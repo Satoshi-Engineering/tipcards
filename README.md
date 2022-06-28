@@ -1,18 +1,3 @@
-## Initial Setup of new project
-
-* clone project: `git clone ssh://git@gitlab.satoshiengineering.com:222/templates/vue3.git`
-* update dependencies: `npx npm-check-updates -u && npm install`
-* commit + push: `git commit -m '[TASK] update all template packages' && git push`
-* change origin: `git remote set-url origin <new-project-url>`
-* update favicon
-  * go to https://favicon.io/favicon-converter/
-  * upload your svg + create favicons
-  * replace all files in public
-* add hooksPath: `git config core.hooksPath .githooks`
-* remove "Initial Setup of new project" from the readme
-* commit: `git commit -m '[TASK] initial commit projects#<issue-id>'`
-* push to new project. `git push -u origin main`
-
 ## Setup
 
 ### VSCode Extensions
