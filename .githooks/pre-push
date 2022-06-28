@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# exit if any command in the script exits with a code != 0
+set -e
+
+npm run lint
+npm run typecheck
+npm run test-units

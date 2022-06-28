@@ -1,0 +1,23 @@
+#!/bin/bash
+
+echo "Checking commit-message format..."
+
+## the first arg is the path to the git commit temporary file
+TEMPORARY_FILE_PATH=$1
+
+## get commit-message from the temporary file
+COMMIT_MSG=`head -n1 $TEMPORARY_FILE_PATH`
+
+## init regex to match commit-message format
+REGEX="^\[([A-Z]+)\] .+( projects#[0-9]+)+$"
+
+## checking commit-message format
+if ! [[ $COMMIT_MSG =~ $REGEX ]];then
+    echo -e "Your commit-message format is not valid:\n$COMMIT_MSG\n"
+    echo -e "Valid example:\n[TASK] Example commit msg projects#123"
+    exit 1
+else
+    echo "Commit-message is valid."
+    exit 0
+fi
+
