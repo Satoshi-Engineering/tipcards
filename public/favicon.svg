@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="303" width="194" version="1.1"><path stroke-linejoin="round" d="m18,295,46-100-27,0,40-56-26,0,63-109,70,0-73,90,23,0-50,59,27,0z" stroke="#000" stroke-miterlimit="4" stroke-width="5" fill="#fff100"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <text x="50%" y=".9em" font-size="90" text-anchor="middle">
+    ⚡
+  </text>
+</svg>
