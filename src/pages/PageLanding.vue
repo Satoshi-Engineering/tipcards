@@ -2,22 +2,30 @@
   <div
     class="my-10 mx-auto px-4 max-w-md"
   >
-    <div
-      v-if="amount != null"
-    >
+    <div v-if="spent === false">
       <h1 class="text-4xl font-semibold">
         <span class="block mb-8 text-5xl font-semibold">
           Hey!
         </span>
-        You are just about to receive
-        <span
-          :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
-        >
-          {{ (amount / (100 * 1000 * 1000)).toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 }) }}
+        <span v-if="amount != null">
+          You are just about to receive
+          <span
+            :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
+          >
+            {{ (amount / (100 * 1000 * 1000)).toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 }) }}
+          </span>
+          bitcoin *
         </span>
-        bitcoin *
       </h1>
       <p class="text-sm mt-3">* via Lightning</p>
+    </div>
+    <div v-else>
+      <h1 class="text-4xl font-semibold mb-8">
+        It seems that this QR code has already been used.
+      </h1>
+      <p>
+        But don't worry: You can get your own bitcoin at a Bitcoin ATM or at a Crypto exchange etc.
+      </p>
     </div>
     <div class="my-10">
       <p>
@@ -62,11 +70,8 @@
 
 
     <div class="mt-20">
-      <p v-if="spent != null">
-        Already spent? <strong>{{ spent === true ? 'yes' : 'no' }}</strong>
-      </p>
       <p v-if="message != null && message != ''">
-        Message: <strong>{{ message }}</strong>
+        Message in LNURL: <strong>{{ message }}</strong>
       </p>
     </div>
   </div>
