@@ -1,31 +1,74 @@
 <template>
-  <div>
-    <p v-if="spent != null">
-      Already spent? <strong>{{ spent === true ? 'yes' : 'no' }}</strong>
-    </p>
-    <p v-if="message != null && message != ''">
-      Message: <strong>{{ message }}</strong>
-    </p>
-    <p v-if="amount != null">
-      Amount: <strong>{{ amount }} sats</strong>
-      <span v-if="amountInEur != null">
-        ({{ amountInEur.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 }) }})
-      </span>
-    </p>
-    <div>
+  <div
+    class="my-10 mx-auto px-4 max-w-md"
+  >
+    <div
+      v-if="amount != null"
+    >
+      <h1 class="text-4xl font-semibold">
+        <span class="block mb-8 text-5xl font-semibold">
+          Hey!
+        </span>
+        You are just about to receive
+        <span
+          :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
+        >
+          {{ (amount / (100 * 1000 * 1000)).toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 }) }}
+        </span>
+        bitcoin *
+      </h1>
+      <p class="text-sm mt-3">* via Lightning</p>
+    </div>
+    <div class="my-10">
+      <p>
+        Bitcoin is a <strong>digital currency</strong>.
+      </p>
+      <p>
+        It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.
+      </p>
+    </div>
+    <div class="my-10">
+      <h2 class="text-2xl font-bold">Download a wallet</h2>
+      <p>
+        We recommend <a href="https://www.walletofsatoshi.com/" target="_blank">Wallet of Satoshi</a>
+      </p>
+      <p>
+        As soon as your wallet is installed, scan the QR code on your tip card again or click / scan the QR code below.
+      </p>
+    </div>
+    <div
+      v-if="qrCodeSvg != null"
+      class="text-center w-full max-w-md"
+    >
       <!-- eslint-disable vue/no-v-html -->
       <a
-        v-if="qrCodeSvg != null"
-        class="inline-block"
+        class="inline-block w-full max-w-xs p-10"
         :href="`lightning:${lnurl}`"
         v-html="qrCodeSvg"
       />
       <!-- eslint-enable vue/no-v-html -->
     </div>
+
     <p
       v-if="userErrorMessage != null"
       class="text-red-500"
-    >{{ userErrorMessage }}</p>
+    >
+      {{ userErrorMessage }}
+    </p>
+    
+
+
+
+
+
+    <div class="mt-20">
+      <p v-if="spent != null">
+        Already spent? <strong>{{ spent === true ? 'yes' : 'no' }}</strong>
+      </p>
+      <p v-if="message != null && message != ''">
+        Message: <strong>{{ message }}</strong>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -91,7 +134,12 @@ onMounted(async () => {
 
   amount.value = lnurlContent.maxWithdrawable / 1000
 
-  qrCodeSvg.value = new QRCode(lnurl).svg()
+  qrCodeSvg.value = new QRCode({
+    content: lnurl,
+    container: 'svg-viewbox',
+    join: true,
+    padding: 0,
+  }).svg()
 
   message.value = lnurlContent.defaultDescription
 
