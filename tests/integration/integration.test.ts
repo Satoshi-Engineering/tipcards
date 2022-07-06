@@ -63,6 +63,6 @@ describe(`webclient test on ${config.TEST_ORIGIN}`, () => {
     const elements = await driver.findElements(By.css('h1'))
     expect(elements.length === 1)
     const titleText = await elements[0].getText()
-    expect(titleText.indexOf('Hello World')).toBe(0)
+    expect(titleText.indexOf('Lightning Tip Cards')).toBe(0)
   }, 60000)
 })
