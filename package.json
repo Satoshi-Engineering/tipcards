@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "test": "NODE_ENV=test jest",
     "test-units-dev": "jest tests/units --watch --collectCoverage",
-    "test-units": "jest tests/units src/**/*.test.ts",
+    "test-units": "jest tests/units",
     "test-integration": "jest tests/integration"
   },
   "dependencies": {
