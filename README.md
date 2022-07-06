@@ -1,5 +1,17 @@
 ## Setup
 
+Make sure to install the dependencies
+
+```bash
+npm install
+```
+
+Configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
+
+```bash
+git config core.hooksPath .githooks
+```
+
 ### VSCode Extensions
 
 * [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
