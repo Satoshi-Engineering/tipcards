@@ -2,7 +2,7 @@
   <div
     class="my-10 mx-auto px-4 max-w-md"
   >
-    <div v-if="spent === false">
+    <div v-if="spent !== true">
       <h1 class="text-4xl font-semibold">
         <span class="block mb-8 text-5xl font-semibold">
           Hey!
@@ -19,7 +19,7 @@
       </h1>
       <p class="text-sm mt-3">* via Lightning</p>
     </div>
-    <div v-else>
+    <div v-if="spent === true">
       <h1 class="text-4xl font-semibold mb-8">
         It seems that this QR code has already been used.
       </h1>
