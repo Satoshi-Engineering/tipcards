@@ -19,7 +19,7 @@ const router = createRouter({
       component: PageLanding,
     },
     {
-      path: '/codes/:withdrawId',
+      path: '/codes/:withdrawId?',
       name: 'codes',
       component: PageCodes,
     },

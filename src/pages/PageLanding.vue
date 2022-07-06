@@ -36,7 +36,7 @@ import axios, { type AxiosError } from 'axios'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 
-const LNURL_ORIGIN = 'https://legend.lnbits.com'
+import { LNURL_ORIGIN } from '@/modules/constants'
 
 const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined>(undefined)

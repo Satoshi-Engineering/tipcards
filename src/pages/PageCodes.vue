@@ -1,5 +1,32 @@
 <template>
-  <div class="relative w-[210mm] p-[15mm]">
+  <div
+    v-if="withdrawId == null || userErrorMessage != null"
+    class="min-h-screen grid place-items-center text-center"
+  >
+    <div>
+      Enter your withdrawId<br>
+
+      <div class="m-5">
+        <input
+          type="text"
+          class="border p-1 focus:outline-none"
+          @keydown.enter="router.push({ ...route, params: { ...route.params, withdrawId: ($event.target as HTMLInputElement).value } })"
+        >
+      </div>
+
+      <small>(Needs to be from <a :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</a>)</small>
+      <p
+        v-if="userErrorMessage != null"
+        class="text-red-500 text-align-center"
+      >
+        {{ userErrorMessage }}
+      </p>
+    </div>
+  </div>
+  <div
+    v-if="cards.length > 0"
+    class="relative w-[210mm] p-[15mm]"
+  >
     <div
       v-for="card in cards"
       :key="card.url"
@@ -61,22 +88,36 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import QRCode from 'qrcode-svg'
+
+import { LNURL_ORIGIN } from '@/modules/constants'
 
 const route = useRoute()
 const router = useRouter()
 
 const cards = ref<Record<string, string>[]>([])
+const withdrawId = ref<string | undefined>(undefined)
+const userErrorMessage = ref<string | undefined>(undefined)
 
-onMounted(async () => {
+const load = async () => {
+  userErrorMessage.value = undefined
+
+  withdrawId.value = route.params.withdrawId == null || route.params.withdrawId === '' ? undefined : String(route.params.withdrawId)
+  if (withdrawId.value == null) {
+    return
+  }
+
   let lnurls: string[]
   try {
-    const response = await axios.get(`https://legend.lnbits.com/withdraw/csv/${route.params.withdrawId}`)
+    const response = await axios.get(`${LNURL_ORIGIN}/withdraw/csv/${withdrawId.value}`)
     lnurls = response.data.toLowerCase().match(/,*?((lnurl)([0-9]{1,}[a-z0-9]+){1})/g)
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      userErrorMessage.value = (error.response?.data as { detail: string }).detail
+    }
     console.error(error)
     return
   }
@@ -99,6 +140,12 @@ onMounted(async () => {
   if (cards.value.length % 2 !== 0) {
     cards.value = [...cards.value, { url: '' }]
   }
-})
+}
+
+onMounted(load)
+  
+watch(() => route.params, load)
+  
+
 
 </script>
