@@ -4,14 +4,24 @@
     class="min-h-screen grid place-items-center text-center"
   >
     <div>
-      Enter your withdrawId<br>
+      Enter your LNURLw withdraw ID<br>
 
-      <div class="m-5">
-        <input
-          type="text"
-          class="border p-1 focus:outline-none"
-          @keydown.enter="router.push({ ...route, params: { ...route.params, withdrawId: ($event.target as HTMLInputElement).value } })"
+      <div class="m-5 text-center">
+        <form
+          @submit="router.push({ ...route, params: { ...route.params, withdrawId: inputWithdrawId } })"
         >
+          <input
+            v-model="inputWithdrawId"
+            type="text"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+          >
+          <button
+            type="submit"
+            class="bg-gray-600 my-1 px-3 py-2 text-white rounded-sm"
+          >
+            Create Codes
+          </button>
+        </form>
       </div>
 
       <small>(Needs to be from <a :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</a>)</small>
@@ -101,6 +111,7 @@ const router = useRouter()
 const cards = ref<Record<string, string>[]>([])
 const withdrawId = ref<string | undefined>(undefined)
 const userErrorMessage = ref<string | undefined>(undefined)
+const inputWithdrawId = ref<string>('')
 
 const load = async () => {
   userErrorMessage.value = undefined
