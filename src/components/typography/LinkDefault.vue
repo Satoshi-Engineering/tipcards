@@ -14,7 +14,9 @@
     :target="targetComputed"
     tabindex="0"
   >
-    <slot />
+    <slot>
+      {{ href }}
+    </slot>
   </a>
   <button
     v-else

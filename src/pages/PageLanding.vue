@@ -2,7 +2,7 @@
   <div
     class="my-10 mx-auto px-4 max-w-md"
   >
-    <div v-if="spent !== true">
+    <div v-if="!spent">
       <HeadlineDefault level="h1">
         <span class="block mb-8 text-5xl font-semibold">
           Hey!
@@ -63,11 +63,11 @@
     </div>
     <div class="my-10">
       <HeadlineDefault level="h2">
-        Download a wallet
+        <span v-if="!spent">1. </span>Download a wallet
       </HeadlineDefault>
       <ParagraphDefault>
         To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.
-        For every-day use, a smartphone app is most convenient.
+        For every-day use and small amounts, a smartphone app is most convenient.
       </ParagraphDefault>
       <ParagraphDefault>
         We recommend
@@ -92,9 +92,9 @@
         <small>*&nbsp;that understands LNURL</small>
       </ParagraphDefault>
     </div>
-    <div v-if="qrCodeSvg != null">
+    <div v-if="!spent">
       <HeadlineDefault level="h2">
-        Receive your bitcoin
+        2. Receive your bitcoin
       </HeadlineDefault>
       <ParagraphDefault>
         As soon as your wallet is installed, scan the QR code on your tip card again or click / scan the QR code below.
@@ -111,13 +111,19 @@
     </div>
     <div>
       <HeadlineDefault level="h2">
-        Use your bitcoin
+        <span v-if="!spent">3. </span>Use your bitcoin
       </HeadlineDefault>
       <ParagraphDefault>
         You can now
-        spend your bitcoin at a store that accepts bitcoin,
+        spend your bitcoin at a store or on a website that accepts bitcoin,
         transfer them to your friend's or colleague's Lightning wallet,
         or just hodl them.
+      </ParagraphDefault>
+      <ParagraphDefault>
+        Here are a few websites where you can pay with bitcoin via Lightning:<br>
+        <LinkDefault href="https://lightning-roulette.com/" /><br>
+        <LinkDefault href="https://lightninggem.com/" /><br>
+        <LinkDefault href="https://kriptode.com/" />
       </ParagraphDefault>
     </div>
   </div>
