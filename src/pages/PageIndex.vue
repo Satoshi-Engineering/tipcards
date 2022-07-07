@@ -4,7 +4,9 @@
       <div class="text-6xl">
         ⚡
       </div>
-      <h1 class="text-xl font-bold my-4">Lightning Tip Cards</h1>
+      <HeadlineDefault level="h1">
+        Lightning Tip Cards
+      </HeadlineDefault>
       <p>by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a></p>
       <p class="mt-4">
         <RouterLink
@@ -20,4 +22,6 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router' 
+
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 </script>

@@ -17,7 +17,9 @@
           bitcoin*
         </span>
       </HeadlineDefault>
-      <ParagraphDefault class="text-sm mt-3">*&nbsp;via Lightning</ParagraphDefault>
+      <ParagraphDefault class="text-sm mt-3">
+        *&nbsp;via Lightning
+      </ParagraphDefault>
     </div>
     <div v-if="spent === true">
       <h1 class="text-4xl font-semibold mb-8">
@@ -107,7 +109,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import axios, { type AxiosError } from 'axios'
+import axios from 'axios'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 
@@ -159,7 +161,7 @@ const loadLnurlData = async () => {
   try {
     const response = await axios.get(lnurlUrl.href)
     lnurlContent = response.data
-  } catch (error: unknown | AxiosError) {
+  } catch (error) {
     if (
       axios.isAxiosError(error)
       && error.response?.status === 404
