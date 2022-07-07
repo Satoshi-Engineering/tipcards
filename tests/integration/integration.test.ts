@@ -3,7 +3,6 @@
  */
 
 import axios from 'axios'
-import * as chromedriver from 'chromedriver'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import { Builder, By } from 'selenium-webdriver'
@@ -30,15 +29,6 @@ describe(`webclient test on ${config.TEST_ORIGIN}`, () => {
   })
 
   it ('loads the page', async () => {
-    // TODO: Refactor this
-    /*
-    const defaultService = chrome.Driver.getDefaultService()
-    if (defaultService && defaultService.isRunning()) {
-      await defaultService.kill()
-    }
-     */
-    chrome.setDefaultService(new chrome.ServiceBuilder(chromedriver.path).build())
-
     const chromeOptions = new chrome.Options()
     chromeOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL)
     // chromeOptions.addArguments('--ignore-certificate-error')
