@@ -102,6 +102,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import QRCode from 'qrcode-svg'
+import { decodelnurl } from 'js-lnurl'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 
@@ -131,6 +132,25 @@ const load = async () => {
     }
     console.error(error)
     return
+  }
+
+  if (lnurls.length === 1) {
+    try {
+      await axios.get(new URL(decodelnurl(lnurls[0])).href)
+    } catch (error) {
+      if (
+        axios.isAxiosError(error)
+        && error.response?.status === 404
+        && ['Withdraw is spent.', 'LNURL-withdraw not found.']
+          .includes((error.response?.data as { detail: string }).detail)
+      ) {
+        userErrorMessage.value = `All LNURLs from withdraw "${withdrawId.value}" have been used.`
+        return
+      }
+      userErrorMessage.value = 'Server cannot find LNURL.'
+      console.error(error)
+      return
+    }
   }
 
   cards.value = lnurls.map(lnurl => {
