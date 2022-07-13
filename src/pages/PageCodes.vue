@@ -124,7 +124,16 @@ const load = async () => {
 
   let lnurls: string[]
   try {
-    const response = await axios.get(`${LNURL_ORIGIN}/withdraw/csv/${withdrawId.value}`)
+    const response = await axios.get(
+      `${LNURL_ORIGIN}/withdraw/csv/${withdrawId.value}`,
+      {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      },
+    )
     lnurls = response.data.toLowerCase().match(/,*?((lnurl)([0-9]{1,}[a-z0-9]+){1})/g)
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -136,7 +145,16 @@ const load = async () => {
 
   if (lnurls.length === 1) {
     try {
-      await axios.get(new URL(decodelnurl(lnurls[0])).href)
+      await axios.get(
+        new URL(decodelnurl(lnurls[0])).href,
+        {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        },
+      )
     } catch (error) {
       if (
         axios.isAxiosError(error)
