@@ -2,37 +2,35 @@
   <div
     class="my-10 mx-auto px-4 max-w-md"
   >
-    <div v-if="!spent">
-      <HeadlineDefault level="h1">
-        <span class="block mb-8 text-5xl font-semibold">
-          Hey!
+    <HeadlineDefault level="h1" class="mb-8">
+      <span class="text-5xl">Hey!</span>
+    </HeadlineDefault>
+    <div v-if="!spent && amount != null">
+      <HeadlineDefault level="h2" styling="h1">
+        You are just about to receive
+        <span
+          :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
+        >
+          {{ (amount / (100 * 1000 * 1000)).toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 }) }}
         </span>
-        <span v-if="amount != null">
-          You are just about to receive
-          <span
-            :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
-          >
-            {{ (amount / (100 * 1000 * 1000)).toLocaleString(undefined, { maximumFractionDigits: 8, minimumFractionDigits: 8 }) }}
-          </span>
-          bitcoin*
-        </span>
+        bitcoin*
       </HeadlineDefault>
-      <ParagraphDefault v-if="amount != null" class="text-sm mt-3">
+      <ParagraphDefault class="text-sm mt-3">
         *&nbsp;via Lightning
       </ParagraphDefault>
     </div>
-    <div v-if="amount == null">
-      <h1 class="text-4xl font-semibold mb-8">
+    <div v-if="spent && amount == null">
+      <HeadlineDefault level="h2" styling="h1">
         It seems that this QR code has already been used.
-      </h1>
+      </HeadlineDefault>
       <ParagraphDefault>
         But don't worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.
       </ParagraphDefault>
     </div>
     <div v-if="spent && amount != null">
-      <h1 class="text-4xl font-semibold mb-8">
+      <HeadlineDefault level="h2" styling="h1">
         Your QR code has just been used. 🥳
-      </h1>
+      </HeadlineDefault>
       <ParagraphDefault>
         You can get more bitcoin at a Bitcoin ATM or a Crypto exchange etc.
       </ParagraphDefault>
@@ -42,6 +40,9 @@
         class="text-red-500"
       >
         {{ userErrorMessage }}
+      </ParagraphDefault>
+      <ParagraphDefault v-if="!spent && amount == null">
+        But don't worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.
       </ParagraphDefault>
     </div>
     <div class="my-10">
@@ -194,7 +195,7 @@ const loadLnurlData = async () => {
   }
 
   if (lnurlUrl.origin !== LNURL_ORIGIN) {
-    userErrorMessage.value = 'LNURL points to a different server.'
+    userErrorMessage.value = 'Sorry, the provided LNURL cannot be used on this website.'
     console.error(`LNURL points to a foreign origin: ${lnurlUrl.origin}`)
     return
   }
@@ -219,7 +220,7 @@ const loadLnurlData = async () => {
   }
   
   if (lnurlContent.tag !== 'withdrawRequest') {
-    userErrorMessage.value = 'This website does not support the provided type of LNURL.'
+    userErrorMessage.value = 'Sorry, this website does not support the provided type of LNURL.'
     return
   }  
 
