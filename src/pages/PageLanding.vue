@@ -17,16 +17,24 @@
           bitcoin*
         </span>
       </HeadlineDefault>
-      <ParagraphDefault class="text-sm mt-3">
+      <ParagraphDefault v-if="amount != null" class="text-sm mt-3">
         *&nbsp;via Lightning
       </ParagraphDefault>
     </div>
-    <div v-if="spent === true">
+    <div v-if="amount == null">
       <h1 class="text-4xl font-semibold mb-8">
         It seems that this QR code has already been used.
       </h1>
       <ParagraphDefault>
         But don't worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.
+      </ParagraphDefault>
+    </div>
+    <div v-if="spent && amount != null">
+      <h1 class="text-4xl font-semibold mb-8">
+        Your QR code has just been used. 🥳
+      </h1>
+      <ParagraphDefault>
+        You can get more bitcoin at a Bitcoin ATM or a Crypto exchange etc.
       </ParagraphDefault>
     </div>
     <div v-if="userErrorMessage != null">
@@ -60,10 +68,13 @@
       <ParagraphDefault>
         It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.
       </ParagraphDefault>
+      <ParagraphDefault>
+        Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!
+      </ParagraphDefault>
     </div>
     <div class="my-10">
       <HeadlineDefault level="h2">
-        <span v-if="!spent">1. </span>Download a wallet
+        <span v-if="amount != null">1. </span>Download a wallet
       </HeadlineDefault>
       <ParagraphDefault>
         To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.
@@ -92,26 +103,33 @@
         <small>*&nbsp;that understands LNURL</small>
       </ParagraphDefault>
     </div>
-    <div v-if="!spent">
+    <div v-if="amount != null">
       <HeadlineDefault level="h2">
         2. Receive your bitcoin
       </HeadlineDefault>
-      <ParagraphDefault>
+      <ParagraphDefault v-if="!spent">
         As soon as your wallet is installed, scan the QR code on your tip card again or click / scan the QR code below.
       </ParagraphDefault>
-      <div class="text-center w-full max-w-md">
+      <ParagraphDefault v-else>
+        <strong>Congrats!</strong> The bitcoin were just transferred to your wallet. 🎉
+      </ParagraphDefault>
+      <div class="relative w-full max-w-xs p-10 mx-auto">
         <!-- eslint-disable vue/no-v-html -->
         <a
-          class="inline-block w-full max-w-xs p-10"
-          :href="`lightning:${lnurl}`"
+          class="block transition-opacity"
+          :class="{ 'opacity-20 blur-sm pointer-events-none': spent }"
+          :href="!spent ? `lightning:${lnurl}`: undefined"
           v-html="qrCodeSvg"
         />
         <!-- eslint-enable vue/no-v-html -->
+        <div v-if="spent" class="absolute top-10 left-10 right-10 bottom-10 grid place-items-center">
+          <AnimatedCheckmark class="w-5/12" />
+        </div>
       </div>
     </div>
     <div>
       <HeadlineDefault level="h2">
-        <span v-if="!spent">3. </span>Use your bitcoin
+        <span v-if="amount != null">3. </span>Use your bitcoin
       </HeadlineDefault>
       <ParagraphDefault>
         You can now
@@ -140,6 +158,7 @@ import { LNURL_ORIGIN } from '@/modules/constants'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import AnimatedCheckmark from '../components/AnimatedCheckmark.vue'
 
 const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined>(undefined)
@@ -164,12 +183,12 @@ const loadBtcEurRate = async () => {
 }
 
 const loadLnurlData = async () => {
-  
+
   let lnurlUrl: URL | undefined
   try {
     lnurlUrl = new URL(decodelnurl(lnurl))
   } catch (error) {
-    userErrorMessage.value = 'Invalid LNURL.'
+    userErrorMessage.value = 'Sorry, the provided LNURL is invalid.'
     console.error(error)
     return
   }
@@ -202,7 +221,7 @@ const loadLnurlData = async () => {
   if (lnurlContent.tag !== 'withdrawRequest') {
     userErrorMessage.value = 'This website does not support the provided type of LNURL.'
     return
-  }
+  }  
 
   amount.value = lnurlContent.maxWithdrawable / 1000
 
@@ -215,7 +234,7 @@ const loadLnurlData = async () => {
 
   message.value = lnurlContent.defaultDescription
 
-  setTimeout(loadLnurlData, 15 * 1000)
+  setTimeout(loadLnurlData, 10 * 1000)
 }
 
 onMounted(() => {
