@@ -114,7 +114,7 @@
       <ParagraphDefault v-else>
         <strong>Congrats!</strong> The bitcoin were just transferred to your wallet. 🎉
       </ParagraphDefault>
-      <div class="relative w-full max-w-xs p-10 mx-auto">
+      <div class="relative w-full max-w-xs p-10 pb-3 mx-auto">
         <!-- eslint-disable vue/no-v-html -->
         <a
           class="block transition-opacity"
@@ -126,6 +126,28 @@
         <div v-if="spent" class="absolute top-10 left-10 right-10 bottom-10 grid place-items-center">
           <AnimatedCheckmark class="w-5/12" />
         </div>
+      </div>
+      <div class="text-center text-xs px-10 mb-5">
+        <CopyToClipboard
+          :text="lnurl"
+          label="Copy LNURL to clipboard"
+          class="text-center inline-block no-underline font-normal"
+        >
+          <template #default>
+            You can also
+            <br>
+            <strong class="underline hover:no-underline">copy the LNURL to your clipboard</strong>
+            <br>
+            to paste it into your wallet app.
+          </template>
+          <template #success>
+            <strong>Copied successfully.</strong>
+            <br>
+            Paste it into
+            <br>
+            your wallet app now :)
+          </template>
+        </CopyToClipboard>
       </div>
     </div>
     <div>
@@ -160,6 +182,7 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import AnimatedCheckmark from '../components/AnimatedCheckmark.vue'
+import CopyToClipboard from '../components/CopyToClipboard.vue'
 
 const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined>(undefined)
