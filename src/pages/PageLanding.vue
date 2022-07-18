@@ -245,7 +245,7 @@ const loadLnurlData = async () => {
   if (lnurlContent.tag !== 'withdrawRequest') {
     userErrorMessage.value = 'Sorry, this website does not support the provided type of LNURL.'
     return
-  }  
+  }
 
   amount.value = lnurlContent.maxWithdrawable / 1000
 

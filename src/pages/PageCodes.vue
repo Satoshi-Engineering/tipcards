@@ -34,6 +34,21 @@
     </div>
   </div>
   <div
+    v-for="userWarning in userWarnings"
+    :key="userWarning"
+    class="bg-yellow-300 p-2 mb-1 print:hidden"
+  >
+    {{ userWarning }}
+  </div>
+  <div
+    v-if="lnurlDescriptionMessage != null"
+    class="p-2 mb-1 border-b print:hidden"
+  >
+    Description that will be displayed in the wallet app:<br>
+    <strong v-if="lnurlDescriptionMessage !== ''">{{ lnurlDescriptionMessage }}</strong>
+    <span v-else>(empty)</span>
+  </div>
+  <div
     v-if="cards.length > 0"
     class="relative w-[210mm] p-[15mm]"
   >
@@ -102,7 +117,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import QRCode from 'qrcode-svg'
-import { decodelnurl } from 'js-lnurl'
+import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 
@@ -112,6 +127,8 @@ const router = useRouter()
 const cards = ref<Record<string, string>[]>([])
 const withdrawId = ref<string | undefined>(undefined)
 const userErrorMessage = ref<string | undefined>(undefined)
+const userWarnings = ref<string[]>([])
+const lnurlDescriptionMessage = ref<string | undefined>(undefined)
 const inputWithdrawId = ref<string>('')
 
 const load = async () => {
@@ -143,33 +160,45 @@ const load = async () => {
     return
   }
 
-  if (lnurls.length === 1) {
-    try {
-      await axios.get(
-        new URL(decodelnurl(lnurls[0])).href,
-        {
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
+  let lnurlContent: LNURLWithdrawParams
+  try {
+    const response = await axios.get(
+      new URL(decodelnurl(lnurls[0])).href,
+      {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
         },
-      )
-    } catch (error) {
-      if (
-        axios.isAxiosError(error)
-        && error.response?.status === 404
-        && ['Withdraw is spent.', 'LNURL-withdraw not found.']
-          .includes((error.response?.data as { detail: string }).detail)
-      ) {
-        userErrorMessage.value = `All LNURLs from withdraw "${withdrawId.value}" have been used.`
-        return
-      }
-      userErrorMessage.value = 'Server cannot find LNURL.'
-      console.error(error)
+      },
+    )
+    lnurlContent = response.data
+  } catch (error) {
+    if (
+      axios.isAxiosError(error)
+      && error.response?.status === 404
+      && ['Withdraw is spent.', 'LNURL-withdraw not found.']
+        .includes((error.response?.data as { detail: string }).detail)
+    ) {
+      userErrorMessage.value = `All LNURLs from withdraw "${withdrawId.value}" have been used.`
       return
     }
+    userErrorMessage.value = 'Server cannot find LNURL.'
+    console.error(error)
+    return
   }
+
+  if (lnurlContent.tag !== 'withdrawRequest') {
+    userErrorMessage.value = 'Sorry, this website does not support the provided type of LNURL.'
+    return
+  }
+  if (lnurlContent.minWithdrawable != lnurlContent.maxWithdrawable) {
+    userWarnings.value = [...userWarnings.value, 'Warning: Minimum withdrawable amount differs from maximum withdrawable amount. Are you sure this is correct?']
+  }
+  if ((lnurlContent.minWithdrawable / 1000) < 1000) {
+    userWarnings.value = [...userWarnings.value, 'Warning: Amount per LNURL is smaller than 1000 sats. Some wallet apps (like BlueWallet, Phoenix or Breez) might have problems with that. Please test your Tip cards before handing them out. :)']
+  }
+  lnurlDescriptionMessage.value = lnurlContent.defaultDescription
 
   cards.value = lnurls.map(lnurl => {
     const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurl.toUpperCase() } }).href
