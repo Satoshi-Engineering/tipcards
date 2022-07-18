@@ -134,11 +134,13 @@
           class="text-center inline-block no-underline font-normal"
         >
           <template #default>
-            You can also
-            <br>
-            <strong class="underline hover:no-underline">copy the LNURL to your clipboard</strong>
-            <br>
-            to paste it into your wallet app.
+            <span class="font-normal">
+              You can also
+              <br>
+              <strong class="underline hover:no-underline">copy the LNURL to your clipboard</strong>
+              <br>
+              to paste it into your wallet app.
+            </span>
           </template>
           <template #success>
             <strong>Copied successfully.</strong>
