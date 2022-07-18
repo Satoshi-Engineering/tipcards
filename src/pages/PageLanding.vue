@@ -123,7 +123,7 @@
           v-html="qrCodeSvg"
         />
         <!-- eslint-enable vue/no-v-html -->
-        <div v-if="spent" class="absolute top-10 left-10 right-10 bottom-10 grid place-items-center">
+        <div v-if="spent" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
           <AnimatedCheckmark class="w-5/12" />
         </div>
       </div>
