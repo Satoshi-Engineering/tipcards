@@ -1,5 +1,5 @@
 {
-  "name": "coin-recycler",
+  "name": "lightning-tip-cards",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite",
