@@ -15,16 +15,15 @@
             type="text"
             class="w-full border my-1 px-3 py-2 focus:outline-none"
           >
-          <button
+          <ButtonDefault
             type="submit"
-            class="bg-gray-600 my-1 px-3 py-2 text-white rounded-sm"
           >
             Create Codes
-          </button>
+          </ButtonDefault>
         </form>
       </div>
 
-      <small>(Needs to be from <a :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</a>)</small>
+      <small>(Needs to be from <LinkDefault :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</LinkDefault>)</small>
       <p
         v-if="userErrorMessage != null"
         class="text-red-500 text-align-center"
@@ -120,6 +119,8 @@ import QRCode from 'qrcode-svg'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
+import ButtonDefault from '../components/ButtonDefault.vue'
+import LinkDefault from '../components/typography/LinkDefault.vue'
 
 const route = useRoute()
 const router = useRouter()

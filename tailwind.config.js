@@ -12,6 +12,8 @@ module.exports = {
         'grey-light': '#f1f1f1',
         'black': '#000',
         'white': '#fff',
+        'btcorange': '#F7931A',
+        'btcorange-effect': '#f8a139',
       },
       fontFamily: {
         emoji: ['Apple Color Emoji', 'Segoe UI Emoji', 'NotoColorEmoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla'],
