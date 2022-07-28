@@ -178,11 +178,22 @@
         or just hodl them.
       </ParagraphDefault>
       <ParagraphDefault>
-        Here are a few websites where you can pay with bitcoin via Lightning:<br>
-        <LinkDefault href="https://lightning-roulette.com/" /><br>
-        <LinkDefault href="https://lightninggem.com/" /><br>
-        <LinkDefault href="https://kriptode.com/" />
+        Here are a few websites where you can pay with bitcoin via Lightning:
       </ParagraphDefault>
+      <ul>
+        <li>
+          Play a round of roulette:<br>
+          <LinkDefault href="https://lightning-roulette.com/" />
+        </li>
+        <li>
+          Buy some organic sustainable Granola:<br>
+          <LinkDefault href="https://saltndaisy.at/" />
+        </li>
+        <li>
+          Find out what else you could do:<br>
+          <LinkDefault href="https://lightningnetworkstores.com/" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
