@@ -69,12 +69,19 @@
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         />
       </label>
+      <label class="block mb-2">
+        <input
+          v-model="showBtcLogo"
+          type="checkbox"
+        >
+        Add Bitcoin logo on top of QR codes
+      </label>
     </div>
     <div class="p-2 mb-1">
       <ButtonDefault
         @click="downloadZip"
       >
-        Download all SVGs as ZIP
+        Download all QR codes as zipped SVGs
       </ButtonDefault>
     </div>
   </div>
@@ -115,6 +122,7 @@
               />
               <!-- eslint-enable vue/no-v-html -->
               <IconBitcoin
+                v-if="showBtcLogo"
                 width="26%"
                 height="26%"
                 x="37%"
@@ -177,6 +185,7 @@ const inputWithdrawId = ref<string>('')
 const amount = ref<number | undefined>(undefined)
 const cardHeadline = ref<string>('Hey :)')
 const cardCopytext = ref<string>('Scan this QR code and learn how to receive\n$$ bitcoin.')
+const showBtcLogo = ref<boolean>(true)
 const cardsContainer = ref<HTMLElement | undefined>(undefined)
 
 const cardCopytextComputed = computed(() => cardCopytext.value
