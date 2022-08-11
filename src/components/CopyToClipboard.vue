@@ -10,7 +10,7 @@
   </LinkDefault>
   <strong
     v-else
-    class="inline-block animate-fade-out-slow [animation-delay:6000ms] pointer-events-none select-none"
+    class="inline-block animate-fade-out-slow [animation-delay:3000ms] pointer-events-none select-none"
   >
     <slot name="success">
       {{ labelSuccess }}
@@ -42,7 +42,7 @@ const recentlyCopied = ref<boolean>(false)
 const copyToClipboard = async (text: string) => {
   await navigator.clipboard.writeText(text)
   recentlyCopied.value = true
-  await new Promise(resolve => setTimeout(resolve, 7000))
+  await new Promise(resolve => setTimeout(resolve, 4000))
   recentlyCopied.value = false
 }
 </script>
