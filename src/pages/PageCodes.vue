@@ -70,9 +70,17 @@
         />
       </label>
     </div>
+    <div class="p-2 mb-1">
+      <ButtonDefault
+        @click="downloadZip"
+      >
+        Download all SVGs as ZIP
+      </ButtonDefault>
+    </div>
   </div>
   <div
     v-if="cards.length > 0"
+    ref="cardsContainer"
     class="relative w-[210mm] p-[15mm]"
   >
     <div
@@ -94,8 +102,10 @@
         <a :href="card.url">
           <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
             <svg
+              xmlns="http://www.w3.org/2000/svg"
               width="100%"
               height="100%"
+              class="qr-code-svg"
             >
               <!-- eslint-disable vue/no-v-html -->
               <svg
@@ -144,6 +154,8 @@ import axios from 'axios'
 import QRCode from 'qrcode-svg'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import sanitizeHtml from 'sanitize-html'
+import JSZip from 'jszip'
+import { saveAs } from 'file-saver'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'
@@ -165,6 +177,7 @@ const inputWithdrawId = ref<string>('')
 const amount = ref<number | undefined>(undefined)
 const cardHeadline = ref<string>('Hey :)')
 const cardCopytext = ref<string>('Scan this QR code and learn how to receive\n$$ bitcoin.')
+const cardsContainer = ref<HTMLElement | undefined>(undefined)
 
 const cardCopytextComputed = computed(() => cardCopytext.value
   .replace('$$', formatNumber((amount.value || 0) / (100 * 1000 * 1000), 8, 8))
@@ -264,7 +277,19 @@ const load = async () => {
 onMounted(load)
   
 watch(() => route.params, load)
-  
+
+const downloadZip = async () => {
+  const zip = new JSZip()
+  if (cardsContainer.value == null) {
+    return
+  }
+  Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg'))
+    .forEach(
+      (svgEl, index) => zip.file(`qrCode_${index}_${amount.value}sats_${withdrawId.value}.svg`, svgEl.outerHTML),
+    )
+  const zipFileContent = await zip.generateAsync({ type: 'blob' })
+  saveAs(zipFileContent, `qrCodes_${amount.value}sats_${withdrawId.value}.zip`)
+}
 
 
 </script>

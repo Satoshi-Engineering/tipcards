@@ -15,7 +15,9 @@
   "dependencies": {
     "axios": "^0.27.2",
     "bootstrap-icons": "^1.8.3",
+    "file-saver": "^2.0.5",
     "js-lnurl": "^0.3.0",
+    "jszip": "^3.10.1",
     "pinia": "^2.0.14",
     "qrcode-svg": "^1.1.0",
     "sanitize-html": "^2.7.1",
@@ -25,6 +27,7 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/chromedriver": "^81.0.1",
+    "@types/file-saver": "^2.0.5",
     "@types/jest": "^28.1.4",
     "@types/node": "^18.0.3",
     "@types/qrcode-svg": "^1.1.1",
