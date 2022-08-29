@@ -78,10 +78,16 @@
       </label>
     </div>
     <div class="p-2 mb-1">
+      Download all QR codes in a ZIP:
       <ButtonDefault
-        @click="downloadZip"
+        @click="downloadZip(false)"
       >
-        Download all QR codes as zipped SVGs
+        SVG
+      </ButtonDefault>&nbsp;
+      <ButtonDefault
+        @click="downloadZip(true)"
+      >
+        PNG
       </ButtonDefault>
     </div>
   </div>
@@ -112,21 +118,18 @@
               xmlns="http://www.w3.org/2000/svg"
               width="100%"
               height="100%"
+              viewBox="0 0 256 256"
               class="qr-code-svg"
             >
               <!-- eslint-disable vue/no-v-html -->
-              <svg
-                width="100%"
-                height="100%"
-                v-html="card.qrCodeSvg"
-              />
+              <g v-html="card.qrCodeSvg" />
               <!-- eslint-enable vue/no-v-html -->
               <IconBitcoin
                 v-if="showBtcLogo"
-                width="26%"
-                height="26%"
-                x="37%"
-                y="37%"
+                :width="0.26 * 256"
+                :height="0.26 * 256"
+                :x="0.37 * 256"
+                :y="0.37 * 256"
               />
             </svg>
           </div>
@@ -167,6 +170,7 @@ import { saveAs } from 'file-saver'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'
+import svgToPng from '@/modules/svgToPng'
 import ButtonDefault from '../components/ButtonDefault.vue'
 import LinkDefault from '../components/typography/LinkDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
@@ -273,7 +277,7 @@ const load = async () => {
           padding: 0,
           join: true,
           xmlDeclaration: false,
-          container: 'svg-viewbox',
+          container: 'none',
         }).svg(),
     }
   })
@@ -287,17 +291,22 @@ onMounted(load)
   
 watch(() => route.params, load)
 
-const downloadZip = async () => {
+const downloadZip = async (asPng = false) => {
   const zip = new JSZip()
   if (cardsContainer.value == null) {
     return
   }
-  Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg'))
-    .forEach(
-      (svgEl, index) => zip.file(`qrCode_${index}_${amount.value}sats_${withdrawId.value}.svg`, svgEl.outerHTML),
-    )
+  const fileExtension = asPng ? 'png' : 'svg'
+  await Promise.all(Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg'))
+    .map(async (svgEl, index) => {
+      let fileContent: string | Blob = svgEl.outerHTML
+      if (asPng) {
+        fileContent = (await svgToPng({ width: 2000, height: 2000, svg: svgEl.outerHTML }) || 'error')
+      }
+      zip.file(`qrCode_${index}_${amount.value}sats_${withdrawId.value}.${fileExtension}`, fileContent)
+    }))
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
-  saveAs(zipFileContent, `qrCodes_${amount.value}sats_${withdrawId.value}.zip`)
+  saveAs(zipFileContent, `qrCodes_${amount.value}sats_${withdrawId.value}_${fileExtension}.zip`)
 }
 
 
