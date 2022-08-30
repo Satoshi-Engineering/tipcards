@@ -69,12 +69,32 @@
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         />
       </label>
-      <label class="block mb-2">
+      <div class="mb-2">
+        Add logo on top of QR codes:
+      </div>
+      <label class="block">
         <input
-          v-model="showBtcLogo"
-          type="checkbox"
+          v-model="cardsQrCodeLogo"
+          value="bitcoin"
+          type="radio"
         >
-        Add Bitcoin logo on top of QR codes
+        Bitcoin
+      </label>
+      <label class="block">
+        <input
+          v-model="cardsQrCodeLogo"
+          value="lightning"
+          type="radio"
+        >
+        Lightning
+      </label>
+      <label class="block">
+        <input
+          v-model="cardsQrCodeLogo"
+          value=""
+          type="radio"
+        >
+        No logo
       </label>
     </div>
     <div class="p-2 mb-1">
@@ -125,7 +145,14 @@
               <g v-html="card.qrCodeSvg" />
               <!-- eslint-enable vue/no-v-html -->
               <IconBitcoin
-                v-if="showBtcLogo"
+                v-if="cardsQrCodeLogo === 'bitcoin'"
+                :width="0.26 * 256"
+                :height="0.26 * 256"
+                :x="0.37 * 256"
+                :y="0.37 * 256"
+              />
+              <IconLightning
+                v-if="cardsQrCodeLogo === 'lightning'"
                 :width="0.26 * 256"
                 :height="0.26 * 256"
                 :x="0.37 * 256"
@@ -174,6 +201,7 @@ import svgToPng from '@/modules/svgToPng'
 import ButtonDefault from '../components/ButtonDefault.vue'
 import LinkDefault from '../components/typography/LinkDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
+import IconLightning from '../components/svgs/IconLightning.vue'
 import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
 
@@ -189,7 +217,7 @@ const inputWithdrawId = ref<string>('')
 const amount = ref<number | undefined>(undefined)
 const cardHeadline = ref<string>('Hey :)')
 const cardCopytext = ref<string>('Scan this QR code and learn how to receive\n$$ bitcoin.')
-const showBtcLogo = ref<boolean>(true)
+const cardsQrCodeLogo = ref<string>('bitcoin')
 const cardsContainer = ref<HTMLElement | undefined>(undefined)
 
 const cardCopytextComputed = computed(() => cardCopytext.value
