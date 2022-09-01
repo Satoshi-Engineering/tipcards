@@ -3,38 +3,44 @@
     class="my-10 mx-auto px-4 max-w-md"
   >
     <HeadlineDefault level="h1" class="mb-8">
-      <span class="text-5xl">Hey!</span>
+      <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
     </HeadlineDefault>
     <div v-if="!spent && amount != null">
       <HeadlineDefault level="h2" styling="h1">
-        You are just about to receive
-        <span class="inline-block">
-          <span
-            :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
-          >
-            {{ formatNumber(amount / (100 * 1000 * 1000), 8, 8) }}
-          </span>
-          bitcoin*
-        </span>
+        <I18nT keypath="landing.introMessageReceiveBtc.message">
+          <template #amountAndUnit>
+            <span class="inline-block">
+              <I18nT keypath="landing.introMessageReceiveBtc.amountAndUnit">
+                <template #amount>
+                  <span
+                    :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
+                  >
+                    {{ formatNumber(amount / (100 * 1000 * 1000), 8, 8) }}
+                  </span>
+                </template>
+              </I18nT>
+            </span>
+          </template>
+        </I18nT>
       </HeadlineDefault>
       <ParagraphDefault class="text-sm mt-3">
-        *&nbsp;via Lightning
+        {{ t('landing.introMessageReceiveBtc.footnote') }}
       </ParagraphDefault>
     </div>
     <div v-if="spent && amount == null">
       <HeadlineDefault level="h2" styling="h1">
-        It seems that this QR code has already been used.
+        {{ t('landing.introMessageAlreadyUsed.headline') }}
       </HeadlineDefault>
       <ParagraphDefault>
-        But don't worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.
+        {{ t('landing.introMessageAlreadyUsed.message') }}
       </ParagraphDefault>
     </div>
     <div v-if="spent && amount != null">
       <HeadlineDefault level="h2" styling="h1">
-        Your QR code has just been used. 🥳
+        {{ t('landing.introMessageJustReceived.headline', { emoji: '🥳' }) }}
       </HeadlineDefault>
       <ParagraphDefault>
-        You can get more bitcoin at a Bitcoin ATM or a Crypto exchange etc.
+        {{ t('landing.introMessageJustReceived.message') }}
       </ParagraphDefault>
     </div>
     <div v-if="userErrorMessage != null">
@@ -44,32 +50,29 @@
         {{ userErrorMessage }}
       </ParagraphDefault>
       <ParagraphDefault v-if="!spent && amount == null">
-        But don't worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.
+        {{ t('landing.introMessageAlreadyUsed.message') }}
       </ParagraphDefault>
     </div>
     <div class="my-10">
       <IconBitcoin class="float-right w-16 ml-3 mb-3" />
-      <ParagraphDefault>
-        Bitcoin is a <strong>digital currency</strong>.
-      </ParagraphDefault>
-      <ParagraphDefault>
-        It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.
-      </ParagraphDefault>
-      <ParagraphDefault>
-        Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!
-      </ParagraphDefault>
+      <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
+      <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.0'))" />
+      <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.1'))" />
+      <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.2'))" />
+      <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
     </div>
     <div class="my-10">
       <HeadlineDefault level="h2">
-        <span v-if="amount != null">1. </span>Download a wallet
+        <span v-if="amount != null">1. </span>{{ t('landing.sectionWallet.headline') }}
       </HeadlineDefault>
+      <!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
+      <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionWallet.explanation'))" />
       <ParagraphDefault>
-        To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.
-        For every-day use and small amounts, a smartphone app is most convenient.
-      </ParagraphDefault>
-      <ParagraphDefault>
-        We recommend
-        <LinkDefault href="https://www.walletofsatoshi.com/">Wallet of Satoshi</LinkDefault>.
+        <I18nT keypath="landing.sectionWallet.recommendation">
+          <template #walletOfSatoshi>
+            <LinkDefault href="https://www.walletofsatoshi.com/">Wallet of Satoshi</LinkDefault>
+          </template>
+        </I18nT>
       </ParagraphDefault>
       <ParagraphDefault class="text-center mt-4 mb-6">
         <LinkDefault
@@ -82,37 +85,42 @@
         </LinkDefault>
         <br>
         <ButtonDefault href="https://www.walletofsatoshi.com/">
-          Download Wallet of Satoshi
+          {{ t('landing.sectionWallet.button') }}
         </ButtonDefault>
       </ParagraphDefault>
       
       <ParagraphDefault>
-        You can also try
-        <LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>,
-        <LinkDefault href="https://muun.com/">Muun</LinkDefault>,
-        <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>,
-        or any other Lightning wallet*.
+        <I18nT keypath="landing.sectionWallet.other">
+          <template #wallet0>
+            <LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>
+          </template>
+          <template #wallet1>
+            <LinkDefault href="https://muun.com/">Muun</LinkDefault>
+          </template>
+          <template #wallet2>
+            <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>
+          </template>
+        </I18nT>
         <br>
-        <small>*&nbsp;that understands LNURL</small>
+        <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
       </ParagraphDefault>
     </div>
     <div v-if="amount != null" class="my-10">
       <HeadlineDefault level="h2">
-        2. Receive your bitcoin
+        2. {{ t('landing.sectionReceive.headline') }}
       </HeadlineDefault>
       <ParagraphDefault v-if="!spent">
-        As soon as your wallet is installed,
+        {{ t('landing.sectionReceive.statusNormal.explanation') }}
         <ul class="list-disc pl-6">
-          <li class="my-1">
-            <strong>tap</strong> the QR code below, or
-          </li>
-          <li class="my-1">
-            <strong>scan</strong> the QR code on your tip card again<br>(using your wallet app)
-          </li>
+          <!-- eslint-disable vue/no-v-html -->
+          <li class="my-1" v-html="sanitizeI18n(t('landing.sectionReceive.statusNormal.step1'))" />
+          <li class="my-1" v-html="sanitizeI18n(t('landing.sectionReceive.statusNormal.step2'))" />
+          <!-- eslint-enable vue/no-v-html -->
         </ul>
       </ParagraphDefault>
       <ParagraphDefault v-else>
-        <strong>Congrats!</strong> The bitcoin were just transferred to your wallet. 🎉
+        <strong>{{ t('landing.sectionReceive.statusReceived.congrats') }}</strong>
+        {{ t('landing.sectionReceive.statusReceived.message') }} 🎉
       </ParagraphDefault>
       <div class="relative w-full max-w-xs p-10 pb-3 mx-auto">
         <!-- eslint-disable vue/no-v-html -->
@@ -133,58 +141,56 @@
           :href="!spent ? `lightning:${lnurl}`: undefined"
           class="w-full"
         >
-          Open in wallet
+          {{ t('landing.sectionReceive.buttonOpenInWallet') }}
         </ButtonDefault>
       </div>
       <div class="text-center text-xs px-10 mb-5">
         <CopyToClipboard
           :text="lnurl"
           label="Copy LNURL to clipboard"
-          class="text-center inline-block no-underline font-normal"
+          class="text-center inline-block no-underline font-normal min-h-[3rem]"
         >
           <template #default>
             <span class="font-normal">
-              You can also
-              <br>
-              <strong class="underline hover:no-underline">copy the LNURL to your clipboard</strong>
-              <br>
-              to paste it into your wallet app.
+              <I18nT keypath="landing.sectionReceive.copyToClipboard.beforeCopy">
+                <template #action>
+                  <br>
+                  <strong class="underline hover:no-underline">{{ t('landing.sectionReceive.copyToClipboard.beforeCopyAction') }}</strong>
+                  <br>
+                </template>
+              </I18nT>
             </span>
           </template>
           <template #success>
-            <strong>Copied successfully.</strong>
+            <strong>{{ t('landing.sectionReceive.copyToClipboard.afterCopySuccess') }}</strong>
             <br>
-            Paste it into
-            <br>
-            your wallet app now :)
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="sanitizeI18n(t('landing.sectionReceive.copyToClipboard.afterCopyNextStep'))" />
           </template>
         </CopyToClipboard>
       </div>
     </div>
     <div class="my-10">
       <HeadlineDefault level="h2">
-        <span v-if="amount != null">3. </span>Use your bitcoin
+        <span v-if="amount != null">3. </span>{{ t('landing.sectionUse.headline') }}
       </HeadlineDefault>
       <ParagraphDefault>
-        You can now
-        spend your bitcoin at a store or on a website that accepts bitcoin,
-        transfer them to your friend's or colleague's Lightning wallet,
-        or just hodl them.
+        {{ t('landing.sectionUse.message') }}
       </ParagraphDefault>
       <ParagraphDefault>
-        Here are a few websites where you can pay with bitcoin via Lightning:
+        {{ t('landing.sectionUse.examplesIntro') }}:
       </ParagraphDefault>
       <ul class="list-disc pl-6">
         <li class="my-1">
-          Buy some organic sustainable Granola:<br>
+          {{ t('landing.sectionUse.examples.saltNDaisy') }}:<br>
           <LinkDefault href="https://saltndaisy.at/" />
         </li>
         <li class="my-1">
-          Play a round of roulette:<br>
+          {{ t('landing.sectionUse.examples.roulette') }}:<br>
           <LinkDefault href="https://lightning-roulette.com/" />
         </li>
         <li class="my-1">
-          Find out what else you could do:<br>
+          {{ t('landing.sectionUse.examples.other') }}:<br>
           <LinkDefault href="https://lightningnetworkstores.com/" />
         </li>
       </ul>
@@ -195,12 +201,14 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n, Translation as I18nT } from 'vue-i18n'
 import axios from 'axios'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'
+import sanitizeI18n from '@/modules/sanitizeI18n'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -208,6 +216,8 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import AnimatedCheckmark from '../components/AnimatedCheckmark.vue'
 import CopyToClipboard from '../components/CopyToClipboard.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
+
+const { t } = useI18n()
 
 const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined>(undefined)
