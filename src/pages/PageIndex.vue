@@ -13,7 +13,7 @@
           :to="{ name: 'codes' }"
           class="underline"
         >
-          Create your QR-Codes
+          {{ t('index.buttonCreate') }}
         </RouterLink>
       </p>
     </div>
@@ -21,7 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink } from 'vue-router' 
+import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+
+const { t } = useI18n()
 </script>

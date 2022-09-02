@@ -178,7 +178,7 @@
         {{ t('landing.sectionUse.message') }}
       </ParagraphDefault>
       <ParagraphDefault>
-        {{ t('landing.sectionUse.examplesIntro') }}:
+        {{ t('landing.sectionUse.examplesIntro') }}
       </ParagraphDefault>
       <ul class="list-disc pl-6">
         <li class="my-1">

@@ -62,6 +62,13 @@ const messages = {
         },
       },
     },
+    index: {
+      buttonCreate: 'Create your QR codes',
+    },
+    codes: {
+      buttonCreate: 'Create codes',
+      labelEnterWithdrawId: 'Enter your LNURLw withdraw ID',
+    },
   },
   de: {
     landing: {
@@ -87,13 +94,49 @@ const messages = {
         },
       },
       sectionWallet: {
-        headline: 'Installiere dir eine Wallet',
+        headline: 'Installiere eine Wallet',
         explanation: 'Um Bitcoin empfangen, speichern und ausgeben zu können, benötigst du eine <strong>Lightning wallet</strong>.<br>Für den alltäglichen Gebrauch und kleine Beträge ist eine Smartphone-App am bequemsten.',
         recommendation: 'Zum Einstieg empfehlen wir die {walletOfSatoshi}.',
         button: 'Wallet of Satoshi herunterladen',
         other: 'Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.',
         otherFootnote: '* die mit LNURL kompatibel ist',
       },
+      sectionReceive: {
+        headline: 'Hol dir deine Bitcoin',
+        statusNormal: {
+          explanation: 'Sobald deine Wallet installiert ist,',
+          step1: '<strong>drücke</strong> auf den QR-Code unten, oder',
+          step2: '<strong>scanne</strong> den QR-Code auf deiner Tip Card erneut<br>(mit deiner Wallet app)',
+        },
+        statusReceived: {
+          congrats: 'Gratulation!',
+          message: 'Die Bitcoin wurden soeben in deine Wallet übertragen.',
+        },
+        buttonOpenInWallet: 'In der Wallet öffnen',
+        copyToClipboard: {
+          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopyAction: 'die LNURL auch kopieren',
+          afterCopySuccess: 'Erfolgreich kopiert.',
+          afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
+        },
+      },
+      sectionUse: {
+        headline: 'Verwende deine Bitcoin',
+        message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akteptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder Kollegen. Oder du hodlst sie einfach.',
+        examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
+        examples: {
+          saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
+          roulette: 'Spiel eine Runde Roulette',
+          other: 'Finde heraus, was du sonst noch machen kannst',
+        },
+      },
+    },
+    index: {
+      buttonCreate: 'Erstelle deine QR-Codes',
+    },
+    codes: {
+      buttonCreate: 'QR-Codes erstellen',
+      labelEnterWithdrawId: 'Gib deine LNURLw withdraw ID ein',
     },
   },
 }

@@ -4,7 +4,7 @@
     class="min-h-screen grid place-items-center text-center"
   >
     <div>
-      Enter your LNURLw withdraw ID<br>
+      {{ t('codes.labelEnterWithdrawId') }}<br>
 
       <div class="m-5 text-center">
         <form
@@ -18,7 +18,7 @@
           <ButtonDefault
             type="submit"
           >
-            Create Codes
+            {{ t('codes.buttonCreate') }}
           </ButtonDefault>
         </form>
       </div>
@@ -194,6 +194,7 @@ import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import sanitizeHtml from 'sanitize-html'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
+import { useI18n } from 'vue-i18n'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'
@@ -207,6 +208,7 @@ import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const cards = ref<Record<string, string>[]>([])
 const withdrawId = ref<string | undefined>(undefined)
