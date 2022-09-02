@@ -23,7 +23,13 @@
         </form>
       </div>
 
-      <small>(Needs to be from <LinkDefault :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</LinkDefault>)</small>
+      <small>
+        <I18nT keypath="codes.hintLnbits">
+          <template #lnbitsLink>
+            <LinkDefault :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</LinkDefault>
+          </template>
+        </I18nT>
+      </small>
       <p
         v-if="userErrorMessage != null"
         class="text-red-500 text-align-center"
@@ -194,7 +200,7 @@ import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import sanitizeHtml from 'sanitize-html'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
-import { useI18n } from 'vue-i18n'
+import { useI18n, Translation as I18nT } from 'vue-i18n'
 
 import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'

@@ -68,6 +68,7 @@ const messages = {
     codes: {
       buttonCreate: 'Create codes',
       labelEnterWithdrawId: 'Enter your LNURLw withdraw ID',
+      hintLnbits: '(Needs to be from {lnbitsLink})',
     },
   },
   de: {
@@ -137,6 +138,7 @@ const messages = {
     codes: {
       buttonCreate: 'QR-Codes erstellen',
       labelEnterWithdrawId: 'Gib deine LNURLw withdraw ID ein',
+      hintLnbits: '(Muss von {lnbitsLink} sein)',
     },
   },
 }
