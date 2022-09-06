@@ -41,6 +41,7 @@ stages:
   rules:
     - if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
       when: never
+    - when: on_success
 
 # ------------- STAGE SETUP
 setup:
