@@ -97,8 +97,7 @@ frontend-build:
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist $DEPLOY_PATH/dist-www"
 
 frontend-deploy-develop:
-  extends:
-  - .deploy_config
+  extends: .frontend-deploy_config
   environment:
     name: develop
   rules:
@@ -107,8 +106,7 @@ frontend-deploy-develop:
     - !reference [.base_config, rules] # Reference is needed, because the rules "array" is not merged with extends
 
 frontend-deploy-main:
-  extends:
-  - .deploy_config
+  extends: .frontend-deploy_config
   environment:
     name: main
   rules:
