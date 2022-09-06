@@ -26,7 +26,7 @@
 # ------------- STAGE SETUP
 frontend-setup:
   stage: setup
-  extends: frontend-base_config
+  extends: .frontend-base_config
   cache:
     policy: pull-push # Upload the cache after it's done
   script:
