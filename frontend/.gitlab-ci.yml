@@ -1,157 +1,92 @@
-# ------------- INFO
-# Cache is deleted after completion of the pipeline which means: ⚠️ THIS PIPELINE CANNOT RUN TWICE
-
-# ------------- SETUP
-# - DEPLOY_SERVER_MAIN
-# - DEPLOY_SERVER_DEVELOP
-# - DEPLOY_USER
-# - DEPLOY_USER_SSH_KEY # can be found in sate access
-# - DEPLOY_PATH_MAIN
-# - DEPLOY_PATH_DEVELOP
-
-# needed Variables in Gitlab
+# ------------- VARIABLES
+# configure them in https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/-/settings/ci_cd
+# - FRONTEND_DEPLOY_SERVER_MAIN
+# - FRONTEND_DEPLOY_SERVER_DEVELOP
+# - FRONTEND_DEPLOY_PATH_MAIN
+# - FRONTEND_DEPLOY_PATH_DEVELOP
 # - TEST_ORIGIN_MAIN
 # - TEST_ORIGIN_DEVELOP
 
-# ------------- PIPELINE
-# Current Node Version on BFR Review Server
-image: node:16.14-alpine
-
-# List of stages for jobs, and their order of execution
-stages:
-  - setup
-  - test
-  - deploy
-  - cleanup
-  - integration
-
 # ------------- BASE CONFIG OF THE JOBS
-# Define a hidden job to be used with extends
-# 1) Key for the cache is current package-lock.json
-#    Cache is deleted after completion of the pipeline which means: ⚠️ THIS PIPELINE CANNOT RUN TWICE
-#    Better than default to avoid activating cache for all jobs
-# 2) Globally define only run on main & develop and NOT on schedule
-.base_config:
-  rules:
-    ### Sources
-    # push   For pipelines triggered by a git push event, including for branches and tags.
-    # web    For pipelines created by using Run pipeline button in the GitLab UI, from the project’s CI/CD > Pipelines section.
-    - if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
-      when: never
-    - when: on_success
+.frontend-base_config:
+  extends: .base_config
   cache:
-    key:
-      files:
-        - package-lock.json
+    key: "frontend-$CI_COMMIT_REF_SLUG"
     paths:
-      - .npm/
-      - node_modules/
-    # only pull the cache (that will be setup by the "setup-job")
-    policy: pull
-
-# Branches which have an deploy environment
-.deployable_branches_rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
-      when: never
+      - frontend/.npm
+      - frontend/node_modules
 
 # Create Artifact with current ref or tag name (using the slug)
-.artifacts_config:
+.frontend-artifacts_config:
   artifacts:
-    name: "$CI_COMMIT_REF_SLUG"
+    name: "frontend-$CI_COMMIT_REF_SLUG"
     paths: 
-      - "dist"
+      - dist
 
 # ------------- STAGE SETUP
-
-setup-job:
+frontend-setup:
   stage: setup
-  script:
-    - npm ci --cache .npm --prefer-offline
-  extends: .base_config
-  # Upload the cache after it's done
+  extends: frontend-base_config
   cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-      - node_modules/
-    policy: pull-push
+    policy: pull-push # Upload the cache after it's done
+  script:
+    - cd frontend
+    - npm ci --cache .npm --prefer-offline
 
 # ------------- STAGE TEST
-
-audit-job:
+frontend-audit:
   stage: test
-  extends: .base_config
+  extends: .frontend-base_config
   script:
+    - cd frontend
     - npm audit
 
-lint-job:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run lint
-
-unit-test-job:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run test-units
-
 # ------------- STAGE DEPLOY (& BUILD)
-
-build-job:
+frontend-build:
   stage: deploy
   extends:
-    - .base_config
-    - .artifacts_config
+    - .frontend-base_config
+    - .frontend-artifacts_config
   script:
-    - npm run build   
+    - cd frontend
+    - npm run build
 
-
-.deploy_config:
+.frontend-deploy_config:
   image: alpine  
   stage: deploy
-  needs: [build-job]
+  needs: [frontend-build]
   variables:
     NODE_ENV: production  
   extends:
-    - .base_config
-    - .artifacts_config
-
-  # Disable Cache
-  cache: {}
-
+    - .frontend-base_config
+    - .frontend-artifacts_config
+  cache: {} # Disable Cache
   before_script:
+    - cd frontend
     - apk update && apk add openssh-client rsync
     - mkdir ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
     - cat ~/.ssh/config
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -  
-    # Check if ssh key was added
-    # - ssh-agent /bin/sh
-    # - ssh-add -l
-
   script:
     - |  
       if [ "$CI_COMMIT_BRANCH" == "main" ]
       then 
         echo "Deploying on Environment Main"
-        export DEPLOY_SERVER=$DEPLOY_SERVER_MAIN
-        export DEPLOY_PATH=$DEPLOY_PATH_MAIN
+        export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_MAIN
+        export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_MAIN
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]
       then
         echo "Deploying on Environment Develop"
-        export DEPLOY_SERVER=$DEPLOY_SERVER_DEVELOP
-        export DEPLOY_PATH=$DEPLOY_PATH_DEVELOP
+        export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_DEVELOP
+        export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_DEVELOP
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
-        # Safety if another branch accedently triggers this job
         exit 1
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
+    - cd frontend
     # 1) RSYNC Dist
     - rsync -atv --delete --progress ./dist $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
     # 2) Remove old dist-previous dir
@@ -161,9 +96,7 @@ build-job:
     # 4) Make new dist available
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist $DEPLOY_PATH/dist-www"
 
-
-
-deploy-develop-job:
+frontend-deploy-develop:
   extends:
   - .deploy_config
   environment:
@@ -173,7 +106,7 @@ deploy-develop-job:
       when: never
     - !reference [.base_config, rules] # Reference is needed, because the rules "array" is not merged with extends
 
-deploy-main-job:
+frontend-deploy-main:
   extends:
   - .deploy_config
   environment:
@@ -184,31 +117,24 @@ deploy-main-job:
     - !reference [.base_config, rules] # Reference is needed, because the rules "array" is not merged with extends
 
 # ------------- STAGE CLEANUP
-
-cleanup-job:
+frontend-cleanup:
   image: alpine
   stage: cleanup
-  extends: .base_config 
+  extends: .frontend-base_config 
   script:
     - echo "Cleaning up the cache"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
   when: on_success
 
 # ------------- STAGE INTEGRATION
-
-integration-test-job:
+frontend-test-integration:
   stage: integration
-
   services:
     - name: selenium/standalone-chrome
       alias: selenium-chrome
-
-  # Disable Cache
-  cache: {}
-
+  cache: {} # Disable Cache
   variables:
     NODE_ENV: test
-
   rules:
     - !reference [.deployable_branches_rules, rules]
     # Exclude other schedules
@@ -218,7 +144,6 @@ integration-test-job:
     - if: $CI_PIPELINE_SOURCE == 'web' || $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'schedule'
       when: on_success
     - when: never
-
   script:
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]
@@ -231,9 +156,9 @@ integration-test-job:
         echo "TEST_ORIGIN=$TEST_ORIGIN_DEVELOP" > .env.test.local
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
-        # Safety if another branch accedently triggers this job
         exit 1
       fi
     - echo "Running Intergration Test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
+    - cd frontend
     - npm ci --include=dev
     - npm run test-integration

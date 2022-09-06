@@ -1,90 +1,47 @@
-# ------------- INFO
-# Cache is deleted after completion of the pipeline which means: ⚠️ THIS PIPELINE CANNOT RUN TWICE
-
-# ------------- SETUP
-# - DEPLOY_SERVER_MAIN
-# - DEPLOY_SERVER_DEVELOP
-# - DEPLOY_USER
-# - DEPLOY_USER_SSH_KEY # can be found in sate access
-# - DEPLOY_PATH_MAIN
-# - DEPLOY_PATH_DEVELOP
+# ------------- VARIABLES
+# configure them in https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/-/settings/ci_cd
+# - BACKEND_DEPLOY_SERVER_MAIN
+# - BACKEND_DEPLOY_SERVER_DEVELOP
+# - BACKEND_DEPLOY_PATH_MAIN
+# - BACKEND_DEPLOY_PATH_DEVELOP
 # - PM2_APP_NAME_MAIN # used to identifiy in ecosystem.config.js
 # - PM2_APP_NAME_DEVELOP # used to identifiy in ecosystem.config.js
 # - ENV_FILE_MAIN
 # - ENV_FILE_DEVELOP
 
-# ------------- PIPELINE
-# Current Node Version on BFR Review Server
-image: node:16.14-alpine
-
-# List of stages for jobs, and their order of execution
-stages:
-  - setup
-  - install
-  - test
-  - deploy
-  - cleanup
-  - integration
-
-  # ------------- BASE CONFIG OF THE JOBS
-# Define a hidden job to be used with extends
-# 1) Key for the cache is current package-lock.json
-#    Cache is deleted after completion of the pipeline which means: ⚠️ THIS PIPELINE CANNOT RUN TWICE
-#    Better than default to avoid activating cache for all jobs
-# 2) Globally define only run on main & develop and NOT on schedule
-.base_config:
-  rules:
-    ### Sources
-    # push   For pipelines triggered by a git push event, including for branches and tags.
-    # web    For pipelines created by using Run pipeline button in the GitLab UI, from the project’s CI/CD > Pipelines section.
-    - if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
-      when: never
-    - when: on_success
+# ------------- BASE CONFIG OF THE JOBS
+.backend-base_config:
+  extends: .base_config
   cache:
-    key:
-      files:
-        - package-lock.json
+    key: "backend-$CI_COMMIT_REF_SLUG"
     paths:
-      - .npm
-      - node_modules
-      - .env
-      - ecosystem.config.js
-    # only pull the cache (that will be setup by the "setup-job")
-    policy: pull
+      - backend/node_modules
+      - backend/.env
+      - backend/ecosystem.config.js
 
 # Create Artifact with current ref or tag name (using the slug)
-.artifacts_config:
+.backend-artifacts_config:
   artifacts:
-    name: "$CI_COMMIT_REF_SLUG"
+    name: "backend-$CI_COMMIT_REF_SLUG"
     paths:
       - build
       - node_modules
       - .env
       - ecosystem.config.js
 
-# Branches which have an deploy environment
-.deployable_branches_rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
-      when: never
-
 # ------------- STAGE SETUP
-
-env-create-job:
-  image: alpine
+backend-setup-env:
   stage: setup
-  extends: .base_config
-  rules:
-    - !reference [.deployable_branches_rules, rules]
-    - !reference [.base_config, rules]
-
-  # Upload the cache after it's done
+  extends:
+    - .backend-base_config
+    - .deployable_branches_rules
   cache:
-    policy: pull-push
+    policy: pull-push # Upload the cache after it's done
   script:
     # get the .env variables for the environment
     - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$ENV_FILE_MAIN; fi
     - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$ENV_FILE_DEVELOP; fi
+    - cd backend
     - |
       # Check if env file exists
       if [ -f "$ENV_FILE" ]; then
@@ -115,86 +72,74 @@ env-create-job:
         fi	
       done
 
-# ------------- STAGE INSTALL
-
-npm-ci-job:
-  stage: install
-  extends: .base_config
-  # Upload the cache after it's done
+backend-setup-npm:
+  stage: setup
+  extends: .backend-base_config
   cache:
-    policy: pull-push
+    policy: pull-push # Upload the cache after it's done
   script:
+    - cd backend
     - npm ci
 
 # ------------- STAGE TEST
-
-audit-job:
+backend-audit:
   stage: test
-  extends: .base_config
+  extends: .backend-base_config
   script:
+    - cd backend
     - npm audit
 
-unit-test-job:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run test-units
-
 # ------------- STAGE DEPLOY (& BUILD)
-
-build-job:
+backend-build:
   stage: deploy
   extends:
-    - .base_config
-    - .artifacts_config
+    - .backend-base_config
+    - .backend-artifacts_config
   script:
+    - cd backend
     - npm run build
 
-
-.deploy_config:
+.backend-deploy_config:
   image: alpine
   stage: deploy
-  needs: [build-job]
+  needs: [backend-build]
   variables:
     NODE_ENV: production
     GIT_STRATEGY: none
   extends:
-    - .base_config
-    - .artifacts_config
-
-  # Disable Cache
-  cache: {}
-
+    - .backend-base_config
+    - .backend-artifacts_config
+  cache: {} # Disable Cache
   before_script:
+    - cd backend
     - apk update && apk add openssh-client rsync
     - mkdir ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
     - cat ~/.ssh/config
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
-
   script:
-    - |  
+    - | 
       if [ "$CI_COMMIT_BRANCH" == "main" ]
       then 
         echo "Deploying on Environment Main"
-        export DEPLOY_SERVER=$DEPLOY_SERVER_MAIN
-        export DEPLOY_PATH=$DEPLOY_PATH_MAIN
+        export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_MAIN
+        export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_MAIN
         export PM2_APP_NAME=$PM2_APP_NAME_MAIN
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]
       then
         echo "Deploying on Environment Develop"
-        export DEPLOY_SERVER=$DEPLOY_SERVER_DEVELOP
-        export DEPLOY_PATH=$DEPLOY_PATH_DEVELOP
+        export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_DEVELOP
+        export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_DEVELOP
         export PM2_APP_NAME=$PM2_APP_NAME_DEVELOP
       else
-        # Safety if another branch accedently triggers this job
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
+    - cd backend
     # RSYNC Dist
-    - rsync -atv --delete --progress  ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-next
+    - rsync -atv --delete --progress ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-next
     - | 
       ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
       
@@ -227,48 +172,40 @@ build-job:
       
       EOT
 
-deploy-develop-job:
-  extends:
-  - .deploy_config
+backend-deploy-develop:
+  extends: .backend-deploy_config
   environment:
     name: develop
   rules:
     - if: $CI_COMMIT_BRANCH != 'develop'
       when: never
-    - !reference [.base_config, rules]
+    - !reference [.backend-base_config, rules]
 
-deploy-main-job:
-  extends:
-  - .deploy_config
+backend-deploy-main:
+  extends: .backend-deploy_config
   environment:
     name: main
   rules:
     - if: $CI_COMMIT_BRANCH != 'main'
       when: never
-    - !reference [.base_config, rules]
+    - !reference [.backend-base_config, rules]
 
 # ------------- STAGE CLEANUP
-
-cleanup-job:
+backend-cleanup:
   image: alpine
   stage: cleanup
-  extends: .base_config
+  extends: .backend-base_config
   script:
     - echo "Cleaning up the cache"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
   when: on_success
 
-  # ------------- STAGE INTEGRATION
-
-integration-test-job:
+# ------------- STAGE INTEGRATION
+backend-test-integration:
   stage: integration
-
-  # Disable Cache
-  cache: {}
-
+  cache: {} # Disable Cache
   variables:
     NODE_ENV: test
-
   rules:
     - !reference [.deployable_branches_rules, rules]
     # Exclude other schedules
@@ -278,7 +215,6 @@ integration-test-job:
     - if: $CI_PIPELINE_SOURCE == 'web' || $CI_PIPELINE_SOURCE == 'push' || $CI_PIPELINE_SOURCE == 'schedule'
       when: on_success
     - when: never
-
   script:
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]
@@ -291,11 +227,12 @@ integration-test-job:
         export ENV_FILE=$ENV_FILE_DEVELOP
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
-        # Safety if another branch accedently triggers this job
         exit 1
       fi
       
-      # Check if env file exists
+    # Check if env file exists
+    - cd backend
+    - |
       if [ -f "$ENV_FILE" ]; then
         cp $ENV_FILE .env
       else
