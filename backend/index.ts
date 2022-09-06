@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import 'dotenv/config'
-import { Socket } from 'net'
-import http from 'http'
+import type { Socket } from 'net'
+import type http from 'http'
 
 import app from './src/app'
 import { EXPRESS_PORT } from './src/constants'

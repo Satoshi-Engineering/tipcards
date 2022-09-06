@@ -3,9 +3,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   testPathIgnorePatterns : [
+    '.nuxt',
+    '.output',
     'node_modules',
-    '<rootDir>/backend/build',
-    '<rootDir>/frontend/dist',
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

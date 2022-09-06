@@ -12,6 +12,7 @@ node_modules
 dist
 dist-ssr
 dist-www
+build
 coverage
 *.local
 

@@ -1,11 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": [
-    "backend/index.ts",
-    "env.d.ts",
-    "src/**/*",
-    "src/**/*.vue"
-  ],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -18,9 +13,10 @@
       "./node_modules/@types"
     ]
   },
+
   "references": [
     {
-      "path": "frontend/tsconfig.vite-config.json"
+      "path": "./tsconfig.vite-config.json"
     }
   ]
 }

@@ -1,7 +1,10 @@
 {
-  "name": "lightning-tip-cards",
+  "name": "frontend",
   "version": "2.0.0",
   "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --port 5050",
     "typecheck": "vue-tsc --noEmit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "test": "NODE_ENV=test jest",
@@ -9,25 +12,47 @@
     "test-units": "jest tests/units",
     "test-integration": "jest tests/integration"
   },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bootstrap-icons": "^1.8.3",
+    "canvg": "^4.0.1",
+    "file-saver": "^2.0.5",
+    "js-lnurl": "^0.3.0",
+    "jszip": "^3.10.1",
+    "pinia": "^2.0.14",
+    "qrcode-svg": "^1.1.0",
+    "sanitize-html": "^2.7.1",
+    "vue": "^3.2.37",
+    "vue-i18n": "^9.2.2",
+    "vue-router": "^4.1.1"
+  },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/chromedriver": "^81.0.1",
+    "@types/file-saver": "^2.0.5",
     "@types/jest": "^28.1.4",
     "@types/node": "^18.0.3",
+    "@types/qrcode-svg": "^1.1.1",
+    "@types/sanitize-html": "^2.6.2",
     "@types/selenium-webdriver": "^4.1.1",
+    "@vitejs/plugin-vue": "^2.3.3",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/tsconfig": "^0.1.3",
+    "autoprefixer": "^10.4.7",
     "chromedriver": "^103.0.0",
     "dotenv": "^16.0.1",
-    "eslint": "^8.23.0",
+    "eslint": "^8.19.0",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-vue": "^9.2.0",
     "jest": "^28.1.3",
     "jest-environment-jsdom": "^28.1.2",
+    "postcss": "^8.4.14",
     "selenium-webdriver": "^4.3.1",
+    "tailwindcss": "^3.1.4",
     "ts-jest": "^28.0.5",
     "typescript": "~4.7.4",
-    "vue-tsc": "^0.40.9"
+    "vite": "^2.9.13",
+    "vue-tsc": "^0.38.3"
   }
 }
