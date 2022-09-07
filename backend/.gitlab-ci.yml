@@ -139,7 +139,7 @@ backend-build:
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     - cd backend
     # RSYNC Dist
-    - rsync -atv --delete --progress ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-next
+    - rsync -atv --delete --progress ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
     - | 
       ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
       
@@ -152,16 +152,16 @@ backend-build:
         echo "No $DEPLOY_PATH/dist-node dir found, skipping pm2 delete"
       fi
 
-      # 2) Remove old dist-previous dir
-      rm -rf $DEPLOY_PATH/dist-previous
+      # 2) Remove old dist-node-previous dir
+      rm -rf $DEPLOY_PATH/dist-node-previous
 
       # 3) Save current dist to previous
       if [ -d $DEPLOY_PATH/dist-node ]; then
-        mv $DEPLOY_PATH/dist-node $DEPLOY_PATH/dist-previous
+        mv $DEPLOY_PATH/dist-node $DEPLOY_PATH/dist-node-previous
       fi
 
       # 4) Make new dist available
-      mv $DEPLOY_PATH/dist-next $DEPLOY_PATH/dist-node
+      mv $DEPLOY_PATH/dist-node-next $DEPLOY_PATH/dist-node
 
       # 5) Start pm2
       cd $DEPLOY_PATH/dist-node      

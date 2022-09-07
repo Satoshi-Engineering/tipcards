@@ -88,13 +88,14 @@ frontend-build:
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     - cd frontend
     # 1) RSYNC Dist
-    - rsync -atv --delete --progress ./dist $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
-    # 2) Remove old dist-previous dir
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-previous"
+    - mv dist dist-www-next
+    - rsync -atv --delete --progress ./dist-www-next $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
+    # 2) Remove old dist-www-previous dir
+    - ssh $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-www-previous"
     # 3) Save current dist to previous
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "if [ -d $DEPLOY_PATH/dist-www ]; then mv $DEPLOY_PATH/dist-www $DEPLOY_PATH/dist-previous; fi"
+    - ssh $DEPLOY_USER@$DEPLOY_SERVER "if [ -d $DEPLOY_PATH/dist-www ]; then mv $DEPLOY_PATH/dist-www $DEPLOY_PATH/dist-www-previous; fi"
     # 4) Make new dist available
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist $DEPLOY_PATH/dist-www"
+    - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist-www-next $DEPLOY_PATH/dist-www"
 
 frontend-deploy-develop:
   extends: .frontend-deploy_config
