@@ -9,7 +9,7 @@ module.exports = {
       },
     },
     {
-      name: 'backend-develop',
+      name: 'lightning-tip-cards-backend-develop',
       script: './build/index.js',
       env: {
       },
