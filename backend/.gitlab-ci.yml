@@ -102,11 +102,9 @@ backend-build:
     - .backend-artifacts_config
   cache: {} # Disable Cache
   before_script:
-    - cd backend
     - apk update && apk add openssh-client rsync
     - mkdir ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
-    - cat ~/.ssh/config
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
   script:
