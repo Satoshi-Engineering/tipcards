@@ -1,13 +1,13 @@
 ## Setup
 
 Make sure to install the dependencies
-
 ```bash
 npm install
+cd frontend && npm install && cd ..
+cd backend && npm install && cd ..
 ```
 
 Configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
-
 ```bash
 git config core.hooksPath .githooks
 ```
@@ -29,18 +29,20 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 * Search for `typescript`
 * Disable "TypeScript and JavaScript Language Support" for Workspace only
 
+
 ## Development
 
-Start the development server on http://localhost:3000
-
+Start the frontend server on http://localhost:3000
 ```bash
-npm run dev
+cd frontend && npm run dev
 ```
+
+Start the backend server on http://localhost:4000
+```bash
+cd backend && npm run dev
+```
+
 
 ## Production
 
-Build the application for production:
-
-```bash
-npm run build
-```
+Deployment is done via Gitlab CI/CD, see .gitlab-ci.yml
