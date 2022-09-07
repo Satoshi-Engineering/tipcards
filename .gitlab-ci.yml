@@ -33,8 +33,8 @@ stages:
     key: $CI_COMMIT_REF_SLUG
     policy: pull # only pull the cache
     paths:
-      - frontend/.npm
-      - frontend/node_modules
+      - .npm
+      - node_modules
 
 # Branches which have a deploy environment.
 .deployable_branches_rules:
