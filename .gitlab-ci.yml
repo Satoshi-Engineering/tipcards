@@ -35,6 +35,11 @@ stages:
     paths:
       - .npm
       - node_modules
+      - backend/node_modules
+      - backend/.env
+      - backend/ecosystem.config.js
+      - frontend/.npm
+      - frontend/node_modules
 
 # Branches which have a deploy environment.
 .deployable_branches_rules:

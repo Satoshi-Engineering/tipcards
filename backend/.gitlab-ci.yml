@@ -10,30 +10,21 @@
 # - ENV_FILE_DEVELOP
 
 # ------------- BASE CONFIG OF THE JOBS
-.backend-base_config:
-  extends: .base_config
-  cache:
-    key: "backend-$CI_COMMIT_REF_SLUG"
-    paths:
-      - backend/node_modules
-      - backend/.env
-      - backend/ecosystem.config.js
-
 # Create Artifact with current ref or tag name (using the slug)
 .backend-artifacts_config:
   artifacts:
     name: "backend-$CI_COMMIT_REF_SLUG"
     paths:
-      - build
-      - node_modules
-      - .env
-      - ecosystem.config.js
+      - backend/build
+      - backend/node_modules
+      - backend/.env
+      - backend/ecosystem.config.js
 
 # ------------- STAGE SETUP
 backend-setup-env:
   stage: setup
   extends:
-    - .backend-base_config
+    - .base_config
     - .deployable_branches_rules
   cache:
     policy: pull-push # Upload the cache after it's done
@@ -74,7 +65,7 @@ backend-setup-env:
 
 backend-setup-npm:
   stage: setup
-  extends: .backend-base_config
+  extends: .base_config
   cache:
     policy: pull-push # Upload the cache after it's done
   script:
@@ -84,7 +75,7 @@ backend-setup-npm:
 # ------------- STAGE TEST
 backend-audit:
   stage: test
-  extends: .backend-base_config
+  extends: .base_config
   script:
     - cd backend
     - npm audit
@@ -93,7 +84,7 @@ backend-audit:
 backend-build:
   stage: deploy
   extends:
-    - .backend-base_config
+    - .base_config
     - .backend-artifacts_config
   script:
     - cd backend
@@ -107,7 +98,7 @@ backend-build:
     NODE_ENV: production
     GIT_STRATEGY: none
   extends:
-    - .backend-base_config
+    - .base_config
     - .backend-artifacts_config
   cache: {} # Disable Cache
   before_script:
@@ -179,7 +170,7 @@ backend-deploy-develop:
   rules:
     - if: $CI_COMMIT_BRANCH != 'develop'
       when: never
-    - !reference [.backend-base_config, rules]
+    - !reference [.base_config, rules]
 
 backend-deploy-main:
   extends: .backend-deploy_config
@@ -188,13 +179,13 @@ backend-deploy-main:
   rules:
     - if: $CI_COMMIT_BRANCH != 'main'
       when: never
-    - !reference [.backend-base_config, rules]
+    - !reference [.base_config, rules]
 
 # ------------- STAGE CLEANUP
 backend-cleanup:
   image: alpine
   stage: cleanup
-  extends: .backend-base_config
+  extends: .base_config
   script:
     - echo "Cleaning up the cache"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"

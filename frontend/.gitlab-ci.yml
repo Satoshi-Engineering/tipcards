@@ -8,25 +8,17 @@
 # - TEST_ORIGIN_DEVELOP
 
 # ------------- BASE CONFIG OF THE JOBS
-.frontend-base_config:
-  extends: .base_config
-  cache:
-    key: "frontend-$CI_COMMIT_REF_SLUG"
-    paths:
-      - frontend/.npm
-      - frontend/node_modules
-
 # Create Artifact with current ref or tag name (using the slug)
 .frontend-artifacts_config:
   artifacts:
     name: "frontend-$CI_COMMIT_REF_SLUG"
     paths: 
-      - dist
+      - frontend/dist
 
 # ------------- STAGE SETUP
 frontend-setup:
   stage: setup
-  extends: .frontend-base_config
+  extends: .base_config
   cache:
     policy: pull-push # Upload the cache after it's done
   script:
@@ -36,7 +28,7 @@ frontend-setup:
 # ------------- STAGE TEST
 frontend-audit:
   stage: test
-  extends: .frontend-base_config
+  extends: .base_config
   script:
     - cd frontend
     - npm audit
@@ -45,7 +37,7 @@ frontend-audit:
 frontend-build:
   stage: deploy
   extends:
-    - .frontend-base_config
+    - .base_config
     - .frontend-artifacts_config
   script:
     - cd frontend
@@ -58,7 +50,7 @@ frontend-build:
   variables:
     NODE_ENV: production  
   extends:
-    - .frontend-base_config
+    - .base_config
     - .frontend-artifacts_config
   cache: {} # Disable Cache
   before_script:
@@ -119,7 +111,7 @@ frontend-deploy-main:
 frontend-cleanup:
   image: alpine
   stage: cleanup
-  extends: .frontend-base_config 
+  extends: .base_config 
   script:
     - echo "Cleaning up the cache"
     - rm -rf "%CACHE_PATH%/%CI_PIPELINE_ID%"
