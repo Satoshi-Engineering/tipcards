@@ -134,6 +134,7 @@ frontend-test-integration:
       when: on_success
     - when: never
   script:
+    - cd frontend
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]
       then 
@@ -148,6 +149,5 @@ frontend-test-integration:
         exit 1
       fi
     - echo "Running Intergration Test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
-    - cd frontend
     - npm ci --include=dev
     - npm run test-integration
