@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dummy from './api/dummy'
+import invoice from './api/invoice'
 import lnurl from './api/lnurl'
 import xstAttack from './xstAttack'
 
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(helmet())
 app.use(xstAttack())
 app.use('/api/dummy', dummy)
+app.use('/api/invoice', invoice)
 app.use('/api/lnurl', lnurl)
 
 export default app

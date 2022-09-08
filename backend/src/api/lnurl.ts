@@ -9,9 +9,6 @@ import axios from 'axios'
 
 const router = express.Router()
 
-////////////////
-//////// CARDS
-////
 router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
   let card: Card | null = null
   try {
@@ -25,7 +22,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     console.error(error)
     return
   }
-  if (card == null) {
+  if (card?.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
       reason: 'This LNURL has not been funded yet. Go to https://tipcards.sate.tools/landing/?lightning=<LNURL> to fund it.',

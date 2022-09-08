@@ -80,3 +80,16 @@ export const getCardByHash = async (cardHash: string): Promise<Card | null> => {
   const card: Card | null = await client.json.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:data`) as Card | null
   return card
 }
+
+/**
+ * @param card Card
+ * @throws
+ */
+export const createCard = async (card: Card): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
+  if (exists) {
+    throw new Error('Card already exists')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`, '$', card)
+}
