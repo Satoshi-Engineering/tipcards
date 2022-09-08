@@ -70,6 +70,11 @@ const messages = {
       labelEnterWithdrawId: 'Enter your LNURLw withdraw ID',
       hintLnbits: '(Needs to be from {lnbitsLink})',
     },
+    cards: {
+      labelEnterSettings: 'Enter an encoded settings string to load an existing set of cards',
+      buttonLoadCards: 'Load cards',
+      buttonCreateNewCards: 'Create new cards',
+    },
   },
   de: {
     landing: {
