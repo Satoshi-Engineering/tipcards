@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-import type { RedisClientType, RedisModules, RedisFunctions, RedisScripts } from 'redis'
+import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import type { Card } from '../data/Card'
 import { REDIS_BASE_PATH } from '../constants'
@@ -7,7 +7,7 @@ import { REDIS_BASE_PATH } from '../constants'
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 
 type Resolve = (value?: unknown) => void
-let client: RedisClientType<RedisModules, RedisFunctions, RedisScripts> | null
+let client: RedisClientType<RedisDefaultModules, RedisFunctions, RedisScripts> | null
 let connecting = false
 let callbacks: Resolve[] = []
 export const resetClient = () => {
@@ -77,9 +77,6 @@ export const getClient = async () => {
  */
 export const getCardByHash = async (cardHash: string): Promise<Card | null> => {
   const client = await getClient()
-  // client.json is not defined in redis client although it's already available
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const card: Card | null = await client.json.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:data`)
+  const card: Card | null = await client.json.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:data`) as Card | null
   return card
 }
