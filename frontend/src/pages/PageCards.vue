@@ -28,14 +28,6 @@
     >
       {{ userWarning }}
     </div>
-    <div
-      v-if="lnurlDescriptionMessage != null"
-      class="p-2 mb-1"
-    >
-      Description that will be displayed in the wallet app:<br>
-      <strong v-if="lnurlDescriptionMessage !== ''">{{ lnurlDescriptionMessage }}</strong>
-      <span v-else>(empty)</span>
-    </div>
     <div class="p-2 mb-1 max-w-md">
       <label class="block mb-2">
         <span class="block">
@@ -193,12 +185,13 @@ import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
-import { useI18n, Translation as I18nT } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 
 // import { LNURL_ORIGIN } from '@/modules/constants'
 import formatNumber from '@/modules/formatNumber'
 import svgToPng from '@/modules/svgToPng'
-import { encodeLnurl } from '@/modules/lnurlHelpers'
+// import { encodeLnurl } from '../../src/modules/lnurlHelpers'
+import { encodeLnurl } from '../../src/modules/lnurlHelpers'
 import ButtonDefault from '../components/ButtonDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import IconLightning from '../components/svgs/IconLightning.vue'
@@ -212,7 +205,6 @@ const { t } = useI18n()
 const cards = ref<Record<string, string>[]>([])
 const userErrorMessage = ref<string | undefined>(undefined)
 const userWarnings = ref<string[]>([])
-const lnurlDescriptionMessage = ref<string | undefined>(undefined)
 
 type Settings = {
   numberOfCards: number
@@ -220,22 +212,20 @@ type Settings = {
   cardCopytext: string
   cardsQrCodeLogo: string
 }
-
 const initialSettings: Settings = {
   numberOfCards: 10,
   cardHeadline: 'Hey :)',
-  cardCopytext: 'Scan this QR code and learn how to receive\n$$ bitcoin.',
+  cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
   cardsQrCodeLogo: 'bitcoin',
 }
 const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
 const settings = reactive<Settings>(initialSettings)
-const resetSettings = (newSettings: Settings | undefined) => {
+const setSettings = (newSettings: Settings | undefined) => {
   settings.cardCopytext = newSettings && newSettings.cardCopytext || initialSettings.cardCopytext
   settings.cardHeadline = newSettings && newSettings.cardHeadline || initialSettings.cardHeadline
   settings.cardsQrCodeLogo = newSettings && newSettings.cardsQrCodeLogo || initialSettings.cardsQrCodeLogo
   settings.numberOfCards = newSettings && newSettings.numberOfCards || initialSettings.numberOfCards
 }
-
 
 const amount = ref<number | undefined>(undefined)
 const cardsContainer = ref<HTMLElement | undefined>(undefined)
@@ -305,7 +295,7 @@ const urlChanged = () => {
   } catch (e) {
     // do nothing
   }
-  resetSettings(settingsDecoded)
+  setSettings(settingsDecoded)
   repopulateCards()
 }
 
