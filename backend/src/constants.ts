@@ -3,7 +3,7 @@ if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 6
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
 }
 
-let REDIS_BASE_PATH = 'server:develop'
+let REDIS_BASE_PATH = 'tipcards:develop'
 if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PATH.length > 0) {
   REDIS_BASE_PATH = process.env.REDIS_BASE_PATH
 }

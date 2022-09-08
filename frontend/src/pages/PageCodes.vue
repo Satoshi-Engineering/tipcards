@@ -211,6 +211,7 @@ import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import IconLightning from '../components/svgs/IconLightning.vue'
 import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
+import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
 
 const route = useRoute()
 const router = useRouter()
@@ -243,17 +244,7 @@ const load = async () => {
 
   let lnurls: string[]
   try {
-    const response = await axios.get(
-      `${LNURL_ORIGIN}/withdraw/csv/${withdrawId.value}`,
-      {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      },
-    )
-    lnurls = response.data.toLowerCase().match(/,*?((lnurl)([0-9]{1,}[a-z0-9]+){1})/g)
+    lnurls = await loadLnurlsFromLnbitsByWithdrawId(withdrawId.value)
   } catch (error) {
     if (axios.isAxiosError(error)) {
       userErrorMessage.value = (error.response?.data as { detail: string }).detail
