@@ -3,7 +3,8 @@ import express from 'express'
 import { ErrorCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
-import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
+import { TIPCARDS_ORIGIN } from '../constants'
+import { decodeLnurl, getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
 import axios from 'axios'
 
@@ -25,7 +26,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card?.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
-      reason: 'This LNURL has not been funded yet. Go to https://tipcards.sate.tools/landing/?lightning=<LNURL> to fund it.',
+      message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
       code: ErrorCode.CardByHashNotFound,
     })
     return

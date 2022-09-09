@@ -12,3 +12,8 @@ export {
   EXPRESS_PORT,
   REDIS_BASE_PATH,
 }
+
+export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
+export const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
+export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
+export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''

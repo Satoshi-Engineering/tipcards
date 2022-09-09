@@ -16,3 +16,9 @@ export const decodeLnurl = (encoded: string) => {
 
   return Buffer.from(requestByteArray).toString()
 }
+
+export const getLandingPageLinkForCardHash = (origin: string, cardHash: string): string => {
+  const lnurlDecoded = `${origin}/api/lnurl/${cardHash}`
+  const lnurlEncoded = encodeLnurl(lnurlDecoded)
+  return `${origin}/landing/?lightning=${lnurlEncoded}`
+}
