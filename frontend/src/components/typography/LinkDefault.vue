@@ -1,7 +1,8 @@
 <template>
   <RouterLink
     v-if="to != null"
-    class="font-bold underline hover:no-underline break-anywhere"
+    class="underline hover:no-underline break-anywhere"
+    :class="{ 'font-bold': bold }"
     :to="to"
     :target="targetComputed"
   >
@@ -9,7 +10,8 @@
   </RouterLink>
   <a
     v-else-if="href != null"
-    class="font-bold underline hover:no-underline cursor-pointer break-anywhere"
+    class="underline hover:no-underline cursor-pointer break-anywhere"
+    :class="{ 'font-bold': bold }"
     :href="href"
     :target="targetComputed"
     tabindex="0"
@@ -20,7 +22,8 @@
   </a>
   <button
     v-else
-    class="font-bold [text-align:inherit] underline hover:no-underline cursor-pointer appearance-none break-anywhere"
+    class="[text-align:inherit] underline hover:no-underline cursor-pointer appearance-none break-anywhere"
+    :class="{ 'font-bold': bold }"
   >
     <slot />
   </button>
@@ -42,6 +45,10 @@ const props = defineProps({
   to: {
     type: [String, Object] as PropType<RouteLocationRaw>,
     default: undefined,
+  },
+  bold: {
+    type: Boolean,
+    default: true,
   },
 })
 
