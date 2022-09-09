@@ -206,25 +206,24 @@ const cards = ref<Record<string, string>[]>([])
 const userErrorMessage = ref<string | undefined>(undefined)
 const userWarnings = ref<string[]>([])
 
-type Settings = {
-  numberOfCards: number
-  cardHeadline: string
-  cardCopytext: string
-  cardsQrCodeLogo: string
-}
-const initialSettings: Settings = {
+const initialSettings = {
   numberOfCards: 10,
   cardHeadline: 'Hey :)',
   cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
   cardsQrCodeLogo: 'bitcoin',
 }
+type Settings = typeof initialSettings
 const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
 const settings = reactive<Settings>(initialSettings)
 const setSettings = (newSettings: Settings | undefined) => {
-  settings.cardCopytext = newSettings && newSettings.cardCopytext || initialSettings.cardCopytext
-  settings.cardHeadline = newSettings && newSettings.cardHeadline || initialSettings.cardHeadline
-  settings.cardsQrCodeLogo = newSettings && newSettings.cardsQrCodeLogo || initialSettings.cardsQrCodeLogo
-  settings.numberOfCards = newSettings && newSettings.numberOfCards || initialSettings.numberOfCards
+  const settingsKeys = Object.keys(initialSettings) as (keyof Settings)[]
+  settingsKeys.forEach((key) => {
+    if (newSettings == null || newSettings[key] == null) {
+      (settings[key] as string | number) = initialSettings[key]
+      return
+    }
+    (settings[key] as string | number) = newSettings[key]
+  })
 }
 
 const amount = ref<number | undefined>(undefined)
@@ -315,10 +314,10 @@ const downloadZip = async (asPng = false) => {
       if (asPng) {
         fileContent = (await svgToPng({ width: 2000, height: 2000, svg: svgEl.outerHTML }) || 'error')
       }
-      zip.file(`qrCode_${index}_${amount.value}sats_${setId.value}.${fileExtension}`, fileContent)
+      zip.file(`qrCode_${index}_${setId.value}.${fileExtension}`, fileContent)
     }))
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
-  saveAs(zipFileContent, `qrCodes_${amount.value}sats_${setId.value}_${fileExtension}.zip`)
+  saveAs(zipFileContent, `qrCodes_${setId.value}_${fileExtension}.zip`)
 }
 
 const hashSha256 = async (message: string) => {
