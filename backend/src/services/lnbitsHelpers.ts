@@ -39,7 +39,7 @@ export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): P
 
   try {
     const response = await axios.post(`${LNBITS_ORIGIN}/withdraw/api/v1/links`, {
-      title: `card-${card.cardHash}`,
+      title: card.text,
       min_withdrawable: card.invoice.amount,
       max_withdrawable: card.invoice.amount,
       uses: 1,

@@ -1,6 +1,5 @@
 export type Card = {
   cardHash: string, // created via sha256(`${cardSetUuid}/${cardSetIndex}`)
-  headline: string,
   text: string,
   invoice:  {
     amount: number,

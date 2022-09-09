@@ -15,10 +15,9 @@ const router = express.Router()
 router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
   // amount in sats
   let amount: number | undefined = undefined
-  let headline = ''
   let text = ''
   try {
-    ({ amount, headline, text } = req.body)
+    ({ amount, text } = req.body)
   } catch (error) {
     console.error(error)
   }
@@ -99,7 +98,6 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   try {
     await createCard({
       cardHash: req.params.cardHash,
-      headline,
       text,
       invoice:  {
         amount,
@@ -115,7 +113,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   }
 })
 
-router.get('/paid/:cardHash', async (req: express.Request, res: express.Response) => {
+const cardPaid = async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
@@ -182,6 +180,9 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
     status: 'success',
     data: 'paid',
   })
-})
+}
+
+router.get('/paid/:cardHash', cardPaid)
+router.post('/paid/:cardHash', cardPaid)
 
 export default router
