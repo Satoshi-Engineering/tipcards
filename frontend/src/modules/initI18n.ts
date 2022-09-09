@@ -71,9 +71,10 @@ const messages = {
       hintLnbits: '(Needs to be from {lnbitsLink})',
     },
     cards: {
-      labelEnterSettings: 'Enter an encoded settings string to load an existing set of cards',
-      buttonLoadCards: 'Load cards',
-      buttonCreateNewCards: 'Create new cards',
+      savedCardsSetsHeadline: 'Saved tip cards sets',
+      buttonCreateNewCards: 'Create new set of tip cards',
+      buttonSaveCardsSet: 'Save tip cards set',
+      buttonBackToOverview: 'Back to overview',
     },
   },
   de: {

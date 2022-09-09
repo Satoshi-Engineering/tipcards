@@ -11,6 +11,38 @@
           {{ t('cards.buttonCreateNewCards') }}
         </ButtonDefault>
       </div>
+      <div 
+        v-if="savedCardsSets.length > 0"
+      >
+        <HeadlineDefault level="h3">
+          {{ t('cards.savedCardsSetsHeadline') }}
+        </HeadlineDefault>
+        <ul>
+          <li
+            v-for="cardsSet in savedCardsSets.reverse()"
+            :key="cardsSet.setId"
+            class="text-left"
+          >
+            <LinkDefault
+              :bold="false"
+              :to="{
+                ...route,
+                params: {
+                  ...route.params,
+                  setId: cardsSet.setId,
+                  settings: cardsSet.settings,
+                }
+              }"
+            >
+              {{ cardsSet.setId }}
+              <small class="block">({{ d(cardsSet.date, {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: 'numeric', minute: 'numeric'
+              }) }})</small>
+            </LinkDefault>
+          </li>
+        </ul>
+      </div>
 
       <p
         v-if="userErrorMessage != null"
@@ -29,13 +61,34 @@
       {{ userWarning }}
     </div>
     <div class="p-2 mb-1 max-w-md">
+      <div class="mb-2">
+        <span class="block">
+          Tip cards set ID:
+        </span>
+        <strong class="block">
+          {{ setId }}
+        </strong>
+        <ButtonDefault
+          @click="saveCardsSet"
+        >
+          {{ t('cards.buttonSaveCardsSet') }}
+        </ButtonDefault>
+        <br>
+        <ButtonDefault
+          outline
+          @click="router.push({ ...route, params: {} })"
+        >
+          {{ t('cards.buttonBackToOverview') }}
+        </ButtonDefault>
+      </div>
       <label class="block mb-2">
         <span class="block">
-          Number of cards:
+          Number of cards for this set:
         </span>
         <input
           v-model="settings.numberOfCards"
           type="number"
+          min="1"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
       </label>
@@ -51,12 +104,13 @@
       </label>
       <label class="block mb-2">
         <span class="block">
-          Card text:<br>
-          <small>($$ will be replaced by the available amount of bitcoin)</small>
+          Card text:
+          <small class="block">($$ will be replaced by the available amount of bitcoin, useful only on funded cards)</small>
         </span>
         <textarea
           v-model="settings.cardCopytext"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
+          rows="4"
         />
       </label>
       <div class="mb-2">
@@ -89,86 +143,93 @@
     </div>
     <div class="p-2 mb-1">
       Download all QR codes in a ZIP:
-      <ButtonDefault
-        @click="downloadZip(false)"
-      >
-        SVG
-      </ButtonDefault><!--
-      -->&nbsp;<!--
-      --><ButtonDefault
-        @click="downloadZip(true)"
-      >
-        PNG
-      </ButtonDefault>
+      <small class="block">(QR code images only)</small>
+      <div>
+        <ButtonDefault
+          @click="downloadZip(false)"
+        >
+          SVG
+        </ButtonDefault>
+        &nbsp;
+        <ButtonDefault
+          @click="downloadZip(true)"
+        >
+          PNG
+        </ButtonDefault>
+      </div>
     </div>
   </div>
   <div
     v-if="cards.length > 0"
-    ref="cardsContainer"
-    class="relative w-[210mm] p-[15mm]"
+    class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
   >
     <div
-      v-for="card in cards"
-      :key="card.url"
-      class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
+      ref="cardsContainer"
+      class="relative w-[210mm] p-[15mm]"
     >
-      <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-      <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-      <div class="hidden group-first:block right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-      <div class="hidden group-last:block left-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-
-      <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-      <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
       <div
-        v-if="card.url != ''"
-        class="absolute w-full h-full"
+        v-for="card in cards"
+        :key="card.url"
+        class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
       >
-        <a :href="card.url">
-          <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="100%"
-              height="100%"
-              viewBox="0 0 256 256"
-              class="qr-code-svg"
-            >
-              <!-- eslint-disable vue/no-v-html -->
-              <g v-html="card.qrCodeSvg" />
-              <!-- eslint-enable vue/no-v-html -->
-              <IconBitcoin
-                v-if="settings.cardsQrCodeLogo === 'bitcoin'"
-                :width="0.26 * 256"
-                :height="0.26 * 256"
-                :x="0.37 * 256"
-                :y="0.37 * 256"
+        <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+        <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+        <div class="hidden group-first:block right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+        <div class="hidden group-last:block left-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+
+        <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
+        <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+        <div
+          v-if="card.url != ''"
+          class="absolute w-full h-full"
+        >
+          <a :href="card.url">
+            <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+                viewBox="0 0 256 256"
+                class="qr-code-svg"
+              >
+                <!-- eslint-disable vue/no-v-html -->
+                <g v-html="card.qrCodeSvg" />
+                <!-- eslint-enable vue/no-v-html -->
+                <IconBitcoin
+                  v-if="settings.cardsQrCodeLogo === 'bitcoin'"
+                  :width="0.26 * 256"
+                  :height="0.26 * 256"
+                  :x="0.37 * 256"
+                  :y="0.37 * 256"
+                />
+                <IconLightning
+                  v-if="settings.cardsQrCodeLogo === 'lightning'"
+                  :width="0.26 * 256"
+                  :height="0.26 * 256"
+                  :x="0.37 * 256"
+                  :y="0.37 * 256"
+                />
+              </svg>
+            </div>
+          </a>
+          <div class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center">
+            <div>
+              <HeadlineDefault
+                v-if="settings.cardHeadline !== ''"
+                level="h1"
+                styling="h4"
+                class="mb-1"
+              >
+                {{ settings.cardHeadline }}
+              </HeadlineDefault>
+              <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
+              <ParagraphDefault
+                v-if="settings.cardCopytext !== ''"
+                class="text-sm leading-tight"
+                v-html="sanitizeHtml(cardCopytextComputed)"
               />
-              <IconLightning
-                v-if="settings.cardsQrCodeLogo === 'lightning'"
-                :width="0.26 * 256"
-                :height="0.26 * 256"
-                :x="0.37 * 256"
-                :y="0.37 * 256"
-              />
-            </svg>
-          </div>
-        </a>
-        <div class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center">
-          <div>
-            <HeadlineDefault
-              v-if="settings.cardHeadline !== ''"
-              level="h1"
-              styling="h4"
-              class="mb-1"
-            >
-              {{ settings.cardHeadline }}
-            </HeadlineDefault>
-            <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
-            <ParagraphDefault
-              v-if="settings.cardCopytext !== ''"
-              class="text-sm leading-tight"
-              v-html="sanitizeHtml(cardCopytextComputed)"
-            />
-            <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+              <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+            </div>
           </div>
         </div>
       </div>
@@ -197,10 +258,11 @@ import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import IconLightning from '../components/svgs/IconLightning.vue'
 import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
+import LinkDefault from '../components/typography/LinkDefault.vue'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, d } = useI18n()
 
 const cards = ref<Record<string, string>[]>([])
 const userErrorMessage = ref<string | undefined>(undefined)
@@ -214,8 +276,8 @@ const initialSettings = {
 }
 type Settings = typeof initialSettings
 const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
-const settings = reactive<Settings>(initialSettings)
-const setSettings = (newSettings: Settings | undefined) => {
+const settings = reactive({ ...initialSettings })
+const setSettings = (newSettings: Settings | undefined = undefined) => {
   const settingsKeys = Object.keys(initialSettings) as (keyof Settings)[]
   settingsKeys.forEach((key) => {
     if (newSettings == null || newSettings[key] == null) {
@@ -237,10 +299,11 @@ const cardCopytextComputed = computed(() => settings.cardCopytext
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
 
 const createNewCards = () => {
-  router.push({ ...route, params: { ...route.params, setId: crypto.randomUUID() } })
+  router.push({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
 }
 
 const repopulateCards = async () => {
+  settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
   cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
     const cardHash = await hashSha256(`${setId.value}/${index}`)
     const lnurlDecoded = `${location.protocol}//${location.host}/api/lnurl/${cardHash}`
@@ -284,9 +347,6 @@ const putSettingsIntoUrl = () => {
 watch(settings, putSettingsIntoUrl)
 
 const urlChanged = () => {
-  if (route.params.settings == null && route.params.settings === '') {
-    return
-  }
   const settingsEncoded = String(route.params.settings)
   let settingsDecoded: Settings | undefined = undefined
   try {
@@ -296,6 +356,7 @@ const urlChanged = () => {
   }
   setSettings(settingsDecoded)
   repopulateCards()
+  loadSavedCardsSets()
 }
 
 onMounted(urlChanged)
@@ -318,6 +379,35 @@ const downloadZip = async (asPng = false) => {
     }))
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
   saveAs(zipFileContent, `qrCodes_${setId.value}_${fileExtension}.zip`)
+}
+
+type CardsSetRecord = {
+  setId: string,
+  settings: string,
+  date: string,
+}
+const SAVED_CARD_SETS_KEY = 'savedTipCardsSets'
+const savedCardsSets = ref<CardsSetRecord[]>([])
+const loadSavedCardsSets = () => {
+  try {
+    savedCardsSets.value = JSON.parse(localStorage.getItem(SAVED_CARD_SETS_KEY) || '[]')
+  } catch(error) {
+    savedCardsSets.value = []
+  }
+}
+const saveCardsSet = () => {
+  if (setId.value == null) {
+    return
+  }
+  loadSavedCardsSets()
+  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
+    ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
+    {
+      setId: setId.value,
+      settings: route.params.settings,
+      date: new Date().toISOString(),
+    },
+  ]))
 }
 
 const hashSha256 = async (message: string) => {
