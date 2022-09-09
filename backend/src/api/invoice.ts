@@ -6,6 +6,7 @@ import type { Card } from '../data/Card'
 import { getCardByHash, createCard, updateCard } from '../services/database'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
 
@@ -63,7 +64,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   let payment_hash: string | undefined = undefined
   let payment_request: string | undefined = undefined
   try {
-    const response = await axios.post('https://legend.lnbits.com/api/v1/payments', {
+    const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
       out: false,
       amount,
       memo: 'Fund your Lightning Tip Card',
@@ -151,7 +152,7 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
   let paid = false
   if (!card.invoice.paid) {
     try {
-      const response = await axios.get(`https://legend.lnbits.com/api/v1/payments/${card.invoice.payment_hash}`, {
+      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`, {
         headers: {
           'Content-type': 'application/json',
           'X-Api-Key': LNBITS_INVOICE_READ_KEY,
@@ -193,7 +194,7 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
   // 4. create withdrawId and update database
   let withdrawId: string | null = null
   try {
-    const response = await axios.post('https://legend.lnbits.com//withdraw/api/v1/links', {
+    const response = await axios.post(`${LNBITS_ORIGIN}/withdraw/api/v1/links`, {
       title: `card-${card.cardHash}`,
       min_withdrawable: card.invoice.amount,
       max_withdrawable: card.invoice.amount,
