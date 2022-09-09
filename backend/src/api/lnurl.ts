@@ -15,12 +15,12 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   try {
     card = await getCardByHash(req.params.cardHash)
   } catch (error: unknown) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
       status: 'ERROR',
       reason: 'Unknown database error.',
       code: ErrorCode.UnknownDatabaseError,
     })
-    console.error(error)
     return
   }
   if (card?.lnbitsWithdrawId == null) {
@@ -37,12 +37,12 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     const lnurls = await loadLnurlsFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
     lnurl = lnurls[0]
   } catch (error) {
+    console.error(ErrorCode.UnableToGetLnurl, error)
     res.status(500).json({
       status: 'ERROR',
       reason: 'Unable to get LNURL from lnbits.',
       code: ErrorCode.UnableToGetLnurl,
     })
-    console.error(error)
     return
   }
 
@@ -59,10 +59,11 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     const response = await axios.get(decodeLnurl(lnurl))
     res.json(response.data)
   } catch (error) {
+    console.error(ErrorCode.UnableToResolveLnbitsLnurl, error)
     res.status(500).json({
       status: 'ERROR',
       reason: 'Unable to resolve LNURL at lnbits.',
-      code: ErrorCode.UnableToResolveLnurl,
+      code: ErrorCode.UnableToResolveLnbitsLnurl,
     })
   }
 })

@@ -2,6 +2,7 @@ import express from 'express'
 
 import axios from 'axios'
 
+import { ErrorCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash, createCard, updateCard } from '../services/database'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
@@ -33,10 +34,11 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   try {
     card = await getCardByHash(req.params.cardHash)
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
       status: 'error',
-      message: 'Unknown database error.',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
     })
     return
   }
@@ -81,12 +83,13 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       data: response.data.payment_request,
     })
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
   }
   if (payment_hash == null || payment_request == null) {
     res.status(500).json({
       status: 'error',
-      message: 'Unable to create invoice in lnbits.',
+      message: 'Unable to create invoice at lnbits.',
+      code: ErrorCode.UnableToCreateLnbitsInvoice,
     })
     return
   }
@@ -107,7 +110,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       used: false,
     })
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnknownDatabaseError, error)
   }
 })
 
@@ -117,10 +120,11 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
   try {
     card = await getCardByHash(req.params.cardHash)
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
       status: 'error',
-      message: 'Unknown database error.',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
     })
     return
   }
@@ -162,10 +166,11 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
         paid = true
       }
     } catch (error) {
-      console.error(error)
+      console.error(ErrorCode.UnableToGetLnbitsInvoiceStatus, error)
       res.status(500).json({
         status: 'error',
         message: 'Unable to check invoice status at lnbits.',
+        code: ErrorCode.UnableToGetLnbitsInvoiceStatus,
       })
       return
     }
@@ -175,10 +180,11 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
     try {
       await updateCard(card)
     } catch (error) {
-      console.error(error)
+      console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
         status: 'error',
-        message: 'Unknown database error.',
+        message: 'An unexpected error occured. Please try again later or contact an admin.',
+        code: ErrorCode.UnknownDatabaseError,
       })
       return
     }
@@ -211,16 +217,18 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
       withdrawId = response.data.id
     }
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnableToCreateLnbitsWithdrawLink, error)
     res.status(500).json({
       status: 'error',
       message: 'Unable to create withdraw link at lnbits.',
+      code: ErrorCode.UnableToCreateLnbitsWithdrawLink,
     })
   }
   if (withdrawId == null) {
     res.status(500).json({
       status: 'error',
       message: 'Unable to create withdraw link at lnbits.',
+      code: ErrorCode.UnableToCreateLnbitsWithdrawLink,
     })
     return
   }
@@ -228,10 +236,11 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
   try {
     await updateCard(card)
   } catch (error) {
-    console.error(error)
+    console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
       status: 'error',
-      message: 'Unknown database error.',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
     })
     return
   }

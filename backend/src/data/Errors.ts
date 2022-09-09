@@ -3,7 +3,10 @@ export enum ErrorCode {
   CardByHashNotFound = 'CardByHashNotFound',
   UnableToGetLnurl = 'UnableToGetLnurl',
   WithdrawIdNotFound = 'WithdrawIdNotFound',
-  UnableToResolveLnurl = 'UnableToResolveLnurl',
+  UnableToResolveLnbitsLnurl = 'UnableToResolveLnbitsLnurl',
+  UnableToCreateLnbitsInvoice = 'UnableToCreateLnbitsInvoice',
+  UnableToGetLnbitsInvoiceStatus = 'UnableToGetLnbitsInvoiceStatus',
+  UnableToCreateLnbitsWithdrawLink = 'UnableToCreateLnbitsWithdrawLink',
 }
 export type Error = {
   code: ErrorCode;
