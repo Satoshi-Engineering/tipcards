@@ -1,8 +1,9 @@
 import express from 'express'
 
-import { ErrorCode } from '../data/Errors'
+import { ErrorCode, ErrorWithCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
+import { checkIfCardInvoiceIsPaidAndCreateWithdrawId } from '../services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '../constants'
 import { decodeLnurl, getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
@@ -22,6 +23,25 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       code: ErrorCode.UnknownDatabaseError,
     })
     return
+  }
+  if (card?.lnbitsWithdrawId == null && card?.invoice != null) {
+    try {
+      await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
+    } catch (error: unknown) {
+      let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
+      let errorToLog = error
+      if (error instanceof ErrorWithCode) {
+        code = error.code
+        errorToLog = error.error
+      }
+      console.error(code, errorToLog)
+      res.status(500).json({
+        status: 'ERROR',
+        message: 'Unable to check invoice status at lnbits.',
+        code: code,
+      })
+      return
+    }
   }
   if (card?.lnbitsWithdrawId == null) {
     res.status(404).json({

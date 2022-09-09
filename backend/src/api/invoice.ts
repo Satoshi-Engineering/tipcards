@@ -2,10 +2,11 @@ import express from 'express'
 
 import axios from 'axios'
 
-import { ErrorCode } from '../data/Errors'
+import { ErrorCode, ErrorWithCode } from '../data/Errors'
 import type { Card } from '../data/Card'
-import { getCardByHash, createCard, updateCard } from '../services/database'
-import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
+import { getCardByHash, createCard } from '../services/database'
+import { checkIfCardInvoiceIsPaidAndCreateWithdrawId } from '../services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
@@ -152,95 +153,28 @@ router.get('/paid/:cardHash', async (req: express.Request, res: express.Response
     return
   }
 
-  // 3. check if invoice of card is paid
-  let paid = false
-  if (!card.invoice.paid) {
-    try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      if (response.data.paid === true) {
-        paid = true
-      }
-    } catch (error) {
-      console.error(ErrorCode.UnableToGetLnbitsInvoiceStatus, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'Unable to check invoice status at lnbits.',
-        code: ErrorCode.UnableToGetLnbitsInvoiceStatus,
-      })
-      return
+  // 3. check if invoice of card is paid and create withdrawId
+  try {
+    await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
+  } catch (error: unknown) {
+    let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
+    let errorToLog = error
+    if (error instanceof ErrorWithCode) {
+      code = error.code
+      errorToLog = error.error
     }
-  }
-  if (paid) {
-    card.invoice.paid = true
-    try {
-      await updateCard(card)
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      })
-      return
-    }
+    console.error(code, errorToLog)
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to check invoice status at lnbits.',
+      code: code,
+    })
+    return
   }
   if (!card.invoice.paid) {
     res.json({
       status: 'success',
       data: 'not_paid',
-    })
-    return
-  }
-
-  // 4. create withdrawId and update database
-  let withdrawId: string | null = null
-  try {
-    const response = await axios.post(`${LNBITS_ORIGIN}/withdraw/api/v1/links`, {
-      title: `card-${card.cardHash}`,
-      min_withdrawable: card.invoice.amount,
-      max_withdrawable: card.invoice.amount,
-      uses: 1,
-      wait_time: 1,
-      is_unique: true,
-    }, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_ADMIN_KEY,
-      },
-    })
-    if (typeof response.data.id === 'string') {
-      withdrawId = response.data.id
-    }
-  } catch (error) {
-    console.error(ErrorCode.UnableToCreateLnbitsWithdrawLink, error)
-    res.status(500).json({
-      status: 'error',
-      message: 'Unable to create withdraw link at lnbits.',
-      code: ErrorCode.UnableToCreateLnbitsWithdrawLink,
-    })
-  }
-  if (withdrawId == null) {
-    res.status(500).json({
-      status: 'error',
-      message: 'Unable to create withdraw link at lnbits.',
-      code: ErrorCode.UnableToCreateLnbitsWithdrawLink,
-    })
-    return
-  }
-  card.lnbitsWithdrawId = withdrawId
-  try {
-    await updateCard(card)
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
-      message: 'An unexpected error occured. Please try again later or contact an admin.',
-      code: ErrorCode.UnknownDatabaseError,
     })
     return
   }

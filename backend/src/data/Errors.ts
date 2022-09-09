@@ -7,9 +7,16 @@ export enum ErrorCode {
   UnableToCreateLnbitsInvoice = 'UnableToCreateLnbitsInvoice',
   UnableToGetLnbitsInvoiceStatus = 'UnableToGetLnbitsInvoiceStatus',
   UnableToCreateLnbitsWithdrawLink = 'UnableToCreateLnbitsWithdrawLink',
+  UnknownErrorWhileCheckingInvoiceStatus = 'UnknownErrorWhileCheckingInvoiceStatus',
 }
-export type Error = {
-  code: ErrorCode;
-  timestamp: number; // first time the error has occurred for a task
-  count: number; // how often has the error occurred
+
+export class ErrorWithCode {
+  error: unknown
+  code: ErrorCode
+
+  constructor(error: unknown, code: ErrorCode) {
+    this.error = error
+    this.code = code
+    Object.setPrototypeOf(this, ErrorWithCode.prototype)
+  }
 }
