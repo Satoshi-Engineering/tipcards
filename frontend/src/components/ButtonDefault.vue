@@ -19,8 +19,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const cssClasses = 'bg-btcorange my-1 px-5 py-2 text-white rounded-sm hover:bg-btcorange-effect active:btcorange-effect'
-
 const props = defineProps({
   href: {
     type: String,
@@ -30,7 +28,19 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  outline: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+const cssClasses = [
+  'border-2 border-btcorange my-1 px-5 py-2 text-white rounded-sm transition-colors',
+  {
+    'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect': !props.outline,
+    'bg-transparent text-btcorange hover:bg-btcorange-effect hover:text-white active:text-white': props.outline,
+  },
+]
 
 const targetComputed = computed(() => {
   if (props.target != null) {
