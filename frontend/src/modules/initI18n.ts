@@ -75,6 +75,13 @@ const messages = {
       buttonCreateNewCards: 'Create new set of tip cards',
       buttonSaveCardsSet: 'Save tip cards set',
       buttonBackToOverview: 'Back to overview',
+      filterLabel: 'Display cards:',
+      filter: {
+        all: 'All',
+        unfunded: 'Unfunded',
+        funded: 'Funded',
+        used: 'Used',
+      },
     },
   },
   de: {

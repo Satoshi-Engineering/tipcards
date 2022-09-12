@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="setId == null || userErrorMessage != null"
+    v-if="setId == null && userErrorMessage == null"
     class="min-h-screen grid place-items-center text-center"
   >
     <div>
@@ -43,13 +43,6 @@
           </li>
         </ul>
       </div>
-
-      <p
-        v-if="userErrorMessage != null"
-        class="text-red-500 text-align-center"
-      >
-        {{ userErrorMessage }}
-      </p>
     </div>
   </div>
   <div v-else class="mb-1 border-b print:hidden">
@@ -88,6 +81,7 @@
         <input
           v-model="settings.numberOfCards"
           type="number"
+          inputmode="numeric"
           min="1"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
@@ -105,7 +99,6 @@
       <label class="block mb-2">
         <span class="block">
           Card text:
-          <small class="block">($$ will be replaced by the available amount of bitcoin, useful only on funded cards)</small>
         </span>
         <textarea
           v-model="settings.cardCopytext"
@@ -158,77 +151,120 @@
         </ButtonDefault>
       </div>
     </div>
+    <div
+      v-if="cards.length > 0"
+      class="p-2 max-w-md"
+    >
+      <label class="block mb-2">
+        <span class="block">
+          {{ t('cards.filterLabel') }}
+        </span>
+        <select
+          v-model="cardsFilter"
+          class="w-full border my-1 px-3 py-2"
+        >
+          <option value="">
+            {{ t('cards.filter.all') }} ({{ cards.length }})
+          </option>
+          <option value="unfunded">
+            {{ t('cards.filter.unfunded') }} ({{ cards.filter(card => card.status === 'unfunded').length }})
+          </option>
+          <option value="funded">
+            {{ t('cards.filter.funded') }} ({{ cards.filter(card => card.status === 'funded').length }})
+          </option>
+          <option value="used">
+            {{ t('cards.filter.used') }} ({{ cards.filter(card => card.status === 'used').length }})
+          </option>
+        </select>
+      </label>
+    </div>
+    <div v-if="userErrorMessage != null" class="p-2">
+      <p
+        class="text-red-500 text-align-center"
+      >
+        {{ userErrorMessage }}
+      </p>
+    </div>
   </div>
   <div
     v-if="cards.length > 0"
-    class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
   >
     <div
-      ref="cardsContainer"
-      class="relative w-[210mm] p-[15mm]"
+      class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
     >
       <div
-        v-for="card in cards"
-        :key="card.url"
-        class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
+        ref="cardsContainer"
+        class="relative w-[210mm] p-[15mm]"
       >
-        <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-        <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-        <div class="hidden group-first:block right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-        <div class="hidden group-last:block left-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-
-        <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-        <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
         <div
-          v-if="card.url != ''"
-          class="absolute w-full h-full"
+          v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
+          :key="card.url"
+          class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
         >
-          <a :href="card.url">
-            <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="100%"
-                height="100%"
-                viewBox="0 0 256 256"
-                class="qr-code-svg"
-              >
-                <!-- eslint-disable vue/no-v-html -->
-                <g v-html="card.qrCodeSvg" />
-                <!-- eslint-enable vue/no-v-html -->
-                <IconBitcoin
-                  v-if="settings.cardsQrCodeLogo === 'bitcoin'"
-                  :width="0.26 * 256"
-                  :height="0.26 * 256"
-                  :x="0.37 * 256"
-                  :y="0.37 * 256"
+          <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+          <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+          <div class="hidden group-first:block right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+          <div class="hidden group-last:block left-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+
+          <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
+          <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+          <div
+            v-if="card.url != ''"
+            class="absolute w-full h-full"
+          >
+            <a :href="card.url">
+              <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 256 256"
+                  class="qr-code-svg"
+                >
+                  <!-- eslint-disable vue/no-v-html -->
+                  <g v-html="card.qrCodeSvg" />
+                  <!-- eslint-enable vue/no-v-html -->
+                  <IconBitcoin
+                    v-if="settings.cardsQrCodeLogo === 'bitcoin'"
+                    :width="0.26 * 256"
+                    :height="0.26 * 256"
+                    :x="0.37 * 256"
+                    :y="0.37 * 256"
+                  />
+                  <IconLightning
+                    v-if="settings.cardsQrCodeLogo === 'lightning'"
+                    :width="0.26 * 256"
+                    :height="0.26 * 256"
+                    :x="0.37 * 256"
+                    :y="0.37 * 256"
+                  />
+                </svg>
+              </div>
+            </a>
+            <div class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center">
+              <div>
+                <HeadlineDefault
+                  v-if="settings.cardHeadline !== ''"
+                  level="h1"
+                  styling="h4"
+                  class="mb-1"
+                >
+                  {{ settings.cardHeadline }}
+                </HeadlineDefault>
+                <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
+                <ParagraphDefault
+                  v-if="settings.cardCopytext !== ''"
+                  class="text-sm leading-tight"
+                  v-html="sanitizeHtml(cardCopytextComputed)"
                 />
-                <IconLightning
-                  v-if="settings.cardsQrCodeLogo === 'lightning'"
-                  :width="0.26 * 256"
-                  :height="0.26 * 256"
-                  :x="0.37 * 256"
-                  :y="0.37 * 256"
-                />
-              </svg>
+                <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+              </div>
             </div>
-          </a>
-          <div class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center">
-            <div>
-              <HeadlineDefault
-                v-if="settings.cardHeadline !== ''"
-                level="h1"
-                styling="h4"
-                class="mb-1"
-              >
-                {{ settings.cardHeadline }}
-              </HeadlineDefault>
-              <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
-              <ParagraphDefault
-                v-if="settings.cardCopytext !== ''"
-                class="text-sm leading-tight"
-                v-html="sanitizeHtml(cardCopytextComputed)"
-              />
-              <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+            <div
+              v-if="card.sats != null"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
+            >
+              <span class="m-auto">{{ card.sats }} sats</span>
             </div>
           </div>
         </div>
@@ -240,17 +276,17 @@
 <script lang="ts" setup>
 import { onMounted, ref, reactive, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import axios from 'axios'
-// import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
+import axios from 'axios'
+import type { LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
 import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { useI18n } from 'vue-i18n'
 
+import { BACKEND_API_ORIGIN } from '@/constants'
 import svgToPng from '@/modules/svgToPng'
-// import { encodeLnurl } from '../../src/modules/lnurlHelpers'
-import { encodeLnurl } from '../../src/modules/lnurlHelpers'
+import { encodeLnurl, decodeLnurl } from '@root/modules/lnurlHelpers'
 import ButtonDefault from '../components/ButtonDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import IconLightning from '../components/svgs/IconLightning.vue'
@@ -262,9 +298,18 @@ const route = useRoute()
 const router = useRouter()
 const { t, d } = useI18n()
 
-const cards = ref<Record<string, string>[]>([])
+type Card = {
+  url: string,
+  lnurlDecoded: string,
+  status: string | null,
+  sats: number | null,
+  qrCodeSvg: string,
+}
+const cards = ref<Card[]>([])
 const userErrorMessage = ref<string | undefined>(undefined)
 const userWarnings = ref<string[]>([])
+
+const cardsFilter = ref('')
 
 const initialSettings = {
   numberOfCards: 10,
@@ -286,11 +331,9 @@ const setSettings = (newSettings: Settings | undefined = undefined) => {
   })
 }
 
-const amount = ref<number | undefined>(undefined)
 const cardsContainer = ref<HTMLElement | undefined>(undefined)
 
 const cardCopytextComputed = computed(() => settings.cardCopytext
-  .replace('$$', formatNumber((amount.value || 0) / (100 * 1000 * 1000), 8, 8))
   .replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
 )
 
@@ -304,12 +347,15 @@ const repopulateCards = async () => {
   settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
   cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
     const cardHash = await hashSha256(`${setId.value}/${index}`)
-    const lnurlDecoded = `${location.protocol}//${location.host}/api/lnurl/${cardHash}`
+    const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
     const lnurlEncoded = encodeLnurl(lnurlDecoded)
     const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
     const url = `${location.protocol}//${location.host}${routeHref}`
     return {
       url,
+      lnurlDecoded,
+      status: null,
+      sats: null,
       qrCodeSvg: new QRCode({
           content: url,
           padding: 0,
@@ -319,9 +365,36 @@ const repopulateCards = async () => {
         }).svg(),
     }
   }))
-  if (cards.value.length % 2 !== 0) {
-    cards.value = [...cards.value, { url: '' }]
-  }
+  cards.value.forEach(async (card) => {
+    let lnurlContent: LNURLWithdrawParams
+    try {
+      const response = await axios.get(
+        new URL(card.lnurlDecoded).href,
+        {
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+          },
+        },
+      )
+      lnurlContent = response.data
+    } catch (error) {
+      if (
+        axios.isAxiosError(error)
+        && error.response?.status === 404
+        && (error.response?.data as { code: string }).code === 'CardByHashNotFound'
+      ) {
+        card.status = 'unfunded'
+        return
+      }
+      userErrorMessage.value = 'Error when trying to load LNURL content.'
+      console.error(error)
+      return
+    }
+    card.sats = lnurlContent.minWithdrawable / 1000
+    card.status = 'funded'
+  })
 }
 
 const putSettingsIntoUrl = () => {
