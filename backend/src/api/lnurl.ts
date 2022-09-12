@@ -74,7 +74,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
-      message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      message: `Card has not been funded yet. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
       code: ErrorCode.CardByHashNotFound,
       data: responseData,
     })
