@@ -206,7 +206,7 @@ import axios from 'axios'
 import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 
-import { LNURL_ORIGIN } from '@/modules/constants'
+import { LNBITS_ORIGIN } from '../../../src/constants'
 import formatNumber from '@/modules/formatNumber'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -252,7 +252,7 @@ const loadLnurlData = async () => {
     return
   }
 
-  if (lnurlUrl.origin !== LNURL_ORIGIN) {
+  if (lnurlUrl.origin !== LNBITS_ORIGIN) {
     userErrorMessage.value = 'Sorry, the provided LNURL cannot be used on this website.'
     console.error(`LNURL points to a foreign origin: ${lnurlUrl.origin}`)
     return

@@ -26,7 +26,7 @@
       <small>
         <I18nT keypath="codes.hintLnbits">
           <template #lnbitsLink>
-            <LinkDefault :href="LNURL_ORIGIN" target="_blank">{{ LNURL_ORIGIN }}</LinkDefault>
+            <LinkDefault :href="LNBITS_ORIGIN" target="_blank">{{ LNBITS_ORIGIN }}</LinkDefault>
           </template>
         </I18nT>
       </small>
@@ -202,7 +202,7 @@ import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { useI18n, Translation as I18nT } from 'vue-i18n'
 
-import { LNURL_ORIGIN } from '@/modules/constants'
+import { LNBITS_ORIGIN } from '../../../src/constants'
 import formatNumber from '@/modules/formatNumber'
 import svgToPng from '@/modules/svgToPng'
 import ButtonDefault from '../components/ButtonDefault.vue'

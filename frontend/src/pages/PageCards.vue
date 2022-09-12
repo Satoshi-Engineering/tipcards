@@ -248,8 +248,6 @@ import JSZip from 'jszip'
 import { saveAs } from 'file-saver'
 import { useI18n } from 'vue-i18n'
 
-// import { LNURL_ORIGIN } from '@/modules/constants'
-import formatNumber from '@/modules/formatNumber'
 import svgToPng from '@/modules/svgToPng'
 // import { encodeLnurl } from '../../src/modules/lnurlHelpers'
 import { encodeLnurl } from '../../src/modules/lnurlHelpers'
