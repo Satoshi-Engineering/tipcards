@@ -3,7 +3,7 @@ import express from 'express'
 import { ErrorCode, ErrorWithCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
-import { checkIfCardInvoiceIsPaidAndCreateWithdrawId } from '../services/lnbitsHelpers'
+import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUed } from '../services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '../constants'
 import { decodeLnurl, getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
@@ -83,8 +83,28 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   responseData.invoicePaid = card.invoice.paid
 
   // check if card is already used
+  if (card.used == null) {
+    try {
+      await checkIfCardIsUed(card)
+    } catch (error: unknown) {
+      let code = ErrorCode.UnknownErrorWhileCheckingWithdrawStatus
+      let errorToLog = error
+      if (error instanceof ErrorWithCode) {
+        code = error.code
+        errorToLog = error.error
+      }
+      console.error(code, errorToLog)
+      res.status(500).json({
+        status: 'ERROR',
+        message: 'Unable to check withdraw status at lnbits.',
+        code: code,
+        data: responseData,
+      })
+      return
+    }
+  }
+  responseData.cardUsed = card.used
   if (card.used != null) {
-    responseData.cardUsed = card.used
     res.status(400).json({
       status: 'ERROR',
       message: 'Card has already been used.',

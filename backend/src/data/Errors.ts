@@ -8,6 +8,8 @@ export enum ErrorCode {
   UnableToGetLnbitsInvoiceStatus = 'UnableToGetLnbitsInvoiceStatus',
   UnableToCreateLnbitsWithdrawLink = 'UnableToCreateLnbitsWithdrawLink',
   UnknownErrorWhileCheckingInvoiceStatus = 'UnknownErrorWhileCheckingInvoiceStatus',
+  UnableToGetLnbitsWithdrawStatus = 'UnableToGetLnbitsWithdrawStatus',
+  UnknownErrorWhileCheckingWithdrawStatus = 'UnknownErrorWhileCheckingWithdrawStatus',
 }
 
 export class ErrorWithCode {
