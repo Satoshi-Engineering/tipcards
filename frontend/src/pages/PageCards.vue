@@ -300,6 +300,7 @@ import IconLightning from '../components/svgs/IconLightning.vue'
 import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
 import LinkDefault from '../components/typography/LinkDefault.vue'
+import loadCardStatus, { type CardStatus } from '@/modules/loadCardStatus'
 
 const route = useRoute()
 const router = useRouter()
@@ -373,41 +374,15 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    let lnurlContent: LNURLWithdrawParams
-    try {
-      const response = await axios.get(
-        new URL(card.lnurlDecoded).href,
-        {
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
-        },
-      )
-      lnurlContent = response.data
-    } catch (error) {
-      if (!axios.isAxiosError(error) || error.response?.data == null) {
-        userErrorMessage.value = 'Error when trying to load LNURL content.'
-        console.error(error)
-        return
-      }
-      const responseCode = (error.response.data as { code: string }).code
-      if (responseCode === 'CardByHashNotFound') {
-        card.status = 'unfunded'
-        return
-      }
-      if (responseCode === 'WithdrawHasBeenSpent') {
-        card.sats = (error.response.data as ({ data: { amount: number}})).data.amount
-        card.status = 'used'
-        return
-      }
-      userErrorMessage.value = 'Unknown error for LNURL.'
-      console.error(error)
+    const { status, message, sats } = await loadCardStatus(card.lnurlDecoded)
+    if (status === 'ERROR') {
+      userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
     }
-    card.sats = lnurlContent.minWithdrawable / 1000
-    card.status = 'funded'
+    card.status = status
+    if (sats != null) {
+      card.sats = sats
+    }
   })
 }
 
