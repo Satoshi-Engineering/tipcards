@@ -103,10 +103,11 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
         amount,
         payment_hash,
         payment_request,
-        paid: false,
+        created: Math.round(+ new Date() / 1000),
+        paid: null,
       },
       lnbitsWithdrawId: null,
-      used: false,
+      used: null,
     })
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)

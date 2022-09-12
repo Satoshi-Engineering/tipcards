@@ -13,6 +13,19 @@ const router = express.Router()
 
 router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
   let card: Card | null = null
+  const responseData: {
+    amount: number | undefined,
+    invoiceCreated: number | undefined,
+    invoicePaid: number | null | undefined,
+    cardUsed: number | null | undefined,
+  } = {
+    amount: undefined,
+    invoiceCreated: undefined,
+    invoicePaid: undefined,
+    cardUsed: undefined,
+  }
+
+  // load card from database
   try {
     card = await getCardByHash(req.params.cardHash)
   } catch (error: unknown) {
@@ -21,10 +34,24 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       status: 'ERROR',
       reason: 'Unknown database error.',
       code: ErrorCode.UnknownDatabaseError,
+      data: responseData,
     })
     return
   }
-  if (card?.lnbitsWithdrawId == null && card?.invoice != null) {
+  if (card == null) {
+    res.status(404).json({
+      status: 'ERROR',
+      message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      code: ErrorCode.CardByHashNotFound,
+      data: responseData,
+    })
+    return
+  }
+  responseData.amount = card.invoice.amount
+  responseData.invoiceCreated = card.invoice.created
+
+  // check if invoice is already paid and get withdrawId
+  if (card.lnbitsWithdrawId == null) {
     try {
       await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
     } catch (error: unknown) {
@@ -39,15 +66,30 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
         status: 'ERROR',
         message: 'Unable to check invoice status at lnbits.',
         code: code,
+        data: responseData,
       })
       return
     }
   }
-  if (card?.lnbitsWithdrawId == null) {
+  if (card.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
       message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
       code: ErrorCode.CardByHashNotFound,
+      data: responseData,
+    })
+    return
+  }
+  responseData.invoicePaid = card.invoice.paid
+
+  // check if card is already used
+  if (card.used != null) {
+    responseData.cardUsed = card.used
+    res.status(400).json({
+      status: 'ERROR',
+      message: 'Card has already been used.',
+      code: ErrorCode.CardByHashNotFound,
+      data: responseData,
     })
     return
   }
@@ -62,6 +104,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       status: 'ERROR',
       reason: 'Unable to get LNURL from lnbits.',
       code: ErrorCode.UnableToGetLnurl,
+      data: responseData,
     })
     return
   }
@@ -71,6 +114,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       status: 'ERROR',
       reason: 'WithdrawId not found at lnbits.',
       code: ErrorCode.CardByHashNotFound,
+      data: responseData,
     })
     return
   }
@@ -84,6 +128,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       status: 'ERROR',
       reason: 'Unable to resolve LNURL at lnbits.',
       code: ErrorCode.UnableToResolveLnbitsLnurl,
+      data: responseData,
     })
   }
 })

@@ -5,8 +5,9 @@ export type Card = {
     amount: number,
     payment_hash: string,
     payment_request: string,
-    paid: boolean,
+    created: number, // unix timestamp
+    paid: number | null, // unix timestamp
   },
   lnbitsWithdrawId: string | null, // gets set as soon as the card is funded
-  used: boolean,
+  used: number | null, // unix timestamp
 }
