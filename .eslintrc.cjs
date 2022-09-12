@@ -12,6 +12,7 @@ module.exports = {
   env: {
     'vue/setup-compiler-macros': true,
     node: true,
+    browser: true,
   },
   ignorePatterns: [
     '**/*.min.js',

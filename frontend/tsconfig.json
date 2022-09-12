@@ -6,7 +6,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["es2021"],
+    "lib": ["ESNext", "dom"],
     "types": ["jest", "node"],
     "typeRoots": [
       "./src/types",
