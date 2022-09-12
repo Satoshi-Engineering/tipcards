@@ -211,9 +211,13 @@
           <div
             v-if="card.url != ''"
             class="absolute w-full h-full"
+            :class="{ 'opacity-50': card.status === 'used' }"
           >
             <a :href="card.url">
-              <div class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square">
+              <div
+                class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square"
+                :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="100%"
@@ -241,7 +245,10 @@
                 </svg>
               </div>
             </a>
-            <div class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center">
+            <div
+              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
+              :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
+            >
               <div>
                 <HeadlineDefault
                   v-if="settings.cardHeadline !== ''"
@@ -286,7 +293,7 @@ import { useI18n } from 'vue-i18n'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
 import svgToPng from '@/modules/svgToPng'
-import { encodeLnurl, decodeLnurl } from '@root/modules/lnurlHelpers'
+import { encodeLnurl } from '@root/modules/lnurlHelpers'
 import ButtonDefault from '../components/ButtonDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import IconLightning from '../components/svgs/IconLightning.vue'
@@ -380,15 +387,22 @@ const repopulateCards = async () => {
       )
       lnurlContent = response.data
     } catch (error) {
-      if (
-        axios.isAxiosError(error)
-        && error.response?.status === 404
-        && (error.response?.data as { code: string }).code === 'CardByHashNotFound'
-      ) {
+      if (!axios.isAxiosError(error) || error.response?.data == null) {
+        userErrorMessage.value = 'Error when trying to load LNURL content.'
+        console.error(error)
+        return
+      }
+      const responseCode = (error.response.data as { code: string }).code
+      if (responseCode === 'CardByHashNotFound') {
         card.status = 'unfunded'
         return
       }
-      userErrorMessage.value = 'Error when trying to load LNURL content.'
+      if (responseCode === 'WithdrawHasBeenSpent') {
+        card.sats = (error.response.data as ({ data: { amount: number}})).data.amount
+        card.status = 'used'
+        return
+      }
+      userErrorMessage.value = 'Unknown error for LNURL.'
       console.error(error)
       return
     }
