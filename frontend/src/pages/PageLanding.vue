@@ -216,6 +216,7 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import AnimatedCheckmark from '../components/AnimatedCheckmark.vue'
 import CopyToClipboard from '../components/CopyToClipboard.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 const { t } = useI18n()
 
@@ -252,7 +253,7 @@ const loadLnurlData = async () => {
     return
   }
 
-  if (lnurlUrl.origin !== LNBITS_ORIGIN) {
+  if (lnurlUrl.origin !== BACKEND_API_ORIGIN && lnurlUrl.origin !== LNBITS_ORIGIN) {
     userErrorMessage.value = 'Sorry, the provided LNURL cannot be used on this website.'
     console.error(`LNURL points to a foreign origin: ${lnurlUrl.origin}`)
     return
@@ -265,9 +266,13 @@ const loadLnurlData = async () => {
   } catch (error) {
     if (
       axios.isAxiosError(error)
-      && error.response?.status === 404
-      && ['Withdraw is spent.', 'LNURL-withdraw not found.']
-        .includes((error.response?.data as { detail: string }).detail)
+      && error.response != null
+      && [404, 400].includes(error.response.status)
+      && (
+        ['Withdraw is spent.', 'LNURL-withdraw not found.']
+          .includes((error.response?.data as { detail: string }).detail)
+        || (error.response?.data as { code: string}).code === 'WithdrawHasBeenSpent'
+      ) 
     ) {
       spent.value = true
       return
