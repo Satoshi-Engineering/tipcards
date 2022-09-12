@@ -74,7 +74,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
-      message: `Card has not been funded yet. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      reason: `Card has not been funded yet. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
       code: ErrorCode.CardByHashNotFound,
       data: responseData,
     })
@@ -107,8 +107,8 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card.used != null) {
     res.status(400).json({
       status: 'ERROR',
-      message: 'Card has already been used.',
-      code: ErrorCode.CardByHashNotFound,
+      reason: 'Card has already been used.',
+      code: ErrorCode.WithdrawHasBeenSpent,
       data: responseData,
     })
     return

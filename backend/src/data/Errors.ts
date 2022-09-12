@@ -10,6 +10,7 @@ export enum ErrorCode {
   UnknownErrorWhileCheckingInvoiceStatus = 'UnknownErrorWhileCheckingInvoiceStatus',
   UnableToGetLnbitsWithdrawStatus = 'UnableToGetLnbitsWithdrawStatus',
   UnknownErrorWhileCheckingWithdrawStatus = 'UnknownErrorWhileCheckingWithdrawStatus',
+  WithdrawHasBeenSpent = 'WithdrawHasBeenSpent',
 }
 
 export class ErrorWithCode {

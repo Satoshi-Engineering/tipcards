@@ -81,7 +81,7 @@ export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): P
  * @throws
  */
 export const checkIfCardIsUed = async (card: Card): Promise<Card> => {
-  if (!card.invoice.paid) {
+  if (card.invoice.paid) {
     try {
       const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
         headers: {
