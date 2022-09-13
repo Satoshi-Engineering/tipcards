@@ -4,6 +4,7 @@ const messages = {
   en: {
     general: {
       back: 'Back',
+      cards: '{count} card | {count} cards',
     },
     landing: {
       introGreeting: 'Hey!',
@@ -100,6 +101,7 @@ const messages = {
   de: {
     general: {
       back: 'Zurück',
+      cards: '{count} Karte | {count} Karten',
     },
     landing: {
       introGreeting: 'Hi!',

@@ -46,13 +46,9 @@
     </div>
   </div>
   <div v-else class="mb-1 border-b print:hidden">
-    <div
-      v-if="backlink != null"
-      class="p-2 pt-4"
-    >
+    <div class="p-2 pt-4">
       <LinkDefault
-        :href="backlink"
-        @click.prevent="$router.back()"
+        :to="{ name: 'home' }"
       >
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
@@ -285,7 +281,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, reactive, watch, computed } from 'vue'
+import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
@@ -350,8 +346,14 @@ const cardCopytextComputed = computed(() => settings.cardCopytext
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
 
 const createNewCards = () => {
-  router.push({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
+  router.replace({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
 }
+
+onBeforeMount(() => {
+  if (setId.value == null) {
+    createNewCards()
+  }
+})
 
 const repopulateCards = async () => {
   if (setId.value == null) {
@@ -407,7 +409,7 @@ const putSettingsIntoUrl = () => {
     `${document.location.origin}/cards/${route.params.setId}/${settingsForUrl}`,
   )
   
-  // router.push({
+  // router.replace({
   //   ...route,
   //   params: {
   //     ...route.params,
@@ -492,13 +494,4 @@ const hashSha256 = async (message: string) => {
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('') // convert bytes to hex string
   return hashHex
 }
-
-const backlink = computed(() => {
-  try {
-    return new URL(document.referrer).origin === location.origin ? document.referrer : null
-  } catch (error) {
-    return null
-  }
-})
-
 </script>
