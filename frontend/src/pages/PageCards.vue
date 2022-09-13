@@ -47,6 +47,17 @@
   </div>
   <div v-else class="mb-1 border-b print:hidden">
     <div
+      v-if="backlink != null"
+      class="p-2 pt-4"
+    >
+      <LinkDefault
+        :href="backlink"
+        @click.prevent="$router.back()"
+      >
+        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
+      </LinkDefault>
+    </div>
+    <div
       v-for="userWarning in userWarnings"
       :key="userWarning"
       class="bg-yellow-300 p-2 mb-1"
@@ -65,13 +76,6 @@
           @click="saveCardsSet"
         >
           {{ t('cards.buttonSaveCardsSet') }}
-        </ButtonDefault>
-        <br>
-        <ButtonDefault
-          outline
-          @click="router.push({ ...route, params: {} })"
-        >
-          {{ t('cards.buttonBackToOverview') }}
         </ButtonDefault>
       </div>
       <label class="block mb-2">
@@ -350,6 +354,10 @@ const createNewCards = () => {
 }
 
 const repopulateCards = async () => {
+  if (setId.value == null) {
+    cards.value = []
+    return
+  }
   settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
   cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
     const cardHash = await hashSha256(`${setId.value}/${index}`)
@@ -484,5 +492,13 @@ const hashSha256 = async (message: string) => {
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('') // convert bytes to hex string
   return hashHex
 }
+
+const backlink = computed(() => {
+  try {
+    return new URL(document.referrer).origin === location.origin ? document.referrer : null
+  } catch (error) {
+    return null
+  }
+})
 
 </script>

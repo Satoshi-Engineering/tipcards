@@ -2,6 +2,9 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
+    general: {
+      back: 'Back',
+    },
     landing: {
       introGreeting: 'Hey!',
       introMessageReceiveBtc: {
@@ -95,6 +98,9 @@ const messages = {
     },
   },
   de: {
+    general: {
+      back: 'Zurück',
+    },
     landing: {
       introGreeting: 'Hi!',
       introMessageReceiveBtc: {

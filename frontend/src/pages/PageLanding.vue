@@ -8,7 +8,7 @@
         :href="backlink"
         @click.prevent="$router.back()"
       >
-        <i class="bi bi-caret-left-fill" />{{ t('back') }}
+        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
     </div>
     <div
