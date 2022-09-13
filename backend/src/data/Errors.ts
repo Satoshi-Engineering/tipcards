@@ -1,6 +1,7 @@
 export enum ErrorCode {
   UnknownDatabaseError = 'UnknownDatabaseError',
   CardByHashNotFound = 'CardByHashNotFound',
+  CardNotFunded = 'CardNotFunded',
   UnableToGetLnurl = 'UnableToGetLnurl',
   WithdrawIdNotFound = 'WithdrawIdNotFound',
   UnableToResolveLnbitsLnurl = 'UnableToResolveLnbitsLnurl',

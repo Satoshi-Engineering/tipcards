@@ -15,11 +15,13 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   let card: Card | null = null
   const responseData: {
     amount: number | undefined,
+    invoicePaymentRequest: string | undefined,
     invoiceCreated: number | undefined,
     invoicePaid: number | null | undefined,
     cardUsed: number | null | undefined,
   } = {
     amount: undefined,
+    invoicePaymentRequest: undefined,
     invoiceCreated: undefined,
     invoicePaid: undefined,
     cardUsed: undefined,
@@ -48,6 +50,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     return
   }
   responseData.amount = card.invoice.amount
+  responseData.invoicePaymentRequest = card.invoice.payment_request
   responseData.invoiceCreated = card.invoice.created
 
   // check if invoice is already paid and get withdrawId
@@ -75,7 +78,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     res.status(404).json({
       status: 'ERROR',
       reason: `Card has not been funded yet. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
-      code: ErrorCode.CardByHashNotFound,
+      code: ErrorCode.CardNotFunded,
       data: responseData,
     })
     return
