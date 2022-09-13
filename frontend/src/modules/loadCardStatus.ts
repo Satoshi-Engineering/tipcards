@@ -53,7 +53,7 @@ export default async (lnurl: string): Promise<CardStatus> => {
     }
     // response.data contains a property `code` if if the LNURL points to the tipcards backend
     const responseCode = (error.response.data as { code: string }).code
-    if (responseCode === 'CardByHashNotFound') {
+    if (responseCode === 'CardByHashNotFound' || responseCode === 'CardNotFunded') {
       return {
         status: 'unfunded',
         sats: null,

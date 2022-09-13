@@ -1,5 +1,15 @@
 <template>
   <div
+    v-if="showFunding && cardHash != null"
+    class="my-10 mx-auto px-4 max-w-md"
+  >
+    <FundingInterface
+      :card-hash="cardHash"
+      :rate-btc-eur="rateBtcEur"
+    />
+  </div>
+  <div
+    v-else
     class="my-10 mx-auto px-4 max-w-md"
   >
     <HeadlineDefault level="h1" class="mb-8">
@@ -122,53 +132,10 @@
         <strong>{{ t('landing.sectionReceive.statusReceived.congrats') }}</strong>
         {{ t('landing.sectionReceive.statusReceived.message') }} 🎉
       </ParagraphDefault>
-      <div class="relative w-full max-w-xs p-10 pb-3 mx-auto">
-        <!-- eslint-disable vue/no-v-html -->
-        <a
-          class="block transition-opacity"
-          :class="{ 'opacity-20 blur-sm pointer-events-none': spent }"
-          :href="!spent ? `lightning:${lnurl}`: undefined"
-          v-html="qrCodeSvg"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-        <div v-if="spent" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
-          <AnimatedCheckmark class="w-5/12" />
-        </div>
-      </div>
-      <div class="text-center max-w-xs px-8 mx-auto">
-        <ButtonDefault
-          :disabled="spent"
-          :href="!spent ? `lightning:${lnurl}`: undefined"
-          class="w-full"
-        >
-          {{ t('landing.sectionReceive.buttonOpenInWallet') }}
-        </ButtonDefault>
-      </div>
-      <div class="text-center text-xs px-10 mb-5">
-        <CopyToClipboard
-          :text="lnurl"
-          label="Copy LNURL to clipboard"
-          class="text-center inline-block no-underline font-normal min-h-[3rem]"
-        >
-          <template #default>
-            <span class="font-normal">
-              <I18nT keypath="landing.sectionReceive.copyToClipboard.beforeCopy">
-                <template #action>
-                  <br>
-                  <strong class="underline hover:no-underline">{{ t('landing.sectionReceive.copyToClipboard.beforeCopyAction') }}</strong>
-                  <br>
-                </template>
-              </I18nT>
-            </span>
-          </template>
-          <template #success>
-            <strong>{{ t('landing.sectionReceive.copyToClipboard.afterCopySuccess') }}</strong>
-            <br>
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="sanitizeI18n(t('landing.sectionReceive.copyToClipboard.afterCopyNextStep'))" />
-          </template>
-        </CopyToClipboard>
-      </div>
+      <LightningQrCode
+        :value="lnurl"
+        :success="spent"
+      />
     </div>
     <div class="my-10">
       <HeadlineDefault level="h2">
@@ -203,107 +170,80 @@ import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n, Translation as I18nT } from 'vue-i18n'
 import axios from 'axios'
-import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
-import QRCode from 'qrcode-svg'
+import { decodelnurl } from 'js-lnurl'
 
-import { LNBITS_ORIGIN } from '../../../src/constants'
 import formatNumber from '@/modules/formatNumber'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import AnimatedCheckmark from '../components/AnimatedCheckmark.vue'
-import CopyToClipboard from '../components/CopyToClipboard.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
-import { BACKEND_API_ORIGIN } from '@/constants'
+import loadCardStatus from '@/modules/loadCardStatus'
+import FundingInterface from '@/components/FundingInterface.vue'
+import LightningQrCode from '../components/LightningQrCode.vue'
 
 const { t } = useI18n()
 
+const showFunding = ref<boolean>(false)
 const spent = ref<boolean | undefined>(undefined)
-const amount = ref<number | undefined>(undefined)
-const message = ref<string | undefined>(undefined)
-const qrCodeSvg = ref<string | undefined>(undefined)
+const amount = ref<number | undefined | null>(undefined)
 const userErrorMessage = ref<string | undefined>(undefined)
-const btcEurRate = ref<number | undefined>(undefined)
+const rateBtcEur = ref<number | undefined>(undefined)
 
 const amountInEur = computed(() => {
-  if (amount.value == null || btcEurRate.value == null) {
+  if (amount.value == null || rateBtcEur.value == null) {
     return undefined
   }
-  return amount.value / btcEurRate.value
+  return (amount.value / (100 * 1000 * 1000)) * rateBtcEur.value
 })
 
 const route = useRoute()
 const lnurl = String(route.query.lightning)
 
-const loadBtcEurRate = async () => {
+const cardHash = computed<string | null | undefined>(() => {
+  let decodedLnurl: string
+  try {
+    decodedLnurl = decodelnurl(lnurl)
+  } catch (error) {
+    return null
+  }
+  const [, hash] = decodedLnurl.toLowerCase().match(/\/api\/lnurl\/([0-9a-f]+)/) || []
+  return hash
+})
+
+const loadRateBtcEur = async () => {
   const krakenResponse = await axios.get('https://api.kraken.com/0/public/Ticker?pair=BTCEUR')
-  btcEurRate.value = Math.floor((100 * 1000 * 1000) / parseFloat(krakenResponse.data.result.XXBTZEUR.c[0]))
+  rateBtcEur.value = parseFloat(krakenResponse.data.result.XXBTZEUR.c[0])
 }
 
 const loadLnurlData = async () => {
-
-  let lnurlUrl: URL | undefined
-  try {
-    lnurlUrl = new URL(decodelnurl(lnurl))
-  } catch (error) {
-    userErrorMessage.value = 'Sorry, the provided LNURL is invalid.'
-    console.error(error)
+  const { status, sats, message } = await loadCardStatus(lnurl)
+  if (status === 'ERROR' && message != null) {
+    userErrorMessage.value = message
     return
   }
 
-  if (lnurlUrl.origin !== BACKEND_API_ORIGIN && lnurlUrl.origin !== LNBITS_ORIGIN) {
-    userErrorMessage.value = 'Sorry, the provided LNURL cannot be used on this website.'
-    console.error(`LNURL points to a foreign origin: ${lnurlUrl.origin}`)
-    return
+  if (status === 'unfunded') {
+    showFunding.value = true
+  } else {
+    showFunding.value = false
   }
 
-  let lnurlContent: LNURLWithdrawParams
-  try {
-    const response = await axios.get(lnurlUrl.href)
-    lnurlContent = response.data
-  } catch (error) {
-    if (
-      axios.isAxiosError(error)
-      && error.response != null
-      && [404, 400].includes(error.response.status)
-      && (
-        ['Withdraw is spent.', 'LNURL-withdraw not found.']
-          .includes((error.response?.data as { detail: string }).detail)
-        || (error.response?.data as { code: string}).code === 'WithdrawHasBeenSpent'
-      ) 
-    ) {
-      spent.value = true
-      return
-    }
-    userErrorMessage.value = 'Server cannot find LNURL.'
-    console.error(error)
-    return
+  if (status === 'used') {
+    spent.value = true
   }
-  
-  if (lnurlContent.tag !== 'withdrawRequest') {
-    userErrorMessage.value = 'Sorry, this website does not support the provided type of LNURL.'
-    return
+  if (status === 'funded') {
+    spent.value = false
   }
 
-  amount.value = lnurlContent.maxWithdrawable / 1000
-
-  qrCodeSvg.value = new QRCode({
-    content: lnurl,
-    container: 'svg-viewbox',
-    join: true,
-    padding: 0,
-  }).svg()
-
-  message.value = lnurlContent.defaultDescription
+  amount.value = sats
 
   setTimeout(loadLnurlData, 10 * 1000)
 }
 
 onMounted(() => {
-  loadBtcEurRate()
+  loadRateBtcEur()
   loadLnurlData()
 })
-
 </script>

@@ -43,13 +43,6 @@ const messages = {
           congrats: 'Congrats!',
           message: 'The bitcoin were just transferred to your wallet.',
         },
-        buttonOpenInWallet: 'Open in wallet',
-        copyToClipboard: {
-          beforeCopy: 'You can also {action} to paste it into your wallet app.',
-          beforeCopyAction: 'copy the LNURL to your clipboard',
-          afterCopySuccess: 'Copied successfully.',
-          afterCopyNextStep: 'Paste it into<br>your wallet app now :)',
-        },
       },
       sectionUse: {
         headline: 'Use your bitcoin',
@@ -81,6 +74,23 @@ const messages = {
         unfunded: 'Unfunded',
         funded: 'Funded',
         used: 'Used',
+      },
+    },
+    lightningQrCode: {
+      buttonOpenInWallet: 'Open in wallet',
+      copyToClipboard: {
+        lnurl: {
+          beforeCopy: 'You can also {action} to paste it into your wallet app.',
+          beforeCopyAction: 'copy the LNURL to your clipboard',
+          afterCopySuccess: 'Copied successfully.',
+          afterCopyNextStep: 'Paste it into<br>your wallet app now :)',
+        },
+        invoice: {
+          beforeCopy: 'You can also {action} to paste it into your wallet app.',
+          beforeCopyAction: 'copy the invoice to your clipboard',
+          afterCopySuccess: 'Copied successfully.',
+          afterCopyNextStep: 'Paste it into<br>your wallet app now :)',
+        },
       },
     },
   },
@@ -126,13 +136,6 @@ const messages = {
           congrats: 'Gratulation!',
           message: 'Die Bitcoin wurden soeben in deine Wallet übertragen.',
         },
-        buttonOpenInWallet: 'In der Wallet öffnen',
-        copyToClipboard: {
-          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
-          beforeCopyAction: 'die LNURL auch kopieren',
-          afterCopySuccess: 'Erfolgreich kopiert.',
-          afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
-        },
       },
       sectionUse: {
         headline: 'Verwende deine Bitcoin',
@@ -152,6 +155,23 @@ const messages = {
       buttonCreate: 'QR-Codes erstellen',
       labelEnterWithdrawId: 'Gib deine LNURLw withdraw ID ein',
       hintLnbits: '(Muss von {lnbitsLink} sein)',
+    },
+    lightningQrCode: {
+      buttonOpenInWallet: 'In der Wallet öffnen',
+      copyToClipboard: {
+        lnurl: {
+          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopyAction: 'die LNURL auch kopieren',
+          afterCopySuccess: 'Erfolgreich kopiert.',
+          afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
+        },
+        invoice: {
+          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopyAction: 'die Rechnung auch kopieren',
+          afterCopySuccess: 'Erfolgreich kopiert.',
+          afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
+        },
+      },
     },
   },
 }
