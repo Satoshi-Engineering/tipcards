@@ -17,7 +17,7 @@ import { LNBITS_ORIGIN } from '../../../src/constants'
  * @throws
  */
 export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): Promise<Card> => {
-  if (!card.invoice.paid) {
+  if (card.invoice.paid == null) {
     try {
       const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`, {
         headers: {
@@ -81,23 +81,24 @@ export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): P
  * @throws
  */
 export const checkIfCardIsUed = async (card: Card): Promise<Card> => {
-  if (card.invoice.paid) {
-    try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      if (typeof response.data.used !== 'number') {
-        throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
-      }
-      if (response.data.used > 0) {
-        card.used = Math.round(+ new Date() / 1000)
-      }
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
+  if (card.used != null) {
+    return card
+  }
+  try {
+    const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
+      headers: {
+        'Content-type': 'application/json',
+        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+      },
+    })
+    if (typeof response.data.used !== 'number') {
+      throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
     }
+    if (response.data.used > 0) {
+      card.used = Math.round(+ new Date() / 1000)
+    }
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
   }
   if (card.used == null) {
     return card
