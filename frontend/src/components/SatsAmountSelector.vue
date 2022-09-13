@@ -1,13 +1,21 @@
 <template>
-  <div class="text-center">
-    <input
-      :value="amount"
-      class="border p-2"
-      type="number"
-      inputmode="decimal"
-      :step="inputStep"
-      @input="onInput"
-    >
+  <div class="flex items-start w-full">
+    <div class="flex-1">
+      <input
+        :value="amount"
+        class="w-full border my-1 px-3 py-2 focus:outline-none"
+        type="number"
+        inputmode="decimal"
+        :step="inputStep"
+        @input="onInput"
+      >
+      <small
+        class="block text-left text-sm"
+        :class="{ 'invisible': alternateAmount == null }"
+      >
+        {{ alternateAmount }} {{ alternateCurrency }}
+      </small>
+    </div>
     <button
       type="button"
       class="p-3"
@@ -17,12 +25,6 @@
       {{ selectedCurrency }}
       <i class="bi bi-arrow-down-up" />
     </button>
-    <div
-      class="text-sm"
-      :class="{ 'invisible': alternateAmount == null }"
-    >
-      {{ alternateAmount }} {{ alternateCurrency }}
-    </div>
   </div>
 </template>
 

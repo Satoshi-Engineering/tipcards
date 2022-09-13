@@ -395,7 +395,7 @@ const putSettingsIntoUrl = () => {
   }
 
   // TODO: check if there is a way to do the following (manipulating the url w/o re-rendering the component) using vue router
-  window.history.pushState({}, '',
+  window.history.replaceState({}, '',
     `${document.location.origin}/cards/${route.params.setId}/${settingsForUrl}`,
   )
   

@@ -14,11 +14,21 @@
       v-else
     >
       <form @submit.prevent="fund">
-        <SatsAmountSelector
-          :amount-sats="amount"
-          :rate-btc-eur="rateBtcEur"
-          @update="amount = $event"
-        />
+        <label class="block mb-2">
+          <SatsAmountSelector
+            :amount-sats="amount"
+            :rate-btc-eur="rateBtcEur"
+            @update="amount = $event"
+          />
+        </label>
+        <label class="block mb-2">
+          <input
+            v-model="text"
+            type="text"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+          >
+          <small class="block">(will be displayed in the recipient's wallet)</small>
+        </label>
         <div class="text-center mt-4">
           <ButtonDefault
             type="submit"
