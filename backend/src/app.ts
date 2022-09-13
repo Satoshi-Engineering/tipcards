@@ -5,6 +5,7 @@ import helmet from 'helmet'
 import dummy from './api/dummy'
 import invoice from './api/invoice'
 import lnurl from './api/lnurl'
+import withdraw from './api/withdraw'
 import xstAttack from './xstAttack'
 
 const app = express()
@@ -15,5 +16,6 @@ app.use(xstAttack())
 app.use('/api/dummy', dummy)
 app.use('/api/invoice', invoice)
 app.use('/api/lnurl', lnurl)
+app.use('/api/withdraw', withdraw)
 
 export default app
