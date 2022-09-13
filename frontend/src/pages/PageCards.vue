@@ -403,19 +403,14 @@ const putSettingsIntoUrl = () => {
   if (settingsBase64 === initialSettingsBase64) {
     settingsForUrl = ''
   }
-
-  // TODO: check if there is a way to do the following (manipulating the url w/o re-rendering the component) using vue router
-  window.history.replaceState({}, '',
-    `${document.location.origin}/cards/${route.params.setId}/${settingsForUrl}`,
-  )
   
-  // router.replace({
-  //   ...route,
-  //   params: {
-  //     ...route.params,
-  //     settings: settingsForUrl,
-  //   },
-  // })
+  router.replace({
+    ...route,
+    params: {
+      ...route.params,
+      settings: settingsForUrl,
+    },
+  })
 }
 
 watch(settings, () => {

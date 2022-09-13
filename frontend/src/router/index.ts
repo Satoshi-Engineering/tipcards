@@ -7,7 +7,10 @@ import PageCards from '@/pages/PageCards.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  scrollBehavior: () => ({ top: 0 }),
+  scrollBehavior: (to, from) => {
+    if (to.name === from.name) return {}
+    return { top: 0 }
+  },
   routes: [
     {
       path: '/',
