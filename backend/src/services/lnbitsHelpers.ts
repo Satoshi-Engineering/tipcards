@@ -47,7 +47,7 @@ export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): P
       uses: 1,
       wait_time: 1,
       is_unique: true,
-      webhook: `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
+      webhook_url: `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
     }, {
       headers: {
         'Content-type': 'application/json',
