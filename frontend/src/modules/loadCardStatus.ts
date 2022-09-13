@@ -1,13 +1,35 @@
 import axios from 'axios'
-import type { LNURLWithdrawParams } from 'js-lnurl'
+import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
+
+import { BACKEND_API_ORIGIN } from '@/constants'
+import { LNBITS_ORIGIN } from '@root/constants'
 
 export type CardStatus = {
   status: 'ERROR' | 'unfunded' | 'funded' | 'used'
   message?: string,
-  sats: number | null,
+  sats?: number | null,
 }
 
-export default async (lnurlDecoded: string): Promise<CardStatus> => {
+export default async (lnurl: string): Promise<CardStatus> => {
+  let lnurlDecoded: URL | undefined
+  try {
+    lnurlDecoded = new URL(decodelnurl(lnurl))
+  } catch (error) {
+    console.error(error)
+    return {
+      status: 'ERROR',
+      message: 'Sorry, the provided LNURL is invalid.',
+    }
+  }
+
+  if (lnurlDecoded.origin !== BACKEND_API_ORIGIN && lnurlDecoded.origin !== LNBITS_ORIGIN) {
+    console.error(`LNURL points to a foreign origin: ${lnurlDecoded.origin}`)
+    return {
+      status: 'ERROR',
+      message: 'Sorry, the provided LNURL cannot be used on this website.',
+    }
+  }
+
   let lnurlContent: LNURLWithdrawParams
   try {
     const response = await axios.get(
@@ -27,9 +49,9 @@ export default async (lnurlDecoded: string): Promise<CardStatus> => {
       return {
         status: 'ERROR',
         message: 'Error when trying to load LNURL content.',
-        sats: null,
       }
     }
+    // response.data contains a property `code` if if the LNURL points to the tipcards backend
     const responseCode = (error.response.data as { code: string }).code
     if (responseCode === 'CardByHashNotFound') {
       return {
@@ -43,15 +65,28 @@ export default async (lnurlDecoded: string): Promise<CardStatus> => {
         sats: (error.response.data as ({ data: { amount: number}})).data.amount,
       }
     }
+    // response.data contains a property `detail` if the LNURL points to lnbits
+    const responseDetail = (error.response?.data as { detail: string }).detail
+    if (['Withdraw is spent.', 'LNURL-withdraw not found.'].includes(responseDetail)) {
+      return {
+        status: 'used',
+        sats: null,
+      }
+    }
     console.error(error)
     return {
       status: 'ERROR',
       message: 'Unknown error for LNURL.',
-      sats: null,
+    }
+  }
+  if (lnurlContent.tag !== 'withdrawRequest') {
+    return {
+      status: 'ERROR',
+      message: 'Sorry, this website does not support the provided type of LNURL.',
     }
   }
   return {
-    sats: lnurlContent.minWithdrawable / 1000,
     status: 'funded',
+    sats: lnurlContent.minWithdrawable / 1000,
   }
 }

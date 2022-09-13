@@ -283,8 +283,6 @@
 <script lang="ts" setup>
 import { onMounted, ref, reactive, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
-import type { LNURLWithdrawParams } from 'js-lnurl'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
 import JSZip from 'jszip'
@@ -300,7 +298,7 @@ import IconLightning from '../components/svgs/IconLightning.vue'
 import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
 import LinkDefault from '../components/typography/LinkDefault.vue'
-import loadCardStatus, { type CardStatus } from '@/modules/loadCardStatus'
+import loadCardStatus from '@/modules/loadCardStatus'
 
 const route = useRoute()
 const router = useRouter()
@@ -308,7 +306,7 @@ const { t, d } = useI18n()
 
 type Card = {
   url: string,
-  lnurlDecoded: string,
+  lnurl: string,
   status: string | null,
   sats: number | null,
   qrCodeSvg: string,
@@ -361,7 +359,7 @@ const repopulateCards = async () => {
     const url = `${location.protocol}//${location.host}${routeHref}`
     return {
       url,
-      lnurlDecoded,
+      lnurl: lnurlEncoded,
       status: null,
       sats: null,
       qrCodeSvg: new QRCode({
@@ -374,7 +372,7 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    const { status, message, sats } = await loadCardStatus(card.lnurlDecoded)
+    const { status, message, sats } = await loadCardStatus(card.lnurl)
     if (status === 'ERROR') {
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
@@ -395,16 +393,25 @@ const putSettingsIntoUrl = () => {
   if (settingsBase64 === initialSettingsBase64) {
     settingsForUrl = ''
   }
-  router.replace({
-    ...route,
-    params: {
-      ...route.params,
-      settings: settingsForUrl,
-    },
-  })
+
+  // TODO: check if there is a way to do the following (manipulating the url w/o re-rendering the component) using vue router
+  window.history.pushState({}, '',
+    `${document.location.origin}/cards/${route.params.setId}/${settingsForUrl}`,
+  )
+  
+  // router.push({
+  //   ...route,
+  //   params: {
+  //     ...route.params,
+  //     settings: settingsForUrl,
+  //   },
+  // })
 }
 
-watch(settings, putSettingsIntoUrl)
+watch(settings, () => {
+  putSettingsIntoUrl()
+  repopulateCards()
+})
 
 const urlChanged = () => {
   const settingsEncoded = String(route.params.settings)
