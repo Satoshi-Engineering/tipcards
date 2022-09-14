@@ -1,51 +1,5 @@
 <template>
-  <div
-    v-if="setId == null && userErrorMessage == null"
-    class="min-h-screen grid place-items-center text-center"
-  >
-    <div>
-      <div class="mb-6">
-        <ButtonDefault
-          @click="createNewCards"
-        >
-          {{ t('cards.buttonCreateNewCards') }}
-        </ButtonDefault>
-      </div>
-      <div 
-        v-if="savedCardsSets.length > 0"
-      >
-        <HeadlineDefault level="h3">
-          {{ t('cards.savedCardsSetsHeadline') }}
-        </HeadlineDefault>
-        <ul>
-          <li
-            v-for="cardsSet in savedCardsSets.reverse()"
-            :key="cardsSet.setId"
-            class="text-left"
-          >
-            <LinkDefault
-              :bold="false"
-              :to="{
-                ...route,
-                params: {
-                  ...route.params,
-                  setId: cardsSet.setId,
-                  settings: cardsSet.settings,
-                }
-              }"
-            >
-              {{ cardsSet.setId }}
-              <small class="block">({{ d(cardsSet.date, {
-                year: 'numeric', month: 'numeric', day: 'numeric',
-                hour: 'numeric', minute: 'numeric'
-              }) }})</small>
-            </LinkDefault>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div v-else class="mb-1 border-b print:hidden">
+  <div class="mb-1 border-b print:hidden">
     <div class="p-2 pt-4">
       <LinkDefault
         :to="{ name: 'home' }"
@@ -61,22 +15,9 @@
       {{ userWarning }}
     </div>
     <div class="p-2 mb-1 max-w-md">
-      <div class="mb-2">
-        <span class="block">
-          Tip cards set ID:
-        </span>
-        <strong class="block">
-          {{ setId }}
-        </strong>
-        <ButtonDefault
-          @click="saveCardsSet"
-        >
-          {{ t('cards.buttonSaveCardsSet') }}
-        </ButtonDefault>
-      </div>
       <label class="block mb-2">
         <span class="block">
-          Number of cards for this set:
+          {{ t('cards.settings.numberOfCards') }}:
         </span>
         <input
           v-model="settings.numberOfCards"
@@ -88,7 +29,7 @@
       </label>
       <label class="block mb-2">
         <span class="block">
-          Card headline:
+          {{ t('cards.settings.cardHeadline') }}:
         </span>
         <input
           v-model="settings.cardHeadline"
@@ -98,7 +39,7 @@
       </label>
       <label class="block mb-2">
         <span class="block">
-          Card text:
+          {{ t('cards.settings.cardText') }}:
         </span>
         <textarea
           v-model="settings.cardCopytext"
@@ -107,7 +48,7 @@
         />
       </label>
       <div class="mb-2">
-        Add logo on top of QR codes:
+        {{ t('cards.settings.cardQrCodeLogoLabel') }}:
       </div>
       <label class="block">
         <input
@@ -131,25 +72,39 @@
           value=""
           type="radio"
         >
-        No logo
+        {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
       </label>
     </div>
-    <div class="p-2 mb-1">
-      Download all QR codes in a ZIP:
-      <small class="block">(QR code images only)</small>
-      <div>
-        <ButtonDefault
-          @click="downloadZip(false)"
-        >
-          SVG
-        </ButtonDefault>
-        &nbsp;
-        <ButtonDefault
-          @click="downloadZip(true)"
-        >
-          PNG
-        </ButtonDefault>
-      </div>
+    <div class="px-2 my-1 text-sm">
+      <ButtonDefault
+        @click="printCards()"
+      >
+        {{ t('cards.buttonPrint') }}
+      </ButtonDefault>
+      &nbsp;
+      <ButtonDefault
+        variant="no-border"
+        @click="downloadZip()"
+      >
+        {{ t('cards.buttonDownloadPngs') }}
+      </ButtonDefault>
+    </div>
+    <div class="px-2 my-1 text-sm">
+      <ButtonDefault
+        @click="saveCardsSet"
+      >
+        {{ t('cards.buttonSaveCardsSet') }}
+        <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
+        <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
+      </ButtonDefault>
+      &nbsp;
+      <ButtonDefault
+        v-if="isSaved"
+        variant="outline"
+        @click="() => { deleteCardsSet(); router.push({ name: 'home' }) }"
+      >
+        {{ t('cards.buttonDeleteCardsSet') }}
+      </ButtonDefault>
     </div>
     <div
       v-if="cards.length > 0"
@@ -224,6 +179,7 @@
                   height="100%"
                   viewBox="0 0 256 256"
                   class="qr-code-svg"
+                  :class="{ 'qr-code-svg--used': card.status === 'used' }"
                 >
                   <!-- eslint-disable vue/no-v-html -->
                   <g v-html="card.qrCodeSvg" />
@@ -304,6 +260,8 @@ const route = useRoute()
 const router = useRouter()
 const { t, d } = useI18n()
 
+const wasPrintedOrDownloaded = ref(false)
+
 type Card = {
   url: string,
   lnurl: string,
@@ -318,7 +276,7 @@ const userWarnings = ref<string[]>([])
 const cardsFilter = ref('')
 
 const initialSettings = {
-  numberOfCards: 10,
+  numberOfCards: 8,
   cardHeadline: 'Hey :)',
   cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
   cardsQrCodeLogo: 'bitcoin',
@@ -435,22 +393,28 @@ onMounted(urlChanged)
   
 watch(() => route.params, urlChanged)
 
-const downloadZip = async (asPng = false) => {
+const downloadZip = async (format: 'png' | 'svg' = 'png') => {
   const zip = new JSZip()
   if (cardsContainer.value == null) {
     return
   }
-  const fileExtension = asPng ? 'png' : 'svg'
-  await Promise.all(Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg'))
+  const fileExtension = format
+  await Promise.all(Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg:not(.qr-code-svg--used)'))
     .map(async (svgEl, index) => {
       let fileContent: string | Blob = svgEl.outerHTML
-      if (asPng) {
+      if (format === 'png') {
         fileContent = (await svgToPng({ width: 2000, height: 2000, svg: svgEl.outerHTML }) || 'error')
       }
       zip.file(`qrCode_${index}_${setId.value}.${fileExtension}`, fileContent)
     }))
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
   saveAs(zipFileContent, `qrCodes_${setId.value}_${fileExtension}.zip`)
+  wasPrintedOrDownloaded.value = true
+}
+
+const printCards = () => {
+  window.print()
+  wasPrintedOrDownloaded.value = true
 }
 
 type CardsSetRecord = {
@@ -471,6 +435,9 @@ const saveCardsSet = () => {
   if (setId.value == null) {
     return
   }
+  if (!hasBeenSaved.value && !confirm(t('cards.saveSetWarning'))) {
+    return
+  }
   loadSavedCardsSets()
   localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
     ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
@@ -480,7 +447,42 @@ const saveCardsSet = () => {
       date: new Date().toISOString(),
     },
   ]))
+  loadSavedCardsSets()
 }
+const deleteCardsSet = () => {
+  if (setId.value === null) {
+    return
+  }
+  loadSavedCardsSets()
+  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
+    ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
+  ]))
+  loadSavedCardsSets()
+}
+const hasBeenSaved = computed(() => {
+  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)
+})
+const isSaved = computed(() => {
+  if (!hasBeenSaved.value) {
+    return false
+  }
+  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && savedSet.settings === route.params.settings)
+})
+const showSaveWarning = computed(() => {
+  if (isSaved.value) {
+    return false
+  }
+  if (hasBeenSaved.value) {
+    return true
+  }
+  if (cards.value.some(card => card.status === 'funded' || card.status === 'used')) {
+    return true
+  }
+  if (wasPrintedOrDownloaded.value) {
+    return true
+  }
+  return false
+})
 
 const hashSha256 = async (message: string) => {
   const msgUint8 = new TextEncoder().encode(message)                           // encode as (utf-8) Uint8Array
@@ -490,3 +492,16 @@ const hashSha256 = async (message: string) => {
   return hashHex
 }
 </script>
+
+<style>
+  @media print {
+    @page {
+      margin: 0mm;
+      size: A4 portrait;
+    }
+    html {
+      margin: 0;
+      background: #ffffff;
+    }
+  }
+</style>

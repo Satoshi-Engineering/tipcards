@@ -60,7 +60,9 @@ const messages = {
       },
     },
     index: {
-      buttonCreate: 'Create your QR codes',
+      buttonCreate: 'Create your Tip Cards set',
+      savedCardsSetsHeadline: 'Saved Tip Cards sets',
+      noSavedCardsSetsMessage: 'No saved Tip Cards sets found in this browser',
     },
     codes: {
       buttonCreate: 'Create codes',
@@ -68,10 +70,20 @@ const messages = {
       hintLnbits: '(Needs to be from {lnbitsLink})',
     },
     cards: {
-      savedCardsSetsHeadline: 'Saved tip cards sets',
-      buttonCreateNewCards: 'Create new set of tip cards',
-      buttonSaveCardsSet: 'Save tip cards set',
-      buttonBackToOverview: 'Back to overview',
+      settings: {
+        numberOfCards: 'Number of cards',
+        cardHeadline: 'Card headline',
+        cardText: 'Card text',
+        cardQrCodeLogoLabel: 'Logo on QR codes',
+        cardQrCodeLogo: {
+          noLogo: 'No logo',
+        },
+      },
+      buttonSaveCardsSet: 'Save Tip Cards set',
+      buttonDeleteCardsSet: 'Delete saved set',
+      buttonPrint: 'Print Tip Cards',
+      buttonDownloadPngs: 'Download PNGs',
+      saveSetWarning: 'The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?',
       filterLabel: 'Display cards:',
       filter: {
         all: 'All',
@@ -157,12 +169,37 @@ const messages = {
       },
     },
     index: {
-      buttonCreate: 'Erstelle deine QR-Codes',
+      buttonCreate: 'Erstelle dein Tip Cards-Sets',
+      savedCardsSetsHeadline: 'Gespeicherte Tip Cards-Sets',
+      noSavedCardsSetsMessage: 'In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert',
     },
     codes: {
       buttonCreate: 'QR-Codes erstellen',
       labelEnterWithdrawId: 'Gib deine LNURLw withdraw ID ein',
       hintLnbits: '(Muss von {lnbitsLink} sein)',
+    },
+    cards: {
+      settings: {
+        numberOfCards: 'Anzahl',
+        cardHeadline: 'Karten-Überschrift',
+        cardText: 'Karten-Text',
+        cardQrCodeLogoLabel: 'Logo auf den QR-Codes',
+        cardQrCodeLogo: {
+          noLogo: 'Kein Logo',
+        },
+      },
+      buttonSaveCardsSet: 'Tip Cards-Set speichern',
+      buttonDeleteCardsSet: 'Set löschen',
+      buttonPrint: 'Tip Cards drucken',
+      buttonDownloadPngs: 'PNGs downloaden',
+      saveSetWarning: 'Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?',
+      filterLabel: 'Karten filtern:',
+      filter: {
+        all: 'Alle',
+        unfunded: 'Nicht aufgeladen',
+        funded: 'Aufgeladen',
+        used: 'Eingelöst',
+      },
     },
     lightningQrCode: {
       buttonOpenInWallet: 'In der Wallet öffnen',

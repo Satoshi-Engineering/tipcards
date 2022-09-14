@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 
 const props = defineProps({
   href: {
@@ -28,17 +28,18 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
-  outline: {
-    type: Boolean,
-    default: false,
+  variant: {
+    type: String as PropType<'outline' | 'no-border' | undefined>,
+    default: undefined,
   },
 })
 
 const cssClasses = [
   'border-2 border-btcorange my-1 px-5 py-2 text-white rounded-sm transition-colors',
   {
-    'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect': !props.outline,
-    'bg-transparent text-btcorange hover:bg-btcorange-effect hover:text-white active:text-white': props.outline,
+    'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect': props.variant == null,
+    'bg-transparent text-btcorange': props.variant === 'outline',
+    'bg-transparent text-btcorange border-transparent px-0': props.variant === 'no-border',
   },
 ]
 

@@ -9,45 +9,54 @@
       </HeadlineDefault>
       <p>by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a></p>
       <p class="mt-4">
-        <RouterLink
-          :to="{ name: 'cards' }"
-          class="underline"
+        <ButtonDefault
+          @click="$router.push({ name: 'cards' })"
         >
           {{ t('index.buttonCreate') }}
-        </RouterLink>
+        </ButtonDefault>
       </p>
       <div 
-        v-if="savedCardsSets.length > 0"
         class="mt-24"
       >
         <HeadlineDefault level="h4">
-          {{ t('cards.savedCardsSetsHeadline') }}
+          {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
-        <ul>
-          <li
-            v-for="cardsSet in savedCardsSets.reverse()"
-            :key="cardsSet.setId"
-            class="text-left"
+        <div class="flex">
+          <div
+            v-if="savedCardsSets.length < 1"
+            class="mx-auto text-sm text-gray-400"
           >
-            <LinkDefault
-              :bold="false"
-              :to="{
-                name: 'cards',
-                params: {
-                  setId: cardsSet.setId,
-                  settings: cardsSet.settings,
-                }
-              }"
+            {{ t('index.noSavedCardsSetsMessage') }}
+          </div>
+          <ul
+            v-else
+            class="mx-auto"
+          >
+            <li
+              v-for="cardsSet in savedCardsSets.reverse()"
+              :key="cardsSet.setId"
+              class="text-left"
             >
-              {{ d(cardsSet.date, {
-                year: 'numeric', month: 'numeric', day: 'numeric',
-                hour: 'numeric', minute: 'numeric'
-              }) }}
-              -
-              {{ t('general.cards', { count: decodeCardsSetSettings(cardsSet.settings).numberOfCards }) }}
-            </LinkDefault>
-          </li>
-        </ul>
+              <LinkDefault
+                :bold="false"
+                :to="{
+                  name: 'cards',
+                  params: {
+                    setId: cardsSet.setId,
+                    settings: cardsSet.settings,
+                  }
+                }"
+              >
+                {{ d(cardsSet.date, {
+                  year: 'numeric', month: 'numeric', day: 'numeric',
+                  hour: 'numeric', minute: 'numeric'
+                }) }}
+                -
+                {{ t('general.cards', { count: decodeCardsSetSettings(cardsSet.settings).numberOfCards }) }}
+              </LinkDefault>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -55,11 +64,11 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref } from 'vue'
-import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
 
 const { t, d } = useI18n()
 
@@ -90,7 +99,7 @@ const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
     // do nothing
   }
   return {
-    numberOfCards: 10,
+    numberOfCards: 8,
     cardHeadline: 'Hey :)',
     cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
     cardsQrCodeLogo: 'bitcoin',
