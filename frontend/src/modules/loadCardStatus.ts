@@ -8,8 +8,10 @@ export type CardStatus = {
   status: 'ERROR' | 'unfunded' | 'funded' | 'used'
   message?: string,
   sats?: number | null,
-  invoiceCreated?: number | null,
   invoicePaymentRequest?: string | null,
+  invoiceCreated?: number | null,
+  invoicePaid?: number | null,
+  cardUsed?: number | null,
 }
 
 // merged response data from "tipcards backend api" and "lnbits api"
@@ -80,6 +82,7 @@ export default async (lnurl: string): Promise<CardStatus> => {
       return {
         status: 'used',
         sats: responseData.data?.amount,
+        cardUsed: responseData.data?.cardUsed,
       }
     }
     if (['Withdraw is spent.', 'LNURL-withdraw not found.'].includes(String(responseData.detail))) {

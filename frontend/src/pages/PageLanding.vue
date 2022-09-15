@@ -17,7 +17,7 @@
       <HeadlineDefault level="h1" class="mb-8">
         <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
       </HeadlineDefault>
-      <div v-if="!spent && amount != null">
+      <div v-if="showContent === 'spendable'">
         <HeadlineDefault level="h2" styling="h1">
           <I18nT keypath="landing.introMessageReceiveBtc.message">
             <template #amountAndUnit>
@@ -27,7 +27,7 @@
                     <span
                       :title="amountInEur?.toLocaleString(undefined, { style: 'currency', currency: 'EUR', maximumFractionDigits: 4 })"
                     >
-                      {{ formatNumber(amount / (100 * 1000 * 1000), 8, 8) }}
+                      {{ formatNumber(Number(amount) / (100 * 1000 * 1000), 8, 8) }}
                     </span>
                   </template>
                 </I18nT>
@@ -39,7 +39,7 @@
           {{ t('landing.introMessageReceiveBtc.footnote') }}
         </ParagraphDefault>
       </div>
-      <div v-if="spent && amount == null">
+      <div v-if="showContent === 'used'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessageAlreadyUsed.headline') }}
         </HeadlineDefault>
@@ -47,7 +47,7 @@
           {{ t('landing.introMessageAlreadyUsed.message') }}
         </ParagraphDefault>
       </div>
-      <div v-if="spent && amount != null">
+      <div v-if="showContent === 'recentlyUsed'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessageJustReceived.headline', { emoji: '🥳' }) }}
         </HeadlineDefault>
@@ -209,6 +209,7 @@ const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined | null>(undefined)
 const userErrorMessage = ref<string | undefined>(undefined)
 const rateBtcEur = ref<number | undefined>(undefined)
+const cardUsed = ref<number | undefined>()
 
 const amountInEur = computed(() => {
   if (amount.value == null || rateBtcEur.value == null) {
@@ -245,7 +246,7 @@ const loadRateBtcEur = async () => {
 }
 
 const loadLnurlData = async () => {
-  const { status, sats, message } = await loadCardStatus(lnurl)
+  const { status, sats, message, cardUsed: cardUsedLocal } = await loadCardStatus(lnurl)
   if (status === 'ERROR' && message != null) {
     userErrorMessage.value = message
     return
@@ -263,6 +264,9 @@ const loadLnurlData = async () => {
 
   if (status === 'used') {
     spent.value = true
+    if (cardUsedLocal != null) {
+      cardUsed.value = cardUsedLocal
+    }
   }
   if (status === 'funded') {
     spent.value = false
@@ -272,6 +276,29 @@ const loadLnurlData = async () => {
 
   setTimeout(loadLnurlData, 10 * 1000)
 }
+
+const showContent = computed<'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+  if (!spent.value && amount.value != null) {
+    return 'spendable'
+  }
+
+  // tipcards v2
+  if (cardUsed.value != null) {
+    if ((+ new Date() / 1000) - cardUsed.value < 5 * 60) {
+      return 'recentlyUsed'
+    }
+    return 'used'
+  }
+
+  // tipcards v1
+  if (spent.value && amount.value == null) {
+    return 'used'
+  }
+  if (spent.value && amount.value != null) {
+    return 'recentlyUsed'
+  }
+  return null
+})
 
 onMounted(() => {
   loadRateBtcEur()
