@@ -154,7 +154,7 @@
         </div>
         <!-- eslint-disable vue/no-v-html -->
         <div
-          class="inline-block w-18 aspect-square mx-6"
+          class="inline-block w-[30mm] aspect-square mx-6"
           v-html="currentSetUrlQrCode"
         />
         <!-- eslint-enable vue/no-v-html -->
