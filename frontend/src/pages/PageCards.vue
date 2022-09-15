@@ -147,9 +147,21 @@
     <div
       class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
     >
+      <div class="w-[210mm] p-[10mm] flex items-start justify-end text-xs text-right">
+        <div>
+          Set ID:<br>
+          <LinkDefault :href="currentSetUrl">{{ setId }}</LinkDefault>
+        </div>
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="inline-block w-18 aspect-square mx-6"
+          v-html="currentSetUrlQrCode"
+        />
+        <!-- eslint-enable vue/no-v-html -->
+      </div>
       <div
         ref="cardsContainer"
-        class="relative w-[210mm] p-[15mm]"
+        class="relative w-[210mm] px-[15mm]"
       >
         <div
           v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
@@ -352,6 +364,16 @@ const repopulateCards = async () => {
   })
 }
 
+const currentSetUrl = ref<string>(document.location.href)
+const currentSetUrlQrCode = computed(() => new QRCode({
+    content: currentSetUrl.value,
+    padding: 0,
+    join: true,
+    xmlDeclaration: false,
+    container: 'svg-viewbox',
+  }).svg(),
+)
+
 const putSettingsIntoUrl = () => {
   if (setId.value == null) {
     return
@@ -387,6 +409,7 @@ const urlChanged = () => {
   setSettings(settingsDecoded)
   repopulateCards()
   loadSavedCardsSets()
+  currentSetUrl.value = document.location.href
 }
 
 onMounted(urlChanged)
