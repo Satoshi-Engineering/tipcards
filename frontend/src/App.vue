@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <RouterView />
-    <footer class="mx-auto mt-auto pt-20 mb-2 w-full max-w-md">
+    <footer class="mx-auto mt-auto pt-20 px-2 pb-2 w-full max-w-md">
       <small class="block text-gray-400">
         <Translation keypath="footer.support">
           <template #email>
