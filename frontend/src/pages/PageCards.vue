@@ -147,7 +147,7 @@
     <div
       class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
     >
-      <div class="w-[210mm] p-[10mm] flex items-start justify-end text-xs text-right">
+      <div class="w-[210mm] p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
         <div>
           Set ID:<br>
           <LinkDefault :href="currentSetUrl">{{ setId }}</LinkDefault>
@@ -161,7 +161,7 @@
       </div>
       <div
         ref="cardsContainer"
-        class="relative w-[210mm] px-[15mm]"
+        class="relative w-[210mm] px-[15mm] py-[10mm]"
       >
         <div
           v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"

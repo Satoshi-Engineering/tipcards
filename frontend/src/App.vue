@@ -5,7 +5,7 @@
       <small class="block text-gray-400">
         <Translation keypath="footer.support">
           <template #email>
-            <LinkDefault href="mailto:support@sate.tools?subject=Lightning%20Tip%20Cards">support@sate.tools</LinkDefault>
+            <LinkDefault href="mailto:support@sate.tools?subject=Lightning%20Tip%20Cards%20Feedback">support@sate.tools</LinkDefault>
           </template>
         </Translation>
       </small>
