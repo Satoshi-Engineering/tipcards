@@ -270,7 +270,7 @@ import loadCardStatus from '@/modules/loadCardStatus'
 
 const route = useRoute()
 const router = useRouter()
-const { t, d } = useI18n()
+const { t } = useI18n()
 
 const wasPrintedOrDownloaded = ref(false)
 
