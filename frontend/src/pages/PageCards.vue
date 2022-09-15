@@ -101,7 +101,7 @@
       <ButtonDefault
         v-if="isSaved"
         variant="outline"
-        @click="() => { deleteCardsSet(); router.push({ name: 'home' }) }"
+        @click="deleteCardsSet"
       >
         {{ t('cards.buttonDeleteCardsSet') }}
       </ButtonDefault>
@@ -476,11 +476,15 @@ const deleteCardsSet = () => {
   if (setId.value === null) {
     return
   }
+  if (!confirm(t('cards.deleteSetConfirm'))) {
+    return
+  }
   loadSavedCardsSets()
   localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
     ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
   ]))
   loadSavedCardsSets()
+  router.push({ name: 'home' })
 }
 const hasBeenSaved = computed(() => {
   return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)

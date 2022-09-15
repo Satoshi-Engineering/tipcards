@@ -99,7 +99,8 @@ const messages = {
       buttonDeleteCardsSet: 'Delete saved set',
       buttonPrint: 'Print Tip Cards',
       buttonDownloadPngs: 'Download PNGs',
-      saveSetWarning: 'The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?',
+      saveSetConfirm: 'The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?',
+      deleteSetConfirm: 'Do you really want to delete the current Tip Cards set and its settings from this browser?',
       filterLabel: 'Display cards:',
       filter: {
         all: 'All',
@@ -224,7 +225,8 @@ const messages = {
       buttonDeleteCardsSet: 'Set löschen',
       buttonPrint: 'Tip Cards drucken',
       buttonDownloadPngs: 'PNGs downloaden',
-      saveSetWarning: 'Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?',
+      saveSetConfirm: 'Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?',
+      deleteSetConfirm: 'Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?',
       filterLabel: 'Karten filtern:',
       filter: {
         all: 'Alle',
