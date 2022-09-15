@@ -12,16 +12,6 @@
       </LinkDefault>
     </div>
     <div
-      v-if="showFunding && cardHash != null"
-      class="my-10 mx-auto px-4 w-full max-w-md"
-    >
-      <FundingInterface
-        :card-hash="cardHash"
-        :rate-btc-eur="rateBtcEur"
-      />
-    </div>
-    <div
-      v-else
       class="my-10 mx-auto px-4 w-full max-w-md"
     >
       <HeadlineDefault level="h1" class="mb-8">
@@ -210,12 +200,11 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import IconBitcoin from '../components/svgs/IconBitcoin.vue'
 import loadCardStatus from '@/modules/loadCardStatus'
-import FundingInterface from '@/components/FundingInterface.vue'
 import LightningQrCode from '../components/LightningQrCode.vue'
+import router from '@/router'
 
 const { t } = useI18n()
 
-const showFunding = ref<boolean>(false)
 const spent = ref<boolean | undefined>(undefined)
 const amount = ref<number | undefined | null>(undefined)
 const userErrorMessage = ref<string | undefined>(undefined)
@@ -263,9 +252,13 @@ const loadLnurlData = async () => {
   }
 
   if (status === 'unfunded') {
-    showFunding.value = true
-  } else {
-    showFunding.value = false
+    router.replace({
+      name: 'funding',
+      params: {
+        cardHash: cardHash.value,
+      },
+    })
+    return
   }
 
   if (status === 'used') {

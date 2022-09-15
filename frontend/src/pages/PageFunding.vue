@@ -1,5 +1,16 @@
 <template>
-  <div>
+  <div class="my-10 mx-auto w-full max-w-md px-4">
+    <div
+      v-if="backlink != null"
+      class="px-4"
+    >
+      <LinkDefault
+        :href="backlink"
+        @click.prevent="$router.back()"
+      >
+        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
+      </LinkDefault>
+    </div>
     <HeadlineDefault level="h1">
       {{ t('funding.headline') }}
     </HeadlineDefault>
@@ -62,9 +73,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useI18n, Translation } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import { BACKEND_API_ORIGIN } from '@/constants'
@@ -72,29 +84,35 @@ import LightningQrCode from '@/components/LightningQrCode.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 const { t } = useI18n()
+
+const route = useRoute()
 
 const amount = ref(1000)
 const text = ref('Have fun with Bitcoin :)')
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
+const rateBtcEur = ref<number | undefined>(undefined)
 
-const props = defineProps({
-  cardHash: {
-    type: String,
-    required: true,
-  },
-  rateBtcEur: {
-    type: Number,
-    default: undefined,
-  },
+const backlink = computed(() => {
+  try {
+    return new URL(document.referrer).origin === location.origin ? document.referrer : null
+  } catch (error) {
+    return null
+  }
 })
+
+const loadRateBtcEur = async () => {
+  const krakenResponse = await axios.get('https://api.kraken.com/0/public/Ticker?pair=BTCEUR')
+  rateBtcEur.value = parseFloat(krakenResponse.data.result.XXBTZEUR.c[0])
+}
 
 const checkCardForInvoice = async () => {
   try {
-    await axios.get(`${BACKEND_API_ORIGIN}/api/lnurl/${props.cardHash}`)
+    await axios.get(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
   } catch (error) {
     if (!axios.isAxiosError(error)) {
       return
@@ -111,12 +129,13 @@ const checkCardForInvoice = async () => {
   }
 }
 
+onBeforeMount(loadRateBtcEur)
 onMounted(checkCardForInvoice)
 
 const fund = async () => {
   try {
     const response = await axios.post(
-      `${BACKEND_API_ORIGIN}/api/invoice/create/${props.cardHash}`,
+      `${BACKEND_API_ORIGIN}/api/invoice/create/${route.params.cardHash}`,
       {
         amount: amount.value,
         text: text.value,
