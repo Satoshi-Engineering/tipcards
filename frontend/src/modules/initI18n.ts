@@ -7,7 +7,7 @@ const messages = {
       cards: '{count} card | {count} cards',
     },
     footer: {
-      support: 'Any questions, feedback or problems? Write us to {email}.',
+      support: 'Any questions or feedback? Or did you find a problem or bug? Don\'t hesitate to contact us: {email}.',
     },
     landing: {
       introGreeting: 'Hey!',
@@ -133,7 +133,7 @@ const messages = {
       cards: '{count} Karte | {count} Karten',
     },
     footer: {
-      support: 'Hast du Fragen, Feedback oder ein Problem? Schreib uns an {email}.',
+      support: 'Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.',
     },
     landing: {
       introGreeting: 'Hi!',
