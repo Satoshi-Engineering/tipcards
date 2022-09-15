@@ -43,7 +43,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card == null) {
     res.status(404).json({
       status: 'ERROR',
-      message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      reason: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
       code: ErrorCode.CardByHashNotFound,
       data: responseData,
     })
@@ -67,7 +67,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       console.error(code, errorToLog)
       res.status(500).json({
         status: 'ERROR',
-        message: 'Unable to check invoice status at lnbits.',
+        reason: 'Unable to check invoice status at lnbits.',
         code: code,
         data: responseData,
       })
@@ -99,7 +99,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       console.error(code, errorToLog)
       res.status(500).json({
         status: 'ERROR',
-        message: 'Unable to check withdraw status at lnbits.',
+        reason: 'Unable to check withdraw status at lnbits.',
         code: code,
         data: responseData,
       })

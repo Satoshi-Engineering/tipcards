@@ -8,6 +8,23 @@ export type CardStatus = {
   status: 'ERROR' | 'unfunded' | 'funded' | 'used'
   message?: string,
   sats?: number | null,
+  invoiceCreated?: number | null,
+  invoicePaymentRequest?: string | null,
+}
+
+// merged response data from "tipcards backend api" and "lnbits api"
+export type ErrorResponseData = {
+  status: 'ERROR'
+  code: string
+  reason?: string
+  detail?: string
+  data?: {
+    amount: number | undefined
+    invoicePaymentRequest: string | undefined
+    invoiceCreated: number | undefined
+    invoicePaid: number | null | undefined
+    cardUsed: number | null | undefined
+  }
 }
 
 export default async (lnurl: string): Promise<CardStatus> => {
@@ -51,23 +68,21 @@ export default async (lnurl: string): Promise<CardStatus> => {
         message: 'Error when trying to load LNURL content.',
       }
     }
-    // response.data contains a property `code` if if the LNURL points to the tipcards backend
-    const responseCode = (error.response.data as { code: string }).code
-    if (responseCode === 'CardByHashNotFound' || responseCode === 'CardNotFunded') {
+    const responseData = error.response.data as ErrorResponseData
+    if (responseData.code === 'CardByHashNotFound' || responseData.code === 'CardNotFunded') {
       return {
         status: 'unfunded',
-        sats: null,
+        sats: responseData.data?.amount,
+        invoicePaymentRequest: responseData.data?.invoicePaymentRequest,
       }
     }
-    if (responseCode === 'WithdrawHasBeenSpent') {
+    if (responseData.code === 'WithdrawHasBeenSpent') {
       return {
         status: 'used',
-        sats: (error.response.data as ({ data: { amount: number}})).data.amount,
+        sats: responseData.data?.amount,
       }
     }
-    // response.data contains a property `detail` if the LNURL points to lnbits
-    const responseDetail = (error.response?.data as { detail: string }).detail
-    if (['Withdraw is spent.', 'LNURL-withdraw not found.'].includes(responseDetail)) {
+    if (['Withdraw is spent.', 'LNURL-withdraw not found.'].includes(String(responseData.detail))) {
       return {
         status: 'used',
         sats: null,

@@ -32,6 +32,7 @@
       </ParagraphDefault>
       <LightningQrCode
         :value="invoice"
+        :success="funded"
       />
     </div>
     <div
@@ -73,10 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import axios from 'axios'
 import { useI18n, Translation } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import { BACKEND_API_ORIGIN } from '@/constants'
@@ -85,10 +86,13 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import loadCardStatus from '@/modules/loadCardStatus'
+import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
 const { t } = useI18n()
 
 const route = useRoute()
+const router = useRouter()
 
 const amount = ref(1000)
 const text = ref('Have fun with Bitcoin :)')
@@ -96,6 +100,7 @@ const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
 const rateBtcEur = ref<number | undefined>(undefined)
+const funded = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -110,27 +115,34 @@ const loadRateBtcEur = async () => {
   rateBtcEur.value = parseFloat(krakenResponse.data.result.XXBTZEUR.c[0])
 }
 
-const checkCardForInvoice = async () => {
-  try {
-    await axios.get(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
-  } catch (error) {
-    if (!axios.isAxiosError(error)) {
-      return
-    }
-    const responseData = error.response?.data as { code: string, data?: { invoicePaymentRequest: string, amount: number } }
-    if (
-      responseData.code === 'CardNotFunded'
-      && typeof responseData.data?.invoicePaymentRequest === 'string'
-      && typeof responseData.data?.amount === 'number'
-    ) {
-      invoice.value = responseData.data?.invoicePaymentRequest
-      invoiceAmount.value = responseData.data?.amount
-    }
+const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
+
+const loadLnurlData = async () => {
+  const { status, sats, invoicePaymentRequest } = await loadCardStatus(lnurl.value)
+
+  if (sats != null) {
+    invoiceAmount.value = sats
   }
+  if (invoicePaymentRequest != null) {
+    invoice.value = invoicePaymentRequest
+  }
+  if (status === 'funded' && invoice.value != null) {
+    funded.value = true
+  } else if (status !== 'unfunded') {
+    router.replace({
+      name: 'landing',
+      query: { lightning: lnurl.value.toUpperCase() },
+    })
+    return
+  }
+
+  setTimeout(loadLnurlData, 10 * 1000)
 }
 
-onBeforeMount(loadRateBtcEur)
-onMounted(checkCardForInvoice)
+onBeforeMount(() => {
+  loadRateBtcEur()
+  loadLnurlData()
+})
 
 const fund = async () => {
   try {
