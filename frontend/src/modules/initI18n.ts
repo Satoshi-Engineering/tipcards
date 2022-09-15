@@ -6,6 +6,9 @@ const messages = {
       back: 'Back',
       cards: '{count} card | {count} cards',
     },
+    footer: {
+      support: 'Any questions, feedback or problems? Write us to {email}.',
+    },
     landing: {
       introGreeting: 'Hey!',
       introMessageReceiveBtc: {
@@ -70,7 +73,7 @@ const messages = {
         textHint: 'will be displayed in the recipient\'s wallet',
         button: 'Jetzt aufladen',
       },
-      invoiceText: 'Please pay your lightning invoice to fund your Tip Card with {amount} sats.',
+      invoiceText: 'Fund your Tip Card with {amount} sats:',
     },
     index: {
       buttonCreate: 'Create your Tip Cards set',
@@ -127,6 +130,9 @@ const messages = {
     general: {
       back: 'Zurück',
       cards: '{count} Karte | {count} Karten',
+    },
+    footer: {
+      support: 'Hast du Fragen, Feedback oder ein Problem? Schreib uns an {email}.',
     },
     landing: {
       introGreeting: 'Hi!',
@@ -192,7 +198,7 @@ const messages = {
         textHint: 'wird in der Wallet des Empfängers angezeigt werden',
         button: 'Jetzt aufladen',
       },
-      invoiceText: 'Bitte bezahle deine Lightning Invoice und lade {amount} Sats auf deine Tip Card.',
+      invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
     },
     index: {
       buttonCreate: 'Erstelle dein Tip Cards-Set',

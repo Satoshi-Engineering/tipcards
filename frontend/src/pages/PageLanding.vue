@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto max-w-md">
+  <div class="mx-auto w-full max-w-md">
     <div
       v-if="backlink != null"
       class="pt-4 px-4"
@@ -13,7 +13,7 @@
     </div>
     <div
       v-if="showFunding && cardHash != null"
-      class="my-10 mx-auto px-4 max-w-md"
+      class="my-10 mx-auto px-4 w-full max-w-md"
     >
       <FundingInterface
         :card-hash="cardHash"
@@ -22,7 +22,7 @@
     </div>
     <div
       v-else
-      class="my-10 mx-auto px-4 max-w-md"
+      class="my-10 mx-auto px-4 w-full max-w-md"
     >
       <HeadlineDefault level="h1" class="mb-8">
         <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
