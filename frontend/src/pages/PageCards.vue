@@ -236,7 +236,7 @@
               </div>
             </div>
             <div
-              v-if="card.sats != null"
+              v-if="card.sats != null && card.status !== 'unfunded'"
               class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
             >
               <span class="m-auto">{{ card.sats }} sats</span>
@@ -458,7 +458,7 @@ const saveCardsSet = () => {
   if (setId.value == null) {
     return
   }
-  if (!hasBeenSaved.value && !confirm(t('cards.saveSetWarning'))) {
+  if (!hasBeenSaved.value && !confirm(t('cards.saveSetConfirm'))) {
     return
   }
   loadSavedCardsSets()

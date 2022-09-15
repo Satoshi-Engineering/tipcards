@@ -37,7 +37,7 @@ const messages = {
         recommendation: 'For starters we recommend {walletOfSatoshi}.',
         button: 'Download Wallet of Satoshi',
         other: 'You can also try {wallet0}, {wallet1}, {wallet2} or any other Lightning wallet*.',
-        otherFootnote: '*that understands LNURL',
+        otherFootnote: '* that understands Lightning and LNURL',
       },
       sectionReceive: {
         headline: 'Receive your bitcoin',
@@ -57,9 +57,9 @@ const messages = {
         examplesIntro: 'Here are a few websites where you can pay with bitcoin via Lightning:',
         examples: {
           saltNDaisy: 'Buy some organic sustainable Granola',
-          coinpages: 'Find stores that accept bitcoin',
           roulette: 'Play a round of roulette',
-          other: 'Find out what else you could do',
+          lightningnetworkstores: 'Find out what else you could do online',
+          coinpages: 'Find stores that accept bitcoin',
         },
         createYourOwnTipCardsHeadline: 'Create your own Tip Cards',
         createYourOwnTipCardsText: 'Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.',
@@ -76,7 +76,7 @@ const messages = {
       invoiceText: 'Fund your Tip Card with {amount} sats:',
     },
     index: {
-      buttonCreate: 'Create your Tip Cards set',
+      buttonCreate: 'Create your Tip Cards set ⚡',
       savedCardsSetsHeadline: 'Saved Tip Cards sets',
       noSavedCardsSetsMessage: 'No saved Tip Cards sets found in this browser',
     },
@@ -163,7 +163,7 @@ const messages = {
         recommendation: 'Zum Einstieg empfehlen wir die {walletOfSatoshi}.',
         button: 'Wallet of Satoshi herunterladen',
         other: 'Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.',
-        otherFootnote: '* die mit LNURL kompatibel ist',
+        otherFootnote: '* die mit Lightning und LNURL kompatibel ist',
       },
       sectionReceive: {
         headline: 'Hol dir deine Bitcoin',
@@ -183,11 +183,11 @@ const messages = {
         examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
         examples: {
           saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
-          coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
           roulette: 'Spiel eine Runde Roulette',
-          other: 'Finde heraus, was du sonst noch machen kannst',
+          lightningnetworkstores: 'Finde heraus, was du online machen kannst',
+          coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
         },
-        createYourOwnTipCardsHeadline: 'Erstelle eigene Tip Cards',
+        createYourOwnTipCardsHeadline: 'Erstelle eigene Tip Cards ⚡',
         createYourOwnTipCardsText: 'Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen Tip Cards.',
         createYourOwnTipCardsButton: 'Meine eigenen Tip Cards erstellen',
       },

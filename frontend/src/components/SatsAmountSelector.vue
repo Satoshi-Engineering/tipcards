@@ -6,6 +6,7 @@
         class="w-full border my-1 px-3 py-2 focus:outline-none"
         type="number"
         inputmode="decimal"
+        :min="min"
         :step="inputStep"
         @input="onInput"
       >
@@ -67,6 +68,10 @@ const props = defineProps({
   rateBtcEur: {
     type: Number,
     default: undefined,
+  },
+  min: {
+    type: Number,
+    default: 0,
   },
 })
 

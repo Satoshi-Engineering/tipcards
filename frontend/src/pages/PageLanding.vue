@@ -75,7 +75,7 @@
       </div>
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="amount != null">1. </span>{{ t('landing.sectionWallet.headline') }}
+          <span v-if="showContent !== 'used'">1. </span>{{ t('landing.sectionWallet.headline') }}
         </HeadlineDefault>
         <!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionWallet.explanation'))" />
@@ -107,17 +107,17 @@
               <LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>
             </template>
             <template #wallet1>
-              <LinkDefault href="https://muun.com/">Muun</LinkDefault>
+              <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>
             </template>
             <template #wallet2>
-              <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>
+              <LinkDefault href="https://breez.technology/">Breez</LinkDefault>
             </template>
           </I18nT>
           <br>
           <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
         </ParagraphDefault>
       </div>
-      <div v-if="amount != null" class="my-10">
+      <div v-if="showContent !== 'used'" class="my-10">
         <HeadlineDefault level="h2">
           2. {{ t('landing.sectionReceive.headline') }}
         </HeadlineDefault>
@@ -141,7 +141,7 @@
       </div>
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="amount != null">3. </span>{{ t('landing.sectionUse.headline') }}
+          <span v-if="showContent !== 'used'">3. </span>{{ t('landing.sectionUse.headline') }}
         </HeadlineDefault>
         <ParagraphDefault>
           {{ t('landing.sectionUse.message') }}
@@ -155,16 +155,16 @@
             <LinkDefault href="https://saltndaisy.at/" />
           </li>
           <li class="my-1">
-            {{ t('landing.sectionUse.examples.coinpages') }}:<br>
-            <LinkDefault href="https://coinpages.io/" />
-          </li>
-          <li class="my-1">
             {{ t('landing.sectionUse.examples.roulette') }}:<br>
             <LinkDefault href="https://lightning-roulette.com/" />
           </li>
           <li class="my-1">
-            {{ t('landing.sectionUse.examples.other') }}:<br>
+            {{ t('landing.sectionUse.examples.lightningnetworkstores') }}:<br>
             <LinkDefault href="https://lightningnetworkstores.com/" />
+          </li>
+          <li class="my-1">
+            {{ t('landing.sectionUse.examples.coinpages') }}:<br>
+            <LinkDefault href="https://coinpages.io/" />
           </li>
         </ul>
         <HeadlineDefault level="h3" class="mt-7">

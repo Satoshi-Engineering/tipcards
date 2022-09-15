@@ -2,6 +2,7 @@
   <button
     v-if="href == null"
     :class="cssClasses"
+    :disabled="disabled"
   >
     <slot />
   </button>
@@ -32,6 +33,10 @@ const props = defineProps({
     type: String as PropType<'outline' | 'no-border' | undefined>,
     default: undefined,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const cssClasses = [
@@ -40,6 +45,7 @@ const cssClasses = [
     'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect': props.variant == null,
     'bg-transparent text-btcorange': props.variant === 'outline',
     'bg-transparent text-btcorange border-transparent px-0': props.variant === 'no-border',
+    'opacity-50 cursor-default pointer-events-none': props.disabled,
   },
 ]
 

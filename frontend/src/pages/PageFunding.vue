@@ -1,8 +1,8 @@
 <template>
-  <div class="my-10 mx-auto w-full max-w-md px-4">
+  <div class="mx-auto w-full max-w-md">
     <div
       v-if="backlink != null"
-      class="px-4"
+      class="pt-4 px-4"
     >
       <LinkDefault
         :href="backlink"
@@ -11,64 +11,67 @@
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
     </div>
-    <HeadlineDefault level="h1">
-      {{ t('funding.headline') }}
-    </HeadlineDefault>
-    <ParagraphDefault
-      v-if="invoice == null"
-      class="mb-8"
-    >
-      {{ t('funding.text') }}
-    </ParagraphDefault>
-    <div
-      v-if="invoice != null"
-    >
-      <ParagraphDefault>
-        <Translation keypath="funding.invoiceText">
-          <template #amount>
-            <strong>{{ invoiceAmount }}</strong>
-          </template>
-        </Translation>
-      </ParagraphDefault>
-      <LightningQrCode
-        :value="invoice"
-        :success="funded"
-      />
-    </div>
-    <div
-      v-else
-    >
-      <form @submit.prevent="fund">
-        <label class="block mb-2">
-          <SatsAmountSelector
-            :amount-sats="amount"
-            :rate-btc-eur="rateBtcEur"
-            @update="amount = $event"
-          />
-        </label>
-        <label class="block mb-2">
-          <input
-            v-model="text"
-            type="text"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
-          >
-          <small class="block">({{ t('funding.form.textHint') }})</small>
-        </label>
-        <div class="text-center mt-4">
-          <ButtonDefault
-            type="submit"
-          >
-            {{ t('funding.form.button') }}
-          </ButtonDefault>
-        </div>
-      </form>
-    </div>
-    <div v-if="userErrorMessage != null">
+    <div class="mt-8 px-4">
+      <HeadlineDefault level="h1" class="mt-10">
+        {{ t('funding.headline') }}
+      </HeadlineDefault>
       <ParagraphDefault
-        class="text-red-500"
+        v-if="invoice == null"
+        class="mb-8"
       >
-        {{ userErrorMessage }}
+        {{ t('funding.text') }}
       </ParagraphDefault>
+      <div
+        v-if="invoice != null"
+      >
+        <ParagraphDefault>
+          <Translation keypath="funding.invoiceText">
+            <template #amount>
+              <strong>{{ invoiceAmount }}</strong>
+            </template>
+          </Translation>
+        </ParagraphDefault>
+        <LightningQrCode
+          :value="invoice"
+          :success="funded"
+        />
+      </div>
+      <div
+        v-else
+      >
+        <form @submit.prevent="fund">
+          <label class="block mb-2">
+            <SatsAmountSelector
+              :amount-sats="amount"
+              :rate-btc-eur="rateBtcEur"
+              :min="500"
+              @update="amount = $event"
+            />
+          </label>
+          <label class="block mb-2">
+            <input
+              v-model="text"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+            >
+            <small class="block">({{ t('funding.form.textHint') }})</small>
+          </label>
+          <div class="text-center mt-4">
+            <ButtonDefault
+              type="submit"
+            >
+              {{ t('funding.form.button') }}
+            </ButtonDefault>
+          </div>
+        </form>
+      </div>
+      <div v-if="userErrorMessage != null">
+        <ParagraphDefault
+          class="text-red-500"
+        >
+          {{ userErrorMessage }}
+        </ParagraphDefault>
+      </div>
     </div>
   </div>
 </template>
