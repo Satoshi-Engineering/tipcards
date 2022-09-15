@@ -33,7 +33,7 @@
             class="mx-auto"
           >
             <li
-              v-for="cardsSet in savedCardsSets.reverse()"
+              v-for="cardsSet in [...savedCardsSets].reverse()"
               :key="cardsSet.setId"
               class="text-left"
             >
