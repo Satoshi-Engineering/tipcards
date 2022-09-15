@@ -54,10 +54,23 @@ const messages = {
         examplesIntro: 'Here are a few websites where you can pay with bitcoin via Lightning:',
         examples: {
           saltNDaisy: 'Buy some organic sustainable Granola',
+          coinpages: 'Find stores that accept bitcoin',
           roulette: 'Play a round of roulette',
           other: 'Find out what else you could do',
         },
+        createYourOwnTipCardsHeadline: 'Create your own Tip Cards',
+        createYourOwnTipCardsText: 'Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.',
+        createYourOwnTipCardsButton: 'Create my own Tip Cards',
       },
+    },
+    funding: {
+      headline: 'Fund this Tip Card',
+      text: 'This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.',
+      form: {
+        textHint: 'will be displayed in the recipient\'s wallet',
+        button: 'Jetzt aufladen',
+      },
+      invoiceText: 'Please pay your lightning invoice to fund your Tip Card with {amount} sats.',
     },
     index: {
       buttonCreate: 'Create your Tip Cards set',
@@ -159,17 +172,30 @@ const messages = {
       },
       sectionUse: {
         headline: 'Verwende deine Bitcoin',
-        message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akteptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder Kollegen. Oder du hodlst sie einfach.',
+        message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akteptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst sie einfach.',
         examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
         examples: {
           saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
+          coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
           roulette: 'Spiel eine Runde Roulette',
           other: 'Finde heraus, was du sonst noch machen kannst',
         },
+        createYourOwnTipCardsHeadline: 'Erstelle eigene Tip Cards',
+        createYourOwnTipCardsText: 'Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen Tip Cards.',
+        createYourOwnTipCardsButton: 'Meine eigenen Tip Cards erstellen',
       },
     },
+    funding: {
+      headline: 'Lade die Tip Card auf',
+      text: 'Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht der Empfänger in seiner Wallet sehen soll.',
+      form: {
+        textHint: 'wird in der Wallet des Empfängers angezeigt werden',
+        button: 'Jetzt aufladen',
+      },
+      invoiceText: 'Bitte bezahle deine Lightning Invoice und lade {amount} Sats auf deine Tip Card.',
+    },
     index: {
-      buttonCreate: 'Erstelle dein Tip Cards-Sets',
+      buttonCreate: 'Erstelle dein Tip Cards-Set',
       savedCardsSetsHeadline: 'Gespeicherte Tip Cards-Sets',
       noSavedCardsSetsMessage: 'In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert',
     },

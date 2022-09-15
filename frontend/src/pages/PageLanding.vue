@@ -165,6 +165,10 @@
             <LinkDefault href="https://saltndaisy.at/" />
           </li>
           <li class="my-1">
+            {{ t('landing.sectionUse.examples.coinpages') }}:<br>
+            <LinkDefault href="https://coinpages.io/" />
+          </li>
+          <li class="my-1">
             {{ t('landing.sectionUse.examples.roulette') }}:<br>
             <LinkDefault href="https://lightning-roulette.com/" />
           </li>
@@ -173,6 +177,19 @@
             <LinkDefault href="https://lightningnetworkstores.com/" />
           </li>
         </ul>
+        <HeadlineDefault level="h3" class="mt-7">
+          {{ t('landing.sectionUse.createYourOwnTipCardsHeadline') }}
+        </HeadlineDefault>
+        <ParagraphDefault>
+          {{ t('landing.sectionUse.createYourOwnTipCardsText') }}
+        </ParagraphDefault>
+        <ParagraphDefault class="text-center">
+          <ButtonDefault
+            @click="$router.push({ name: 'home' })"
+          >
+            {{ t('landing.sectionUse.createYourOwnTipCardsButton') }}
+          </ButtonDefault>
+        </ParagraphDefault>
       </div>
     </div>
   </div>
