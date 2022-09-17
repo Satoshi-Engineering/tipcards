@@ -43,7 +43,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card == null) {
     res.status(404).json({
       status: 'ERROR',
-      reason: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      reason: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
       code: ErrorCode.CardByHashNotFound,
       data: responseData,
     })
@@ -77,7 +77,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   if (card.lnbitsWithdrawId == null) {
     res.status(404).json({
       status: 'ERROR',
-      reason: `Card has not been funded yet. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+      reason: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
       code: ErrorCode.CardNotFunded,
       data: responseData,
     })

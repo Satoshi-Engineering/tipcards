@@ -6,7 +6,7 @@
         class="w-full border my-1 px-3 py-2 focus:outline-none"
         type="number"
         inputmode="decimal"
-        :min="min"
+        :min="inputMin"
         :step="inputStep"
         @input="onInput"
       >
@@ -58,6 +58,16 @@ const inputStep = computed(() => {
     return 0.01
   }
   return 0.00000001
+})
+
+const inputMin = computed(() => {
+  if (selectedCurrency.value === 'sats') {
+    return props.min
+  }
+  if (selectedCurrency.value === 'EUR' && props.rateBtcEur != null && props.rateBtcEur > 0) {
+    return props.min / rateBtcSats * props.rateBtcEur
+  }
+  return props.min / rateBtcSats
 })
 
 const props = defineProps({
