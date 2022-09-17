@@ -65,7 +65,7 @@ const inputMin = computed(() => {
     return props.min
   }
   if (selectedCurrency.value === 'EUR' && props.rateBtcEur != null && props.rateBtcEur > 0) {
-    return props.min / rateBtcSats * props.rateBtcEur
+    return formatNumber(props.min / rateBtcSats * props.rateBtcEur, 2, 2, undefined, 'en')
   }
   return props.min / rateBtcSats
 })
