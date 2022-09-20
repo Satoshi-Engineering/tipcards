@@ -12,6 +12,7 @@ export enum ErrorCode {
   UnableToGetLnbitsWithdrawStatus = 'UnableToGetLnbitsWithdrawStatus',
   UnknownErrorWhileCheckingWithdrawStatus = 'UnknownErrorWhileCheckingWithdrawStatus',
   WithdrawHasBeenSpent = 'WithdrawHasBeenSpent',
+  CardFundedAndNotUsed = 'CardFundedAndNotUsed',
 }
 
 export class ErrorWithCode {

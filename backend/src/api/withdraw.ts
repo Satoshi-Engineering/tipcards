@@ -3,7 +3,7 @@ import express from 'express'
 import { ErrorCode, ErrorWithCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
-import { checkIfCardIsUed } from '../services/lnbitsHelpers'
+import { checkIfCardIsUsed } from '../services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '../constants'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 
@@ -47,7 +47,7 @@ const cardUsed = async (req: express.Request, res: express.Response) => {
 
   // check lnbits if the card is used
   try {
-    await checkIfCardIsUed(card)
+    await checkIfCardIsUsed(card)
   } catch (error: unknown) {
     let code = ErrorCode.UnknownErrorWhileCheckingWithdrawStatus
     let errorToLog = error

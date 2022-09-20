@@ -17,6 +17,9 @@ import { LNBITS_ORIGIN } from '../../../src/constants'
  * @throws
  */
 export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): Promise<Card> => {
+  if (card.lnbitsWithdrawId != null) {
+    return card
+  }
   if (card.invoice.paid == null) {
     try {
       const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`, {
@@ -80,8 +83,8 @@ export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): P
  * @param card Card
  * @throws
  */
-export const checkIfCardIsUed = async (card: Card): Promise<Card> => {
-  if (card.used != null) {
+export const checkIfCardIsUsed = async (card: Card): Promise<Card> => {
+  if (card.lnbitsWithdrawId == null || card.used != null) {
     return card
   }
   try {

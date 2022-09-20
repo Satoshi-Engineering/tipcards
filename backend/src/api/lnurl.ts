@@ -3,9 +3,8 @@ import express from 'express'
 import { ErrorCode, ErrorWithCode } from '../data/Errors'
 import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
-import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '../constants'
-import { decodeLnurl, getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
+import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
 import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
 import axios from 'axios'
 
@@ -88,7 +87,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   // check if card is already used
   if (card.used == null) {
     try {
-      await checkIfCardIsUed(card)
+      await checkIfCardIsUsed(card)
     } catch (error: unknown) {
       let code = ErrorCode.UnknownErrorWhileCheckingWithdrawStatus
       let errorToLog = error
