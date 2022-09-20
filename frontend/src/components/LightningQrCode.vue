@@ -78,5 +78,4 @@ const qrCodeSvg = computed<string>(() => props.value != null ? new QRCode({
   }).svg() : '')
 
 const type = computed(() => props.value.toLowerCase().startsWith('lnurl') ? 'lnurl' : 'invoice')
-
 </script>

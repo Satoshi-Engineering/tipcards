@@ -192,6 +192,10 @@
 </template>
 
 <script lang="ts" setup>
+/**
+ * This page will be deleted. At the latest as soon as PageCards has bulk/pre-funding.
+ * @deprecated
+ */
 import { onMounted, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
@@ -335,6 +339,4 @@ const downloadZip = async (asPng = false) => {
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
   saveAs(zipFileContent, `qrCodes_${amount.value}sats_${withdrawId.value}_${fileExtension}.zip`)
 }
-
-
 </script>
