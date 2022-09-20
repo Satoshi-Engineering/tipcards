@@ -12,7 +12,10 @@
       </LinkDefault>
     </div>
     <div class="mt-8 px-4">
-      <HeadlineDefault level="h1" class="mt-10">
+      <HeadlineDefault
+        level="h1"
+        class="mt-10"
+      >
         {{ t('funding.headline') }}
       </HeadlineDefault>
       <ParagraphDefault
@@ -57,18 +60,14 @@
             <small class="block">({{ t('funding.form.textHint') }})</small>
           </label>
           <div class="text-center mt-4">
-            <ButtonDefault
-              type="submit"
-            >
+            <ButtonDefault type="submit">
               {{ t('funding.form.button') }}
             </ButtonDefault>
           </div>
         </form>
       </div>
       <div v-if="userErrorMessage != null">
-        <ParagraphDefault
-          class="text-red-500"
-        >
+        <ParagraphDefault class="text-red-500">
           {{ userErrorMessage }}
         </ParagraphDefault>
       </div>
@@ -77,23 +76,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
 import axios from 'axios'
+import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n, Translation } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import ButtonDefault from '@/components/ButtonDefault.vue'
-import { BACKEND_API_ORIGIN } from '@/constants'
-import LightningQrCode from '@/components/LightningQrCode.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
+import LightningQrCode from '@/components/LightningQrCode.vue'
+import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import loadCardStatus from '@/modules/loadCardStatus'
+import { rateBtcEur } from '@/modules/rateBtcEur'
+import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
 const { t } = useI18n()
-
 const route = useRoute()
 const router = useRouter()
 
@@ -102,7 +101,6 @@ const text = ref('Have fun with Bitcoin :)')
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
-const rateBtcEur = ref<number | undefined>(undefined)
 const funded = ref(false)
 
 const backlink = computed(() => {
@@ -112,11 +110,6 @@ const backlink = computed(() => {
     return null
   }
 })
-
-const loadRateBtcEur = async () => {
-  const krakenResponse = await axios.get('https://api.kraken.com/0/public/Ticker?pair=BTCEUR')
-  rateBtcEur.value = parseFloat(krakenResponse.data.result.XXBTZEUR.c[0])
-}
 
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
@@ -142,10 +135,7 @@ const loadLnurlData = async () => {
   setTimeout(loadLnurlData, 10 * 1000)
 }
 
-onBeforeMount(() => {
-  loadRateBtcEur()
-  loadLnurlData()
-})
+onBeforeMount(loadLnurlData)
 
 const fund = async () => {
   try {

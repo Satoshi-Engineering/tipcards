@@ -186,29 +186,28 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useI18n, Translation as I18nT } from 'vue-i18n'
-import axios from 'axios'
 import { decodelnurl } from 'js-lnurl'
+import { onMounted, ref, computed } from 'vue'
+import { useI18n, Translation as I18nT } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
-import formatNumber from '@/modules/formatNumber'
-import sanitizeI18n from '@/modules/sanitizeI18n'
+import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import IconBitcoin from '../components/svgs/IconBitcoin.vue'
+import LightningQrCode from '@/components/LightningQrCode.vue'
+import formatNumber from '@/modules/formatNumber'
 import loadCardStatus from '@/modules/loadCardStatus'
-import LightningQrCode from '../components/LightningQrCode.vue'
+import { rateBtcEur } from '@/modules/rateBtcEur'
+import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
 
 const { t } = useI18n()
 
-const spent = ref<boolean | undefined>(undefined)
-const amount = ref<number | undefined | null>(undefined)
-const userErrorMessage = ref<string | undefined>(undefined)
-const rateBtcEur = ref<number | undefined>(undefined)
+const spent = ref<boolean | undefined>()
+const amount = ref<number | undefined | null>()
+const userErrorMessage = ref<string | undefined>()
 const cardUsed = ref<number | undefined>()
 
 const amountInEur = computed(() => {
@@ -239,11 +238,6 @@ const cardHash = computed<string | null | undefined>(() => {
   const [, hash] = decodedLnurl.toLowerCase().match(/\/api\/lnurl\/([0-9a-f]+)/) || []
   return hash
 })
-
-const loadRateBtcEur = async () => {
-  const krakenResponse = await axios.get('https://api.kraken.com/0/public/Ticker?pair=BTCEUR')
-  rateBtcEur.value = parseFloat(krakenResponse.data.result.XXBTZEUR.c[0])
-}
 
 const loadLnurlData = async () => {
   const { status, sats, message, cardUsed: cardUsedLocal } = await loadCardStatus(lnurl)
@@ -300,8 +294,5 @@ const showContent = computed<'spendable' | 'used' | 'recentlyUsed' | null>(() =>
   return null
 })
 
-onMounted(() => {
-  loadRateBtcEur()
-  loadLnurlData()
-})
+onMounted(loadLnurlData)
 </script>
