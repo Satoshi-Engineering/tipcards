@@ -1,9 +1,7 @@
 <template>
   <div class="mb-1 border-b print:hidden">
     <div class="p-2 pt-4">
-      <LinkDefault
-        :to="{ name: 'home' }"
-      >
+      <LinkDefault :to="{ name: 'home' }">
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
     </div>
@@ -76,9 +74,7 @@
       </label>
     </div>
     <div class="px-2 my-1 text-sm">
-      <ButtonDefault
-        @click="printCards()"
-      >
+      <ButtonDefault @click="printCards()">
         {{ t('cards.buttonPrint') }}
       </ButtonDefault>
       &nbsp;
@@ -90,9 +86,7 @@
       </ButtonDefault>
     </div>
     <div class="px-2 my-1 text-sm">
-      <ButtonDefault
-        @click="saveCardsSet"
-      >
+      <ButtonDefault @click="saveCardsSet">
         {{ t('cards.buttonSaveCardsSet') }}
         <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
         <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
@@ -133,20 +127,17 @@
         </select>
       </label>
     </div>
-    <div v-if="userErrorMessage != null" class="p-2">
-      <p
-        class="text-red-500 text-align-center"
-      >
+    <div
+      v-if="userErrorMessage != null"
+      class="p-2"
+    >
+      <p class="text-red-500 text-align-center">
         {{ userErrorMessage }}
       </p>
     </div>
   </div>
-  <div
-    v-if="cards.length > 0"
-  >
-    <div
-      class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0"
-    >
+  <div v-if="cards.length > 0">
+    <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
       <div class="w-[210mm] p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
         <div>
           Set ID:<br>
@@ -260,41 +251,32 @@ import { useI18n } from 'vue-i18n'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import svgToPng from '@/modules/svgToPng'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
-import ButtonDefault from '../components/ButtonDefault.vue'
-import IconBitcoin from '../components/svgs/IconBitcoin.vue'
-import IconLightning from '../components/svgs/IconLightning.vue'
-import HeadlineDefault from '../components/typography/HeadlineDefault.vue'
-import ParagraphDefault from '../components/typography/ParagraphDefault.vue'
-import LinkDefault from '../components/typography/LinkDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
+import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
+import IconLightning from '@/components/svgs/IconLightning.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 import loadCardStatus from '@/modules/loadCardStatus'
+import {
+  initialSettings,
+  type Settings,
+  initialSettingsBase64,
+  savedCardsSets,
+  loadSavedCardsSets,
+  saveCardsSet as saveCardsSetToLocalStorage,
+  deleteCardsSet as deleteCardsSetFromLocalStorage,
+} from '@/modules/cardsSets'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 
-const wasPrintedOrDownloaded = ref(false)
+///////////////////////
+// CARDS SETS + SETTINGS
+//
+const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
 
-type Card = {
-  url: string,
-  lnurl: string,
-  status: string | null,
-  sats: number | null,
-  qrCodeSvg: string,
-}
-const cards = ref<Card[]>([])
-const userErrorMessage = ref<string | undefined>(undefined)
-const userWarnings = ref<string[]>([])
-
-const cardsFilter = ref('')
-
-const initialSettings = {
-  numberOfCards: 8,
-  cardHeadline: 'Hey :)',
-  cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
-  cardsQrCodeLogo: 'bitcoin',
-}
-type Settings = typeof initialSettings
-const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
 const settings = reactive({ ...initialSettings })
 const setSettings = (newSettings: Settings | undefined = undefined) => {
   const settingsKeys = Object.keys(initialSettings) as (keyof Settings)[]
@@ -307,61 +289,29 @@ const setSettings = (newSettings: Settings | undefined = undefined) => {
   })
 }
 
-const cardsContainer = ref<HTMLElement | undefined>(undefined)
-
-const cardCopytextComputed = computed(() => settings.cardCopytext
-  .replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
-)
-
-const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
-
-const createNewCards = () => {
-  router.replace({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
-}
-
-onBeforeMount(() => {
+const saveCardsSet = () => {
   if (setId.value == null) {
-    createNewCards()
-  }
-})
-
-const repopulateCards = async () => {
-  if (setId.value == null) {
-    cards.value = []
     return
   }
-  settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
-  cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
-    const cardHash = await hashSha256(`${setId.value}/${index}`)
-    const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
-    const lnurlEncoded = encodeLnurl(lnurlDecoded)
-    const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
-    const url = `${location.protocol}//${location.host}${routeHref}`
-    return {
-      url,
-      lnurl: lnurlEncoded,
-      status: null,
-      sats: null,
-      qrCodeSvg: new QRCode({
-          content: url,
-          padding: 0,
-          join: true,
-          xmlDeclaration: false,
-          container: 'none',
-        }).svg(),
-    }
-  }))
-  cards.value.forEach(async (card) => {
-    const { status, message, sats } = await loadCardStatus(card.lnurl)
-    if (status === 'ERROR') {
-      userErrorMessage.value = message || 'Unknown error for LNURL.'
-      return
-    }
-    card.status = status
-    if (sats != null) {
-      card.sats = sats
-    }
+  if (!hasBeenSaved.value && !confirm(t('cards.saveSetConfirm'))) {
+    return
+  }
+  saveCardsSetToLocalStorage({
+    setId: setId.value,
+    settings: String(route.params.settings),
+    date: new Date().toISOString(),
   })
+}
+
+const deleteCardsSet = () => {
+  if (setId.value == null) {
+    return
+  }
+  if (!confirm(t('cards.deleteSetConfirm'))) {
+    return
+  }
+  deleteCardsSetFromLocalStorage(setId.value)
+  router.push({ name: 'home' })
 }
 
 const currentSetUrl = ref<string>(document.location.href)
@@ -416,6 +366,106 @@ onMounted(urlChanged)
   
 watch(() => route.params, urlChanged)
 
+const hasBeenSaved = computed(() => {
+  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)
+})
+
+const isSaved = computed(() => {
+  if (!hasBeenSaved.value) {
+    return false
+  }
+  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && savedSet.settings === route.params.settings)
+})
+
+const showSaveWarning = computed(() => {
+  if (isSaved.value) {
+    return false
+  }
+  if (hasBeenSaved.value) {
+    return true
+  }
+  if (cards.value.some(card => card.status === 'funded' || card.status === 'used')) {
+    return true
+  }
+  if (wasPrintedOrDownloaded.value) {
+    return true
+  }
+  return false
+})
+
+///////////////////////
+// CARDS
+//
+const wasPrintedOrDownloaded = ref(false)
+
+type Card = {
+  url: string,
+  lnurl: string,
+  status: string | null,
+  sats: number | null,
+  qrCodeSvg: string,
+}
+const cards = ref<Card[]>([])
+const userErrorMessage = ref<string | undefined>(undefined)
+const userWarnings = ref<string[]>([])
+
+const cardsFilter = ref('')
+
+const cardsContainer = ref<HTMLElement | undefined>(undefined)
+
+const cardCopytextComputed = computed(() => settings.cardCopytext
+  .replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
+)
+
+const createNewCards = () => {
+  router.replace({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
+}
+
+onBeforeMount(() => {
+  if (setId.value == null) {
+    createNewCards()
+  }
+})
+
+const repopulateCards = async () => {
+  if (setId.value == null) {
+    cards.value = []
+    return
+  }
+  settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
+  cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
+    const cardHash = await hashSha256(`${setId.value}/${index}`)
+    const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
+    const lnurlEncoded = encodeLnurl(lnurlDecoded)
+    const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
+    const url = `${location.protocol}//${location.host}${routeHref}`
+    return {
+      url,
+      lnurl: lnurlEncoded,
+      status: null,
+      sats: null,
+      qrCodeSvg: new QRCode({
+          content: url,
+          padding: 0,
+          join: true,
+          xmlDeclaration: false,
+          container: 'none',
+        }).svg(),
+    }
+  }))
+  cards.value.forEach(async (card) => {
+    const { status, message, sats } = await loadCardStatus(card.lnurl)
+    if (status === 'ERROR') {
+      userErrorMessage.value = message || 'Unknown error for LNURL.'
+      return
+    }
+    card.status = status
+    if (sats != null) {
+      card.sats = sats
+    }
+  })
+}
+
 const downloadZip = async (format: 'png' | 'svg' = 'png') => {
   const zip = new JSZip()
   if (cardsContainer.value == null) {
@@ -439,77 +489,6 @@ const printCards = () => {
   window.print()
   wasPrintedOrDownloaded.value = true
 }
-
-type CardsSetRecord = {
-  setId: string,
-  settings: string,
-  date: string,
-}
-const SAVED_CARD_SETS_KEY = 'savedTipCardsSets'
-const savedCardsSets = ref<CardsSetRecord[]>([])
-const loadSavedCardsSets = () => {
-  try {
-    savedCardsSets.value = JSON.parse(localStorage.getItem(SAVED_CARD_SETS_KEY) || '[]')
-  } catch(error) {
-    savedCardsSets.value = []
-  }
-}
-const saveCardsSet = () => {
-  if (setId.value == null) {
-    return
-  }
-  if (!hasBeenSaved.value && !confirm(t('cards.saveSetConfirm'))) {
-    return
-  }
-  loadSavedCardsSets()
-  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
-    ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
-    {
-      setId: setId.value,
-      settings: route.params.settings,
-      date: new Date().toISOString(),
-    },
-  ]))
-  loadSavedCardsSets()
-}
-const deleteCardsSet = () => {
-  if (setId.value === null) {
-    return
-  }
-  if (!confirm(t('cards.deleteSetConfirm'))) {
-    return
-  }
-  loadSavedCardsSets()
-  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
-    ...savedCardsSets.value.filter((set) => set.setId !== setId.value),
-  ]))
-  loadSavedCardsSets()
-  router.push({ name: 'home' })
-}
-const hasBeenSaved = computed(() => {
-  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)
-})
-const isSaved = computed(() => {
-  if (!hasBeenSaved.value) {
-    return false
-  }
-  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && savedSet.settings === route.params.settings)
-})
-const showSaveWarning = computed(() => {
-  if (isSaved.value) {
-    return false
-  }
-  if (hasBeenSaved.value) {
-    return true
-  }
-  if (cards.value.some(card => card.status === 'funded' || card.status === 'used')) {
-    return true
-  }
-  if (wasPrintedOrDownloaded.value) {
-    return true
-  }
-  return false
-})
 
 const hashSha256 = async (message: string) => {
   const msgUint8 = new TextEncoder().encode(message)                           // encode as (utf-8) Uint8Array
