@@ -1,10 +1,10 @@
 import express from 'express'
 
-import { ErrorCode, ErrorWithCode } from '../data/Errors'
-import type { Card } from '../data/Card'
 import { getCardByHash } from '../services/database'
 import { checkIfCardIsUsed } from '../services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '../constants'
+import type { Card } from '../../../src/data/Card'
+import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 
 const router = express.Router()
@@ -59,7 +59,7 @@ const cardUsed = async (req: express.Request, res: express.Response) => {
     res.status(500).json({
       status: 'error',
       message: 'Unable to check withdraw status at lnbits.',
-      code: code,
+      code,
     })
     return
   }

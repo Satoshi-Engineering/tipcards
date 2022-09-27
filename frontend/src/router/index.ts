@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import PageIndex from '@/pages/PageIndex.vue'
 import PageLanding from '@/pages/PageLanding.vue'
-import PageCodes from '@/pages/PageCodes.vue'
 import PageCards from '@/pages/PageCards.vue'
 import PageFunding from '@/pages/PageFunding.vue'
 
@@ -22,11 +21,6 @@ const router = createRouter({
       path: '/landing/',
       name: 'landing',
       component: PageLanding,
-    },
-    {
-      path: '/codes/:withdrawId?',
-      name: 'codes',
-      component: PageCodes,
     },
     {
       path: '/cards/:setId?/:settings?',

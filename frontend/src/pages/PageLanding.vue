@@ -198,7 +198,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import formatNumber from '@/modules/formatNumber'
-import loadCardStatus from '@/modules/loadCardStatus'
+import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcEur'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
@@ -240,13 +240,17 @@ const cardHash = computed<string | null | undefined>(() => {
 })
 
 const loadLnurlData = async () => {
-  const { status, sats, message, cardUsed: cardUsedLocal } = await loadCardStatus(lnurl)
-  if (status === 'ERROR' && message != null) {
+  if (cardHash.value == null) {
+    router.push({ name: 'home' })
+    return
+  }
+  const { status, message, card } = await loadCardStatus(cardHash.value)
+  if (status === 'error' && message != null) {
     userErrorMessage.value = message
     return
   }
 
-  if (status === 'unfunded') {
+  if (card == null || status === 'unfunded') {
     router.replace({
       name: 'funding',
       params: {
@@ -258,15 +262,14 @@ const loadLnurlData = async () => {
 
   if (status === 'used') {
     spent.value = true
-    if (cardUsedLocal != null) {
-      cardUsed.value = cardUsedLocal
+    if (card.used != null) {
+      cardUsed.value = card.used
     }
   }
   if (status === 'funded') {
     spent.value = false
   }
-
-  amount.value = sats
+  amount.value = card.invoice.amount
 
   setTimeout(loadLnurlData, 10 * 1000)
 }
@@ -276,20 +279,11 @@ const showContent = computed<'spendable' | 'used' | 'recentlyUsed' | null>(() =>
     return 'spendable'
   }
 
-  // tipcards v2
   if (cardUsed.value != null) {
     if ((+ new Date() / 1000) - cardUsed.value < 5 * 60) {
       return 'recentlyUsed'
     }
     return 'used'
-  }
-
-  // tipcards v1
-  if (spent.value && amount.value == null) {
-    return 'used'
-  }
-  if (spent.value && amount.value != null) {
-    return 'recentlyUsed'
   }
   return null
 })

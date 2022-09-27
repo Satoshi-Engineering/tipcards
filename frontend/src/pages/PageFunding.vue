@@ -87,7 +87,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
-import loadCardStatus from '@/modules/loadCardStatus'
+import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcEur'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
@@ -114,13 +114,13 @@ const backlink = computed(() => {
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  const { status, sats, invoicePaymentRequest } = await loadCardStatus(lnurl.value)
+  const { status, card } = await loadCardStatus(lnurl.value)
 
-  if (sats != null) {
-    invoiceAmount.value = sats
+  if (card?.invoice.amount != null) {
+    invoiceAmount.value = card.invoice.amount
   }
-  if (invoicePaymentRequest != null) {
-    invoice.value = invoicePaymentRequest
+  if (card?.invoice.payment_request != null) {
+    invoice.value = card.invoice.payment_request
   }
   if (status === 'funded' && invoice.value != null) {
     funded.value = true

@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-import type { Card } from '../data/Card'
-import { ErrorWithCode, ErrorCode } from '../data/Errors'
 import { updateCard } from './database'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
+import type { Card } from '../../../src/data/Card'
+import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
 /**

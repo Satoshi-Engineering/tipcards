@@ -1,42 +1,25 @@
 import axios from 'axios'
-import { decodelnurl, type LNURLWithdrawParams } from 'js-lnurl'
+import { decodelnurl } from 'js-lnurl'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
+import type { Card } from '@root/data/Card'
+import type { SuccessResponse } from '@root/data/Response'
 import { LNBITS_ORIGIN } from '@root/constants'
 
 export type CardStatus = {
-  status: 'ERROR' | 'unfunded' | 'funded' | 'used'
-  message?: string,
-  sats?: number | null,
-  invoicePaymentRequest?: string | null,
-  invoiceCreated?: number | null,
-  invoicePaid?: number | null,
-  cardUsed?: number | null,
+  status: 'error' | 'unfunded' | 'funded' | 'used'
+  message?: string // a message intended for the user
+  card?: Card
 }
 
-// merged response data from "tipcards backend api" and "lnbits api"
-export type ErrorResponseData = {
-  status: 'ERROR'
-  code: string
-  reason?: string
-  detail?: string
-  data?: {
-    amount: number | undefined
-    invoicePaymentRequest: string | undefined
-    invoiceCreated: number | undefined
-    invoicePaid: number | null | undefined
-    cardUsed: number | null | undefined
-  }
-}
-
-export default async (lnurl: string): Promise<CardStatus> => {
-  let lnurlDecoded: URL | undefined
+export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatus> => {
+  let lnurlDecoded: URL
   try {
     lnurlDecoded = new URL(decodelnurl(lnurl))
   } catch (error) {
     console.error(error)
     return {
-      status: 'ERROR',
+      status: 'error',
       message: 'Sorry, the provided LNURL is invalid.',
     }
   }
@@ -44,15 +27,26 @@ export default async (lnurl: string): Promise<CardStatus> => {
   if (lnurlDecoded.origin !== BACKEND_API_ORIGIN && lnurlDecoded.origin !== LNBITS_ORIGIN) {
     console.error(`LNURL points to a foreign origin: ${lnurlDecoded.origin}`)
     return {
-      status: 'ERROR',
+      status: 'error',
       message: 'Sorry, the provided LNURL cannot be used on this website.',
     }
   }
 
-  let lnurlContent: LNURLWithdrawParams
+  const cardHashMatch = lnurlDecoded.pathname.match(/\/api\/lnurl\/([a-z0-9]*)/)
+  if (cardHashMatch == null) {
+    return {
+      status: 'error',
+      message: 'Sorry, the provided LNURL is invalid.',
+    }
+  }
+  return loadCardStatus(cardHashMatch[1])
+}
+
+export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
+  let cardResponse: SuccessResponse
   try {
     const response = await axios.get(
-      new URL(lnurlDecoded).href,
+      `${BACKEND_API_ORIGIN}/api/card/${cardHash}`,
       {
         headers: {
           'Cache-Control': 'no-cache',
@@ -61,50 +55,34 @@ export default async (lnurl: string): Promise<CardStatus> => {
         },
       },
     )
-    lnurlContent = response.data
+    cardResponse = response.data
   } catch (error) {
-    if (!axios.isAxiosError(error) || error.response?.data == null) {
-      console.error(error)
-      return {
-        status: 'ERROR',
-        message: 'Error when trying to load LNURL content.',
-      }
-    }
-    const responseData = error.response.data as ErrorResponseData
-    if (responseData.code === 'CardByHashNotFound' || responseData.code === 'CardNotFunded') {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
       return {
         status: 'unfunded',
-        sats: responseData.data?.amount,
-        invoicePaymentRequest: responseData.data?.invoicePaymentRequest,
-      }
-    }
-    if (responseData.code === 'WithdrawHasBeenSpent') {
-      return {
-        status: 'used',
-        sats: responseData.data?.amount,
-        cardUsed: responseData.data?.cardUsed,
-      }
-    }
-    if (['Withdraw is spent.', 'LNURL-withdraw not found.'].includes(String(responseData.detail))) {
-      return {
-        status: 'used',
-        sats: null,
       }
     }
     console.error(error)
     return {
-      status: 'ERROR',
-      message: 'Unknown error for LNURL.',
+      status: 'error',
+      message: 'Unable to load card info.',
     }
   }
-  if (lnurlContent.tag !== 'withdrawRequest') {
+  const card = cardResponse.data as Card
+  if (card.lnbitsWithdrawId == null) {
     return {
-      status: 'ERROR',
-      message: 'Sorry, this website does not support the provided type of LNURL.',
+      status: 'unfunded',
+      card,
+    }
+  }
+  if (card.used != null) {
+    return {
+      status: 'used',
+      card,
     }
   }
   return {
     status: 'funded',
-    sats: lnurlContent.minWithdrawable / 1000,
+    card,
   }
 }

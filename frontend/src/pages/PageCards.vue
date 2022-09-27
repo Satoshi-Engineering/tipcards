@@ -240,24 +240,20 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { saveAs } from 'file-saver'
+import JSZip from 'jszip'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
-import JSZip from 'jszip'
-import { saveAs } from 'file-saver'
+import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 
-import { BACKEND_API_ORIGIN } from '@/constants'
-import svgToPng from '@/modules/svgToPng'
-import { encodeLnurl } from '@root/modules/lnurlHelpers'
-import ButtonDefault from '@/components/ButtonDefault.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import loadCardStatus from '@/modules/loadCardStatus'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
 import {
   initialSettings,
   type Settings,
@@ -267,6 +263,10 @@ import {
   saveCardsSet as saveCardsSetToLocalStorage,
   deleteCardsSet as deleteCardsSetFromLocalStorage,
 } from '@/modules/cardsSets'
+import { loadCardStatus } from '@/modules/loadCardStatus'
+import svgToPng from '@/modules/svgToPng'
+import { BACKEND_API_ORIGIN } from '@/constants'
+import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
 const route = useRoute()
 const router = useRouter()
@@ -454,14 +454,14 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    const { status, message, sats } = await loadCardStatus(card.lnurl)
-    if (status === 'ERROR') {
+    const { status, message, card: cardData } = await loadCardStatus(card.lnurl)
+    if (status === 'error') {
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
     }
     card.status = status
-    if (sats != null) {
-      card.sats = sats
+    if (cardData?.invoice.amount != null) {
+      card.sats = cardData.invoice.amount
     }
   })
 }

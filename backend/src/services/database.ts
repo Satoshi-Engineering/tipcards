@@ -1,8 +1,8 @@
 import { createClient } from 'redis'
 import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
-import type { Card } from '../data/Card'
 import { REDIS_BASE_PATH } from '../constants'
+import type { Card } from '../../../src/data/Card'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 
