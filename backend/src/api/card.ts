@@ -85,3 +85,5 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     data: card,
   })
 })
+
+export default router

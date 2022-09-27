@@ -399,6 +399,7 @@ const showSaveWarning = computed(() => {
 const wasPrintedOrDownloaded = ref(false)
 
 type Card = {
+  cardHash: string,
   url: string,
   lnurl: string,
   status: string | null,
@@ -440,6 +441,7 @@ const repopulateCards = async () => {
     const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
     const url = `${location.protocol}//${location.host}${routeHref}`
     return {
+      cardHash,
       url,
       lnurl: lnurlEncoded,
       status: null,
@@ -454,7 +456,7 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    const { status, message, card: cardData } = await loadCardStatus(card.lnurl)
+    const { status, message, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return

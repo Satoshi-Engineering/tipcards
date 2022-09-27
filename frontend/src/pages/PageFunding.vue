@@ -114,7 +114,7 @@ const backlink = computed(() => {
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  const { status, card } = await loadCardStatus(lnurl.value)
+  const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
   if (card?.invoice.amount != null) {
     invoiceAmount.value = card.invoice.amount
