@@ -2,7 +2,7 @@ import express from 'express'
 
 import { getCardByHash } from '../services/database'
 import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { Card } from '../../../src/data/Card'
+import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 
 const router = express.Router()
