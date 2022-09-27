@@ -1,4 +1,4 @@
-## Setup
+## Setup for development
 
 Make sure to install the dependencies
 ```bash
@@ -12,7 +12,26 @@ Configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
 git config core.hooksPath .githooks
 ```
 
-### VSCode Extensions
+### Backend
+
+* Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host.
+* Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
+* Create your own wallet on https://legend.lnbits.com/.
+* Create a `backend/.env` (or copy it from `backend/.env.example`) and set the following variables:
+  - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
+  - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
+  - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
+  - `LNBITS_ADMIN_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
+* You can look up additional optional variables in `.env.example`
+
+### Frontend
+
+* Create a `frontend/.env.development.local` file and add the following variable:
+  - `VITE_BACKEND_API_ORIGIN` probably http://localhost:4000 -> where your frontend will be served
+
+### VSCode
+
+#### Extensions
 
 * [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 * [PostCSS Language Support](https://marketplace.visualstudio.com/items?itemName=csstools.postcss)
@@ -23,7 +42,7 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 
 #### Use Volar's take over mode (disable builtin Typescript extension)
 
-* Make sure, "Vue Language Features (Volar)" is installed and activated (see above)
+* Make sure "Vue Language Features (Volar)" is installed and activated (see above)
 * In the commands input (Cmd/ctrl + shift + P), type in `builtin`
 * Click on "Extensions: Show built-in Extensions"
 * Search for `typescript`
@@ -32,7 +51,7 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 
 ## Development
 
-Start the frontend server on http://localhost:3000
+Start the frontend server on http://localhost:5173
 ```bash
 cd frontend && npm run dev
 ```
