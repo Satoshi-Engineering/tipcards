@@ -48,6 +48,7 @@
               :amount-sats="amount"
               :rate-btc-eur="rateBtcEur"
               :min="500"
+              :disabled="creatingInvoice"
               @update="amount = $event"
             />
           </label>
@@ -56,11 +57,15 @@
               v-model="text"
               type="text"
               class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :disabled="creatingInvoice"
             >
             <small class="block">({{ t('funding.form.textHint') }})</small>
           </label>
           <div class="text-center mt-4">
-            <ButtonDefault type="submit">
+            <ButtonDefault
+              type="submit"
+              :disabled="creatingInvoice"
+            >
               {{ t('funding.form.button') }}
             </ButtonDefault>
           </div>
@@ -102,6 +107,7 @@ const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
 const funded = ref(false)
+const creatingInvoice = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -138,6 +144,7 @@ const loadLnurlData = async () => {
 onBeforeMount(loadLnurlData)
 
 const fund = async () => {
+  creatingInvoice.value = true
   try {
     const response = await axios.post(
       `${BACKEND_API_ORIGIN}/api/invoice/create/${route.params.cardHash}`,
@@ -153,10 +160,10 @@ const fund = async () => {
   } catch(error) {
     console.error(error)
   }
+  creatingInvoice.value = false
   
   if (invoice.value == null) {
     userErrorMessage.value = 'Error when creating funding invoice.'
-    return
   }
 }
 </script>

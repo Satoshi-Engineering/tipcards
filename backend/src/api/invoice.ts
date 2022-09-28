@@ -77,10 +77,6 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       },
     })
     ;({ payment_hash, payment_request } = response.data)
-    res.json({
-      status: 'success',
-      data: response.data.payment_request,
-    })
   } catch (error) {
     console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
   }
@@ -110,7 +106,17 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
     })
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
   }
+  res.json({
+    status: 'success',
+    data: payment_request,
+  })
 })
 
 const cardPaid = async (req: express.Request, res: express.Response) => {
