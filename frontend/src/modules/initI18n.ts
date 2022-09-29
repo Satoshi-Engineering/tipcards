@@ -184,7 +184,7 @@ const messages = {
         examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
         examples: {
           saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
-          satoshistore: 'Bitcoin Outfit kaufen',
+          satoshistore: 'Check dir stylishes Bitcoin-Outfit',
           aprycotMedia: 'Bitcoin Bücher, Medien & mehr',
           lightningnetworkstores: 'Finde heraus, was du online machen kannst',
           coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
