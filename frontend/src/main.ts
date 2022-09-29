@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+import '@/modules/polyfill.randomUUID'
 import '@/assets/css/main.css'
 import i18n from '@/modules/initI18n'
 import router from '@/router'
