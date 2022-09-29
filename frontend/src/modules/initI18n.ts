@@ -57,7 +57,8 @@ const messages = {
         examplesIntro: 'Here are a few websites where you can pay with bitcoin via Lightning:',
         examples: {
           saltNDaisy: 'Buy some organic sustainable Granola',
-          roulette: 'Play a round of roulette',
+          satoshistore: 'Shop Bitcoin Outfits',
+          aprycotMedia: 'Bitcoin books, media and more',
           lightningnetworkstores: 'Find out what else you could do online',
           coinpages: 'Find stores that accept bitcoin',
         },
@@ -183,7 +184,8 @@ const messages = {
         examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
         examples: {
           saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
-          roulette: 'Spiel eine Runde Roulette',
+          satoshistore: 'Bitcoin Outfit kaufen',
+          aprycotMedia: 'Bitcoin Bücher, Medien & mehr',
           lightningnetworkstores: 'Finde heraus, was du online machen kannst',
           coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
         },

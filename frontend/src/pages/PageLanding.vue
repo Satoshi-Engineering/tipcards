@@ -155,8 +155,12 @@
             <LinkDefault href="https://saltndaisy.at/" />
           </li>
           <li class="my-1">
-            {{ t('landing.sectionUse.examples.roulette') }}:<br>
-            <LinkDefault href="https://lightning-roulette.com/" />
+            {{ t('landing.sectionUse.examples.satoshistore') }}:<br>
+            <LinkDefault href="https://satoshistore.io/" />
+          </li>
+          <li class="my-1">
+            {{ t('landing.sectionUse.examples.aprycotMedia') }}:<br>
+            <LinkDefault href="https://aprycot.media/" />
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.lightningnetworkstores') }}:<br>
