@@ -53,7 +53,8 @@ const messages = {
       },
       sectionUse: {
         headline: 'Use your bitcoin',
-        message: 'You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend\'s or colleague\'s Lightning wallet, or just hodl them.',
+        message: 'You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend\'s or colleague\'s Lightning wallet, or just hodl* them.',
+        messageFootnote: '* to hodl = to hold, to save up',
         examplesIntro: 'Here are a few websites where you can pay with bitcoin via Lightning:',
         examples: {
           saltNDaisy: 'Buy some organic sustainable Granola',
@@ -180,7 +181,8 @@ const messages = {
       },
       sectionUse: {
         headline: 'Verwende deine Bitcoin',
-        message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akteptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst sie einfach.',
+        message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst* sie einfach.',
+        messageFootnote: '* hodln = halten, sparen',
         examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
         examples: {
           saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',

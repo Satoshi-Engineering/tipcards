@@ -166,6 +166,9 @@
         <ParagraphDefault>
           {{ t('landing.sectionUse.message') }}
         </ParagraphDefault>
+        <ParagraphDefault class="text-sm mb-5">
+          {{ t('landing.sectionUse.messageFootnote') }}
+        </ParagraphDefault>
         <ParagraphDefault>
           {{ t('landing.sectionUse.examplesIntro') }}
         </ParagraphDefault>
