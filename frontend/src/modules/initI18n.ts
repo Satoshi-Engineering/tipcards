@@ -18,11 +18,11 @@ const messages = {
       },
       introMessageAlreadyUsed: {
         headline: 'It seems that this QR code has already been used.',
-        message: 'But don\'t worry: You can get your own bitcoin at a Bitcoin ATM or a Crypto exchange etc.',
+        message: 'But don\'t worry: You can get your own bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc.',
       },
       introMessageJustReceived: {
         headline: 'Your QR code has just been used. {emoji}',
-        message: 'You can get more bitcoin at a Bitcoin ATM or a Crypto exchange etc.',
+        message: 'You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc.',
       },
       sectionBitcoin: {
         paragraphs: {
@@ -145,11 +145,11 @@ const messages = {
       },
       introMessageAlreadyUsed: {
         headline: 'Dieser QR-Code wurde anscheinend bereits eingelöst.',
-        message: 'Aber keine Sorge: Du kannst dir Bitcoin auch an einem Bitcoin-Automaten oder einer Crypto-Börse etc. kaufen.',
+        message: 'Aber keine Sorge: Du kannst dir Bitcoin auch an einer Crypto-Börse (z.B. {exchange}), einem Bitcoin-Automaten (z.B. {atm}) oder bei einem Bitcoin-Broker (z.B. {broker}) etc. kaufen.',
       },
       introMessageJustReceived: {
         headline: 'Dein QR-Code wurde soeben eingelöst. {emoji}',
-        message: 'Mehr Bitcoin kannst du dir an einem Bitcoin-Automaten oder einer Crypto-Börse etc. kaufen.',
+        message: 'Mehr Bitcoin kannst du dir an einer Crypto-Börse (wie {exchange}), einem Bitcoin-Automaten (z.B. von {atm}) oder bei einem Bitcoin-Broker (beispielsweise {broker}) etc. kaufen.',
       },
       sectionBitcoin: {
         paragraphs: {

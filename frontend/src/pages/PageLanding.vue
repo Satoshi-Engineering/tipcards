@@ -44,7 +44,17 @@
           {{ t('landing.introMessageAlreadyUsed.headline') }}
         </HeadlineDefault>
         <ParagraphDefault>
-          {{ t('landing.introMessageAlreadyUsed.message') }}
+          <I18nT keypath="landing.introMessageAlreadyUsed.message">
+            <template #exchange>
+              <LinkDefault href="https://kraken.com/">Kraken</LinkDefault>
+            </template>
+            <template #atm>
+              <LinkDefault href="https://kurant.net/">Kurant</LinkDefault>
+            </template>
+            <template #broker>
+              <LinkDefault href="https://coinfinity.co/">Coinfinity</LinkDefault>
+            </template>
+          </I18nT>
         </ParagraphDefault>
       </div>
       <div v-if="showContent === 'recentlyUsed'">
@@ -52,7 +62,17 @@
           {{ t('landing.introMessageJustReceived.headline', { emoji: '🥳' }) }}
         </HeadlineDefault>
         <ParagraphDefault>
-          {{ t('landing.introMessageJustReceived.message') }}
+          <I18nT keypath="landing.introMessageJustReceived.message">
+            <template #exchange>
+              <LinkDefault href="https://kraken.com/">Kraken</LinkDefault>
+            </template>
+            <template #atm>
+              <LinkDefault href="https://kurant.net/">Kurant</LinkDefault>
+            </template>
+            <template #broker>
+              <LinkDefault href="https://coinfinity.co/">Coinfinity</LinkDefault>
+            </template>
+          </I18nT>
         </ParagraphDefault>
       </div>
       <div v-if="userErrorMessage != null">
