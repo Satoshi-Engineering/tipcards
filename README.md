@@ -1,13 +1,23 @@
+# ⚡️ Lightning Tip Cards
+_by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
+
+[![MIT License Badge](docs/license-badge.svg)](LICENSE)
+
+Lightning Tip Cards is a free to use tool, free of charge and without warrenty of any kind.
+
+`#satohsiengineeringcrew` is `#happy2help`
+
 ## Setup for development
 
 Make sure to install the dependencies
+
 ```bash
 npm install
 cd frontend && npm install && cd ..
 cd backend && npm install && cd ..
 ```
 
-Configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
+If you are working at Satoshi Engineering, please configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
 ```bash
 git config core.hooksPath .githooks
 ```
@@ -16,8 +26,9 @@ git config core.hooksPath .githooks
 
 * Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
+  * See [Example](docs/examples/redis) 
 * Create your own wallet on https://legend.lnbits.com/.
-* Create a `backend/.env` (or copy it from `backend/.env.example`) and set the following variables:
+* Create a `backend/.env` file (or copy it from `backend/.env.example`) and set the following variables:
   - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
   - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
   - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
@@ -26,7 +37,7 @@ git config core.hooksPath .githooks
 
 ### Frontend
 
-* Create a `frontend/.env.development.local` file and add the following variable:
+* Create a `frontend/.env.development.local` file  (or copy it from `frontend/.env.development`)  and add the following variable:
   - `VITE_BACKEND_API_ORIGIN` probably http://localhost:4000 -> where your frontend will be served
 
 ### VSCode
