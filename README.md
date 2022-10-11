@@ -10,6 +10,9 @@ app recommendation to start their journey into the bitcoin rabbit hole.
 It is an open-source project developed and operated for the benefit of the Bitcoin community,
 with a focus on "How to gentle orange pill nocoiners" - and without warrenty of any kind.
 
+### How to use it
+- TODO: Wie erstelle ich Tipcards 
+
 `#satohsiengineeringcrew` is `#happy2help`
 
 ## Setup for development
@@ -44,6 +47,15 @@ git config core.hooksPath .githooks
 
 * Create a `frontend/.env.development.local` file  (or copy it from `frontend/.env.development`)  and add the following variable:
   - `VITE_BACKEND_API_ORIGIN` probably http://localhost:4000 -> where your frontend will be served
+
+### Testing
+
+If you want to test the tipcards on your local machine, here are some hints
+- Fund your https://legend.lnbits.com/wallet with 1 - 100sats. The tipcard redeeming creates a lightning invoice 
+via lnbits and there are transaction costs.
+- It won't work with your smartphone, because the development setup restricted to localhost. (And if you use `vite --host` to expose the port,
+your lightning apps will refuse to work because there is no ssl connection)
+  - We use BlueWallet Deskop app for testing (it can access localhost) 
 
 ### VSCode
 
