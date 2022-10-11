@@ -9,7 +9,9 @@ export type Card = {
     paid: number | null, // unix timestamp
   } | null,
   lnurlp: {
-    id: string,
+    amount: number | null,
+    payment_hash: string | null,
+    id: number,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
   } | null, // gets created if the user scans an unfunded card with a wallet

@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { getCardByHash } from '../services/database'
-import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 
@@ -34,7 +34,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   // check if invoice is already paid and get withdrawId
   if (card.lnbitsWithdrawId == null) {
     try {
-      await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
+      await checkIfCardIsPaidAndCreateWithdrawId(card)
     } catch (error: unknown) {
       let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
       let errorToLog = error

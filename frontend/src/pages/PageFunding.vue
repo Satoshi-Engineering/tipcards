@@ -97,6 +97,8 @@ import { rateBtcEur } from '@/modules/rateBtcEur'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
+// TODO : show "funded" if funded via lnurlp
+
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
@@ -122,10 +124,10 @@ const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${rout
 const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
-  if (card?.invoice.amount != null) {
+  if (card?.invoice?.amount != null) {
     invoiceAmount.value = card.invoice.amount
   }
-  if (card?.invoice.payment_request != null) {
+  if (card?.invoice?.payment_request != null) {
     invoice.value = card.invoice.payment_request
   }
   if (status === 'funded' && invoice.value != null) {

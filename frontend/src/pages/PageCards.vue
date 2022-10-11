@@ -272,6 +272,8 @@ const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 
+// TODO : show "funded" if funded via lnurlp
+
 ///////////////////////
 // CARDS SETS + SETTINGS
 //
@@ -464,6 +466,8 @@ const repopulateCards = async () => {
     card.status = status
     if (cardData?.invoice?.amount != null) {
       card.sats = cardData.invoice.amount
+    } else if (cardData?.lnurlp?.amount != null) {
+      card.sats = cardData.lnurlp.amount
     }
   })
 }

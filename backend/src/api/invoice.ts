@@ -2,7 +2,7 @@ import axios from 'axios'
 import express from 'express'
 
 import { getCardByHash, createCard, deleteCard } from '../services/database'
-import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
@@ -167,7 +167,7 @@ const cardPaid = async (req: express.Request, res: express.Response) => {
 
   // 3. check if invoice of card is paid and create withdrawId
   try {
-    await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
+    await checkIfCardIsPaidAndCreateWithdrawId(card)
   } catch (error: unknown) {
     let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
     let errorToLog = error
@@ -223,7 +223,7 @@ router.delete('/delete/:cardHash', async (req: express.Request, res: express.Res
 
   // 2. check if invoice is already paid and used
   try {
-    await checkIfCardInvoiceIsPaidAndCreateWithdrawId(card)
+    await checkIfCardIsPaidAndCreateWithdrawId(card)
   } catch (error: unknown) {
     let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
     let errorToLog = error

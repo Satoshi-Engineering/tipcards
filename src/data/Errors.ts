@@ -15,6 +15,8 @@ export enum ErrorCode {
   CardFundedAndNotUsed = 'CardFundedAndNotUsed',
   UnableToCreateLnurlP = 'UnableToCreateLnurlP',
   UnableToGetLnurlP = 'UnableToGetLnurlP',
+  UnableToGetLnbitsLnurlpStatus = 'UnableToGetLnbitsLnurlpStatus',
+  UnableToGetLnbitsPaymentRequests = 'UnableToGetLnbitsPaymentRequests',
 }
 
 export class ErrorWithCode {

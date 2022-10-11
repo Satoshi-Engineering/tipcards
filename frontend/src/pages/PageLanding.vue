@@ -296,7 +296,11 @@ const loadLnurlData = async () => {
   if (status === 'funded') {
     spent.value = false
   }
-  amount.value = card.invoice.amount
+  if (card.invoice?.amount != null) {
+    amount.value = card.invoice.amount
+  } else if (card.lnurlp?.amount != null) {
+    amount.value = card.lnurlp.amount
+  }
 
   setTimeout(loadLnurlData, 10 * 1000)
 }
