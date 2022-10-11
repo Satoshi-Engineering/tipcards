@@ -3,7 +3,12 @@ _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
 [![MIT License Badge](docs/license-badge.svg)](LICENSE)
 
-Lightning Tip Cards is a free to use tool, free of charge and without warrenty of any kind.
+Lightning Tip Cards are a gift (or tip) card system, where you can fund tip cards via the lightning network
+and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning
+app recommendation to start their journey into the bitcoin rabbit hole.
+
+It is an open-source project developed and operated for the benefit of the Bitcoin community,
+with a focus on "How to gentle orange pill nocoiners" - and without warrenty of any kind.
 
 `#satohsiengineeringcrew` is `#happy2help`
 
