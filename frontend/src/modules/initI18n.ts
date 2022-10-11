@@ -81,6 +81,16 @@ const messages = {
       buttonCreate: 'Create your Tip Cards set ⚡',
       savedCardsSetsHeadline: 'Saved Tip Cards sets',
       noSavedCardsSetsMessage: 'No saved Tip Cards sets found in this browser',
+      youtube: {
+        create: {
+          label: 'Create',
+          link: '',
+        },
+        use: {
+          label: 'Use',
+          link: '',
+        },
+      },
     },
     codes: {
       buttonCreate: 'Create codes',
@@ -209,6 +219,16 @@ const messages = {
       buttonCreate: 'Erstelle dein Tip Cards-Set',
       savedCardsSetsHeadline: 'Gespeicherte Tip Cards-Sets',
       noSavedCardsSetsMessage: 'In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert',
+      youtube: {
+        create: {
+          label: 'Erstellen',
+          link: 'https://www.youtube.com/watch?v=Oq__BT6oVoM',
+        },
+        use: {
+          label: 'Verwenden',
+          link: 'https://www.youtube.com/watch?v=26dj0580HYc',
+        },
+      },
     },
     codes: {
       buttonCreate: 'QR-Codes erstellen',
