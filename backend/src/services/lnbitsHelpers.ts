@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { updateCard } from './database'
+import { createCard, updateCard } from './database'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
@@ -17,7 +17,7 @@ import { LNBITS_ORIGIN } from '../../../src/constants'
  * @throws
  */
 export const checkIfCardInvoiceIsPaidAndCreateWithdrawId = async (card: Card): Promise<Card> => {
-  if (card.lnbitsWithdrawId != null) {
+  if (card.lnbitsWithdrawId != null || card.invoice == null) {
     return card
   }
   if (card.invoice.paid == null) {
@@ -113,4 +113,63 @@ export const checkIfCardIsUsed = async (card: Card): Promise<Card> => {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
   return card
+}
+
+export const getLnurlpForCard = async (card: Card): Promise<unknown> => {
+  let id
+  if (card.lnurlp?.id != null) {
+    id = card.lnurlp.id
+  } else {
+    try {
+      const response = await axios.post(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/`, {
+        description: 'Fund your tipcard!',
+        min: 210,
+        max: 210000,
+        webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurl/paid/${card.cardHash}`,
+      }, {
+        headers: {
+          'Content-type': 'application/json',
+          'X-Api-Key': LNBITS_ADMIN_KEY,
+        },
+      })
+      id = response.data.id
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnableToCreateLnurlP)
+    }
+    card.lnurlp = {
+      id,
+      created: Math.round(+ new Date() / 1000),
+      paid: null,
+    }
+    try {
+      await updateCard(card)
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
+    }
+  }
+
+  try {
+    const response = await axios.get(`${LNBITS_ORIGIN}/lnurlp/api/v1/lnurl/${id}`)
+    return response.data
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnurlP)
+  }
+}
+
+export const getLnurlpForNewCard = async (cardHash: string): Promise<unknown> => {
+  const card: Card = {
+    cardHash,
+    text: 'Have fun with Bitcoin :)',
+    invoice: null,
+    lnurlp: null,
+    lnbitsWithdrawId: null,
+    used: null,
+  }
+  try {
+    await createCard(card)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    throw error
+  }
+  return getLnurlpForCard(card)
 }

@@ -41,7 +41,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
     })
     return
   }
-  if (card != null) {
+  if (card?.invoice != null) {
     if (card.invoice.paid) {
       res.status(400).json({
         status: 'error',
@@ -58,6 +58,13 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
         message: `Card already exists with different amount: ${card.invoice.amount}.`,
       })
     }
+    return
+  }
+  if (card?.lnurlp?.paid != null) {
+    res.status(400).json({
+      status: 'error',
+      message: 'Card is already funded.',
+    })
     return
   }
 
@@ -94,13 +101,14 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
     await createCard({
       cardHash: req.params.cardHash,
       text,
-      invoice:  {
+      invoice: {
         amount,
         payment_hash,
         payment_request,
         created: Math.round(+ new Date() / 1000),
         paid: null,
       },
+      lnurlp: null,
       lnbitsWithdrawId: null,
       used: null,
     })

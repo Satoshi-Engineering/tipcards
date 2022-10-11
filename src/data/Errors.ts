@@ -13,6 +13,8 @@ export enum ErrorCode {
   UnknownErrorWhileCheckingWithdrawStatus = 'UnknownErrorWhileCheckingWithdrawStatus',
   WithdrawHasBeenSpent = 'WithdrawHasBeenSpent',
   CardFundedAndNotUsed = 'CardFundedAndNotUsed',
+  UnableToCreateLnurlP = 'UnableToCreateLnurlP',
+  UnableToGetLnurlP = 'UnableToGetLnurlP',
 }
 
 export class ErrorWithCode {

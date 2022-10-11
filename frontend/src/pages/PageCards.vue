@@ -462,7 +462,7 @@ const repopulateCards = async () => {
       return
     }
     card.status = status
-    if (cardData?.invoice.amount != null) {
+    if (cardData?.invoice?.amount != null) {
       card.sats = cardData.invoice.amount
     }
   })
@@ -493,10 +493,13 @@ const printCards = () => {
 }
 
 const hashSha256 = async (message: string) => {
-  const msgUint8 = new TextEncoder().encode(message)                           // encode as (utf-8) Uint8Array
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8)           // hash the message
-  const hashArray = Array.from(new Uint8Array(hashBuffer))                     // convert buffer to byte array
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('') // convert bytes to hex string
+  if (crypto.subtle == null && import.meta.env.MODE === 'development') {
+    return message.replace(/\//g, '-').replace(/-/g,'')
+  }
+  const msgUint8 = new TextEncoder().encode(message)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
   return hashHex
 }
 </script>

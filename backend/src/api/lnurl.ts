@@ -2,7 +2,12 @@ import axios from 'axios'
 import express from 'express'
 
 import { getCardByHash } from '../services/database'
-import { checkIfCardInvoiceIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
+import {
+  checkIfCardInvoiceIsPaidAndCreateWithdrawId,
+  checkIfCardIsUsed,
+  getLnurlpForNewCard,
+  getLnurlpForCard,
+} from '../services/lnbitsHelpers'
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
@@ -25,12 +30,20 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     })
     return
   }
+
+  // create + return lnurlp for unfunded card
   if (card == null) {
-    res.status(404).json({
-      status: 'ERROR',
-      reason: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
-      code: ErrorCode.CardByHashNotFound,
-    })
+    try {
+      const data = await getLnurlpForNewCard(req.params.cardHash)
+      res.json(data)
+    } catch (error) {
+      console.error(ErrorCode.UnableToCreateLnurlP, error)
+      res.status(500).json({
+        status: 'ERROR',
+        reason: 'Unable to create LNURL-P at lnbits.',
+        code: ErrorCode.UnableToCreateLnurlP,
+      })
+    }
     return
   }
 
@@ -54,12 +67,20 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       return
     }
   }
+
+  // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
-    res.status(404).json({
-      status: 'ERROR',
-      reason: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
-      code: ErrorCode.CardNotFunded,
-    })
+    try {
+      const data = await getLnurlpForCard(card)
+      res.json(data)
+    } catch (error) {
+      console.error(ErrorCode.UnableToCreateLnurlP, error)
+      res.status(500).json({
+        status: 'ERROR',
+        reason: 'Unable to create LNURL-P at lnbits.',
+        code: ErrorCode.UnableToCreateLnurlP,
+      })
+    }
     return
   }
 

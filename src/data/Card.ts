@@ -7,7 +7,12 @@ export type Card = {
     payment_request: string,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
-  },
+  } | null,
+  lnurlp: {
+    id: string,
+    created: number, // unix timestamp
+    paid: number | null, // unix timestamp
+  } | null, // gets created if the user scans an unfunded card with a wallet
   lnbitsWithdrawId: string | null, // gets set as soon as the card is funded
   used: number | null, // unix timestamp
 }
