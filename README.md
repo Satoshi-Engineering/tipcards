@@ -18,9 +18,9 @@ with a focus on "How to gentle orange pill nocoiners" - and without warrenty of 
 
 ### Explanation Videos
 - Youtube: [How to use lightning tip cards - DE](https://youtu.be/26dj0580HYc)
-- Youtube: [How to use lightning tip cards - EN]()
+- Youtube: [How to use lightning tip cards - EN](https://youtu.be/bFeEPbupdx8)
 - Youtube: [How to create your set of lightning tip cards - DE](https://youtu.be/Oq__BT6oVoM)
-- Youtube: [How to create your set of lightning tip cards - EN]()
+- Youtube: [How to create your set of lightning tip cards - EN](https://youtu.be/R6p7fUKu4MY)
 
 `#satohsiengineeringcrew` is `#happy2help`
 
