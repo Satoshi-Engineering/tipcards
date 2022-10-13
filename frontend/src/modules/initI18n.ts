@@ -73,7 +73,7 @@ const messages = {
       text: 'This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.',
       form: {
         textHint: 'will be displayed in the recipient\'s wallet',
-        button: 'Jetzt aufladen',
+        button: 'Load card',
       },
       invoiceText: 'Fund your Tip Card with {amount} sats:',
     },
