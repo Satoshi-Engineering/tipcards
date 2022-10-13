@@ -1,23 +1,36 @@
 # ⚡️ Lightning Tip Cards
 _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
-[![MIT License Badge](docs/license-badge.svg)](LICENSE)
+[![MIT License Badge](docs/img/license-badge.svg)](LICENSE)
 
-Lightning Tip Cards are a gift (or tip) card system, where you can fund tip cards via the lightning network
+![](docs/img/TipCardsHeader.png)
+
+# A tip card system based on LNBits and the lightning network
+
+Lightning Tip Cards are a tip (or gift) card system, where you can fund tip cards via the lightning network
 and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning
 app recommendation to start their journey into the bitcoin rabbit hole.
 
 It is an open-source project developed and operated for the benefit of the Bitcoin community,
 with a focus on "How to gentle orange pill nocoiners" - and without warrenty of any kind.
 
-### How to use it
-- TODO: Wie erstelle ich Tipcards 
+[LNBits](https://github.com/lnbits/lnbits) is used for the wallet and lightning payments in the background.
+
+### Explanation Videos
+- Youtube: [How to use lightning tip cards - DE](https://youtu.be/26dj0580HYc)
+- Youtube: [How to use lightning tip cards - EN]()
+- Youtube: [How to create your set of lightning tip cards - DE](https://youtu.be/Oq__BT6oVoM)
+- Youtube: [How to create your set of lightning tip cards - EN]()
 
 `#satohsiengineeringcrew` is `#happy2help`
 
 ## Setup for development
 
-Make sure to install the dependencies
+### Prerequisites
+- [nodejs 16.18.0 LTS](https://nodejs.org/en/)
+- npm
+
+### Setup
 
 ```bash
 npm install
@@ -77,7 +90,7 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 * Disable "TypeScript and JavaScript Language Support" for Workspace only
 
 
-## Development
+## Run from source
 
 Start the frontend server on http://localhost:5173
 ```bash
@@ -93,3 +106,8 @@ cd backend && npm run dev
 ## Production
 
 Deployment is done via Gitlab CI/CD, see .gitlab-ci.yml
+
+# Tip us
+
+If you like this project, please adapt the landingpage to your local stores, that
+accept bitcoin or even extend it. Why not [send some tip love?](https://legend.lnbits.com/tipjar/523)
