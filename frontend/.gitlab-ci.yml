@@ -6,6 +6,8 @@
 # - FRONTEND_DEPLOY_PATH_DEVELOP
 # - TEST_ORIGIN_MAIN
 # - TEST_ORIGIN_DEVELOP
+# - FRONTEND_ENV_FILE_MAIN
+# - FRONTEND_ENV_FILE_DEVELOP
 
 # ------------- BASE CONFIG OF THE JOBS
 # Create Artifact with current ref or tag name (using the slug)
@@ -16,7 +18,49 @@
       - frontend/dist
 
 # ------------- STAGE SETUP
-frontend-setup:
+frontend-setup-env:
+  stage: setup
+  extends:
+    - .base_config
+    - .deployable_branches_rules
+  cache:
+    policy: pull-push # Upload the cache after it's done
+  script:
+    # get the .env variables for the environment
+    - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$FRONTEND_ENV_FILE_MAIN; fi
+    - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$FRONTEND_ENV_FILE_DEVELOP; fi
+    - cd frontend
+    - |
+      # Check if env file exists
+      if [ -f "$ENV_FILE" ]; then
+        cp $ENV_FILE .env.production.local
+      else
+        echo -e "\e[31mERROR:FRONTEND_ENV_FILE_[ENVIRONMENT/BRANCH] not set in Gitlab CI/CD variables\e[0m"
+        exit 1
+      fi
+    # Compare env vars with .env.example
+    - |
+     cat .env.production | while read line; do
+        # Exclude non key=var lines
+        if [[ "$line" != *\=* ]]; then continue; fi
+        # String split to KEY and VALUE
+        savedIFS="$IFS"
+        IFS="\="
+        set x $line
+        KEY=$2
+        IFS="$savedIFS"
+        # Find key in .env file
+        echo "Checking: $KEY"
+        if grep -Fq "$KEY=" .env.production.local
+        then
+          echo "✅ $KEY"
+        else
+          echo -e "\e[31mERROR:ENV variable $KEY not set in Gitlab CI/CD variables\e[0m"
+          exit 1
+        fi	
+      done
+
+frontend-setup-npm:
   stage: setup
   extends: .base_config
   cache:
