@@ -84,11 +84,11 @@ const messages = {
       youtube: {
         create: {
           label: 'Create',
-          link: '',
+          link: 'https://youtu.be/R6p7fUKu4MY',
         },
         use: {
           label: 'Use',
-          link: '',
+          link: 'https://youtu.be/bFeEPbupdx8',
         },
       },
     },
