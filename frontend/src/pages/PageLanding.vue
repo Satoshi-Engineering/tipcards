@@ -186,6 +186,10 @@
             <LinkDefault href="https://aprycot.media/" />
           </li>
           <li class="my-1">
+            {{ t('landing.sectionUse.examples.copiaro') }}:<br>
+            <LinkDefault href="https://copiaro.de/" />
+          </li>
+          <li class="my-1">
             {{ t('landing.sectionUse.examples.lightningnetworkstores') }}:<br>
             <LinkDefault href="https://lightningnetworkstores.com/" />
           </li>
