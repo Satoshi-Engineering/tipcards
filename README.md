@@ -5,16 +5,16 @@ _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
 ![](docs/img/TipCardsHeader.png)
 
-# A tip card system based on LNBits and the lightning network
+# A tip card system based on LNbits and the lightning network
 
 Lightning Tip Cards are a tip (or gift) card system, where you can fund tip cards via the lightning network
 and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning
 app recommendation to start their journey into the bitcoin rabbit hole.
 
 It is an open-source project developed and operated for the benefit of the Bitcoin community,
-with a focus on "How to gentle orange pill nocoiners" - and without warrenty of any kind.
+with a focus on "How to gentle orange pill nocoiners" - and without warranty of any kind.
 
-[LNBits](https://github.com/lnbits/lnbits) is used for the wallet and lightning payments in the background.
+[LNbits](https://github.com/lnbits/lnbits) is used for the wallet and lightning payments in the background.
 
 ### Explanation Videos
 - Youtube: [How to use lightning tip cards - DE](https://youtu.be/26dj0580HYc)
@@ -29,6 +29,7 @@ with a focus on "How to gentle orange pill nocoiners" - and without warrenty of 
 ### Prerequisites
 - [nodejs 16.18.0 LTS](https://nodejs.org/en/)
 - npm
+- docker (recommended for redis setup, see below)
 
 ### Setup
 
