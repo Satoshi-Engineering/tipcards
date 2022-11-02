@@ -279,6 +279,145 @@ const messages = {
       },
     },
   },
+  es: {
+    general: {
+      back: 'Atrás',
+      cards: '{count} tarjeta | {count} tarjetas',
+    },
+    footer: {
+      support: '¿Tienes preguntas, comentarios, un problema o encontraste un error? Escríbenos a {email}.',
+    },
+    landing: {
+      introGreeting: '¡Hola!',
+      introMessageReceiveBtc: {
+        message: 'Puedes obtener {amountAndUnit} aquí*.',
+        amountAndUnit: '{amount} Bitcoin',
+        footnote: '* con Lightning',
+      },
+      introMessageAlreadyUsed: {
+        headline: 'Al parecer, este código QR ya ha sido canjeado.',
+        message: 'Pero no te preocupes: también puedes comprar Bitcoin en un criptointercambio (por ejemplo, {exchange}), una máquina de Bitcoin (por ejemplo, {atm}) o un broker de Bitcoin (por ejemplo, {broker}), etc.',
+      },
+      introMessageJustReceived: {
+        headline: 'Tu código QR acaba de ser canjeado. {emoji}',
+        message: 'Puedes comprar más Bitcoin en un criptointercambio (como {exchange}), en una máquina de Bitcoin (por ejemplo de {atm}) o en un broker de Bitcoin (por ejemplo {broker}).',
+      },
+      sectionBitcoin: {
+        paragraphs: {
+          0: 'Bitcoin es una <strong>moneda digital</strong>.',
+          1: 'Está gestionado por todos los participantes de la red Bitcoin, lo que significa que <strong>no está bajo el control</strong> de un banco central, gobierno o corporación.',
+          2: 'Transferir dinero (incluso a nivel internacional) es tan fácil como escanear un código QR. Pruébalo.',
+        },
+      },
+      sectionWallet: {
+        headline: 'Instala una cartera',
+        explanation: 'Para poder recibir, almacenar y gastar bitcoin, se necesita un <strong>monedero Lightning<strong>.<br>Para el uso cotidiano y las pequeñas cantidades, lo más cómodo es una aplicación para smartphone.',
+        recommendation: 'Para empezar, recomendamos el {walletOfSatoshi}.',
+        button: 'Descargar Wallet of Satoshi',
+        other: 'También puedes probar con {wallet0}, {wallet1}, {wallet2} o cualquier otra cartera.*.',
+        otherFootnote: '* que es compatible con Lightning y LNURL',
+      },
+      sectionReceive: {
+        headline: 'Consigue tu Bitcoin',
+        statusNormal: {
+          explanation: 'Una vez instalada la cartera,',
+          step1: '<strong>drücke</strong> en el código QR de abajo, o',
+          step2: '<strong>scanne</strong> el código QR de tu tarjeta de propinas de nuevo<br>(con tu aplicación wallet).',
+        },
+        statusReceived: {
+          congrats: '¡Felicicades!',
+          message: 'Los Bitcoin acaban de ser transferidos a tu cartera.',
+        },
+      },
+      sectionUse: {
+        headline: 'Utiliza tus Bitcoin',
+        message: 'Ahora puedes comprar algo con tus Bitcoin en una tienda o en un sitio web donde se acepte Bitcoin. O puedes transferirlos a la Lightning Wallet de un amigo o colega. O puedes simplemente guardarlos*.',
+        messageFootnote: '* hodln = mantener, guardar',
+        examplesIntro: 'Aquí hay algunos enlaces a sitios donde puede usar Bitcoin:',
+        examples: {
+          saltNDaisy: 'Compra granola orgánica sostenible',
+          satoshistore: 'Compra ropa Bitcoin de moda',
+          aprycotMedia: 'Libros de Bitcoin, medios de comunicación y más',
+          copiaro: 'Carteras de hardware y herramientas HODL',
+          lightningnetworkstores: 'Descubre lo que puedes hacer online',
+          coinpages: 'Busca tiendas que acepten Bitcoin',
+        },
+        createYourOwnTipCardsHeadline: 'Crea tus propias tarjetas de propina ⚡',
+        createYourOwnTipCardsText: '¿Quieres regalar a tus amigos o conocidos unos sats (1 Sat = 0,00000001 Bitcoin) o dar a alguien una propina en forma de Bitcoin? Haz clic en el siguiente botón y configura tus tarjetas de propina personales.',
+        createYourOwnTipCardsButton: 'Crear mis propias tarjetas de propinas',
+      },
+    },
+    funding: {
+      headline: 'Cargar la tarjeta de propinas',
+      text: 'Esta tarjeta de propina aún no ha sido recargada con sats. Estableze la cantidad que deseas recargar y el mensaje que quieres que el destinatario vea en su cartera.',
+      form: {
+        textHint: 'aparecerá en la cartera del destinatario',
+        button: 'Recargar ahora',
+      },
+      invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
+    },
+    index: {
+      buttonCreate: 'Crea tu conjunto de tarjetas de propina',
+      savedCardsSetsHeadline: 'Juegos de tarjetas de consejos guardados',
+      noSavedCardsSetsMessage: 'Actualmente no hay conjuntos de Tip Cards almacenados en este navegador',
+      youtube: {
+        create: {
+          label: 'Crear',
+          link: 'https://youtu.be/R6p7fUKu4MY',
+        },
+        use: {
+          label: 'Usar',
+          link: 'https://youtu.be/bFeEPbupdx8',
+        },
+      },
+    },
+    codes: {
+      buttonCreate: 'Crear códigos QR',
+      labelEnterWithdrawId: 'Introduce tu número número para retirar LNURLw',
+      hintLnbits: '(Debe ser de {lnbitsLink})',
+    },
+    cards: {
+      settings: {
+        numberOfCards: 'Número',
+        cardHeadline: 'Título de la tarjeta',
+        cardText: 'Texto de la tarjeta',
+        cardQrCodeLogoLabel: 'Logo en los códigos QR',
+        cardQrCodeLogo: {
+          noLogo: 'Sin logo',
+        },
+      },
+      buttonSaveCardsSet: 'Guardar juego de tarjetas de propina',
+      buttonDeleteCardsSet: 'Borrar juego',
+      buttonPrint: 'Imprimir tarjetas de propina',
+      buttonDownloadPngs: 'Bajar PNGs',
+      saveSetConfirm: 'El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?',
+      deleteSetConfirm: '¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?',
+      filterLabel: 'Filtro de tarjetas:',
+      filter: {
+        all: 'Todas',
+        unfunded: 'Sin cargo',
+        funded: 'Cargadas',
+        used: 'Canjeadas',
+      },
+    },
+    lightningQrCode: {
+      buttonOpenInWallet: 'Abrir en la cartera',
+      copyToClipboard: {
+        lnurl: {
+          beforeCopy: 'Puedes {actuar} para añadirlos a tu cartera.',
+          beforeCopyAction: 'También copiar LNURL.',
+          afterCopySuccess: 'Copiado con éxito.',
+          afterCopyNextStep: 'Añádalos ahora<br>en tu aplicación de cartera :)',
+        },
+        invoice: {
+          beforeCopy: 'Puedes {actuar} para añadirlos a tu cartera.',
+          beforeCopyAction: 'también copiar la factura',
+          afterCopySuccess: 'Copiado con éxito.',
+          afterCopyNextStep: 'Añádalos ahora<br>en tu aplicación de cartera :)',
+        },
+      },
+    },
+  },
 }
 
 const getPreferredLocale = () => {
