@@ -199,6 +199,21 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnableToCreateLnbitsWithdrawLink)
   }
+
+  // remove lnurlp as soon as withdraw link is created to avoid paying more sats into a card that cannot be funded anymore
+  if (card.lnurlp?.id != null) {
+    try {
+      await axios.delete(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/${card.lnurlp.id}`, {
+        headers: {
+          'Content-type': 'application/json',
+          'X-Api-Key': LNBITS_ADMIN_KEY,
+        },
+      })
+    } catch (error) {
+      console.error(ErrorCode.UnableToRemoveLnurlpLink, error)
+    }
+  }
+
   try {
     await updateCard(card)
   } catch (error) {

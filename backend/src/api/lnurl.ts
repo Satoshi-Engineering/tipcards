@@ -183,36 +183,7 @@ const cardPaid = async (req: express.Request, res: express.Response) => {
     return
   }
 
-  // 3. check if the given payment belongs to the lnurlp
-  if (req.body.payment_hash != null) {
-    try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${req.body.payment_hash}`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      if (
-        response.data.details.extra.tag === 'lnurlp'
-        && response.data.details.extra.link === card.lnurlp.id
-        && response.data.paid === true
-      ) {
-        card.lnurlp.amount = Math.round(response.data.details.amount / 1000)
-        card.lnurlp.payment_hash = response.data.details.payment_hash
-        card.lnurlp.paid = Math.round(+ new Date() / 1000)
-      }
-    } catch (error) {
-      console.error(ErrorCode.UnableToGetLnbitsInvoiceStatus, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnableToGetLnbitsInvoiceStatus,
-      })
-      return
-    }
-  }
-
-  // 4. check if card is paid and create withdrawId
+  // 3. check if card is paid and create withdrawId
   try {
     await checkIfCardIsPaidAndCreateWithdrawId(card)
   } catch (error: unknown) {

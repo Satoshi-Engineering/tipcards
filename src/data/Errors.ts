@@ -17,6 +17,7 @@ export enum ErrorCode {
   UnableToGetLnurlP = 'UnableToGetLnurlP',
   UnableToGetLnbitsLnurlpStatus = 'UnableToGetLnbitsLnurlpStatus',
   UnableToGetLnbitsPaymentRequests = 'UnableToGetLnbitsPaymentRequests',
+  UnableToRemoveLnurlpLink = 'UnableToRemoveLnurlpLink',
 }
 
 export class ErrorWithCode {
