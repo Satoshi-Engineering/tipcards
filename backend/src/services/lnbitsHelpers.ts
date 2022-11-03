@@ -284,7 +284,7 @@ export const getLnurlpForCard = async (card: Card, multi = false): Promise<unkno
         description: 'Fund your tipcard!',
         min: 210,
         max: 210000,
-        webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurl/paid/${card.cardHash}`,
+        webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurlp/paid/${card.cardHash}`,
       }, {
         headers: {
           'Content-type': 'application/json',

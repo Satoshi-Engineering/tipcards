@@ -127,7 +127,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   })
 })
 
-const cardPaid = async (req: express.Request, res: express.Response) => {
+const invoicePaid = async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
@@ -196,8 +196,8 @@ const cardPaid = async (req: express.Request, res: express.Response) => {
   })
 }
 
-router.get('/paid/:cardHash', cardPaid)
-router.post('/paid/:cardHash', cardPaid)
+router.get('/paid/:cardHash', invoicePaid)
+router.post('/paid/:cardHash', invoicePaid)
 
 router.delete('/delete/:cardHash', async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
