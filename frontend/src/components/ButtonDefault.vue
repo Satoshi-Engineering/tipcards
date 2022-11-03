@@ -39,7 +39,7 @@ const props = defineProps({
   },
 })
 
-const cssClasses = [
+const cssClasses = computed(() => [
   'border-2 border-btcorange my-1 px-5 py-2 text-white rounded-sm transition-colors',
   {
     'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect': props.variant == null,
@@ -47,7 +47,7 @@ const cssClasses = [
     'bg-transparent text-btcorange border-transparent px-0': props.variant === 'no-border',
     'opacity-50 cursor-default pointer-events-none': props.disabled,
   },
-]
+])
 
 const targetComputed = computed(() => {
   if (props.target != null) {

@@ -145,8 +145,6 @@ import { rateBtcEur } from '@/modules/rateBtcEur'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
-// TODO : show "funded" if funded via lnurlp
-
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
