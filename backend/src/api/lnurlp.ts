@@ -112,7 +112,7 @@ router.post('/finish/:cardHash', async (req: express.Request, res: express.Respo
 
   // check if card has funding and set to "paid"
   try {
-    await checkIfCardLnurlpIsPaid(card)
+    await checkIfCardLnurlpIsPaid(card, true)
   } catch (error: unknown) {
     let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
     let errorToLog = error
