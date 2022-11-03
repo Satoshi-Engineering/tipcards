@@ -9,8 +9,9 @@ export type Card = {
     paid: number | null, // unix timestamp
   } | null,
   lnurlp: {
+    multi: boolean,
     amount: number | null,
-    payment_hash: string | null,
+    payment_hash: string[] | null,
     id: number,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp

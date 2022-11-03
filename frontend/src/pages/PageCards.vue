@@ -232,6 +232,12 @@
             >
               <span class="m-auto">{{ card.sats }} sats</span>
             </div>
+            <div
+              v-else-if="card.hasInvoice || card.isMulti"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+            >
+              <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Multi' }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -271,8 +277,6 @@ import { encodeLnurl } from '@root/modules/lnurlHelpers'
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
-
-// TODO : show "funded" if funded via lnurlp
 
 ///////////////////////
 // CARDS SETS + SETTINGS
@@ -406,6 +410,8 @@ type Card = {
   lnurl: string,
   status: string | null,
   sats: number | null,
+  hasInvoice: boolean,
+  isMulti: boolean,
   qrCodeSvg: string,
 }
 const cards = ref<Card[]>([])
@@ -448,6 +454,8 @@ const repopulateCards = async () => {
       lnurl: lnurlEncoded,
       status: null,
       sats: null,
+      hasInvoice: false,
+      isMulti: false,
       qrCodeSvg: new QRCode({
           content: url,
           padding: 0,
@@ -468,6 +476,12 @@ const repopulateCards = async () => {
       card.sats = cardData.invoice.amount
     } else if (cardData?.lnurlp?.amount != null) {
       card.sats = cardData.lnurlp.amount
+    }
+    if (cardData?.invoice != null) {
+      card.hasInvoice = true
+    }
+    if (typeof cardData?.lnurlp?.multi === 'boolean') {
+      card.isMulti = cardData.lnurlp.multi
     }
   })
 }

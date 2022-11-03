@@ -77,6 +77,15 @@ const messages = {
         button: 'Load card',
       },
       invoiceText: 'Fund your Tip Card with {amount} sats:',
+      multi: {
+        text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
+        textFunded: 'This Tip Card is already funded ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
+        textEmpty: 'This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.',
+        textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
+        amountAndUnit: '{amount} BTC',
+        buttonFinish: 'Complete Funding',
+        buttonMakeMulti: 'Or fund it multiple times',
+      },
     },
     index: {
       buttonCreate: 'Create your Tip Cards set ⚡',
@@ -216,6 +225,15 @@ const messages = {
         button: 'Jetzt aufladen',
       },
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
+      multi: {
+        text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
+        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
+        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann es abgeschlossen werden.',
+        textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
+        amountAndUnit: '{amount} BTC',
+        buttonFinish: 'Aufladen abschließen',
+        buttonMakeMulti: 'Oder mehrfach aufladen',
+      },
     },
     index: {
       buttonCreate: 'Erstelle dein Tip Cards-Set',

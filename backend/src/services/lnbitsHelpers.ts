@@ -58,7 +58,7 @@ export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
  * @param card Card
  * @throws ErrorWithCode
  */
-export const checkIfCardLnurlpIsPaid = async (card: Card): Promise<Card> => {
+export const checkIfCardLnurlpIsPaid = async (card: Card, closeMulti = false): Promise<Card> => {
   if (
     card.lnbitsWithdrawId != null
     || card.lnurlp == null
@@ -113,7 +113,9 @@ export const checkIfCardLnurlpIsPaid = async (card: Card): Promise<Card> => {
   }
 
   // 3. check if a payment request was paid
-  while (card.lnurlp.paid == null) {
+  let amount = 0
+  const payment_hash: string[] = []
+  while (paymentRequests.length > 0) {
     const paymentRequest = paymentRequests.shift()
     if (paymentRequest == null) {
       break
@@ -126,12 +128,19 @@ export const checkIfCardLnurlpIsPaid = async (card: Card): Promise<Card> => {
         },
       })
       if (response.data.paid === true) {
-        card.lnurlp.amount = Math.round(response.data.details.amount / 1000)
-        card.lnurlp.payment_hash = response.data.details.payment_hash
-        card.lnurlp.paid = Math.round(+ new Date() / 1000)
+        amount += Math.round(response.data.details.amount / 1000)
+        payment_hash.push(response.data.details.payment_hash)
       }
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
+    }
+  }
+  if (amount > 0) {
+    card.lnurlp.amount = amount
+    card.lnurlp.payment_hash = payment_hash
+
+    if (!card.lnurlp.multi || closeMulti) {
+      card.lnurlp.paid = Math.round(+ new Date() / 1000)
     }
   }
 
@@ -250,7 +259,7 @@ export const checkIfCardIsUsed = async (card: Card): Promise<Card> => {
  * @param card Card
  * @throws
  */
-export const getLnurlpForCard = async (card: Card): Promise<unknown> => {
+export const getLnurlpForCard = async (card: Card, multi = false): Promise<unknown> => {
   let id
   if (card.lnurlp?.id != null) {
     id = card.lnurlp.id
@@ -273,6 +282,7 @@ export const getLnurlpForCard = async (card: Card): Promise<unknown> => {
     }
     card.invoice = null
     card.lnurlp = {
+      multi,
       amount: null,
       payment_hash: null,
       id,
@@ -294,7 +304,7 @@ export const getLnurlpForCard = async (card: Card): Promise<unknown> => {
   }
 }
 
-export const getLnurlpForNewCard = async (cardHash: string): Promise<unknown> => {
+export const getLnurlpForNewCard = async (cardHash: string, multi = false): Promise<unknown> => {
   const card: Card = {
     cardHash,
     text: 'Have fun with Bitcoin :)',
@@ -309,5 +319,5 @@ export const getLnurlpForNewCard = async (cardHash: string): Promise<unknown> =>
     console.error(ErrorCode.UnknownDatabaseError, error)
     throw error
   }
-  return getLnurlpForCard(card)
+  return getLnurlpForCard(card, multi)
 }

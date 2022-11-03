@@ -24,6 +24,7 @@
     v-else
     class="[text-align:inherit] underline hover:no-underline cursor-pointer appearance-none break-anywhere"
     :class="{ 'font-bold': bold }"
+    :disabled="disabled"
   >
     <slot />
   </button>
@@ -49,6 +50,10 @@ const props = defineProps({
   bold: {
     type: Boolean,
     default: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

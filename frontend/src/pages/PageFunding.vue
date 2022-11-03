@@ -19,14 +19,12 @@
         {{ t('funding.headline') }}
       </HeadlineDefault>
       <ParagraphDefault
-        v-if="invoice == null"
+        v-if="invoice == null && !multi"
         class="mb-8"
       >
         {{ t('funding.text') }}
       </ParagraphDefault>
-      <div
-        v-if="invoice != null"
-      >
+      <div v-if="invoice != null">
         <ParagraphDefault>
           <Translation keypath="funding.invoiceText">
             <template #amount>
@@ -39,9 +37,51 @@
           :success="funded"
         />
       </div>
-      <div
-        v-else
-      >
+      <div v-else-if="multi">
+        <ParagraphDefault class="mb-8">
+          {{ t('funding.multi.text') }} 
+        </ParagraphDefault>
+        <div class="mb-12">
+          <LightningQrCode
+            :value="lnurl"
+            :success="funded"
+          />
+        </div>
+        <ParagraphDefault v-if="funded">
+          <Translation keypath="funding.multi.textFunded">
+            <template #amountAndUnit>
+              <strong class="inline-block">
+                {{ t('funding.multi.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+              </strong>
+            </template>
+          </Translation>
+        </ParagraphDefault>
+        <ParagraphDefault v-else-if="amount === 0">
+          {{ t('funding.multi.textEmpty') }} 
+        </ParagraphDefault>
+        <ParagraphDefault v-else>
+          <Translation keypath="funding.multi.textPartiallyFunded">
+            <template #amountAndUnit>
+              <strong class="inline-block">
+                {{ t('funding.multi.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+              </strong>
+            </template>
+          </Translation>
+        </ParagraphDefault>
+        <div
+          v-if="!funded"
+          class="flex flex-col items-center mt-4"
+        >
+          <ButtonDefault
+            type="submit"
+            :disabled="amount === 0 || finishingMulti || funded"
+            @click="finishMulti"
+          >
+            {{ t('funding.multi.buttonFinish') }} 
+          </ButtonDefault>
+        </div>
+      </div>
+      <div v-else>
         <form @submit.prevent="fund">
           <label class="block mb-2">
             <SatsAmountSelector
@@ -61,13 +101,20 @@
             >
             <small class="block">({{ t('funding.form.textHint') }})</small>
           </label>
-          <div class="text-center mt-4">
+          <div class="flex flex-col items-center mt-4">
             <ButtonDefault
               type="submit"
               :disabled="creatingInvoice"
             >
               {{ t('funding.form.button') }}
             </ButtonDefault>
+            <LinkDefault
+              class="mt-4 text-btcorange"
+              :disabled="creatingInvoice"
+              @click.prevent="multiFund"
+            >
+              {{ t('funding.multi.buttonMakeMulti') }} 
+            </LinkDefault>
           </div>
         </form>
       </div>
@@ -92,6 +139,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
+import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcEur'
 import { BACKEND_API_ORIGIN } from '@/constants'
@@ -110,6 +158,8 @@ const invoice = ref<string>()
 const invoiceAmount = ref<number>()
 const funded = ref(false)
 const creatingInvoice = ref(false)
+const multi = ref(false)
+const finishingMulti = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -124,13 +174,20 @@ const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${rout
 const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
+  if (card?.lnurlp?.multi) {
+    amount.value = Number(card.lnurlp.amount)
+    multi.value = true
+  }
   if (card?.invoice?.amount != null) {
     invoiceAmount.value = card.invoice.amount
   }
   if (card?.invoice?.payment_request != null) {
     invoice.value = card.invoice.payment_request
   }
-  if (status === 'funded' && invoice.value != null) {
+  if (
+    status === 'funded'
+    && (invoice.value != null || multi.value)
+  ) {
     funded.value = true
   } else if (status !== 'unfunded') {
     router.replace({
@@ -166,6 +223,38 @@ const fund = async () => {
   
   if (invoice.value == null) {
     userErrorMessage.value = 'Error when creating funding invoice.'
+  }
+}
+
+const multiFund = async () => {
+  creatingInvoice.value = true
+
+  try {
+    const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/create/${route.params.cardHash}`)
+    if (response.data.status === 'success') {
+      multi.value = true
+      userErrorMessage.value = undefined
+    }
+  } catch(error) {
+    console.error(error)
+  }
+  if (multi.value !== true) {
+    userErrorMessage.value = 'Unable to make multifund.'
+  }
+}
+const finishMulti = async () => {
+  finishingMulti.value = true
+  try {
+    const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/finish/${route.params.cardHash}`)
+    if (response.data.status === 'success') {
+      funded.value = true
+    }
+  } catch(error) {
+    console.error(error)
+  }
+  finishingMulti.value = false
+  if (!funded.value) {
+    userErrorMessage.value = 'Unable to finish multifund card.'
   }
 }
 </script>
