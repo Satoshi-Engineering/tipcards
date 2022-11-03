@@ -228,7 +228,7 @@ const messages = {
       multi: {
         text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
-        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann es abgeschlossen werden.',
+        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',

@@ -175,7 +175,7 @@ const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
   if (card?.lnurlp?.multi) {
-    amount.value = Number(card.lnurlp.amount)
+    amount.value = typeof card.lnurlp.amount === 'number' ? card.lnurlp.amount : 0
     multi.value = true
   }
   if (card?.invoice?.amount != null) {
@@ -232,6 +232,7 @@ const multiFund = async () => {
   try {
     const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/create/${route.params.cardHash}`)
     if (response.data.status === 'success') {
+      amount.value = 0
       multi.value = true
       userErrorMessage.value = undefined
     }
