@@ -227,7 +227,13 @@
               </div>
             </div>
             <div
-              v-if="card.sats != null && card.status !== 'unfunded'"
+              v-if="card.status === 'error'"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
+            >
+              <span class="m-auto">Error</span>
+            </div>
+            <div
+              v-else-if="card.sats != null && card.status !== 'unfunded'"
               class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
             >
               <span class="m-auto">{{ card.sats }} sats</span>
@@ -468,6 +474,7 @@ const repopulateCards = async () => {
   cards.value.forEach(async (card) => {
     const { status, message, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
+      card.status = 'error'
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
     }

@@ -3,18 +3,21 @@
     <!-- eslint-disable vue/no-v-html -->
     <a
       class="block transition-opacity"
-      :class="{ 'opacity-20 blur-sm pointer-events-none': success }"
+      :class="{ 'opacity-20 blur-sm pointer-events-none': success || error }"
       :href="!success ? `lightning:${value}`: undefined"
       v-html="qrCodeSvg"
     />
     <!-- eslint-enable vue/no-v-html -->
-    <div v-if="success" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
+    <div v-if="error" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
+      ⚠️
+    </div>
+    <div v-else-if="success" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
       <AnimatedCheckmark class="w-5/12" />
     </div>
   </div>
   <div class="text-center max-w-xs px-8 mx-auto">
     <ButtonDefault
-      :disabled="success"
+      :disabled="success || error"
       :href="!success ? `lightning:${value}`: undefined"
       class="w-full"
     >
@@ -63,6 +66,10 @@ const props = defineProps({
     required: true,
   },
   success: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
     type: Boolean,
     default: false,
   },

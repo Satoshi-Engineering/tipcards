@@ -65,7 +65,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
     console.error(error)
     return {
       status: 'error',
-      message: 'Unable to load card info.',
+      message: 'The server (legends of LNBits) is currently not reachable. Please try again later.',
     }
   }
   const card = cardResponse.data as Card

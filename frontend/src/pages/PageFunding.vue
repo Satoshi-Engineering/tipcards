@@ -216,6 +216,7 @@ const fund = async () => {
       userErrorMessage.value = undefined
     }
   } catch(error) {
+    alert('We are building our Tip Cards on the shoulders of giants, in this case it\'s LNBits. The legend.lnbits.com server is currently not reachable. Please try again later.')
     console.error(error)
   }
   creatingInvoice.value = false
