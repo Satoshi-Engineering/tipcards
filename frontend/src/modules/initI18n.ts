@@ -84,7 +84,7 @@ const messages = {
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Complete Funding',
-        buttonMakeMulti: 'Or fund it multiple times',
+        buttonMakeMulti: 'Switch Tip Card to multi funding',
       },
     },
     index: {
@@ -232,7 +232,7 @@ const messages = {
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
-        buttonMakeMulti: 'Oder mehrfach aufladen',
+        buttonMakeMulti: 'Tip Card mehrfach aufladen',
       },
     },
     index: {
@@ -373,6 +373,15 @@ const messages = {
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
+      multi: {
+        text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
+        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
+        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
+        textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
+        amountAndUnit: '{amount} BTC',
+        buttonFinish: 'Aufladen abschließen',
+        buttonMakeMulti: 'Tip Card mehrfach aufladen',
+      },
     },
     index: {
       buttonCreate: 'Crea tu conjunto de tarjetas de propina',

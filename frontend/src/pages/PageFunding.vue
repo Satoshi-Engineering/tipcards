@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto w-full max-w-md">
+  <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
     <div
       v-if="backlink != null"
       class="pt-4 px-4"
@@ -11,7 +11,7 @@
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
     </div>
-    <div class="mt-8 px-4">
+    <div class="flex-1 mt-8 px-4">
       <HeadlineDefault
         level="h1"
         class="mt-10"
@@ -108,13 +108,6 @@
             >
               {{ t('funding.form.button') }}
             </ButtonDefault>
-            <LinkDefault
-              class="mt-4 text-btcorange"
-              :disabled="creatingInvoice"
-              @click.prevent="multiFund"
-            >
-              {{ t('funding.multi.buttonMakeMulti') }} 
-            </LinkDefault>
           </div>
         </form>
       </div>
@@ -124,6 +117,14 @@
         </ParagraphDefault>
       </div>
     </div>
+    <LinkDefault
+      v-if="invoice == null && !multi"
+      class="mt-12 px-4"
+      :disabled="creatingInvoice"
+      @click.prevent="multiFund"
+    >
+      {{ t('funding.multi.buttonMakeMulti') }} 
+    </LinkDefault>
   </div>
 </template>
 
