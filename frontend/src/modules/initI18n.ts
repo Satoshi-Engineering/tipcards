@@ -339,8 +339,8 @@ const messages = {
         headline: 'Consigue tu Bitcoin',
         statusNormal: {
           explanation: 'Una vez instalada la cartera,',
-          step1: '<strong>drücke</strong> en el código QR de abajo, o',
-          step2: '<strong>scanne</strong> el código QR de tu tarjeta de propinas de nuevo<br>(con tu aplicación wallet).',
+          step1: '<strong>presiona</strong> en el código QR de abajo, o',
+          step2: '<strong>escanea</strong> el código QR de tu tarjeta de propinas de nuevo<br>(con tu aplicación wallet).',
         },
         statusReceived: {
           congrats: '¡Felicicades!',
@@ -373,6 +373,7 @@ const messages = {
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
+      /*
       multi: {
         text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
@@ -382,6 +383,7 @@ const messages = {
         buttonFinish: 'Aufladen abschließen',
         buttonMakeMulti: 'Tip Card mehrfach aufladen',
       },
+      */
     },
     index: {
       buttonCreate: 'Crea tu conjunto de tarjetas de propina',
