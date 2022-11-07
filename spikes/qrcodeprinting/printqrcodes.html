@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      @page {
+          size: A4 portrait;
+          margin: 0cm;
+      }
+
+      @media print {
+          .no-print, .no-print * {
+              display: none !important;
+          }
+      }
+  </style>
+</head>
+<body id="theBody">
+  <input type="text" style="position: fixed; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold;">
+  <div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 700px;">
+    <button id="btnClearAll">Clear All</button>&nbsp;<strong>Add Mode:</strong>
+    <input type="radio" id="replace" name="add_mode" value="replace" checked>
+    <label for="replace">replace</label>
+    <input type="radio" id="add" name="add_mode" value="add">
+    <label for="add">add</label>
+  </div>
+<script>
+  const boxColor = 'white'
+  //const boxColor = 'black'
+
+  const paddingTop = 97
+  const paddingLeft = 29
+  const spacingX = 20
+  const spacingY = 20
+  const boxWidth = 169
+  const boxHeight = boxWidth
+  const imagePadding = 5
+
+  // -------------------------- Controls
+  function deleteAllImages() {
+    const matches = document.querySelectorAll('[data-image="image"]')
+    matches.forEach((img) => {
+      img.parentNode.removeChild(img)
+    })
+  }
+
+  document.getElementById('btnClearAll').addEventListener('click', deleteAllImages)
+
+  function getAddMode() {
+    const element = document.querySelector('input[name="add_mode"]:checked')
+    return element.value
+  }
+
+
+  // -------------------------- Drag and Drop and Fill with Images
+  const theBody = document.getElementById('theBody')
+
+  function getPosition(i) {
+    const x = paddingLeft + (i % 4) * (boxWidth + spacingX)
+    const y = paddingTop + Math.floor(i / 4) * (boxHeight + spacingY)
+
+    return { x, y }
+  }
+
+  for (let i = 0; i < 20; ++i) {
+    const {x, y} = getPosition(i)
+
+    const node = document.createElement('div')
+    node.setAttribute('id', `Box${i}`)
+    node.setAttribute('style', `position: fixed; left: ${x}px; top: ${y}px; width: ${boxWidth}px; height: ${boxHeight}px; border: 2px solid ${boxColor};`)
+    // const textnode = document.createTextNode(`${i}`)
+    // node.appendChild(textnode);
+    theBody.appendChild(node)
+  }
+
+  // Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
+  theBody.addEventListener('dragover', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  });
+
+  theBody.addEventListener('drop', function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    const addMode = getAddMode()
+    console.log(`Add Mode: ${addMode}`)
+
+    if (addMode === 'replace') {
+      deleteAllImages()
+    }
+
+    const startBox = document.querySelectorAll('[data-image="image"]').length
+
+
+    let files = e.dataTransfer.files; // Array of all files
+
+    for (let i = 0, file; file=files[i]; i++) {
+      const boxNumber = startBox + i
+
+      if (boxNumber >= 20) {
+        window.alert('More than 20 Images, stopping!')
+        return
+      }
+
+      if (file.type.match(/image.*/)) {
+        let reader = new FileReader();
+        const fileName = file.name
+
+        reader.onload = function(e2) {
+          const {x, y} = getPosition(boxNumber)
+          console.log(`Loading Box ${boxNumber} with ${fileName}`)
+
+          // finished reading file data.
+          let img = document.createElement('img');
+          img.setAttribute('data-image', 'image')
+          img.setAttribute('style', `position: fixed; left: ${2 + x + imagePadding}px; top: ${2 + y + imagePadding}px; width: ${boxWidth - 2 * imagePadding}px; height: ${boxHeight - 2 * imagePadding}px;`)
+          img.src= e2.target.result;
+          document.getElementById('Box2').appendChild(img);
+        }
+
+        reader.readAsDataURL(file); // start reading the file data.
+      }
+    }
+  })
+
+</script>
+
+</body>
+</html>
