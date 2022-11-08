@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
+  <script type="text/javascript" src="libs/qrcode.min.js"></script>
+  <style>
+      @page {
+          size: A4;
+      }
+
+      @media print {
+          .no-print, .no-print * {
+              display: none !important;
+          }
+      }
+
+      html {
+          font-family: ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial;
+      }
+
+      .sheet-centering {
+          display: flex;
+          justify-content: center;
+          align-items:center;
+      }
+
+      .templatelines {
+          width: 803px;
+      }
+
+      .bolt {
+          position: absolute;
+          padding-bottom: 280px;
+
+          font-size: 3.5rem;
+      }
+
+      .title {
+          position: absolute;
+          padding-bottom: 175px;
+
+          font-size: 1.2rem;
+          font-weight: 700;
+      }
+
+      .subtitle {
+          position: absolute;
+          padding-bottom: 130px;
+
+          font-size: 0.7rem;
+      }
+
+      .text-top {
+          position: absolute;
+          padding-bottom: 577px;
+          width: 220px;
+
+          font-size: 0.8rem;
+          font-weight: 600;
+      }
+
+      .set-qrcode {
+          position: absolute;
+          padding-bottom: 243px;
+      }
+
+      .text-middle {
+          position: absolute;
+          padding-bottom: 45px;
+
+          text-align: center;
+          font-size: 0.5rem;
+          font-style: italic;
+      }
+
+      .text-middle img {
+          width: 15px;
+          margin-bottom: -3px;
+      }
+
+      .text-bottom {
+          position: absolute;
+          padding-top: 180px;
+
+          text-align: center;
+          font-size: 0.7rem;
+          line-height: 2;
+          font-weight: 600;
+      }
+
+      .back-sate {
+          position: absolute;
+          padding-top: 390px;
+          width: 276px;
+      }
+  </style>
+</head>
+<body id="theBody" class="A4">
+<div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 700px;">
+  <strong>QR Code Text</strong>
+  <input type="text" id="input_qrcode" style="font-weight: bold;">
+</div>
+
+<section class="sheet padding-10mm sheet-centering">
+  <img src="res/box_lines.png" class="templatelines">
+  <div class="bolt"> ⚡ </div>
+  <div class="title">Lightning Tip Cards Set</div>
+  <div class="subtitle">by Satoshi Engineering</div>
+</section>
+
+<section class="sheet padding-10mm sheet-centering">
+  <img src="res/box_lines.png" class="templatelines no-prints">
+  <div class="text-top">Use the Set QR-Code to check the<br>
+    status of your Lightning Tip Cards! </div>
+  <div id="qrcode" class="set-qrcode"></div>
+  <div class="text-middle"><img src="res/warning.png"> Keep this QR Code a secret! All Tip Cards can be accessed!<img src="res/warning.png"></div>
+  <div class="text-bottom">Create your own Lightning Tip Cards Set at:<br>
+  https://tipcards.sate.tools</div>
+  <img src="res/sate_logo_full.png" class="back-sate">
+</section>
+
+<script>
+  const inputQRCode = document.getElementById('input_qrcode')
+
+  let qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: "",
+    width: 160,
+    height: 160
+  })
+
+  inputQRCode.addEventListener("keyup", function(event) {
+    event.preventDefault()
+    console.log(inputQRCode.value)
+    qrcode.clear()
+    qrcode.makeCode(inputQRCode.value)
+      /*
+      if (event.keyCode === 13) {
+        document.getElementById("id_of_button").click();
+      }*/
+
+
+    });
+</script>
+
+</body>
+</html>
