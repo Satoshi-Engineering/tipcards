@@ -390,11 +390,11 @@ const messages = {
       youtube: {
         create: {
           label: 'Crear',
-          link: 'https://youtu.be/R6p7fUKu4MY',
+          link: 'https://youtu.be/6PNTu6IDBmc',
         },
         use: {
           label: 'Usar',
-          link: 'https://youtu.be/bFeEPbupdx8',
+          link: 'https://youtu.be/cGWwuuhmtXk',
         },
       },
     },
