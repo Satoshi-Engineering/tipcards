@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
+
   <style>
       @page {
-          size: A4 portrait;
-          margin: 0cm;
+          size: A4;
       }
 
       @media print {
@@ -16,18 +17,26 @@
       }
   </style>
 </head>
-<body id="theBody">
-  <input type="text" style="position: fixed; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold;">
+<body class="A4">
   <div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 700px;">
-    <button id="btnClearAll">Clear All</button>&nbsp;<strong>Add Mode:</strong>
-    <input type="radio" id="replace" name="add_mode" value="replace" checked>
-    <label for="replace">replace</label>
-    <input type="radio" id="add" name="add_mode" value="add">
-    <label for="add">add</label>
+    <div>
+      <button id="btnClearAll">Clear All</button>
+    </div>
+    <div>
+      <strong>Add Mode:</strong>
+      <input type="radio" id="replace" name="add_mode" value="replace" checked>
+      <label for="replace">replace</label>
+      <input type="radio" id="add" name="add_mode" value="add">
+      <label for="add">add</label>
+    </div>
   </div>
+
+  <section class="sheet" id="theSheet">
+    <input type="text" style="position: absolute; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold; border: 1px solid gray;">
+  </section>
 <script>
-  const boxColor = 'white'
-  //const boxColor = 'black'
+  //const boxColor = 'white'
+  const boxColor = 'black'
 
   const paddingTop = 97
   const paddingLeft = 29
@@ -54,7 +63,7 @@
 
 
   // -------------------------- Drag and Drop and Fill with Images
-  const theBody = document.getElementById('theBody')
+  const theSheet = document.getElementById('theSheet')
 
   function getPosition(i) {
     const x = paddingLeft + (i % 4) * (boxWidth + spacingX)
@@ -68,20 +77,20 @@
 
     const node = document.createElement('div')
     node.setAttribute('id', `Box${i}`)
-    node.setAttribute('style', `position: fixed; left: ${x}px; top: ${y}px; width: ${boxWidth}px; height: ${boxHeight}px; border: 2px solid ${boxColor};`)
+    node.setAttribute('style', `position: absolute; left: ${x}px; top: ${y}px; width: ${boxWidth}px; height: ${boxHeight}px; border: 2px solid ${boxColor};`)
     // const textnode = document.createTextNode(`${i}`)
     // node.appendChild(textnode);
-    theBody.appendChild(node)
+    theSheet.appendChild(node)
   }
 
   // Optional.   Show the copy icon when dragging over.  Seems to only work for chrome.
-  theBody.addEventListener('dragover', function(e) {
+  theSheet.addEventListener('dragover', function(e) {
     e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
   });
 
-  theBody.addEventListener('drop', function(e) {
+  theSheet.addEventListener('drop', function(e) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -93,7 +102,6 @@
     }
 
     const startBox = document.querySelectorAll('[data-image="image"]').length
-
 
     let files = e.dataTransfer.files; // Array of all files
 
