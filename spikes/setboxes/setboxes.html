@@ -86,7 +86,7 @@
 
           text-align: center;
           font-size: 0.7rem;
-          line-height: 2;
+          line-height: 1.5;
           font-weight: 600;
       }
 
@@ -94,6 +94,25 @@
           position: absolute;
           padding-top: 390px;
           width: 276px;
+      }
+
+      .text-id {
+          position: absolute;
+          padding-top: 900px;
+      }
+
+      .minimized-code {
+          position: absolute;
+          padding-top: 283px;
+          padding-left: 471px;
+
+          text-transform: uppercase;
+          font-size: 2rem;
+          color: #f5f5f5;
+      }
+
+      .minimized-code p {
+          transform: rotate(-90deg);
       }
   </style>
 </head>
@@ -115,14 +134,19 @@
   <div class="text-top">Use the Set QR-Code to check the<br>
     status of your Lightning Tip Cards! </div>
   <div id="qrcode" class="set-qrcode"></div>
-  <div class="text-middle"><img src="res/warning.png"> Keep this QR Code a secret! All Tip Cards can be accessed!<img src="res/warning.png"></div>
-  <div class="text-bottom">Create your own Lightning Tip Cards Set at:<br>
-  https://tipcards.sate.tools</div>
+  <div class="text-middle"><img src="res/warning.png"> Keep this QR Code a secret! All Tip Cards can be accessed with it!<img src="res/warning.png"></div>
+  <div class="text-bottom">For more information OR how to create<br>your own tip cards, please visit:
+  <br>https://tipcards.sate.tools</div>
   <img src="res/sate_logo_full.png" class="back-sate">
+  <div id="identifier" class="text-id">not set</div>
+  <div class="minimized-code"><p id="minimizedCode">notset</p></div>
+
 </section>
 
 <script>
   const inputQRCode = document.getElementById('input_qrcode')
+  const textId = document.getElementById('identifier')
+  const minimizedCode = document.getElementById('minimizedCode')
 
   let qrcode = new QRCode(document.getElementById("qrcode"), {
     text: "",
@@ -135,13 +159,16 @@
     console.log(inputQRCode.value)
     qrcode.clear()
     qrcode.makeCode(inputQRCode.value)
-      /*
-      if (event.keyCode === 13) {
-        document.getElementById("id_of_button").click();
-      }*/
 
+    textId.innerText = inputQRCode.value
 
-    });
+    const parts = inputQRCode.value.split('/')
+    const codeFull = parts.at(-1)
+    const codeParts = codeFull.split('-')
+    const codeMinimized = codeParts.at(0).toUpperCase()
+
+    minimizedCode.innerText = codeMinimized
+  })
 </script>
 
 </body>
