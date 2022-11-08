@@ -339,7 +339,7 @@ const messages = {
         headline: 'Consigue tu Bitcoin',
         statusNormal: {
           explanation: 'Una vez instalada la cartera,',
-          step1: '<strong>presiona</strong> en el código QR de abajo, o',
+          step1: '<strong>haz clic</strong> en el código QR de abajo, o',
           step2: '<strong>escanea</strong> el código QR de tu tarjeta de propinas de nuevo<br>(con tu aplicación wallet).',
         },
         statusReceived: {
@@ -373,17 +373,15 @@ const messages = {
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
-      /*
       multi: {
-        text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
-        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
-        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
-        textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
+        text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
+        textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
+        textEmpty: 'En el momento no hay Sats en la tarjeta. En cuanto la tarjeta esté cargada por lo menos una vez se puede finalizar la carga.',
+        textPartiallyFunded: 'La tarjeta fue cargada con {amountAndUnit}. En cuanto finalices la carga es posible recoger los Bitcoin.',
         amountAndUnit: '{amount} BTC',
-        buttonFinish: 'Aufladen abschließen',
-        buttonMakeMulti: 'Tip Card mehrfach aufladen',
+        buttonFinish: 'Finalizar carga',
+        buttonMakeMulti: 'Cargar tarjeta de propina varias veces',
       },
-      */
     },
     index: {
       buttonCreate: 'Crea tu conjunto de tarjetas de propina',
