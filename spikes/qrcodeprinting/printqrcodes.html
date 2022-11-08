@@ -21,22 +21,23 @@
   <div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 700px;">
     <div>
       <button id="btnClearAll">Clear All</button>
+      <button id="btnGetCodes">Get Codes from Images</button>
     </div>
     <div>
       <strong>Add Mode:</strong>
-      <input type="radio" id="replace" name="add_mode" value="replace" checked>
+      <input type="radio" id="replace" name="add_mode" value="replace">
       <label for="replace">replace</label>
-      <input type="radio" id="add" name="add_mode" value="add">
+      <input type="radio" id="add" name="add_mode" value="add" checked>
       <label for="add">add</label>
     </div>
   </div>
 
   <section class="sheet" id="theSheet">
-    <textarea rows="2" style="position: absolute; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold; border: 1px solid gray;"></textarea>
+    <textarea id="title" rows="2" style="position: absolute; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold; border: 1px solid gray;"></textarea>
   </section>
 <script>
-  const boxColor = 'white'
-  //const boxColor = 'black'
+  //const boxColor = 'white'
+  const boxColor = 'black'
 
   const paddingTop = 97
   const paddingLeft = 29
@@ -55,10 +56,39 @@
   }
 
   document.getElementById('btnClearAll').addEventListener('click', deleteAllImages)
+  document.getElementById('btnGetCodes').addEventListener('click', printCodes)
+
+  const title = document.getElementById('title')
 
   function getAddMode() {
     const element = document.querySelector('input[name="add_mode"]:checked')
     return element.value
+  }
+
+  function printCodes() {
+    let codes = []
+
+    const matches = document.querySelectorAll('[data-image="image"]')
+    matches.forEach((img) => {
+      const filename = img.getAttribute('data-filename').replace('.png', '')
+      const parts = filename.split('_')
+      const code = parts.at(-1)
+
+      if (codes.length == 0 || codes.at(-1).code !== code) {
+        codes.push({ code, count: 1})
+      } else {
+        codes.at(-1).count++
+      }
+    })
+
+    let text = ''
+    codes.forEach((c) => {
+      text += `${c.count} x ${c.code}, `
+    })
+
+    console.log(text)
+
+    title.value = text;
   }
 
 
@@ -118,15 +148,15 @@
         const fileName = file.name
 
         reader.onload = function(e2) {
-          const {x, y} = getPosition(boxNumber)
           console.log(`Loading Box ${boxNumber} with ${fileName}`)
 
           // finished reading file data.
           let img = document.createElement('img');
           img.setAttribute('data-image', 'image')
-          img.setAttribute('style', `position: fixed; left: ${2 + x + imagePadding}px; top: ${2 + y + imagePadding}px; width: ${boxWidth - 2 * imagePadding}px; height: ${boxHeight - 2 * imagePadding}px;`)
+          img.setAttribute('data-filename', fileName)
+          img.setAttribute('style', `position: absolute; left: ${imagePadding}px; top: ${imagePadding}px; width: ${boxWidth - 2 * imagePadding}px; height: ${boxHeight - 2 * imagePadding}px;`)
           img.src= e2.target.result;
-          document.getElementById('Box2').appendChild(img);
+          document.getElementById(`Box${boxNumber}`).appendChild(img);
         }
 
         reader.readAsDataURL(file); // start reading the file data.
