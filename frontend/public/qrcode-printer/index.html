@@ -14,14 +14,25 @@
           .no-print, .no-print * {
               display: none !important;
           }
+          textarea::placeholder { /* Modern browsers */
+              color: #fff;
+          }
       }
   </style>
 </head>
 <body class="A4">
   <div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 700px;">
+    <h2>QR Template</h2>
+    <div style="width: 250px;">
+      <p>With this tool you can directly print on the <a href="https://www.amazon.de/dp/B08QRRP7JJ/ref=pe_27091401_487024491_TE_item" target="_blank">AVERY 6252-10 45x45mm</a> labels.<br>
+      </p>
+      <ul>
+        <li>Just drag and drop the images</li>
+      </ul>
+    </div>
     <div>
       <button id="btnClearAll">Clear All</button>
-      <button id="btnGetCodes">Get Codes from Images</button>
+      <button id="btnGetCodes">Get Codes from Filenames</button>
     </div>
     <div>
       <strong>Add Mode:</strong>
@@ -33,7 +44,7 @@
   </div>
 
   <section class="sheet" id="theSheet">
-    <textarea id="title" rows="2" style="position: absolute; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold; border: 1px solid gray;"></textarea>
+    <textarea id="title" placeholder="Enter Text" rows="2" style="position: absolute; top: 40px; left: 29px; border: 0; width: 700px; font-weight: bold; border: 1px solid gray;"></textarea>
   </section>
 <script>
   const boxColor = 'white'
