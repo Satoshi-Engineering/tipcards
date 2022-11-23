@@ -157,7 +157,7 @@
         <LightningQrCode
           :value="lnurl"
           :success="spent"
-          :error="userErrorMessage != null"
+          :error="userErrorMessage"
         />
       </div>
       <div class="my-10">

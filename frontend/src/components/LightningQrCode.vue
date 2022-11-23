@@ -3,12 +3,12 @@
     <!-- eslint-disable vue/no-v-html -->
     <a
       class="block transition-opacity"
-      :class="{ 'opacity-20 blur-sm pointer-events-none': success || error }"
+      :class="{ 'opacity-20 blur-sm pointer-events-none': success || error != null }"
       :href="!success ? `lightning:${value}`: undefined"
       v-html="qrCodeSvg"
     />
     <!-- eslint-enable vue/no-v-html -->
-    <div v-if="error" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
+    <div v-if="error != null" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
       ⚠️
     </div>
     <div v-else-if="success" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
@@ -17,17 +17,19 @@
   </div>
   <div class="text-center max-w-xs px-8 mx-auto">
     <ButtonDefault
-      :disabled="success || error"
+      :disabled="success"
       :href="!success ? `lightning:${value}`: undefined"
       class="w-full"
+      @click="checkForError"
     >
       {{ t('lightningQrCode.buttonOpenInWallet') }}
     </ButtonDefault>
   </div>
   <div class="text-center text-xs px-10 mb-5">
     <CopyToClipboard
-      :text="value"
       class="text-center inline-block no-underline font-normal min-h-[3rem]"
+      :text="value"
+      :error="error"
     >
       <template #default>
         <span class="font-normal">
@@ -70,8 +72,8 @@ const props = defineProps({
     default: false,
   },
   error: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: undefined,
   },
 })
 
@@ -85,4 +87,11 @@ const qrCodeSvg = computed<string>(() => props.value != null ? new QRCode({
   }).svg() : '')
 
 const type = computed(() => props.value.toLowerCase().startsWith('lnurl') ? 'lnurl' : 'invoice')
+
+const checkForError = (event: Event) => {
+  if (props.error != null) {
+    event.preventDefault()
+    alert(props.error)
+  }
+}
 </script>

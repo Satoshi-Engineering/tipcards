@@ -22,7 +22,7 @@
 import { ref } from 'vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
-defineProps({
+const props = defineProps({
   text: {
     type: String,
     required: true,
@@ -35,11 +35,19 @@ defineProps({
     type: String,
     default: 'Copied successfully',
   },
+  error: {
+    type: String,
+    default: undefined,
+  },
 })
 
 const recentlyCopied = ref<boolean>(false)
 
 const copyToClipboard = async (text: string) => {
+  if (props.error != null) {
+    alert(props.error)
+    return
+  }
   await navigator.clipboard.writeText(text)
   recentlyCopied.value = true
   await new Promise(resolve => setTimeout(resolve, 4000))
