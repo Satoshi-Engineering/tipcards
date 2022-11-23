@@ -84,7 +84,7 @@ const messages = {
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Complete Funding',
-        buttonMakeMulti: 'Switch Tip Card to multi funding',
+        buttonMakeMulti: 'Activate shared funding on this Tip Card',
       },
     },
     index: {
@@ -175,7 +175,7 @@ const messages = {
       sectionBitcoin: {
         paragraphs: {
           0: 'Bitcoin ist eine <strong>digitale Währung</strong>.',
-          1: 'Es wird von allen Teilnehmer:innen des Bitcoin-Netzwerks verwaltet, das bedeutet es ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.',
+          1: 'Sie wird von allen Teilnehmer:innen des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.',
           2: 'Überweisungen (auch internationale) sind so einfach wie das Scannen eines QR-Codes. Probier es einfach aus!',
         },
       },
@@ -226,13 +226,13 @@ const messages = {
       },
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
       multi: {
-        text: 'Diese Tip Card kann mehrfach aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
+        text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
         textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
-        buttonMakeMulti: 'Tip Card mehrfach aufladen',
+        buttonMakeMulti: 'Tip Card gemeinsam aufladen',
       },
     },
     index: {
@@ -380,7 +380,7 @@ const messages = {
         textPartiallyFunded: 'La tarjeta fue cargada con {amountAndUnit}. En cuanto finalices la carga es posible recoger los Bitcoin.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Finalizar carga',
-        buttonMakeMulti: 'Cargar tarjeta de propina varias veces',
+        buttonMakeMulti: 'Carga de la tarjeta de propina juntos',
       },
     },
     index: {
