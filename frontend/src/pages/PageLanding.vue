@@ -102,11 +102,12 @@
         <ParagraphDefault>
           <I18nT keypath="landing.sectionWallet.recommendation">
             <template #walletOfSatoshi>
-              <LinkDefault href="https://www.walletofsatoshi.com/">Wallet of Satoshi</LinkDefault>
+              <!--<LinkDefault href="https://www.walletofsatoshi.com/">Wallet of Satoshi</LinkDefault>-->
+              <LinkDefault href="https://www.bluewallet.io/">BlueWallet</LinkDefault>
             </template>
           </I18nT>
         </ParagraphDefault>
-        <ParagraphDefault class="text-center mt-4 mb-6">
+        <!--<ParagraphDefault class="text-center mt-4 mb-6">
           <LinkDefault
             href="https://www.walletofsatoshi.com/"
             class="inline-block w-40 my-2"
@@ -119,12 +120,18 @@
           <ButtonDefault href="https://www.walletofsatoshi.com/">
             {{ t('landing.sectionWallet.button') }}
           </ButtonDefault>
+        </ParagraphDefault>-->
+        <ParagraphDefault class="text-center mt-4 mb-6">
+          <ButtonDefault href="https://www.bluewallet.io/">
+            Download BlueWallet
+          </ButtonDefault>
         </ParagraphDefault>
         
         <ParagraphDefault>
           <I18nT keypath="landing.sectionWallet.other">
             <template #wallet0>
-              <LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>
+              <!--<LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>-->
+              <span class="line-through font-bold">Wallet of Satoshi</span>
             </template>
             <template #wallet1>
               <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>
@@ -135,6 +142,9 @@
           </I18nT>
           <br>
           <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
+        </ParagraphDefault>
+        <ParagraphDefault class="text-red-500">
+          <strong>Warning:</strong> Currently we are experiencing problems with Wallet of Satoshi, working hard to fix this problem as soon as possible. In the meantime, please use BlueWallet as an alternative.
         </ParagraphDefault>
       </div>
       <div v-if="showContent !== 'used'" class="my-10">
