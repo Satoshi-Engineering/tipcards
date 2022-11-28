@@ -1,4 +1,4 @@
-import { createClient } from 'redis'
+import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH } from '../constants'
@@ -64,6 +64,7 @@ export const getClient = async () => {
     resetClient()
     throw new Error('Unable to connect to redis server.')
   }
+
   client = newClient
   connecting = false
   callbacks.forEach(resolve => resolve())
@@ -118,4 +119,18 @@ export const deleteCard = async (card: Card): Promise<void> => {
     throw new Error('Card doesn\'t exists.')
   }
   await client.del(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
+}
+
+export const getAllCardHashes = async (): Promise<string[]> => {
+  const client = await getClient()
+  const keys = await client.keys('*')
+  const hashes: string[] = []
+  keys.forEach((hash) => {
+    const matches = new RegExp(`^${REDIS_BASE_PATH}:cardsByHash:([A-z0-9]+):data$`).exec(hash)
+    if (matches == null) {
+      return
+    }
+    hashes.push(matches[1])
+  })
+  return hashes
 }

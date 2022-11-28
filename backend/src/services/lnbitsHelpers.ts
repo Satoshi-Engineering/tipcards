@@ -266,6 +266,36 @@ export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Ca
 }
 
 /**
+ * Checks if the card has been used.
+ * 
+ * @param card Card
+ * @throws
+ */
+export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
+  if (card.lnbitsWithdrawId == null) {
+    return false
+  }
+  try {
+    const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
+      headers: {
+        'Content-type': 'application/json',
+        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+      },
+    })
+    if (typeof response.data.used !== 'number') {
+      throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
+    }
+    if (response.data.used > 0) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
+  }
+}
+
+/**
  * Creates lnurlp for a card.
  * 
  * Side-effects:

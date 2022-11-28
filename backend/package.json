@@ -8,7 +8,8 @@
     "test": "jest",
     "test-units": "jest tests/units",
     "test-integration": "jest tests/integration",
-    "tmp-dev": "nodemon tmpDevelop.ts"
+    "tmp-dev": "nodemon tmpDevelop.ts",
+    "cli": "ts-node cli.ts"
   },
   "dependencies": {
     "@node-redis/json": "^1.0.2",
