@@ -230,9 +230,10 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
  *  - updates the card in the database
  * 
  * @param card Card
+ * @param persist Bool
  * @throws
  */
-export const checkIfCardIsUsed = async (card: Card): Promise<Card> => {
+export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Card> => {
   if (card.lnbitsWithdrawId == null || card.used != null) {
     return card
   }
@@ -252,7 +253,7 @@ export const checkIfCardIsUsed = async (card: Card): Promise<Card> => {
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
   }
-  if (card.used == null) {
+  if (card.used == null || !persist) {
     return card
   }
 

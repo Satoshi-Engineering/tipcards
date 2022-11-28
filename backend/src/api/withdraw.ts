@@ -47,7 +47,7 @@ const cardUsed = async (req: express.Request, res: express.Response) => {
 
   // check lnbits if the card is used
   try {
-    await checkIfCardIsUsed(card)
+    await checkIfCardIsUsed(card, true)
   } catch (error: unknown) {
     let code = ErrorCode.UnknownErrorWhileCheckingWithdrawStatus
     let errorToLog = error
