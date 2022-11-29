@@ -22,10 +22,10 @@ const run = async () => {
     try {
       const used = await getCardIsUsedFromLnbits(card)
       if (!used) {
-        console.log(`\nCard ${card.used} is not used and needs database update.`)
+        console.log(`\nCard ${card.cardHash} is not used and needs database update.`)
       }
     } catch (error) {
-      console.error(`\nUnable to fetch card status for card ${card.used}.`)
+      console.error(`\nUnable to fetch card status for card ${card.cardHash}.`)
     }
   }
 
