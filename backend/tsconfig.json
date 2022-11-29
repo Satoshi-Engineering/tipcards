@@ -4,6 +4,7 @@
   },
   "include": [
     "./index.ts",
+    "./cli.ts",
     "./src/**/*.ts"
   ],
   "compilerOptions": {
