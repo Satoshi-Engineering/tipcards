@@ -228,7 +228,6 @@
 </template>
 
 <script lang="ts" setup>
-import { decodelnurl } from 'js-lnurl'
 import { onMounted, ref, computed } from 'vue'
 import { useI18n, Translation as I18nT } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -239,6 +238,7 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
+import { decodeLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcEur'
@@ -273,7 +273,7 @@ const lnurl = String(route.query.lightning)
 const cardHash = computed<string | null | undefined>(() => {
   let decodedLnurl: string
   try {
-    decodedLnurl = decodelnurl(lnurl)
+    decodedLnurl = decodeLnurl(lnurl)
   } catch (error) {
     return null
   }

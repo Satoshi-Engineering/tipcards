@@ -19,7 +19,6 @@
     "buffer": "^6.0.3",
     "canvg": "^4.0.1",
     "file-saver": "^2.0.5",
-    "js-lnurl": "^0.4.0",
     "jszip": "^3.10.1",
     "pinia": "^2.0.22",
     "qrcode-svg": "^1.1.0",

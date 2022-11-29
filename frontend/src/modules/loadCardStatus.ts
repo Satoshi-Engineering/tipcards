@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { decodelnurl } from 'js-lnurl'
 
+import { decodeLnurl } from '@/modules//lnurlHelpers'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import type { Card } from '@root/data/Card'
 import type { SuccessResponse } from '@root/data/Response'
@@ -15,7 +15,7 @@ export type CardStatus = {
 export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatus> => {
   let lnurlDecoded: URL
   try {
-    lnurlDecoded = new URL(decodelnurl(lnurl))
+    lnurlDecoded = new URL(decodeLnurl(lnurl))
   } catch (error) {
     console.error(error)
     return {
