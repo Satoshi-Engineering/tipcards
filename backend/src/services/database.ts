@@ -1,4 +1,4 @@
-import { createClient, SchemaFieldTypes } from 'redis'
+import { createClient } from 'redis'
 import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH } from '../constants'
