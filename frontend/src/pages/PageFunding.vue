@@ -81,6 +81,29 @@
             </template>
           </Translation>
         </ParagraphDefault>
+        <div v-if="!funded">
+          <label class="block mb-2">
+            <input
+              v-model="text"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :disabled="creatingInvoice"
+              @input="updateText"
+            >
+            <small class="block">({{ t('funding.form.textHint') }})</small>
+          </label>
+          <label class="block mb-2">
+            <input
+              v-model="note"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :placeholder="t('funding.form.notePlaceholder')"
+              :disabled="creatingInvoice"
+              @input="updateNote"
+            >
+            <small class="block">({{ t('funding.form.noteHint') }})</small>
+          </label>
+        </div>
         <div
           v-if="!funded"
           class="flex flex-col items-center mt-4"
@@ -162,6 +185,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
+import debounce from 'lodash.debounce'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n, Translation } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -184,7 +208,9 @@ const router = useRouter()
 
 const amount = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
+const textIsDirty = ref(false)
 const note = ref<string>()
+const noteIsDirty = ref(false)
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
@@ -219,6 +245,12 @@ const loadLnurlData = async () => {
   }
   if (card?.invoice?.expired === true) {
     invoiceExpired.value = true
+  }
+  if (card?.text != null && !textIsDirty.value) {
+    text.value = card.text
+  }
+  if (card?.note != null && !noteIsDirty.value) {
+    note.value = card.note
   }
   if (
     status === 'funded'
@@ -277,6 +309,10 @@ const resetInvoice = async () => {
       creatingInvoice.value = false
       finishingShared.value = false
       invoiceExpired.value = false
+      text.value = 'Have fun with Bitcoin :)'
+      textIsDirty.value = false
+      note.value = undefined
+      noteIsDirty.value = false
     }
   } catch(error) {
     console.error(error)
@@ -310,10 +346,49 @@ const makeShared = async () => {
   creatingInvoice.value = false
 }
 
+const updateTextAndNoteForSharedCard = debounce(async () => {
+  if (!shared.value) {
+    return
+  }
+  const newText = text.value
+  const newNote = note.value
+  try {
+    await axios.post(
+      `${BACKEND_API_ORIGIN}/api/lnurlp/update/${route.params.cardHash}`,
+      {
+        text: newText,
+        note: newNote,
+      },
+    )
+  } catch(error) {
+    console.error(error)
+  }
+  if (text.value === newText) {
+    textIsDirty.value = false
+  }
+  if (note.value === newNote) {
+    noteIsDirty.value = false
+  }
+}, 300)
+const updateText = () => {
+  textIsDirty.value = true
+  updateTextAndNoteForSharedCard()
+}
+const updateNote = () => {
+  noteIsDirty.value = true
+  updateTextAndNoteForSharedCard()
+}
+
 const finishShared = async () => {
   finishingShared.value = true
   try {
-    const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/finish/${route.params.cardHash}`)
+    const response = await axios.post(
+      `${BACKEND_API_ORIGIN}/api/lnurlp/finish/${route.params.cardHash}`,
+      {
+        text: text.value,
+        note: note.value,
+      },
+    )
     if (response.data.status === 'success') {
       funded.value = true
     }

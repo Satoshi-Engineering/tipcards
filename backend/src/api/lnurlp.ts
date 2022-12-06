@@ -1,8 +1,7 @@
 import express from 'express'
 
-import { createCard, getCardByHash } from '../services/database'
+import { createCard, getCardByHash, updateCard } from '../services/database'
 import {
-  getLnurlpForNewCard,
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
   checkIfCardIsPaidAndCreateWithdrawId,
@@ -170,6 +169,72 @@ router.get('/paid/:cardHash', cardPaid)
 router.post('/paid/:cardHash', cardPaid)
 
 /**
+ * Update text+note for shared cards
+ */
+router.post('/update/:cardHash', async (req: express.Request, res: express.Response) => {
+  // check if card exists
+  let card: Card | null = null
+  try {
+    card = await getCardByHash(req.params.cardHash)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  if (card == null) {
+    res.status(404).json({
+      status: 'error',
+      message: 'Card not found.',
+    })
+    return
+  }
+  if (!card.lnurlp?.shared) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This Tip Card has no shared funding enabled.',
+    })
+    return
+  }
+  if (card.lnurlp.paid) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This Tip Card is already funded.',
+    })
+    return
+  }
+
+  // update text + note
+  let text = ''
+  let note = ''
+  try {
+    ({ text, note } = req.body)
+  } catch (error) {
+    console.error(error)
+  }
+  card.text = text
+  card.note = note
+
+  try {
+    await updateCard(card)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to update card.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+  }
+  res.json({
+    status: 'success',
+    data: card,
+  })
+})
+
+/**
  * Finish shared funding lnurlp link
  */
 router.post('/finish/:cardHash', async (req: express.Request, res: express.Response) => {
@@ -200,6 +265,17 @@ router.post('/finish/:cardHash', async (req: express.Request, res: express.Respo
     })
     return
   }
+
+  // update text + note
+  let text = ''
+  let note = ''
+  try {
+    ({ text, note } = req.body)
+  } catch (error) {
+    console.error(error)
+  }
+  card.text = text
+  card.note = note
 
   // check if card has funding and set to "paid"
   try {
