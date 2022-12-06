@@ -15,7 +15,7 @@ import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers
 const router = express.Router()
 
 /**
- * Create multi funding lnurlp link
+ * Create shared funding lnurlp link
  */
 router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
   // check if card/invoice already exists
@@ -88,7 +88,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
 })
 
 /**
- * Handle lnurlp link payment. Either single or multi funding.
+ * Handle lnurlp link payment. Either single or shared funding.
  */
 const cardPaid = async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
@@ -155,7 +155,7 @@ router.get('/paid/:cardHash', cardPaid)
 router.post('/paid/:cardHash', cardPaid)
 
 /**
- * Finish multi funding lnurlp link
+ * Finish shared funding lnurlp link
  */
 router.post('/finish/:cardHash', async (req: express.Request, res: express.Response) => {
   // check if card exists
@@ -178,10 +178,10 @@ router.post('/finish/:cardHash', async (req: express.Request, res: express.Respo
     })
     return
   }
-  if (!card.lnurlp?.multi) {
+  if (!card.lnurlp?.multi && !card.lnurlp?.shared) {
     res.status(400).json({
       status: 'error',
-      message: 'Card is not a multi-fund card.',
+      message: 'This Tip Card has no shared funding enabled.',
     })
     return
   }

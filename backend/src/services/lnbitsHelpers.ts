@@ -65,7 +65,7 @@ export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
  * @param card Card
  * @throws ErrorWithCode
  */
-export const checkIfCardLnurlpIsPaid = async (card: Card, closeMulti = false): Promise<Card> => {
+export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): Promise<Card> => {
   if (
     card.lnbitsWithdrawId != null
     || card.lnurlp == null
@@ -146,7 +146,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeMulti = false): P
     card.lnurlp.amount = amount
     card.lnurlp.payment_hash = payment_hash
 
-    if (!card.lnurlp.multi || closeMulti) {
+    if ((!card.lnurlp.multi && !card.lnurlp.shared) || closeShared) {
       card.lnurlp.paid = Math.round(+ new Date() / 1000)
     }
   }
@@ -310,9 +310,10 @@ export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
  *  - updates the card in the database
  * 
  * @param card Card
+ * @param shared Boolean
  * @throws
  */
-export const getLnurlpForCard = async (card: Card, multi = false): Promise<unknown> => {
+export const getLnurlpForCard = async (card: Card, shared = false): Promise<unknown> => {
   let id
   if (card.lnurlp?.id != null) {
     id = card.lnurlp.id
@@ -335,7 +336,7 @@ export const getLnurlpForCard = async (card: Card, multi = false): Promise<unkno
     }
     card.invoice = null
     card.lnurlp = {
-      multi,
+      shared,
       amount: null,
       payment_hash: null,
       id,
@@ -357,7 +358,7 @@ export const getLnurlpForCard = async (card: Card, multi = false): Promise<unkno
   }
 }
 
-export const getLnurlpForNewCard = async (cardHash: string, multi = false): Promise<unknown> => {
+export const getLnurlpForNewCard = async (cardHash: string, shared = false): Promise<unknown> => {
   const card: Card = {
     cardHash,
     text: 'Have fun with Bitcoin :)',
@@ -372,5 +373,5 @@ export const getLnurlpForNewCard = async (cardHash: string, multi = false): Prom
     console.error(ErrorCode.UnknownDatabaseError, error)
     throw error
   }
-  return getLnurlpForCard(card, multi)
+  return getLnurlpForCard(card, shared)
 }

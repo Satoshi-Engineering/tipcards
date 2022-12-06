@@ -239,10 +239,10 @@
               <span class="m-auto">{{ card.sats }} sats</span>
             </div>
             <div
-              v-else-if="card.hasInvoice || card.isMulti"
+              v-else-if="(card.hasInvoice || card.isShared)"
               class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
             >
-              <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Multi' }}</span>
+              <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Shared' }}</span>
             </div>
           </div>
         </div>
@@ -417,7 +417,7 @@ type Card = {
   status: string | null,
   sats: number | null,
   hasInvoice: boolean,
-  isMulti: boolean,
+  isShared: boolean,
   qrCodeSvg: string,
 }
 const cards = ref<Card[]>([])
@@ -461,7 +461,7 @@ const repopulateCards = async () => {
       status: null,
       sats: null,
       hasInvoice: false,
-      isMulti: false,
+      isShared: false,
       qrCodeSvg: new QRCode({
           content: url,
           padding: 0,
@@ -487,8 +487,10 @@ const repopulateCards = async () => {
     if (cardData?.invoice != null) {
       card.hasInvoice = true
     }
-    if (typeof cardData?.lnurlp?.multi === 'boolean') {
-      card.isMulti = cardData.lnurlp.multi
+    if (typeof cardData?.lnurlp?.shared === 'boolean') {
+      card.isShared = cardData.lnurlp.shared
+    } else if (typeof cardData?.lnurlp?.multi === 'boolean') {
+      card.isShared = cardData.lnurlp.multi
     }
   })
 }

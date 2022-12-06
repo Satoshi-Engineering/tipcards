@@ -79,14 +79,14 @@ const messages = {
       invoiceText: 'Fund your Tip Card with {amount} sats:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
-      multi: {
+      shared: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
         textFunded: 'This Tip Card is already funded ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
         textEmpty: 'This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.',
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Complete Funding',
-        buttonMakeMulti: 'Activate shared funding on this Tip Card',
+        buttonMakeShared: 'Activate shared funding on this Tip Card',
       },
     },
     index: {
@@ -229,14 +229,14 @@ const messages = {
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
       invoiceExpired: 'Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.',
       resetInvoice: 'Tip Card zurücksetzen',
-      multi: {
+      shared: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
         textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
-        buttonMakeMulti: 'Tip Card gemeinsam aufladen',
+        buttonMakeShared: 'Tip Card gemeinsam aufladen',
       },
     },
     index: {
@@ -379,14 +379,14 @@ const messages = {
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
-      multi: {
+      shared: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
         textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
         textEmpty: 'En el momento no hay Sats en la tarjeta. En cuanto la tarjeta esté cargada por lo menos una vez se puede finalizar la carga.',
         textPartiallyFunded: 'La tarjeta fue cargada con {amountAndUnit}. En cuanto finalices la carga es posible recoger los Bitcoin.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Finalizar carga',
-        buttonMakeMulti: 'Carga de la tarjeta de propina juntos',
+        buttonMakeShared: 'Carga de la tarjeta de propina juntos',
       },
     },
     index: {

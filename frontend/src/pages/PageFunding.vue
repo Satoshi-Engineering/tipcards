@@ -19,7 +19,7 @@
         {{ t('funding.headline') }}
       </HeadlineDefault>
       <ParagraphDefault
-        v-if="invoice == null && !multi"
+        v-if="(invoice == null && !shared)"
         class="mb-8"
       >
         {{ t('funding.text') }}
@@ -50,9 +50,9 @@
           </ButtonDefault>
         </div>
       </div>
-      <div v-else-if="multi">
+      <div v-else-if="shared">
         <ParagraphDefault class="mb-8">
-          {{ t('funding.multi.text') }} 
+          {{ t('funding.shared.text') }} 
         </ParagraphDefault>
         <div class="mb-12">
           <LightningQrCode
@@ -61,22 +61,22 @@
           />
         </div>
         <ParagraphDefault v-if="funded">
-          <Translation keypath="funding.multi.textFunded">
+          <Translation keypath="funding.shared.textFunded">
             <template #amountAndUnit>
               <strong class="inline-block">
-                {{ t('funding.multi.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                {{ t('funding.shared.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </Translation>
         </ParagraphDefault>
         <ParagraphDefault v-else-if="amount === 0">
-          {{ t('funding.multi.textEmpty') }} 
+          {{ t('funding.shared.textEmpty') }} 
         </ParagraphDefault>
         <ParagraphDefault v-else>
-          <Translation keypath="funding.multi.textPartiallyFunded">
+          <Translation keypath="funding.shared.textPartiallyFunded">
             <template #amountAndUnit>
               <strong class="inline-block">
-                {{ t('funding.multi.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                {{ t('funding.shared.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </Translation>
@@ -86,7 +86,7 @@
           class="flex flex-col items-center mt-4"
         >
           <ButtonDefault
-            v-if="amount === 0 && !finishingMulti && !funded"
+            v-if="amount === 0 && !finishingShared && !funded"
             type="submit"
             variant="outline"
             @click="resetInvoice"
@@ -96,15 +96,15 @@
           <ButtonDefault
             v-else
             type="submit"
-            :disabled="amount === 0 || finishingMulti || funded"
-            @click="finishMulti"
+            :disabled="amount === 0 || finishingShared || funded"
+            @click="finishShared"
           >
-            {{ t('funding.multi.buttonFinish') }} 
+            {{ t('funding.shared.buttonFinish') }} 
           </ButtonDefault>
         </div>
       </div>
       <div v-else>
-        <form @submit.prevent="fund">
+        <form @submit.prevent="createInvoice">
           <label class="block mb-2">
             <SatsAmountSelector
               :amount-sats="amount"
@@ -140,12 +140,12 @@
       </div>
     </div>
     <LinkDefault
-      v-if="invoice == null && !multi"
+      v-if="(invoice == null && !shared)"
       class="mt-12 px-4"
       :disabled="creatingInvoice"
-      @click.prevent="multiFund"
+      @click.prevent="makeShared"
     >
-      {{ t('funding.multi.buttonMakeMulti') }} 
+      {{ t('funding.shared.buttonMakeShared') }} 
     </LinkDefault>
   </div>
 </template>
@@ -180,8 +180,8 @@ const invoiceAmount = ref<number>()
 const invoiceExpired = ref(false)
 const funded = ref(false)
 const creatingInvoice = ref(false)
-const multi = ref(false)
-const finishingMulti = ref(false)
+const shared = ref(false)
+const finishingShared = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -196,9 +196,9 @@ const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${rout
 const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
-  if (card?.lnurlp?.multi) {
+  if (card?.lnurlp?.multi || card?.lnurlp?.shared) {
     amount.value = typeof card.lnurlp.amount === 'number' ? card.lnurlp.amount : 0
-    multi.value = true
+    shared.value = true
   }
   if (card?.invoice?.amount != null) {
     invoiceAmount.value = card.invoice.amount
@@ -211,7 +211,7 @@ const loadLnurlData = async () => {
   }
   if (
     status === 'funded'
-    && (invoice.value != null || multi.value)
+    && (invoice.value != null || shared.value)
   ) {
     funded.value = true
   } else if (status !== 'unfunded') {
@@ -227,7 +227,7 @@ const loadLnurlData = async () => {
 
 onBeforeMount(loadLnurlData)
 
-const fund = async () => {
+const createInvoice = async () => {
   creatingInvoice.value = true
   try {
     const response = await axios.post(
@@ -258,12 +258,12 @@ const resetInvoice = async () => {
       `${BACKEND_API_ORIGIN}/api/invoice/delete/${route.params.cardHash}`)
     if (response.data.status === 'success') {
       invoice.value = undefined
-      multi.value = false
+      shared.value = false
       funded.value = false
       amount.value = 2100
       userErrorMessage.value = undefined
       creatingInvoice.value = false
-      finishingMulti.value = false
+      finishingShared.value = false
       invoiceExpired.value = false
     }
   } catch(error) {
@@ -272,27 +272,28 @@ const resetInvoice = async () => {
   }
 }
 
-const multiFund = async () => {
+const makeShared = async () => {
   creatingInvoice.value = true
 
   try {
     const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/create/${route.params.cardHash}`)
     if (response.data.status === 'success') {
       amount.value = 0
-      multi.value = true
+      shared.value = true
       userErrorMessage.value = undefined
     }
   } catch(error) {
     console.error(error)
   }
-  if (multi.value !== true) {
-    userErrorMessage.value = 'Unable to make multifund.'
+  if (shared.value !== true) {
+    userErrorMessage.value = 'Unable to make share funding.'
   }
 
   creatingInvoice.value = false
 }
-const finishMulti = async () => {
-  finishingMulti.value = true
+
+const finishShared = async () => {
+  finishingShared.value = true
   try {
     const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/finish/${route.params.cardHash}`)
     if (response.data.status === 'success') {
@@ -301,9 +302,9 @@ const finishMulti = async () => {
   } catch(error) {
     console.error(error)
   }
-  finishingMulti.value = false
+  finishingShared.value = false
   if (!funded.value) {
-    userErrorMessage.value = 'Unable to finish multifund card.'
+    userErrorMessage.value = 'Unable to finish shared funding.'
   }
 }
 </script>
