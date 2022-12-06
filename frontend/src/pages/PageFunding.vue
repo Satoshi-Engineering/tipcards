@@ -123,6 +123,16 @@
             >
             <small class="block">({{ t('funding.form.textHint') }})</small>
           </label>
+          <label class="block mb-2">
+            <input
+              v-model="note"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :placeholder="t('funding.form.notePlaceholder')"
+              :disabled="creatingInvoice"
+            >
+            <small class="block">({{ t('funding.form.noteHint') }})</small>
+          </label>
           <div class="flex flex-col items-center mt-4">
             <ButtonDefault
               type="submit"
@@ -174,6 +184,7 @@ const router = useRouter()
 
 const amount = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
+const note = ref<string>()
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
@@ -235,6 +246,7 @@ const createInvoice = async () => {
       {
         amount: amount.value,
         text: text.value,
+        note: note.value,
       },
     )
     if (response.data.status === 'success' && typeof response.data.data === 'string') {

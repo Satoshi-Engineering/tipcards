@@ -74,6 +74,8 @@ const messages = {
       text: 'This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.',
       form: {
         textHint: 'will be displayed in the recipient\'s wallet',
+        notePlaceholder: 'Notes / handed out to',
+        noteHint: 'will be displayed on the status section of your Tip Cards set',
         button: 'Load card',
       },
       invoiceText: 'Fund your Tip Card with {amount} sats:',
@@ -226,6 +228,8 @@ const messages = {
       text: 'Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht der Empfänger in seiner Wallet sehen soll.',
       form: {
         textHint: 'wird in der Wallet des Empfängers angezeigt werden',
+        notePlaceholder: 'Notizen / ausgegeben an',
+        noteHint: 'wird im Statusbereich der Tip Cards Übersichtsseite angezeigt',
         button: 'Jetzt aufladen',
       },
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
@@ -377,6 +381,8 @@ const messages = {
       text: 'Esta tarjeta de propina aún no ha sido recargada con sats. Estableze la cantidad que deseas recargar y el mensaje que quieres que el destinatario vea en su cartera.',
       form: {
         textHint: 'aparecerá en la cartera del destinatario',
+        notePlaceholder: 'Notes / handed out to',
+        noteHint: 'will be displayed on the status section of your Tip Cards set',
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',

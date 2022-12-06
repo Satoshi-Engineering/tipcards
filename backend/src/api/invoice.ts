@@ -15,8 +15,9 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   // amount in sats
   let amount: number | undefined = undefined
   let text = ''
+  let note = ''
   try {
-    ({ amount, text } = req.body)
+    ({ amount, text, note } = req.body)
   } catch (error) {
     console.error(error)
   }
@@ -101,6 +102,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
     await createCard({
       cardHash: req.params.cardHash,
       text,
+      note,
       invoice: {
         amount,
         payment_hash,
