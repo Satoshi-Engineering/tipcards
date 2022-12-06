@@ -287,14 +287,14 @@ const messages = {
       buttonOpenInWallet: 'In der Wallet öffnen',
       copyToClipboard: {
         lnurl: {
-          beforeCopy: 'Du kannst {action}, um sie in deiner Wallet einzufügen.',
-          beforeCopyAction: 'die LNURL auch kopieren',
+          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopyAction: 'die LNURL auch kopieren,',
           afterCopySuccess: 'Erfolgreich kopiert.',
           afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
         },
         invoice: {
-          beforeCopy: 'Du kannst {action}, um sie in deiner Wallet einzufügen.',
-          beforeCopyAction: 'die Rechnung auch kopieren',
+          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopyAction: 'die Rechnung auch kopieren,',
           afterCopySuccess: 'Erfolgreich kopiert.',
           afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
         },
