@@ -257,7 +257,7 @@ const loadLnurlData = async () => {
     && (invoice.value != null || shared.value)
   ) {
     funded.value = true
-  } else if (status !== 'unfunded') {
+  } else if (['used', 'funded'].includes(status)) {
     router.replace({
       name: 'landing',
       query: { lightning: lnurl.value.toUpperCase() },

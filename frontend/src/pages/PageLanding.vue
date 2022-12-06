@@ -276,13 +276,15 @@ const loadLnurlData = async () => {
     router.push({ name: 'home' })
     return
   }
-  const { status, message, card } = await loadCardStatus(cardHash.value)
+  const cardStatus = await loadCardStatus(cardHash.value)
+  const { status, message, card } = cardStatus
+
   if (status === 'error' && message != null) {
     userErrorMessage.value = message
     return
   }
 
-  if (card == null || status === 'unfunded') {
+  if (card == null || !['used', 'funded'].includes(status)) {
     router.replace({
       name: 'funding',
       params: {
@@ -301,10 +303,8 @@ const loadLnurlData = async () => {
   if (status === 'funded') {
     spent.value = false
   }
-  if (card.invoice?.amount != null) {
-    amount.value = card.invoice.amount
-  } else if (card.lnurlp?.amount != null) {
-    amount.value = card.lnurlp.amount
+  if (cardStatus.amount != null) {
+    amount.value = cardStatus.amount
   }
 
   setTimeout(loadLnurlData, 10 * 1000)

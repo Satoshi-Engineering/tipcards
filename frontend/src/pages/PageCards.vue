@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="border-t p-2">
-            <strong>{{ usedCardsTotalAmount }}</strong> Sats
+            <strong>{{ usedCardsTotalAmount }}</strong> sats
           </div>
         </div>
         <div
@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="border-t p-2">
-            <strong>{{ fundedCardsTotalAmount }}</strong> Sats
+            <strong>{{ fundedCardsTotalAmount }}</strong> sats
           </div>
         </div>
       </div>
@@ -281,16 +281,33 @@
             <span class="m-auto">Error</span>
           </div>
           <div
-            v-else-if="card.sats != null && card.status !== 'unfunded'"
+            v-else-if="card.sats != null && (card.status === 'funded' || card.status === 'used')"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.sats }} sats</span>
           </div>
           <div
-            v-else-if="(card.hasInvoice || card.isShared)"
+            v-else-if="(card.status === 'invoice' || card.status === 'lnurlp')"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
-            <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Shared' }}</span>
+            <span
+              v-if="card.status === 'invoice'"
+              class="m-auto"
+            >
+              Invoice pending
+            </span>
+            <span
+              v-else-if="card.status === 'lnurlp' && card.shared"
+              class="m-auto"
+            >
+              Shared payment pending
+            </span>
+            <span
+              v-else-if="card.status === 'lnurlp'"
+              class="m-auto"
+            >
+              Payment pending
+            </span>
           </div>
         </div>
       </div>
@@ -463,8 +480,9 @@ type Card = {
   lnurl: string,
   status: string | null,
   sats: number | null,
-  hasInvoice: boolean,
-  isShared: boolean,
+  note: string | null,
+  shared: boolean,
+  fundedDate: number | null,
   qrCodeSvg: string,
 }
 const cards = ref<Card[]>([])
@@ -507,8 +525,9 @@ const repopulateCards = async () => {
       lnurl: lnurlEncoded,
       status: null,
       sats: null,
-      hasInvoice: false,
-      isShared: false,
+      note: null,
+      fundedDate: null,
+      shared: false,
       qrCodeSvg: new QRCode({
           content: url,
           padding: 0,
@@ -519,26 +538,17 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    const { status, message, card: cardData } = await loadCardStatus(card.cardHash)
+    const { status, amount, shared, message, fundedDate, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
       card.status = 'error'
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
     }
     card.status = status
-    if (cardData?.invoice?.amount != null) {
-      card.sats = cardData.invoice.amount
-    } else if (cardData?.lnurlp?.amount != null) {
-      card.sats = cardData.lnurlp.amount
-    }
-    if (cardData?.invoice != null) {
-      card.hasInvoice = true
-    }
-    if (typeof cardData?.lnurlp?.shared === 'boolean') {
-      card.isShared = cardData.lnurlp.shared
-    } else if (typeof cardData?.lnurlp?.multi === 'boolean') {
-      card.isShared = cardData.lnurlp.multi
-    }
+    card.shared = shared || false
+    card.sats = amount || null
+    card.note = cardData?.note || null
+    card.fundedDate = fundedDate || null
   })
 }
 

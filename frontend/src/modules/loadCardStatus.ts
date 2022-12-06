@@ -7,7 +7,11 @@ import type { SuccessResponse } from '@root/data/Response'
 import { LNBITS_ORIGIN } from '@root/constants'
 
 export type CardStatus = {
-  status: 'error' | 'unfunded' | 'funded' | 'used'
+  status: 'error' | 'unfunded' | 'funded' | 'used' | 'invoice' | 'lnurlp'
+  amount?: number
+  shared?: boolean
+  createdDate?: number,
+  fundedDate?: number,
   message?: string // a message intended for the user
   card?: Card
 }
@@ -60,6 +64,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
       return {
         status: 'unfunded',
+        shared: false,
       }
     }
     console.error(error)
@@ -69,20 +74,64 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
     }
   }
   const card = cardResponse.data as Card
-  if (card.lnbitsWithdrawId == null) {
-    return {
-      status: 'unfunded',
-      card,
-    }
+
+  let amount
+  let shared = false
+  let createdDate
+  let fundedDate
+  if (card.invoice != null) {
+    amount = card.invoice.amount
+    createdDate = card.invoice.created
+    fundedDate = card.invoice.paid != null ? card.invoice.paid : undefined
+  } else if (card.lnurlp != null) {
+    amount = card.lnurlp.amount != null ? card.lnurlp.amount : undefined
+    shared = card.lnurlp.shared || card.lnurlp.multi || false
+    createdDate = card.lnurlp.created
+    fundedDate = card.lnurlp.paid != null ? card.lnurlp.paid : undefined
   }
+  
   if (card.used != null) {
     return {
       status: 'used',
+      amount,
+      shared,
+      createdDate,
+      fundedDate,
+      card,
+    }
+  }
+  if (card.lnbitsWithdrawId != null) {
+    return {
+      status: 'funded',
+      amount,
+      shared,
+      createdDate,
+      fundedDate,
+      card,
+    }  
+  }
+  if (card.invoice != null && card.invoice.paid == null) {
+    return {
+      status: 'invoice',
+      amount: card.invoice.amount,
+      shared,
+      createdDate,
+      fundedDate,
+      card,
+    }
+  }
+  if (card.lnurlp != null && card.lnurlp.paid == null) {
+    return {
+      status: 'lnurlp',
+      amount: card.lnurlp.amount != null ? card.lnurlp.amount : undefined,
+      shared,
+      createdDate,
+      fundedDate,
       card,
     }
   }
   return {
-    status: 'funded',
+    status: 'unfunded',
     card,
   }
 }
