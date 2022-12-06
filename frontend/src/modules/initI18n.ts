@@ -104,13 +104,15 @@ const messages = {
         },
       },
     },
-    codes: {
-      buttonCreate: 'Create codes',
-      labelEnterWithdrawId: 'Enter your LNURLw withdraw ID',
-      hintLnbits: '(Needs to be from {lnbitsLink})',
-    },
     cards: {
+      status: {
+        headline: 'Status',
+        noCards: 'No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.',
+        labelUsedCards: 'Used',
+        labelFundedCards: 'Not used',
+      },
       settings: {
+        headline: 'Configuration',
         numberOfCards: 'Number of cards',
         cardHeadline: 'Card headline',
         cardText: 'Card text',
@@ -254,12 +256,13 @@ const messages = {
         },
       },
     },
-    codes: {
-      buttonCreate: 'QR-Codes erstellen',
-      labelEnterWithdrawId: 'Gib deine LNURLw withdraw ID ein',
-      hintLnbits: '(Muss von {lnbitsLink} sein)',
-    },
     cards: {
+      status: {
+        headline: 'Status',
+        noCards: 'Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.',
+        labelUsedCards: 'Eingelöst',
+        labelFundedCards: 'Nicht eingelöst',
+      },
       settings: {
         numberOfCards: 'Anzahl',
         cardHeadline: 'Karten-Überschrift',
@@ -403,11 +406,6 @@ const messages = {
           link: 'https://youtu.be/cGWwuuhmtXk',
         },
       },
-    },
-    codes: {
-      buttonCreate: 'Crear códigos QR',
-      labelEnterWithdrawId: 'Introduce tu número número para retirar LNURLw',
-      hintLnbits: '(Debe ser de {lnbitsLink})',
     },
     cards: {
       settings: {

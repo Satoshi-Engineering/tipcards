@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-1 border-b print:hidden">
-    <div class="p-2 pt-4">
+  <div class="mb-1 print:hidden max-w-md w-full m-auto">
+    <div class="p-4">
       <LinkDefault :to="{ name: 'home' }">
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
@@ -8,11 +8,58 @@
     <div
       v-for="userWarning in userWarnings"
       :key="userWarning"
-      class="bg-yellow-300 p-2 mb-1"
+      class="bg-yellow-300 p-4 mb-1"
     >
       {{ userWarning }}
     </div>
-    <div class="p-2 mb-1 max-w-md">
+    <div class="p-4 mb-3">
+      <HeadlineDefault level="h2">
+        {{ t('cards.status.headline') }}
+      </HeadlineDefault>
+      <ParagraphDefault
+        v-if="usedCards.length == 0 && fundedCards.length == 0"
+        class="text-sm text-grey"
+      >
+        {{ t('cards.status.noCards') }}
+      </ParagraphDefault>
+      <div
+        v-else
+        class="grid grid-cols-2 gap-3"
+      >
+        <div
+          v-if="usedCards.length > 0"
+          class="border flex flex-col"
+        >
+          <div class="p-2 flex-1">
+            <strong class="text-4xl">{{ usedCards.length }}</strong>
+            <div class="text-sm text-grey uppercase">
+              {{ t('cards.status.labelUsedCards') }}
+            </div>
+          </div>
+          <div class="border-t p-2">
+            <strong>{{ usedCardsTotalAmount }}</strong> Sats
+          </div>
+        </div>
+        <div
+          v-if="usedCards.length > 0"
+          class="border flex flex-col"
+        >
+          <div class="p-2 flex-1">
+            <strong class="text-4xl">{{ fundedCards.length }}</strong>
+            <div class="text-sm text-grey uppercase">
+              {{ t('cards.status.labelFundedCards') }}
+            </div>
+          </div>
+          <div class="border-t p-2">
+            <strong>{{ fundedCardsTotalAmount }}</strong> Sats
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p-4 mb-1 max-w-md">
+      <HeadlineDefault level="h2">
+        {{ t('cards.settings.headline') }}
+      </HeadlineDefault>
       <label class="block mb-2">
         <span class="block">
           {{ t('cards.settings.numberOfCards') }}:
@@ -73,7 +120,7 @@
         {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
       </label>
     </div>
-    <div class="px-2 my-1 text-sm">
+    <div class="px-4 my-1 text-sm">
       <ButtonDefault @click="printCards()">
         {{ t('cards.buttonPrint') }}
       </ButtonDefault>
@@ -85,7 +132,7 @@
         {{ t('cards.buttonDownloadPngs') }}
       </ButtonDefault>
     </div>
-    <div class="px-2 my-1 text-sm">
+    <div class="px-4 my-1 text-sm">
       <ButtonDefault @click="saveCardsSet">
         {{ t('cards.buttonSaveCardsSet') }}
         <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
@@ -102,7 +149,7 @@
     </div>
     <div
       v-if="cards.length > 0"
-      class="p-2 max-w-md"
+      class="p-4 max-w-md"
     >
       <label class="block mb-2">
         <span class="block">
@@ -129,7 +176,7 @@
     </div>
     <div
       v-if="userErrorMessage != null"
-      class="p-2"
+      class="p-4"
     >
       <p class="text-red-500 text-align-center">
         {{ userErrorMessage }}
@@ -138,7 +185,7 @@
   </div>
   <div v-if="cards.length > 0">
     <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
-      <div class="w-[210mm] p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
+      <div class="w-[210mm] mx-auto p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
         <div>
           Set ID:<br>
           <LinkDefault :href="currentSetUrl">{{ setId }}</LinkDefault>
@@ -152,7 +199,7 @@
       </div>
       <div
         ref="cardsContainer"
-        class="relative w-[210mm] px-[15mm] py-[10mm]"
+        class="relative w-[210mm] mx-auto px-[15mm] py-[10mm] border-t print:border-0"
       >
         <div
           v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
@@ -226,24 +273,24 @@
                 <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
               </div>
             </div>
-            <div
-              v-if="card.status === 'error'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
-            >
-              <span class="m-auto">Error</span>
-            </div>
-            <div
-              v-else-if="card.sats != null && card.status !== 'unfunded'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
-            >
-              <span class="m-auto">{{ card.sats }} sats</span>
-            </div>
-            <div
-              v-else-if="(card.hasInvoice || card.isShared)"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
-            >
-              <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Shared' }}</span>
-            </div>
+          </div>
+          <div
+            v-if="card.status === 'error'"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
+          >
+            <span class="m-auto">Error</span>
+          </div>
+          <div
+            v-else-if="card.sats != null && card.status !== 'unfunded'"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
+          >
+            <span class="m-auto">{{ card.sats }} sats</span>
+          </div>
+          <div
+            v-else-if="(card.hasInvoice || card.isShared)"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+          >
+            <span class="m-auto">{{ card.hasInvoice ? 'Invoice' : 'Shared' }}</span>
           </div>
         </div>
       </div>
@@ -376,7 +423,7 @@ const urlChanged = () => {
 
 onMounted(urlChanged)
   
-watch(() => route.params, urlChanged)
+watch(() => route.fullPath, urlChanged)
 
 const hasBeenSaved = computed(() => {
   return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)
@@ -529,6 +576,16 @@ const hashSha256 = async (message: string) => {
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
   return hashHex
 }
+
+///////////////////////
+// STATUS
+//
+const usedCards = computed(() => cards.value.filter(({ status }) => status === 'used'))
+const usedCardsTotalAmount = computed(() => usedCards.value.reduce((total, { sats }) => total + (sats || 0), 0))
+
+const fundedCards = computed(() => cards.value.filter(({ status }) => status === 'funded'))
+const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, { sats }) => total + (sats || 0), 0))
+
 </script>
 
 <style>
