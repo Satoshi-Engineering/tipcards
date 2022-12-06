@@ -57,7 +57,7 @@ const messages = {
         messageFootnote: '* to hodl = to hold, to save up',
         examplesIntro: 'Here are a few websites where you can pay with bitcoin via Lightning:',
         examples: {
-          saltNDaisy: 'Buy some organic sustainable Granola',
+          saltNDaisy: 'Buy some sustainable granola',
           satoshistore: 'Shop Bitcoin Outfits',
           aprycotMedia: 'Bitcoin books, media and more',
           copiaro: 'Hardware Wallets & HODL tools',
@@ -182,7 +182,7 @@ const messages = {
       },
       sectionWallet: {
         headline: 'Installiere eine Wallet',
-        explanation: 'Um Bitcoin empfangen, speichern und ausgeben zu können, benötigst du eine <strong>Lightning wallet</strong>.<br>Für den alltäglichen Gebrauch und kleine Beträge ist eine Smartphone-App am bequemsten.',
+        explanation: 'Um Bitcoin empfangen, speichern und ausgeben zu können, benötigst du eine <strong>Lightning-Wallet</strong>.<br>Für den alltäglichen Gebrauch und kleine Beträge ist eine Smartphone-App am bequemsten.',
         recommendation: 'Zum Einstieg empfehlen wir die {walletOfSatoshi}.',
         button: 'Wallet of Satoshi herunterladen',
         other: 'Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.',
@@ -192,8 +192,8 @@ const messages = {
         headline: 'Hol dir deine Bitcoin',
         statusNormal: {
           explanation: 'Sobald deine Wallet installiert ist,',
-          step1: '<strong>drücke</strong> auf den QR-Code unten, oder',
-          step2: '<strong>scanne</strong> den QR-Code auf deiner Tip Card erneut<br>(mit deiner Wallet app)',
+          step1: '<strong>drücke</strong> auf den QR-Code unten oder',
+          step2: '<strong>scanne</strong> den QR-Code auf deiner Tip Card erneut<br>(mit deiner Wallet-App)',
         },
         statusReceived: {
           congrats: 'Gratulation!',
@@ -204,12 +204,12 @@ const messages = {
         headline: 'Verwende deine Bitcoin',
         message: 'Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst* sie einfach.',
         messageFootnote: '* hodln = halten, sparen',
-        examplesIntro: 'Hier sind ein paar Links auf Sites, wo du Bitcoin verwenden kannst:',
+        examplesIntro: 'Hier sind ein paar Links auf Sites, auf denen du Bitcoin verwenden kannst:',
         examples: {
-          saltNDaisy: 'Kauf dir nachhaltiges Bio-Granola',
-          satoshistore: 'Check dir stylishes Bitcoin-Outfit',
-          aprycotMedia: 'Bitcoin Bücher, Medien & mehr',
-          copiaro: 'Hardware Wallets & HODL Werkzeuge',
+          saltNDaisy: 'Kauf dir nachhaltiges Granola',
+          satoshistore: 'Shoppe stylishes Bitcoin-Outfit',
+          aprycotMedia: 'Bücher, Medien & mehr zum Thema Bitcoin',
+          copiaro: 'Hardware Wallets & HODL-Werkzeuge',
           lightningnetworkstores: 'Finde heraus, was du online machen kannst',
           coinpages: 'Such nach Geschäften, die Bitcoin akzeptieren',
         },
@@ -285,13 +285,13 @@ const messages = {
       buttonOpenInWallet: 'In der Wallet öffnen',
       copyToClipboard: {
         lnurl: {
-          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopy: 'Du kannst {action}, um sie in deiner Wallet einzufügen.',
           beforeCopyAction: 'die LNURL auch kopieren',
           afterCopySuccess: 'Erfolgreich kopiert.',
           afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
         },
         invoice: {
-          beforeCopy: 'Du kannst {action} um sie in deiner Wallet einzufügen.',
+          beforeCopy: 'Du kannst {action}, um sie in deiner Wallet einzufügen.',
           beforeCopyAction: 'die Rechnung auch kopieren',
           afterCopySuccess: 'Erfolgreich kopiert.',
           afterCopyNextStep: 'Füge sie jetzt<br>in deiner Wallet app ein :)',
@@ -355,7 +355,7 @@ const messages = {
         messageFootnote: '* hodln = mantener, guardar',
         examplesIntro: 'Aquí hay algunos enlaces a sitios donde puede usar Bitcoin:',
         examples: {
-          saltNDaisy: 'Compra granola orgánica sostenible',
+          saltNDaisy: 'Compra granola sostenible',
           satoshistore: 'Compra ropa Bitcoin de moda',
           aprycotMedia: 'Libros de Bitcoin, medios de comunicación y más',
           copiaro: 'Carteras de hardware y herramientas HODL',

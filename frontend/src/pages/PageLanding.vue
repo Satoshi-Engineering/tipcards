@@ -176,27 +176,27 @@
         <ul class="list-disc pl-6">
           <li class="my-1">
             {{ t('landing.sectionUse.examples.saltNDaisy') }}:<br>
-            <LinkDefault href="https://saltndaisy.at/" />
+            <LinkDefault href="https://saltndaisy.at/">saltndaisy.at</LinkDefault>
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.satoshistore') }}:<br>
-            <LinkDefault href="https://satoshistore.io/" />
+            <LinkDefault href="https://satoshistore.io/">satoshistore.io</LinkDefault>
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.aprycotMedia') }}:<br>
-            <LinkDefault href="https://aprycot.media/" />
+            <LinkDefault href="https://aprycot.media/">aprycot.media</LinkDefault>
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.copiaro') }}:<br>
-            <LinkDefault href="https://copiaro.de/" />
+            <LinkDefault href="https://copiaro.de/">copiaro.de</LinkDefault>
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.lightningnetworkstores') }}:<br>
-            <LinkDefault href="https://lightningnetworkstores.com/" />
+            <LinkDefault href="https://lightningnetworkstores.com/">lightningnetworkstores.com</LinkDefault>
           </li>
           <li class="my-1">
             {{ t('landing.sectionUse.examples.coinpages') }}:<br>
-            <LinkDefault href="https://coinpages.io/" />
+            <LinkDefault href="https://coinpages.io/">coinpages.io</LinkDefault>
           </li>
         </ul>
         <HeadlineDefault level="h3" class="mt-7">
