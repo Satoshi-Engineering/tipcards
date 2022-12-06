@@ -288,7 +288,13 @@ const makeShared = async () => {
   creatingInvoice.value = true
 
   try {
-    const response = await axios.post(`${BACKEND_API_ORIGIN}/api/lnurlp/create/${route.params.cardHash}`)
+    const response = await axios.post(
+      `${BACKEND_API_ORIGIN}/api/lnurlp/create/${route.params.cardHash}`,
+      {
+        text: text.value,
+        note: note.value,
+      },
+    )
     if (response.data.status === 'success') {
       amount.value = 0
       shared.value = true

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getCardByHash } from '../services/database'
+import { createCard, getCardByHash } from '../services/database'
 import {
   getLnurlpForNewCard,
   getLnurlpForCard,
@@ -18,6 +18,14 @@ const router = express.Router()
  * Create shared funding lnurlp link
  */
 router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
+  let text = ''
+  let note = ''
+  try {
+    ({ text, note } = req.body)
+  } catch (error) {
+    console.error(error)
+  }
+
   // check if card/invoice already exists
   let card: Card | null = null
   try {
@@ -32,21 +40,28 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
     return
   }
 
-  // create + return lnurlp for new card
+  // create new card if it doesn't exist yet
   if (card == null) {
+    card = {
+      cardHash: req.params.cardHash,
+      text,
+      note,
+      invoice: null,
+      lnurlp: null,
+      lnbitsWithdrawId: null,
+      used: null,
+    }
     try {
-      await getLnurlpForNewCard(req.params.cardHash, true)
-      res.json({
-        status: 'success',
-      })
+      await createCard(card)
     } catch (error) {
-      console.error(ErrorCode.UnableToCreateLnurlP, error)
+      console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
         status: 'error',
-        reason: 'Unable to create LNURL-P at lnbits.',
+        message: 'An unexpected error occured. Please try again later or contact an admin.',
+        code: ErrorCode.UnknownDatabaseError,
       })
+      return
     }
-    return
   }
   
   // check status of card
