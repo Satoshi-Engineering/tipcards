@@ -77,6 +77,7 @@ const messages = {
         button: 'Load card',
       },
       invoiceText: 'Fund your Tip Card with {amount} sats:',
+      invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
       multi: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
@@ -226,6 +227,7 @@ const messages = {
         button: 'Jetzt aufladen',
       },
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
+      invoiceExpired: 'Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.',
       resetInvoice: 'Tip Card zurücksetzen',
       multi: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
@@ -375,6 +377,7 @@ const messages = {
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
+      invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
       multi: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',

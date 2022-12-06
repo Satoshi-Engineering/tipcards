@@ -35,7 +35,11 @@
         <LightningQrCode
           :value="invoice"
           :success="funded"
+          :error="invoiceExpired ? t('funding.invoiceExpired') : undefined"
         />
+        <p v-if="invoiceExpired" class="mb-4">
+          {{ t('funding.invoiceExpired') }}
+        </p>
         <div class="flex justify-center">
           <ButtonDefault
             type="submit"
@@ -173,6 +177,7 @@ const text = ref('Have fun with Bitcoin :)')
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
+const invoiceExpired = ref(false)
 const funded = ref(false)
 const creatingInvoice = ref(false)
 const multi = ref(false)
@@ -200,6 +205,9 @@ const loadLnurlData = async () => {
   }
   if (card?.invoice?.payment_request != null) {
     invoice.value = card.invoice.payment_request
+  }
+  if (card?.invoice?.expired === true) {
+    invoiceExpired.value = true
   }
   if (
     status === 'funded'
@@ -256,6 +264,7 @@ const resetInvoice = async () => {
       userErrorMessage.value = undefined
       creatingInvoice.value = false
       finishingMulti.value = false
+      invoiceExpired.value = false
     }
   } catch(error) {
     console.error(error)

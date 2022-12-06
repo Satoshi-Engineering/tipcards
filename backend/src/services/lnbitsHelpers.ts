@@ -38,6 +38,13 @@ export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
       card.invoice.paid = Math.round(+ new Date() / 1000)
     }
   } catch (error) {
+    // if the invoice doesnt exist anymore handle the expired invoice in the frontend
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        card.invoice.expired = true
+        return card
+      }
+    }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
   }
   try {

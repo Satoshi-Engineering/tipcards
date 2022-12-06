@@ -7,6 +7,7 @@ export type Card = {
     payment_request: string,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
+    expired?: boolean,
   } | null,
   lnurlp: {
     multi: boolean,
