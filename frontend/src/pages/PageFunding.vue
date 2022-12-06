@@ -36,6 +36,15 @@
           :value="invoice"
           :success="funded"
         />
+        <div class="flex justify-center">
+          <ButtonDefault
+            type="submit"
+            variant="outline"
+            @click="resetInvoice"
+          >
+            {{ t('funding.resetInvoice') }} 
+          </ButtonDefault>
+        </div>
       </div>
       <div v-else-if="multi">
         <ParagraphDefault class="mb-8">
@@ -223,6 +232,20 @@ const fund = async () => {
   
   if (invoice.value == null) {
     userErrorMessage.value = 'Error when creating funding invoice.'
+  }
+}
+
+const resetInvoice = async () => {
+  try {
+    const response = await axios.delete(
+      `${BACKEND_API_ORIGIN}/api/invoice/delete/${route.params.cardHash}`)
+    if (response.data.status === 'success') {
+      invoice.value = undefined
+      userErrorMessage.value = undefined
+    }
+  } catch(error) {
+    console.error(error)
+    userErrorMessage.value = 'Error when deleting invoice. Please try again later.'
   }
 }
 

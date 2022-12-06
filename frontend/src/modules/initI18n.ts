@@ -77,6 +77,7 @@ const messages = {
         button: 'Load card',
       },
       invoiceText: 'Fund your Tip Card with {amount} sats:',
+      resetInvoice: 'Reset Tip Card',
       multi: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
         textFunded: 'This Tip Card is already funded ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
@@ -225,6 +226,7 @@ const messages = {
         button: 'Jetzt aufladen',
       },
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
+      resetInvoice: 'Tip Card zurücksetzen',
       multi: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
@@ -373,6 +375,7 @@ const messages = {
         button: 'Recargar ahora',
       },
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
+      resetInvoice: 'Reset Tip Card',
       multi: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
         textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
