@@ -82,6 +82,15 @@
           class="flex flex-col items-center mt-4"
         >
           <ButtonDefault
+            v-if="amount === 0 && !finishingMulti && !funded"
+            type="submit"
+            variant="outline"
+            @click="resetInvoice"
+          >
+            {{ t('funding.resetInvoice') }} 
+          </ButtonDefault>
+          <ButtonDefault
+            v-else
             type="submit"
             :disabled="amount === 0 || finishingMulti || funded"
             @click="finishMulti"
@@ -159,7 +168,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const amount = ref(1000)
+const amount = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
@@ -241,11 +250,16 @@ const resetInvoice = async () => {
       `${BACKEND_API_ORIGIN}/api/invoice/delete/${route.params.cardHash}`)
     if (response.data.status === 'success') {
       invoice.value = undefined
+      multi.value = false
+      funded.value = false
+      amount.value = 2100
       userErrorMessage.value = undefined
+      creatingInvoice.value = false
+      finishingMulti.value = false
     }
   } catch(error) {
     console.error(error)
-    userErrorMessage.value = 'Error when deleting invoice. Please try again later.'
+    userErrorMessage.value = 'Unable to reset Tip Card. Please try again later.'
   }
 }
 
@@ -265,6 +279,8 @@ const multiFund = async () => {
   if (multi.value !== true) {
     userErrorMessage.value = 'Unable to make multifund.'
   }
+
+  creatingInvoice.value = false
 }
 const finishMulti = async () => {
   finishingMulti.value = true

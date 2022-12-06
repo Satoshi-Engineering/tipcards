@@ -264,6 +264,14 @@ router.delete('/delete/:cardHash', async (req: express.Request, res: express.Res
     })
     return
   }
+  if (card.lnurlp?.amount != null && card.lnurlp?.amount > 0 && card.used == null) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This card is funded and not used. Withdraw satoshis first!',
+      code: ErrorCode.CardFundedAndNotUsed,
+    })
+    return
+  }
 
   // 4. delete card in database
   try {
