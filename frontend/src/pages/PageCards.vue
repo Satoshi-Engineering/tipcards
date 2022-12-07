@@ -384,6 +384,7 @@ import sanitizeHtml from 'sanitize-html'
 import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import debounce from 'lodash.debounce'
 
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
@@ -480,10 +481,10 @@ const putSettingsIntoUrl = () => {
   })
 }
 
-watch(settings, () => {
+watch(settings, debounce(() => {
   putSettingsIntoUrl()
   repopulateCards()
-})
+}, 700))
 
 const urlChanged = () => {
   const settingsEncoded = String(route.params.settings)
