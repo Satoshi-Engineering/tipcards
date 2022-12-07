@@ -100,6 +100,7 @@ const messages = {
       buttonCreate: 'Create your Tip Cards set ⚡',
       savedCardsSetsHeadline: 'Saved Tip Cards sets',
       noSavedCardsSetsMessage: 'No saved Tip Cards sets found in this browser',
+      unnamedSetNameFallback: 'Unnamed set',
       youtube: {
         create: {
           label: 'Create',
@@ -130,6 +131,7 @@ const messages = {
         cardQrCodeLogo: {
           noLogo: 'No logo',
         },
+        setName: 'Set name',
       },
       buttonSaveCardsSet: 'Save Tip Cards set',
       buttonDeleteCardsSet: 'Delete saved set',
@@ -262,6 +264,7 @@ const messages = {
       buttonCreate: 'Erstelle dein Tip Cards-Set',
       savedCardsSetsHeadline: 'Gespeicherte Tip Cards-Sets',
       noSavedCardsSetsMessage: 'In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert',
+      unnamedSetNameFallback: 'Unbenanntes Set',
       youtube: {
         create: {
           label: 'Erstellen',
@@ -292,8 +295,9 @@ const messages = {
         cardQrCodeLogo: {
           noLogo: 'Kein Logo',
         },
+        setName: 'Set-Name',
       },
-      buttonSaveCardsSet: 'Tip Cards-Set speichern',
+      buttonSaveCardsSet: 'Set speichern',
       buttonDeleteCardsSet: 'Set löschen',
       buttonPrint: 'Tip Cards drucken',
       buttonDownloadPngs: 'PNGs downloaden',

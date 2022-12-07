@@ -12,6 +12,7 @@ export const initialSettings = {
   cardHeadline: 'Hey :)',
   cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
   cardsQrCodeLogo: 'bitcoin',
+  setName: '',
 }
 export const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
 export type Settings = typeof initialSettings

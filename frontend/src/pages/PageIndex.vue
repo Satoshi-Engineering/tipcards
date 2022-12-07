@@ -31,9 +31,10 @@
             <li
               v-for="cardsSet in [...savedCardsSets].reverse()"
               :key="cardsSet.setId"
-              class="text-left"
+              class="leading-tight my-2"
             >
               <LinkDefault
+                class="no-underline group"
                 :bold="false"
                 :to="{
                   name: 'cards',
@@ -43,12 +44,16 @@
                   }
                 }"
               >
-                {{ d(cardsSet.date, {
-                  year: 'numeric', month: 'numeric', day: 'numeric',
-                  hour: 'numeric', minute: 'numeric'
-                }) }}
-                -
-                {{ t('general.cards', { count: decodeCardsSetSettings(cardsSet.settings).numberOfCards }) }}
+                <small>
+                  {{ d(cardsSet.date, {
+                    year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric'
+                  }) }}
+                  -
+                  {{ t('general.cards', { count: decodeCardsSetSettings(cardsSet.settings).numberOfCards }) }}
+                </small>
+                <br>
+                <span class="underline group-hover:no-underline">{{ decodeCardsSetSettings(cardsSet.settings).setName || t('index.unnamedSetNameFallback') }}</span>
               </LinkDefault>
             </li>
           </ul>

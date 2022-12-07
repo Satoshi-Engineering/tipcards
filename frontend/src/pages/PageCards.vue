@@ -180,7 +180,9 @@
       </label>
     </div>
     <div class="px-4 my-1 text-sm">
-      <ButtonDefault @click="printCards()">
+      <ButtonDefault
+        @click="printCards()"
+      >
         {{ t('cards.buttonPrint') }}
       </ButtonDefault>
       &nbsp;
@@ -191,8 +193,18 @@
         {{ t('cards.buttonDownloadPngs') }}
       </ButtonDefault>
     </div>
-    <div class="px-4 my-1 text-sm">
-      <ButtonDefault @click="saveCardsSet">
+    <div class="px-4 my-2">
+      <label class="block mb-1">
+        <span class="block">
+          {{ t('cards.settings.setName') }}:
+        </span>
+        <input
+          v-model="settings.setName"
+          type="text"
+          class="w-full border my-1 px-3 py-2 focus:outline-none"
+        >
+      </label>
+      <ButtonDefault class="text-sm" @click="saveCardsSet">
         {{ t('cards.buttonSaveCardsSet') }}
         <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
         <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
@@ -201,6 +213,7 @@
       <ButtonDefault
         v-if="isSaved"
         variant="outline"
+        class="text-sm"
         @click="deleteCardsSet"
       >
         {{ t('cards.buttonDeleteCardsSet') }}
