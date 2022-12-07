@@ -6,7 +6,7 @@
     >
       <LinkDefault
         :href="backlink"
-        @click.prevent="$router.back()"
+        target="_self"
       >
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
