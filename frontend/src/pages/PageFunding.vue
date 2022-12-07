@@ -24,25 +24,7 @@
       >
         {{ t('funding.text') }}
       </ParagraphDefault>
-      <div v-if="lnurlp">
-        <ParagraphDefault>
-          {{ t('funding.lnurlpText') }}
-        </ParagraphDefault>
-        <LightningQrCode
-          :value="lnurl"
-          :success="funded"
-        />
-        <div class="flex justify-center">
-          <ButtonDefault
-            type="submit"
-            variant="outline"
-            @click="resetInvoice"
-          >
-            {{ t('funding.resetInvoice') }} 
-          </ButtonDefault>
-        </div>
-      </div>
-      <div v-else-if="invoice != null">
+      <div v-if="invoice != null">
         <ParagraphDefault>
           <Translation keypath="funding.invoiceText">
             <template #amount>
@@ -144,6 +126,47 @@
           </ButtonDefault>
         </div>
       </div>
+      <div v-else-if="lnurlp">
+        <ParagraphDefault>
+          {{ t('funding.lnurlpText') }}
+        </ParagraphDefault>
+        <LightningQrCode
+          :value="lnurl"
+          :success="funded"
+        />
+        <div class="mb-4">
+          <label class="block mb-2">
+            <input
+              v-model="text"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :disabled="funded"
+              @input="updateText"
+            >
+            <small class="block">({{ t('funding.form.textHint') }})</small>
+          </label>
+          <label class="block mb-2">
+            <input
+              v-model="note"
+              type="text"
+              class="w-full border my-1 px-3 py-2 focus:outline-none"
+              :placeholder="t('funding.form.notePlaceholder')"
+              :disabled="funded"
+              @input="updateNote"
+            >
+            <small class="block">({{ t('funding.form.noteHint') }})</small>
+          </label>
+        </div>
+        <div class="flex justify-center">
+          <ButtonDefault
+            type="submit"
+            variant="outline"
+            @click="resetInvoice"
+          >
+            {{ t('funding.resetInvoice') }} 
+          </ButtonDefault>
+        </div>
+      </div>
       <div v-else>
         <form @submit.prevent="createInvoice">
           <label class="block mb-2">
@@ -191,7 +214,7 @@
       </div>
     </div>
     <LinkDefault
-      v-if="(invoice == null && !shared)"
+      v-if="invoice == null && !shared && !funded"
       class="mt-12 px-4"
       :disabled="creatingInvoice"
       @click.prevent="makeShared"
@@ -333,6 +356,7 @@ const resetInvoice = async () => {
       textIsDirty.value = false
       note.value = undefined
       noteIsDirty.value = false
+      lnurlp.value = false
     }
   } catch(error) {
     console.error(error)
