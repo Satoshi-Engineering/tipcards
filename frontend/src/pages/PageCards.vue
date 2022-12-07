@@ -13,9 +13,19 @@
       {{ userWarning }}
     </div>
     <div class="p-4 mb-3">
-      <HeadlineDefault level="h2">
-        {{ t('cards.status.headline') }}
-      </HeadlineDefault>
+      <div class="my-2 flex justify-between items-center">
+        <HeadlineDefault level="h2" class="my-0">
+          {{ t('cards.status.headline') }}
+        </HeadlineDefault>
+        <ButtonDefault
+          variant="no-border"
+          class="text-xs text-black underline"
+          :disabled="reloadingStatusForCards"
+          @click="reloadStatusForCards()"
+        >
+          {{ t('cards.status.reload') }}
+        </ButtonDefault>
+      </div>
       <ParagraphDefault
         v-if="usedCards.length == 0 && fundedCards.length == 0"
         class="text-sm text-grey"
@@ -611,8 +621,10 @@ const generateNewCardSkeleton = async (index: number) => {
   }
 }
 
+const reloadingStatusForCards = ref(false)
 const reloadStatusForCards = throttle(async () => {
-  cards.value.forEach(async (card) => {
+  reloadingStatusForCards.value = true
+  await Promise.all(cards.value.map(async (card) => {
     const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
       card.status = 'error'
@@ -626,7 +638,8 @@ const reloadStatusForCards = throttle(async () => {
     card.fundedDate = fundedDate || null
     card.usedDate = cardData?.used || null
     card.createdDate = createdDate || null
-  })
+  }))
+  reloadingStatusForCards.value = false
 }, 1000)
 
 const repopulateCards = async () => {

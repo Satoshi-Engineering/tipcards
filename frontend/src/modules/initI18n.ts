@@ -121,6 +121,7 @@ const messages = {
         labelPendingFunding: 'Funding in progress',
         labelPendingSharedFunding: 'Shared funding in progress',
         labelNote: 'Note',
+        reload: 'Reload',
       },
       settings: {
         headline: 'Configuration',
@@ -285,6 +286,7 @@ const messages = {
         labelPendingFunding: 'Wird aufgeladen',
         labelPendingSharedFunding: 'Wird gemeinsam aufgeladen',
         labelNote: 'Notiz',
+        reload: 'Aktualisieren',
       },
       settings: {
         headline: 'Konfiguration',
