@@ -40,7 +40,7 @@
         <p v-if="invoiceExpired" class="mb-4">
           {{ t('funding.invoiceExpired') }}
         </p>
-        <div class="flex justify-center">
+        <div v-if="!funded" class="flex justify-center">
           <ButtonDefault
             type="submit"
             variant="outline"
