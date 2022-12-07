@@ -571,38 +571,46 @@ onBeforeMount(() => {
   }
 })
 
+const generateNewCardSkeleton = async (index: number) => {
+  const cardHash = await hashSha256(`${setId.value}/${index}`)
+  const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
+  const lnurlEncoded = encodeLnurl(lnurlDecoded)
+  const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
+  const url = `${location.protocol}//${location.host}${routeHref}`
+  return {
+    cardHash,
+    url,
+    lnurl: lnurlEncoded,
+    status: null,
+    amount: null,
+    note: null,
+    fundedDate: null,
+    usedDate: null,
+    createdDate: null,
+    shared: false,
+    qrCodeSvg: new QRCode({
+        content: url,
+        padding: 0,
+        join: true,
+        xmlDeclaration: false,
+        container: 'none',
+      }).svg(),
+  }
+}
+
 const repopulateCards = async () => {
   if (setId.value == null) {
     cards.value = []
     return
   }
-  settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 500), 0)
-  cards.value = await Promise.all([...Array(settings.numberOfCards).keys()].map(async (_, index) => {
-    const cardHash = await hashSha256(`${setId.value}/${index}`)
-    const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
-    const lnurlEncoded = encodeLnurl(lnurlDecoded)
-    const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
-    const url = `${location.protocol}//${location.host}${routeHref}`
-    return {
-      cardHash,
-      url,
-      lnurl: lnurlEncoded,
-      status: null,
-      amount: null,
-      note: null,
-      fundedDate: null,
-      usedDate: null,
-      createdDate: null,
-      shared: false,
-      qrCodeSvg: new QRCode({
-          content: url,
-          padding: 0,
-          join: true,
-          xmlDeclaration: false,
-          container: 'none',
-        }).svg(),
+  settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 100), 0)
+  cards.value.splice(settings.numberOfCards)
+  for (let i = 0; i < settings.numberOfCards; i+=1) {
+    if (cards.value[i] != null) {
+      continue
     }
-  }))
+    cards.value[i] = await generateNewCardSkeleton(i)
+  }
   cards.value.forEach(async (card) => {
     const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
