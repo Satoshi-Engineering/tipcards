@@ -317,6 +317,7 @@ export const getLnurlpForCard = async (card: Card, shared = false): Promise<unkn
   let id
   if (card.lnurlp?.id != null) {
     id = card.lnurlp.id
+    card.lnurlp.shared = shared
   } else {
     try {
       const response = await axios.post(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/`, {
@@ -343,11 +344,11 @@ export const getLnurlpForCard = async (card: Card, shared = false): Promise<unkn
       created: Math.round(+ new Date() / 1000),
       paid: null,
     }
-    try {
-      await updateCard(card)
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
-    }
+  }
+  try {
+    await updateCard(card)
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
 
   try {

@@ -19,12 +19,30 @@
         {{ t('funding.headline') }}
       </HeadlineDefault>
       <ParagraphDefault
-        v-if="(invoice == null && !shared)"
+        v-if="invoice == null && !shared && !lnurlp"
         class="mb-8"
       >
         {{ t('funding.text') }}
       </ParagraphDefault>
-      <div v-if="invoice != null">
+      <div v-if="lnurlp">
+        <ParagraphDefault>
+          {{ t('funding.lnurlpText') }}
+        </ParagraphDefault>
+        <LightningQrCode
+          :value="lnurl"
+          :success="funded"
+        />
+        <div class="flex justify-center">
+          <ButtonDefault
+            type="submit"
+            variant="outline"
+            @click="resetInvoice"
+          >
+            {{ t('funding.resetInvoice') }} 
+          </ButtonDefault>
+        </div>
+      </div>
+      <div v-else-if="invoice != null">
         <ParagraphDefault>
           <Translation keypath="funding.invoiceText">
             <template #amount>
@@ -206,6 +224,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
+const lnurlp = ref(false)
 const amount = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
 const textIsDirty = ref(false)
@@ -257,6 +276,8 @@ const loadLnurlData = async () => {
     && (invoice.value != null || shared.value)
   ) {
     funded.value = true
+  } else if (status === 'lnurlp') {
+    lnurlp.value = true
   } else if (['used', 'funded'].includes(status)) {
     router.replace({
       name: 'landing',
