@@ -307,13 +307,12 @@ const createInvoice = async () => {
       userErrorMessage.value = undefined
     }
   } catch(error) {
-    alert('We are building our Tip Cards on the shoulders of giants, in this case it\'s LNBits. The legend.lnbits.com server is currently not reachable. Please try again later.')
     console.error(error)
   }
   creatingInvoice.value = false
   
   if (invoice.value == null) {
-    userErrorMessage.value = 'Error when creating funding invoice.'
+    userErrorMessage.value = 'Unable to create funding invoice. Please try again later.'
   }
 }
 

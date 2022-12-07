@@ -70,7 +70,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
     console.error(error)
     return {
       status: 'error',
-      message: 'The server (legends of LNBits) is currently not reachable. Please try again later.',
+      message: 'Unable to load the Tip Card status as the server is currently not reachable. Please try again later.',
     }
   }
   const card = cardResponse.data as Card
