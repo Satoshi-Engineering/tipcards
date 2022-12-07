@@ -14,7 +14,7 @@
     </div>
     <div class="p-4 mb-3">
       <div class="my-2 flex justify-between items-center">
-        <HeadlineDefault level="h2" class="my-0">
+        <HeadlineDefault level="h2" class="!my-0">
           {{ t('cards.status.headline') }}
         </HeadlineDefault>
         <ButtonDefault
