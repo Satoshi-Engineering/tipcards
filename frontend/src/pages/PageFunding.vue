@@ -402,7 +402,7 @@ const makeShared = async () => {
 }
 
 const updateTextAndNoteForSharedCard = debounce(async () => {
-  if (!shared.value) {
+  if (!shared.value && !lnurlp.value) {
     return
   }
   const newText = text.value
