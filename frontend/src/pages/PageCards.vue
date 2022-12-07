@@ -22,38 +22,100 @@
       >
         {{ t('cards.status.noCards') }}
       </ParagraphDefault>
-      <div
-        v-else
-        class="grid grid-cols-2 gap-3"
-      >
-        <div
-          v-if="usedCards.length > 0"
-          class="border flex flex-col"
-        >
-          <div class="p-2 flex-1">
-            <strong class="text-4xl">{{ usedCards.length }}</strong>
-            <div class="text-sm text-grey uppercase">
-              {{ t('cards.status.labelUsedCards') }}
+      <div v-else>
+        <div class="grid grid-cols-2 gap-3">
+          <div
+            v-if="usedCards.length > 0"
+            class="border flex flex-col"
+          >
+            <div class="p-2 flex-1">
+              <strong class="text-4xl">{{ usedCards.length }}</strong>
+              <div class="text-sm text-lightningpurple uppercase">
+                {{ t('cards.status.labelUsed') }}
+              </div>
+            </div>
+            <div class="border-t p-2">
+              <strong>{{ usedCardsTotalAmount }}</strong> sats
             </div>
           </div>
-          <div class="border-t p-2">
-            <strong>{{ usedCardsTotalAmount }}</strong> sats
-          </div>
-        </div>
-        <div
-          v-if="usedCards.length > 0"
-          class="border flex flex-col"
-        >
-          <div class="p-2 flex-1">
-            <strong class="text-4xl">{{ fundedCards.length }}</strong>
-            <div class="text-sm text-grey uppercase">
-              {{ t('cards.status.labelFundedCards') }}
+          <div
+            v-if="usedCards.length > 0"
+            class="border flex flex-col"
+          >
+            <div class="p-2 flex-1">
+              <strong class="text-4xl">{{ fundedCards.length }}</strong>
+              <div class="text-sm text-btcorange uppercase">
+                {{ t('cards.status.labelFunded') }}
+              </div>
+            </div>
+            <div class="border-t p-2">
+              <strong>{{ fundedCardsTotalAmount }}</strong> sats
             </div>
           </div>
-          <div class="border-t p-2">
-            <strong>{{ fundedCardsTotalAmount }}</strong> sats
-          </div>
         </div>
+        <ul class="w-full text-sm my-5">
+          <li
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, url } in cardsStatusList"
+            :key="cardHash"
+            class="flex border-b py-1 my-1"
+          >
+            <div
+              class="w-3 h-3 mr-1.5 mt-1 rounded-full flex-none"
+              :class="{
+                'bg-btcorange': status === 'funded',
+                'bg-lightningpurple': status === 'used',
+                'bg-red-500': status === 'error',
+                'bg-grey': status === 'lnurlp' || status === 'invoice',
+              }"
+            />
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <a :href="url">
+                  <div v-if="(status === 'used' && usedDate != null)">
+                    <strong>{{ t('cards.status.labelUsed') }}:</strong>
+                    {{
+                      $d(usedDate * 1000, {
+                        year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
+                      })
+                    }}
+                  </div>
+                  <div v-if="((status === 'funded' || status === 'used') && fundedDate != null)">
+                    <strong v-if="status !== 'used'">{{ t('cards.status.labelFunded') }}:</strong>
+                    <span v-else>{{ t('cards.status.labelFunded') }}:</span>
+                    {{
+                      $d(fundedDate * 1000, {
+                        year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
+                      })
+                    }}
+                  </div>
+                  <div v-else-if="(status === 'invoice')">
+                    <strong>{{ t('cards.status.labelPendingFunding') }}</strong> <small class="text-xs">(Invoice)</small>
+                  </div>
+                  <div v-else-if="(status === 'lnurlp' && shared)">
+                    <strong>{{ t('cards.status.labelPendingSharedFunding') }}</strong>
+                  </div>
+                  <div v-else-if="(status === 'lnurlp')">
+                    <strong>{{ t('cards.status.labelPendingFunding') }}</strong> <small class="text-xs">(Wallet)</small>
+                  </div>
+                  <div v-else-if="(status === 'error')">
+                    <strong>Error</strong>
+                  </div>
+                </a>
+                <div
+                  v-if="amount != null"
+                  class="text-right"
+                >
+                  {{ amount }}&nbsp;sats
+                </div>
+              </div>
+              <div
+                v-if="note"
+              >
+                {{ t('cards.status.labelNote') }}: <strong>{{ note }}</strong>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
     <div class="p-4 mb-1 max-w-md">
@@ -281,10 +343,16 @@
             <span class="m-auto">Error</span>
           </div>
           <div
-            v-else-if="card.sats != null && (card.status === 'funded' || card.status === 'used')"
+            v-else-if="card.amount != null && card.status === 'funded'"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
           >
-            <span class="m-auto">{{ card.sats }} sats</span>
+            <span class="m-auto">{{ card.amount }} sats</span>
+          </div>
+          <div
+            v-else-if="card.amount != null && card.status === 'used'"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
+          >
+            <span class="m-auto">{{ card.amount }} sats</span>
           </div>
           <div
             v-else-if="(card.status === 'invoice' || card.status === 'lnurlp')"
@@ -294,19 +362,19 @@
               v-if="card.status === 'invoice'"
               class="m-auto"
             >
-              Invoice pending
+              {{ t('cards.status.labelPendingFunding') }} (Invoice)
             </span>
             <span
               v-else-if="card.status === 'lnurlp' && card.shared"
               class="m-auto"
             >
-              Shared payment pending
+              {{ t('cards.status.labelPendingSharedFunding') }}
             </span>
             <span
               v-else-if="card.status === 'lnurlp'"
               class="m-auto"
             >
-              Payment pending
+              {{ t('cards.status.labelPendingFunding') }} (Wallet)
             </span>
           </div>
         </div>
@@ -339,7 +407,7 @@ import {
   saveCardsSet as saveCardsSetToLocalStorage,
   deleteCardsSet as deleteCardsSetFromLocalStorage,
 } from '@/modules/cardsSets'
-import { loadCardStatus } from '@/modules/loadCardStatus'
+import { loadCardStatus, type CardStatus } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
@@ -479,10 +547,12 @@ type Card = {
   url: string,
   lnurl: string,
   status: string | null,
-  sats: number | null,
+  amount: number | null,
   note: string | null,
   shared: boolean,
   fundedDate: number | null,
+  usedDate: number | null,
+  createdDate: number | null,
   qrCodeSvg: string,
 }
 const cards = ref<Card[]>([])
@@ -524,9 +594,11 @@ const repopulateCards = async () => {
       url,
       lnurl: lnurlEncoded,
       status: null,
-      sats: null,
+      amount: null,
       note: null,
       fundedDate: null,
+      usedDate: null,
+      createdDate: null,
       shared: false,
       qrCodeSvg: new QRCode({
           content: url,
@@ -538,7 +610,7 @@ const repopulateCards = async () => {
     }
   }))
   cards.value.forEach(async (card) => {
-    const { status, amount, shared, message, fundedDate, card: cardData } = await loadCardStatus(card.cardHash)
+    const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
       card.status = 'error'
       userErrorMessage.value = message || 'Unknown error for LNURL.'
@@ -546,9 +618,11 @@ const repopulateCards = async () => {
     }
     card.status = status
     card.shared = shared || false
-    card.sats = amount || null
+    card.amount = amount || null
     card.note = cardData?.note || null
     card.fundedDate = fundedDate || null
+    card.usedDate = cardData?.used || null
+    card.createdDate = createdDate || null
   })
 }
 
@@ -591,10 +665,39 @@ const hashSha256 = async (message: string) => {
 // STATUS
 //
 const usedCards = computed(() => cards.value.filter(({ status }) => status === 'used'))
-const usedCardsTotalAmount = computed(() => usedCards.value.reduce((total, { sats }) => total + (sats || 0), 0))
+const usedCardsTotalAmount = computed(() => usedCards.value.reduce((total, { amount }) => total + (amount || 0), 0))
 
 const fundedCards = computed(() => cards.value.filter(({ status }) => status === 'funded'))
-const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, { sats }) => total + (sats || 0), 0))
+const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, { amount }) => total + (amount || 0), 0))
+
+const statusOrder: Record<CardStatus['status'], number> = {
+  invoice: 0,
+  lnurlp: 1,
+  funded: 2,
+  used: 3,
+  unfunded: 4,
+  error: 5,
+}
+
+const cardsStatusList = computed(
+  () => cards.value
+    .filter(({ status }) => status != null && status !== 'unfunded')
+    .sort((a, b) => {
+      if (a.status !== b.status) {
+        return statusOrder[a.status as CardStatus['status']] - statusOrder[b.status as CardStatus['status']]
+      }
+      if (a.usedDate != null && b.usedDate != null) {
+        return b.usedDate - a.usedDate
+      }
+      if (a.fundedDate != null && b.fundedDate != null) {
+        return b.fundedDate - a.fundedDate
+      }
+      if (a.createdDate != null && b.createdDate != null) {
+        return b.createdDate - a.createdDate
+      }
+      return 0
+    }),
+)
 
 </script>
 

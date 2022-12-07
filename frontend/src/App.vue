@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <RouterView />
-    <footer class="mx-auto mt-auto pt-20 px-2 pb-2 w-full max-w-md print:hidden">
+    <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md print:hidden">
       <small
         v-if="SUPPORT_EMAIL != null"
         class="block text-gray-400"

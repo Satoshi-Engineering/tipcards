@@ -1,7 +1,7 @@
 <template>
   <div class="grid place-items-center text-center min-h-screen">
     <div>
-      <div class="text-6xl">
+      <div class="mt-18 text-6xl">
         ⚡
       </div>
       <HeadlineDefault level="h1">

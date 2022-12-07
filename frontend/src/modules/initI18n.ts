@@ -111,8 +111,11 @@ const messages = {
       status: {
         headline: 'Status',
         noCards: 'No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.',
-        labelUsedCards: 'Used',
-        labelFundedCards: 'Not used',
+        labelUsed: 'Used',
+        labelFunded: 'Funded',
+        labelPendingFunding: 'Funding in progress',
+        labelPendingSharedFunding: 'Shared funding in progress',
+        labelNote: 'Note',
       },
       settings: {
         headline: 'Configuration',
@@ -240,8 +243,8 @@ const messages = {
       shared: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
-        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde kann das Aufladen abgeschlossen werden.',
-        textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt können die Bitcoin abgeholt werden.',
+        textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.',
+        textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
         buttonMakeShared: 'Tip Card gemeinsam aufladen',
@@ -266,10 +269,14 @@ const messages = {
       status: {
         headline: 'Status',
         noCards: 'Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.',
-        labelUsedCards: 'Eingelöst',
-        labelFundedCards: 'Nicht eingelöst',
+        labelUsed: 'Eingelöst',
+        labelFunded: 'Aufgeladen',
+        labelPendingFunding: 'Wird aufgeladen',
+        labelPendingSharedFunding: 'Wird gemeinsam aufgeladen',
+        labelNote: 'Notiz',
       },
       settings: {
+        headline: 'Konfiguration',
         numberOfCards: 'Anzahl',
         cardHeadline: 'Karten-Überschrift',
         cardText: 'Karten-Text',
