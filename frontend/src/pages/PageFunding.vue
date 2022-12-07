@@ -127,8 +127,17 @@
         </div>
       </div>
       <div v-else-if="lnurlp">
-        <ParagraphDefault>
-          {{ t('funding.lnurlpText') }}
+        <ParagraphDefault v-if="funded">
+          <Translation keypath="funding.lnurlp.textFunded">
+            <template #amountAndUnit>
+              <strong class="inline-block">
+                {{ t('funding.lnurlp.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+              </strong>
+            </template>
+          </Translation>
+        </ParagraphDefault>
+        <ParagraphDefault v-else>
+          {{ t('funding.lnurlp.text') }}
         </ParagraphDefault>
         <LightningQrCode
           :value="lnurl"
@@ -157,7 +166,7 @@
             <small class="block">({{ t('funding.form.noteHint') }})</small>
           </label>
         </div>
-        <div class="flex justify-center">
+        <div v-if="!funded" class="flex justify-center">
           <ButtonDefault
             type="submit"
             variant="outline"
@@ -276,8 +285,10 @@ const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
   if (card?.lnurlp?.multi || card?.lnurlp?.shared) {
-    amount.value = typeof card.lnurlp.amount === 'number' ? card.lnurlp.amount : 0
     shared.value = true
+  }
+  if (card?.lnurlp != null) {
+    amount.value = typeof card.lnurlp.amount === 'number' ? card.lnurlp.amount : 0
   }
   if (card?.invoice?.amount != null) {
     invoiceAmount.value = card.invoice.amount
@@ -296,7 +307,7 @@ const loadLnurlData = async () => {
   }
   if (
     status === 'funded'
-    && (invoice.value != null || shared.value)
+    && (invoice.value != null || shared.value || lnurlp.value)
   ) {
     funded.value = true
   } else if (status === 'lnurlp') {

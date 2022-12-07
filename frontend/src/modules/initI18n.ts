@@ -81,10 +81,14 @@ const messages = {
       invoiceText: 'Fund your Tip Card with {amount} sats:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
-      lnurlpText: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
+      lnurlp: {
+        text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
+        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
+        amountAndUnit: '{amount} BTC',
+      },
       shared: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
-        textFunded: 'This Tip Card is already funded ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
+        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
         textEmpty: 'This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.',
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
         amountAndUnit: '{amount} BTC',
@@ -239,7 +243,11 @@ const messages = {
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
       invoiceExpired: 'Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.',
       resetInvoice: 'Tip Card zurücksetzen',
-      lnurlpText: 'Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf "In der Wallet öffnen" klicken und in der App den gewünschten Betrag eingeben.',
+      lnurlp: {
+        text: 'Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf "In der Wallet öffnen" klicken und in der App den gewünschten Betrag eingeben.',
+        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
+        amountAndUnit: '{amount} BTC',
+      },
       shared: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
@@ -397,7 +405,11 @@ const messages = {
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
-      lnurlpText: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
+      lnurlp: {
+        text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
+        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
+        amountAndUnit: '{amount} BTC',
+      },
       shared: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
         textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
