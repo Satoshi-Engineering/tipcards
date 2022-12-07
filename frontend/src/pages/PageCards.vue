@@ -57,7 +57,7 @@
           <li
             v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, url } in cardsStatusList"
             :key="cardHash"
-            class="flex border-b py-1 my-1"
+            class="flex border-b border-grey py-1"
           >
             <div
               class="w-3 h-3 mr-1.5 mt-1 rounded-full flex-none"
@@ -88,21 +88,18 @@
                       })
                     }}
                   </div>
-                  <div v-else-if="(status === 'invoice')">
-                    <strong>{{ t('cards.status.labelPendingFunding') }}</strong> <small class="text-xs">(Invoice)</small>
-                  </div>
                   <div v-else-if="(status === 'lnurlp' && shared)">
                     <strong>{{ t('cards.status.labelPendingSharedFunding') }}</strong>
                   </div>
-                  <div v-else-if="(status === 'lnurlp')">
-                    <strong>{{ t('cards.status.labelPendingFunding') }}</strong> <small class="text-xs">(Wallet)</small>
+                  <div v-else-if="(status === 'lnurlp' || status === 'invoice')">
+                    <strong :title="status">{{ t('cards.status.labelPendingFunding') }}</strong>
                   </div>
                   <div v-else-if="(status === 'error')">
                     <strong>Error</strong>
                   </div>
                 </a>
                 <div
-                  v-if="amount != null"
+                  v-if="(status === 'funded' || status === 'used' || (status === 'lnurlp' && shared)) && amount != null"
                   class="text-right"
                 >
                   {{ amount }}&nbsp;sats
@@ -111,7 +108,7 @@
               <div
                 v-if="note"
               >
-                {{ t('cards.status.labelNote') }}: <strong>{{ note }}</strong>
+                {{ t('cards.status.labelNote') }}: <strong class="font-medium">{{ note }}</strong>
               </div>
             </div>
           </li>
@@ -359,22 +356,18 @@
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
             <span
-              v-if="card.status === 'invoice'"
-              class="m-auto"
-            >
-              {{ t('cards.status.labelPendingFunding') }} (Invoice)
-            </span>
-            <span
-              v-else-if="card.status === 'lnurlp' && card.shared"
+              v-if="card.status === 'lnurlp' && card.shared"
+              :title="card.status"
               class="m-auto"
             >
               {{ t('cards.status.labelPendingSharedFunding') }}
             </span>
             <span
-              v-else-if="card.status === 'lnurlp'"
+              v-else-if="(card.status === 'lnurlp' || card.status === 'invoice')"
+              :title="card.status"
               class="m-auto"
             >
-              {{ t('cards.status.labelPendingFunding') }} (Wallet)
+              {{ t('cards.status.labelPendingFunding') }}
             </span>
           </div>
         </div>
@@ -672,18 +665,18 @@ const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, {
 
 const statusOrder: Record<CardStatus['status'], number> = {
   invoice: 0,
-  lnurlp: 1,
-  funded: 2,
-  used: 3,
-  unfunded: 4,
-  error: 5,
+  lnurlp: 0,
+  funded: 1,
+  used: 2,
+  unfunded: 3,
+  error: 4,
 }
 
 const cardsStatusList = computed(
   () => cards.value
     .filter(({ status }) => status != null && status !== 'unfunded')
     .sort((a, b) => {
-      if (a.status !== b.status) {
+      if (statusOrder[a.status as CardStatus['status']] !== statusOrder[b.status as CardStatus['status']]) {
         return statusOrder[a.status as CardStatus['status']] - statusOrder[b.status as CardStatus['status']]
       }
       if (a.usedDate != null && b.usedDate != null) {
