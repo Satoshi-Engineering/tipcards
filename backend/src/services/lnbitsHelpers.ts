@@ -313,11 +313,13 @@ export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
  * @param shared Boolean
  * @throws
  */
-export const getLnurlpForCard = async (card: Card, shared = false): Promise<unknown> => {
+export const getLnurlpForCard = async (card: Card, shared: undefined | boolean = undefined): Promise<unknown> => {
   let id
   if (card.lnurlp?.id != null) {
     id = card.lnurlp.id
-    card.lnurlp.shared = shared
+    if (typeof shared === 'boolean') {
+      card.lnurlp.shared = shared
+    }
   } else {
     try {
       const response = await axios.post(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/`, {
@@ -337,7 +339,7 @@ export const getLnurlpForCard = async (card: Card, shared = false): Promise<unkn
     }
     card.invoice = null
     card.lnurlp = {
-      shared,
+      shared: typeof shared === 'boolean' ? shared : false,
       amount: null,
       payment_hash: null,
       id,
