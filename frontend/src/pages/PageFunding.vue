@@ -1,11 +1,9 @@
 <template>
   <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
-    <div
-      v-if="backlink != null"
-      class="pt-4 px-4"
-    >
+    <div class="pt-4 px-4">
       <LinkDefault
-        :href="backlink"
+        :href="(backlink != null) ? backlink : undefined"
+        :to="(backlink == null) ? { name: 'home' } : undefined"
         target="_self"
       >
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
