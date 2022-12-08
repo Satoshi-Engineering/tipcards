@@ -90,6 +90,10 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsLnurlpStatus)
   }
+  // 1.a remove the payments that are already registered
+  if (card.lnurlp.payment_hash != null) {
+    servedPaymentRequests -= card.lnurlp.payment_hash.length
+  }
 
   // 2. query payment requests for lnurlp
   const paymentRequests: string[] = []
@@ -104,6 +108,10 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
       })
       if (Array.isArray(response.data)) {
         response.data.forEach((payment) => {
+          // do not add payments that are already recorded
+          if (card.lnurlp?.payment_hash != null && card.lnurlp.payment_hash.includes(payment.payment_hash)) {
+            return
+          }
           if (payment.extra.tag === 'lnurlp' && payment.extra.link === card.lnurlp?.id) {
             paymentRequests.push(payment.payment_hash)
           }
@@ -120,8 +128,8 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
   }
 
   // 3. check if a payment request was paid
-  let amount = 0
-  const payment_hash: string[] = []
+  let amount = card.lnurlp?.amount != null ? card.lnurlp.amount : 0
+  const payment_hash: string[] = card.lnurlp?.payment_hash != null ? card.lnurlp.payment_hash : []
   while (paymentRequests.length > 0) {
     const paymentRequest = paymentRequests.shift()
     if (paymentRequest == null) {
