@@ -27,7 +27,7 @@
         </ButtonDefault>
       </div>
       <ParagraphDefault
-        v-if="usedCards.length == 0 && fundedCards.length == 0"
+        v-if="cardsStatusList.length == 0"
         class="text-sm text-grey"
       >
         {{ t('cards.status.noCards') }}
@@ -35,7 +35,6 @@
       <div v-else>
         <div class="grid grid-cols-2 gap-3">
           <div
-            v-if="usedCards.length > 0"
             class="border flex flex-col"
           >
             <div class="p-2 flex-1">
@@ -49,7 +48,6 @@
             </div>
           </div>
           <div
-            v-if="usedCards.length > 0"
             class="border flex flex-col"
           >
             <div class="p-2 flex-1">
