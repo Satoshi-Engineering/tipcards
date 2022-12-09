@@ -18,6 +18,7 @@ export type Card = {
     id: number,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
+    expired?: boolean,
   } | null, // gets created if the user scans an unfunded card with a wallet
   lnbitsWithdrawId: string | null, // gets set as soon as the card is funded
   used: number | null, // unix timestamp

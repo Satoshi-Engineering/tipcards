@@ -86,6 +86,8 @@ const messages = {
         textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
         amountAndUnit: '{amount} BTC',
       },
+      lnurlpExpired: 'Unfortunately the payment link for this Tip Card expired. Reset the card to continue.',
+      lnurlpFundedExpired: 'Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.',
       shared: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
         textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
@@ -251,6 +253,8 @@ const messages = {
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
         amountAndUnit: '{amount} BTC',
       },
+      lnurlpExpired: 'Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Setze sie zurück um fortzufahren.',
+      lnurlpFundedExpired: 'Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Schließe sie ab um fortzufahren.',
       shared: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
@@ -416,6 +420,8 @@ const messages = {
         textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
         amountAndUnit: '{amount} BTC',
       },
+      lnurlpExpired: 'Unfortunately the payment link for this Tip Card expired. Reset the card to continue.',
+      lnurlpFundedExpired: 'Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.',
       shared: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
         textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',

@@ -56,7 +56,11 @@
           <LightningQrCode
             :value="lnurl"
             :success="funded"
+            :error="lnurlpExpired ? (amount > 0 ? t('funding.lnurlpFundedExpired') : t('funding.lnurlpExpired')) : undefined"
           />
+          <p v-if="lnurlpExpired" class="mb-4">
+            {{ amount > 0 ? t('funding.lnurlpFundedExpired') : t('funding.lnurlpExpired') }}
+          </p>
         </div>
         <ParagraphDefault v-if="funded">
           <Translation keypath="funding.shared.textFunded">
@@ -140,7 +144,11 @@
         <LightningQrCode
           :value="lnurl"
           :success="funded"
+          :error="lnurlpExpired ? t('funding.lnurlpExpired') : undefined"
         />
+        <p v-if="lnurlpExpired" class="mb-4">
+          {{ t('funding.lnurlpExpired') }}
+        </p>
         <div class="mb-4">
           <label class="block mb-2">
             <input
@@ -268,6 +276,7 @@ const funded = ref(false)
 const creatingInvoice = ref(false)
 const shared = ref(false)
 const finishingShared = ref(false)
+const lnurlpExpired = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -296,6 +305,9 @@ const loadLnurlData = async () => {
   }
   if (card?.invoice?.expired === true) {
     invoiceExpired.value = true
+  }
+  if (card?.lnurlp?.expired === true) {
+    lnurlpExpired.value = true
   }
   if (card?.text != null && !textIsDirty.value) {
     text.value = card.text
@@ -366,6 +378,7 @@ const resetInvoice = async () => {
       note.value = undefined
       noteIsDirty.value = false
       lnurlp.value = false
+      lnurlpExpired.value = false
     }
   } catch(error) {
     console.error(error)

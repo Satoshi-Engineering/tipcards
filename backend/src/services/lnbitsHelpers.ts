@@ -88,6 +88,13 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
     }
     servedPaymentRequests = response.data.served_pr
   } catch (error) {
+    // if the pay link doesnt exist anymore handle the expired lnurlp in the frontend
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        card.lnurlp.expired = true
+        return card
+      }
+    }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsLnurlpStatus)
   }
   // 1.a remove the payments that are already registered
