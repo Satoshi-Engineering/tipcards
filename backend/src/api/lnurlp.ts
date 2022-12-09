@@ -258,7 +258,7 @@ router.post('/finish/:cardHash', async (req: express.Request, res: express.Respo
     })
     return
   }
-  if (!card.lnurlp?.multi && !card.lnurlp?.shared) {
+  if (!card.lnurlp?.shared) {
     res.status(400).json({
       status: 'error',
       message: 'This Tip Card has no shared funding enabled.',

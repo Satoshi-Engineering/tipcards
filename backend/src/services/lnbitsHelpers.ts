@@ -161,7 +161,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
     card.lnurlp.amount = amount
     card.lnurlp.payment_hash = payment_hash
 
-    if ((!card.lnurlp.multi && !card.lnurlp.shared) || closeShared) {
+    if (!card.lnurlp.shared || closeShared) {
       card.lnurlp.paid = Math.round(+ new Date() / 1000)
     }
   }

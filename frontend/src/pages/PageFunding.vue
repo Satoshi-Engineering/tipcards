@@ -291,7 +291,7 @@ const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${rout
 const loadLnurlData = async () => {
   const { status, card } = await loadCardStatus(String(route.params.cardHash))
 
-  if (card?.lnurlp?.multi || card?.lnurlp?.shared) {
+  if (card?.lnurlp?.shared) {
     shared.value = true
   }
   if (card?.lnurlp != null) {

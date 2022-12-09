@@ -71,7 +71,7 @@ const migrateLnbitsInstance = async () => {
 
     if (
       card.lnurlp != null &&
-      card.lnurlp.multi &&
+      card.lnurlp.shared &&
       card.lnurlp.amount != null &&
       card.lnurlp.amount > 0
     ) {
@@ -94,34 +94,6 @@ const migrateLnbitsInstance = async () => {
   console.log(`  ${unfundedCardsCount} unfunded cards have been deleted.`)
 }
 
-const migrateDeprecatedMultiCards = async () => {
-  let hashes: string[] = []
-  try {
-    hashes = await getAllCardHashes()
-  } catch (error) {
-    console.error(error)
-  }
-
-  console.log(`\nStarting check for ${hashes.length} cards.\n`)
-
-  for (let x = 0; x < hashes.length; x += 1) {
-    const card = await getCardByHash(hashes[x])
-    if (typeof card?.lnurlp?.multi !== 'boolean') {
-      continue
-    }
-    card.lnurlp.shared = card.lnurlp.multi
-    delete card.lnurlp.multi
-    try {
-      await updateCard(card)
-      console.log(`\nCard ${card.cardHash} shared flag set to ${card.lnurlp.shared}.`)
-    } catch (error) {
-      console.error(`\nUnable to update card ${card.cardHash}.`)
-    }
-  }
-
-  console.log(`\nChecking done.\n`)
-}
-
 const readlineInterface = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -138,15 +110,12 @@ const run = async () => {
   console.log('What do you want to do?')
   console.log('1. Check all cards with used flag if they are actually used (by calling lnbits).')
   console.log('2. Migrate to a new lnbits instance. This means deleting unfunded cards from the database and clearing the withdrawId from all unclaimed cards.')
-  console.log('3. List all cards that use the deprecated "multi" flag.')
   const answer = await prompt('Type a number: ')
 
   if (answer === '1') {
     await clearUnusedCards()
   } else if (answer === '2') {
     await migrateLnbitsInstance()
-  } else if (answer === '3') {
-    await migrateDeprecatedMultiCards()
   } else {
     console.log('Unknown command.')
   }

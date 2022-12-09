@@ -85,7 +85,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
     fundedDate = card.invoice.paid != null ? card.invoice.paid : undefined
   } else if (card.lnurlp != null) {
     amount = card.lnurlp.amount != null ? card.lnurlp.amount : undefined
-    shared = card.lnurlp.shared || card.lnurlp.multi || false
+    shared = card.lnurlp.shared || false
     createdDate = card.lnurlp.created
     fundedDate = card.lnurlp.paid != null ? card.lnurlp.paid : undefined
   }

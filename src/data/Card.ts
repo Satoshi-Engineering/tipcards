@@ -11,7 +11,6 @@ export type Card = {
     expired?: boolean,
   } | null,
   lnurlp: {
-    multi?: boolean, // depcreated - use shared instead
     shared?: boolean,
     amount: number | null,
     payment_hash: string[] | null,
