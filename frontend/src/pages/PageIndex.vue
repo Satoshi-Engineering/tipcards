@@ -29,7 +29,7 @@
             class="mx-auto"
           >
             <li
-              v-for="cardsSet in [...savedCardsSets].reverse()"
+              v-for="cardsSet in sortedSavedCardsSetsWithDecodedSettings"
               :key="cardsSet.setId"
               class="leading-tight my-2"
             >
@@ -50,10 +50,10 @@
                     hour: 'numeric', minute: 'numeric'
                   }) }}
                   -
-                  {{ t('general.cards', { count: decodeCardsSetSettings(cardsSet.settings).numberOfCards }) }}
+                  {{ t('general.cards', { count: cardsSet.decodedSettings.numberOfCards }) }}
                 </small>
                 <br>
-                <span class="underline group-hover:no-underline">{{ decodeCardsSetSettings(cardsSet.settings).setName || t('index.unnamedSetNameFallback') }}</span>
+                <span class="underline group-hover:no-underline">{{ cardsSet.decodedSettings.setName || t('index.unnamedSetNameFallback') }}</span>
               </LinkDefault>
             </li>
           </ul>
@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
+import { onBeforeMount, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -120,6 +120,26 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import { savedCardsSets, loadSavedCardsSets, decodeCardsSetSettings } from '@/modules/cardsSets'
 
 const { t, d } = useI18n()
+
+const sortedSavedCardsSetsWithDecodedSettings = computed(() => {
+  return savedCardsSets.value
+    .map((set) => ({
+      ...set,
+      decodedSettings: decodeCardsSetSettings(set.settings),
+    }))
+    .reverse()
+    .sort((a, b) => {
+      const nameA = a.decodedSettings.setName.toLowerCase()
+      const nameB = b.decodedSettings.setName.toLowerCase()
+      if (nameA === '') {
+        return 1
+      }
+      if (nameB === '') {
+        return -1
+      }
+      return nameA.localeCompare(nameB)
+    })
+})
 
 onBeforeMount(loadSavedCardsSets)
 </script>

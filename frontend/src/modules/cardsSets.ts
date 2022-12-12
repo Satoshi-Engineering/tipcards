@@ -30,14 +30,14 @@ export const saveCardsSet = ({ setId, settings, date }: CardsSetRecord) => {
     return
   }
   loadSavedCardsSets()
-  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
-    ...savedCardsSets.value.filter((set) => set.setId !== setId),
-    {
-      setId,
-      settings,
-      date,
-    },
-  ]))
+  const existingIndex = savedCardsSets.value.findIndex(({ setId: existingSetId }) => existingSetId === setId)
+  const newSets = [...savedCardsSets.value]
+  if (existingIndex > -1) {
+    newSets[existingIndex] = { setId, settings, date }
+  } else {
+    newSets.push({ setId, settings, date })
+  }
+  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify(newSets))
   loadSavedCardsSets()
 }
 export const deleteCardsSet = (setId: string) => {
