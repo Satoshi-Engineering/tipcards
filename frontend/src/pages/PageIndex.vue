@@ -1,6 +1,6 @@
 <template>
   <div class="grid place-items-center text-center min-h-screen">
-    <div>
+    <div class="max-w-3xl w-full px-4">
       <div class="mt-18 text-6xl">
         ⚡
       </div>
@@ -63,13 +63,13 @@
         v-if="t('index.youtube.create.link').length > 0 && t('index.youtube.use.link').length > 0"
         class="mt-24"
       >
-        <div class="flex flex-col md:flex-row">
-          <div class="mb-5 md:mb-0 md:mr-5">
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1">
             <HeadlineDefault level="h4">
               {{ t('index.youtube.create.label') }}
             </HeadlineDefault>
             <a
-              class="flex items-center justify-center [width:356px] [height:200px] bg-[url('/src/assets/images/create-tipcards.webp')] bg-cover bg-center bg-no-repeat"
+              class="flex items-center justify-center aspect-[356/200] bg-black bg-[url('/src/assets/images/create-tipcards.square.webp')] bg-[length:70%] bg-center bg-no-repeat"
               :href="t('index.youtube.create.link')"
               target="_blank"
             >
@@ -84,12 +84,12 @@
               </svg>
             </a>
           </div>
-          <div>
+          <div class="flex-1">
             <HeadlineDefault level="h4">
               {{ t('index.youtube.use.label') }}
             </HeadlineDefault>
             <a
-              class="flex items-center justify-center [width:356px] [height:200px] bg-[url('/src/assets/images/use-tipcards.webp')] bg-cover bg-center bg-no-repeat"
+              class="flex items-center justify-center aspect-[356/200] w-full bg-black bg-[url('/src/assets/images/use-tipcards.square.webp')] bg-[length:70%] bg-center bg-no-repeat"
               :href="t('index.youtube.use.link')"
               target="_blank"
             >
