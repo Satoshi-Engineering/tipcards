@@ -118,7 +118,7 @@ const messages = {
       status: {
         headline: 'Status',
         noCards: 'No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.',
-        labelUsed: 'Used',
+        labelUsed: 'Redeemed',
         labelFunded: 'Funded',
         labelPendingFunding: 'Funding in progress',
         labelPendingSharedFunding: 'Shared funding in progress',
@@ -147,7 +147,7 @@ const messages = {
         all: 'All',
         unfunded: 'Unfunded',
         funded: 'Funded',
-        used: 'Used',
+        used: 'Redeemed',
       },
     },
     lightningQrCode: {
@@ -448,6 +448,10 @@ const messages = {
       },
     },
     cards: {
+      status: {
+        labelUsed: 'Canjeada | Canjeadas',
+        labelFunded: 'Cargada | Cargadas',
+      },
       settings: {
         numberOfCards: 'Número',
         cardHeadline: 'Título de la tarjeta',

@@ -40,7 +40,7 @@
             <div class="p-2 flex-1">
               <strong class="text-4xl">{{ usedCards.length }}</strong>
               <div class="text-sm text-lightningpurple uppercase">
-                {{ t('cards.status.labelUsed') }}
+                {{ t('cards.status.labelUsed', 2) }}
               </div>
             </div>
             <div class="border-t p-2">
@@ -53,7 +53,7 @@
             <div class="p-2 flex-1">
               <strong class="text-4xl">{{ fundedCards.length }}</strong>
               <div class="text-sm text-btcorange uppercase">
-                {{ t('cards.status.labelFunded') }}
+                {{ t('cards.status.labelFunded', 2) }}
               </div>
             </div>
             <div class="border-t p-2">
@@ -80,7 +80,7 @@
               <div class="flex justify-between">
                 <a :href="url">
                   <div v-if="(status === 'used' && usedDate != null)">
-                    <strong>{{ t('cards.status.labelUsed') }}:</strong>
+                    <strong>{{ t('cards.status.labelUsed', 1) }}:</strong>
                     {{
                       $d(usedDate * 1000, {
                         year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
@@ -88,8 +88,8 @@
                     }}
                   </div>
                   <div v-if="((status === 'funded' || status === 'used') && fundedDate != null)">
-                    <strong v-if="status !== 'used'">{{ t('cards.status.labelFunded') }}:</strong>
-                    <span v-else>{{ t('cards.status.labelFunded') }}:</span>
+                    <strong v-if="status !== 'used'">{{ t('cards.status.labelFunded', 1) }}:</strong>
+                    <span v-else>{{ t('cards.status.labelFunded', 1) }}:</span>
                     {{
                       $d(fundedDate * 1000, {
                         year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
