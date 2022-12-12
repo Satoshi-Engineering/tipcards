@@ -127,7 +127,6 @@ const sortedSavedCardsSetsWithDecodedSettings = computed(() => {
       ...set,
       decodedSettings: decodeCardsSetSettings(set.settings),
     }))
-    .reverse()
     .sort((a, b) => {
       const nameA = a.decodedSettings.setName.toLowerCase()
       const nameB = b.decodedSettings.setName.toLowerCase()
