@@ -81,6 +81,7 @@ const messages = {
       invoiceText: 'Fund your Tip Card with {amount} sats:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
+      resetDisabledTooltip: 'This card is already funded with sats.',
       lnurlp: {
         text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
         textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
@@ -95,6 +96,7 @@ const messages = {
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Complete Funding',
+        finishDisabledTooltip: 'You need to fund this card first.',
         buttonMakeShared: 'Activate shared funding on this Tip Card',
       },
     },
@@ -248,6 +250,7 @@ const messages = {
       invoiceText: 'Lade {amount} Sats auf deine Tip Card:',
       invoiceExpired: 'Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.',
       resetInvoice: 'Tip Card zurücksetzen',
+      resetDisabledTooltip: 'Diese Tip Card wurde bereits mit Sats aufgeladen.',
       lnurlp: {
         text: 'Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf "In der Wallet öffnen" klicken und in der App den gewünschten Betrag eingeben.',
         textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
@@ -262,6 +265,7 @@ const messages = {
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.',
         amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
+        finishDisabledTooltip: 'Die Karte muss zuerst aufgeladen werden.',
         buttonMakeShared: 'Tip Card gemeinsam aufladen',
       },
     },
@@ -415,6 +419,7 @@ const messages = {
       invoiceText: 'Carga {cantidad} de sats en tu tarjeta de propinas:',
       invoiceExpired: 'The lightning invoice for this card has expired. Please reset the Tip Card to continue.',
       resetInvoice: 'Reset Tip Card',
+      resetDisabledTooltip: 'This card is already funded with sats.',
       lnurlp: {
         text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
         textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',

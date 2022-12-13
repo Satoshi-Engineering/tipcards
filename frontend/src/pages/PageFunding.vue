@@ -38,14 +38,16 @@
         <p v-if="invoiceExpired" class="mb-4">
           {{ t('funding.invoiceExpired') }}
         </p>
-        <div v-if="!funded" class="flex justify-center">
-          <ButtonDefault
+        <div class="flex justify-center">
+          <ButtonWithTooltip
             type="submit"
             variant="outline"
+            :disabled="funded"
+            :tooltip="funded ? t('funding.resetDisabledTooltip') : undefined"
             @click="resetInvoice"
           >
             {{ t('funding.resetInvoice') }} 
-          </ButtonDefault>
+          </ButtonWithTooltip>
         </div>
       </div>
       <div v-else-if="shared">
@@ -107,25 +109,24 @@
           </label>
         </div>
         <div
-          v-if="!funded"
           class="flex flex-col items-center mt-4"
         >
-          <ButtonDefault
-            v-if="amount === 0 && !finishingShared && !funded"
-            type="submit"
+          <ButtonWithTooltip
             variant="outline"
+            :disabled="amount > 0 || finishingShared || funded"
+            :tooltip="amount > 0 ? t('funding.resetDisabledTooltip') : undefined"
             @click="resetInvoice"
           >
             {{ t('funding.resetInvoice') }} 
-          </ButtonDefault>
-          <ButtonDefault
-            v-else
+          </ButtonWithTooltip>
+          <ButtonWithTooltip
             type="submit"
             :disabled="amount === 0 || finishingShared || funded"
+            :tooltip="amount === 0 ? t('funding.shared.finishDisabledTooltip') : undefined"
             @click="finishShared"
           >
             {{ t('funding.shared.buttonFinish') }} 
-          </ButtonDefault>
+          </ButtonWithTooltip>
         </div>
       </div>
       <div v-else-if="lnurlp">
@@ -172,14 +173,15 @@
             <small class="block">({{ t('funding.form.noteHint') }})</small>
           </label>
         </div>
-        <div v-if="!funded" class="flex justify-center">
-          <ButtonDefault
-            type="submit"
+        <div class="flex justify-center">
+          <ButtonWithTooltip
             variant="outline"
+            :disabled="funded"
+            :tooltip="funded ? t('funding.resetDisabledTooltip') : undefined"
             @click="resetInvoice"
           >
             {{ t('funding.resetInvoice') }} 
-          </ButtonDefault>
+          </ButtonWithTooltip>
         </div>
       </div>
       <div v-else>
@@ -250,6 +252,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import formatNumber from '@/modules/formatNumber'
