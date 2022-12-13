@@ -2,16 +2,23 @@
   <RouterLink
     v-if="to != null"
     class="underline hover:no-underline break-anywhere"
-    :class="{ 'font-bold': bold }"
+    :class="{
+      'font-bold': bold,
+      'opacity-50 pointer-events-none cursor-default': disabled,
+    }"
     :to="to"
     :target="targetComputed"
+    :disabled="disabled"
   >
     <slot />
   </RouterLink>
   <a
     v-else-if="href != null"
     class="underline hover:no-underline cursor-pointer break-anywhere"
-    :class="{ 'font-bold': bold }"
+    :class="{
+      'font-bold': bold,
+      'opacity-50 pointer-events-none cursor-default': disabled,
+    }"
     :href="href"
     :target="targetComputed"
     tabindex="0"
@@ -23,7 +30,10 @@
   <button
     v-else
     class="[text-align:inherit] underline hover:no-underline cursor-pointer appearance-none break-anywhere"
-    :class="{ 'font-bold': bold }"
+    :class="{
+      'font-bold': bold,
+      'opacity-50 pointer-events-none cursor-default': disabled,
+    }"
     :disabled="disabled"
   >
     <slot />

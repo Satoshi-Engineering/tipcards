@@ -30,6 +30,7 @@
       class="text-center inline-block no-underline font-normal min-h-[3rem]"
       :text="value"
       :error="error"
+      :disabled="success"
     >
       <template #default>
         <span class="font-normal">

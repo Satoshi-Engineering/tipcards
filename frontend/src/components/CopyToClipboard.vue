@@ -2,6 +2,7 @@
   <LinkDefault
     v-if="!recentlyCopied"
     class="inline-block animate-fade-in"
+    :disabled="disabled"
     @click="copyToClipboard(text)"
   >
     <slot>
@@ -38,6 +39,10 @@ const props = defineProps({
   error: {
     type: String,
     default: undefined,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 
