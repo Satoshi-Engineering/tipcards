@@ -9,7 +9,16 @@
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
     </div>
-    <div class="flex-1 mt-8 px-4">
+    <div
+      v-if="initializing"
+      class="flex justify-center flex-1 mt-8 px-4"
+    >
+      <AnimatedLoadingWheel />
+    </div>
+    <div 
+      v-else
+      class="flex-1 mt-8 px-4"
+    >
       <HeadlineDefault
         level="h1"
         class="mt-10"
@@ -231,7 +240,7 @@
       </div>
     </div>
     <LinkDefault
-      v-if="invoice == null && !shared && !funded"
+      v-if="!initializing && invoice == null && !shared && !funded"
       class="mt-12 px-4"
       :disabled="creatingInvoice"
       @click.prevent="makeShared"
@@ -251,6 +260,7 @@ import { useRoute, useRouter } from 'vue-router'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
@@ -265,6 +275,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
+const initializing = ref(true)
 const lnurlp = ref(false)
 const amount = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
@@ -332,6 +343,7 @@ const loadLnurlData = async () => {
     })
     return
   }
+  initializing.value = false
 
   setTimeout(loadLnurlData, 10 * 1000)
 }
