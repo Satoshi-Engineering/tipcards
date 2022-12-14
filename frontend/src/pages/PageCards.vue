@@ -63,18 +63,19 @@
         </div>
         <ul class="w-full text-sm my-5">
           <li
-            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview } in cardsStatusList"
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, viewed } in cardsStatusList"
             :key="cardHash"
             class="flex border-b border-grey py-1"
           >
             <CardStatusComponent
               :status="status || undefined"
-              :fundedDate="fundedDate || undefined"
-              :usedDate="usedDate || undefined"
+              :funded-date="fundedDate || undefined"
+              :used-date="usedDate || undefined"
               :shared="shared"
               :amount="amount || undefined"
               :note="note || undefined"
               :url="urlPreview"
+              :viewed="viewed"
             />
           </li>
         </ul>
@@ -527,6 +528,7 @@ type Card = {
   fundedDate: number | null,
   usedDate: number | null,
   createdDate: number | null,
+  viewed: boolean,
   qrCodeSvg: string,
 }
 const cards = ref<Card[]>([])
@@ -569,6 +571,7 @@ const generateNewCardSkeleton = async (index: number) => {
     fundedDate: null,
     usedDate: null,
     createdDate: null,
+    viewed: false,
     shared: false,
     qrCodeSvg: new QRCode({
         content: url,
@@ -597,6 +600,7 @@ const reloadStatusForCards = throttle(async () => {
     card.fundedDate = fundedDate || null
     card.usedDate = cardData?.used || null
     card.createdDate = createdDate || null
+    card.viewed = cardData?.landingPageViewed != null
   }))
   reloadingStatusForCards.value = false
 }, 1000)

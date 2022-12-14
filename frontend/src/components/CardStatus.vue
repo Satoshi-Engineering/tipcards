@@ -50,6 +50,11 @@
     >
       {{ t('cards.status.labelNote') }}: <strong class="font-medium">{{ note }}</strong>
     </div>
+    <div
+      v-if="viewed"
+    >
+      {{ t('cards.status.labelViewed') }} 👀
+    </div>
   </div>
 </template>
 
@@ -63,6 +68,7 @@ defineProps({
   },
   url: {
     type: String,
+    required: true,
   },
   usedDate: {
     type: Number,
@@ -83,6 +89,10 @@ defineProps({
   note: {
     type: String,
     default: null,
+  },
+  viewed: {
+    type: Boolean,
+    default: false,
   },
 })
 

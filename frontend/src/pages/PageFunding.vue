@@ -258,11 +258,12 @@
       >
         <CardStatus
           :status="cardStatus"
-          :fundedDate="cardFundedDate"
-          :usedDate="usedDate"
+          :funded-date="cardFundedDate"
+          :used-date="usedDate"
           :shared="shared"
           :amount="amount || undefined"
           :note="note || undefined"
+          :viewed="viewed"
           :url="previewPageUrl"
         />
       </div>
@@ -323,6 +324,7 @@ const lnurlpExpired = ref(false)
 const cardStatus = ref<string | undefined>()
 const cardFundedDate = ref<number | undefined>()
 const usedDate = ref<number | undefined>()
+const viewed = ref(false)
 
 const backlink = computed(() => {
   try {
@@ -369,6 +371,9 @@ const loadLnurlData = async () => {
   }
   if (status === 'funded' || status === 'used') {
     funded.value = true
+  }
+  if (card?.landingPageViewed != null) {
+    viewed.value = true
   }
   initializing.value = false
 
