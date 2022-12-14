@@ -23,7 +23,13 @@
         level="h1"
         class="mt-10"
       >
-        {{ t('funding.headline') }}
+        {{
+          usedDate != null
+            ? t('funding.headlineUsed')
+            : funded
+             ? t('funding.headlineFunded') 
+             : t('funding.headline')
+        }}
       </HeadlineDefault>
       <ParagraphDefault
         v-if="invoice == null && !shared && !lnurlp"
@@ -33,7 +39,15 @@
       </ParagraphDefault>
       <div v-if="invoice != null">
         <ParagraphDefault>
-          <Translation keypath="funding.invoiceText">
+          <Translation
+            :keypath="
+              usedDate != null
+                ? 'funding.textUsed'
+                : funded
+                  ? 'funding.textFunded'
+                  : 'funding.invoiceText'
+            "
+          >
             <template #amount>
               <strong>{{ invoiceAmount }}</strong>
             </template>
@@ -74,10 +88,10 @@
           </p>
         </div>
         <ParagraphDefault v-if="funded">
-          <Translation keypath="funding.shared.textFunded">
+          <Translation :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
             <template #amountAndUnit>
               <strong class="inline-block">
-                {{ t('funding.shared.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </Translation>
@@ -89,7 +103,7 @@
           <Translation keypath="funding.shared.textPartiallyFunded">
             <template #amountAndUnit>
               <strong class="inline-block">
-                {{ t('funding.shared.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </Translation>
@@ -140,10 +154,10 @@
       </div>
       <div v-else-if="lnurlp">
         <ParagraphDefault v-if="funded">
-          <Translation keypath="funding.lnurlp.textFunded">
+          <Translation :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
             <template #amountAndUnit>
               <strong class="inline-block">
-                {{ t('funding.lnurlp.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </Translation>
@@ -238,6 +252,20 @@
           {{ userErrorMessage }}
         </ParagraphDefault>
       </div>
+      <div
+        v-if="funded"
+        class="flex mt-24"
+      >
+        <CardStatus
+          :status="cardStatus"
+          :fundedDate="cardFundedDate"
+          :usedDate="usedDate"
+          :shared="shared"
+          :amount="amount || undefined"
+          :note="note || undefined"
+          :url="landingPageUrl"
+        />
+      </div>
     </div>
     <LinkDefault
       v-if="!initializing && invoice == null && !shared && !funded"
@@ -265,6 +293,7 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
+import CardStatus from '@/components/CardStatus.vue'
 import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcEur'
@@ -291,6 +320,9 @@ const creatingInvoice = ref(false)
 const shared = ref(false)
 const finishingShared = ref(false)
 const lnurlpExpired = ref(false)
+const cardStatus = ref<string | undefined>()
+const cardFundedDate = ref<number | undefined>()
+const usedDate = ref<number | undefined>()
 
 const backlink = computed(() => {
   try {
@@ -303,8 +335,14 @@ const backlink = computed(() => {
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  const { status, card } = await loadCardStatus(String(route.params.cardHash))
+  const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))
 
+  cardStatus.value = status || undefined
+  cardFundedDate.value = fundedDate || undefined
+  usedDate.value = card?.used || undefined
+  if (card?.lnurlp != null) {
+    lnurlp.value = true
+  }
   if (card?.lnurlp?.shared) {
     shared.value = true
   }
@@ -329,19 +367,8 @@ const loadLnurlData = async () => {
   if (card?.note != null && !noteIsDirty.value) {
     note.value = card.note
   }
-  if (
-    status === 'funded'
-    && (invoice.value != null || shared.value || lnurlp.value)
-  ) {
+  if (status === 'funded' || status === 'used') {
     funded.value = true
-  } else if (status === 'lnurlp') {
-    lnurlp.value = true
-  } else if (['used', 'funded'].includes(status)) {
-    router.replace({
-      name: 'landing',
-      query: { lightning: lnurl.value.toUpperCase() },
-    })
-    return
   }
   initializing.value = false
 
@@ -481,4 +508,11 @@ const finishShared = async () => {
     userErrorMessage.value = 'Unable to finish shared funding.'
   }
 }
+
+const landingPageUrl = computed(() => {
+  return router.resolve({
+    name: 'landing',
+    query: { lightning: lnurl.value.toUpperCase() },
+  }).href
+})
 </script>

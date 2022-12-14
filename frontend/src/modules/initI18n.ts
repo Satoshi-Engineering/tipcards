@@ -71,7 +71,12 @@ const messages = {
     },
     funding: {
       headline: 'Fund this Tip Card',
+      headlineFunded: 'Tip Card has been funded',
+      headlineUsed: 'Tip Card successfully redeemed',
       text: 'This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.',
+      textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
+      textUsed: 'This card was funded with {amountAndUnit} and has been redeemed.',
+      amountAndUnit: '{amount} BTC',
       form: {
         textHint: 'will be displayed in the recipient\'s wallet',
         notePlaceholder: 'Notes / handed out to',
@@ -84,17 +89,13 @@ const messages = {
       resetDisabledTooltip: 'This card is already funded with sats.',
       lnurlp: {
         text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
-        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
-        amountAndUnit: '{amount} BTC',
       },
       lnurlpExpired: 'Unfortunately the payment link for this Tip Card expired. Reset the card to continue.',
       lnurlpFundedExpired: 'Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.',
       shared: {
         text: 'Scan and pay the QR Code as many times as you want and "Complete Funding" as soon as you\'re done.',
-        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
         textEmpty: 'This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.',
         textPartiallyFunded: 'This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.',
-        amountAndUnit: '{amount} BTC',
         buttonFinish: 'Complete Funding',
         finishDisabledTooltip: 'You need to fund this card first.',
         buttonMakeShared: 'Activate shared funding on this Tip Card',
@@ -240,7 +241,12 @@ const messages = {
     },
     funding: {
       headline: 'Lade die Tip Card auf',
+      headlineFunded: 'Die Tip Card wurde aufgeladen',
+      headlineUsed: 'Die Tip Card wurde eingelöst',
       text: 'Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht der Empfänger in seiner Wallet sehen soll.',
+      textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
+      textUsed: 'Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.',
+      amountAndUnit: '{amount} BTC',
       form: {
         textHint: 'wird in der Wallet des Empfängers angezeigt werden',
         notePlaceholder: 'Notizen / ausgegeben an',
@@ -253,17 +259,13 @@ const messages = {
       resetDisabledTooltip: 'Diese Tip Card wurde bereits mit Sats aufgeladen.',
       lnurlp: {
         text: 'Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf "In der Wallet öffnen" klicken und in der App den gewünschten Betrag eingeben.',
-        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
-        amountAndUnit: '{amount} BTC',
       },
       lnurlpExpired: 'Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Setze sie zurück um fortzufahren.',
       lnurlpFundedExpired: 'Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Schließe sie ab um fortzufahren.',
       shared: {
         text: 'Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach "Aufladen abschließen".',
-        textFunded: 'Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.',
         textEmpty: 'Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.',
         textPartiallyFunded: 'Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.',
-        amountAndUnit: '{amount} BTC',
         buttonFinish: 'Aufladen abschließen',
         finishDisabledTooltip: 'Die Karte muss zuerst aufgeladen werden.',
         buttonMakeShared: 'Tip Card gemeinsam aufladen',
@@ -409,7 +411,12 @@ const messages = {
     },
     funding: {
       headline: 'Cargar la tarjeta de propinas',
+      headlineFunded: 'Tip Card has been funded',
+      headlineUsed: 'Tip Card successfully redeemed',
       text: 'Esta tarjeta de propina aún no ha sido recargada con sats. Estableze la cantidad que deseas recargar y el mensaje que quieres que el destinatario vea en su cartera.',
+      textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
+      textUsed: 'This card was funded with {amountAndUnit} and has been redeemed.',
+      amountAndUnit: '{amount} BTC',
       form: {
         textHint: 'aparecerá en la cartera del destinatario',
         notePlaceholder: 'Notes / handed out to',
@@ -422,17 +429,13 @@ const messages = {
       resetDisabledTooltip: 'This card is already funded with sats.',
       lnurlp: {
         text: 'Scan the QR code with your wallet app or click "Open in wallet" to fund the card. You can enter the desired amount in the wallet app.',
-        textFunded: 'This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.',
-        amountAndUnit: '{amount} BTC',
       },
       lnurlpExpired: 'Unfortunately the payment link for this Tip Card expired. Reset the card to continue.',
       lnurlpFundedExpired: 'Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.',
       shared: {
         text: 'Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en "Finalizar carga"',
-        textFunded: 'La tarjeta está cargada con {amountAndUnit} y está lista para regalar.',
         textEmpty: 'En el momento no hay Sats en la tarjeta. En cuanto la tarjeta esté cargada por lo menos una vez se puede finalizar la carga.',
         textPartiallyFunded: 'La tarjeta fue cargada con {amountAndUnit}. En cuanto finalices la carga es posible recoger los Bitcoin.',
-        amountAndUnit: '{amount} BTC',
         buttonFinish: 'Finalizar carga',
         buttonMakeShared: 'Carga de la tarjeta de propina juntos',
       },
