@@ -270,7 +270,11 @@ export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Ca
       throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
     }
     if (response.data.used > 0) {
-      card.used = Math.round(+ new Date() / 1000)
+      if (persist) {
+        card.used = Math.round(+ new Date() / 1000)
+      } else {
+        card.withdrawPending = true
+      }
     }
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)

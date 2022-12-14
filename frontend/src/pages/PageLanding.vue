@@ -157,6 +157,7 @@
         <LightningQrCode
           :value="lnurl"
           :success="spent"
+          :pending="withdrawPending"
           :error="userErrorMessage"
         />
       </div>
@@ -240,6 +241,7 @@ const { t } = useI18n()
 const spent = ref<boolean | undefined>()
 const amount = ref<number | undefined | null>()
 const userErrorMessage = ref<string | undefined>()
+const withdrawPending = ref(false)
 const cardUsed = ref<number | undefined>()
 
 const amountInEur = computed(() => {
@@ -294,6 +296,7 @@ const loadLnurlData = async () => {
     return
   }
 
+  withdrawPending.value = !!card.withdrawPending
   if (status === 'used') {
     spent.value = true
     if (card.used != null) {
@@ -311,6 +314,10 @@ const loadLnurlData = async () => {
 }
 
 const showContent = computed<'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+  if (withdrawPending.value) {
+    return 'spendable'
+  }
+
   if (!spent.value && amount.value != null) {
     return 'spendable'
   }

@@ -3,8 +3,8 @@
     <!-- eslint-disable vue/no-v-html -->
     <a
       class="block transition-opacity"
-      :class="{ 'opacity-20 blur-sm pointer-events-none': success || error != null }"
-      :href="!success ? `lightning:${value}`: undefined"
+      :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || error != null }"
+      :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
       v-html="qrCodeSvg"
     />
     <!-- eslint-enable vue/no-v-html -->
@@ -14,11 +14,14 @@
     <div v-else-if="success" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
       <AnimatedCheckmark class="w-5/12" />
     </div>
+    <div v-else-if="pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
+      <AnimatedLoadingWheel class="w-5/12" />
+    </div>
   </div>
   <div class="text-center max-w-xs px-8 mx-auto">
     <ButtonDefault
-      :disabled="success"
-      :href="!success ? `lightning:${value}`: undefined"
+      :disabled="success || pending"
+      :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
       class="w-full"
       @click="checkForError"
     >
@@ -30,7 +33,7 @@
       class="text-center inline-block no-underline font-normal min-h-[3rem]"
       :text="value"
       :error="error"
-      :disabled="success"
+      :disabled="success || pending"
     >
       <template #default>
         <span class="font-normal">
@@ -62,6 +65,7 @@ import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import AnimatedCheckmark from '@/components/AnimatedCheckmark.vue'
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 
 const props = defineProps({
   value: {
@@ -69,6 +73,10 @@ const props = defineProps({
     required: true,
   },
   success: {
+    type: Boolean,
+    default: false,
+  },
+  pending: {
     type: Boolean,
     default: false,
   },

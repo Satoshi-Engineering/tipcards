@@ -20,5 +20,6 @@ export type Card = {
     expired?: boolean,
   } | null, // gets created if the user scans an unfunded card with a wallet
   lnbitsWithdrawId: string | null, // gets set as soon as the card is funded
+  withdrawPending?: boolean, // if this is true the user clicked on "receive sats" in the wallet app but the invoice isn't paid yet (this flag should not be persisted to the database)
   used: number | null, // unix timestamp
 }
