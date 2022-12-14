@@ -15,7 +15,10 @@
       </p>
     </div>
   </div>
-  <ModalLogin v-if="showLogin" />
+  <ModalLogin
+    v-if="showLogin"
+    @close="showLogin = false"
+  />
 </template>
 
 <script setup lang="ts">
