@@ -128,12 +128,12 @@ const sortedSavedCardsSetsWithDecodedSettings = computed(() => {
       decodedSettings: decodeCardsSetSettings(set.settings),
     }))
     .sort((a, b) => {
-      const nameA = a.decodedSettings.setName.toLowerCase()
-      const nameB = b.decodedSettings.setName.toLowerCase()
-      if (nameA === '') {
+      const nameA = a.decodedSettings.setName?.toLowerCase()
+      const nameB = b.decodedSettings.setName?.toLowerCase()
+      if (nameA == null || nameA === '') {
         return 1
       }
-      if (nameB === '') {
+      if (nameB == null || nameB === '') {
         return -1
       }
       return nameA.localeCompare(nameB)
