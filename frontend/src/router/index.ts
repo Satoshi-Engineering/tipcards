@@ -4,6 +4,7 @@ import PageIndex from '@/pages/PageIndex.vue'
 import PageLanding from '@/pages/PageLanding.vue'
 import PageCards from '@/pages/PageCards.vue'
 import PageFunding from '@/pages/PageFunding.vue'
+import PageAuthDevelopment from '@/pages/PageAuthDevelopment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/funding/:cardHash',
       name: 'funding',
       component: PageFunding,
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: PageAuthDevelopment,
     },
   ],
 })

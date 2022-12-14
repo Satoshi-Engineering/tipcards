@@ -1,1 +1,1 @@
-export const LNBITS_ORIGIN = 'https://lnbits.thespielplatz.com/'
+export const LNBITS_ORIGIN = 'https://lnbits.thespielplatz.com'
