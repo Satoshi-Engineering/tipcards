@@ -63,7 +63,7 @@
         </div>
         <ul class="w-full text-sm my-5">
           <li
-            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, url } in cardsStatusList"
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview } in cardsStatusList"
             :key="cardHash"
             class="flex border-b border-grey py-1"
           >
@@ -74,7 +74,7 @@
               :shared="shared"
               :amount="amount || undefined"
               :note="note || undefined"
-              :url="url"
+              :url="urlPreview"
             />
           </li>
         </ul>
@@ -255,7 +255,7 @@
             class="absolute w-full h-full"
             :class="{ 'opacity-50': card.status === 'used' }"
           >
-            <a :href="card.url">
+            <a :href="card.urlPreview">
               <div
                 class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
@@ -518,6 +518,7 @@ const wasPrintedOrDownloaded = ref(false)
 type Card = {
   cardHash: string,
   url: string,
+  urlPreview: string,
   lnurl: string,
   status: string | null,
   amount: number | null,
@@ -556,9 +557,11 @@ const generateNewCardSkeleton = async (index: number) => {
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
   const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
   const url = `${location.protocol}//${location.host}${routeHref}`
+  const urlPreview = router.resolve({ name: 'preview', query: { lightning: lnurlEncoded.toUpperCase() } }).href
   return {
     cardHash,
     url,
+    urlPreview,
     lnurl: lnurlEncoded,
     status: null,
     amount: null,
@@ -581,7 +584,7 @@ const reloadingStatusForCards = ref(false)
 const reloadStatusForCards = throttle(async () => {
   reloadingStatusForCards.value = true
   await Promise.all(cards.value.map(async (card) => {
-    const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash)
+    const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash, 'cards')
     if (status === 'error') {
       card.status = 'error'
       userErrorMessage.value = message || 'Unknown error for LNURL.'

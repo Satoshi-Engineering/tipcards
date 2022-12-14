@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getCardByHash } from '../services/database'
+import { getCardByHash, updateCard } from '../services/database'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
@@ -77,6 +77,20 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
         code,
       })
       return
+    }
+  }
+
+  // if card is not used and origin is the landing page mark the card as viewed
+  if (
+    card.used == null
+    && card.landingPageViewed == null
+    && req.query.origin === 'landing'
+  ) {
+    card.landingPageViewed = Math.round(+ new Date() / 1000)
+    try {
+      await updateCard(card)
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
     }
   }
 

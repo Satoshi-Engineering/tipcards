@@ -263,7 +263,7 @@
           :shared="shared"
           :amount="amount || undefined"
           :note="note || undefined"
-          :url="landingPageUrl"
+          :url="previewPageUrl"
         />
       </div>
     </div>
@@ -335,7 +335,7 @@ const backlink = computed(() => {
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))
+  const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash), 'funding')
 
   cardStatus.value = status || undefined
   cardFundedDate.value = fundedDate || undefined
@@ -509,9 +509,9 @@ const finishShared = async () => {
   }
 }
 
-const landingPageUrl = computed(() => {
+const previewPageUrl = computed(() => {
   return router.resolve({
-    name: 'landing',
+    name: 'preview',
     query: { lightning: lnurl.value.toUpperCase() },
   }).href
 })

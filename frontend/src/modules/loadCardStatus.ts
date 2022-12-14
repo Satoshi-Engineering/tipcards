@@ -46,11 +46,15 @@ export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatus>
   return loadCardStatus(cardHashMatch[1])
 }
 
-export const loadCardStatus = async (cardHash: string): Promise<CardStatus> => {
+export const loadCardStatus = async (cardHash: string, origin: string | undefined = undefined): Promise<CardStatus> => {
   let cardResponse: SuccessResponse
+  let url = `${BACKEND_API_ORIGIN}/api/card/${cardHash}`
+  if (origin != null) {
+    url = `${url}?origin=${origin}`
+  }
   try {
     const response = await axios.get(
-      `${BACKEND_API_ORIGIN}/api/card/${cardHash}`,
+      url,
       {
         headers: {
           'Cache-Control': 'no-cache',

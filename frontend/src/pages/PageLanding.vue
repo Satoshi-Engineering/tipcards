@@ -278,7 +278,7 @@ const loadLnurlData = async () => {
     router.push({ name: 'home' })
     return
   }
-  const cardStatus = await loadCardStatus(cardHash.value)
+  const cardStatus = await loadCardStatus(cardHash.value, String(route.name))
   const { status, message, card } = cardStatus
 
   if (status === 'error' && message != null) {

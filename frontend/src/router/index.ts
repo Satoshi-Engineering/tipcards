@@ -23,6 +23,11 @@ const router = createRouter({
       component: PageLanding,
     },
     {
+      path: '/preview/',
+      name: 'preview',
+      component: PageLanding,
+    },
+    {
       path: '/cards/:setId?/:settings?',
       name: 'cards',
       component: PageCards,
