@@ -27,8 +27,8 @@
           usedDate != null
             ? t('funding.headlineUsed')
             : funded
-             ? t('funding.headlineFunded') 
-             : t('funding.headline')
+              ? t('funding.headlineFunded') 
+              : t('funding.headline')
         }}
       </HeadlineDefault>
       <ParagraphDefault
