@@ -9,20 +9,16 @@ import { LNBITS_ORIGIN } from '../../../src/constants'
 
 /////
 // LNURL SERVICE
-const LNURL_PORT = process.env.LNURL_PORT || 4002
-const LNURL_ORIGIN = process.env.LNURL_ORIGIN || 'https://auth.dev.tipcards.sate.tools'
-const backend = 'lnbits'
-const config = {
-	baseUrl: LNBITS_ORIGIN,
-	adminKey: LNBITS_ADMIN_KEY,
-}
 const lnurlServer = lnurl.createServer({
   host: 'localhost',
-  port: LNURL_PORT,
-  url: LNURL_ORIGIN,
+  port: process.env.LNURL_PORT || 4001,
+  url: process.env.TIPCARDS_API_ORIGIN || 'https://dev.tipcards.sate.tools',
   lightning: {
-    backend,
-    config,
+    backend: 'lnbits',
+    config: {
+      baseUrl: LNBITS_ORIGIN,
+      adminKey: LNBITS_ADMIN_KEY,
+    },
   },
 })
 
