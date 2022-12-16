@@ -10,6 +10,7 @@ module.exports = {
       colors: {
         'grey': '#a5a5a5',
         'grey-light': '#f1f1f1',
+        'grey-dark': '#777777',
         'black': '#000',
         'white': '#fff',
         'btcorange': '#F7931A',

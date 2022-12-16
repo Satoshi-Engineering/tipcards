@@ -53,7 +53,18 @@
                   {{ t('general.cards', { count: cardsSet.decodedSettings.numberOfCards }) }}
                 </small>
                 <br>
-                <span class="underline group-hover:no-underline">{{ cardsSet.decodedSettings.setName || t('index.unnamedSetNameFallback') }}</span>
+                <span
+                  v-if="typeof cardsSet.decodedSettings.setName === 'string' && cardsSet.decodedSettings.setName !== ''"
+                  class="underline group-hover:no-underline"
+                >
+                  {{ cardsSet.decodedSettings.setName }}
+                </span>
+                <span
+                  v-else
+                  class="underline group-hover:no-underline italic text-grey-dark"
+                >
+                  {{ t('index.unnamedSetNameFallback') }}
+                </span>
               </LinkDefault>
             </li>
           </ul>
