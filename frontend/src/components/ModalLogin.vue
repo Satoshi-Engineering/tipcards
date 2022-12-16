@@ -73,7 +73,6 @@ const checkStatus = async () => {
   }
   setTimeout(checkStatus, 300)
 }
-
 onBeforeMount(async () => {
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/create`)
@@ -84,17 +83,19 @@ onBeforeMount(async () => {
   } catch(error) {
     console.error(error)
   }
+  connectSocket()
+  fetchingLogin.value = false
+})
+const connectSocket = () => {
   socket = io(BACKEND_API_ORIGIN)
-  socket.on('connect', () => {
-    socket.emit('waitForLogin', { hash: hash.value })
-  })
   socket.on('loggedIn', ({ key }) => {
     loggedIn.value = true
     userKey.value = key
   })
-  fetchingLogin.value = false
-})
-
+  socket.on('connect', () => {
+    socket.emit('waitForLogin', { hash: hash.value })
+  })
+}
 onBeforeUnmount(() => {
   hash.value = undefined
   if (socket != null) {
@@ -102,6 +103,24 @@ onBeforeUnmount(() => {
   }
 })
 
+/////
+// reconnect on tab change (connection gets lost on smartphones sometimes)
+const reconnectOnVisibilityChange = () => {
+  if (document.visibilityState !== 'visible' || socket == null || hash.value == null) {
+    return
+  }
+  socket.close()
+  connectSocket()
+}
+onBeforeMount(() => {
+  document.addEventListener('visibilitychange', reconnectOnVisibilityChange)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('visibilitychange', reconnectOnVisibilityChange)
+})
+
+/////
+// close on escape
 const onKeyDown = (event: KeyboardEvent) => {
   if (event.key === 'Escape') {
     emit('close')
