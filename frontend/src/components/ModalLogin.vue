@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import axios from 'axios'
-import { io } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -56,6 +56,7 @@ const lnurl = ref<string>()
 const hash = ref<string>()
 const loggedIn = ref(false)
 const userKey = ref<string>()
+let socket: Socket
 
 const checkStatus = async () => {
   if (hash.value == null) {
@@ -83,7 +84,7 @@ onBeforeMount(async () => {
   } catch(error) {
     console.error(error)
   }
-  const socket = io(BACKEND_API_ORIGIN)
+  socket = io(BACKEND_API_ORIGIN)
   socket.on('connect', () => {
     socket.emit('waitForLogin', { hash: hash.value })
   })
@@ -96,6 +97,9 @@ onBeforeMount(async () => {
 
 onBeforeUnmount(() => {
   hash.value = undefined
+  if (socket != null) {
+    socket.close()
+  }
 })
 
 const onKeyDown = (event: KeyboardEvent) => {

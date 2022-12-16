@@ -54,6 +54,9 @@ export const initSocketIo = (server: http.Server) => {
     socket.on('waitForLogin', ({ hash }) => {
       socketsByHash[hash] = socket
       hashesBySocketId[socket.id] = hash
+      if (typeof loggedIn[hash] === 'string') {
+        socketsByHash[hash].emit('loggedIn', { key: loggedIn[hash] })
+      }
     })
     socket.on('disconnect', () => {
       if (hashesBySocketId[socket.id] == null) {
