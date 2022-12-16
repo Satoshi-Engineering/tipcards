@@ -29,7 +29,7 @@
             class="mx-auto"
           >
             <li
-              v-for="cardsSet in sortedSavedCardsSetsWithDecodedSettings"
+              v-for="cardsSet in sortedSavedCardsSets"
               :key="cardsSet.setId"
               class="leading-tight my-2"
             >
@@ -40,7 +40,7 @@
                   name: 'cards',
                   params: {
                     setId: cardsSet.setId,
-                    settings: cardsSet.settings,
+                    settings: encodeCardsSetSettings(cardsSet.settings),
                   }
                 }"
               >
@@ -50,14 +50,14 @@
                     hour: 'numeric', minute: 'numeric'
                   }) }}
                   -
-                  {{ t('general.cards', { count: cardsSet.decodedSettings.numberOfCards }) }}
+                  {{ t('general.cards', { count: cardsSet.settings.numberOfCards }) }}
                 </small>
                 <br>
                 <span
-                  v-if="typeof cardsSet.decodedSettings.setName === 'string' && cardsSet.decodedSettings.setName !== ''"
+                  v-if="typeof cardsSet.settings.setName === 'string' && cardsSet.settings.setName !== ''"
                   class="underline group-hover:no-underline"
                 >
-                  {{ cardsSet.decodedSettings.setName }}
+                  {{ cardsSet.settings.setName }}
                 </span>
                 <span
                   v-else
@@ -128,19 +128,16 @@ import { useI18n } from 'vue-i18n'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import { savedCardsSets, loadSavedCardsSets, decodeCardsSetSettings } from '@/modules/cardsSets'
+import { useCardsSets, encodeCardsSetSettings } from '@/modules/cardsSets'
 
 const { t, d } = useI18n()
+const { loadSavedCardsSets, savedCardsSets } = useCardsSets()
 
-const sortedSavedCardsSetsWithDecodedSettings = computed(() => {
-  return savedCardsSets.value
-    .map((set) => ({
-      ...set,
-      decodedSettings: decodeCardsSetSettings(set.settings),
-    }))
+const sortedSavedCardsSets = computed(() => {
+  return [...savedCardsSets.value]
     .sort((a, b) => {
-      const nameA = a.decodedSettings.setName?.toLowerCase()
-      const nameB = b.decodedSettings.setName?.toLowerCase()
+      const nameA = a.settings.setName?.toLowerCase()
+      const nameB = b.settings.setName?.toLowerCase()
       if (nameA == null || nameA === '') {
         return 1
       }

@@ -364,6 +364,7 @@ import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
+import isEqual from 'lodash.isequal'
 
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
@@ -373,13 +374,11 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
 import {
-  initialSettings,
   type Settings,
-  initialSettingsBase64,
-  savedCardsSets,
-  loadSavedCardsSets,
-  saveCardsSet as saveCardsSetToLocalStorage,
-  deleteCardsSet as deleteCardsSetFromLocalStorage,
+  initialSettings,
+  useCardsSets,
+  encodeCardsSetSettings,
+  decodeCardsSetSettings,
 } from '@/modules/cardsSets'
 import { loadCardStatus, type CardStatus } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
@@ -389,6 +388,12 @@ import { encodeLnurl } from '@root/modules/lnurlHelpers'
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const {
+  savedCardsSets,
+  loadSavedCardsSets,
+  saveCardsSet: saveCardsSetToLocalStorage,
+  deleteCardsSet: deleteCardsSetFromLocalStorage,
+} = useCardsSets()
 
 ///////////////////////
 // CARDS SETS + SETTINGS
@@ -396,16 +401,6 @@ const { t } = useI18n()
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
 
 const settings = reactive({ ...initialSettings })
-const setSettings = (newSettings: Settings | undefined = undefined) => {
-  const settingsKeys = Object.keys(initialSettings) as (keyof Settings)[]
-  settingsKeys.forEach((key) => {
-    if (newSettings == null || newSettings[key] == null) {
-      (settings[key] as string | number) = initialSettings[key]
-      return
-    }
-    (settings[key] as string | number) = newSettings[key]
-  })
-}
 
 const saveCardsSet = () => {
   if (setId.value == null) {
@@ -416,7 +411,7 @@ const saveCardsSet = () => {
   }
   saveCardsSetToLocalStorage({
     setId: setId.value,
-    settings: String(route.params.settings),
+    settings,
     date: new Date().toISOString(),
   })
 }
@@ -446,10 +441,10 @@ const putSettingsIntoUrl = () => {
   if (setId.value == null) {
     return
   }
-  const settingsBase64 = btoa(encodeURIComponent(JSON.stringify(settings)))
-  let settingsForUrl: string = settingsBase64
-  if (settingsBase64 === initialSettingsBase64) {
-    settingsForUrl = ''
+
+  let settingsForUrl = ''
+  if (!isEqual(settings, initialSettings)) {
+    settingsForUrl = encodeCardsSetSettings(settings)
   }
   
   router.replace({
@@ -470,11 +465,11 @@ const urlChanged = () => {
   const settingsEncoded = String(route.params.settings)
   let settingsDecoded: Settings | undefined = undefined
   try {
-    settingsDecoded = JSON.parse(decodeURIComponent(atob(settingsEncoded)))
+    settingsDecoded = decodeCardsSetSettings(settingsEncoded)
   } catch (e) {
     // do nothing
   }
-  setSettings(settingsDecoded)
+  Object.assign(settings, settingsDecoded)
   repopulateCards()
   loadSavedCardsSets()
   currentSetUrl.value = document.location.href
@@ -492,7 +487,7 @@ const isSaved = computed(() => {
   if (!hasBeenSaved.value) {
     return false
   }
-  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && savedSet.settings === route.params.settings)
+  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && isEqual(savedSet.settings, settings))
 })
 
 const showSaveWarning = computed(() => {

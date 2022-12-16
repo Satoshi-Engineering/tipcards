@@ -2,11 +2,6 @@ import { ref } from 'vue'
 
 export const SAVED_CARD_SETS_KEY = 'savedTipCardsSets'
 
-export type CardsSetRecord = {
-  setId: string
-  settings: string
-  date: string
-}
 export const initialSettings = {
   numberOfCards: 8,
   cardHeadline: 'Hey :)',
@@ -14,48 +9,96 @@ export const initialSettings = {
   cardsQrCodeLogo: 'bitcoin',
   setName: '',
 }
-export const initialSettingsBase64 = btoa(encodeURIComponent(JSON.stringify(initialSettings)))
+
 export type Settings = typeof initialSettings
 
-export const savedCardsSets = ref<CardsSetRecord[]>([])
-export const loadSavedCardsSets = () => {
-  try {
-    savedCardsSets.value = JSON.parse(localStorage.getItem(SAVED_CARD_SETS_KEY) || '[]')
-  } catch (error) {
-    savedCardsSets.value = []
-  }
+export type CardsSetRecord = {
+  setId: string
+  settings: Settings
+  date: string
 }
-export const saveCardsSet = ({ setId, settings, date }: CardsSetRecord) => {
-  if (setId == null) {
-    return
-  }
-  loadSavedCardsSets()
-  const existingIndex = savedCardsSets.value.findIndex(({ setId: existingSetId }) => existingSetId === setId)
-  const newSets = [...savedCardsSets.value]
-  if (existingIndex > -1) {
-    newSets[existingIndex] = { setId, settings, date }
-  } else {
-    newSets.push({ setId, settings, date })
-  }
-  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify(newSets))
-  loadSavedCardsSets()
-}
-export const deleteCardsSet = (setId: string) => {
-  if (setId === null) {
-    return
-  }
-  loadSavedCardsSets()
-  localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
-    ...savedCardsSets.value.filter((set) => set.setId !== setId),
-  ]))
-  loadSavedCardsSets()
+
+type CardsSetRecordEncoded = {
+  setId: string
+  settings: string
+  date: string
 }
 
 export const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
+  let settingsDecoded = {}
   try {
-    return JSON.parse(decodeURIComponent(atob(settingsEncoded)))
+    settingsDecoded = JSON.parse(decodeURIComponent(atob(settingsEncoded)))
   } catch (error) {
     // do nothing
   }
-  return { ...initialSettings }
+  return {
+    ...initialSettings,
+    ...settingsDecoded,
+  }
+}
+
+export const encodeCardsSetSettings = (settingsDecoded: Settings): string => {
+  return btoa(encodeURIComponent(JSON.stringify({
+    ...initialSettings,
+    ...settingsDecoded,
+  })))
+}
+
+export const useCardsSets = () => {
+  const savedCardsSets = ref<CardsSetRecord[]>([])
+
+  const loadSavedCardsSets = () => {
+    let fromLocalStorage: CardsSetRecordEncoded[] = []
+    try {
+      fromLocalStorage = JSON.parse(localStorage.getItem(SAVED_CARD_SETS_KEY) || '[]')
+    } catch (error) {
+      // do nothing
+    }
+    savedCardsSets.value = fromLocalStorage.map((set) => ({
+      ...set,
+      settings: decodeCardsSetSettings(set.settings),
+    }))
+  }
+
+  const saveCardsSet = ({ setId, settings, date }: CardsSetRecord) => {
+    if (setId == null) {
+      return
+    }
+    loadSavedCardsSets()
+    const existingIndex = savedCardsSets.value.findIndex(({ setId: existingSetId }) => existingSetId === setId)
+    const newSets: CardsSetRecordEncoded[] = savedCardsSets.value.map((set) => ({
+      ...set,
+      settings: encodeCardsSetSettings(set.settings),
+    }))
+    if (existingIndex > -1) {
+      newSets[existingIndex] = { setId, settings: encodeCardsSetSettings(settings), date }
+    } else {
+      newSets.push({ setId, settings: encodeCardsSetSettings(settings), date })
+    }
+    localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify(newSets))
+    loadSavedCardsSets()
+  }
+
+  const deleteCardsSet = (setId: string) => {
+    if (setId === null) {
+      return
+    }
+    loadSavedCardsSets()
+    localStorage.setItem(SAVED_CARD_SETS_KEY, JSON.stringify([
+      ...savedCardsSets.value
+        .filter((set) => set.setId !== setId)
+        .map((set) => ({
+          ...set,
+          settings: encodeCardsSetSettings(set.settings),
+        })),
+    ]))
+    loadSavedCardsSets()
+  }
+
+  return {
+    savedCardsSets,
+    loadSavedCardsSets,
+    saveCardsSet,
+    deleteCardsSet,
+  }
 }
