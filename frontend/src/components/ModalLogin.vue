@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import axios from 'axios'
+import { io } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -82,8 +83,15 @@ onBeforeMount(async () => {
   } catch(error) {
     console.error(error)
   }
+  const socket = io(BACKEND_API_ORIGIN)
+  socket.on('connect', () => {
+    socket.emit('waitForLogin', { hash: hash.value })
+  })
+  socket.on('loggedIn', ({ key }) => {
+    loggedIn.value = true
+    userKey.value = key
+  })
   fetchingLogin.value = false
-  checkStatus()
 })
 
 onBeforeUnmount(() => {

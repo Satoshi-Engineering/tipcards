@@ -4,6 +4,7 @@ import type { Socket } from 'net'
 import type http from 'http'
 
 import app from './src/app'
+import { initSocketIo } from './src/api/auth'
 import { EXPRESS_PORT } from './src/constants'
 import consoleOverride from './src/consoleOverride'
 
@@ -32,6 +33,7 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
 const server = app.listen(EXPRESS_PORT, () => {
   console.info(`${APP_NAME} running on ${EXPRESS_PORT}`)
 })
+initSocketIo(server)
 
 let connections: Array<Socket> = []
 

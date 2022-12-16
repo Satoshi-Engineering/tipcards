@@ -1,6 +1,8 @@
 import crypto from 'crypto'
 import express from 'express'
+import type http from 'http'
 import lnurl from 'lnurl'
+import { Server, Socket } from 'socket.io'
 
 import { LNBITS_ADMIN_KEY } from '../constants'
 import { LNBITS_ORIGIN } from '../../../src/constants'
@@ -34,7 +36,35 @@ lnurlServer.on('login', (event: LoginEvent) => {
   // `hash` - the hash of the secret for the LNURL used to login
   const { key, hash } = event
   loggedIn[hash] = key
+
+  if (socketsByHash[hash] != null) {
+    socketsByHash[hash].emit('loggedIn', { key })
+  }
 })
+
+/////
+// SOCKET CONNECTION FOR AUTH
+const socketsByHash: Record<string, Socket> = {}
+const hashesBySocketId: Record<string, string> = {}
+export const initSocketIo = (server: http.Server) => {
+  const io = new Server(server, {
+    cors: { origin: 'http://localhost:5173' },
+  })
+  io.on('connection', (socket) => {
+    socket.on('waitForLogin', ({ hash }) => {
+      socketsByHash[hash] = socket
+      hashesBySocketId[socket.id] = hash
+    })
+    socket.on('disconnect', () => {
+      if (hashesBySocketId[socket.id] == null) {
+        return
+      }
+      const hash = hashesBySocketId[socket.id]
+      delete socketsByHash[hash]
+      delete hashesBySocketId[socket.id]
+    })
+  })
+}
 
 /////
 // ROUTES
