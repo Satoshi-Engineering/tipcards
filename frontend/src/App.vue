@@ -1,5 +1,17 @@
 <template>
   <div class="min-h-screen flex flex-col">
+    <header
+      v-if="isLoggedIn"
+      class="p-4 text-right"
+    >
+      <ButtonDefault
+        class="m-0"
+        variant="outline"
+        @click="logout"
+      >
+        {{ t('auth.logout') }}
+      </ButtonDefault>
+    </header>
     <RouterView />
     <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md print:hidden">
       <small
@@ -34,16 +46,24 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { RouterView } from 'vue-router'
 import { Translation, useI18n } from 'vue-i18n'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
+import { useUserStore } from '@/stores/user'
 import { SUPPORT_EMAIL } from '@/constants'
 
 const i18n = useI18n()
+const { t } = i18n
 const activeLanguage = computed(() => i18n.locale.value)
 const selectLanguage = (lang: string) => {
   i18n.locale.value = lang
 }
+
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
+const { logout } = userStore
 </script>
