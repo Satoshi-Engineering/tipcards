@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { generateKeyPair, importPKCS8, KeyLike, SignJWT, exportPKCS8 } from 'jose'
+import { generateKeyPair, importPKCS8, type KeyLike, SignJWT, exportPKCS8 } from 'jose'
 
 const FILENAME = 'lnurl.auth.pem'
 const alg = 'RS256'

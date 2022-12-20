@@ -52,7 +52,7 @@ export const initSocketIo = (server: http.Server) => {
     cors: { origin: TIPCARDS_ORIGIN },
   })
   io.on('connection', (socket) => {
-    socket.on('waitForLogin', async({ hash }) => {
+    socket.on('waitForLogin', async ({ hash }) => {
       socketsByHash[hash] = socket
       hashesBySocketId[socket.id] = hash
       if (typeof loggedIn[hash] === 'string') {
