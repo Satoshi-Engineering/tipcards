@@ -46,10 +46,12 @@ import { useI18n } from 'vue-i18n'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
+import { useUserStore } from '@/stores/user'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 const { t } = useI18n()
 const emit = defineEmits(['close'])
+const { login } = useUserStore()
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
@@ -65,8 +67,8 @@ const checkStatus = async () => {
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/status/${hash.value}`)
     if (response.data.status === 'success') {
-      loggedIn.value = true
-      userKey.value = response.data.data
+      login(response.data.data)
+      emit('close')
     }
   } catch(error) {
     console.error(error)
@@ -89,8 +91,8 @@ onBeforeMount(async () => {
 const connectSocket = () => {
   socket = io(BACKEND_API_ORIGIN)
   socket.on('loggedIn', ({ key }) => {
-    loggedIn.value = true
-    userKey.value = key
+    login(key)
+    emit('close')
   })
   socket.on('connect', () => {
     socket.emit('waitForLogin', { hash: hash.value })

@@ -4,7 +4,7 @@ import type http from 'http'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 
-import { LNBITS_ADMIN_KEY } from '../constants'
+import { TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
 /////
@@ -44,7 +44,7 @@ const socketsByHash: Record<string, Socket> = {}
 const hashesBySocketId: Record<string, string> = {}
 export const initSocketIo = (server: http.Server) => {
   const io = new Server(server, {
-    cors: { origin: 'http://localhost:5173' },
+    cors: { origin: TIPCARDS_ORIGIN },
   })
   io.on('connection', (socket) => {
     socket.on('waitForLogin', ({ hash }) => {
@@ -100,6 +100,20 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
   res.status(403).json({
     status: 'error',
     data: 'not logged in',
+  })
+})
+router.get('/debug', async (req: express.Request, res: express.Response) => {
+  if (process.env.LNURL_AUTH_DEBUG !== '1') {
+    res.status(403).json({
+      status: 'error',
+    })
+    return
+  }
+  Object.keys(socketsByHash).forEach((hash) => {
+    socketsByHash[hash].emit('loggedIn', { key: 'gotcha' })
+  })
+  res.json({
+    status: 'success',
   })
 })
 
