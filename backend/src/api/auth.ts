@@ -4,6 +4,7 @@ import type http from 'http'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 
+import { createJWT } from '../services/jwt'
 import { TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
@@ -26,15 +27,19 @@ type LoginEvent = {
   key: string,
   hash: string,
 }
-const loggedIn: Record<string, string | boolean> = {}
-lnurlServer.on('login', (event: LoginEvent) => {
+const loggedIn: Record<string, string> = {}
+lnurlServer.on('login', async (event: LoginEvent) => {
   // `key` - the public key as provided by the LNURL wallet app
   // `hash` - the hash of the secret for the LNURL used to login
   const { key, hash } = event
   loggedIn[hash] = key
 
   if (socketsByHash[hash] != null) {
-    socketsByHash[hash].emit('loggedIn', { key })
+    const jwt = await createJWT(key)
+    socketsByHash[hash].emit('loggedIn', {
+      key,
+      jwt,
+    })
   }
 })
 
@@ -47,11 +52,15 @@ export const initSocketIo = (server: http.Server) => {
     cors: { origin: TIPCARDS_ORIGIN },
   })
   io.on('connection', (socket) => {
-    socket.on('waitForLogin', ({ hash }) => {
+    socket.on('waitForLogin', async({ hash }) => {
       socketsByHash[hash] = socket
       hashesBySocketId[socket.id] = hash
       if (typeof loggedIn[hash] === 'string') {
-        socketsByHash[hash].emit('loggedIn', { key: loggedIn[hash] })
+        const jwt = await createJWT(loggedIn[hash])
+        socketsByHash[hash].emit('loggedIn', {
+          key: loggedIn[hash],
+          jwt,
+        })
       }
     })
     socket.on('disconnect', () => {
@@ -72,7 +81,7 @@ router.get('/create', async (req: express.Request, res: express.Response) => {
   const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = crypto.createHash('sha256').update(secret).digest('hex')
-  loggedIn[hash] = false
+  delete loggedIn[hash]
   res.json({
     status: 'success',
     data: {
@@ -91,9 +100,13 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
     return
   }
   if (typeof loggedIn[hash] === 'string') {
+    const jwt = await createJWT(loggedIn[hash])
     res.json({
       status: 'success',
-      data: loggedIn[hash],
+      data: {
+        key: loggedIn[hash],
+        jwt,
+      },
     })
     return
   }
@@ -109,8 +122,10 @@ router.get('/debug', async (req: express.Request, res: express.Response) => {
     })
     return
   }
-  Object.keys(socketsByHash).forEach((hash) => {
-    socketsByHash[hash].emit('loggedIn', { key: 'gotcha' })
+  Object.keys(socketsByHash).forEach(async (hash) => {
+    const key = 'debugKey'
+    const jwt = await createJWT(key)
+    socketsByHash[hash].emit('loggedIn', { key, jwt })
   })
   res.json({
     status: 'success',

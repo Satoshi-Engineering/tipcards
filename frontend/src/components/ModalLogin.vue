@@ -67,7 +67,10 @@ const checkStatus = async () => {
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/status/${hash.value}`)
     if (response.data.status === 'success') {
-      login(response.data.data)
+      login({
+        key: response.data.data.key,
+        jwt: response.data.data.jwt,
+      })
       emit('close')
     }
   } catch(error) {
@@ -90,8 +93,8 @@ onBeforeMount(async () => {
 })
 const connectSocket = () => {
   socket = io(BACKEND_API_ORIGIN)
-  socket.on('loggedIn', ({ key }) => {
-    login(key)
+  socket.on('loggedIn', ({ key, jwt }) => {
+    login({ key, jwt })
     emit('close')
   })
   socket.on('connect', () => {
