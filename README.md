@@ -73,6 +73,14 @@ your lightning apps will refuse to work because there is no ssl connection)
 
 ### VSCode
 
+### Ngrok
+
+Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone.
+
+1. Register at ngrok
+2. Set up locally: https://dashboard.ngrok.com/get-started/setup
+
+
 #### Extensions
 
 * [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)

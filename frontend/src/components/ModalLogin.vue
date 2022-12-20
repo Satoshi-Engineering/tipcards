@@ -86,8 +86,8 @@ onBeforeMount(async () => {
 })
 const connectSocket = () => {
   socket = io(BACKEND_API_ORIGIN)
-  socket.on('loggedIn', ({ key, jwt }) => {
-    login({ key, jwt })
+  socket.on('loggedIn', ({ jwt }) => {
+    login({ jwt })
     emit('close')
   })
   socket.on('connect', () => {
