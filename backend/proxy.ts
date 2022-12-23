@@ -22,5 +22,6 @@ app.use('/lnurl', proxy(`localhost:${LNURL_PORT}`, {
 app.use('/', proxy(`localhost:${WEB_PORT}`))
 
 app.listen(PROXY_PORT, () => {
+  /* eslint-disable */
   console.info(`proxy running on ${PROXY_PORT}`)
 })

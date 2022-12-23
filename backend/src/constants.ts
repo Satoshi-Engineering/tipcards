@@ -14,6 +14,10 @@ let WEB_PORT = 5173
 if (Number(process.env.WEB_PORT) > 0 && Number(process.env.WEB_PORT) < 65536) {
   WEB_PORT = Number(process.env.WEB_PORT)
 }
+let NGROK_AUTH_TOKEN: string | undefined = undefined
+if (typeof process.env.NGROK_AUTH_TOKEN === 'string' && process.env.NGROK_AUTH_TOKEN.length > 0) {
+  NGROK_AUTH_TOKEN = process.env.NGROK_AUTH_TOKEN
+}
 
 let REDIS_BASE_PATH = 'tipcards:develop'
 if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PATH.length > 0) {
@@ -25,6 +29,7 @@ export {
   LNURL_PORT,
   PROXY_PORT,
   WEB_PORT,
+  NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
 }
 

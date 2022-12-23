@@ -10,7 +10,8 @@
     "test-integration": "jest tests/integration",
     "tmp-dev": "nodemon tmpDevelop.ts",
     "cli": "ts-node cli.ts",
-    "proxy": "nodemon proxy.ts"
+    "proxy": "ts-node proxy.ts",
+    "ngrok": "ts-node ngrok.ts"
   },
   "dependencies": {
     "@node-redis/json": "^1.0.2",
@@ -25,6 +26,7 @@
     "helmet": "^6.0.0",
     "jose": "^4.11.1",
     "lnurl": "^0.24.2",
+    "ngrok": "^4.3.3",
     "redis": "^4.3.1",
     "socket.io": "^4.5.4"
   },
