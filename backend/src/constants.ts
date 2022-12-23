@@ -2,6 +2,18 @@ let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
 }
+let LNURL_PORT = 4001
+if (Number(process.env.LNURL_PORT) > 0 && Number(process.env.LNURL_PORT) < 65536) {
+  LNURL_PORT = Number(process.env.LNURL_PORT)
+}
+let PROXY_PORT = 4002
+if (Number(process.env.PROXY_PORT) > 0 && Number(process.env.PROXY_PORT) < 65536) {
+  PROXY_PORT = Number(process.env.PROXY_PORT)
+}
+let WEB_PORT = 5173
+if (Number(process.env.WEB_PORT) > 0 && Number(process.env.WEB_PORT) < 65536) {
+  WEB_PORT = Number(process.env.WEB_PORT)
+}
 
 let REDIS_BASE_PATH = 'tipcards:develop'
 if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PATH.length > 0) {
@@ -10,6 +22,9 @@ if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PA
 
 export {
   EXPRESS_PORT,
+  LNURL_PORT,
+  PROXY_PORT,
+  WEB_PORT,
   REDIS_BASE_PATH,
 }
 

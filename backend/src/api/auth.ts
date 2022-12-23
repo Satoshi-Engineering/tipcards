@@ -49,7 +49,9 @@ const socketsByHash: Record<string, Socket> = {}
 const hashesBySocketId: Record<string, string> = {}
 export const initSocketIo = (server: http.Server) => {
   const io = new Server(server, {
-    cors: { origin: TIPCARDS_ORIGIN },
+    cors: {
+      origin: (process.env.LNURL_AUTH_DEBUG === '1') ? '*' : TIPCARDS_ORIGIN,
+    },
   })
   io.on('connection', (socket) => {
     socket.on('waitForLogin', async ({ hash }) => {
