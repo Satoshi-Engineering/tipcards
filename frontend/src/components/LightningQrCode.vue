@@ -37,13 +37,13 @@
     >
       <template #default>
         <span class="font-normal">
-          <Translation :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'">
+          <I18nT :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'">
             <template #action>
               <br>
               <strong class="underline hover:no-underline">{{ t(type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopyAction' : 'lightningQrCode.copyToClipboard.invoice.beforeCopyAction') }}</strong>
               <br>
             </template>
-          </Translation>
+          </I18nT>
         </span>
       </template>
       <template #success>
@@ -59,8 +59,9 @@
 <script setup lang="ts">
 import QRCode from 'qrcode-svg'
 import { computed } from 'vue'
-import { useI18n, Translation } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 
+import I18nT from '@/modules/I18nT'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'

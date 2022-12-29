@@ -220,9 +220,10 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
-import { useI18n, Translation as I18nT } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import I18nT from '@/modules/I18nT'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

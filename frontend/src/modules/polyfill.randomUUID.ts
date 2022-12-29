@@ -1,4 +1,4 @@
-if (!('randomUUID' in crypto))
+if (typeof crypto.randomUUID !== 'function') {
   // https://stackoverflow.com/a/2117523/2800218
   // LICENSE: https://creativecommons.org/licenses/by-sa/4.0/legalcode
   crypto.randomUUID = () => {
@@ -6,6 +6,7 @@ if (!('randomUUID' in crypto))
       /[018]/g,
       (c) => (Number(c) ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> Number(c) / 4).toString(16),
     )
+  }
 }
 
 export default crypto

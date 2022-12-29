@@ -39,7 +39,7 @@
       </ParagraphDefault>
       <div v-if="invoice != null">
         <ParagraphDefault>
-          <Translation
+          <I18nT
             :keypath="
               usedDate != null
                 ? 'funding.textUsed'
@@ -51,7 +51,7 @@
             <template #amount>
               <strong>{{ invoiceAmount }}</strong>
             </template>
-          </Translation>
+          </I18nT>
         </ParagraphDefault>
         <LightningQrCode
           :value="invoice"
@@ -88,25 +88,25 @@
           </p>
         </div>
         <ParagraphDefault v-if="funded">
-          <Translation :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
+          <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
             <template #amountAndUnit>
               <strong class="inline-block">
                 {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
-          </Translation>
+          </I18nT>
         </ParagraphDefault>
         <ParagraphDefault v-else-if="amount === 0">
           {{ t('funding.shared.textEmpty') }} 
         </ParagraphDefault>
         <ParagraphDefault v-else>
-          <Translation keypath="funding.shared.textPartiallyFunded">
+          <I18nT keypath="funding.shared.textPartiallyFunded">
             <template #amountAndUnit>
               <strong class="inline-block">
                 {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
-          </Translation>
+          </I18nT>
         </ParagraphDefault>
         <div v-if="!funded">
           <label class="block mb-2">
@@ -154,13 +154,13 @@
       </div>
       <div v-else-if="lnurlp">
         <ParagraphDefault v-if="funded">
-          <Translation :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
+          <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
             <template #amountAndUnit>
               <strong class="inline-block">
                 {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
-          </Translation>
+          </I18nT>
         </ParagraphDefault>
         <ParagraphDefault v-else>
           {{ t('funding.lnurlp.text') }}
@@ -283,9 +283,10 @@
 import axios from 'axios'
 import debounce from 'lodash.debounce'
 import { computed, onBeforeMount, ref } from 'vue'
-import { useI18n, Translation } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
+import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

@@ -18,11 +18,11 @@
         v-if="SUPPORT_EMAIL != null"
         class="block text-gray-400"
       >
-        <Translation keypath="footer.support">
+        <I18nT keypath="footer.support">
           <template #email>
             <LinkDefault :href="`mailto:${SUPPORT_EMAIL}?subject=Lightning%20Tip%20Cards%20Feedback`">{{ SUPPORT_EMAIL }}</LinkDefault>
           </template>
-        </Translation>
+        </I18nT>
       </small>
       <small class="block text-gray-400">
         Switch language:
@@ -49,8 +49,9 @@
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { RouterView } from 'vue-router'
-import { Translation, useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 
+import I18nT from './modules/I18nT'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import { useUserStore } from '@/stores/user'
