@@ -11,11 +11,11 @@
     <div v-if="error != null" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
       ⚠️
     </div>
-    <div v-else-if="success" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
-      <AnimatedCheckmark class="w-5/12" />
-    </div>
-    <div v-else-if="pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
-      <AnimatedLoadingWheel class="w-5/12" />
+    <div v-else-if="success || pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
+      <AnimatedCheckmark
+        class="w-5/12"
+        :pending="pending && !success"
+      />
     </div>
   </div>
   <div class="text-center max-w-xs px-8 mx-auto">
@@ -37,13 +37,13 @@
     >
       <template #default>
         <span class="font-normal">
-          <I18nT :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'">
+          <Translation :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'">
             <template #action>
               <br>
               <strong class="underline hover:no-underline">{{ t(type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopyAction' : 'lightningQrCode.copyToClipboard.invoice.beforeCopyAction') }}</strong>
               <br>
             </template>
-          </I18nT>
+          </Translation>
         </span>
       </template>
       <template #success>
@@ -59,13 +59,12 @@
 <script setup lang="ts">
 import QRCode from 'qrcode-svg'
 import { computed } from 'vue'
-import { useI18n, Translation as I18nT } from 'vue-i18n'
+import { useI18n, Translation } from 'vue-i18n'
 
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import AnimatedCheckmark from '@/components/AnimatedCheckmark.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 
 const props = defineProps({
   value: {
