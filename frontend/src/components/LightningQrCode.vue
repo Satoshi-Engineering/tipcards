@@ -9,7 +9,7 @@
     />
     <!-- eslint-enable vue/no-v-html -->
     <div v-if="error != null" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
-      ⚠️
+      <IconWarning class="w-18" />
     </div>
     <div v-else-if="success || pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
       <AnimatedCheckmark
@@ -66,6 +66,7 @@ import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import AnimatedCheckmark from '@/components/AnimatedCheckmark.vue'
+import IconWarning from '@/components/svgs/IconWarning.vue'
 
 const props = defineProps({
   value: {
