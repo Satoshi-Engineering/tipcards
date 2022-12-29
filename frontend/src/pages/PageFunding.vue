@@ -328,7 +328,7 @@ const viewed = ref(false)
 
 const backlink = computed(() => {
   try {
-    return new URL(document.referrer).origin === location.origin ? document.referrer : null
+    return new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href ? document.referrer : null
   } catch (error) {
     return null
   }
