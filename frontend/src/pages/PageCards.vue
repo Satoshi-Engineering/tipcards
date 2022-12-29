@@ -475,7 +475,10 @@ const urlChanged = () => {
   currentSetUrl.value = document.location.href
 }
 
-onMounted(urlChanged)
+onMounted(() => {
+  urlChanged()
+  putSettingsIntoUrl()
+})
   
 watch(() => route.fullPath, urlChanged)
 
