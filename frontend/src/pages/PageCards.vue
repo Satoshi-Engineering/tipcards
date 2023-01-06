@@ -216,7 +216,7 @@
       v-if="userErrorMessage != null"
       class="p-4"
     >
-      <p class="text-red-500 text-align-center">
+      <p class="text-red-500 text-align-center" dir="ltr">
         {{ userErrorMessage }}
       </p>
     </div>
