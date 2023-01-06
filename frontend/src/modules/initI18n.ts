@@ -524,6 +524,173 @@ const messages = {
       },
     },
   },
+  he: {
+    general: {
+      back: 'חזרה',
+      cards: 'כרטיס אחד | {count} כרטיסים',
+    },
+    footer: {
+      support: 'יש שאלות, הערות והארות? מצאת בעיה או באג? אל תהסס/י ליצור קשר: {email}',
+    },
+    landing: {
+      introGreeting: 'היי!',
+      introMessageReceiveBtc: {
+        message: 'את/ה עומד/ת לקבל {amountAndUnit}',
+        amountAndUnit: '{amount} ביטקוין*',
+        footnote: '* דרך לייטנינג',
+      },
+      introMessageAlreadyUsed: {
+        headline: 'נראה שכבר נעשה שימוש בקוד ה-QR הזה.',
+        message: 'אל דאגה: את/ה יכול/ה לקנות לך ביטקוין בבורסת קריפטו (לדוגמא {exchange}), בכספומט ביטקוין (לדוגמא {atm}), מחלפן קריפטו (לדוגמא {broker}) וכו\'.',
+      },
+      introMessageJustReceived: {
+        headline: 'כרגע השתמשו בקוד ה-QR שלך. {emoji}',
+        message: 'את/ה יכול/ה לקנות לך ביטקוין בבורסת קריפטו (לדוגמא {exchange}), בכספומט ביטקוין (לדוגמא {atm}), מחלפן קריפטו (לדוגמא {broker}) וכו\'.',
+      },
+      sectionBitcoin: {
+        paragraphs: {
+          0: 'ביטקוין הוא <strong>מטבע דיגיטלי</strong>.',
+          1: 'הוא מנוהל ע"י כל החברים ברשת הביטקוין, כלומר הוא <strong>לא תחת שליטה</strong> של אף בנק מרכזי, ממשלה או תאגיד.',
+          2: 'קל מאוד לשלוח ביטקוין (כולל העברות בינלאומיות) באמצעות סריקת קוד QR. נסו בעצמכם!',
+        },
+      },
+      sectionWallet: {
+        headline: 'התקנת ארנק',
+        explanation: 'על מנת לקבל, לשמור ולהוציא את הביטקוין שלך, עליך להתקין <strong>ארנק ביטקוין</strong>.<br>לכמויות קטנות וימיומיות, אפליקצייה בסמארטפון היא הכי נוחה.',
+        recommendation: 'למתחילים, אנו ממליצים להשתמש ב-{walletOfSatoshi}',
+        button: 'להורדת Wallet of Satoshi',
+        other: 'את/ה יכול/ה לנסות גם את {wallet0}, {wallet1}, {wallet2} או כל ארנק לייטנינג*.',
+        otherFootnote: '* ארנק ביטקוין שתומך בלייטנינג וב-LNURL',
+      },
+      sectionReceive: {
+        headline: 'קבלת הביטקוין שלך',
+        statusNormal: {
+          explanation: 'לאחר התקנת הארנק:',
+          step1: '<strong>לחצ/י</strong> על קוד ה-QR, או',
+          step2: '<strong>סרוק/סרקי</strong> את קוד ה-QR בכרטיס הטיפ שוב<br>(באמצעות אפליקציית הארנק)',
+        },
+        statusReceived: {
+          congrats: 'מזל טוב!',
+          message: 'הביטקוין הועבר לארנק שלך.',
+        },
+      },
+      sectionUse: {
+        headline: 'השתמש/י בביטקוין שלך',
+        message: 'כעת את/ה יכול/ה להשתמש בביטקוין שלך בחנויות ואתרים שמקבלים ביטקוין, לשלוח אותו לארנקי לייטנינג של חברים, או סתם להדל*.',
+        messageFootnote: '* להדל = to hold, to save up',
+        examplesIntro: 'הנה מספר דוגמאות לאתרים שבהם ניתן לשלם עם ביטקוין דרך לייטנינג:',
+        examples: {
+          saltNDaisy: 'קנו גרנולה בת-קיימה',
+          satoshistore: 'קנו בגדים בביטקוין',
+          aprycotMedia: 'ספרים על ביטקוין, סרטונים ועוד',
+          copiaro: 'ארנקי חומרה ושמירת ביטקוין לטווח ארוך',
+          lightningnetworkstores: 'מצא/י מה עוד ניתן לקנות באינטרנט',
+          coinpages: 'מצא חנויות שמקבלות ביטקוין',
+        },
+        createYourOwnTipCardsHeadline: 'צור/צרי את כרטיסי הטיפ שלך',
+        createYourOwnTipCardsText: 'רוצה לתת לחברים כמה סטושים (1 סטושי = 0.00000001 ביטקוין) או לתת טיפ בביטקוין? לחצ/י על הכפתור מטה והגדר/י את כרטיסי הטיפ האישיים שלך.',
+        createYourOwnTipCardsButton: 'צור את כרטיסי הטיפ שלי',
+      },
+    },
+    funding: {
+      headline: 'הטענת כרטיס הטיפ',
+      text: 'כרטיס טיפ זה לא נטען עדיין באף סטושי. ציין/י את כמות הסטושים ואת ההודעה שמקבל/ת הכרטיס יראה/תראה בארנק שלו/ה.',
+      form: {
+        textHint: 'יוצג בארנק של מקבל/ת הכרטיס',
+        notePlaceholder: 'הערות',
+        noteHint: 'יוצגו בעמוד הסטטוס של קבוצת כרטיסי הטיפ שלך.',
+        button: 'הטען כרטיס',
+      },
+      invoiceText: 'טען את כרטיס הטיפ שלך ב-{amount} סטושים:',
+      invoiceExpired: 'קבלת הלייטנינג עבור כרטיס זה פקעה. יש לאתחל את כרטיס הטיפ כדי להמשיך.',
+      resetInvoice: 'אתחל כרטיס טיפ',
+      lnurlp: {
+        text: 'סרוק/סרקי את קוד ה-QR עם אפליקציית הארנק, או לחצ/י "פתח בארנק" להטענת הכרטיס. ניתן לבחור את הכמות הרצויה להטענה באפליקציית הארנק.',
+        textFunded: 'כרטיס טיפ זה כבר נטען ב-({amountAndUnit}) וניתן למסור אותו למישהו/י שצריכ/ה את "הגלולה הכתומה".',
+        amountAndUnit: '{amount} ביטקוין',
+      },
+      lnurlpExpired: 'לצערנו פקע לינק התשלום לכרטיס הטיפ. אנא אתחל/י את הכרטיס כדי להמשיך.',
+      lnurlpFundedExpired: 'לצערנו פקע לינק התשלום לכרטיס הטיפ. אנא סיימ/י את טעינת הכרטיס כדי להמשיך.',
+      shared: {
+        text: 'סרוק/סרקי ושלמ/י את קוד ה-QR כמה פעמים שתבחר/י, ולחצ/י על "סיים הטענה" כשסיימת.',
+        textFunded: 'כרטיס טיפ זה טעון ב-({amountAndUnit}) וניתן למסור אותו למישהו/י שצריכ/ה את "הגלולה הכתומה".',
+        textEmpty: 'כרטיס טיפ זה עדיין ריק. לאחר שייטען בכמה סטושים תוכל/י לסיים את התהליך.',
+        textPartiallyFunded: 'כרטיס טיפ זה טעון ב-{amountAndUnit}. כשתסיימ/י את ההטענה יהיה ניתן למשוך את הביטקוין.',
+        amountAndUnit: '{amount} ביטקוין',
+        buttonFinish: 'סיים הטענה',
+        buttonMakeShared: 'הפעל הטענה משותפת בכרטיס טיפ זה',
+      },
+    },
+    index: {
+      buttonCreate: 'צור/צרי את כרטיסי הטיפ שלך ⚡',
+      savedCardsSetsHeadline: 'כרטיסי טיפ שמורים',
+      noSavedCardsSetsMessage: 'לא נמצאו בדפדפן שלך אף כרטיסי טיפ שמורים',
+      unnamedSetNameFallback: 'ללא שם',
+      youtube: {
+        create: {
+          label: 'Create',
+          link: 'https://youtu.be/R6p7fUKu4MY',
+        },
+        use: {
+          label: 'Use',
+          link: 'https://youtu.be/bFeEPbupdx8',
+        },
+      },
+    },
+    cards: {
+      status: {
+        headline: 'סטטוס',
+        noCards: 'אף כרטיס לא הוטען עדיין. תוכל/י לראות את הסטטוס של הכרטיסים בקבוצה זו כאן, לאחר שתטענ/י את אחד מהם.',
+        labelUsed: 'נוצל',
+        labelFunded: 'הוטען',
+        labelPendingFunding: 'הטענה מתבצעת כרגע',
+        labelPendingSharedFunding: 'הטענה משותפת מתבצעת כרגע',
+        labelNote: 'הערה',
+        reload: 'Reload',
+      },
+      settings: {
+        headline: 'הגדרות',
+        numberOfCards: 'מספר הכרטיסים',
+        cardHeadline: 'כותרת כרטיס',
+        cardText: 'תיאור כרטיס',
+        cardQrCodeLogoLabel: 'לוגו שיופיע על פני קוד ה-QR',
+        cardQrCodeLogo: {
+          noLogo: 'ללא לוגו',
+        },
+        setName: 'שם קבוצת כרטיסים',
+      },
+      buttonSaveCardsSet: 'שמור קבוצת כרטיסים',
+      buttonDeleteCardsSet: 'מחק קבוצת כרטיסים',
+      buttonPrint: 'הדפס קבוצת כרטיסים',
+      buttonDownloadPngs: 'הורדת PNGים',
+      saveSetConfirm: 'קבוצת הכרטיסים הנוכחית תשמר בזכרון המקומי של הדפדפן.\n\nניתן להשתמש גם בשורת הכתובת של עמוד זה כדי לגשת לקבוצת כרטיסי הטיפ הנוכחית.\n\nלהמשיך?',
+      deleteSetConfirm: 'האם את/ה בטוח/ה שברצונך למחוק את קבוצת הכרטיסים הנוכחית מהזכרון של הדפדפן?',
+      filterLabel: 'תצוגת כרטיסים:',
+      filter: {
+        all: 'כל הכרטיסים',
+        unfunded: 'לא הוטענו',
+        funded: 'הוטענו',
+        used: 'נוצלו',
+      },
+    },
+    lightningQrCode: {
+      buttonOpenInWallet: 'פתח בארנק',
+      copyToClipboard: {
+        lnurl: {
+          beforeCopy: 'ניתן גם {action} כדי להדביק אותו באפליקציית הארנק שלך.',
+          beforeCopyAction: 'להעתיק את ה-LNURL ל-clipboard',
+          afterCopySuccess: 'העתקה בוצעה בהצלחה.',
+          afterCopyNextStep: 'הדבק/י אותו<br>באפליקציית הארנק שלך :)',
+        },
+        invoice: {
+          beforeCopy: 'ניתן גם {action} כדי להדביק אותה באפליקציית הארנק שלך.',
+          beforeCopyAction: 'להעתיק את החשבונית ל-clipboard',
+          afterCopySuccess: 'העתקה בוצעה בהצלחה.',
+          afterCopyNextStep: 'הדבק/י אותה<br>באפליקציית הארנק שלך :)',
+        },
+      },
+    },
+  },
 }
 
 const getPreferredLocale = () => {
