@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col" :dir="activeLanguage === 'he' ? 'rtl' : 'ltr'">
     <header
       v-if="isLoggedIn"
       class="p-4 text-right"
@@ -24,7 +24,7 @@
           </template>
         </I18nT>
       </small>
-      <small class="block text-gray-400">
+      <small class="block text-gray-400" dir="ltr">
         Switch language:
         <LinkDefault
           :bold="activeLanguage === 'de'"
@@ -40,6 +40,11 @@
           :bold="activeLanguage === 'es'"
           @click="() => selectLanguage('es')"
         >ES</LinkDefault>
+        |
+        <LinkDefault
+          :bold="activeLanguage === 'he'"
+          @click="() => selectLanguage('he')"
+        >HE</LinkDefault>
       </small>
     </footer>
   </div>

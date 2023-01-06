@@ -249,7 +249,7 @@
         </form>
       </div>
       <div v-if="userErrorMessage != null">
-        <ParagraphDefault class="text-red-500">
+        <ParagraphDefault class="text-red-500" dir="ltr">
           {{ userErrorMessage }}
         </ParagraphDefault>
       </div>
