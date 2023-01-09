@@ -201,6 +201,25 @@
             <LinkDefault href="https://coinpages.io/">coinpages.io</LinkDefault>
           </li>
         </ul>
+        <div
+          v-if="te('landing.sectionMore.headline')"
+          class="my-7"
+        >
+          <HeadlineDefault level="h3" class="mt-7">
+            {{ t('landing.sectionMore.headline') }}
+          </HeadlineDefault>
+          <ParagraphDefault>
+            {{ t('landing.sectionMore.text') }}
+          </ParagraphDefault>
+          <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
+          <ParagraphDefault v-html="t('landing.sectionMore.bconf.text')" />
+          <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
+          <ParagraphDefault>
+            <LinkDefault :href="t('landing.sectionMore.bconf.linkHref')">
+              {{ t('landing.sectionMore.bconf.linkLabel') }}
+            </LinkDefault>
+          </ParagraphDefault>
+        </div>
         <HeadlineDefault level="h3" class="mt-7">
           {{ t('landing.sectionUse.createYourOwnTipCardsHeadline') }}
         </HeadlineDefault>
@@ -238,7 +257,7 @@ import { rateBtcEur } from '@/modules/rateBtcEur'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 
 const spent = ref<boolean | undefined>()
 const amount = ref<number | undefined | null>()

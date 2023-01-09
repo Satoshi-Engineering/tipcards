@@ -245,6 +245,15 @@ const messages = {
         createYourOwnTipCardsText: 'Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen Tip Cards.',
         createYourOwnTipCardsButton: 'Meine eigenen Tip Cards erstellen',
       },
+      sectionMore: {
+        headline: 'Mehr über Bitcoin',
+        text: 'Es gibt viele Möglichkeiten, mehr über Bitcoin zu erfahren.',
+        bconf: {
+          text: 'Die <strong>BTC23</strong> ist die größte Bitcoin-Konferenz im deutschsprachigen Raum und findet von 14. bis 17. September 2023 in Innsbruck (Österreich) statt. Mit dem Gutscheincode "<b>tipcards</b>" bekommst du 5% Rabatt auf dein Ticket.',
+          linkLabel: 'Hol dir hier dein Ticket für die BTC23',
+          linkHref: 'https://pretix.eu/btc/23/c/bPCDAshzq/',
+        },
+      },
     },
     funding: {
       title: 'Lade die Tip Card auf',
