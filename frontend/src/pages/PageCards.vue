@@ -384,10 +384,12 @@ import { loadCardStatus, type CardStatus } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
+import { useSeoHelpers } from '@/modules/seoHelpers'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const { setDocumentTitle } = useSeoHelpers()
 const {
   savedCardsSets,
   loadSavedCardsSets,
@@ -437,7 +439,7 @@ const currentSetUrlQrCode = computed(() => new QRCode({
   }).svg(),
 )
 
-const putSettingsIntoUrl = () => {
+const putSettingsIntoUrl = async () => {
   if (setId.value == null) {
     return
   }
@@ -454,6 +456,8 @@ const putSettingsIntoUrl = () => {
       settings: settingsForUrl,
     },
   })
+
+  setDocumentTitle(settings.setName !== '' ? settings.setName : t('index.unnamedSetNameFallback'))
 }
 
 watch(settings, () => {

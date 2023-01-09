@@ -10,6 +10,8 @@ const messages = {
       support: 'Any questions or feedback? Or did you find a problem or bug? Don\'t hesitate to contact us: {email}.',
     },
     landing: {
+      title: 'Get your bitcoin',
+      titlePreview: 'Preview – Get your bitcoin',
       introGreeting: 'Hey!',
       introMessageReceiveBtc: {
         message: 'You are just about to receive {amountAndUnit}',
@@ -70,6 +72,7 @@ const messages = {
       },
     },
     funding: {
+      title: 'Fund your Tip Card',
       headline: 'Fund this Tip Card',
       headlineFunded: 'Tip Card has been funded',
       headlineUsed: 'Tip Card successfully redeemed',
@@ -118,6 +121,7 @@ const messages = {
       },
     },
     cards: {
+      title: 'Tip Cards Set',
       status: {
         headline: 'Status',
         noCards: 'No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.',
@@ -181,6 +185,8 @@ const messages = {
       support: 'Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.',
     },
     landing: {
+      title: 'Hol dir deine Bitcoin',
+      titlePreview: 'Vorschau – Hol dir deine Bitcoin',
       introGreeting: 'Hi!',
       introMessageReceiveBtc: {
         message: 'Hier kannst du dir {amountAndUnit} holen*.',
@@ -241,6 +247,7 @@ const messages = {
       },
     },
     funding: {
+      title: 'Lade die Tip Card auf',
       headline: 'Lade die Tip Card auf',
       headlineFunded: 'Die Tip Card wurde aufgeladen',
       headlineUsed: 'Die Tip Card wurde eingelöst',
@@ -289,6 +296,7 @@ const messages = {
       },
     },
     cards: {
+      title: 'Tip Cards-Set',
       status: {
         headline: 'Status',
         noCards: 'Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.',
@@ -352,6 +360,8 @@ const messages = {
       support: '¿Tienes preguntas, comentarios, un problema o encontraste un error? Escríbenos a {email}.',
     },
     landing: {
+      title: 'Consigue tu Bitcoin',
+      titlePreview: 'Vista previa – Consigue tu Bitcoin',
       introGreeting: '¡Hola!',
       introMessageReceiveBtc: {
         message: 'Puedes obtener {amountAndUnit} aquí*.',
@@ -412,6 +422,7 @@ const messages = {
       },
     },
     funding: {
+      title: 'Cargar la tarjeta de propinas',
       headline: 'Cargar la tarjeta de propinas',
       headlineFunded: 'Tip Card has been funded',
       headlineUsed: 'Tip Card successfully redeemed',
@@ -458,6 +469,7 @@ const messages = {
       },
     },
     cards: {
+      title: 'Conjunto de tarjetas de propina',
       status: {
         labelUsed: 'Canjeada | Canjeadas',
         labelFunded: 'Cargada | Cargadas',
@@ -519,6 +531,7 @@ const getPreferredLocale = () => {
 
 const i18n = createI18n({
   legacy: false,
+  allowComposition: true,
   locale: getPreferredLocale(),
   fallbackLocale: 'en',
   messages,
