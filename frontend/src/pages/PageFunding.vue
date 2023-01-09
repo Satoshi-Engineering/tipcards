@@ -5,6 +5,7 @@
         :href="(backlink != null) ? backlink : undefined"
         :to="(backlink == null) ? { name: 'home' } : undefined"
         target="_self"
+        @click="backlinkAction"
       >
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
@@ -334,6 +335,14 @@ const backlink = computed(() => {
     return null
   }
 })
+
+const backlinkAction = () => {
+  if (backlink.value != null) {
+    router.go(-1)
+  } else {
+    router.push('/')
+  }
+}
 
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
