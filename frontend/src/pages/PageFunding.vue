@@ -5,7 +5,7 @@
         :href="(backlink != null) ? backlink : undefined"
         :to="(backlink == null) ? { name: 'home' } : undefined"
         target="_self"
-        @click="backlinkAction"
+        @click.prevent="backlinkAction"
       >
         <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
       </LinkDefault>
