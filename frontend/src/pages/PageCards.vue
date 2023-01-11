@@ -21,7 +21,7 @@
         </HeadlineDefault>
         <ButtonDefault
           variant="no-border"
-          class="text-xs text-black underline"
+          class="text-xs text-black underline hover:no-underline active:no-underline disabled:no-underline"
           :disabled="reloadingStatusForCards"
           @click="reloadStatusForCards()"
         >

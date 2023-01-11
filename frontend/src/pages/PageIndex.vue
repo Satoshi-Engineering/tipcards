@@ -14,7 +14,7 @@
         </ButtonDefault>
       </p>
       <div class="mt-24">
-        <HeadlineDefault level="h4">
+        <HeadlineDefault level="h2" styling="h4">
           {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
         <div class="flex">
@@ -76,12 +76,13 @@
       >
         <div class="flex flex-col md:flex-row gap-4">
           <div class="flex-1">
-            <HeadlineDefault level="h4">
+            <HeadlineDefault level="h2" styling="h4">
               {{ t('index.youtube.create.label') }}
             </HeadlineDefault>
             <a
               class="flex items-center justify-center aspect-[356/200] bg-black bg-[url('/src/assets/images/create-tipcards.square.webp')] bg-[length:70%] bg-center bg-no-repeat"
               :href="t('index.youtube.create.link')"
+              :aria-label="t('index.youtube.create.label')"
               target="_blank"
             >
               <svg
@@ -96,12 +97,13 @@
             </a>
           </div>
           <div class="flex-1">
-            <HeadlineDefault level="h4">
+            <HeadlineDefault level="h2" styling="h4">
               {{ t('index.youtube.use.label') }}
             </HeadlineDefault>
             <a
               class="flex items-center justify-center aspect-[356/200] w-full bg-black bg-[url('/src/assets/images/use-tipcards.square.webp')] bg-[length:70%] bg-center bg-no-repeat"
               :href="t('index.youtube.use.link')"
+              :aria-label="t('index.youtube.use.label')"
               target="_blank"
             >
               <svg
