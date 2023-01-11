@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-3 h-3 mr-1.5 mt-1 rounded-full flex-none"
+    class="w-3 h-3 mt-1 rounded-full flex-none"
     :class="{
       'bg-btcorange': status === 'funded',
       'bg-lightningpurple': status === 'used',

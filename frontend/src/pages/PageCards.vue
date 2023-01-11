@@ -2,7 +2,9 @@
   <div class="mb-1 print:hidden max-w-md w-full m-auto">
     <div class="p-4">
       <LinkDefault :to="{ name: 'home' }">
-        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
+        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
+        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
+        -->{{ t('general.back') }}
       </LinkDefault>
     </div>
     <div
@@ -65,7 +67,7 @@
           <li
             v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, viewed } in cardsStatusList"
             :key="cardHash"
-            class="flex border-b border-grey py-1"
+            class="flex border-b border-grey py-1 gap-1.5"
           >
             <CardStatusComponent
               :status="status || undefined"
@@ -242,15 +244,15 @@
         <div
           v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
           :key="card.url"
-          class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
+          class="relative break-inside-avoid w-[90mm] h-[55mm] ltr:float-left rtl:float-right group"
         >
-          <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-          <div class="group-odd:left-0 group-even:right-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-          <div class="hidden group-first:block right-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-          <div class="hidden group-last:block left-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+          <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+          <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+          <div class="hidden group-first:block [inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+          <div class="hidden group-last:block [inset-inline-start:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
 
-          <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-          <div class="group-odd:-left-4 group-even:-right-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+          <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
+          <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
           <div
             v-if="card.url != ''"
             class="absolute w-full h-full"
@@ -258,7 +260,7 @@
           >
             <a :href="card.urlPreview">
               <div
-                class="absolute left-3 top-7 bottom-7 w-auto h-auto aspect-square"
+                class="absolute ltr:left-3 rtl:right-3 top-7 bottom-7 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
               >
                 <svg
@@ -290,7 +292,7 @@
               </div>
             </a>
             <div
-              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
+              class="absolute ltr:left-1/2 rtl:right-1/2 ltr:ml-2 rtl:mr-2 ltr:mr-4 rtl:ml-4 top-0 bottom-2 flex items-center"
               :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
             >
               <div>
@@ -314,25 +316,25 @@
           </div>
           <div
             v-if="card.status === 'error'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
+            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
           >
             <span class="m-auto">Error</span>
           </div>
           <div
             v-else-if="card.amount != null && card.status === 'funded'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
+            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>
           <div
             v-else-if="card.amount != null && card.status === 'used'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
+            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>
           <div
             v-else-if="(card.status === 'invoice' || card.status === 'lnurlp')"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
             <span
               v-if="card.status === 'lnurlp' && card.shared"

@@ -7,7 +7,9 @@
         target="_self"
         @click.prevent="backlinkAction"
       >
-        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
+        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
+        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
+        -->{{ t('general.back') }}
       </LinkDefault>
     </div>
     <div
@@ -255,7 +257,7 @@
       </div>
       <div
         v-if="funded"
-        class="flex mt-24"
+        class="flex gap-1.5 mt-24"
       >
         <CardStatus
           :status="cardStatus"

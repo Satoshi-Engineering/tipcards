@@ -9,7 +9,9 @@
         target="_self"
         @click.prevent="backlinkAction"
       >
-        <i class="bi bi-caret-left-fill" />{{ t('general.back') }}
+      <i class="bi bi-caret-left-fill rtl:hidden" /><!--
+        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
+        -->{{ t('general.back') }}
       </LinkDefault>
     </div>
     <div
@@ -88,7 +90,7 @@
         </ParagraphDefault>
       </div>
       <div class="my-10">
-        <IconBitcoin class="float-right w-16 ml-3 mb-3" />
+        <IconBitcoin class="w-16 mb-3 ltr:float-right ltr:ml-3 rtl:float-left rtl:mr-3" />
         <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.0'))" />
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.1'))" />
