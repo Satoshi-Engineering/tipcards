@@ -9,7 +9,7 @@
         target="_self"
         @click.prevent="backlinkAction"
       >
-      <i class="bi bi-caret-left-fill rtl:hidden" /><!--
+        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
         --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
         -->{{ t('general.back') }}
       </LinkDefault>
@@ -215,7 +215,7 @@
             {{ t('landing.sectionMore.text') }}
           </ParagraphDefault>
           <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
-          <ParagraphDefault v-html="t('landing.sectionMore.bconf.text')" />
+          <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionMore.bconf.text'))" />
           <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
           <ParagraphDefault>
             <LinkDefault :href="t('landing.sectionMore.bconf.linkHref')">
