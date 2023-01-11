@@ -1,4 +1,5 @@
 const plugin = require('tailwindcss/plugin')
+const colors = require('tailwindcss/colors')
 
 module.exports = {
   content: [
@@ -13,8 +14,8 @@ module.exports = {
         'grey-dark': '#777777',
         'black': '#000',
         'white': '#fff',
-        'btcorange': '#F7931A',
-        'btcorange-effect': '#f8a139',
+        'btcorange': colors.orange[400],
+        'btcorange-effect': colors.orange[500],
         'lightningpurple': '#7B1AF7',
       },
       fontFamily: {
