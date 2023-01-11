@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import i18n from '@/modules/initI18n'
-import PageIndex from '@/pages/PageIndex.vue'
-import PageLanding from '@/pages/PageLanding.vue'
-import PageCards from '@/pages/PageCards.vue'
-import PageFunding from '@/pages/PageFunding.vue'
-import PageAuthDevelopment from '@/pages/PageAuthDevelopment.vue'
+
+const PageIndex = () => import('@/pages/PageIndex.vue')
+const PageLanding = () => import('@/pages/PageLanding.vue')
+const PageCards = () => import('@/pages/PageCards.vue')
+const PageFunding = () => import('@/pages/PageFunding.vue')
+const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
