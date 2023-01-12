@@ -44,13 +44,23 @@ const i18n = createI18n({
   fallbackLocale: 'en',
 })
 
-export const setLocale = async (locale: LocaleCode | undefined = 'en') => {
+const loadLocaleMessages = async (locale: LocaleCode) => {
   const messages = await import(`@/locales/${locale}.json`)
   i18n.global.setLocaleMessage(locale, messages.default)
   await nextTick()
+}
+
+export const setLocale = async (locale: LocaleCode | undefined = 'en') => {
+  if (!i18n.global.availableLocales.includes(locale)) {
+    await loadLocaleMessages(locale)
+  }
   i18n.global.locale.value = locale
 }
 
-await setLocale(getPreferredLocale())
+(async () => {
+  await setLocale(getPreferredLocale())
+  await nextTick()
+  await loadLocaleMessages('en') // load EN locale so that the fallback terms are available
+})()
 
 export default i18n

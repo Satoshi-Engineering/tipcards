@@ -69,7 +69,7 @@ router.afterEach(async () => {
 const i18n = useI18n()
 const { t } = i18n
 const activeLanguage = computed(() => i18n.locale.value)
-const activeDir = computed(() => LOCALES[activeLanguage.value as LocaleCode].dir)
+const activeDir = computed(() => LOCALES[activeLanguage.value as LocaleCode]?.dir || 'ltr')
 const selectLocale = async (code: LocaleCode) => {
   await setLocale(code)
   setHeaderSeo()
