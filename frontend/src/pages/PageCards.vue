@@ -57,11 +57,11 @@
             </div>
           </div>
         </div>
-        <ul class="w-full text-sm my-5">
+        <ul class="w-full my-5">
           <li
             v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, viewed } in cardsStatusList"
             :key="cardHash"
-            class="flex border-b border-grey py-1 gap-1.5"
+            class="py-1 border-b border-grey"
           >
             <CardStatusComponent
               :status="status || undefined"

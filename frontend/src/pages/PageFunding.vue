@@ -254,7 +254,7 @@
       </div>
       <div
         v-if="funded"
-        class="flex gap-1.5 mt-24"
+        class="mt-24"
       >
         <CardStatus
           :status="cardStatus"
