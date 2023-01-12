@@ -1,19 +1,9 @@
 <template>
   <div class="mx-auto w-full max-w-md">
-    <div
-      v-if="backlink != null"
+    <BackLink
+      only-internal-referrer
       class="pt-4 px-4"
-    >
-      <LinkDefault
-        :href="backlink"
-        target="_self"
-        @click.prevent="backlinkAction"
-      >
-        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
-        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
-        -->{{ t('general.back') }}
-      </LinkDefault>
-    </div>
+    />
     <div
       class="my-10 mx-auto px-4 w-full max-w-md"
     >
@@ -247,6 +237,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import I18nT from '@/modules/I18nT'
+import BackLink from '@/components/BackLink.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -274,22 +265,6 @@ const amountInEur = computed(() => {
   }
   return (amount.value / (100 * 1000 * 1000)) * rateBtcEur.value
 })
-
-const backlink = computed(() => {
-  try {
-    return new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href ? document.referrer : null
-  } catch (error) {
-    return null
-  }
-})
-
-const backlinkAction = () => {
-  if (backlink.value != null) {
-    router.go(-1)
-  } else {
-    router.push('/')
-  }
-}
 
 const route = useRoute()
 const lnurl = String(route.query.lightning)

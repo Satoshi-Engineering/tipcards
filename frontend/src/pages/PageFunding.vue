@@ -1,17 +1,6 @@
 <template>
   <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
-    <div class="pt-4 px-4">
-      <LinkDefault
-        :href="(backlink != null) ? backlink : undefined"
-        :to="(backlink == null) ? { name: 'home' } : undefined"
-        target="_self"
-        @click.prevent="backlinkAction"
-      >
-        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
-        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
-        -->{{ t('general.back') }}
-      </LinkDefault>
-    </div>
+    <BackLink class="pt-4 px-4" />
     <div
       v-if="initializing"
       class="flex justify-center flex-1 mt-8 px-4"
@@ -290,6 +279,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import I18nT from '@/modules/I18nT'
+import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
@@ -329,22 +319,6 @@ const cardStatus = ref<string | undefined>()
 const cardFundedDate = ref<number | undefined>()
 const usedDate = ref<number | undefined>()
 const viewed = ref(false)
-
-const backlink = computed(() => {
-  try {
-    return new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href ? document.referrer : null
-  } catch (error) {
-    return null
-  }
-})
-
-const backlinkAction = () => {
-  if (backlink.value != null) {
-    router.go(-1)
-  } else {
-    router.push('/')
-  }
-}
 
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 

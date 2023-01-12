@@ -1,12 +1,6 @@
 <template>
   <div class="mb-1 print:hidden max-w-md w-full m-auto">
-    <div class="p-4">
-      <LinkDefault :to="{ name: 'home' }">
-        <i class="bi bi-caret-left-fill rtl:hidden" /><!--
-        --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
-        -->{{ t('general.back') }}
-      </LinkDefault>
-    </div>
+    <BackLink class="p-4" :to="{ name: 'home' }" />
     <div
       v-for="userWarning in userWarnings"
       :key="userWarning"
@@ -368,6 +362,7 @@ import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
+import BackLink from '@/components/BackLink.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
