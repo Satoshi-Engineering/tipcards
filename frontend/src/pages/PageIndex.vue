@@ -1,5 +1,5 @@
 <template>
-  <div class="grid place-items-center text-center min-h-screen">
+  <div class="grid justify-items-center text-center">
     <div class="max-w-3xl w-full px-4">
       <div class="mt-18 text-6xl">
         ⚡

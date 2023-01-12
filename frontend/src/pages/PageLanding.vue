@@ -1,7 +1,7 @@
 <template>
   <div class="mx-auto w-full max-w-md">
     <BackLink
-      only-internal-referrer
+      :only-internal-referrer="$route.name === 'landing'"
       class="pt-4 px-4"
     />
     <div

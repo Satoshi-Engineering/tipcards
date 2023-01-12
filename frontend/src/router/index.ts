@@ -36,7 +36,7 @@ const router = createRouter({
       path: '/cards/:setId?/:settings?',
       name: 'cards',
       component: PageCards,
-      meta: { title: () => false },
+      meta: { title: () => false }, // title will be set in the page component
     },
     {
       path: '/funding/:cardHash',
