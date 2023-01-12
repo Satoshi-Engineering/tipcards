@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col" :dir="activeLanguage === 'he' ? 'rtl' : 'ltr'">
+  <div class="min-h-screen flex flex-col" :dir="activeDir">
     <header
       v-if="isLoggedIn"
       class="p-4 text-right"
@@ -26,25 +26,18 @@
       </small>
       <small class="block text-gray-400" dir="ltr">
         Switch language:
-        <LinkDefault
-          :bold="activeLanguage === 'de'"
-          @click="() => selectLanguage('de')"
-        >DE</LinkDefault>
-        |
-        <LinkDefault
-          :bold="activeLanguage === 'en'"
-          @click="() => selectLanguage('en')"
-        >EN</LinkDefault>
-        |
-        <LinkDefault
-          :bold="activeLanguage === 'es'"
-          @click="() => selectLanguage('es')"
-        >ES</LinkDefault>
-        |
-        <LinkDefault
-          :bold="activeLanguage === 'he'"
-          @click="() => selectLanguage('he')"
-        >HE</LinkDefault>
+        <br>
+        <span
+          v-for="([ code, { name } ]) of Object.entries(LOCALES)"
+          :key="code"
+          class="group"
+        >
+          <LinkDefault
+            :bold="activeLanguage === code"
+            @click="() => selectLocale(code as LocaleCode)"
+          >{{ name }}</LinkDefault>
+          <span class="group-last:hidden"> | </span>
+        </span>
       </small>
     </footer>
   </div>
@@ -56,7 +49,8 @@ import { computed, nextTick } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import I18nT from './modules/I18nT'
+import { LOCALES, setLocale, type LocaleCode } from '@/modules/initI18n'
+import I18nT from '@/modules/I18nT'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import { useUserStore } from '@/stores/user'
@@ -75,8 +69,9 @@ router.afterEach(async () => {
 const i18n = useI18n()
 const { t } = i18n
 const activeLanguage = computed(() => i18n.locale.value)
-const selectLanguage = (lang: string) => {
-  i18n.locale.value = lang
+const activeDir = computed(() => LOCALES[activeLanguage.value as LocaleCode].dir)
+const selectLocale = async (code: LocaleCode) => {
+  await setLocale(code)
   setHeaderSeo()
   setDocumentTitle()
 }

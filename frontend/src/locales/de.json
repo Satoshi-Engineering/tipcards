@@ -1,0 +1,184 @@
+{
+  "general": {
+    "back": "Zurück",
+    "cards": "{count} Karte | {count} Karten"
+  },
+  "footer": {
+    "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}."
+  },
+  "landing": {
+    "title": "Hol dir deine Bitcoin",
+    "titlePreview": "Vorschau – Hol dir deine Bitcoin",
+    "introGreeting": "Hi!",
+    "introMessageReceiveBtc": {
+      "message": "Hier kannst du dir {amountAndUnit} holen*.",
+      "amountAndUnit": "{amount} Bitcoin",
+      "footnote": "* über Lightning"
+    },
+    "introMessageAlreadyUsed": {
+      "headline": "Dieser QR-Code wurde anscheinend bereits eingelöst.",
+      "message": "Aber keine Sorge: Du kannst dir Bitcoin auch an einer Crypto-Börse (z.B. {exchange}), einem Bitcoin-Automaten (z.B. {atm}) oder bei einem Bitcoin-Broker (z.B. {broker}) etc. kaufen."
+    },
+    "introMessageJustReceived": {
+      "headline": "Dein QR-Code wurde soeben eingelöst. {emoji}",
+      "message": "Mehr Bitcoin kannst du dir an einer Crypto-Börse (wie {exchange}), einem Bitcoin-Automaten (z.B. von {atm}) oder bei einem Bitcoin-Broker (beispielsweise {broker}) etc. kaufen."
+    },
+    "sectionBitcoin": {
+      "paragraphs": {
+        "0": "Bitcoin ist eine <strong>digitale Währung</strong>.",
+        "1": "Sie wird von allen Teilnehmer:innen des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.",
+        "2": "Überweisungen (auch internationale) sind so einfach wie das Scannen eines QR-Codes. Probier es einfach aus!"
+      }
+    },
+    "sectionWallet": {
+      "headline": "Installiere eine Wallet",
+      "explanation": "Um Bitcoin empfangen, speichern und ausgeben zu können, benötigst du eine <strong>Lightning-Wallet</strong>.<br>Für den alltäglichen Gebrauch und kleine Beträge ist eine Smartphone-App am bequemsten.",
+      "recommendation": "Zum Einstieg empfehlen wir die {walletOfSatoshi}.",
+      "button": "Wallet of Satoshi herunterladen",
+      "other": "Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.",
+      "otherFootnote": "* die mit Lightning und LNURL kompatibel ist"
+    },
+    "sectionReceive": {
+      "headline": "Hol dir deine Bitcoin",
+      "statusNormal": {
+        "explanation": "Sobald deine Wallet installiert ist,",
+        "step1": "<strong>drücke</strong> auf den QR-Code unten oder",
+        "step2": "<strong>scanne</strong> den QR-Code auf deiner Tip Card erneut<br>(mit deiner Wallet-App)"
+      },
+      "statusReceived": {
+        "congrats": "Gratulation!",
+        "message": "Die Bitcoin wurden soeben in deine Wallet übertragen."
+      }
+    },
+    "sectionUse": {
+      "headline": "Verwende deine Bitcoin",
+      "message": "Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst* sie einfach.",
+      "messageFootnote": "* hodln = halten, sparen",
+      "examplesIntro": "Hier sind ein paar Links auf Sites, auf denen du Bitcoin verwenden kannst:",
+      "examples": {
+        "saltNDaisy": "Kauf dir nachhaltiges Granola",
+        "satoshistore": "Shoppe stylishes Bitcoin-Outfit",
+        "aprycotMedia": "Bücher, Medien & mehr zum Thema Bitcoin",
+        "copiaro": "Hardware Wallets & HODL-Werkzeuge",
+        "lightningnetworkstores": "Finde heraus, was du online machen kannst",
+        "coinpages": "Such nach Geschäften, die Bitcoin akzeptieren"
+      },
+      "createYourOwnTipCardsHeadline": "Erstelle eigene Tip Cards ⚡",
+      "createYourOwnTipCardsText": "Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen Tip Cards.",
+      "createYourOwnTipCardsButton": "Meine eigenen Tip Cards erstellen"
+    },
+    "sectionMore": {
+      "headline": "Mehr über Bitcoin",
+      "text": "Es gibt viele Möglichkeiten, mehr über Bitcoin zu erfahren.",
+      "bconf": {
+        "text": "Die <strong>BTC23</strong> ist die größte Bitcoin-Konferenz im deutschsprachigen Raum und findet von 14. bis 17. September 2023 in Innsbruck (Österreich) statt. Mit dem Gutscheincode \"<b>tipcards</b>\" bekommst du 5% Rabatt auf dein Ticket.",
+        "linkLabel": "Hol dir hier dein Ticket für die BTC23",
+        "linkHref": "https://pretix.eu/btc/23/c/bPCDAshzq/"
+      }
+    }
+  },
+  "funding": {
+    "title": "Lade die Tip Card auf",
+    "headline": "Lade die Tip Card auf",
+    "headlineFunded": "Die Tip Card wurde aufgeladen",
+    "headlineUsed": "Die Tip Card wurde eingelöst",
+    "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht der Empfänger in seiner Wallet sehen soll.",
+    "textFunded": "Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.",
+    "textUsed": "Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.",
+    "amountAndUnit": "{amount} BTC",
+    "form": {
+      "textHint": "wird in der Wallet des Empfängers angezeigt werden",
+      "notePlaceholder": "Notizen / ausgegeben an",
+      "noteHint": "wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "button": "Jetzt aufladen"
+    },
+    "invoiceText": "Lade {amount} Sats auf deine Tip Card:",
+    "invoiceExpired": "Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.",
+    "resetInvoice": "Tip Card zurücksetzen",
+    "resetDisabledTooltip": "Diese Tip Card wurde bereits mit Sats aufgeladen.",
+    "lnurlp": {
+      "text": "Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf \"In der Wallet öffnen\" klicken und in der App den gewünschten Betrag eingeben."
+    },
+    "lnurlpExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Setze sie zurück um fortzufahren.",
+    "lnurlpFundedExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Schließe sie ab um fortzufahren.",
+    "shared": {
+      "text": "Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach \"Aufladen abschließen\".",
+      "textEmpty": "Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.",
+      "textPartiallyFunded": "Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.",
+      "buttonFinish": "Aufladen abschließen",
+      "finishDisabledTooltip": "Die Karte muss zuerst aufgeladen werden.",
+      "buttonMakeShared": "Tip Card gemeinsam aufladen"
+    }
+  },
+  "index": {
+    "buttonCreate": "Erstelle dein Tip Cards-Set",
+    "savedCardsSetsHeadline": "Gespeicherte Tip Cards-Sets",
+    "noSavedCardsSetsMessage": "In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert",
+    "unnamedSetNameFallback": "Unbenanntes Set",
+    "youtube": {
+      "create": {
+        "label": "Erstellen",
+        "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
+      },
+      "use": {
+        "label": "Verwenden",
+        "link": "https://www.youtube.com/watch?v=26dj0580HYc"
+      }
+    }
+  },
+  "cards": {
+    "title": "Tip Cards-Set",
+    "status": {
+      "headline": "Status",
+      "noCards": "Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.",
+      "labelUsed": "Eingelöst",
+      "labelFunded": "Aufgeladen",
+      "labelPendingFunding": "Wird aufgeladen",
+      "labelPendingSharedFunding": "Wird gemeinsam aufgeladen",
+      "labelNote": "Notiz",
+      "labelViewed": "Wurde angesehen",
+      "reload": "Aktualisieren"
+    },
+    "settings": {
+      "headline": "Konfiguration",
+      "numberOfCards": "Anzahl",
+      "cardHeadline": "Karten-Überschrift",
+      "cardText": "Karten-Text",
+      "cardQrCodeLogoLabel": "Logo auf den QR-Codes",
+      "cardQrCodeLogo": {
+        "noLogo": "Kein Logo"
+      },
+      "setName": "Set-Name"
+    },
+    "buttonSaveCardsSet": "Set speichern",
+    "buttonDeleteCardsSet": "Set löschen",
+    "buttonPrint": "Tip Cards drucken",
+    "buttonDownloadPngs": "PNGs downloaden",
+    "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
+    "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
+    "filterLabel": "Karten filtern:",
+    "filter": {
+      "all": "Alle",
+      "unfunded": "Nicht aufgeladen",
+      "funded": "Aufgeladen",
+      "used": "Eingelöst"
+    }
+  },
+  "lightningQrCode": {
+    "buttonOpenInWallet": "In der Wallet öffnen",
+    "copyToClipboard": {
+      "lnurl": {
+        "beforeCopy": "Du kannst {action} um sie in deiner Wallet einzufügen.",
+        "beforeCopyAction": "die LNURL auch kopieren,",
+        "afterCopySuccess": "Erfolgreich kopiert.",
+        "afterCopyNextStep": "Füge sie jetzt<br>in deiner Wallet-App ein :)"
+      },
+      "invoice": {
+        "beforeCopy": "Du kannst {action} um sie in deiner Wallet einzufügen.",
+        "beforeCopyAction": "die Rechnung auch kopieren,",
+        "afterCopySuccess": "Erfolgreich kopiert.",
+        "afterCopyNextStep": "Füge sie jetzt<br>in deiner Wallet-App ein :)"
+      }
+    }
+  }
+}

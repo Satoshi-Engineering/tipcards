@@ -1,0 +1,175 @@
+{
+  "general": {
+    "back": "Back",
+    "cards": "{count} card | {count} cards"
+  },
+  "footer": {
+    "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}."
+  },
+  "landing": {
+    "title": "Get your bitcoin",
+    "titlePreview": "Preview – Get your bitcoin",
+    "introGreeting": "Hey!",
+    "introMessageReceiveBtc": {
+      "message": "You are just about to receive {amountAndUnit}",
+      "amountAndUnit": "{amount} bitcoin*",
+      "footnote": "* via Lightning"
+    },
+    "introMessageAlreadyUsed": {
+      "headline": "It seems that this QR code has already been used.",
+      "message": "But don't worry: You can get your own bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
+    },
+    "introMessageJustReceived": {
+      "headline": "Your QR code has just been used. {emoji}",
+      "message": "You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
+    },
+    "sectionBitcoin": {
+      "paragraphs": {
+        "0": "Bitcoin is a <strong>digital currency</strong>.",
+        "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",
+        "2": "Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!"
+      }
+    },
+    "sectionWallet": {
+      "headline": "Download a wallet",
+      "explanation": "To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.<br>For every-day use and small amounts, a smartphone app is most convenient.",
+      "recommendation": "For starters we recommend {walletOfSatoshi}.",
+      "button": "Download Wallet of Satoshi",
+      "other": "You can also try {wallet0}, {wallet1}, {wallet2} or any other Lightning wallet*.",
+      "otherFootnote": "* that understands Lightning and LNURL"
+    },
+    "sectionReceive": {
+      "headline": "Receive your bitcoin",
+      "statusNormal": {
+        "explanation": "As soon as your wallet is installed,",
+        "step1": "<strong>tap</strong> the QR code below, or",
+        "step2": "<strong>scan</strong> the QR code on your tip card again<br>(using your wallet app)"
+      },
+      "statusReceived": {
+        "congrats": "Congrats!",
+        "message": "The bitcoin were just transferred to your wallet."
+      }
+    },
+    "sectionUse": {
+      "headline": "Use your bitcoin",
+      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl* them.",
+      "messageFootnote": "* to hodl = to hold, to save up",
+      "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
+      "examples": {
+        "saltNDaisy": "Buy some sustainable granola",
+        "satoshistore": "Shop Bitcoin Outfits",
+        "aprycotMedia": "Bitcoin books, media and more",
+        "copiaro": "Hardware Wallets & HODL tools",
+        "lightningnetworkstores": "Find out what else you could do online",
+        "coinpages": "Find stores that accept bitcoin"
+      },
+      "createYourOwnTipCardsHeadline": "Create your own Tip Cards",
+      "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.",
+      "createYourOwnTipCardsButton": "Create my own Tip Cards"
+    }
+  },
+  "funding": {
+    "title": "Fund your Tip Card",
+    "headline": "Fund this Tip Card",
+    "headlineFunded": "Tip Card has been funded",
+    "headlineUsed": "Tip Card successfully redeemed",
+    "text": "This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.",
+    "textFunded": "This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.",
+    "textUsed": "This card was funded with {amountAndUnit} and has been redeemed.",
+    "amountAndUnit": "{amount} BTC",
+    "form": {
+      "textHint": "will be displayed in the recipient's wallet",
+      "notePlaceholder": "Notes / handed out to",
+      "noteHint": "will be displayed on the status section of your Tip Cards set",
+      "button": "Load card"
+    },
+    "invoiceText": "Fund your Tip Card with {amount} sats:",
+    "invoiceExpired": "The lightning invoice for this card has expired. Please reset the Tip Card to continue.",
+    "resetInvoice": "Reset Tip Card",
+    "resetDisabledTooltip": "This card is already funded with sats.",
+    "lnurlp": {
+      "text": "Scan the QR code with your wallet app or click \"Open in wallet\" to fund the card. You can enter the desired amount in the wallet app."
+    },
+    "lnurlpExpired": "Unfortunately the payment link for this Tip Card expired. Reset the card to continue.",
+    "lnurlpFundedExpired": "Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.",
+    "shared": {
+      "text": "Scan and pay the QR Code as many times as you want and \"Complete Funding\" as soon as you're done.",
+      "textEmpty": "This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.",
+      "textPartiallyFunded": "This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.",
+      "buttonFinish": "Complete Funding",
+      "finishDisabledTooltip": "You need to fund this card first.",
+      "buttonMakeShared": "Activate shared funding on this Tip Card"
+    }
+  },
+  "index": {
+    "buttonCreate": "Create your Tip Cards set ⚡",
+    "savedCardsSetsHeadline": "Saved Tip Cards sets",
+    "noSavedCardsSetsMessage": "No saved Tip Cards sets found in this browser",
+    "unnamedSetNameFallback": "Unnamed set",
+    "youtube": {
+      "create": {
+        "label": "Create",
+        "link": "https://youtu.be/R6p7fUKu4MY"
+      },
+      "use": {
+        "label": "Use",
+        "link": "https://youtu.be/bFeEPbupdx8"
+      }
+    }
+  },
+  "cards": {
+    "title": "Tip Cards Set",
+    "status": {
+      "headline": "Status",
+      "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.",
+      "labelUsed": "Redeemed",
+      "labelFunded": "Funded",
+      "labelPendingFunding": "Funding in progress",
+      "labelPendingSharedFunding": "Shared funding in progress",
+      "labelNote": "Note",
+      "labelViewed": "Viewed by recipient",
+      "reload": "Reload"
+    },
+    "settings": {
+      "headline": "Configuration",
+      "numberOfCards": "Number of cards",
+      "cardHeadline": "Card headline",
+      "cardText": "Card text",
+      "cardQrCodeLogoLabel": "Logo on QR codes",
+      "cardQrCodeLogo": {
+        "noLogo": "No logo"
+      },
+      "setName": "Set name"
+    },
+    "buttonSaveCardsSet": "Save Tip Cards set",
+    "buttonDeleteCardsSet": "Delete saved set",
+    "buttonPrint": "Print Tip Cards",
+    "buttonDownloadPngs": "Download PNGs",
+    "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
+    "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?",
+    "filterLabel": "Display cards:",
+    "filter": {
+      "all": "All",
+      "unfunded": "Unfunded",
+      "funded": "Funded",
+      "used": "Redeemed"
+    }
+  },
+  "lightningQrCode": {
+    "buttonOpenInWallet": "Open in wallet",
+    "copyToClipboard": {
+      "lnurl": {
+        "beforeCopy": "You can also {action} to paste it into your wallet app.",
+        "beforeCopyAction": "copy the LNURL to your clipboard",
+        "afterCopySuccess": "Copied successfully.",
+        "afterCopyNextStep": "Paste it into<br>your wallet app now :)"
+      },
+      "invoice": {
+        "beforeCopy": "You can also {action} to paste it into your wallet app.",
+        "beforeCopyAction": "copy the invoice to your clipboard",
+        "afterCopySuccess": "Copied successfully.",
+        "afterCopyNextStep": "Paste it into<br>your wallet app now :)"
+      }
+    }
+  }
+}
