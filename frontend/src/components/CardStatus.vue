@@ -52,7 +52,7 @@
         {{ t('cards.status.labelNote') }}: <strong class="font-medium">{{ note }}</strong>
       </div>
       <div
-        v-if="viewed"
+        v-if="viewed && status !== 'used'"
       >
         {{ t('cards.status.labelViewed') }} 👀
       </div>
