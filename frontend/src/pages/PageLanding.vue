@@ -137,7 +137,7 @@
         </HeadlineDefault>
         <ParagraphDefault v-if="!spent">
           {{ t('landing.sectionReceive.statusNormal.explanation') }}
-          <ul class="list-disc pl-6">
+          <ul class="list-disc ltr:pl-6 rtl:pr-6">
             <!-- eslint-disable vue/no-v-html -->
             <li class="my-1" v-html="sanitizeI18n(t('landing.sectionReceive.statusNormal.step1'))" />
             <li class="my-1" v-html="sanitizeI18n(t('landing.sectionReceive.statusNormal.step2'))" />
@@ -168,7 +168,7 @@
         <ParagraphDefault>
           {{ t('landing.sectionUse.examplesIntro') }}
         </ParagraphDefault>
-        <ul class="list-disc pl-6">
+        <ul class="list-disc ltr:pl-6 rtl:pr-6">
           <li class="my-1">
             {{ t('landing.sectionUse.examples.saltNDaisy') }}:<br>
             <LinkDefault href="https://saltndaisy.at/">saltndaisy.at</LinkDefault>
