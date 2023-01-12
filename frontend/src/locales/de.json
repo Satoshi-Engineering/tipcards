@@ -97,12 +97,12 @@
     "resetInvoice": "Tip Card zurücksetzen",
     "resetDisabledTooltip": "Diese Tip Card wurde bereits mit Sats aufgeladen.",
     "lnurlp": {
-      "text": "Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf \"In der Wallet öffnen\" klicken und in der App den gewünschten Betrag eingeben."
+      "text": "Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf {buttonOpenInWallet} klicken und in der App den gewünschten Betrag eingeben."
     },
     "lnurlpExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Setze sie zurück um fortzufahren.",
     "lnurlpFundedExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Schließe sie ab um fortzufahren.",
     "shared": {
-      "text": "Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach \"Aufladen abschließen\".",
+      "text": "Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach {buttonFinish}.",
       "textEmpty": "Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.",
       "textPartiallyFunded": "Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.",
       "buttonFinish": "Aufladen abschließen",

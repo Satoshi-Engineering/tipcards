@@ -88,12 +88,12 @@
     "resetInvoice": "Reset Tip Card",
     "resetDisabledTooltip": "This card is already funded with sats.",
     "lnurlp": {
-      "text": "Scan the QR code with your wallet app or click \"Open in wallet\" to fund the card. You can enter the desired amount in the wallet app."
+      "text": "Scan the QR code with your wallet app or click {buttonOpenInWallet} to fund the card. You can enter the desired amount in the wallet app."
     },
     "lnurlpExpired": "Unfortunately the payment link for this Tip Card expired. Reset the card to continue.",
     "lnurlpFundedExpired": "Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.",
     "shared": {
-      "text": "Scan and pay the QR Code as many times as you want and \"Complete Funding\" as soon as you're done.",
+      "text": "Scan and pay the QR Code as many times as you want and {buttonFinish} as soon as you're done.",
       "textEmpty": "This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.",
       "textPartiallyFunded": "This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.",
       "buttonFinish": "Complete Funding",

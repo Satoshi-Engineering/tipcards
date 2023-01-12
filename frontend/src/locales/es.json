@@ -88,12 +88,12 @@
     "resetInvoice": "Reset Tip Card",
     "resetDisabledTooltip": "This card is already funded with sats.",
     "lnurlp": {
-      "text": "Scan the QR code with your wallet app or click \"Open in wallet\" to fund the card. You can enter the desired amount in the wallet app."
+      "text": "Scan the QR code with your wallet app or click {buttonOpenInWallet} to fund the card. You can enter the desired amount in the wallet app."
     },
     "lnurlpExpired": "Unfortunately the payment link for this Tip Card expired. Reset the card to continue.",
     "lnurlpFundedExpired": "Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.",
     "shared": {
-      "text": "Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en \"Finalizar carga\"",
+      "text": "Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en {buttonFinish}",
       "textEmpty": "En el momento no hay Sats en la tarjeta. En cuanto la tarjeta esté cargada por lo menos una vez se puede finalizar la carga.",
       "textPartiallyFunded": "La tarjeta fue cargada con {amountAndUnit}. En cuanto finalices la carga es posible recoger los Bitcoin.",
       "buttonFinish": "Finalizar carga",
