@@ -217,7 +217,7 @@
       </p>
     </div>
   </div>
-  <div v-if="cards.length > 0">
+  <div v-if="cards.length > 0" dir="ltr">
     <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
       <div class="w-[210mm] mx-auto p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
         <div>
@@ -238,7 +238,7 @@
         <div
           v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
           :key="card.url"
-          class="relative break-inside-avoid w-[90mm] h-[55mm] ltr:float-left rtl:float-right group"
+          class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
         >
           <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
           <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
@@ -254,7 +254,7 @@
           >
             <a :href="card.urlPreview">
               <div
-                class="absolute ltr:left-3 rtl:right-3 top-7 bottom-7 w-auto h-auto aspect-square"
+                class="absolute top-7 bottom-7 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
               >
                 <svg
@@ -286,7 +286,7 @@
               </div>
             </a>
             <div
-              class="absolute ltr:left-1/2 rtl:right-1/2 ltr:ml-2 rtl:mr-2 ltr:mr-4 rtl:ml-4 top-0 bottom-2 flex items-center"
+              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center rtl:direction-rtl"
               :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
             >
               <div>
@@ -310,13 +310,13 @@
           </div>
           <div
             v-if="card.status === 'error'"
-            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
           >
             <span class="m-auto">Error</span>
           </div>
           <div
             v-else-if="card.amount != null && card.status === 'funded'"
-            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>
@@ -705,5 +705,8 @@ const cardsStatusList = computed(
       margin: 0;
       background: #ffffff;
     }
+  }
+  [dir="rtl"] .rtl\:direction-rtl {
+    direction: rtl;
   }
 </style>
