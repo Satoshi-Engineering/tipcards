@@ -102,11 +102,11 @@
     "unnamedSetNameFallback": "ללא שם",
     "youtube": {
       "create": {
-        "label": "Create",
+        "label": "יצירה",
         "link": "https://youtu.be/R6p7fUKu4MY"
       },
       "use": {
-        "label": "Use",
+        "label": "שימוש",
         "link": "https://youtu.be/bFeEPbupdx8"
       }
     }
