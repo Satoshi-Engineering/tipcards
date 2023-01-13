@@ -1,4 +1,4 @@
-import { nextTick } from 'vue'
+import { nextTick, computed } from 'vue'
 import { createI18n } from 'vue-i18n'
 
 export const LOCALES = {
@@ -35,6 +35,16 @@ const getPreferredLocale = () => {
     if (Object.keys(LOCALES).includes(langShort)) {
       return langShort as LocaleCode
     }
+  }
+}
+
+export const useI18nHelpers = () => {
+  const currentLocale = computed(() => i18n.global.locale.value as LocaleCode)
+  const currentTextDirection = computed<'ltr' | 'rtl'>(() => LOCALES[currentLocale.value]?.dir === 'rtl' ? 'rtl' : 'ltr')
+
+  return {
+    currentLocale,
+    currentTextDirection,
   }
 }
 

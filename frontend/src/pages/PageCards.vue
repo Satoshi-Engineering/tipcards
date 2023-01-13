@@ -286,8 +286,9 @@
               </div>
             </a>
             <div
-              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center rtl:direction-rtl"
+              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
               :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
+              :dir="currentTextDirection"
             >
               <div>
                 <HeadlineDefault
@@ -322,13 +323,13 @@
           </div>
           <div
             v-else-if="card.amount != null && card.status === 'used'"
-            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>
           <div
             v-else-if="(card.status === 'invoice' || card.status === 'lnurlp')"
-            class="absolute flex ltr:right-0.5 rtl:left-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
             <span
               v-if="card.status === 'lnurlp' && card.shared"
@@ -362,6 +363,7 @@ import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
+import { useI18nHelpers } from '@/modules/initI18n'
 import BackLink from '@/components/BackLink.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
@@ -386,6 +388,7 @@ import { useSeoHelpers } from '@/modules/seoHelpers'
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
+const { currentTextDirection } = useI18nHelpers()
 const { setDocumentTitle } = useSeoHelpers()
 const {
   savedCardsSets,
@@ -705,8 +708,5 @@ const cardsStatusList = computed(
       margin: 0;
       background: #ffffff;
     }
-  }
-  [dir="rtl"] .rtl\:direction-rtl {
-    direction: rtl;
   }
 </style>

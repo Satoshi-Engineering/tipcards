@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col" :dir="activeDir">
+  <div class="min-h-screen flex flex-col" :dir="currentTextDirection">
     <header
       v-if="isLoggedIn"
       class="p-4 text-right"
@@ -28,12 +28,12 @@
         Switch language:
         <br>
         <span
-          v-for="([ code, { name } ]) of Object.entries(LOCALES)"
+          v-for="([code, { name }]) of Object.entries(LOCALES)"
           :key="code"
           class="group"
         >
           <LinkDefault
-            :bold="activeLanguage === code"
+            :bold="currentLocale === code"
             @click="() => selectLocale(code as LocaleCode)"
           >{{ name }}</LinkDefault>
           <span class="group-last:hidden"> | </span>
@@ -45,11 +45,11 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import { LOCALES, setLocale, type LocaleCode } from '@/modules/initI18n'
+import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
 import I18nT from '@/modules/I18nT'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
@@ -66,10 +66,8 @@ router.afterEach(async () => {
   setDocumentTitle()
 })
 
-const i18n = useI18n()
-const { t } = i18n
-const activeLanguage = computed(() => i18n.locale.value)
-const activeDir = computed(() => LOCALES[activeLanguage.value as LocaleCode]?.dir || 'ltr')
+const { t } = useI18n()
+const { currentLocale, currentTextDirection } = useI18nHelpers()
 const selectLocale = async (code: LocaleCode) => {
   await setLocale(code)
   setHeaderSeo()
