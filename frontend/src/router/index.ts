@@ -7,6 +7,8 @@ const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
+const PageAbout = () => import('@/pages/PageAbout.vue')
+const PageTerms = () => import('@/pages/PageTerms.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,6 +45,18 @@ const router = createRouter({
       name: 'funding',
       component: PageFunding,
       meta: { title: () => i18n.global.t('funding.title') },
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: PageAbout,
+      meta: { title: () => 'About' },
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      component: PageTerms,
+      meta: { title: () => 'Terms of service' },
     },
     {
       path: '/auth',
