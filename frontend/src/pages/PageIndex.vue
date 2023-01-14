@@ -61,7 +61,7 @@
                 </span>
                 <span
                   v-else
-                  class="underline group-hover:no-underline italic text-grey-dark"
+                  class="underline group-hover:no-underline italic text-grey"
                 >
                   {{ t('index.unnamedSetNameFallback') }}
                 </span>

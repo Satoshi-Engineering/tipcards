@@ -9,9 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'grey': '#a5a5a5',
-        'grey-light': '#f1f1f1',
-        'grey-dark': '#777777',
+        'grey': colors.gray[500],
+        'grey-light': colors.gray[200],
+        'grey-dark': colors.gray[600],
         'black': '#000',
         'white': '#fff',
         'btcorange': colors.orange[400],

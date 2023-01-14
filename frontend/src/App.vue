@@ -13,32 +13,33 @@
       </ButtonDefault>
     </header>
     <RouterView />
-    <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md print:hidden">
-      <small
+    <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md text-xs text-grey print:hidden">
+      <div
         v-if="SUPPORT_EMAIL != null"
-        class="block text-gray-400"
+        class="my-4"
       >
         <I18nT keypath="footer.support">
           <template #email>
             <LinkDefault :href="`mailto:${SUPPORT_EMAIL}?subject=Lightning%20Tip%20Cards%20Feedback`">{{ SUPPORT_EMAIL }}</LinkDefault>
           </template>
         </I18nT>
-      </small>
-      <small class="block text-gray-400" dir="ltr">
-        Switch language:
-        <br>
-        <span
-          v-for="([code, { name }]) of Object.entries(LOCALES)"
-          :key="code"
-          class="group"
-        >
-          <LinkDefault
-            :bold="currentLocale === code"
-            @click="() => selectLocale(code as LocaleCode)"
-          >{{ name }}</LinkDefault>
-          <span class="group-last:hidden"> | </span>
-        </span>
-      </small>
+      </div>
+      <div class="mt-4 flex flex-wrap gap-x-1" dir="ltr">
+        <div>Switch language:</div>
+        <div>
+          <span
+            v-for="([code, { name }]) of Object.entries(LOCALES)"
+            :key="code"
+            class="group"
+          >
+            <LinkDefault
+              :bold="currentLocale === code"
+              @click="() => selectLocale(code as LocaleCode)"
+            >{{ name }}</LinkDefault>
+            <span class="group-last:hidden"> | </span>
+          </span>
+        </div>
+      </div>
     </footer>
   </div>
 </template>
