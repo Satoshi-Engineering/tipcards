@@ -15,7 +15,7 @@
           </HeadlineDefault>
           <button
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            class="text-grey bg-transparent hover:bg-grey-light hover:text-grey-dark rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             @click="$emit('close')"
           >
             <svg

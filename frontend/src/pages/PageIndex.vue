@@ -20,7 +20,7 @@
         <div class="flex">
           <div
             v-if="savedCardsSets.length < 1"
-            class="mx-auto text-sm text-gray-400"
+            class="mx-auto text-sm text-grey"
           >
             {{ t('index.noSavedCardsSetsMessage') }}
           </div>
