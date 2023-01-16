@@ -201,15 +201,15 @@
           <HeadlineDefault level="h3" class="mt-7">
             {{ t('landing.sectionMore.headline') }}
           </HeadlineDefault>
-          <ParagraphDefault>
+          <ParagraphDefault v-if="te('landing.sectionMore.text')">
             {{ t('landing.sectionMore.text') }}
           </ParagraphDefault>
           <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
-          <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionMore.bconf.text'))" />
+          <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionMore.0.text'))" />
           <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
           <ParagraphDefault>
-            <LinkDefault :href="t('landing.sectionMore.bconf.linkHref')">
-              {{ t('landing.sectionMore.bconf.linkLabel') }}
+            <LinkDefault :href="t('landing.sectionMore.0.linkHref')">
+              {{ t('landing.sectionMore.0.linkLabel') }}
             </LinkDefault>
           </ParagraphDefault>
         </div>
