@@ -201,17 +201,35 @@
           <HeadlineDefault level="h3" class="mt-7">
             {{ t('landing.sectionMore.headline') }}
           </HeadlineDefault>
-          <ParagraphDefault v-if="te('landing.sectionMore.text')">
+          <ParagraphDefault
+            v-if="te('landing.sectionMore.text')"
+            class="mb-6"
+          >
             {{ t('landing.sectionMore.text') }}
           </ParagraphDefault>
-          <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
-          <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionMore.0.text'))" />
-          <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
-          <ParagraphDefault>
-            <LinkDefault :href="t('landing.sectionMore.0.linkHref')">
-              {{ t('landing.sectionMore.0.linkLabel') }}
-            </LinkDefault>
-          </ParagraphDefault>
+          <div>
+            <template
+              v-for="index of [...Array(10).keys()]"
+              :key="index"
+            >
+              <div
+                v-if="te(`landing.sectionMore.${index}.text`) || te(`landing.sectionMore.${index}.linkHref`)"
+                class="my-8 first:mt-0 last:mb-0"
+              >
+                <!--eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
+                <ParagraphDefault
+                  v-if="te(`landing.sectionMore.${index}.text`)"
+                  v-html="sanitizeI18n(t(`landing.sectionMore.${index}.text`))"
+                />
+                <!--eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
+                <ParagraphDefault v-if="te(`landing.sectionMore.${index}.linkHref`)">
+                  <LinkDefault :href="t(`landing.sectionMore.${index}.linkHref`)">
+                    {{ t(`landing.sectionMore.${index}.linkLabel`) }}
+                  </LinkDefault>
+                </ParagraphDefault>
+              </div>
+            </template>
+          </div>
         </div>
         <HeadlineDefault level="h3" class="mt-7">
           {{ t('landing.sectionUse.createYourOwnTipCardsHeadline') }}

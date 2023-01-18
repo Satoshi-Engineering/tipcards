@@ -71,6 +71,11 @@
       "headline": "Mehr über Bitcoin",
       "text": "Es gibt viele Möglichkeiten, mehr über Bitcoin zu erfahren.",
       "0": {
+        "text": "<strong>Bitcoin verstehen</strong> ist <em>der</em> deutschsprachige Podcast für Bitcoin-Einsteiger:innen und neugierige Fortgeschrittene.",
+        "linkLabel": "Bitcoin verstehen",
+        "linkHref": "https://bitcoinverstehen.info/"
+      },
+      "1": {
         "text": "Die <strong>BTC23</strong> ist die größte Bitcoin-Konferenz im deutschsprachigen Raum und findet von 14. bis 17. September 2023 in Innsbruck (Österreich) statt. Mit dem Gutscheincode \"<b>tipcards</b>\" bekommst du 5% Rabatt auf dein Ticket.",
         "linkLabel": "Hol dir hier dein Ticket für die BTC23",
         "linkHref": "https://pretix.eu/btc/23/c/bPCDAshzq/"
