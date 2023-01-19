@@ -54,8 +54,21 @@
 
       .front-sate {
           position: absolute;
-          padding-top: 380px;
+          padding-top: 180px;
           width: 276px;
+      }
+
+
+      .front-sate > img {
+          width: 276px;
+      }
+
+      .rotate180 {
+          -webkit-transform:rotate(180deg);
+          -moz-transform: rotate(180deg);
+          -ms-transform: rotate(180deg);
+          -o-transform: rotate(180deg);
+          transform: rotate(180deg);
       }
 
       .text-top {
@@ -118,6 +131,7 @@
       }
 
       .minimized-code p {
+          color: #F0F0F0;
           transform: rotate(-90deg);
       }
   </style>
@@ -153,7 +167,10 @@
   <div class="bolt"> ⚡ </div>
   <div class="title">Lightning Tip Cards Set</div>
   <div class="subtitle">by Satoshi Engineering</div>
-  <img src="res/sate_logo_full.png" class="front-sate">
+    <div class="front-sate">
+        <img src="res/sate_logo_full.png" class="rotate180">
+    </div>
+
 </section>
 
 <section class="sheet padding-10mm sheet-centering">
