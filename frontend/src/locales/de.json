@@ -3,6 +3,12 @@
     "back": "Zurück",
     "cards": "{count} Karte | {count} Karten"
   },
+  "nav": {
+    "index": "Home",
+    "cards": "Erstellen",
+    "preview": "Landing page",
+    "about": "Über"
+  },
   "footer": {
     "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}."
   },
@@ -14,6 +20,10 @@
       "message": "Hier kannst du dir {amountAndUnit} holen*.",
       "amountAndUnit": "{amount} Bitcoin",
       "footnote": "* über Lightning"
+    },
+    "introMessagePreview": {
+      "headline": "Scanne eine Lightning Tip Card um dir Bitcoin zu holen.",
+      "message": "Du kannst dir Bitcoin auch an einer Crypto-Börse (z.B. {exchange}), einem Bitcoin-Automaten (z.B. {atm}) oder bei einem Bitcoin-Broker (z.B. {broker}) etc. kaufen."
     },
     "introMessageAlreadyUsed": {
       "headline": "Dieser QR-Code wurde anscheinend bereits eingelöst.",

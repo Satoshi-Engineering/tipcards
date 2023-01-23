@@ -32,6 +32,24 @@
           {{ t('landing.introMessageReceiveBtc.footnote') }}
         </ParagraphDefault>
       </div>
+      <div v-if="showContent === 'preview'">
+        <HeadlineDefault level="h2" styling="h1">
+          {{ t('landing.introMessagePreview.headline') }}
+        </HeadlineDefault>
+        <ParagraphDefault>
+          <I18nT keypath="landing.introMessagePreview.message">
+            <template #exchange>
+              <LinkDefault href="https://kraken.com/">Kraken</LinkDefault>
+            </template>
+            <template #atm>
+              <LinkDefault href="https://kurant.net/">Kurant</LinkDefault>
+            </template>
+            <template #broker>
+              <LinkDefault href="https://coinfinity.co/">Coinfinity</LinkDefault>
+            </template>
+          </I18nT>
+        </ParagraphDefault>
+      </div>
       <div v-if="showContent === 'used'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessageAlreadyUsed.headline') }}
@@ -89,7 +107,7 @@
       </div>
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="showContent !== 'used'">1. </span>{{ t('landing.sectionWallet.headline') }}
+          <span v-if="showContent !== 'used' && showContent !== 'preview'">1. </span>{{ t('landing.sectionWallet.headline') }}
         </HeadlineDefault>
         <!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionWallet.explanation'))" />
@@ -131,7 +149,7 @@
           <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
         </ParagraphDefault>
       </div>
-      <div v-if="showContent !== 'used'" class="my-10">
+      <div v-if="showContent !== 'used' && showContent !== 'preview'" class="my-10">
         <HeadlineDefault level="h2">
           2. {{ t('landing.sectionReceive.headline') }}
         </HeadlineDefault>
@@ -157,7 +175,7 @@
       </div>
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="showContent !== 'used'">3. </span>{{ t('landing.sectionUse.headline') }}
+          <span v-if="showContent !== 'used' && showContent !== 'preview'">3. </span>{{ t('landing.sectionUse.headline') }}
         </HeadlineDefault>
         <ParagraphDefault>
           {{ t('landing.sectionUse.message') }}
@@ -300,7 +318,9 @@ const cardHash = computed<string | null | undefined>(() => {
 
 const loadLnurlData = async () => {
   if (cardHash.value == null) {
-    router.push({ name: 'home' })
+    if (route.name !== 'preview') {
+      router.push({ name: 'home' })
+    }
     return
   }
   const cardStatus = await loadCardStatus(cardHash.value, String(route.name))
@@ -338,7 +358,11 @@ const loadLnurlData = async () => {
   setTimeout(loadLnurlData, 10 * 1000)
 }
 
-const showContent = computed<'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+const showContent = computed<'preview' | 'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+  if (cardHash.value == null) {
+    return 'preview'
+  }
+  
   if (withdrawPending.value) {
     return 'spendable'
   }

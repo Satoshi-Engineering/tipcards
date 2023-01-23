@@ -3,6 +3,12 @@
     "back": "Back",
     "cards": "{count} card | {count} cards"
   },
+  "nav": {
+    "index": "Home",
+    "cards": "Create",
+    "preview": "Landing page",
+    "about": "About"
+  },
   "footer": {
     "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}."
   },
@@ -14,6 +20,10 @@
       "message": "You are just about to receive {amountAndUnit}",
       "amountAndUnit": "{amount} bitcoin*",
       "footnote": "* via Lightning"
+    },
+    "introMessagePreview": {
+      "headline": "Scan a Lightning Tip Card to receive some bitcoin.",
+      "message": "You can also get bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "introMessageAlreadyUsed": {
       "headline": "It seems that this QR code has already been used.",

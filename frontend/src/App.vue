@@ -24,6 +24,30 @@
           </template>
         </I18nT>
       </div>
+      <nav class="my-4">
+        <ul class="flex text-xs text-grey-dark gap-x-2">
+          <li>
+            <LinkDefault :to="{ name: 'home' }" :bold="false">
+              {{ t('nav.index') }}
+            </LinkDefault>
+          </li>
+          <li>
+            <LinkDefault :to="{ name: 'cards' }" :bold="false">
+              {{ t('nav.cards') }}
+            </LinkDefault>
+          </li>
+          <li>
+            <LinkDefault :to="{ name: 'preview' }" :bold="false">
+              {{ t('nav.preview') }}
+            </LinkDefault>
+          </li>
+          <li>
+            <LinkDefault :to="{ name: 'about' }" :bold="false">
+              {{ t('nav.about') }}
+            </LinkDefault>
+          </li>
+        </ul>
+      </nav>
       <div class="mt-4 flex flex-wrap gap-x-1" dir="ltr">
         <div>Switch language:</div>
         <div>
