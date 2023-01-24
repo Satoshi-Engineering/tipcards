@@ -27,7 +27,7 @@
       <nav class="my-4">
         <ul class="flex text-xs text-grey-dark gap-x-2">
           <li
-            v-for="{ routeName, label }, index of navLinks"
+            v-for="{ routeName, labelKey }, index of navLinks"
             :key="index"
           >
             <LinkDefault
@@ -35,7 +35,7 @@
               :bold="false"
               active-class="font-bold"
             >
-              {{ label }}
+              {{ t(labelKey) }}
             </LinkDefault>
           </li>
         </ul>
@@ -92,10 +92,10 @@ const selectLocale = async (code: LocaleCode) => {
 }
 
 const navLinks = [
-  { routeName: 'home', label: t('nav.index') },
-  { routeName: 'cards', label: t('nav.cards') },
-  { routeName: 'preview', label: t('nav.preview') },
-  { routeName: 'about', label: t('nav.about') },
+  { routeName: 'home', labelKey: 'nav.index' },
+  { routeName: 'cards', labelKey: 'nav.cards' },
+  { routeName: 'preview', labelKey: 'nav.preview' },
+  { routeName: 'about', labelKey: 'nav.about' },
 ]
 
 const userStore = useUserStore()
