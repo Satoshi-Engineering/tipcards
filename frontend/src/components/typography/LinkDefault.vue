@@ -7,6 +7,7 @@
       'opacity-50 pointer-events-none cursor-default': disabled,
     }"
     :to="to"
+    :active-class="activeClass"
     :target="targetComputed"
     :disabled="disabled"
   >
@@ -55,6 +56,11 @@ const props = defineProps({
   },
   to: {
     type: [String, Object] as PropType<RouteLocationRaw>,
+    default: undefined,
+  },
+  activeClass: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    type: String,
     default: undefined,
   },
   bold: {

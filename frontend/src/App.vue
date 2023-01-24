@@ -26,24 +26,16 @@
       </div>
       <nav class="my-4">
         <ul class="flex text-xs text-grey-dark gap-x-2">
-          <li>
-            <LinkDefault :to="{ name: 'home' }" :bold="false">
-              {{ t('nav.index') }}
-            </LinkDefault>
-          </li>
-          <li>
-            <LinkDefault :to="{ name: 'cards' }" :bold="false">
-              {{ t('nav.cards') }}
-            </LinkDefault>
-          </li>
-          <li>
-            <LinkDefault :to="{ name: 'preview' }" :bold="false">
-              {{ t('nav.preview') }}
-            </LinkDefault>
-          </li>
-          <li>
-            <LinkDefault :to="{ name: 'about' }" :bold="false">
-              {{ t('nav.about') }}
+          <li
+            v-for="{ routeName, label }, index of navLinks"
+            :key="index"
+          >
+            <LinkDefault
+              :to="{ name: routeName }"
+              :bold="false"
+              active-class="font-bold"
+            >
+              {{ label }}
             </LinkDefault>
           </li>
         </ul>
@@ -71,7 +63,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { nextTick } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
+import { RouterView, useRouter, type RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
@@ -98,6 +90,13 @@ const selectLocale = async (code: LocaleCode) => {
   setHeaderSeo()
   setDocumentTitle()
 }
+
+const navLinks = [
+  { routeName: 'home', label: t('nav.index') },
+  { routeName: 'cards', label: t('nav.cards') },
+  { routeName: 'preview', label: t('nav.preview') },
+  { routeName: 'about', label: t('nav.about') },
+]
 
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)
