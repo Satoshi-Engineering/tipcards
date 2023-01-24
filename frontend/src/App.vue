@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { nextTick } from 'vue'
-import { RouterView, useRouter, type RouteLocationRaw } from 'vue-router'
+import { RouterView, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
