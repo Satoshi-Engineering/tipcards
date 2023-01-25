@@ -25,7 +25,7 @@ export const LOCALES = {
   hi: {
     name: 'हिन्दी',
     dir: 'ltr',
-  }
+  },
 }
 
 export type LocaleCode = keyof typeof LOCALES
