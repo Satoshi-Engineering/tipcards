@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -150,5 +150,18 @@ const sortedSavedCardsSets = computed(() => {
     })
 })
 
-onBeforeMount(loadSavedCardsSets)
+onMounted(() => {
+  loadSavedCardsSets()
+
+  const originMapping: Record<string, string> = {
+    'https://tipcards.sate.tools': 'https://tipcards.io',
+    'https://dev.tipcards.sate.tools': 'https://dev.tipcards.io',
+  }
+  if (
+    savedCardsSets.value.length === 0
+    && typeof originMapping[location.origin] === 'string'
+  ) {
+    location.href = originMapping[location.origin]
+  }
+})
 </script>
