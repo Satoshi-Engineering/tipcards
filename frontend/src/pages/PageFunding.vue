@@ -36,8 +36,8 @@
             :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'"
           >
             <template #amountAndUnit>
-              <strong class="inline-block">
-                {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+              <strong v-if="invoiceAmount != null" class="inline-block">
+                {{ t('funding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8)}) }}
               </strong>
             </template>
           </I18nT>
@@ -263,7 +263,7 @@
           :funded-date="cardFundedDate"
           :used-date="usedDate"
           :shared="shared"
-          :amount="amount || undefined"
+          :amount="invoiceAmount || amount || undefined"
           :note="note || undefined"
           :viewed="viewed"
           :url="previewPageUrl"
