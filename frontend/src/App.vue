@@ -31,7 +31,7 @@
             :key="index"
           >
             <LinkDefault
-              :to="{ name: routeName }"
+              :to="{ name: routeName, params: { lang: route.params.lang } }"
               :bold="false"
               active-class="font-bold"
             >
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { nextTick } from 'vue'
-import { RouterView, useRouter } from 'vue-router'
+import { RouterView, useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
@@ -75,9 +75,13 @@ import { SUPPORT_EMAIL } from '@/constants'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 
 const router = useRouter()
+const route = useRoute()
 const { setDocumentTitle, setHeaderSeo } = useSeoHelpers()
 
 router.afterEach(async () => {
+  if (route?.params.lang != null) {
+    setLocale(route.params.lang as LocaleCode)
+  }
   await nextTick()
   setHeaderSeo()
   setDocumentTitle()
@@ -86,9 +90,13 @@ router.afterEach(async () => {
 const { t } = useI18n()
 const { currentLocale, currentTextDirection } = useI18nHelpers()
 const selectLocale = async (code: LocaleCode) => {
-  await setLocale(code)
-  setHeaderSeo()
-  setDocumentTitle()
+  router.push({
+    ...route,
+    params: {
+      ...route.params,
+      lang: code,
+    },
+  })
 }
 
 const navLinks = [
