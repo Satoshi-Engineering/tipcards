@@ -513,6 +513,7 @@ const finishShared = async () => {
 const previewPageUrl = computed(() => {
   return router.resolve({
     name: 'preview',
+    params: { lang: route.params.lang },
     query: { lightning: lnurl.value.toUpperCase() },
   }).href
 })
