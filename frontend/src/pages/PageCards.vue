@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1 print:hidden max-w-md w-full m-auto">
-    <BackLink class="p-4" :to="{ name: 'home' }" />
+    <BackLink class="p-4" :to="{ name: 'home', params: { lang: route.params.lang } }" />
     <div
       v-for="userWarning in userWarnings"
       :key="userWarning"
@@ -426,7 +426,7 @@ const deleteCardsSet = () => {
     return
   }
   deleteCardsSetFromLocalStorage(setId.value)
-  router.push({ name: 'home' })
+  router.push({ name: 'home', params: { lang: route.params.lang } })
 }
 
 const currentSetUrl = ref<string>(document.location.href)
@@ -559,9 +559,9 @@ const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
-  const routeHref = router.resolve({ name: 'landing', query: { lightning: lnurlEncoded.toUpperCase() } }).href
+  const routeHref = router.resolve({ name: 'landing', params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
   const url = `${location.protocol}//${location.host}${routeHref}`
-  const urlPreview = router.resolve({ name: 'preview', query: { lightning: lnurlEncoded.toUpperCase() } }).href
+  const urlPreview = router.resolve({ name: 'preview', params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
   return {
     cardHash,
     url,

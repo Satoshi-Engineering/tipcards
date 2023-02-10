@@ -9,7 +9,7 @@
       </HeadlineDefault>
       <p>by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a></p>
       <p class="mt-4">
-        <ButtonDefault @click="$router.push({ name: 'cards' })">
+        <ButtonDefault @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })">
           {{ t('index.buttonCreate') }}
         </ButtonDefault>
       </p>
@@ -41,6 +41,7 @@
                   params: {
                     setId: cardsSet.setId,
                     settings: encodeCardsSetSettings(cardsSet.settings),
+                    lang: $route.params.lang,
                   }
                 }"
               >

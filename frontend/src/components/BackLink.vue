@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { useRouter, type RouteLocationRaw } from 'vue-router'
+import { useRouter, useRoute, type RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import LinkDefault from './typography/LinkDefault.vue'
@@ -36,6 +36,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 
 const backlink = computed(() => {
   try {
@@ -59,7 +60,7 @@ const backlinkAction = () => {
   if (backlink.value != null) {
     router.go(-1)
   } else {
-    router.push('/')
+    router.push({ name: 'home', params: { lang: route.params.lang } })
   }
 }
 </script>

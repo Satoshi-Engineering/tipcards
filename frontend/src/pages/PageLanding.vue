@@ -257,7 +257,7 @@
         </ParagraphDefault>
         <ParagraphDefault class="text-center">
           <ButtonDefault
-            @click="$router.push({ name: 'home' })"
+            @click="$router.push({ name: 'home', params: { lang: $route.params.lang } })"
           >
             {{ t('landing.sectionUse.createYourOwnTipCardsButton') }}
           </ButtonDefault>
@@ -318,9 +318,6 @@ const cardHash = computed<string | null | undefined>(() => {
 
 const loadLnurlData = async () => {
   if (cardHash.value == null) {
-    if (route.name !== 'preview') {
-      router.push({ name: 'home' })
-    }
     return
   }
   const cardStatus = await loadCardStatus(cardHash.value, String(route.name))
@@ -335,6 +332,7 @@ const loadLnurlData = async () => {
     router.replace({
       name: 'funding',
       params: {
+        lang: route.params.lang,
         cardHash: cardHash.value,
       },
     })
