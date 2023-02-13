@@ -36,7 +36,7 @@
     "sectionBitcoin": {
       "paragraphs": {
         "0": "Bitcoin ist eine <strong>digitale Währung</strong>.",
-        "1": "Sie wird von allen Teilnehmer:innen des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.",
+        "1": "Sie wird von allen Teilnehmerinnen und Teilnehmern des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.",
         "2": "Überweisungen (auch internationale) sind so einfach wie das Scannen eines QR-Codes. Probier es einfach aus!"
       }
     },
@@ -81,7 +81,7 @@
       "headline": "Mehr über Bitcoin",
       "text": "Es gibt viele Möglichkeiten, mehr über Bitcoin zu erfahren.",
       "0": {
-        "text": "<strong>Bitcoin verstehen</strong> ist <em>der</em> deutschsprachige Podcast für Bitcoin-Einsteiger:innen und neugierige Fortgeschrittene.",
+        "text": "<strong>Bitcoin verstehen</strong> ist <em>der</em> deutschsprachige Podcast für Bitcoin-Einsteiger und neugierige Fortgeschrittene.",
         "linkLabel": "Bitcoin verstehen",
         "linkHref": "https://bitcoinverstehen.info/"
       },
@@ -97,12 +97,12 @@
     "headline": "Lade die Tip Card auf",
     "headlineFunded": "Die Tip Card wurde aufgeladen",
     "headlineUsed": "Die Tip Card wurde eingelöst",
-    "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht der Empfänger in seiner Wallet sehen soll.",
+    "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht die Empfängerin in ihrer Wallet sehen soll.",
     "textFunded": "Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.",
     "textUsed": "Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.",
     "amountAndUnit": "{amount} BTC",
     "form": {
-      "textHint": "wird in der Wallet des Empfängers angezeigt werden",
+      "textHint": "wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
       "noteHint": "wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
       "button": "Jetzt aufladen"
