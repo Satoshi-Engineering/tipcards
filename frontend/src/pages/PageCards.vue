@@ -555,13 +555,29 @@ onBeforeMount(() => {
   }
 })
 
+const getCardUrl = (lnurlEncoded: string, landingPageType: 'landing' | 'preview') => {
+  const routeHref = router.resolve({ name: landingPageType, params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
+  if (landingPageType === 'preview') {
+    return routeHref
+  }
+  return `${location.protocol}//${location.host}${routeHref}`
+}
+
+const getQrCodeForUrl = (url: string) => 
+  new QRCode({
+        content: url,
+        padding: 0,
+        join: true,
+        xmlDeclaration: false,
+        container: 'none',
+      }).svg()
+
 const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
-  const routeHref = router.resolve({ name: 'landing', params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
-  const url = `${location.protocol}//${location.host}${routeHref}`
-  const urlPreview = router.resolve({ name: 'preview', params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
+  const url = getCardUrl(lnurlEncoded, 'landing')
+  const urlPreview = getCardUrl(lnurlEncoded, 'preview')
   return {
     cardHash,
     url,
@@ -575,13 +591,7 @@ const generateNewCardSkeleton = async (index: number) => {
     createdDate: null,
     viewed: false,
     shared: false,
-    qrCodeSvg: new QRCode({
-        content: url,
-        padding: 0,
-        join: true,
-        xmlDeclaration: false,
-        container: 'none',
-      }).svg(),
+    qrCodeSvg: getQrCodeForUrl(url),
   }
 }
 
@@ -589,6 +599,10 @@ const reloadingStatusForCards = ref(false)
 const reloadStatusForCards = throttle(async () => {
   reloadingStatusForCards.value = true
   await Promise.all(cards.value.map(async (card) => {
+    // the URLs need to change in case the language was switched
+    card.url = getCardUrl(card.lnurl, 'landing')
+    card.urlPreview = getCardUrl(card.lnurl, 'preview')
+    card.qrCodeSvg = getQrCodeForUrl(card.url)
     const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash, 'cards')
     if (status === 'error') {
       card.status = 'error'
