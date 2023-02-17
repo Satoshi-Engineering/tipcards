@@ -10,6 +10,14 @@
       <HeadlineDefault level="h1" class="mb-8">
         <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
       </HeadlineDefault>
+      <div v-if="userErrorMessage != null" class="my-4">
+        <ParagraphDefault
+          class="text-red-500"
+          dir="ltr"
+        >
+          {{ userErrorMessage }}
+        </ParagraphDefault>
+      </div>
       <div v-if="showContent === 'spendable'">
         <HeadlineDefault level="h2" styling="h1">
           <I18nT keypath="landing.introMessageReceiveBtc.message">
@@ -84,17 +92,6 @@
               <LinkDefault href="https://coinfinity.co/">Coinfinity</LinkDefault>
             </template>
           </I18nT>
-        </ParagraphDefault>
-      </div>
-      <div v-if="userErrorMessage != null">
-        <ParagraphDefault
-          class="text-red-500"
-          dir="ltr"
-        >
-          {{ userErrorMessage }}
-        </ParagraphDefault>
-        <ParagraphDefault v-if="!spent && amount == null">
-          {{ t('landing.introMessageAlreadyUsed.message') }}
         </ParagraphDefault>
       </div>
       <div class="my-10">
@@ -303,10 +300,13 @@ const amountInEur = computed(() => {
 })
 
 const route = useRoute()
-const lnurl = String(route.query.lightning)
+const lnurl = route.query.lightning
 
 const cardHash = computed<string | null | undefined>(() => {
   let decodedLnurl: string
+  if (typeof lnurl !== 'string') {
+    return null
+  }
   try {
     decodedLnurl = decodeLnurl(lnurl)
   } catch (error) {
@@ -318,6 +318,9 @@ const cardHash = computed<string | null | undefined>(() => {
 
 const loadLnurlData = async () => {
   if (cardHash.value == null) {
+    if (lnurl != null && lnurl !== '') {
+      userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
+    }
     return
   }
   const cardStatus = await loadCardStatus(cardHash.value, String(route.name))

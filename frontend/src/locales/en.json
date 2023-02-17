@@ -76,6 +76,9 @@
       "createYourOwnTipCardsHeadline": "Create your own Tip Cards",
       "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.",
       "createYourOwnTipCardsButton": "Create my own Tip Cards"
+    },
+    "errors": {
+      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card."
     }
   },
   "funding": {

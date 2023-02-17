@@ -90,6 +90,9 @@
         "linkLabel": "Hol dir hier dein Ticket für die BTC23",
         "linkHref": "https://pretix.eu/btc/23/c/bPCDAshzq/"
       }
+    },
+    "errors": {
+      "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card."
     }
   },
   "funding": {
