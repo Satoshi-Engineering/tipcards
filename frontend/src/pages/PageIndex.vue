@@ -162,7 +162,7 @@ onMounted(() => {
     savedCardsSets.value.length === 0
     && typeof originMapping[location.origin] === 'string'
   ) {
-    location.href = originMapping[location.origin]
+    location.href = `${originMapping[location.origin]}${location.pathname}${location.search}${location.hash}`
   }
 })
 </script>

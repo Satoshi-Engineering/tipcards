@@ -79,7 +79,7 @@ const route = useRoute()
 const { setDocumentTitle, setHeaderSeo } = useSeoHelpers()
 
 router.afterEach(async () => {
-  if (route?.params.lang != null) {
+  if (route?.params.lang != null && route?.params.lang !== '') {
     setLocale(route.params.lang as LocaleCode)
   }
   await nextTick()
