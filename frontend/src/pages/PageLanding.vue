@@ -266,7 +266,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -301,15 +301,16 @@ const amountInEur = computed(() => {
 })
 
 const route = useRoute()
-const lnurl = typeof route.query.lightning === 'string' ? route.query.lightning : undefined
+
+const lnurl = computed(() => typeof route.query.lightning === 'string' ? route.query.lightning : undefined)
 
 const cardHash = computed<string | null | undefined>(() => {
   let decodedLnurl: string
-  if (typeof lnurl !== 'string') {
+  if (typeof lnurl.value !== 'string') {
     return null
   }
   try {
-    decodedLnurl = decodeLnurl(lnurl)
+    decodedLnurl = decodeLnurl(lnurl.value)
   } catch (error) {
     return null
   }
@@ -319,7 +320,7 @@ const cardHash = computed<string | null | undefined>(() => {
 
 const loadLnurlData = async () => {
   if (cardHash.value == null) {
-    if (lnurl != null && lnurl !== '') {
+    if (lnurl.value != null && lnurl.value !== '') {
       userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
     }
     return
@@ -383,4 +384,6 @@ const showContent = computed<'preview' | 'spendable' | 'used' | 'recentlyUsed' |
 })
 
 onMounted(loadLnurlData)
+
+watch(() => route.params.lang, loadLnurlData)
 </script>
