@@ -164,6 +164,7 @@
           {{ t('landing.sectionReceive.statusReceived.message') }} 🎉
         </ParagraphDefault>
         <LightningQrCode
+          v-if="lnurl != null"
           :value="lnurl"
           :success="spent"
           :pending="withdrawPending"
@@ -300,7 +301,7 @@ const amountInEur = computed(() => {
 })
 
 const route = useRoute()
-const lnurl = route.query.lightning
+const lnurl = typeof route.query.lightning === 'string' ? route.query.lightning : undefined
 
 const cardHash = computed<string | null | undefined>(() => {
   let decodedLnurl: string
