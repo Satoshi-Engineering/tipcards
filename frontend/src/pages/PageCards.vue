@@ -254,7 +254,7 @@
           >
             <a :href="card.urlPreview">
               <div
-                class="absolute top-7 bottom-7 w-auto h-auto aspect-square"
+                class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
               >
                 <svg
