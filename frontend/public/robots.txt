@@ -1,2 +1,12 @@
 User-agent: *
 Allow: /
+
+Disallow: /api
+Disallow: /preview/?lightning=
+Disallow: /landing/?lightning=
+
+Disallow: /funding/
+Allow: /funding/$
+
+Disallow: /cards/
+Allow: /cards/$
