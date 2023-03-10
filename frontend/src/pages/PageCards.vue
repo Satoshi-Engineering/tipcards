@@ -392,6 +392,7 @@ import svgToPng from '@/modules/svgToPng'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 import { useSeoHelpers } from '@/modules/seoHelpers'
+import hashSha256 from '@/modules/hashSha256'
 
 const route = useRoute()
 const router = useRouter()
@@ -676,17 +677,6 @@ const downloadZip = async (format: 'png' | 'svg' = 'png') => {
 const printCards = () => {
   window.print()
   wasPrintedOrDownloaded.value = true
-}
-
-const hashSha256 = async (message: string) => {
-  if (crypto.subtle == null && import.meta.env.MODE === 'development') {
-    return message.replace(/\//g, '-').replace(/-/g,'')
-  }
-  const msgUint8 = new TextEncoder().encode(message)
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8)
-  const hashArray = Array.from(new Uint8Array(hashBuffer))
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-  return hashHex
 }
 
 ///////////////////////

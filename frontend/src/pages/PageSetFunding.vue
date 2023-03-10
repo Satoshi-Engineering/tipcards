@@ -150,6 +150,8 @@ import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import formatNumber from '@/modules/formatNumber'
 import { rateBtcEur } from '@/modules/rateBtcEur'
+import { loadCardStatus } from '@/modules/loadCardStatus'
+import hashSha256 from '@/modules/hashSha256'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { type Settings, initialSettings, decodeCardsSetSettings } from '@/modules/cardsSets'
 
@@ -165,6 +167,7 @@ const note = ref<string>()
 const noteIsDirty = ref(false)
 const userErrorMessage = ref<string>()
 const set = ref<Set>()
+const cardIndicesNotUnfunded = ref<number[]>([])
 const creatingInvoice = ref(false)
 
 const funded = computed(() => set.value?.invoice?.paid != null)
@@ -188,7 +191,23 @@ const loadSetData = async () => {
       set.value = response.data.data
     }
   } catch(error) {
+    set.value = undefined
     console.error(error)
+  }
+
+  if (set.value == null) {
+    cardIndicesNotUnfunded.value = []
+    try {
+      await Promise.all([...new Array(settings.numberOfCards).keys()].map(async (index) => {
+        const cardHash = await hashSha256(`${route.params.setId}/${index}`)
+        const { status } = await loadCardStatus(cardHash, 'cards')
+        if (status !== 'unfunded') {
+          cardIndicesNotUnfunded.value.push(index)
+        }
+      }))
+    } catch (error) {
+      console.error(error)
+    }
   }
   initializing.value = false
 
@@ -196,7 +215,7 @@ const loadSetData = async () => {
 }
 onBeforeMount(loadSetData)
 
-const numberOfCardsToFund = computed<number>(() => settings.numberOfCards)
+const numberOfCardsToFund = computed<number>(() => settings.numberOfCards - cardIndicesNotUnfunded.value.length)
 const amountTotal = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
 
 const createInvoice = async () => {
