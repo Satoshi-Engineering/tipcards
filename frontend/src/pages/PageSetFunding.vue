@@ -137,6 +137,8 @@ import { onBeforeMount, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import type { Set } from '@root/data/Set'
+
 import I18nT from '@/modules/I18nT'
 import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -162,11 +164,13 @@ const textIsDirty = ref(false)
 const note = ref<string>()
 const noteIsDirty = ref(false)
 const userErrorMessage = ref<string>()
-const invoice = ref<string>()
-const invoiceAmount = ref<number>()
-const invoiceExpired = ref(false)
-const funded = ref(false)
+const set = ref<Set>()
 const creatingInvoice = ref(false)
+
+const funded = computed(() => set.value?.invoice?.paid != null)
+const invoice = computed(() => set.value?.invoice?.payment_request)
+const invoiceAmount = computed(() => set.value?.invoice?.amount)
+const invoiceExpired = computed(() => !!set.value?.invoice?.expired)
 
 const loadSetData = async () => {
   const settingsEncoded = String(route.params.settings)
@@ -177,16 +181,11 @@ const loadSetData = async () => {
     // do nothing
   }
   Object.assign(settings, settingsDecoded)
-  
+
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${route.params.setId}`)
-    if (
-      response.data.status === 'success'
-      && response.data.data != null
-      && typeof response.data.data.invoice === 'string'
-    ) {
-      invoice.value = response.data.data.invoice
-      console.log('TODO : check if there are cards that are already funded/used/etc')
+    if (response.data.status === 'success' && response.data.data != null) {
+      set.value = response.data.data
     }
   } catch(error) {
     console.error(error)
@@ -211,8 +210,8 @@ const createInvoice = async () => {
         note: note.value,
       },
     )
-    if (response.data.status === 'success' && typeof response.data.data === 'string') {
-      invoice.value = response.data.data
+    if (response.data.status === 'success' && typeof response.data.data != null) {
+      set.value = response.data.data
       userErrorMessage.value = undefined
     }
   } catch(error) {
@@ -230,12 +229,10 @@ const resetInvoice = async () => {
     const response = await axios.delete(
       `${BACKEND_API_ORIGIN}/api/set/invoice/${route.params.setId}`)
     if (response.data.status === 'success') {
-      invoice.value = undefined
-      funded.value = false
+      set.value = undefined
       amountPerCard.value = 2100
       userErrorMessage.value = undefined
       creatingInvoice.value = false
-      invoiceExpired.value = false
       text.value = 'Have fun with Bitcoin :)'
       textIsDirty.value = false
       note.value = undefined

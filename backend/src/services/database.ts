@@ -3,6 +3,7 @@ import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts
 
 import { REDIS_BASE_PATH } from '../constants'
 import type { Card } from '../../../src/data/Card'
+import type { Set } from '../../../src/data/Set'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 
@@ -133,4 +134,27 @@ export const getAllCardHashes = async (): Promise<string[]> => {
     hashes.push(matches[1])
   })
   return hashes
+}
+
+/**
+ * @param setId string
+ * @throws
+ */
+export const getSetById = async (setId: string): Promise<Set | null> => {
+  const client = await getClient()
+  const set: Set | null = await client.json.get(`${REDIS_BASE_PATH}:setsById:${setId}:data`) as Set | null
+  return set
+}
+
+/**
+ * @param set Set
+ * @throws
+ */
+export const updateSet = async (set: Set): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
+  if (!exists) {
+    throw new Error('Set doesn\'t exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:setsById:${set.id}:data`, '$', set)
 }

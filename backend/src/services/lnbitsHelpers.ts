@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-import { createCard, updateCard } from './database'
+import { createCard, updateCard, updateSet } from './database'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
+import type { Set } from '../../../src/data/Set'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
@@ -396,4 +397,52 @@ export const getLnurlpForNewCard = async (cardHash: string, shared = false): Pro
     throw error
   }
   return getLnurlpForCard(card, shared)
+}
+
+/**
+ * Checks if the set invoice has been paid.
+ * 
+ * Side-effects:
+ *  - manipulates the given set
+ *  - updates the set in the database
+ * 
+ * @param set Set
+ * @throws ErrorWithCode
+ */
+export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
+  if (
+    set.invoice == null
+    || set.invoice.paid != null
+  ) {
+    return set
+  }
+  try {
+    const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${set.invoice.payment_hash}`, {
+      headers: {
+        'Content-type': 'application/json',
+        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+      },
+    })
+    if (typeof response.data.paid !== 'boolean') {
+      throw new ErrorWithCode('Missing paid status when checking invoice status at lnbits.', ErrorCode.UnableToGetLnbitsInvoiceStatus)
+    }
+    if (response.data.paid === true) {
+      set.invoice.paid = Math.round(+ new Date() / 1000)
+    }
+  } catch (error) {
+    // if the invoice doesnt exist anymore handle the expired invoice in the frontend
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 404) {
+        set.invoice.expired = true
+        return set
+      }
+    }
+    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
+  }
+  try {
+    await updateSet(set)
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
+  }
+  return set
 }
