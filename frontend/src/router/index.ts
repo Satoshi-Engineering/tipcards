@@ -50,7 +50,7 @@ const router = createRouter({
           meta: { title: () => i18n.global.t('funding.title') },
         },
         {
-          path: 'set-funding/:setId',
+          path: 'set-funding/:setId/:settings?',
           name: 'set-funding',
           component: PageSetFunding,
           meta: { title: () => i18n.global.t('setFunding.title') },

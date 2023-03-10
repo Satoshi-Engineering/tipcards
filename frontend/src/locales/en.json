@@ -114,6 +114,19 @@
       "buttonMakeShared": "Activate shared funding on this Tip Card"
     }
   },
+  "setFunding": {
+    "title": "Load set",
+    "headline": "Load {setName}",
+    "amountAndUnit": "{amount} BTC",
+    "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
+    "form": {
+      "amountHint": "amount per card",
+      "textHint": "will be displayed in the recipient's wallet",
+      "notePlaceholder": "Notes / handed out to",
+      "noteHint": "will be displayed on the status section of your Tip Cards set",
+      "button": "Load set"
+    }
+  },
   "index": {
     "buttonCreate": "Create your Tip Cards set ⚡",
     "savedCardsSetsHeadline": "Saved Tip Cards sets",
