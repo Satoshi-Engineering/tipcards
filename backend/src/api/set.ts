@@ -1,9 +1,13 @@
+import axios from 'axios'
 import express from 'express'
 
-import { getSetById } from '../services/database'
+import { createCard, getSetById, createSet } from '../services/database'
+import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
 import type { Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
 
@@ -55,6 +59,129 @@ router.get('/:setId', async (req: express.Request, res: express.Response) => {
   res.json({
     status: 'success',
     data: set,
+  })
+})
+
+router.post('/invoice/:setId', async (req: express.Request, res: express.Response) => {
+  // amount in sats
+  let amountPerCard: number | undefined = undefined
+  let text = ''
+  let note = ''
+  let cardIndices: number[] = []
+  try {
+    ({ amountPerCard, text, note, cardIndices } = req.body)
+  } catch (error) {
+    console.error(error)
+  }
+  if (amountPerCard == null || amountPerCard < 100 || cardIndices.length < 1) {
+    res.status(400).json({
+      status: 'error',
+      message: 'Invalid input.',
+    })
+    return
+  }
+
+  // check if set/invoice already exists
+  let set: Set | null = null
+  try {
+    set = await getSetById(req.params.setId)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  if (set?.invoice != null) {
+    if (set.invoice.paid != null) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Set is already funded.',
+      })
+    }  else {
+      res.status(400).json({
+        status: 'error',
+        message: `Set invoice already exists.`,
+      })
+    }
+    return
+  }
+
+  // create invoice in lnbits
+  const amount = amountPerCard * cardIndices.length
+  let payment_hash: string | undefined = undefined
+  let payment_request: string | undefined = undefined
+  try {
+    const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
+      out: false,
+      amount,
+      memo: 'Fund your Lightning Tip Card',
+      webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
+    }, {
+      headers: {
+        'Content-type': 'application/json',
+        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+      },
+    })
+    ;({ payment_hash, payment_request } = response.data)
+  } catch (error) {
+    console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
+  }
+  if (payment_hash == null || payment_request == null) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to create invoice at lnbits.',
+      code: ErrorCode.UnableToCreateLnbitsInvoice,
+    })
+    return
+  }
+
+  // persist data
+  try {
+    await Promise.all(cardIndices.map(async (index) => {
+      const cardHash = await hashSha256(`${req.params.setId}/${index}`)
+      await createCard({
+        cardHash,
+        text,
+        note,
+        setFunding: {
+          created: Math.round(+ new Date() / 1000),
+          paid: null,
+        },
+        invoice: null,
+        lnurlp: null,
+        lnbitsWithdrawId: null,
+        used: null,
+      })
+    }))
+    await createSet({
+      id: req.params.setId,
+      text,
+      note,
+      invoice: {
+        fundedCards: cardIndices,
+        amount,
+        payment_hash,
+        payment_request,
+        created: Math.round(+ new Date() / 1000),
+        paid: null,
+        expired: false,
+      },
+    })
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  res.json({
+    status: 'success',
+    data: payment_request,
   })
 })
 

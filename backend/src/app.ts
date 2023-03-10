@@ -8,6 +8,7 @@ import dummy from './api/dummy'
 import invoice from './api/invoice'
 import lnurl from './api/lnurl'
 import lnurlp from './api/lnurlp'
+import set from './api/set'
 import withdraw from './api/withdraw'
 import xstAttack from './xstAttack'
 
@@ -22,6 +23,7 @@ app.use('/api/dummy', dummy)
 app.use('/api/invoice', invoice)
 app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
+app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
 
 export default app

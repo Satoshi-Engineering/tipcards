@@ -150,6 +150,19 @@ export const getSetById = async (setId: string): Promise<Set | null> => {
  * @param set Set
  * @throws
  */
+export const createSet = async (set: Set): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
+  if (exists) {
+    throw new Error('Set already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:setsById:${set.id}:data`, '$', set)
+}
+
+/**
+ * @param set Set
+ * @throws
+ */
 export const updateSet = async (set: Set): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
