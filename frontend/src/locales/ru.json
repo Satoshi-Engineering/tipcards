@@ -150,7 +150,12 @@
       "buttonSaveCardsSet":"Сохранить набор ТИП-карт",
       "buttonDeleteCardsSet":"Удалить сохраненный набор",
       "saveSetConfirm":"Текущий набор ТИП-карт будет сохранен локально в этом браузере, используя localStorage.\n\nYВы также можете использовать URL-адрес (из адресной строки) для доступа к этому набору ТИП-карт.\n\nПродолжить?",
-      "deleteSetConfirm":"Вы действительно хотите удалить текущий набор ТИП-карт и его настройки из этого браузера?"
+      "deleteSetConfirm":"Вы действительно хотите удалить текущий набор ТИП-карт и его настройки из этого браузера?",
+      "setFunding": {
+        "labelAll": "Fund all cards at once",
+        "labelUnfunded": "Fund all unfunded cards",
+        "button": "Load set"
+      }
     },
     "cards": {
       "headline": "Tip Cards",

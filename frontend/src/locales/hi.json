@@ -148,7 +148,12 @@
         "buttonSaveCardsSet": "टिप कार्ड का समूह सहेजें",
         "buttonDeleteCardsSet": "सहेजा गया समूह हटाएं",
         "saveSetConfirm": "वर्तमान टिप कार्ड सेट को स्थानीय संग्रहण का उपयोग करके इस ब्राउज़र में स्थानीय रूप से सहेजा जाएगा।\n\nआप इस टिप कार्ड सेट को एक्सेस करने के लिए URL (एड्रेस बार से) का भी उपयोग कर सकते हैं।\n\nजारी रखें?",
-        "deleteSetConfirm": "क्या आप वास्तव में इस ब्राउज़र से वर्तमान टिप कार्ड सेट और इसकी सेटिंग हटाना चाहते हैं?"
+        "deleteSetConfirm": "क्या आप वास्तव में इस ब्राउज़र से वर्तमान टिप कार्ड सेट और इसकी सेटिंग हटाना चाहते हैं?",
+        "setFunding": {
+          "labelAll": "Fund all cards at once",
+          "labelUnfunded": "Fund all unfunded cards",
+          "button": "Load set"
+        }
       },
       "cards": {
         "headline": "Tip Cards",

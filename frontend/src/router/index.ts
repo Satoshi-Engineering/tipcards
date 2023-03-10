@@ -6,6 +6,7 @@ const PageIndex = () => import('@/pages/PageIndex.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
+const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
 const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 
@@ -47,6 +48,12 @@ const router = createRouter({
           name: 'funding',
           component: PageFunding,
           meta: { title: () => i18n.global.t('funding.title') },
+        },
+        {
+          path: 'set-funding/:setId',
+          name: 'set-funding',
+          component: PageSetFunding,
+          meta: { title: () => i18n.global.t('setFunding.title') },
         },
         {
           path: 'about',

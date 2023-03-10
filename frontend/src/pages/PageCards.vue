@@ -181,6 +181,14 @@
       >
         {{ t('cards.actions.buttonDeleteCardsSet') }}
       </ButtonDefault>
+      <label class="block mt-3">
+        <span class="block">
+          {{ cardsStatusList.length == 0 ? t('cards.actions.setFunding.labelAll') : t('cards.actions.setFunding.labelUnfunded') }}:
+        </span>
+      </label>
+      <ButtonDefault class="text-sm" :href="setFundingHref">
+        {{ t('cards.actions.setFunding.button') }}
+      </ButtonDefault>
     </div>
   </div>
   <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
@@ -512,6 +520,8 @@ const showSaveWarning = computed(() => {
   }
   return false
 })
+
+const setFundingHref = router.resolve({ name: 'set-funding', params: { lang: route.params.lang, setId: route.params.setId } }).href
 
 ///////////////////////
 // CARDS

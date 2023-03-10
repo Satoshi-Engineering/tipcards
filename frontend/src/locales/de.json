@@ -175,7 +175,12 @@
       "buttonSaveCardsSet": "Set speichern",
       "buttonDeleteCardsSet": "Set löschen",
       "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
-      "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?"
+      "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
+      "setFunding": {
+        "labelAll": "Alle Karten auf einmal aufladen",
+        "labelUnfunded": "Alle noch nicht aufgeladenen Karten aufladen",
+        "button": "Set aufladen"
+      }
     },
     "cards": {
       "headline": "Tip Cards",

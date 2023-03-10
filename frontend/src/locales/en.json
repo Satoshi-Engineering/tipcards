@@ -161,7 +161,12 @@
       "buttonSaveCardsSet": "Save Tip Cards set",
       "buttonDeleteCardsSet": "Delete saved set",
       "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
-      "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?"
+      "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?",
+      "setFunding": {
+        "labelAll": "Fund all cards at once",
+        "labelUnfunded": "Fund all unfunded cards",
+        "button": "Load set"
+      }
     },
     "cards": {
       "headline": "Tip Cards",

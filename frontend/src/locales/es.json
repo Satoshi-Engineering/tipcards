@@ -146,7 +146,12 @@
       "buttonSaveCardsSet": "Guardar juego de tarjetas de propina",
       "buttonDeleteCardsSet": "Borrar juego",
       "saveSetConfirm": "El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?",
-      "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?"
+      "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?",
+      "setFunding": {
+        "labelAll": "Fund all cards at once",
+        "labelUnfunded": "Fund all unfunded cards",
+        "button": "Load set"
+      }
     },
     "cards": {
       "headline": "Tip Cards",
