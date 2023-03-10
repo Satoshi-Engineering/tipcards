@@ -46,15 +46,15 @@ git config core.hooksPath .githooks
 
 ### Backend
 
-* Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host.
+* Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host. The modules `rejson` and `redisearch` are required.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
   * See [Example](docs/examples/redis) 
-* Create your own wallet on https://legend.lnbits.com/.
+* Create your own wallet on https://lnbits.thespielplatz.com/ or your preferred lnbits instance after customizing `src/constants.ts`
 * Create a `backend/.env` file (or copy it from `backend/.env.example`) and set the following variables:
   - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
   - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
-  - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
-  - `LNBITS_ADMIN_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
+  - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://lnbits.thespielplatz.com/wallet and clicking on "API info"
+  - `LNBITS_ADMIN_KEY` paste from your lnbits wallet: get this from https://lnbits.thespielplatz.com/wallet and clicking on "API info"
 * You can look up additional optional variables in `.env.example`
 
 ### Frontend
@@ -65,7 +65,7 @@ git config core.hooksPath .githooks
 ### Testing
 
 If you want to test the tipcards on your local machine, here are some hints
-- Fund your https://legend.lnbits.com/wallet with 1 - 100sats. The tipcard redeeming creates a lightning invoice 
+- Fund your https://lnbits.thespielplatz.com/wallet with 1 - 100sats. The tipcard redeeming creates a lightning invoice 
 via lnbits and there are transaction costs.
 - It won't work with your smartphone, because the development setup restricted to localhost. (And if you use `vite --host` to expose the port,
 your lightning apps will refuse to work because there is no ssl connection)
