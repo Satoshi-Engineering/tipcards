@@ -77,7 +77,7 @@
         </ul>
       </div>
     </div>
-    <div class="p-4 mb-1 max-w-md">
+    <div class="p-4 mb-3">
       <HeadlineDefault level="h2">
         {{ t('cards.settings.headline') }}
       </HeadlineDefault>
@@ -141,24 +141,25 @@
         {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
       </label>
     </div>
-    <div class="px-4 my-1 text-sm">
+    <div class="p-4 mb-3 text-sm">
+      <HeadlineDefault level="h2">
+        {{ t('cards.actions.headline') }}
+      </HeadlineDefault>
       <ButtonDefault
         @click="printCards()"
       >
-        {{ t('cards.buttonPrint') }}
+        {{ t('cards.actions.buttonPrint') }}
       </ButtonDefault>
       &nbsp;
       <ButtonDefault
         variant="no-border"
         @click="downloadZip()"
       >
-        {{ t('cards.buttonDownloadPngs') }}
+        {{ t('cards.actions.buttonDownloadPngs') }}
       </ButtonDefault>
-    </div>
-    <div class="px-4 my-2">
-      <label class="block mb-1">
+      <label class="block mt-3 mb-1">
         <span class="block">
-          {{ t('cards.settings.setName') }}:
+          {{ t('cards.actions.setName') }}:
         </span>
         <input
           v-model="settings.setName"
@@ -167,7 +168,7 @@
         >
       </label>
       <ButtonDefault class="text-sm" @click="saveCardsSet">
-        {{ t('cards.buttonSaveCardsSet') }}
+        {{ t('cards.actions.buttonSaveCardsSet') }}
         <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
         <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
       </ButtonDefault>
@@ -178,40 +179,39 @@
         class="text-sm"
         @click="deleteCardsSet"
       >
-        {{ t('cards.buttonDeleteCardsSet') }}
+        {{ t('cards.actions.buttonDeleteCardsSet') }}
       </ButtonDefault>
     </div>
-    <div
-      v-if="cards.length > 0"
-      class="p-4 max-w-md"
-    >
+  </div>
+  <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
+    <HeadlineDefault level="h2">
+      {{ t('cards.cards.headline') }}
+    </HeadlineDefault>
+    <div v-if="cards.length > 0">
       <label class="block mb-2">
         <span class="block">
-          {{ t('cards.filterLabel') }}
+          {{ t('cards.cards.filterLabel') }}
         </span>
         <select
           v-model="cardsFilter"
           class="w-full border my-1 px-3 py-2"
         >
           <option value="">
-            {{ t('cards.filter.all') }} ({{ cards.length }})
+            {{ t('cards.cards.filter.all') }} ({{ cards.length }})
           </option>
           <option value="unfunded">
-            {{ t('cards.filter.unfunded') }} ({{ cards.filter(card => card.status === 'unfunded').length }})
+            {{ t('cards.cards.filter.unfunded') }} ({{ cards.filter(card => card.status === 'unfunded').length }})
           </option>
           <option value="funded">
-            {{ t('cards.filter.funded') }} ({{ cards.filter(card => card.status === 'funded').length }})
+            {{ t('cards.cards.filter.funded') }} ({{ cards.filter(card => card.status === 'funded').length }})
           </option>
           <option value="used">
-            {{ t('cards.filter.used') }} ({{ cards.filter(card => card.status === 'used').length }})
+            {{ t('cards.cards.filter.used') }} ({{ cards.filter(card => card.status === 'used').length }})
           </option>
         </select>
       </label>
     </div>
-    <div
-      v-if="userErrorMessage != null"
-      class="p-4"
-    >
+    <div v-if="userErrorMessage != null">
       <p class="text-red-500 text-align-center" dir="ltr">
         {{ userErrorMessage }}
       </p>
@@ -408,7 +408,7 @@ const saveCardsSet = () => {
   if (setId.value == null) {
     return
   }
-  if (!hasBeenSaved.value && !confirm(t('cards.saveSetConfirm'))) {
+  if (!hasBeenSaved.value && !confirm(t('cards.actions.saveSetConfirm'))) {
     return
   }
   saveCardsSetToLocalStorage({
@@ -422,7 +422,7 @@ const deleteCardsSet = () => {
   if (setId.value == null) {
     return
   }
-  if (!confirm(t('cards.deleteSetConfirm'))) {
+  if (!confirm(t('cards.actions.deleteSetConfirm'))) {
     return
   }
   deleteCardsSetFromLocalStorage(setId.value)

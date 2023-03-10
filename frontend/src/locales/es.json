@@ -118,10 +118,18 @@
   "cards": {
     "title": "Conjunto de tarjetas de propina",
     "status": {
+      "headline": "Status",
+      "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.",
       "labelUsed": "Canjeada | Canjeadas",
-      "labelFunded": "Cargada | Cargadas"
+      "labelFunded": "Cargada | Cargadas",
+      "labelPendingFunding": "Funding in progress",
+      "labelPendingSharedFunding": "Shared funding in progress",
+      "labelNote": "Note",
+      "labelViewed": "Viewed by recipient",
+      "reload": "Reload"
     },
     "settings": {
+      "headline": "Configuration",
       "numberOfCards": "Número",
       "cardHeadline": "Título de la tarjeta",
       "cardText": "Texto de la tarjeta",
@@ -130,18 +138,25 @@
         "noLogo": "Sin logo"
       }
     },
-    "buttonSaveCardsSet": "Guardar juego de tarjetas de propina",
-    "buttonDeleteCardsSet": "Borrar juego",
-    "buttonPrint": "Imprimir tarjetas de propina",
-    "buttonDownloadPngs": "Bajar PNGs",
-    "saveSetConfirm": "El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?",
-    "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?",
-    "filterLabel": "Filtro de tarjetas:",
-    "filter": {
-      "all": "Todas",
-      "unfunded": "Sin cargo",
-      "funded": "Cargadas",
-      "used": "Canjeadas"
+    "actions": {
+      "headline": "Actions",
+      "buttonPrint": "Imprimir tarjetas de propina",
+      "buttonDownloadPngs": "Bajar PNGs",
+      "setName": "Set name",
+      "buttonSaveCardsSet": "Guardar juego de tarjetas de propina",
+      "buttonDeleteCardsSet": "Borrar juego",
+      "saveSetConfirm": "El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?",
+      "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?"
+    },
+    "cards": {
+      "headline": "Tip Cards",
+      "filterLabel": "Filtro de tarjetas:",
+      "filter": {
+        "all": "Todas",
+        "unfunded": "Sin cargo",
+        "funded": "Cargadas",
+        "used": "Canjeadas"
+      }
     }
   },
   "lightningQrCode": {

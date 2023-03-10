@@ -165,21 +165,27 @@
       "cardQrCodeLogoLabel": "Logo auf den QR-Codes",
       "cardQrCodeLogo": {
         "noLogo": "Kein Logo"
-      },
-      "setName": "Set-Name"
+      }
     },
-    "buttonSaveCardsSet": "Set speichern",
-    "buttonDeleteCardsSet": "Set löschen",
-    "buttonPrint": "Tip Cards drucken",
-    "buttonDownloadPngs": "PNGs downloaden",
-    "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
-    "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
-    "filterLabel": "Karten filtern:",
-    "filter": {
-      "all": "Alle",
-      "unfunded": "Nicht aufgeladen",
-      "funded": "Aufgeladen",
-      "used": "Eingelöst"
+    "actions": {
+      "headline": "Aktionen",
+      "buttonPrint": "Tip Cards drucken",
+      "buttonDownloadPngs": "PNGs downloaden",
+      "setName": "Set-Name",
+      "buttonSaveCardsSet": "Set speichern",
+      "buttonDeleteCardsSet": "Set löschen",
+      "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
+      "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?"
+    },
+    "cards": {
+      "headline": "Tip Cards",
+      "filterLabel": "Karten filtern:",
+      "filter": {
+        "all": "Alle",
+        "unfunded": "Nicht aufgeladen",
+        "funded": "Aufgeladen",
+        "used": "Eingelöst"
+      }
     }
   },
   "lightningQrCode": {
