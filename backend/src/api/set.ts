@@ -1,10 +1,14 @@
 import axios from 'axios'
 import express from 'express'
 
-import { createCard, getSetById, createSet, deleteSet } from '../services/database'
+import {
+  createCard, getSetById, createSet, deleteSet,
+  deleteCard, getCardByHash,
+} from '../services/database'
 import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
+import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
@@ -235,8 +239,23 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
     return
   }
 
-  // 4. delete set in database
+  // 3. delete set+cards in database
   try {
+    // delete all cards
+    await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
+      if (set == null) {
+        return
+      }
+      const cardHash = await hashSha256(`${set.id}/${cardIndex}`)
+      let card: Card | null = await getCardByHash(cardHash)
+      if (card?.setFunding == null) {
+        return
+      }
+      card.setFunding.paid = Math.round(+ new Date() / 1000)
+      await deleteCard(card)
+    }))
+
+    // delete set
     await deleteSet(set)
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
