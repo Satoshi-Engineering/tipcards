@@ -108,13 +108,15 @@
     "headline": "Load {setName}",
     "amountAndUnit": "{amount} BTC",
     "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
+    "invoiceText": "Fund {numberOfCardsToFund} cards by paying a single invoice of {amountAndUnit}.",
     "form": {
       "amountHint": "amount per card",
       "textHint": "will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
       "noteHint": "will be displayed on the status section of your Tip Cards set",
       "button": "Load set"
-    }
+    },
+    "resetInvoice": "Reset Set Invoice"
   },
   "index":{
     "buttonCreate":"Создайте собственный набор ТИП-карт ⚡",
@@ -140,6 +142,7 @@
       "labelFunded":"Пополненные",
       "labelPendingFunding":"Поплнение в процессе",
       "labelPendingSharedFunding":"Совместное поплнение в процессе",
+      "labelPendingSetFunding": "Set funding in progress",
       "labelNote":"Примечание",
       "reload":"Перезагрузить"
     },

@@ -40,8 +40,16 @@
             v-else
             keypath="setFunding.invoiceText"
           >
-            <template #amount>
-              <strong>{{ invoiceAmount }}</strong>
+            <template #numberOfCardsToFund>
+              {{ numberOfCardsToFund }}
+            </template>
+            <template #amountAndUnit>
+              <strong
+                v-if="invoiceAmount != null"
+                class="inline-block"
+              >
+                {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8) }) }}
+              </strong>
             </template>
           </I18nT>
         </ParagraphDefault>
@@ -217,7 +225,12 @@ const loadSetData = async () => {
 }
 onBeforeMount(loadSetData)
 
-const numberOfCardsToFund = computed<number>(() => settings.numberOfCards - cardIndicesNotUnfunded.value.length)
+const numberOfCardsToFund = computed<number>(() => {
+  if (set.value?.invoice?.fundedCards != null) {
+    return set.value.invoice.fundedCards.length
+  }
+  return settings.numberOfCards - cardIndicesNotUnfunded.value.length
+})
 const amountTotal = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
 const cardIndicesToFund = computed<number[]>(() => [...new Array(settings.numberOfCards).keys()].filter(index => !cardIndicesNotUnfunded.value.includes(index)))
 

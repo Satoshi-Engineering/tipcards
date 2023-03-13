@@ -70,7 +70,7 @@
               :shared="shared"
               :amount="amount || undefined"
               :note="note || undefined"
-              :url="urlPreview"
+              :url="status === 'setFunding' ? setFundingHref : urlPreview"
               :viewed="viewed"
             />
           </li>
@@ -260,7 +260,7 @@
             class="absolute w-full h-full"
             :class="{ 'opacity-50': card.status === 'used' }"
           >
-            <a :href="card.urlPreview">
+            <a :href="card.status === 'setFunding' ? setFundingHref : card.urlPreview">
               <div
                 class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
@@ -336,7 +336,7 @@
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>
           <div
-            v-else-if="(card.status === 'invoice' || card.status === 'lnurlp')"
+            v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
             <span
@@ -352,6 +352,13 @@
               class="m-auto"
             >
               {{ t('cards.status.labelPendingFunding') }}
+            </span>
+            <span
+              v-else-if="card.status === 'setFunding'"
+              :title="card.status"
+              class="m-auto"
+            >
+              {{ t('cards.status.labelPendingSetFunding') }}
             </span>
           </div>
         </div>
@@ -691,6 +698,7 @@ const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, {
 const statusOrder: Record<CardStatus['status'], number> = {
   invoice: 0,
   lnurlp: 0,
+  setFunding: 0,
   funded: 1,
   used: 2,
   unfunded: 3,

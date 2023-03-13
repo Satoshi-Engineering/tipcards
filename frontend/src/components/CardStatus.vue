@@ -6,7 +6,7 @@
         'bg-btcorange': status === 'funded',
         'bg-lightningpurple': status === 'used',
         'bg-red-500': status === 'error',
-        'bg-grey': status === 'lnurlp' || status === 'invoice',
+        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding',
       }"
     />
     <div class="flex-1">
@@ -34,6 +34,9 @@
           </div>
           <div v-else-if="(status === 'lnurlp' || status === 'invoice')">
             <strong :title="status">{{ t('cards.status.labelPendingFunding') }}</strong>
+          </div>
+          <div v-else-if="(status === 'setFunding')">
+            <strong :title="status">{{ t('cards.status.labelPendingSetFunding') }}</strong>
           </div>
           <div v-else-if="(status === 'error')">
             <strong>Error</strong>

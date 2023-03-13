@@ -251,7 +251,6 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
       if (card?.setFunding == null) {
         return
       }
-      card.setFunding.paid = Math.round(+ new Date() / 1000)
       await deleteCard(card)
     }))
 

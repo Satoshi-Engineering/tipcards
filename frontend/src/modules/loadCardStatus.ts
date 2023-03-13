@@ -7,7 +7,7 @@ import type { SuccessResponse } from '@root/data/Response'
 import { LNBITS_ORIGIN } from '@root/constants'
 
 export type CardStatus = {
-  status: 'error' | 'unfunded' | 'funded' | 'used' | 'invoice' | 'lnurlp'
+  status: 'error' | 'unfunded' | 'funded' | 'used' | 'invoice' | 'lnurlp' | 'setFunding'
   amount?: number
   shared?: boolean
   createdDate?: number,
@@ -92,6 +92,11 @@ export const loadCardStatus = async (cardHash: string, origin: string | undefine
     shared = card.lnurlp.shared || false
     createdDate = card.lnurlp.created
     fundedDate = card.lnurlp.paid != null ? card.lnurlp.paid : undefined
+  } else if (card.setFunding != null) {
+    amount = card.setFunding.amount
+    createdDate = card.setFunding.created
+    fundedDate = card.setFunding.paid != null ? card.setFunding.paid : undefined
+
   }
   
   if (card.used != null) {
@@ -128,6 +133,16 @@ export const loadCardStatus = async (cardHash: string, origin: string | undefine
     return {
       status: 'lnurlp',
       amount: card.lnurlp.amount != null ? card.lnurlp.amount : undefined,
+      shared,
+      createdDate,
+      fundedDate,
+      card,
+    }
+  }
+  if (card.setFunding != null && card.setFunding.paid == null) {
+    return {
+      status: 'setFunding',
+      amount,
       shared,
       createdDate,
       fundedDate,
