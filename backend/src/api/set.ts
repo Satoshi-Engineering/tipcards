@@ -1,7 +1,7 @@
 import axios from 'axios'
 import express from 'express'
 
-import { createCard, getSetById, createSet } from '../services/database'
+import { createCard, getSetById, createSet, deleteSet } from '../services/database'
 import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
@@ -182,6 +182,72 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   res.json({
     status: 'success',
     data: payment_request,
+  })
+})
+
+router.delete('/invoice/:setId', async (req: express.Request, res: express.Response) => {
+  // 1. check if set exists
+  let set: Set | null = null
+  try {
+    set = await getSetById(req.params.setId)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  if (set == null) {
+    res.status(404).json({
+      status: 'error',
+      message: `Set not found. Go to /set-funding/${req.params.setId} to create an invoice.`,
+    })
+    return
+  }
+
+  // 2. check if invoice is already paid and used
+  try {
+    await checkIfSetInvoiceIsPaid(set)
+  } catch (error: unknown) {
+    let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
+    let errorToLog = error
+    if (error instanceof ErrorWithCode) {
+      code = error.code
+      errorToLog = error.error
+    }
+    console.error(code, errorToLog)
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to check invoice status at lnbits.',
+      code,
+    })
+    return
+  }
+  if (set.invoice?.paid == null) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This set invoice is already funded and cannot be deleted anymore!',
+      code: ErrorCode.CannotDeleteFundedSet,
+    })
+    return
+  }
+
+  // 4. delete set in database
+  try {
+    await deleteSet(set)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  res.json({
+    status: 'success',
   })
 })
 

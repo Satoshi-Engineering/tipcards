@@ -20,6 +20,7 @@ export enum ErrorCode {
   UnableToRemoveLnurlpLink = 'UnableToRemoveLnurlpLink',
   SetNotFound = 'SetNotFound',
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
+  CannotDeleteFundedSet = 'CannotDeleteFundedSet',
 }
 
 export class ErrorWithCode {

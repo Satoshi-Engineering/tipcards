@@ -171,3 +171,12 @@ export const updateSet = async (set: Set): Promise<void> => {
   }
   await client.json.set(`${REDIS_BASE_PATH}:setsById:${set.id}:data`, '$', set)
 }
+
+export const deleteSet = async (set: Set): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
+  if (!exists) {
+    throw new Error('Set doesn\'t exists.')
+  }
+  await client.del(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
+}
