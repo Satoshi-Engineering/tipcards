@@ -251,4 +251,53 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
   })
 })
 
+const invoicePaid = async (req: express.Request, res: express.Response) => {
+  // 1. check if set exists
+  let set: Set | null = null
+  try {
+    set = await getSetById(req.params.setId)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  if (set?.invoice == null) {
+    res.status(404).json({
+      status: 'error',
+      message: `Set not found. Go to /set-funding/${req.params.setId} to create an invoice.`,
+    })
+    return
+  }
+
+  // 2. check if invoice is paid
+  try {
+    await checkIfSetInvoiceIsPaid(set)
+  } catch (error: unknown) {
+    let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
+    let errorToLog = error
+    if (error instanceof ErrorWithCode) {
+      code = error.code
+      errorToLog = error.error
+    }
+    console.error(code, errorToLog)
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to check invoice status at lnbits.',
+      code,
+    })
+    return
+  }
+  res.json({
+    status: 'success',
+    data: set,
+  })
+}
+
+router.get('/invoice/paid/:cardHash', invoicePaid)
+router.post('/invoice/paid/:cardHash', invoicePaid)
+
 export default router
