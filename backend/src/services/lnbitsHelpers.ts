@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-import { createCard, updateCard, updateSet } from './database'
+import { getCardByHash, createCard, updateCard, updateSet } from './database'
+import hashSha256 from './hashSha256'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
@@ -195,6 +196,8 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
     amount = card.invoice.amount
   } else if (card.lnurlp?.paid != null && card.lnurlp.amount != null) {
     amount = card.lnurlp.amount
+  } else if (card.setFunding?.paid != null) {
+    amount = card.setFunding.amount
   }
   if (amount == null) {
     return card
@@ -404,7 +407,7 @@ export const getLnurlpForNewCard = async (cardHash: string, shared = false): Pro
  * 
  * Side-effects:
  *  - manipulates the given set
- *  - updates the set in the database
+ *  - updates the set and cards (specified in set.invoice.fundedCards) in the database
  * 
  * @param set Set
  * @throws ErrorWithCode
@@ -439,7 +442,23 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
     }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
   }
+  if (set.invoice.paid == null) {
+    return set
+  }
+
   try {
+    // update all cards -> paid
+    await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
+      const cardHash = await hashSha256(`${set.id}/${cardIndex}`)
+      let card: Card | null = await getCardByHash(cardHash)
+      if (card?.setFunding == null) {
+        return
+      }
+      card.setFunding.paid = Math.round(+ new Date() / 1000)
+      await updateCard(card)
+    }))
+
+    // update set -> paid
     await updateSet(set)
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)

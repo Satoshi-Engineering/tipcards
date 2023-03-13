@@ -147,6 +147,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
         text,
         note,
         setFunding: {
+          amount: typeof amountPerCard === 'number' ? amountPerCard : 0,
           created: Math.round(+ new Date() / 1000),
           paid: null,
         },

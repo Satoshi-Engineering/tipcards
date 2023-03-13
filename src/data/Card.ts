@@ -20,6 +20,7 @@ export type Card = {
     expired?: boolean,
   } | null, // gets created if the user scans an unfunded card with a wallet
   setFunding?: {
+    amount: number,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
   }, // card is funded via set-funding
