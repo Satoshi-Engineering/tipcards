@@ -100,9 +100,11 @@
     "headline": "Lade die Tip Card auf",
     "headlineFunded": "Die Tip Card wurde aufgeladen",
     "headlineUsed": "Die Tip Card wurde eingelöst",
+    "headlineSetFunding": "Tip Card Funding",
     "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht die Empfängerin in ihrer Wallet sehen soll.",
     "textFunded": "Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.",
     "textUsed": "Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.",
+    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "amountAndUnit": "{amount} BTC",
     "form": {
       "textHint": "wird in der Wallet des Empfängers angezeigt",

@@ -86,9 +86,11 @@
     "headline": "Fund this Tip Card",
     "headlineFunded": "Tip Card has been funded",
     "headlineUsed": "Tip Card successfully redeemed",
+    "headlineSetFunding": "Tip Card Funding",
     "text": "This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.",
     "textFunded": "This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.",
     "textUsed": "This card was funded with {amountAndUnit} and has been redeemed.",
+    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "amountAndUnit": "{amount} BTC",
     "form": {
       "textHint": "will be displayed in the recipient's wallet",

@@ -76,7 +76,9 @@
   },
   "funding":{
     "headline":"Пополнить эту ТИП-карту",
+    "headlineSetFunding": "Tip Card Funding",
     "text":"Эта ТИП-карта еще не пополнена сатами. Укажите сумму и сообщение, которое вы бы хотели, чтобы получатель увидел в своем кошельке.",
+    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "form":{
       "textHint":"отобразится в кошельке получателя",
       "notePlaceholder":"Примечания / вручено",

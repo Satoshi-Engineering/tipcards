@@ -73,9 +73,11 @@
     "headline": "Cargar la tarjeta de propinas",
     "headlineFunded": "Tip Card has been funded",
     "headlineUsed": "Tip Card successfully redeemed",
+    "headlineSetFunding": "Tip Card Funding",
     "text": "Esta tarjeta de propina aún no ha sido recargada con sats. Estableze la cantidad que deseas recargar y el mensaje que quieres que el destinatario vea en su cartera.",
     "textFunded": "La tarjeta está cargada con {amountAndUnit} y está lista para regalar.",
     "textUsed": "This card was funded with {amountAndUnit} and has been redeemed.",
+    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "amountAndUnit": "{amount} BTC",
     "form": {
       "textHint": "aparecerá en la cartera del destinatario",

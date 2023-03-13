@@ -73,9 +73,11 @@
       "headline": "इस टिप कार्ड में राशि जमा करें",
       "headlineFunded": "टिप कार्ड को निधि किया गया है",
       "headlineUsed": "टिप कार्ड का सफलतापूर्वक उपयोग किया गया",
+      "headlineSetFunding": "Tip Card Funding",
       "text": "इस टिप कार्ड में अभी तक सैट्स नहीं जमा किये गए है। उस राशि और संदेश का वर्णन करें जिसे आप प्राप्तकर्ता को उनके वॉलेट में दिखना चाहते हैं।",
       "textFunded": "इस टिप कार्ड में पहले से ही ({amountAndUnit}) पैसा है और इसे किसी ऐसे व्यक्ति को दिया जा सकता है जिसे ऑरेंज पिलिंग की आवश्यकता हो।",
       "textUsed": "इस कार्ड में {amountAndUnit} की राशि डाली गई थी और इसका उपयोग हो चूका है।",
+      "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
       "amountAndUnit": "{amount} BTC",
       "form": {
         "textHint": "प्राप्तकर्ता के वॉलेट में प्रदर्शित किया जाएगा", 

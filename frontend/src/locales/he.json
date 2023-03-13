@@ -83,9 +83,11 @@
     "headline": "טעינת כרטיס הטיפ",
     "headlineFunded": "כרטיס הטיפ טעון",
     "headlineUsed": "כרטיס הטיפ נפדה בהצלחה",
+    "headlineSetFunding": "Tip Card Funding",
     "text": "כרטיס טיפ זה לא נטען עדיין באף סטושי. יש לציין את כמות הסטושים ואת ההודעה שמקבל/ת הכרטיס יראה/תראה בארנק שלו/ה.",
     "textFunded": "כרטיס זה נטען ב-({amountAndUnit}) ואפשר לתת אותו למישהו שצריך את \"הגלולה הכתומה\".",
     "textUsed": "כרטיס זה נטען בעבר ב-{amountAndUnit} וכבר נפדה.",
+    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "amountAndUnit": "{amount} ביטקוין",
     "form": {
       "textHint": "יוצג בארנק של מקבל/ת הכרטיס",
