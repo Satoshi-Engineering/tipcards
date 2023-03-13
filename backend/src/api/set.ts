@@ -248,7 +248,7 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
         return
       }
       const cardHash = await hashSha256(`${set.id}/${cardIndex}`)
-      let card: Card | null = await getCardByHash(cardHash)
+      const card: Card | null = await getCardByHash(cardHash)
       if (card?.setFunding == null) {
         return
       }

@@ -28,7 +28,7 @@
         class="text-sm mt-4"
         :href="cardsHref"
       >
-      {{ t('setFunding.backToSet') }}
+        {{ t('setFunding.backToSet') }}
       </ButtonDefault>
     </div>
     <div 
