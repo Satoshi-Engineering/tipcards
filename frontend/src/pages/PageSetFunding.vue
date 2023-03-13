@@ -7,6 +7,30 @@
     >
       <AnimatedLoadingWheel />
     </div>
+    <div
+      v-else-if="numberOfCardsToFund === 0"
+      class="flex-1 mt-8 px-4"
+    >
+      <HeadlineDefault
+        level="h1"
+        class="mt-10"
+      >
+        {{
+          funded
+            ? t('setFunding.headlineFunded') 
+            : t('setFunding.headline', { setName: settings.setName })
+        }}
+      </HeadlineDefault>
+      <p>
+        {{ t('setFunding.textNoCardsToFund') }}
+      </p>
+      <ButtonDefault
+        class="text-sm mt-4"
+        :href="cardsHref"
+      >
+      {{ t('setFunding.backToSet') }}
+      </ButtonDefault>
+    </div>
     <div 
       v-else
       class="flex-1 mt-8 px-4"
@@ -145,7 +169,7 @@
 import axios from 'axios'
 import { onBeforeMount, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import type { Set } from '@root/data/Set'
 
@@ -167,6 +191,7 @@ import { type Settings, initialSettings, decodeCardsSetSettings } from '@/module
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 
 const initializing = ref(true)
 const settings = reactive({ ...initialSettings })
@@ -186,15 +211,6 @@ const invoiceAmount = computed(() => set.value?.invoice?.amount)
 const invoiceExpired = computed(() => !!set.value?.invoice?.expired)
 
 const loadSetData = async () => {
-  const settingsEncoded = String(route.params.settings)
-  let settingsDecoded: Settings | undefined = undefined
-  try {
-    settingsDecoded = decodeCardsSetSettings(settingsEncoded)
-  } catch (error) {
-    // do nothing
-  }
-  Object.assign(settings, settingsDecoded)
-
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${route.params.setId}`)
     if (response.data.status === 'success' && response.data.data != null) {
@@ -206,15 +222,16 @@ const loadSetData = async () => {
   }
 
   if (set.value == null) {
-    cardIndicesNotUnfunded.value = []
+    const cardIndicesNotUnfundedLocal: number[] = []
     try {
       await Promise.all([...new Array(settings.numberOfCards).keys()].map(async (index) => {
         const cardHash = await hashSha256(`${route.params.setId}/${index}`)
         const { status } = await loadCardStatus(cardHash, 'cards')
         if (status !== 'unfunded') {
-          cardIndicesNotUnfunded.value.push(index)
+          cardIndicesNotUnfundedLocal.push(index)
         }
       }))
+      cardIndicesNotUnfunded.value = cardIndicesNotUnfundedLocal
     } catch (error) {
       console.error(error)
     }
@@ -223,7 +240,19 @@ const loadSetData = async () => {
 
   setTimeout(loadSetData, 10 * 1000)
 }
-onBeforeMount(loadSetData)
+
+onBeforeMount(() => {
+  const settingsEncoded = String(route.params.settings)
+  let settingsDecoded: Settings | undefined = undefined
+  try {
+    settingsDecoded = decodeCardsSetSettings(settingsEncoded)
+  } catch (error) {
+    // do nothing
+  }
+  Object.assign(settings, settingsDecoded)
+
+  loadSetData()
+})
 
 const numberOfCardsToFund = computed<number>(() => {
   if (set.value?.invoice?.fundedCards != null) {
@@ -279,4 +308,13 @@ const resetInvoice = async () => {
     userErrorMessage.value = 'Unable to reset set. Please try again later.'
   }
 }
+
+const cardsHref = computed(() => router.resolve({
+  name: 'cards',
+  params: {
+    lang: route.params.lang,
+    setId: route.params.setId,
+    settings: route.params.settings,
+  },
+}).href)
 </script>
