@@ -219,6 +219,7 @@ onBeforeMount(loadSetData)
 
 const numberOfCardsToFund = computed<number>(() => settings.numberOfCards - cardIndicesNotUnfunded.value.length)
 const amountTotal = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
+const cardIndicesToFund = computed<number[]>(() => [...new Array(settings.numberOfCards).keys()].filter(index => !cardIndicesNotUnfunded.value.includes(index)))
 
 const createInvoice = async () => {
   creatingInvoice.value = true
@@ -226,9 +227,10 @@ const createInvoice = async () => {
     const response = await axios.post(
       `${BACKEND_API_ORIGIN}/api/set/invoice/${route.params.setId}`,
       {
-        amount: amountTotal.value,
+        amountPerCard: amountPerCard.value,
         text: text.value,
         note: note.value,
+        cardIndices: cardIndicesToFund.value,
       },
     )
     if (response.data.status === 'success' && response.data.data != null) {

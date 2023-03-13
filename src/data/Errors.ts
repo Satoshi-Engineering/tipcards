@@ -21,6 +21,7 @@ export enum ErrorCode {
   SetNotFound = 'SetNotFound',
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
+  CardNeedsSetFunding = 'CardNeedsSetFunding',
 }
 
 export class ErrorWithCode {
