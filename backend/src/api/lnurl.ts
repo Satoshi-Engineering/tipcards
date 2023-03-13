@@ -15,6 +15,9 @@ import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHel
 
 const router = express.Router()
 
+/**
+ * LNURL response when cards are scanned directly
+ */
 router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
   let card: Card | null = null
 
@@ -70,6 +73,15 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
+    if (card.setFunding != null) {
+      res.status(500).json({
+        status: 'ERROR',
+        reason: 'This card is being funded via set funding.',
+        code: ErrorCode.CardNeedsSetFunding,
+      })
+      return
+    }
+
     try {
       const data = await getLnurlpForCard(card)
       res.json(data)
