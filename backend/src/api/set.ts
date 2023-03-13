@@ -204,7 +204,7 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
     })
     return
   }
-  if (set == null) {
+  if (set?.invoice == null) {
     res.status(404).json({
       status: 'error',
       message: `Set not found. Go to /set-funding/${req.params.setId} to create an invoice.`,
@@ -230,7 +230,7 @@ router.delete('/invoice/:setId', async (req: express.Request, res: express.Respo
     })
     return
   }
-  if (set.invoice?.paid == null) {
+  if (set.invoice?.paid != null) {
     res.status(400).json({
       status: 'error',
       message: 'This set invoice is already funded and cannot be deleted anymore!',
