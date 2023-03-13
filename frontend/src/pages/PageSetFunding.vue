@@ -71,7 +71,9 @@
       <div v-else>
         <ParagraphDefault class="mb-8">
           <I18nT keypath="setFunding.text">
-            <template #numberOfCardsToFund>{{ numberOfCardsToFund }}</template>
+            <template #numberOfCardsToFund>
+              {{ numberOfCardsToFund }}
+            </template>
             <template #amountAndUnit>
               <strong class="inline-block">
                 {{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}
@@ -229,7 +231,7 @@ const createInvoice = async () => {
         note: note.value,
       },
     )
-    if (response.data.status === 'success' && typeof response.data.data != null) {
+    if (response.data.status === 'success' && response.data.data != null) {
       set.value = response.data.data
       userErrorMessage.value = undefined
     }

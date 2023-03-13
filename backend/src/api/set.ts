@@ -103,7 +103,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
     }  else {
       res.status(400).json({
         status: 'error',
-        message: `Set invoice already exists.`,
+        message: 'Set invoice already exists.',
       })
     }
     return
