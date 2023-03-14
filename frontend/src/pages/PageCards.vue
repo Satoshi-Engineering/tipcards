@@ -183,12 +183,17 @@
       </ButtonDefault>
       <label class="block mt-3">
         <span class="block">
-          {{ cardsStatusList.length == 0 ? t('cards.actions.setFunding.labelAll') : t('cards.actions.setFunding.labelUnfunded') }}:
+          {{ t('cards.actions.setFunding.labelAll') }}:
         </span>
       </label>
-      <ButtonDefault class="text-sm" :href="setFundingHref">
+      <ButtonWithTooltip
+        class="text-sm"
+        :href="setFundingHref"
+        :disabled="cardsStatusList.length !== 0"
+        :tooltip="cardsStatusList.length !== 0 ? t('cards.actions.setFunding.disabledReason') : undefined"
+      >
         {{ t('cards.actions.setFunding.button') }}
-      </ButtonDefault>
+      </ButtonWithTooltip>
     </div>
   </div>
   <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
@@ -387,6 +392,7 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
+import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import {
   type Settings,
   initialSettings,

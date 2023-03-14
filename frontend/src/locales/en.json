@@ -186,7 +186,8 @@
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
-        "button": "Load set"
+        "button": "Fund set",
+        "disabledReason": "Some cards of this set have already been funded. Create a new set to fund a whole set."
       }
     },
     "cards": {

@@ -200,7 +200,8 @@
       "setFunding": {
         "labelAll": "Alle Karten auf einmal aufladen",
         "labelUnfunded": "Alle noch nicht aufgeladenen Karten aufladen",
-        "button": "Set aufladen"
+        "button": "Set aufladen",
+        "disabledReason": "In diesem Set befinden sich bereits aufgeladene Karten. Erstelle ein neues Set, um alle Karten auf einmal aufzuladen."
       }
     },
     "cards": {
