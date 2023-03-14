@@ -77,7 +77,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   } catch (error) {
     console.error(error)
   }
-  if (amountPerCard == null || amountPerCard < 100 || cardIndices.length < 1) {
+  if (amountPerCard == null || amountPerCard < 21 || cardIndices.length < 1) {
     res.status(400).json({
       status: 'error',
       message: 'Invalid input.',
