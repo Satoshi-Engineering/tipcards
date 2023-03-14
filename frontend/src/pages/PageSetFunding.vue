@@ -118,11 +118,14 @@
             <SatsAmountSelector
               :amount-sats="amountPerCard"
               :rate-btc-eur="rateBtcEur"
-              :min="210"
+              :min="21"
               :disabled="creatingInvoice"
               @update="amountPerCard = $event"
             />
             <small class="block">({{ t('setFunding.form.amountHint') }})</small>
+            <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3">
+              {{ t('setFunding.form.smallAmountWarning') }}
+            </small>
           </label>
           <label class="block mb-2">
             <input

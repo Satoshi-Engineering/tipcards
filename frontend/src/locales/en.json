@@ -125,6 +125,7 @@
     "textNoCardsToFund": "There are no cards that can be funded with set funding. Either delete pending invoices of your cards, increase the set size or create a new set to continue.",
     "form": {
       "amountHint": "amount per card",
+      "smallAmountWarning": "Warning: Small amounts per card may cause issues for the recipient when trying to receive their sats. We recommend to use a minimum of 210 sats per card.",
       "textHint": "will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
       "noteHint": "will be displayed on the status section of your Tip Cards set",

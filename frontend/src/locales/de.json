@@ -131,21 +131,22 @@
     }
   },
   "setFunding": {
-    "title": "Load set",
-    "headline": "Load {setName}",
+    "title": "Set aufladen",
+    "headline": "{setName} aufladen",
     "amountAndUnit": "{amount} BTC",
-    "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
-    "invoiceText": "Fund {numberOfCardsToFund} cards by paying a single invoice of {amountAndUnit}.",
-    "textNoCardsToFund": "There are no cards that can be funded with set funding. Either delete pending invoices of your cards, increase the set size or create a new set to continue.",
+    "text": "In diesem Set gibt es {numberOfCardsToFund} Karten, die noch nicht aufgeladen wurden. Lege den Betrag pro Karte und die Nachricht, die die Empfängerinnen in ihren Wallets sehen sollen. Die Summe beträgt {amountAndUnit}.",
+    "invoiceText": "Bezahle die Invoice über {amountAndUnit}, um {numberOfCardsToFund} aufzuladen.",
+    "textNoCardsToFund": "Hier gibt es keine Karten, die mittels der Set-Aufladefunktion aufgeladen werden können. Erhöhe die Anzahl der Karten in deinem Set, um fortzufahren.",
     "form": {
-      "amountHint": "amount per card",
-      "textHint": "will be displayed in the recipient's wallet",
-      "notePlaceholder": "Notes / handed out to",
-      "noteHint": "will be displayed on the status section of your Tip Cards set",
-      "button": "Load set"
+      "amountHint": "Betrag pro Karte",
+      "smallAmountWarning": "Warnung: Kleine Beträge pro Karte können für den Empfänger zu Problemen beim Abholen ihrer Sats führen. Wir empfehlen ein Minimum von 210 sats pro Karte.",
+      "textHint": "wird in der Wallet des Empfängers angezeigt",
+      "notePlaceholder": "Notizen / ausgegeben an",
+      "noteHint": "wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "button": "Set aufladen"
     },
-    "resetInvoice": "Reset Set Invoice",
-    "backToSet": "Back to the cards"
+    "resetInvoice": "Set-Invoice zurücksetzen",
+    "backToSet": "Zurück zum Set"
   },
   "index": {
     "buttonCreate": "Erstelle dein Tip Cards-Set",
