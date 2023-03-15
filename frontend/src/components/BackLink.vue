@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="backlink != null || onlyInternalReferrer === false"
+    v-if="backlink != null || to != null || onlyInternalReferrer === false"
   >
     <LinkDefault
       :href="backlink"
       :to="to"
       target="_self"
-      @click.prevent="backlinkAction"
+      @click="backlinkAction($event)"
     >
       <i class="bi bi-caret-left-fill rtl:hidden" /><!--
       --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
@@ -39,6 +39,9 @@ const router = useRouter()
 const route = useRoute()
 
 const backlink = computed(() => {
+  if (props.to != null) {
+    return undefined
+  }
   try {
     return new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href ? document.referrer : undefined
   } catch (error) {
@@ -53,10 +56,14 @@ const to = computed(() => {
   if (backlink.value != null) {
     return undefined
   }
-  return { name: 'home' }
+  return { name: 'home', params: { lang: route.params.lang } }
 })
 
-const backlinkAction = () => {
+const backlinkAction = (event: Event) => {
+  if (props.to != null) {
+    return true
+  }
+  event.preventDefault()
   if (backlink.value != null) {
     router.go(-1)
   } else {

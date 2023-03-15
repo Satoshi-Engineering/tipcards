@@ -2,8 +2,8 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     style="margin: auto; display: block; shape-rendering: auto;"
-    width="150px"
-    height="150px"
+    width="50px"
+    height="50px"
     viewBox="0 0 100 100"
     preserveAspectRatio="xMidYMid"
   >
@@ -12,7 +12,7 @@
       cy="50"
       fill="none"
       stroke="#f7931a"
-      stroke-width="4"
+      stroke-width="6"
       r="35"
       stroke-dasharray="164.93361431346415 56.97787143782138"
     >

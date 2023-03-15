@@ -40,8 +40,9 @@ const props = defineProps({
 })
 
 const cssClasses = computed(() => [
-  'border-2 border-btcorange my-1 px-5 py-2 text-white rounded-sm transition-colors duration-200',
+  'border-2 border-btcorange my-1 py-2 text-center rounded-sm transition-colors duration-200',
   {
+    'px-5': props.variant !== 'no-border',
     'bg-btcorange text-white hover:bg-btcorange-effect active:bg-btcorange-effect hover:border-btcorange-effect active:border-btcorange-effect': props.variant == null,
     'bg-transparent text-btcorange': props.variant === 'outline',
     'bg-transparent text-btcorange border-transparent px-0': props.variant === 'no-border',
