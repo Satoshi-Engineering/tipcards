@@ -158,14 +158,14 @@
         <ParagraphDefault>
           <I18nT keypath="landing.sectionWallet.other">
             <template #wallet0>
-              <LinkDefault href="https://bluewallet.io/">BlueWallet</LinkDefault>
+              <LinkDefault href="https://breez.technology/">Breez</LinkDefault>
             </template>
             <template #wallet1>
               <LinkDefault href="https://phoenix.acinq.co/">Phoenix</LinkDefault>
             </template>
-            <template #wallet2>
-              <LinkDefault href="https://breez.technology/">Breez</LinkDefault>
-            </template>
+            <!-- <template #wallet2>
+              <LinkDefault href="https://muun.com/">Muun</LinkDefault>
+            </template> -->
           </I18nT>
           <br>
           <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
