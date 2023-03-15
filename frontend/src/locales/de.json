@@ -142,7 +142,7 @@
     "textFunded": "Alle {numberOfCardsToFund} Karten dieses Sets wurden mit je {amountAndUnitPerCard} aufgeladen.",
     "form": {
       "amountLabel": "Betrag pro Karte",
-      "smallAmountWarning": "Warnung: Kleine Beträge pro Karte können für den Empfänger zu Problemen beim Abholen ihrer Sats führen. Wir empfehlen ein Minimum von 210 sats pro Karte.",
+      "smallAmountWarning": "Warnung: Kleine Beträge pro Karte können für die Empfänger zu Problemen beim Abholen ihrer Sats führen. Wir empfehlen ein Minimum von 210 sats pro Karte.",
       "totalAmountLabel": "Summe",
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
