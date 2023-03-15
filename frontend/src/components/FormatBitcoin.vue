@@ -5,7 +5,10 @@
       :key="index"
     >
       <span
-        :class="{ [leadingZerosClass]: isLeadingZero }"
+        :class="{
+          [leadingZerosClass]: isLeadingZero,
+          'ml-1': (1 - index) % 3 === 0 && char !== decimalSeparator,
+        }"
       >{{ char }}</span>
     </template>
   </span>

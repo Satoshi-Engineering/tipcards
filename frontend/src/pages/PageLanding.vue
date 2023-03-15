@@ -25,7 +25,7 @@
               <span class="inline-block">
                 <I18nT keypath="landing.introMessageReceiveBtc.amountAndUnit">
                   <template #amount>
-                    <FormatNumber
+                    <FormatBitcoin
                       v-if="amount != null"
                       :value="amount / (100 * 1000 * 1000)"
                       :format="{ minimumFractionDigits: 8, maximumFractionDigits: 8 }"
@@ -303,7 +303,6 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import FormatNumber from '@/components/FormatNumberLeadingZeros.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import { decodeLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
@@ -311,6 +310,7 @@ import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
+import FormatBitcoin from '@/components/FormatBitcoin.vue'
 
 const { t, te } = useI18n()
 
