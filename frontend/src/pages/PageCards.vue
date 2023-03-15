@@ -15,7 +15,7 @@
         </HeadlineDefault>
         <ButtonDefault
           variant="no-border"
-          class="text-xs text-black underline hover:no-underline active:no-underline disabled:no-underline"
+          class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
           :disabled="reloadingStatusForCards"
           @click="reloadStatusForCards()"
         >
@@ -141,23 +141,16 @@
         {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
       </label>
     </div>
-    <div class="p-4 mb-3 text-sm">
+    <div class="px-4">
       <HeadlineDefault level="h2">
         {{ t('cards.actions.headline') }}
       </HeadlineDefault>
-      <ButtonDefault
-        @click="printCards()"
-      >
-        {{ t('cards.actions.buttonPrint') }}
-      </ButtonDefault>
-      &nbsp;
-      <ButtonDefault
-        variant="no-border"
-        @click="downloadZip()"
-      >
-        {{ t('cards.actions.buttonDownloadPngs') }}
-      </ButtonDefault>
-      <label class="block mt-3 mb-1">
+    </div>
+    <div class="px-4 my-5">
+      <HeadlineDefault level="h3" class="mb-2">
+        Speichern <!-- {{ t('cards.actions.print.headline') }} -->
+      </HeadlineDefault>
+      <label class="block mb-1">
         <span class="block">
           {{ t('cards.actions.setName') }}:
         </span>
@@ -167,27 +160,53 @@
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
       </label>
-      <ButtonDefault class="text-sm" @click="saveCardsSet">
+      <ButtonDefault class="text-sm min-w-[170px]" @click="saveCardsSet">
         {{ t('cards.actions.buttonSaveCardsSet') }}
         <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
         <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
       </ButtonDefault>
       &nbsp;
+      <br class="xs:hidden">
       <ButtonDefault
         v-if="isSaved"
-        variant="outline"
+        variant="no-border"
         class="text-sm"
         @click="deleteCardsSet"
       >
         {{ t('cards.actions.buttonDeleteCardsSet') }}
       </ButtonDefault>
-      <label class="block mt-3">
+    </div>
+    <div class="px-4 my-5">
+      <HeadlineDefault level="h3" class="mb-2">
+        Drucken <!-- {{ t('cards.actions.print.headline') }} -->
+      </HeadlineDefault>
+      <ButtonDefault
+        class="text-sm min-w-[170px]"
+        @click="printCards()"
+      >
+        {{ t('cards.actions.buttonPrint') }}
+      </ButtonDefault>
+      &nbsp;
+      <br class="xs:hidden">
+      <ButtonDefault
+        variant="no-border"
+        class="text-sm"
+        @click="downloadZip()"
+      >
+        {{ t('cards.actions.buttonDownloadPngs') }}
+      </ButtonDefault>
+    </div>
+    <div class="px-4 my-5">
+      <HeadlineDefault level="h3" class="mb-2">
+        Alle aufladen <!-- {{ t('cards.actions.print.headline') }} -->
+      </HeadlineDefault>
+      <label class="block">
         <span class="block">
           {{ t('cards.actions.setFunding.labelAll') }}:
         </span>
       </label>
       <ButtonWithTooltip
-        class="text-sm"
+        class="text-sm min-w-[170px]"
         :href="setFundingHref"
         :disabled="cardsStatusList.length !== 0"
         :tooltip="cardsStatusList.length !== 0 ? t('cards.actions.setFunding.disabledReason') : undefined"

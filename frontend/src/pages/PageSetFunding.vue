@@ -1,35 +1,21 @@
 <template>
   <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
-    <BackLink class="pt-4 px-4" />
+    <BackLink
+      class="pt-4 px-4"
+      :to="{
+        name: 'cards',
+        params: {
+          lang: route.params.lang,
+          setId: route.params.setId,
+          settings: route.params.settings,
+        }
+      }"
+    />
     <div
       v-if="initializing"
       class="flex justify-center flex-1 mt-8 px-4"
     >
       <AnimatedLoadingWheel />
-    </div>
-    <div
-      v-else-if="numberOfCardsToFund === 0"
-      class="flex-1 mt-8 px-4"
-    >
-      <HeadlineDefault
-        level="h1"
-        class="mt-10"
-      >
-        {{
-          funded
-            ? t('setFunding.headlineFunded') 
-            : t('setFunding.headline', { setName: settings.setName })
-        }}
-      </HeadlineDefault>
-      <p>
-        {{ t('setFunding.textNoCardsToFund') }}
-      </p>
-      <ButtonDefault
-        class="text-sm mt-4"
-        :href="cardsHref"
-      >
-        {{ t('setFunding.backToSet') }}
-      </ButtonDefault>
     </div>
     <div 
       v-else
@@ -39,24 +25,30 @@
         level="h1"
         class="mt-10"
       >
-        {{
-          funded
-            ? t('setFunding.headlineFunded') 
-            : t('setFunding.headline', { setName: settings.setName })
-        }}
+        {{ t('setFunding.headline') }}
       </HeadlineDefault>
+      <p class="my-3">
+        <I18nT keypath="setFunding.setName">
+          <template #setName>
+            <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
+          </template>
+        </I18nT>
+      </p>
       <div v-if="invoice != null">
         <ParagraphDefault>
           <I18nT
             v-if="funded"
             keypath="setFunding.textFunded"
           >
-            <template #amountAndUnit>
+            <template #numberOfCardsToFund>
+              {{ numberOfCardsToFund }}
+            </template>
+            <template #amountAndUnitPerCard>
               <strong
                 v-if="invoiceAmount != null"
                 class="inline-block"
               >
-                {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8) }) }}
+                {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / numberOfCardsToFund / (100 * 1000 * 1000), 8, 8) }) }}
               </strong>
             </template>
           </I18nT>
@@ -115,6 +107,9 @@
         </ParagraphDefault>
         <form @submit.prevent="createInvoice">
           <label class="block mb-2">
+            <span class="block">
+              {{ t('setFunding.form.amountLabel') }}:
+            </span>
             <SatsAmountSelector
               :amount-sats="amountPerCard"
               :rate-btc-eur="rateBtcEur"
@@ -122,11 +117,14 @@
               :disabled="creatingInvoice"
               @update="amountPerCard = $event"
             />
-            <small class="block">({{ t('setFunding.form.amountHint') }})</small>
-            <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3">
+            <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3 text-sm text-btcorange-effect">
               {{ t('setFunding.form.smallAmountWarning') }}
             </small>
           </label>
+          <div class="block leading-tight my-3">
+            {{ t('setFunding.form.totalAmountLabel') }}:
+            <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}</strong>
+          </div>
           <label class="block mb-2">
             <input
               v-model="text"

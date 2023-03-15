@@ -104,12 +104,12 @@
     "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht die Empfängerin in ihrer Wallet sehen soll.",
     "textFunded": "Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.",
     "textUsed": "Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.",
-    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
+    "textSetFunding": "Die Karte wird gemeinsam mit dem ganzen Set aufgeladen. Bezahle die Invoice für das Set um fortzufahren.",
     "amountAndUnit": "{amount} BTC",
     "form": {
-      "textHint": "wird in der Wallet des Empfängers angezeigt",
+      "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
-      "noteHint": "wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "noteHint": "Wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
       "button": "Jetzt aufladen"
     },
     "invoiceText": "Lade {amount} Sats auf deine Tip Card:",
@@ -132,20 +132,23 @@
   },
   "setFunding": {
     "title": "Set aufladen",
-    "headline": "{setName} aufladen",
+    "headline": "Set aufladen",
+    "setName": "Set-Name: {setName}",
     "amountAndUnit": "{amount} BTC",
-    "text": "In diesem Set gibt es {numberOfCardsToFund} Karten, die noch nicht aufgeladen wurden. Lege den Betrag pro Karte und die Nachricht, die die Empfängerinnen in ihren Wallets sehen sollen. Die Summe beträgt {amountAndUnit}.",
-    "invoiceText": "Bezahle die Invoice über {amountAndUnit}, um {numberOfCardsToFund} aufzuladen.",
-    "textNoCardsToFund": "Hier gibt es keine Karten, die mittels der Set-Aufladefunktion aufgeladen werden können. Erhöhe die Anzahl der Karten in deinem Set, um fortzufahren.",
+    "text": "In diesem Set gibt es {numberOfCardsToFund} Karten, die auf einmal aufgeladen werden können. Lege den Betrag pro Karte fest und die Nachricht, die die Empfängerinnen und Empfänger in ihren Wallets sehen sollen. Die Summe beträgt {amountAndUnit}.",
+    "invoiceText": "Bezahle die Invoice über {amountAndUnit}, um {numberOfCardsToFund} Karten aufzuladen.",
+    "textFunded": "Alle {numberOfCardsToFund} Karten dieses Sets wurden mit je {amountAndUnitPerCard} aufgeladen.",
     "form": {
-      "amountHint": "Betrag pro Karte",
+      "amountLabel": "Betrag pro Karte",
       "smallAmountWarning": "Warnung: Kleine Beträge pro Karte können für den Empfänger zu Problemen beim Abholen ihrer Sats führen. Wir empfehlen ein Minimum von 210 sats pro Karte.",
-      "textHint": "wird in der Wallet des Empfängers angezeigt",
+      "totalAmountLabel": "Summe",
+      "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
-      "noteHint": "wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "noteHint": "Wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
       "button": "Set aufladen"
     },
     "resetInvoice": "Set-Invoice zurücksetzen",
+    "resetDisabledTooltip": "Dieses Set wurde bereits aufgeladen",
     "backToSet": "Zurück zum Set"
   },
   "index": {

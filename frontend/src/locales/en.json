@@ -93,10 +93,10 @@
     "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "amountAndUnit": "{amount} BTC",
     "form": {
-      "textHint": "will be displayed in the recipient's wallet",
+      "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "will be displayed on the status section of your Tip Cards set",
-      "button": "Load card"
+      "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "button": "Fund card"
     },
     "invoiceText": "Fund your Tip Card with {amount} sats:",
     "invoiceExpired": "The lightning invoice for this card has expired. Please reset the Tip Card to continue.",
@@ -117,21 +117,24 @@
     }
   },
   "setFunding": {
-    "title": "Load set",
-    "headline": "Load {setName}",
+    "title": "Set funding",
+    "headline": "Set funding",
+    "setName": "Set name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
     "invoiceText": "Fund {numberOfCardsToFund} cards by paying a single invoice of {amountAndUnit}.",
-    "textNoCardsToFund": "There are no cards that can be funded with set funding. Either delete pending invoices of your cards, increase the set size or create a new set to continue.",
+    "textFunded": "All {numberOfCardsToFund} cards of this set have been funded with {amountAndUnitPerCard} each.",
     "form": {
-      "amountHint": "amount per card",
+      "amountLabel": "Amount per card",
       "smallAmountWarning": "Warning: Small amounts per card may cause issues for the recipient when trying to receive their sats. We recommend to use a minimum of 210 sats per card.",
-      "textHint": "will be displayed in the recipient's wallet",
+      "totalAmountLabel": "Total amount",
+      "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "will be displayed on the status section of your Tip Cards set",
-      "button": "Load set"
+      "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "button": "Fund set"
     },
     "resetInvoice": "Reset Set Invoice",
+    "resetDisabledTooltip": "This set has already been funded",
     "backToSet": "Back to the cards"
   },
   "index": {
