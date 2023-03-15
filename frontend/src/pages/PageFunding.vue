@@ -315,7 +315,7 @@ import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
 import CardStatus from '@/components/CardStatus.vue'
 import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
-import { rateBtcEur } from '@/modules/rateBtcEur'
+import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 

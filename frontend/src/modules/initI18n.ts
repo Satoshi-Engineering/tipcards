@@ -5,26 +5,32 @@ export const LOCALES = {
   en: {
     name: 'English',
     dir: 'ltr',
+    fiat: 'USD',
   },
   de: {
     name: 'Deutsch',
     dir: 'ltr',
+    fiat: 'EUR',
   },
   es: {
     name: 'Español',
     dir: 'ltr',
+    fiat: 'EUR',
   },
   he: {
     name: 'עברית',
     dir: 'rtl',
+    fiat: 'EUR',
   },
   ru: {
     name: 'Русский',
     dir: 'ltr',
+    fiat: 'EUR',
   },
   hi: {
     name: 'हिन्दी',
     dir: 'ltr',
+    fiat: 'USD',
   },
 }
 
@@ -45,10 +51,12 @@ const getPreferredLocale = () => {
 export const useI18nHelpers = () => {
   const currentLocale = computed(() => i18n.global.locale.value as LocaleCode)
   const currentTextDirection = computed<'ltr' | 'rtl'>(() => LOCALES[currentLocale.value]?.dir === 'rtl' ? 'rtl' : 'ltr')
+  const currentFiat = computed(() => LOCALES[currentLocale.value]?.fiat || 'EUR')
 
   return {
     currentLocale,
     currentTextDirection,
+    currentFiat,
   }
 }
 

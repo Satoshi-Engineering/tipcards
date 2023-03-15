@@ -11,9 +11,9 @@
     "titlePreview": "Vista previa – Consigue tu Bitcoin",
     "introGreeting": "¡Hola!",
     "introMessageReceiveBtc": {
-      "message": "Puedes obtener {amountAndUnit} aquí*.",
+      "message": "Puedes obtener {amountAndUnit} aquí.",
       "amountAndUnit": "{amount} Bitcoin",
-      "footnote": "* con Lightning"
+      "footnote": "con Lightning"
     },
     "introMessageAlreadyUsed": {
       "headline": "Al parecer, este código QR ya ha sido canjeado.",

@@ -10,8 +10,8 @@
     "introGreeting":"Привет!",
     "introMessageReceiveBtc":{
       "message":"Вы вот-вот получите {amountAndUnit}",
-      "amountAndUnit":"{amount} биткоин*",
-      "footnote":"* через сеть Молния"
+      "amountAndUnit":"{amount} биткоин",
+      "footnote":"через сеть Молния"
     },
     "introMessageAlreadyUsed":{
       "headline":"Похоже, этот QR-код уже был использован.",

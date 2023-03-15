@@ -12,8 +12,8 @@
       "introGreeting": "नमस्ते",
       "introMessageReceiveBtc": {
         "message": "आपको प्राप्त होने वाले है {amountAndUnit}",
-        "amountAndUnit": "{amount} बिटकॉइन*",
-        "footnote": "* लाइटनिंग मार्ग से"
+        "amountAndUnit": "{amount} बिटकॉइन",
+        "footnote": "लाइटनिंग मार्ग से"
       },
       "introMessageAlreadyUsed": {
         "headline": "ऐसा लगता है कि इस QR-कोड का पहले ही इस्तेमाल किया जा चुका है।",

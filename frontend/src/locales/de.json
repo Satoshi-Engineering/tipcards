@@ -17,9 +17,11 @@
     "titlePreview": "Vorschau – Hol dir deine Bitcoin",
     "introGreeting": "Hi!",
     "introMessageReceiveBtc": {
-      "message": "Hier kannst du dir {amountAndUnit} holen*.",
+      "message": "Hier kannst du dir {amountAndUnit} holen.",
       "amountAndUnit": "{amount} Bitcoin",
-      "footnote": "* über Lightning"
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
+      "footnote": "über Lightning"
     },
     "introMessagePreview": {
       "headline": "Scanne eine Lightning Tip Card um dir Bitcoin zu holen.",

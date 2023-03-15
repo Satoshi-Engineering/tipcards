@@ -18,8 +18,10 @@
     "introGreeting": "היי!",
     "introMessageReceiveBtc": {
       "message": "את/ה עומד/ת לקבל {amountAndUnit}",
-      "amountAndUnit": "{amount} ביטקוין*",
-      "footnote": "* דרך לייטנינג"
+      "amountAndUnit": "{amount} ביטקוין",
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
+      "footnote": "דרך לייטנינג"
     },
     "introMessagePreview": {
       "headline": "יש לסרוק את אחד מכרטיסי הטיפ לקבלת ביטקוין.",

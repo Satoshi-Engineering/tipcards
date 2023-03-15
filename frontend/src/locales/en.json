@@ -18,8 +18,10 @@
     "introGreeting": "Hey!",
     "introMessageReceiveBtc": {
       "message": "You are just about to receive {amountAndUnit}",
-      "amountAndUnit": "{amount} bitcoin*",
-      "footnote": "* via Lightning"
+      "amountAndUnit": "{amount} bitcoin",
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
+      "footnote": "via Lightning"
     },
     "introMessagePreview": {
       "headline": "Scan a Lightning Tip Card to receive some bitcoin.",
