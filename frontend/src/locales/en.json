@@ -124,7 +124,7 @@
     "setName": "Set name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
-    "textFundingNotPossible": "Some cards of this set have already been funded. Create a new set to fund a whole set.",
+    "textFundingNotPossible": "Some cards of this set have already been used. Create a new set to fund a whole set.",
     "invoiceText": "Fund {numberOfCardsToFund} cards by paying a single invoice of {amountAndUnit}.",
     "textFunded": "All {numberOfCardsToFund} cards of this set have been funded with {amountAndUnitPerCard} each.",
     "form": {
@@ -193,7 +193,7 @@
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
         "button": "Fund set",
-        "disabledReason": "Some cards of this set have already been funded. Create a new set to fund a whole set."
+        "disabledReason": "Some cards of this set have already been used. Create a new set to fund a whole set."
       }
     },
     "cards": {
