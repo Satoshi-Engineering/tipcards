@@ -200,7 +200,9 @@
       <HeadlineDefault level="h3" class="mb-2">
         Alle aufladen <!-- {{ t('cards.actions.print.headline') }} -->
       </HeadlineDefault>
-      <ParagraphDefault class="text-sm">{{ t('cards.actions.setFunding.intro') }}</ParagraphDefault>
+      <ParagraphDefault class="text-sm">
+        {{ t('cards.actions.setFunding.intro') }}
+      </ParagraphDefault>
       <div class="mb-2">
         {{ t('cards.actions.setFunding.label') }}:
       </div>
