@@ -2,14 +2,7 @@
   <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
     <BackLink
       class="pt-4 px-4"
-      :to="{
-        name: 'cards',
-        params: {
-          lang: route.params.lang,
-          setId: route.params.setId,
-          settings: route.params.settings,
-        }
-      }"
+      :to="cardsHref"
     />
     <div
       v-if="initializing"
@@ -17,7 +10,34 @@
     >
       <AnimatedLoadingWheel />
     </div>
-    <div 
+    <div
+      v-else-if="numberOfCardsToFund !== settings.numberOfCards"
+      class="flex-1 mt-8 px-4"
+    >
+      <HeadlineDefault
+        level="h1"
+        class="mt-10"
+      >
+        {{ t('setFunding.headline') }}
+      </HeadlineDefault>
+      <p class="my-3">
+        <I18nT keypath="setFunding.setName">
+          <template #setName>
+            <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
+          </template>
+        </I18nT>
+      </p>
+      <p>
+        {{ t('setFunding.textFundingNotPossible') }}
+      </p>
+      <ButtonDefault
+        class="text-sm mt-4"
+        :href="cardsHref"
+      >
+        {{ t('setFunding.backToSet') }}
+      </ButtonDefault>
+    </div>
+    <div
       v-else
       class="flex-1 mt-8 px-4"
     >

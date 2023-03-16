@@ -138,6 +138,7 @@
     "setName": "Set-Name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "text": "In diesem Set gibt es {numberOfCardsToFund} Karten, die auf einmal aufgeladen werden können. Lege den Betrag pro Karte fest und die Nachricht, die die Empfängerinnen und Empfänger in ihren Wallets sehen sollen. Die Summe beträgt {amountAndUnit}.",
+    "textFundingNotPossible": "In diesem Set befinden sich bereits aufgeladene Karten. Erstelle ein neues Set, um alle Karten auf einmal aufzuladen.",
     "invoiceText": "Bezahle die Invoice über {amountAndUnit}, um {numberOfCardsToFund} Karten aufzuladen.",
     "textFunded": "Alle {numberOfCardsToFund} Karten dieses Sets wurden mit je {amountAndUnitPerCard} aufgeladen.",
     "form": {
