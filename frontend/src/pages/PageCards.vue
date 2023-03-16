@@ -200,11 +200,10 @@
       <HeadlineDefault level="h3" class="mb-2">
         Alle aufladen <!-- {{ t('cards.actions.print.headline') }} -->
       </HeadlineDefault>
-      <label class="block">
-        <span class="block">
-          {{ t('cards.actions.setFunding.labelAll') }}:
-        </span>
-      </label>
+      <ParagraphDefault class="text-sm">{{ t('cards.actions.setFunding.intro') }}</ParagraphDefault>
+      <div class="mb-2">
+        {{ t('cards.actions.setFunding.label') }}:
+      </div>
       <ButtonWithTooltip
         class="text-sm min-w-[170px]"
         :href="setFundingHref"
