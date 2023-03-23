@@ -1,9 +1,8 @@
 <template>
   <div
-    v-if="backlink != null || to != null || onlyInternalReferrer === false"
+    v-if="!onlyInternalReferrer"
   >
     <LinkDefault
-      :href="backlink"
       :to="to"
       target="_self"
       @click="backlinkAction($event)"
@@ -38,36 +37,42 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 
-const backlink = computed(() => {
-  if (props.to != null) {
-    return undefined
-  }
+const referrerFromApplication = computed(() => {
   try {
-    return new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href ? document.referrer : undefined
+    if (new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href) {
+      return true
+    }
   } catch (error) {
-    return undefined
+    return false
   }
+  return false
 })
 
 const to = computed(() => {
   if (props.to != null) {
     return props.to
   }
-  if (backlink.value != null) {
-    return undefined
+
+  const home = { name: 'home', params: { lang: route.params.lang } }
+  if (!referrerFromApplication.value) {
+    return home
   }
-  return { name: 'home', params: { lang: route.params.lang } }
+  try {
+    return router.resolve(new URL(document.referrer).pathname)
+  } catch (error) {
+    return home
+  }
 })
 
 const backlinkAction = (event: Event) => {
-  if (props.to != null) {
+  if (
+    props.to != null
+    || history.length <= 1
+    || !referrerFromApplication.value
+    ) {
     return true
   }
   event.preventDefault()
-  if (backlink.value != null) {
-    router.go(-1)
-  } else {
-    router.push({ name: 'home', params: { lang: route.params.lang } })
-  }
+  router.go(-1)
 }
 </script>
