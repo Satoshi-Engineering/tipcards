@@ -397,7 +397,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
-import { onMounted, ref, reactive, watch, computed, onBeforeMount, onActivated } from 'vue'
+import { onMounted, ref, reactive, watch, computed, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
@@ -525,7 +525,22 @@ onMounted(() => {
   urlChanged()
   putSettingsIntoUrl()
 })
-onActivated(() => reloadStatusForCards())
+
+// weird workaround
+// when navigating back via history, chrome restores the page incl javascript memory+runtime
+// I found no other way to check if that happened
+let lastCheck = + new Date()
+const intervalId = setInterval(() => {
+  const delta = + new Date() - lastCheck
+  if (delta > 2000) {
+    reloadStatusForCards()
+  }
+  lastCheck = + new Date()
+}, 1000)
+onBeforeUnmount(() => {
+  clearInterval(intervalId)
+})
+// weird workaround end
   
 watch(() => route.fullPath, urlChanged)
 
