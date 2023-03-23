@@ -397,7 +397,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
-import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
+import { onMounted, ref, reactive, watch, computed, onBeforeMount, onActivated } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
@@ -525,6 +525,7 @@ onMounted(() => {
   urlChanged()
   putSettingsIntoUrl()
 })
+onActivated(() => reloadStatusForCards())
   
 watch(() => route.fullPath, urlChanged)
 
