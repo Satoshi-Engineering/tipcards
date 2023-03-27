@@ -192,6 +192,10 @@
       "cardQrCodeLogoLabel": "Logo auf den QR-Codes",
       "cardQrCodeLogo": {
         "noLogo": "Kein Logo"
+      },
+      "defaults": {
+        "cardHeadline": "Hey :)",
+        "cardCopytext": "Trinkgeld für dich. 🎉\nScanne den QR code und erfahre wie du zu deinen Bitcoin kommst."
       }
     },
     "actions": {

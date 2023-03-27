@@ -415,7 +415,7 @@ import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import {
   type Settings,
-  initialSettings,
+  getDefaultSettings,
   useCardsSets,
   encodeCardsSetSettings,
   decodeCardsSetSettings,
@@ -444,7 +444,7 @@ const {
 //
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
 
-const settings = reactive({ ...initialSettings })
+const settings = reactive(getDefaultSettings())
 
 const saveCardsSet = () => {
   if (setId.value == null) {
@@ -487,7 +487,7 @@ const putSettingsIntoUrl = async () => {
   }
 
   let settingsForUrl = ''
-  if (!isEqual(settings, initialSettings)) {
+  if (!isEqual(settings, getDefaultSettings())) {
     settingsForUrl = encodeCardsSetSettings(settings)
   }
   

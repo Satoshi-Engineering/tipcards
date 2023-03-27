@@ -160,6 +160,10 @@
         "cardQrCodeLogoLabel": "QR-कोड्स पर प्रतीक चिन्ह",
         "cardQrCodeLogo": {
           "noLogo": "कोई प्रतीक चिन्ह नहीं"
+        },
+        "defaults": {
+          "cardHeadline": "Hey :)",
+          "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin."
         }
       },
       "actions": {

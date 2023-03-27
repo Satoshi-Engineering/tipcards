@@ -1,5 +1,9 @@
 import { ref } from 'vue'
 
+import i18n from './initI18n'
+
+const { t } = i18n.global
+
 export const SAVED_CARD_SETS_KEY = 'savedTipCardsSets'
 
 export const initialSettings = {
@@ -24,6 +28,12 @@ type CardsSetRecordEncoded = {
   date: string
 }
 
+export const getDefaultSettings = (): Settings => ({
+  ...initialSettings,
+  cardHeadline: t('cards.settings.defaults.cardHeadline'),
+  cardCopytext: t('cards.settings.defaults.cardCopytext'),
+})
+
 export const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
   let settingsDecoded = {}
   try {
@@ -32,14 +42,14 @@ export const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
     // do nothing
   }
   return {
-    ...initialSettings,
+    ...getDefaultSettings(),
     ...settingsDecoded,
   }
 }
 
 export const encodeCardsSetSettings = (settingsDecoded: Settings): string => {
   return btoa(encodeURIComponent(JSON.stringify({
-    ...initialSettings,
+    ...getDefaultSettings(),
     ...settingsDecoded,
   })))
 }

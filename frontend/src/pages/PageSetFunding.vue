@@ -208,14 +208,14 @@ import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
 import { BACKEND_API_ORIGIN } from '@/constants'
-import { type Settings, initialSettings, decodeCardsSetSettings } from '@/modules/cardsSets'
+import { type Settings, getDefaultSettings, decodeCardsSetSettings } from '@/modules/cardsSets'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
 const initializing = ref(true)
-const settings = reactive({ ...initialSettings })
+const settings = reactive(getDefaultSettings())
 const amountPerCard = ref(2100)
 const text = ref('Have fun with Bitcoin :)')
 const textIsDirty = ref(false)

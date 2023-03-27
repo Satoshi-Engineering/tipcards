@@ -158,6 +158,10 @@
       "cardQrCodeLogoLabel": "Logo en los códigos QR",
       "cardQrCodeLogo": {
         "noLogo": "Sin logo"
+      },
+      "defaults": {
+        "cardHeadline": "Hey :)",
+        "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin."
       }
     },
     "actions": {
