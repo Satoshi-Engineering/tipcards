@@ -526,22 +526,9 @@ onMounted(() => {
   putSettingsIntoUrl()
 })
 
-// weird workaround
-// when navigating back via history, chrome restores the page incl javascript memory+runtime
-// I found no other way to check if that happened
-let lastCheck = + new Date()
-const intervalId = setInterval(() => {
-  const delta = + new Date() - lastCheck
-  if (delta > 2000) {
-    reloadStatusForCards()
-  }
-  lastCheck = + new Date()
-}, 1000)
-onBeforeUnmount(() => {
-  clearInterval(intervalId)
-})
-// weird workaround end
-  
+// https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/425
+window.addEventListener('pageshow', () => reloadStatusForCards())
+
 watch(() => route.fullPath, urlChanged)
 
 const hasBeenSaved = computed(() => {
