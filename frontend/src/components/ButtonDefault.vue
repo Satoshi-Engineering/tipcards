@@ -5,6 +5,11 @@
     :disabled="disabled"
   >
     <slot />
+    <AnimatedLoadingWheel
+      v-if="loading"
+      class="inline-block w-5 h-5 ml-3 -mt-1"
+      color="white"
+    />
   </button>
   <a
     v-else
@@ -14,11 +19,18 @@
     :class="cssClasses"
   >
     <slot />
+    <AnimatedLoadingWheel
+      v-if="loading"
+      class="inline-block w-5 h-5 ml-3 -mt-1"
+      color="white"
+    />
   </a>
 </template>
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
+
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 
 const props = defineProps({
   href: {
@@ -34,6 +46,10 @@ const props = defineProps({
     default: undefined,
   },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },

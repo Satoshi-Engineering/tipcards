@@ -1,7 +1,9 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    style="margin: auto; display: block; shape-rendering: auto;"
+    style="shape-rendering: auto;"
+    class="block m-auto"
+    :class="`text-${color}`"
     width="50px"
     height="50px"
     viewBox="0 0 100 100"
@@ -11,8 +13,8 @@
       cx="50"
       cy="50"
       fill="none"
-      stroke="#f7931a"
-      stroke-width="6"
+      class="stroke-current"
+      stroke-width="8"
       r="35"
       stroke-dasharray="164.93361431346415 56.97787143782138"
     >
@@ -27,3 +29,12 @@
     </circle>
   </svg>
 </template>
+
+<script setup lang="ts">
+defineProps({
+  color: {
+    type: String,
+    default: 'btcorange',
+  },
+})
+</script>
