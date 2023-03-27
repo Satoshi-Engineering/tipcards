@@ -182,14 +182,17 @@
     },
     "actions": {
       "headline": "Actions",
+      "printHeadline": "Print",
       "buttonPrint": "Print Tip Cards",
       "buttonDownloadPngs": "Download PNGs",
       "setName": "Set name",
       "buttonSaveCardsSet": "Save Tip Cards set",
       "buttonDeleteCardsSet": "Delete saved set",
+      "saveHeadline": "Save",
       "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
       "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?",
       "setFunding": {
+        "headline": "Fund all cards",
         "intro": "You can fund single Tip Cards by scanning the QR code of a new card. If you want to fund all cards of this set at once, use the \"Set funding\" feature.",
         "label": "Fund all cards at once",
         "button": "Fund set",

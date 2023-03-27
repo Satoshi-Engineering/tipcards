@@ -148,7 +148,7 @@
     </div>
     <div class="px-4 my-5">
       <HeadlineDefault level="h3" class="mb-2">
-        Speichern <!-- {{ t('cards.actions.print.headline') }} -->
+        {{ t('cards.actions.saveHeadline') }}
       </HeadlineDefault>
       <label class="block mb-1">
         <span class="block">
@@ -178,7 +178,7 @@
     </div>
     <div class="px-4 my-5">
       <HeadlineDefault level="h3" class="mb-2">
-        Drucken <!-- {{ t('cards.actions.print.headline') }} -->
+        {{ t('cards.actions.printHeadline') }}
       </HeadlineDefault>
       <ButtonDefault
         class="text-sm min-w-[170px]"
@@ -198,7 +198,7 @@
     </div>
     <div class="px-4 my-5">
       <HeadlineDefault level="h3" class="mb-2">
-        Alle aufladen <!-- {{ t('cards.actions.print.headline') }} -->
+        {{ t('cards.actions.setFunding.headline') }}
       </HeadlineDefault>
       <ParagraphDefault class="text-sm">
         {{ t('cards.actions.setFunding.intro') }}
