@@ -326,7 +326,7 @@ const router = useRouter()
 const initializing = ref(true)
 const lnurlp = ref(false)
 const amount = ref(2100)
-const text = ref('Have fun with Bitcoin :)')
+const text = ref(t('cards.settings.defaults.invoiceText'))
 const textIsDirty = ref(false)
 const note = ref<string>()
 const noteIsDirty = ref(false)
@@ -435,7 +435,7 @@ const resetInvoice = async () => {
       creatingInvoice.value = false
       finishingShared.value = false
       invoiceExpired.value = false
-      text.value = 'Have fun with Bitcoin :)'
+      text.value = t('cards.settings.defaults.invoiceText')
       textIsDirty.value = false
       note.value = undefined
       noteIsDirty.value = false

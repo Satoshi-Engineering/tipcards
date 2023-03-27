@@ -181,7 +181,8 @@
       },
       "defaults": {
         "cardHeadline": "Hey :)",
-        "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin."
+        "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.",
+        "invoiceText": "Have fun with Bitcoin :)"
       }
     },
     "actions": {
