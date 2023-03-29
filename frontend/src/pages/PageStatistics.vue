@@ -59,7 +59,13 @@
             {{ stats.week }}
           </th>
           <td class="px-2 text-right w-48">
-            <div :style="`background: linear-gradient(to right, #fb923c ${formatNumber(stats.movementsCount / statistics.maxMovementsWeekly * 100, 2, 2, undefined, 'en')}%, transparent ${formatNumber(stats.movementsCount / statistics.maxMovementsWeekly * 100, 2, 2, undefined, 'en')}%)`">
+            <div
+              :style="`background: linear-gradient(
+                to right,
+                #fb923c ${stats.movementsPercent}}%,
+                transparent ${stats.movementsPercent}%
+              )`"
+            >
               {{ stats.movementsCount }}
             </div>
           </td>
@@ -108,7 +114,13 @@
           <td
             class="px-2 text-right w-48"
           >
-            <div :style="`background: linear-gradient(to right, #fb923c ${formatNumber(stats.movementsCount / statistics.maxMovementsDaily * 100, 2, 2, undefined, 'en')}%, transparent ${formatNumber(stats.movementsCount / statistics.maxMovementsDaily * 100, 2, 2, undefined, 'en')}%)`">
+            <div
+              :style="`background: linear-gradient(
+                to right,
+                #fb923c ${stats.movementsPercent}}%,
+                transparent ${stats.movementsPercent}%
+              )`"
+            >
               {{ stats.movementsCount }}
             </div>
           </td>
@@ -135,7 +147,6 @@ import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import { DateTime } from 'luxon'
 
-import formatNumber from '@/modules/formatNumber'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import { LNBITS_ORIGIN } from '@root/constants'
@@ -147,7 +158,14 @@ let apiKey: string | null = null
 
 const fetching = ref(false)
 
-const statistics = ref<Record<string, any> | undefined>(undefined)
+const statisticsInitial = {
+  maxMovementsDaily: 0,
+  maxMovementsWeekly: 0,
+  daily: [] as Record<string, number | string>[],
+  weekly: [] as Record<string, number | string>[],
+}
+
+const statistics = ref<typeof statisticsInitial | undefined>(undefined)
 
 const loadStats = async () => {
   fetching.value = true
@@ -165,12 +183,10 @@ const loadStats = async () => {
     return
   }
   fetching.value = false
-  statistics.value = {}
+  statistics.value = { ...statisticsInitial }
   const payments = response.data
   const daily: Record<string, Record<string, number>> = {}
   const weekly: Record<string, Record<string, number>> = {}
-  statistics.value.maxMovementsDaily = 0
-  statistics.value.maxMovementsWeekly = 0
   payments.forEach((payment: Record<string, number>) => {
     if (payment.pending) {
       return
@@ -216,12 +232,13 @@ const loadStats = async () => {
   statistics.value.daily = Object.entries(daily).map(([day, values]) => ({
     day,
     ...values,
+    movementsPercent: statistics.value ? Math.round(values.movementsCount / statistics.value.maxMovementsDaily * 10000) / 100 : 0,
   }))
   statistics.value.weekly = Object.entries(weekly).map(([week, values]) => ({
     week,
     ...values,
+    movementsPercent: statistics.value ? Math.round(values.movementsCount / statistics.value.maxMovementsWeekly * 10000) / 100 : 0,
   }))
-  console.log(statistics.value)
 }
 
 onMounted(async () => {
@@ -243,11 +260,4 @@ const onSubmit = async () => {
   }
   sessionStorage.setItem(SESSION_STORAGE_KEY, apiKey)
 }
-
-const getYMD = (ts: number) => {
-  const d = new Date(ts)
-  return `${d.getFullYear()}-${`${d.getMonth() + 1}`.padStart(2, '0')}-${`${d.getDate()}`.padStart(2, '0')}`
-}
-
-
 </script>
