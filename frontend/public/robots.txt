@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 
+Disallow: /statistics
+
 Disallow: /api
 Disallow: /preview/?lightning=
 Disallow: /landing/?lightning=
