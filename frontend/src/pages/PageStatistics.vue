@@ -62,7 +62,7 @@
             <div
               :style="`background: linear-gradient(
                 to right,
-                #fb923c ${stats.movementsPercent}}%,
+                #fb923c ${stats.movementsPercent}%,
                 transparent ${stats.movementsPercent}%
               )`"
             >
@@ -117,7 +117,7 @@
             <div
               :style="`background: linear-gradient(
                 to right,
-                #fb923c ${stats.movementsPercent}}%,
+                #fb923c ${stats.movementsPercent}%,
                 transparent ${stats.movementsPercent}%
               )`"
             >
