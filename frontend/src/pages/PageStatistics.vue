@@ -30,7 +30,7 @@
       </form>
     </div>
     <div v-else class="p-4">
-      <HeadlineDefault level="h2">
+      <HeadlineDefault level="h2" class="sticky left-0">
         Weekly
       </HeadlineDefault>
       <table class="w-full -mx-2">
@@ -38,20 +38,20 @@
           <th class="px-2 sticky left-0 bg-white z-10 text-left">
             Week
           </th>
-          <th class="px-2">
+          <th class="px-2 text-left">
             Movements
           </th>
           <th class="px-2 text-right">
             Fundings
           </th>
           <th class="px-2 text-right">
-            Count
+            sats
           </th>
           <th class="px-2 text-right">
             Withdrawals
           </th>
           <th class="px-2 text-right">
-            Count
+            sats
           </th>
         </tr>
         <tr v-for="stats in statistics.weekly" :key="stats.week">
@@ -70,20 +70,20 @@
             </div>
           </td>
           <td class="px-2 text-right">
-            {{ stats.fundingAmount }}
-          </td>
-          <td class="px-2 text-right">
             {{ stats.fundingCount }}
           </td>
           <td class="px-2 text-right">
-            {{ stats.withdrawAmount }}
+            {{ stats.fundingAmount }}
           </td>
           <td class="px-2 text-right">
             {{ stats.withdrawCount }}
           </td>
+          <td class="px-2 text-right">
+            {{ stats.withdrawAmount }}
+          </td>
         </tr>
       </table>
-      <HeadlineDefault level="h2">
+      <HeadlineDefault level="h2" class="sticky left-0">
         Daily
       </HeadlineDefault>
       <table class="w-full -mx-2">
@@ -91,20 +91,20 @@
           <th class="px-2 sticky left-0 bg-white z-10 text-left">
             Day
           </th>
-          <th class="px-2">
+          <th class="px-2 text-left">
             Movements
           </th>
           <th class="px-2 text-right">
             Fundings
           </th>
           <th class="px-2 text-right">
-            Count
+            sats
           </th>
           <th class="px-2 text-right">
             Withdrawals
           </th>
           <th class="px-2 text-right">
-            Count
+            sats
           </th>
         </tr>
         <tr v-for="stats in statistics.daily" :key="stats.day">
@@ -125,16 +125,16 @@
             </div>
           </td>
           <td class="px-2 text-right">
-            {{ stats.fundingAmount }}
-          </td>
-          <td class="px-2 text-right">
             {{ stats.fundingCount }}
           </td>
           <td class="px-2 text-right">
-            {{ stats.withdrawAmount }}
+            {{ stats.fundingAmount }}
           </td>
           <td class="px-2 text-right">
             {{ stats.withdrawCount }}
+          </td>
+          <td class="px-2 text-right">
+            {{ stats.withdrawAmount }}
           </td>
         </tr>
       </table>
@@ -258,6 +258,8 @@ const onSubmit = async () => {
   if (statistics.value == null) {
     return
   }
-  sessionStorage.setItem(SESSION_STORAGE_KEY, apiKey)
+  if (location.hostname === 'localhost') {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, apiKey)
+  }
 }
 </script>
