@@ -10,6 +10,7 @@ import lnurl from './api/lnurl'
 import lnurlp from './api/lnurlp'
 import set from './api/set'
 import withdraw from './api/withdraw'
+import statistics from './api/statistics'
 import xstAttack from './xstAttack'
 
 const app = express()
@@ -25,5 +26,6 @@ app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
+app.use('/api/statistics', statistics)
 
 export default app

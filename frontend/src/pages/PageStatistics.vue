@@ -10,7 +10,7 @@
       <form @submit.prevent="onSubmit">
         <label class="block mb-1">
           <span class="block">
-            LNbits invoice/read key:
+            Statistics Auth Token:
           </span>
           <input
             v-model="apiKeyInputValue"
@@ -30,7 +30,7 @@
       </form>
     </div>
     <div v-else class="p-4">
-      <HeadlineDefault level="h2" class="sticky left-0">
+      <HeadlineDefault level="h2">
         Weekly
       </HeadlineDefault>
       <table class="w-full -mx-2">
@@ -83,7 +83,7 @@
           </td>
         </tr>
       </table>
-      <HeadlineDefault level="h2" class="sticky left-0">
+      <HeadlineDefault level="h2">
         Daily
       </HeadlineDefault>
       <table class="w-full -mx-2">
@@ -145,11 +145,10 @@
 <script setup lang="ts">
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
-import { DateTime } from 'luxon'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import { LNBITS_ORIGIN } from '@root/constants'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 const SESSION_STORAGE_KEY = 'STATISTICS_KEY'
 
@@ -171,74 +170,19 @@ const loadStats = async () => {
   fetching.value = true
   let response
   try {
-    response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments`, {
+    response = await axios.get(`${BACKEND_API_ORIGIN}/api/statistics`, {
       headers: {
-        'X-Api-Key': apiKey,
-        'Content-type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
       },
     })
+    fetching.value = false
+    statistics.value = response.data.data
   } catch (error) {
     fetching.value = false
     console.error(error)
     return
   }
-  fetching.value = false
-  statistics.value = { ...statisticsInitial }
-  const payments = response.data
-  const daily: Record<string, Record<string, number>> = {}
-  const weekly: Record<string, Record<string, number>> = {}
-  payments.forEach((payment: Record<string, number>) => {
-    if (payment.pending) {
-      return
-    }
-    const dt = DateTime.fromSeconds(payment.time)
-    const ymd = dt.toFormat('yyyy-MM-dd')
-    const yw = dt.toFormat('kkkk-WW')
-    if (daily[ymd] == null) {
-      daily[ymd] = {
-        fundingAmount: 0,
-        fundingCount: 0,
-        withdrawAmount: 0,
-        withdrawCount: 0,
-      }
-    }
-    if (weekly[yw] == null) {
-      weekly[yw] = {
-        fundingAmount: 0,
-        fundingCount: 0,
-        withdrawAmount: 0,
-        withdrawCount: 0,
-      }
-    }
-    if (payment.amount > 0) {
-      daily[ymd].fundingAmount += payment.amount / 1000
-      daily[ymd].fundingCount += 1
-      weekly[yw].fundingAmount += payment.amount / 1000
-      weekly[yw].fundingCount += 1
-    }
-    if (payment.amount < 0) {
-      daily[ymd].withdrawAmount += -payment.amount / 1000
-      daily[ymd].withdrawCount += 1
-      weekly[yw].withdrawAmount += -payment.amount / 1000
-      weekly[yw].withdrawCount += 1
-    }
-    daily[ymd].movementsCount = daily[ymd].fundingCount + daily[ymd].withdrawCount
-    weekly[yw].movementsCount = weekly[yw].fundingCount + weekly[yw].withdrawCount
-    if (statistics.value != null) {
-      statistics.value.maxMovementsDaily = Math.max(statistics.value.maxMovementsDaily, daily[ymd].movementsCount)
-      statistics.value.maxMovementsWeekly = Math.max(statistics.value.maxMovementsWeekly, weekly[yw].movementsCount)
-    }
-  })
-  statistics.value.daily = Object.entries(daily).map(([day, values]) => ({
-    day,
-    ...values,
-    movementsPercent: statistics.value ? Math.round(values.movementsCount / statistics.value.maxMovementsDaily * 10000) / 100 : 0,
-  }))
-  statistics.value.weekly = Object.entries(weekly).map(([week, values]) => ({
-    week,
-    ...values,
-    movementsPercent: statistics.value ? Math.round(values.movementsCount / statistics.value.maxMovementsWeekly * 10000) / 100 : 0,
-  }))
+
 }
 
 onMounted(async () => {
