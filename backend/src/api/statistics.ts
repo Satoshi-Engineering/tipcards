@@ -64,7 +64,6 @@ const statisticsInitial = {
 
 router.get('/', async (req: express.Request, res: express.Response) => {
   let response
-  const isProd = req.hostname === 'tipcards.io' || req.hostname === 'tipcards.sate.tools'
   try {
     response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments`, {
       headers: {
@@ -79,15 +78,16 @@ router.get('/', async (req: express.Request, res: express.Response) => {
     })
   }
   const statistics = { ...statisticsInitial }
-  let legendsPayments = []
-  if (isProd) {
-    legendsPayments = JSON.parse(
-      readFileSync(
-        path.resolve(__dirname, '../data/statistics/legendsPayments.json'),
-        'utf-8',
-      ),
-    )
+  let legendsFile = path.resolve(__dirname, '../data/statistics/legendsPaymentsDev.json')
+  if (process.env.NODE_ENV === 'production') {
+    legendsFile = path.resolve(__dirname, '../data/statistics/legendsPaymentsProd.json')
   }
+  const legendsPayments = JSON.parse(
+    readFileSync(
+      legendsFile,
+      'utf-8',
+    ),
+  )
   const payments = [...legendsPayments, ...response.data].filter(({ payment_hash }) => !systemFundingHashes.includes(payment_hash))
   payments.sort((a, b) => b.time - a.time)
   const daily: Record<string, Record<string, number>> = {}
