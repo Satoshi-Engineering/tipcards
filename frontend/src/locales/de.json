@@ -195,7 +195,7 @@
       },
       "defaults": {
         "cardHeadline": "Hey :)",
-        "cardCopytext": "Trinkgeld für dich. 🎉\nScanne den QR code und erfahre wie du zu deinen Bitcoin kommst.",
+        "cardCopytext": "Trinkgeld für dich. 🎉\nScanne den QR-Code und erfahre, wie du zu deinen Bitcoin kommst.",
         "invoiceText": "Viel Spaß mit Bitcoin :)"
       }
     },
