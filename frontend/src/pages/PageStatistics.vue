@@ -14,7 +14,8 @@
           </span>
           <input
             v-model="apiKeyInputValue"
-            type="text"
+            type="password"
+            autocomplete="current-password"
             class="w-full border my-1 px-3 py-2 focus:outline-none"
             :disabled="fetching"
           >
