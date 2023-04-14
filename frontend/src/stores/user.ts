@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 
 const TIPCARDS_AUTH_USER = 'tipcardsAuthUser'
 
-
 export const useUserStore = defineStore('user', () => {
   const jwt = ref<string>()
   const jwtCookie = document.cookie

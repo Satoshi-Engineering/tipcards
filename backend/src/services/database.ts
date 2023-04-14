@@ -1,11 +1,25 @@
-import { createClient } from 'redis'
+import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
+import type { User } from '../../../src/data/User'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
+const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
+
+const addOrUpdateIndex = async (
+  client: any,
+  index: string,
+  schema: any,
+  options: any,
+) => {
+  try {
+    await client.ft.dropIndex(index)
+  } catch (error) {}
+  await client.ft.create(index, schema, options)
+}
 
 type Resolve = (value?: unknown) => void
 let client: RedisClientType<RedisDefaultModules, RedisFunctions, RedisScripts> | null
@@ -65,6 +79,16 @@ export const getClient = async () => {
     resetClient()
     throw new Error('Unable to connect to redis server.')
   }
+
+  await addOrUpdateIndex(newClient, INDEX_USER_BY_LNURL_AUTH_KEY, {
+    '$.lnurlAuthKey': {
+      type: SchemaFieldTypes.TEXT,
+      AS: 'lnurlAuthKey',
+    },
+  }, {
+    ON: 'JSON',
+    PREFIX: `${REDIS_BASE_PATH}:usersById`,
+  })
 
   client = newClient
   connecting = false
@@ -179,4 +203,44 @@ export const deleteSet = async (set: Set): Promise<void> => {
     throw new Error('Set doesn\'t exists.')
   }
   await client.del(`${REDIS_BASE_PATH}:setsById:${set.id}:data`)
+}
+
+/**
+ * @param user User
+ * @throws
+ */
+export const createUser = async (user: User): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:usersById:${user.id}:data`)
+  if (exists) {
+    throw new Error('User already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:usersById:${user.id}:data`, '$', user)
+}
+
+/**
+ * @param userId string
+ * @throws
+ */
+export const getUserById = async (userId: string): Promise<User | null> => {
+  const client = await getClient()
+  const user: User | null = await client.json.get(`${REDIS_BASE_PATH}:usersById:${userId}:data`) as User | null
+  return user
+}
+
+/**
+ * @param lnurlAuthKey string
+ * @throws
+ */
+export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User | null> => {
+  const client = await getClient()
+  const result = await client.ft.search(INDEX_USER_BY_LNURL_AUTH_KEY, `@lnurlAuthKey:${lnurlAuthKey}`)
+  const user = result.documents
+    .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:usersById:[A-z0-9-]+:data$`).test(id))
+    .map(({ value }) => value as User)
+    .find((user) => user.lnurlAuthKey === lnurlAuthKey)
+  if (user == null) {
+    return null
+  }
+  return user
 }

@@ -11,4 +11,6 @@ export type Set = {
     paid: number | null, // unix timestamp
     expired?: boolean,
   } | null,
+  settings?: string | null,
+  userId?: string | null,
 }
