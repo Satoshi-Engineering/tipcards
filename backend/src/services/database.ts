@@ -1,4 +1,5 @@
-import { createClient, SchemaFieldTypes } from 'redis'
+import { randomUUID } from 'crypto'
+import { createClient, type RediSearchSchema, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH } from '../constants'
@@ -10,14 +11,16 @@ const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
 
 const addOrUpdateIndex = async (
-  client: any,
+  client: RedisClientType<RedisDefaultModules, RedisFunctions, RedisScripts>,
   index: string,
-  schema: any,
-  options: any,
+  schema: RediSearchSchema,
+  options: object,
 ) => {
   try {
     await client.ft.dropIndex(index)
-  } catch (error) {}
+  } catch (error) {
+    // do nothing, the index doesn't exist
+  }
   await client.ft.create(index, schema, options)
 }
 
@@ -242,5 +245,22 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
   if (user == null) {
     return null
   }
+  return user
+}
+
+/**
+ * @param lnurlAuthKey string
+ * @throws
+ */
+export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Promise<User> => {
+  let user = await getUserByLnurlAuthKey(lnurlAuthKey)
+  if (user != null) {
+    return user
+  }
+  user = {
+    id: randomUUID(),
+    lnurlAuthKey,
+  }
+  await createUser(user)
   return user
 }

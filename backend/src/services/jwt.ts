@@ -1,6 +1,8 @@
 import fs from 'fs'
 import { generateKeyPair, importPKCS8, type KeyLike, SignJWT, exportPKCS8 } from 'jose'
 
+import type { User } from '../../../src/data/User'
+
 const FILENAME = 'lnurl.auth.pem'
 const alg = 'RS256'
 
@@ -23,8 +25,8 @@ const loadPrivateKey = async () => {
 }
 loadPrivateKey()
 
-const createJWT = async (key: string) => {
-  return new SignJWT({ key })
+const createJWT = async ({ id, lnurlAuthKey }: User) => {
+  return new SignJWT({ id, lnurlAuthKey })
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer('tipcards:auth')

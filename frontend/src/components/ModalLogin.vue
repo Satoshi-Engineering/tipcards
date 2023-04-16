@@ -32,8 +32,11 @@
             </svg>
           </button>
         </div>
-        <p class="mb-4">
+        <p v-if="!error" class="mb-4">
           {{ t('auth.text') }}
+        </p>
+        <p v-else class="mb-4 text-red-500">
+          {{ t('auth.loginErrorText') }}
         </p>
         <div v-if="loggedIn">
           logged in as: {{ userKey }}
@@ -42,6 +45,7 @@
         <LightningQrCode
           v-else-if="lnurl != null"
           :value="lnurl"
+          :error="error ? t('auth.loginErrorText') : undefined"
         />
       </div>
     </div>
@@ -69,6 +73,7 @@ const lnurl = ref<string>()
 const hash = ref<string>()
 const loggedIn = ref(false)
 const userKey = ref<string>()
+const error = ref(false)
 let socket: Socket
 
 onBeforeMount(async () => {
@@ -83,9 +88,13 @@ onBeforeMount(async () => {
   }
   connectSocket()
   fetchingLogin.value = false
+  error.value = false
 })
 const connectSocket = () => {
   socket = io(BACKEND_API_ORIGIN)
+  socket.on('error', () => {
+    error.value = true
+  })
   socket.on('loggedIn', ({ jwt }) => {
     login({ jwt })
     emit('close')

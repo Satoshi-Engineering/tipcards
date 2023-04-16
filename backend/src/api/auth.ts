@@ -1,10 +1,12 @@
-import crypto from 'crypto'
+import { createHash } from 'crypto'
 import express from 'express'
 import type http from 'http'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 
+import { getUserByLnurlAuthKeyOrCreateNew } from '../services/database'
 import { createJWT } from '../services/jwt'
+import { ErrorCode } from '../../../src/data/Errors'
 import { TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
@@ -34,12 +36,17 @@ lnurlServer.on('login', async (event: LoginEvent) => {
   const { key, hash } = event
   loggedIn[hash] = key
 
-  if (socketsByHash[hash] != null) {
-    const jwt = await createJWT(key)
-    socketsByHash[hash].emit('loggedIn', {
-      key,
-      jwt,
-    })
+  if (socketsByHash[hash] == null) {
+    return
+  }
+
+  try {
+    const user = await getUserByLnurlAuthKeyOrCreateNew(key)
+    const jwt = await createJWT(user)
+    socketsByHash[hash].emit('loggedIn', { jwt })
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    socketsByHash[hash].emit('error')
   }
 })
 
@@ -57,12 +64,16 @@ export const initSocketIo = (server: http.Server) => {
     socket.on('waitForLogin', async ({ hash }) => {
       socketsByHash[hash] = socket
       hashesBySocketId[socket.id] = hash
-      if (typeof loggedIn[hash] === 'string') {
-        const jwt = await createJWT(loggedIn[hash])
-        socketsByHash[hash].emit('loggedIn', {
-          key: loggedIn[hash],
-          jwt,
-        })
+      if (typeof loggedIn[hash] !== 'string') {
+        return
+      }
+      try {
+        const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
+        const jwt = await createJWT(user)
+        socketsByHash[hash].emit('loggedIn', { jwt })
+      } catch (error) {
+        console.error(ErrorCode.UnknownDatabaseError, error)
+        socketsByHash[hash].emit('error')
       }
     })
     socket.on('disconnect', () => {
@@ -82,7 +93,7 @@ const router = express.Router()
 router.get('/create', async (req: express.Request, res: express.Response) => {
   const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
-  const hash = crypto.createHash('sha256').update(secret).digest('hex')
+  const hash = createHash('sha256').update(secret).digest('hex')
   delete loggedIn[hash]
   res.json({
     status: 'success',
@@ -101,8 +112,16 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
     })
     return
   }
-  if (typeof loggedIn[hash] === 'string') {
-    const jwt = await createJWT(loggedIn[hash])
+  if (typeof loggedIn[hash] !== 'string') {
+    res.status(403).json({
+      status: 'error',
+      data: 'not logged in',
+    })
+    return
+  }
+  try {
+    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
+    const jwt = await createJWT(user)
     res.json({
       status: 'success',
       data: {
@@ -110,12 +129,13 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
         jwt,
       },
     })
-    return
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
+    })
   }
-  res.status(403).json({
-    status: 'error',
-    data: 'not logged in',
-  })
 })
 router.get('/debug', async (req: express.Request, res: express.Response) => {
   if (process.env.LNURL_AUTH_DEBUG !== '1') {
@@ -125,9 +145,20 @@ router.get('/debug', async (req: express.Request, res: express.Response) => {
     return
   }
   Object.keys(socketsByHash).forEach(async (hash) => {
+    if (req.query.error != null) {
+      socketsByHash[hash].emit('error')
+      return
+    }
     const key = 'debugKey'
-    const jwt = await createJWT(key)
-    socketsByHash[hash].emit('loggedIn', { key, jwt })
+    loggedIn[hash] = key
+    try {
+      const user = await getUserByLnurlAuthKeyOrCreateNew(key)
+      const jwt = await createJWT(user)
+      socketsByHash[hash].emit('loggedIn', { jwt })
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      socketsByHash[hash].emit('error')
+    }
   })
   res.json({
     status: 'success',
