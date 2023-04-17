@@ -2,11 +2,12 @@ import axios from 'axios'
 import express from 'express'
 
 import {
-  createCard, getSetById, createSet, deleteSet,
-  deleteCard, getCardByHash,
+  getSetById, createSet, deleteSet, updateSet,
+  createCard, deleteCard, getCardByHash,
 } from '../services/database'
 import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
+import { authGuard } from '../services/jwt'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
@@ -14,6 +15,95 @@ import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
+
+router.post('/:setId', authGuard, async (req: express.Request, res: express.Response) => {
+  if (typeof res.locals.jwtPayload?.id !== 'string') {
+    res.status(400).json({
+      status: 'error',
+      message: 'Invalid input.',
+    })
+    return
+  }
+  const userId: string = res.locals.jwtPayload.id
+  let settings: string | undefined = undefined
+  try {
+    ({ settings } = req.body)
+  } catch (error) {
+    console.error(error)
+  }
+
+  let set: Set | null = null
+  // load set from database
+  try {
+    set = await getSetById(req.params.setId)
+  } catch (error: unknown) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+
+  // create a new set
+  if (set == null) {
+    set = {
+      id: req.params.setId,
+      userId,
+      invoice: null,
+      settings,
+    }
+  
+    try {
+      await createSet(set)
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      res.status(500).json({
+        status: 'error',
+        message: 'An unexpected error occured. Please try again later or contact an admin.',
+        code: ErrorCode.UnknownDatabaseError,
+      })
+      return
+    }
+    res.json({
+      status: 'success',
+      data: set,
+    })
+    return
+  }
+
+  // check if the set belongs to the current user
+  if (set.userId != null && set.userId !== userId) {
+    res.status(403).json({
+      status: 'error',
+      message: 'This set belongs to another user.',
+    })
+    return
+  }
+
+  // update set
+  set.userId = userId
+  if (settings != null) {
+    set.settings = settings
+  }
+  try {
+    await updateSet(set)
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+
+  res.json({
+    status: 'success',
+    data: set,
+  })
+})
 
 router.get('/:setId', async (req: express.Request, res: express.Response) => {
   let set: Set | null = null
@@ -104,7 +194,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
         status: 'error',
         message: 'Set is already funded.',
       })
-    }  else {
+    } else {
       res.status(400).json({
         status: 'error',
         message: 'Set invoice already exists.',

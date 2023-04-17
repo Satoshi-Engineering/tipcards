@@ -1,8 +1,8 @@
 export type Set = {
   id: string,
-  text: string,
-  note?: string,
-  invoice:  {
+  text?: string, // this text is used if cards are funded via set-funding
+  note?: string, // this note is used if cards are funded via set-funding
+  invoice: {
     fundedCards: number[], // list of card indices (e.g. [0, 1, 2, 5, 7])
     amount: number, // total amount
     payment_hash: string,

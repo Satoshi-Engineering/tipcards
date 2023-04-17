@@ -22,6 +22,8 @@ export enum ErrorCode {
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
   CardNeedsSetFunding = 'CardNeedsSetFunding',
+  MissingAuthorizationHeader = 'MissingAuthorizationHeader',
+  InvalidAuthorizationHeader = 'InvalidAuthorizationHeader',
 }
 
 export class ErrorWithCode {

@@ -1,5 +1,8 @@
+import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 const TIPCARDS_AUTH_USER = 'tipcardsAuthUser'
 
@@ -52,6 +55,33 @@ export const useUserStore = defineStore('user', () => {
 
     document.cookie = `${TIPCARDS_AUTH_USER}=;max-age=0;secure`
   }
+
+  axios.interceptors.request.use((config) => {
+    if (
+      jwt.value == null
+      || config.url == null
+      || config.url.indexOf(BACKEND_API_ORIGIN) < 0
+    ) {
+      return config
+    }
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: jwt.value,
+      },
+    }
+  })
+
+  axios.interceptors.response.use(undefined, (error) => {
+    if (error.config.url == null || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
+      return Promise.reject(error)
+    }
+    if (error.response.status === 401) {
+      logout()
+    }
+    return Promise.reject(error)
+  })
 
   return { isLoggedIn, id, lnurlAuthKey, login, logout }
 })
