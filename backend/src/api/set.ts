@@ -2,7 +2,8 @@ import axios from 'axios'
 import express from 'express'
 
 import {
-  getSetById, createSet, deleteSet, updateSet,
+  getSetById, getSetsByUserId,
+  createSet, deleteSet, updateSet,
   createCard, deleteCard, getCardByHash,
 } from '../services/database'
 import hashSha256 from '../services/hashSha256'
@@ -15,6 +16,39 @@ import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
+
+/**
+ * get all sets from the current user
+ */
+router.get('/', authGuard, async (req: express.Request, res: express.Response) => {
+  if (typeof res.locals.jwtPayload?.id !== 'string') {
+    res.status(400).json({
+      status: 'error',
+      message: 'Invalid input.',
+    })
+    return
+  }
+  const userId: string = res.locals.jwtPayload.id
+
+  // load set from database
+  let sets: Set[] | null = null
+  try {
+    sets = await getSetsByUserId(userId)
+  } catch (error: unknown) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+
+  res.json({
+    status: 'success',
+    data: sets,
+  })
+})
 
 router.post('/:setId', authGuard, async (req: express.Request, res: express.Response) => {
   if (typeof res.locals.jwtPayload?.id !== 'string') {

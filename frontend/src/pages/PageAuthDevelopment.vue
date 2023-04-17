@@ -20,6 +20,10 @@
         <ButtonDefault @click="saveNewSet">
           create and save a new set
         </ButtonDefault>
+        <br>
+        <ButtonDefault @click="loadSets">
+          load sets
+        </ButtonDefault>
       </p>
     </div>
   </div>
@@ -49,5 +53,9 @@ const showLogin = ref(false)
 
 const saveNewSet = async () => {
   await axios.post(`${BACKEND_API_ORIGIN}/api/set/${crypto.randomUUID()}`)
+}
+
+const loadSets = async () => {
+  await axios.get(`${BACKEND_API_ORIGIN}/api/set/`)
 }
 </script>

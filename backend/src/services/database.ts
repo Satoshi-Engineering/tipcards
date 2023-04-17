@@ -9,6 +9,7 @@ import type { User } from '../../../src/data/User'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
+const INDEX_SETS_BY_USER_ID = `idx:${REDIS_BASE_PATH}:setsByUserId`
 
 const addOrUpdateIndex = async (
   client: RedisClientType<RedisDefaultModules, RedisFunctions, RedisScripts>,
@@ -92,6 +93,15 @@ export const getClient = async () => {
     ON: 'JSON',
     PREFIX: `${REDIS_BASE_PATH}:usersById`,
   })
+  await addOrUpdateIndex(newClient, INDEX_SETS_BY_USER_ID, {
+    '$.userId': {
+      type: SchemaFieldTypes.TEXT,
+      AS: 'userId',
+    },
+  }, {
+    ON: 'JSON',
+    PREFIX: `${REDIS_BASE_PATH}:setsById`,
+  })
 
   client = newClient
   connecting = false
@@ -171,6 +181,14 @@ export const getSetById = async (setId: string): Promise<Set | null> => {
   const client = await getClient()
   const set: Set | null = await client.json.get(`${REDIS_BASE_PATH}:setsById:${setId}:data`) as Set | null
   return set
+}
+
+export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
+  const client = await getClient()
+  const result = await client.ft.search(INDEX_SETS_BY_USER_ID, `@userId:${userId.replace(/-/g, '')}`)
+  return result.documents
+    .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:setsById:[A-z0-9-]+:data$`).test(id))
+    .map(({ value }) => value as Set)
 }
 
 /**
