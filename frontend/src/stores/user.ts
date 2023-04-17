@@ -12,14 +12,29 @@ export const useUserStore = defineStore('user', () => {
   if (jwtCookie != null) {
     jwt.value = jwtCookie[1]
   }
+
   const isLoggedIn = computed(() => jwt.value != null)
-  const key = computed(() => {
+
+  const id = computed(() => {
     if (jwt.value == null) {
       return undefined
     }
     try {
       const payload = JSON.parse(atob(jwt.value.split('.')[1]))
-      return payload.key
+      return payload.id
+    } catch (error) {
+      console.error(error)
+    }
+    return undefined
+  })
+
+  const lnurlAuthKey = computed(() => {
+    if (jwt.value == null) {
+      return undefined
+    }
+    try {
+      const payload = JSON.parse(atob(jwt.value.split('.')[1]))
+      return payload.lnurlAuthKey
     } catch (error) {
       console.error(error)
     }
@@ -31,11 +46,12 @@ export const useUserStore = defineStore('user', () => {
 
     document.cookie = `${TIPCARDS_AUTH_USER}=${jwt.value};max-age=${60 * 60 * 24};secure`
   }
+
   const logout = () => {
     jwt.value = undefined
 
     document.cookie = `${TIPCARDS_AUTH_USER}=;max-age=0;secure`
   }
 
-  return { isLoggedIn, key, login, logout }
+  return { isLoggedIn, id, lnurlAuthKey, login, logout }
 })
