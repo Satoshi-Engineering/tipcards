@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type InternalAxiosRequestConfig } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
@@ -70,7 +70,7 @@ export const useUserStore = defineStore('user', () => {
         ...config.headers,
         Authorization: jwt.value,
       },
-    }
+    } as InternalAxiosRequestConfig<any>
   })
 
   axios.interceptors.response.use(undefined, (error) => {
