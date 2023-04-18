@@ -1,11 +1,10 @@
-import { randomUUID } from 'crypto'
-import { createClient, type RediSearchSchema, SchemaFieldTypes } from 'redis'
-import type { RedisClientType, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
+import { createClient, SchemaFieldTypes } from 'redis'
+import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
-import type { User } from '../../../src/data/User'
+import { createUserId, type User } from '../../../src/data/User'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -276,7 +275,7 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
     return user
   }
   user = {
-    id: randomUUID(),
+    id: createUserId(),
     lnurlAuthKey,
   }
   await createUser(user)
