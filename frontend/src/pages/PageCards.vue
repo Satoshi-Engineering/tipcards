@@ -558,14 +558,19 @@ const showSaveWarning = computed(() => {
   return false
 })
 
-const setFundingHref = computed(() => router.resolve({
-  name: 'set-funding',
-  params: {
-    lang: route.params.lang,
-    setId: route.params.setId,
-    settings: route.params.settings,
-  },
-}).href)
+const setFundingHref = computed(() => {
+  if (setId.value == null) {
+    return ''
+  }
+  return router.resolve({
+    name: 'set-funding',
+    params: {
+      lang: route.params.lang,
+      setId: route.params.setId,
+      settings: route.params.settings,
+    },
+  }).href
+})
 
 ///////////////////////
 // CARDS
