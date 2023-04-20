@@ -3,6 +3,12 @@
     "back": "Atrás",
     "cards": "{count} tarjeta | {count} tarjetas"
   },
+  "nav": {
+    "index": "Home",
+    "cards": "Create",
+    "preview": "Landing page",
+    "about": "About"
+  },
   "footer": {
     "support": "¿Tienes preguntas, comentarios, un problema o encontraste un error? Escríbenos a {email}."
   },

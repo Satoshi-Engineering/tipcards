@@ -3,6 +3,12 @@
       "back": "पीछे",
       "cards": "{count} कार्ड | {count} कार्डस"
     },
+    "nav": {
+      "index": "Home",
+      "cards": "Create",
+      "preview": "Landing page",
+      "about": "About"
+    },
     "footer": {
       "support": "कोई प्रश्न या प्रतिक्रिया? या आपको कोई समस्या या गलती मिली? हमसे संपर्क करने में संकोच न करें: {email}।" 
     },

@@ -3,6 +3,12 @@
     "back":"Назад",
     "cards":"{count} карта | {count} карты"
   },
+  "nav": {
+    "index": "Home",
+    "cards": "Create",
+    "preview": "Landing page",
+    "about": "About"
+  },
   "footer":{
     "support":"Есть вопросы или предложения? Нашли проблему или ошибку? Свяжитесь с нами: {email}."
   },

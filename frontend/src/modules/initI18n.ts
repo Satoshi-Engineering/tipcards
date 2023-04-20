@@ -1,6 +1,8 @@
 import { nextTick, computed } from 'vue'
 import { createI18n } from 'vue-i18n'
 
+import en from '@/locales/en.json'
+
 export const LOCALES = {
   en: {
     name: 'English',
@@ -61,12 +63,17 @@ export const useI18nHelpers = () => {
 }
 
 const i18n = createI18n({
+  locale: 'en',
   legacy: false,
   allowComposition: true,
   fallbackLocale: 'en',
 })
+i18n.global.setLocaleMessage('en', en)
 
 const loadLocaleMessages = async (locale: LocaleCode) => {
+  if (locale === 'en') {
+    return
+  }
   const messages = await import(`@/locales/${locale}.json`)
   i18n.global.setLocaleMessage(locale, messages.default)
   await nextTick()
