@@ -11,7 +11,7 @@ import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
 import { authGuard } from '../services/jwt'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
 import type { Card } from '../../../src/data/Card'
-import type { Set } from '../../../src/data/Set'
+import type { Settings, Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
@@ -59,7 +59,7 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
     return
   }
   const userId: string = res.locals.jwtPayload.id
-  let settings: string | undefined = undefined
+  let settings: Settings | null | undefined = undefined
   try {
     ({ settings } = req.body)
   } catch (error) {
