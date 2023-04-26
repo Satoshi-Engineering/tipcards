@@ -7,8 +7,15 @@
       <HeadlineDefault level="h1">
         Lightning Tip Cards
       </HeadlineDefault>
-      <p>by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a></p>
-      <p class="mt-4">
+      <p class="mb-4">
+        by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a>
+      </p>
+      <p v-if="showLoginButton && !isLoggedIn">
+        <ButtonDefault @click="showLogin = true">
+          {{ t('index.buttonLogin') }}
+        </ButtonDefault>
+      </p>
+      <p>
         <ButtonDefault @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })">
           {{ t('index.buttonCreate') }}
         </ButtonDefault>
@@ -122,16 +129,24 @@
       </div>
     </div>
   </div>
+  <ModalLogin
+    v-if="showLogin"
+    @close="showLogin = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { onMounted, computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import ModalLogin from '@/components/ModalLogin.vue'
 import { useCardsSets, encodeCardsSetSettings } from '@/modules/cardsSets'
+import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'
+import { useUserStore } from '@/stores/user'
 
 const { t, d } = useI18n()
 const { loadSavedCardsSets, savedCardsSets } = useCardsSets()
@@ -165,4 +180,11 @@ onMounted(() => {
     location.href = `${originMapping[location.origin]}${location.pathname}${location.search}${location.hash}`
   }
 })
+
+// auth
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
+const { features } = useNewFeatures()
+const showLoginButton = computed(() => features.value.includes(FEATURE_AUTH))
+const showLogin = ref(false)
 </script>

@@ -155,6 +155,7 @@
     "backToSet": "Zurück zum Set"
   },
   "index": {
+    "buttonLogin": "Einloggen mit LNURL-Auth",
     "buttonCreate": "Erstelle dein Tip Cards-Set",
     "savedCardsSetsHeadline": "Gespeicherte Tip Cards-Sets",
     "noSavedCardsSetsMessage": "In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert",
@@ -244,6 +245,13 @@
         "afterCopySuccess": "Erfolgreich kopiert.",
         "afterCopyNextStep": "Füge sie jetzt<br>in deiner Wallet-App ein :)"
       }
+    }
+  },
+  "auth": {
+    "modalLogin": {
+      "headline": "Login mit LNURL-Auth",
+      "text": "Einloggen und tolle neue Features verwenden! Du benötigst eine App die LNURL-Auth unterstützt.",
+      "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support."
     }
   }
 }

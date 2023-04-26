@@ -11,7 +11,7 @@
       <div class="relative bg-white rounded-lg shadow p-4">
         <div class="flex items-start justify-between mb-4">
           <HeadlineDefault level="h3">
-            {{ t('auth.login') }}
+            {{ t('auth.modalLogin.headline') }}
           </HeadlineDefault>
           <button
             type="button"
@@ -33,19 +33,16 @@
           </button>
         </div>
         <p v-if="!error" class="mb-4">
-          {{ t('auth.text') }}
+          {{ t('auth.modalLogin.text') }}
         </p>
         <p v-else class="mb-4 text-red-500">
-          {{ t('auth.loginErrorText') }}
+          {{ t('auth.modalLogin.loginErrorText') }}
         </p>
-        <div v-if="loggedIn">
-          logged in as: {{ userKey }}
-        </div>
-        <AnimatedLoadingWheel v-else-if="fetchingLogin" />
+        <AnimatedLoadingWheel v-if="fetchingLogin" />
         <LightningQrCode
           v-else-if="lnurl != null"
           :value="lnurl"
-          :error="error ? t('auth.loginErrorText') : undefined"
+          :error="error ? t('auth.modalLogin.loginErrorText') : undefined"
         />
       </div>
     </div>
@@ -71,8 +68,6 @@ const { login } = useUserStore()
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
 const hash = ref<string>()
-const loggedIn = ref(false)
-const userKey = ref<string>()
 const error = ref(false)
 let socket: Socket
 

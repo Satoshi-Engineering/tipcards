@@ -141,6 +141,7 @@
     "backToSet": "Back to the cards"
   },
   "index": {
+    "buttonLogin": "Login using LNURL-Auth",
     "buttonCreate": "Create your Tip Cards set ⚡",
     "savedCardsSetsHeadline": "Saved Tip Cards sets",
     "noSavedCardsSetsMessage": "No saved Tip Cards sets found in this browser",
@@ -230,6 +231,13 @@
         "afterCopySuccess": "Copied successfully.",
         "afterCopyNextStep": "Paste it into<br>your wallet app now :)"
       }
+    }
+  },
+  "auth": {
+    "modalLogin": {
+      "headline": "Login using LNURL-Auth",
+      "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
+      "loginErrorText": "Something went wrong. Please try again later or contact support."
     }
   }
 }
