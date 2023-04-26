@@ -219,6 +219,7 @@
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
       "loginErrorText": "Something went wrong. Please try again later or contact support."
-    }
+    },
+    "buttonLogout": "Logout"
   }
 }

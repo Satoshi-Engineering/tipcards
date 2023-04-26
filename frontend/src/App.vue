@@ -1,16 +1,19 @@
 <template>
   <div class="min-h-screen flex flex-col" :dir="currentTextDirection">
     <header
-      v-if="isLoggedIn"
-      class="p-4 text-right"
+      class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden"
     >
-      <ButtonDefault
-        class="m-0"
-        variant="outline"
-        @click="logout"
-      >
-        {{ t('auth.logout') }}
-      </ButtonDefault>
+      <BackLink
+        v-if="backlink != null"
+        class="p-4"
+        :to="backlink.to"
+        :only-internal-referrer="backlink.onlyInternalReferrer"
+      />
+      <div v-if="isLoggedIn" class="col-start-2 p-4 text-right">
+        <LinkDefault @click="logout">
+          {{ t('auth.buttonLogout') }}
+        </LinkDefault>
+      </div>
     </header>
     <RouterView />
     <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md text-xs text-grey print:hidden">
@@ -62,14 +65,14 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { nextTick } from 'vue'
+import { computed, nextTick } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
 import I18nT from '@/modules/I18nT'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import BackLink from '@/components/BackLink.vue'
 import { useUserStore } from '@/stores/user'
 import { SUPPORT_EMAIL } from '@/constants'
 import { useSeoHelpers } from '@/modules/seoHelpers'
@@ -105,6 +108,28 @@ const navLinks = [
   { routeName: 'preview', labelKey: 'nav.preview' },
   { routeName: 'about', labelKey: 'nav.about' },
 ]
+
+const backlink = computed(() => {
+  if (route.meta.backlink === true) {
+    return {
+      to: undefined,
+      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
+    }
+  }
+  if (typeof route.meta.backlink === 'string') {
+    return {
+      to: route.meta.backlink,
+      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
+    }
+  }
+  if (typeof route.meta.backlink === 'function') {
+    return {
+      to: route.meta.backlink(route),
+      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
+    }
+  }
+  return null
+})
 
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)

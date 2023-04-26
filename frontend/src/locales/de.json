@@ -252,6 +252,7 @@
       "headline": "Login mit LNURL-Auth",
       "text": "Einloggen und tolle neue Features verwenden! Du benötigst eine App die LNURL-Auth unterstützt.",
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support."
-    }
+    },
+    "buttonLogout": "Ausloggen"
   }
 }

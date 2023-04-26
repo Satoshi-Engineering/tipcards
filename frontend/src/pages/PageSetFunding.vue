@@ -1,9 +1,5 @@
 <template>
   <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
-    <BackLink
-      class="pt-4 px-4"
-      :to="cardsHref"
-    />
     <div
       v-if="initializing"
       class="flex justify-center flex-1 mt-8 px-4"
@@ -195,7 +191,6 @@ import { useRoute, useRouter } from 'vue-router'
 import type { Set } from '@root/data/Set'
 
 import I18nT from '@/modules/I18nT'
-import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'

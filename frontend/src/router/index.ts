@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } from 'vue-router'
 
 import i18n, { LOCALES } from '@/modules/initI18n'
 
@@ -30,37 +30,64 @@ const router = createRouter({
           path: 'landing',
           name: 'landing',
           component: PageLanding,
-          meta: { title: () => i18n.global.t('landing.title') },
+          meta: {
+            title: () => i18n.global.t('landing.title'),
+            backlink: true,
+            backlinkOnlyInternalReferrer: true,
+          },
         },
         {
           path: 'preview',
           name: 'preview',
           component: PageLanding,
-          meta: { title: () => i18n.global.t('landing.titlePreview') },
+          meta: {
+            title: () => i18n.global.t('landing.titlePreview'),
+            backlink: true,
+          },
         },
         {
           path: 'cards/:setId?/:settings?',
           name: 'cards',
           component: PageCards,
-          meta: { title: () => false }, // title will be set in the page component
+          meta: {
+            title: () => false, // title will be set in the page component
+            backlink: 'home',
+          },
         },
         {
           path: 'funding/:cardHash',
           name: 'funding',
           component: PageFunding,
-          meta: { title: () => i18n.global.t('funding.title') },
+          meta: {
+            title: () => i18n.global.t('funding.title'),
+            backlink: true,
+          },
         },
         {
           path: 'set-funding/:setId/:settings?',
           name: 'set-funding',
           component: PageSetFunding,
-          meta: { title: () => i18n.global.t('setFunding.title') },
+          meta: {
+            title: () => i18n.global.t('setFunding.title'),
+            backlink: (route: RouteLocationNormalizedLoaded) => 
+              router.resolve({
+                name: 'cards',
+                params: {
+                  lang: route.params.lang,
+                  setId: route.params.setId,
+                  settings: route.params.settings,
+                },
+              }),
+          },
         },
         {
           path: 'about',
           name: 'about',
           component: PageAbout,
-          meta: { title: () => 'About' },
+          meta: {
+            title: () => 'About',
+            backlink: true,
+          },
         },
         {
           path: 'auth',

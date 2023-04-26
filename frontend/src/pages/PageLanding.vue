@@ -1,9 +1,5 @@
 <template>
   <div class="mx-auto w-full max-w-md">
-    <BackLink
-      :only-internal-referrer="$route.name === 'landing'"
-      class="pt-4 px-4"
-    />
     <div
       class="my-10 mx-auto px-4 w-full max-w-md"
     >
@@ -297,7 +293,6 @@ import { useRoute } from 'vue-router'
 
 import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
-import BackLink from '@/components/BackLink.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

@@ -1,6 +1,5 @@
 <template>
   <div class="mb-1 print:hidden max-w-md w-full m-auto">
-    <BackLink class="p-4" :to="{ name: 'home', params: { lang: route.params.lang } }" />
     <div
       v-for="userWarning in userWarnings"
       :key="userWarning"
@@ -404,7 +403,6 @@ import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
 import { useI18nHelpers } from '@/modules/initI18n'
-import BackLink from '@/components/BackLink.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
