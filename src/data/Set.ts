@@ -10,7 +10,7 @@ export type Set = {
   id: string
   settings?: Settings | null
   created?: number // unix timestamp
-  date?: string | number // iso string or unix timestamp of latest update
+  date?: number // unix timestamp of latest update
 
   userId?: string | null
 

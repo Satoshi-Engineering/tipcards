@@ -32,7 +32,8 @@ const SAVED_CARDS_SETS_KEY = 'savedTipCardsSets'
 type SetWithEncodedSettings = {
   setId: string
   settings: string
-  date: string
+  created?: string // iso string
+  date: string // iso string of latest update
 }
 
 const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
@@ -48,17 +49,83 @@ const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
   }
 }
 
+const encodeCardsSetSettings = (settingsDecoded: Settings | null | undefined): string => {
+  if (settingsDecoded == null) {
+    return btoa(encodeURIComponent(JSON.stringify({
+      ...getDefaultSettings(),
+    })))
+  }
+  return btoa(encodeURIComponent(JSON.stringify({
+    ...getDefaultSettings(),
+    ...settingsDecoded,
+  })))
+}
+
+/**
+ * transform Set into SetWithEncodedSettings
+ */
+const fromSet = (set: Set): SetWithEncodedSettings => {
+  let date = new Date().toISOString()
+  if (set.date != null) {
+    date = new Date(set.date).toISOString()
+  }
+  let created = date
+  if (set.created != null) {
+    created = new Date(set.created).toISOString()
+  }
+  return {
+    setId: set.id,
+    settings: encodeCardsSetSettings(set.settings),
+    created,
+    date,
+  }
+}
+
+/**
+ * transform SetWithEncodedSettings into Set
+ */
+const toSet = (set: SetWithEncodedSettings): Set => {
+  let created = Math.floor(+ new Date(set.date) / 1000)
+  if (set.created != null) {
+    created = Math.floor(+ new Date(set.created) / 1000)
+  }
+  return {
+    id: set.setId,
+    settings: decodeCardsSetSettings(set.settings),
+    created,
+    date: Math.floor(+ new Date(set.date) / 1000),
+  }
+}
+
 const loadSetsFromlocalStorage = () => {
   try {
     const fromLocalStorage = JSON.parse(localStorage.getItem(SAVED_CARDS_SETS_KEY) || '[]') as SetWithEncodedSettings[]
-    setsLocalStorage.value = fromLocalStorage.map((set) => ({
-      id: set.setId,
-      ...set,
-      settings: decodeCardsSetSettings(set.settings),
-    }))
+    setsLocalStorage.value = fromLocalStorage.map((set) => toSet(set))
   } catch (error) {
     // do nothing
   }
+}
+
+const saveCardsSetToLocalStorage = (set: Set) => {
+  loadSetsFromlocalStorage()
+  const existingIndex = setsLocalStorage.value.findIndex(({ id: existingSetId }) => existingSetId === set.id)
+  const newSets: SetWithEncodedSettings[] = setsLocalStorage.value.map((currentSet) => fromSet(currentSet))
+  if (existingIndex > -1) {
+    newSets[existingIndex] = fromSet(set)
+  } else {
+    newSets.push(fromSet(set))
+  }
+  localStorage.setItem(SAVED_CARDS_SETS_KEY, JSON.stringify(newSets))
+  loadSetsFromlocalStorage()
+}
+
+const deleteCardsSetFromLocalStorage = (id: string) => {
+  loadSetsFromlocalStorage()
+  const newSets: SetWithEncodedSettings[] = setsLocalStorage.value
+    .filter((set) => set.id !== id)
+    .map((set) => fromSet(set))
+  localStorage.setItem(SAVED_CARDS_SETS_KEY, JSON.stringify(newSets))
+  loadSetsFromlocalStorage()
 }
 
 /////
@@ -121,7 +188,21 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     return promise
   }
 
-  // console.log('todo : add save functionality')
+  const saveSet = async (set: Set) => {
+    if (isLoggedIn.value) {
+      // console.log('todo : send to backend')
+    } else {
+      saveCardsSetToLocalStorage(set)
+    }
+  }
+
+  const deleteSet = async (id: string) => {
+    if (isLoggedIn.value) {
+      // console.log('todo : send to backend')
+    } else {
+      deleteCardsSetFromLocalStorage(id)
+    }
+  }
 
   watch(isLoggedIn, async () => {
     if (!subscribed.value) {
@@ -139,5 +220,11 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
 
   const sets = computed(() => [...setsLocalStorage.value, ...setsServer.value])
 
-  return { fetching, subscribe, sets }
+  return {
+    fetching,
+    sets,
+    subscribe,
+    saveSet,
+    deleteSet,
+  }
 })
