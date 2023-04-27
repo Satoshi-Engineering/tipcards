@@ -118,7 +118,7 @@ const backlink = computed(() => {
   }
   if (typeof route.meta.backlink === 'string') {
     return {
-      to: route.meta.backlink,
+      to: { name: route.meta.backlink },
       onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
     }
   }
