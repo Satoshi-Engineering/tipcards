@@ -254,5 +254,12 @@
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support."
     },
     "buttonLogout": "Ausloggen"
+  },
+  "stores": {
+    "cardsSets": {
+      "errors": {
+        "unableToLoadSetsFromBackend": "Sets vom Server konnten nicht geladen werden."
+      }
+    }
   }
 }

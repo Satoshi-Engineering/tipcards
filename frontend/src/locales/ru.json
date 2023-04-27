@@ -225,5 +225,12 @@
       "loginErrorText": "Something went wrong. Please try again later or contact support."
     },
     "buttonLogout": "Logout"
+  },
+  "stores": {
+    "cardsSets": {
+      "errors": {
+        "unableToLoadSetsFromBackend": "Unable to load sets from the server."
+      }
+    }
   }
 }
