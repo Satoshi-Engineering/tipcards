@@ -24,19 +24,7 @@ export const getDefaultSettings = (): Settings => ({
   cardCopytext: t('cards.settings.defaults.cardCopytext'),
 })
 
-//////
-// localStorage
-const setsLocalStorage = ref<Set[]>([])
-const SAVED_CARDS_SETS_KEY = 'savedTipCardsSets'
-
-type SetWithEncodedSettings = {
-  setId: string
-  settings: string
-  created?: string // iso string
-  date: string // iso string of latest update
-}
-
-const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
+export const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
   let settingsDecoded = {}
   try {
     settingsDecoded = JSON.parse(decodeURIComponent(atob(settingsEncoded)))
@@ -49,7 +37,7 @@ const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
   }
 }
 
-const encodeCardsSetSettings = (settingsDecoded: Settings | null | undefined): string => {
+export const encodeCardsSetSettings = (settingsDecoded: Settings | null | undefined): string => {
   if (settingsDecoded == null) {
     return btoa(encodeURIComponent(JSON.stringify({
       ...getDefaultSettings(),
@@ -59,6 +47,18 @@ const encodeCardsSetSettings = (settingsDecoded: Settings | null | undefined): s
     ...getDefaultSettings(),
     ...settingsDecoded,
   })))
+}
+
+//////
+// localStorage
+const setsLocalStorage = ref<Set[]>([])
+const SAVED_CARDS_SETS_KEY = 'savedTipCardsSets'
+
+type SetWithEncodedSettings = {
+  setId: string
+  settings: string
+  created?: string // iso string
+  date: string // iso string of latest update
 }
 
 /**
@@ -269,6 +269,7 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
   }, { immediate: true })
 
   const sets = computed(() => [...setsLocalStorage.value, ...setsServer.value])
+  const hasSetsInLocalStorage = computed(() => setsLocalStorage.value.length > 0)
 
   return {
     fetching,
@@ -276,5 +277,6 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     subscribe,
     saveSet,
     deleteSet,
+    hasSetsInLocalStorage,
   }
 })

@@ -26,7 +26,7 @@
         </HeadlineDefault>
         <div class="flex">
           <div
-            v-if="savedCardsSets.length < 1"
+            v-if="sets.length < 1"
             class="mx-auto text-sm text-grey"
           >
             {{ t('index.noSavedCardsSetsMessage') }}
@@ -144,15 +144,32 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
-import { useCardsSets, encodeCardsSetSettings } from '@/modules/cardsSets'
 import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'
 import { useUserStore } from '@/stores/user'
+import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
 
 const { t, d } = useI18n()
-const { loadSavedCardsSets, savedCardsSets } = useCardsSets()
+const cardsStore = useCardsSetsStore()
+const { subscribe } = cardsStore
+const { sets, hasSetsInLocalStorage } = storeToRefs(cardsStore)
 
 const sortedSavedCardsSets = computed(() => {
-  return [...savedCardsSets.value]
+  return [...sets.value]
+    .map((set) => {
+      let date = new Date().toISOString()
+      if (set.date != null) {
+        date = new Date(set.date).toISOString()
+      }
+      let settings = getDefaultSettings()
+      if (set.settings != null) {
+        settings = set.settings
+      }
+      return {
+        setId: set.id,
+        date,
+        settings,
+      }
+    })
     .sort((a, b) => {
       const nameA = a.settings.setName?.toLowerCase()
       const nameB = b.settings.setName?.toLowerCase()
@@ -166,15 +183,15 @@ const sortedSavedCardsSets = computed(() => {
     })
 })
 
-onMounted(() => {
-  loadSavedCardsSets()
+onMounted(async () => {
+  await subscribe()
 
   const originMapping: Record<string, string> = {
     'https://tipcards.sate.tools': 'https://tipcards.io',
     'https://dev.tipcards.sate.tools': 'https://dev.tipcards.io',
   }
   if (
-    savedCardsSets.value.length === 0
+    !hasSetsInLocalStorage.value
     && typeof originMapping[location.origin] === 'string'
   ) {
     location.href = `${originMapping[location.origin]}${location.pathname}${location.search}${location.hash}`
