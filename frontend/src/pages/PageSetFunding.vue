@@ -188,7 +188,7 @@ import { onBeforeMount, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { Set } from '@root/data/Set'
+import type { Set, Settings } from '@root/data/Set'
 
 import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -202,8 +202,8 @@ import formatNumber from '@/modules/formatNumber'
 import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
+import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
 import { BACKEND_API_ORIGIN } from '@/constants'
-import { type Settings, getDefaultSettings, decodeCardsSetSettings } from '@/modules/cardsSets'
 
 const { t } = useI18n()
 const route = useRoute()

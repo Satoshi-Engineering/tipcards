@@ -28,6 +28,7 @@
           <div v-if="fetchingUserErrorMessages.length > 0">
             <ParagraphDefault
               v-for="message in fetchingUserErrorMessages"
+              :key="message"
               class="text-red-500"
               dir="ltr"
             >
