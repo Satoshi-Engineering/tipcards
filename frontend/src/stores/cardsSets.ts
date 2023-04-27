@@ -163,7 +163,7 @@ const saveSetToServer = async (set: Set) => {
   } else {
     setsServer.value.push(set)
   }
-  
+
   const response = await axios.post(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`, set)
   if (response.data.status !== 'success') {
     throw response.data
@@ -179,22 +179,27 @@ const saveSetToServer = async (set: Set) => {
   }, 0)
 }
 
-const deleteSetFromServer = async (set: Set) => {
-  setsServer.value = setsServer.value.filter(({ id }) => id !== set.id)
-  
-  const response = await axios.delete(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`)
-  if (response.data.status !== 'success') {
-    throw response.data
-  }
-
-  // refresh asynchronously
-  setTimeout(() => {
-    try {
-      loadSetsFromServer()
-    } catch (error) {
-      // do nothing as nobody subscribed to this call
+const deleteSetFromServer = async (setId: string) => {
+  const oldSets = setsServer.value
+  setsServer.value = setsServer.value.filter(({ id }) => id !== setId)
+  try {
+    const response = await axios.delete(`${BACKEND_API_ORIGIN}/api/set/${setId}/`)
+    if (response.data.status !== 'success') {
+      throw response.data
     }
-  }, 0)
+  } catch (error) {
+    setsServer.value = oldSets
+    throw error
+  } finally {
+    // refresh asynchronously
+    setTimeout(() => {
+      try {
+        loadSetsFromServer()
+      } catch (error) {
+        // do nothing as nobody subscribed to this call
+      }
+    }, 0)
+  }
 }
 
 /////
@@ -248,11 +253,11 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
   /**
    * @throws
    */
-  const deleteSet = async (set: Set) => {
+  const deleteSet = async (setId: string) => {
     if (isLoggedIn.value) {
-      await deleteSetFromServer(set)
+      await deleteSetFromServer(setId)
     } else {
-      deleteCardsSetFromLocalStorage(set.id)
+      deleteCardsSetFromLocalStorage(setId)
     }
   }
 

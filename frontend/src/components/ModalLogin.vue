@@ -32,11 +32,14 @@
             </svg>
           </button>
         </div>
-        <p v-if="!error" class="mb-4">
+        <p v-if="!error" class="mb-3">
           {{ t('auth.modalLogin.text') }}
         </p>
         <p v-else class="mb-4 text-red-500">
           {{ t('auth.modalLogin.loginErrorText') }}
+        </p>
+        <p class="mb-4">
+          {{ t('auth.modalLogin.cookieWarning') }}
         </p>
         <AnimatedLoadingWheel v-if="fetchingLogin" />
         <LightningQrCode

@@ -159,10 +159,25 @@
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
       </label>
-      <ButtonDefault class="text-sm min-w-[170px]" @click="saveCardsSet">
+      <div v-if="savingError != null">
+        <ParagraphDefault class="text-red-500" dir="ltr">
+          {{ savingError }}
+        </ParagraphDefault>
+      </div>
+      <div v-if="deletingError != null">
+        <ParagraphDefault class="text-red-500" dir="ltr">
+          {{ deletingError }}
+        </ParagraphDefault>
+      </div>
+      <ButtonDefault
+        class="text-sm min-w-[170px]"
+        :disabled="saving"
+        :loading="saving"
+        @click="saveCardsSet"
+      >
         {{ t('cards.actions.buttonSaveCardsSet') }}
-        <i v-if="isSaved" class="bi bi-check-square-fill ml-1" />
-        <i v-if="showSaveWarning" class="bi bi-exclamation-square ml-1" />
+        <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
+        <i v-if="showSaveWarning && !saving" class="bi bi-exclamation-square ml-1" />
       </ButtonDefault>
       &nbsp;
       <br class="xs:hidden">
@@ -170,6 +185,8 @@
         v-if="isSaved"
         variant="no-border"
         class="text-sm"
+        :disabled="deleting"
+        :loading="deleting"
         @click="deleteCardsSet"
       >
         {{ t('cards.actions.buttonDeleteCardsSet') }}
@@ -394,6 +411,7 @@
 <script lang="ts" setup>
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import { storeToRefs } from 'pinia'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
 import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
@@ -402,7 +420,9 @@ import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
-import { useI18nHelpers } from '@/modules/initI18n'
+import type { Settings } from '@root/data/Set'
+import { encodeLnurl } from '@root/modules/lnurlHelpers'
+
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -411,62 +431,96 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import {
-  type Settings,
-  getDefaultSettings,
-  useCardsSets,
-  encodeCardsSetSettings,
-  decodeCardsSetSettings,
-} from '@/modules/cardsSets'
 import { loadCardStatus, type CardStatus } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
-import { BACKEND_API_ORIGIN } from '@/constants'
-import { encodeLnurl } from '@root/modules/lnurlHelpers'
+import { useI18nHelpers } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
+import {
+  getDefaultSettings,
+  encodeCardsSetSettings,
+  decodeCardsSetSettings,
+  useCardsSetsStore,
+} from '@/stores/cardsSets'
+import { useUserStore } from '@/stores/user'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
 const { currentTextDirection } = useI18nHelpers()
 const { setDocumentTitle } = useSeoHelpers()
-const {
-  savedCardsSets,
-  loadSavedCardsSets,
-  saveCardsSet: saveCardsSetToLocalStorage,
-  deleteCardsSet: deleteCardsSetFromLocalStorage,
-} = useCardsSets()
+
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
+
+const cardsStore = useCardsSetsStore()
+const { subscribe, saveSet, deleteSet } = cardsStore
+const { sets } = storeToRefs(cardsStore)
 
 ///////////////////////
 // CARDS SETS + SETTINGS
 //
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
-
 const settings = reactive(getDefaultSettings())
+const saving = ref(false)
+const savingError = ref<string>()
+const deleting = ref(false)
+const deletingError = ref<string>()
 
-const saveCardsSet = () => {
+const saveCardsSet = async () => {
   if (setId.value == null) {
     return
   }
-  if (!hasBeenSaved.value && !confirm(t('cards.actions.saveSetConfirm'))) {
+  if (!isLoggedIn.value && !hasBeenSaved.value && !confirm(t('cards.actions.saveSetConfirm'))) {
     return
   }
-  saveCardsSetToLocalStorage({
-    setId: setId.value,
-    settings,
-    date: new Date().toISOString(),
-  })
+
+  saving.value = true
+  savingError.value = undefined
+  try {
+    let created = Math.floor(+ new Date() / 1000)
+    const currentSet = sets.value.find(({ id }) => id === setId.value)
+    if (currentSet?.created != null) {
+      created = currentSet.created
+    }
+    await saveSet({
+      id: setId.value,
+      settings,
+      date: Math.floor(+ new Date() / 1000),
+      created,
+    })
+  } catch (error) {
+    console.error(error)
+    savingError.value = t('cards.errors.unableToSaveSet')
+  } finally {
+    saving.value = false
+  }
 }
 
-const deleteCardsSet = () => {
+const deleteCardsSet = async () => {
   if (setId.value == null) {
     return
   }
-  if (!confirm(t('cards.actions.deleteSetConfirm'))) {
+  if (!confirm(
+    isLoggedIn.value
+      ? t('cards.actions.deleteSetOnServerConfirm')
+      : t('cards.actions.deleteSetConfirm'),
+  )) {
     return
   }
-  deleteCardsSetFromLocalStorage(setId.value)
-  router.push({ name: 'home', params: { lang: route.params.lang } })
+
+  deleting.value = true
+  deletingError.value = undefined
+  try {
+    await deleteSet(setId.value)
+    router.push({ name: 'home', params: { lang: route.params.lang } })
+  } catch (error) {
+    console.error(error)
+    savingError.value = t('cards.errors.unableToDeleteSet')
+  } finally {
+    deleting.value = false
+  }
 }
 
 const currentSetUrl = ref<string>(document.location.href)
@@ -515,7 +569,7 @@ const urlChanged = () => {
   }
   Object.assign(settings, settingsDecoded)
   repopulateCards()
-  loadSavedCardsSets()
+  subscribe()
   currentSetUrl.value = document.location.href
 }
 
@@ -530,14 +584,14 @@ window.addEventListener('pageshow', () => reloadStatusForCards())
 watch(() => route.fullPath, urlChanged)
 
 const hasBeenSaved = computed(() => {
-  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value)
+  return sets.value.some(({ id }) => id === setId.value)
 })
 
 const isSaved = computed(() => {
   if (!hasBeenSaved.value) {
     return false
   }
-  return savedCardsSets.value.some(savedSet => savedSet.setId === setId.value && isEqual(savedSet.settings, settings))
+  return sets.value.some((set) => set.id === setId.value && isEqual(set.settings, settings))
 })
 
 const showSaveWarning = computed(() => {

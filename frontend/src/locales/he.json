@@ -188,6 +188,7 @@
       "buttonDeleteCardsSet": "מחק קבוצת כרטיסים",
       "saveSetConfirm": "קבוצת הכרטיסים הנוכחית תשמר בזכרון המקומי של הדפדפן.\n\nניתן להשתמש גם בשורת הכתובת של עמוד זה כדי לגשת לקבוצת כרטיסי הטיפ הנוכחית.\n\nלהמשיך?",
       "deleteSetConfirm": "האם את/ה בטוח/ה שברצונך למחוק את קבוצת הכרטיסים הנוכחית מהזכרון של הדפדפן?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -203,6 +204,10 @@
         "funded": "נטענו",
         "used": "נוצלו"
       }
+    },
+    "errors": {
+      "unableToSaveSet": "Unable to save set on server.",
+      "unableToDeleteSet": "Unable to delete set from server."
     }
   },
   "lightningQrCode": {
@@ -226,7 +231,8 @@
     "modalLogin": {
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support."
+      "loginErrorText": "Something went wrong. Please try again later or contact support.",
+      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
     },
     "buttonLogout": "Logout"
   },

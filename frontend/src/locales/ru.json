@@ -184,6 +184,7 @@
       "buttonDeleteCardsSet":"Удалить сохраненный набор",
       "saveSetConfirm":"Текущий набор ТИП-карт будет сохранен локально в этом браузере, используя localStorage.\n\nYВы также можете использовать URL-адрес (из адресной строки) для доступа к этому набору ТИП-карт.\n\nПродолжить?",
       "deleteSetConfirm":"Вы действительно хотите удалить текущий набор ТИП-карт и его настройки из этого браузера?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -199,6 +200,10 @@
         "funded":"Пополненные",
         "used":"Использованные"
       }
+    },
+    "errors": {
+      "unableToSaveSet": "Unable to save set on server.",
+      "unableToDeleteSet": "Unable to delete set from server."
     }
   },
   "lightningQrCode":{
@@ -222,7 +227,8 @@
     "modalLogin": {
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support."
+      "loginErrorText": "Something went wrong. Please try again later or contact support.",
+      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
     },
     "buttonLogout": "Logout"
   },

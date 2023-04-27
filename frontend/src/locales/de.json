@@ -211,6 +211,7 @@
       "buttonDeleteCardsSet": "Set löschen",
       "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
       "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
+      "deleteSetOnServerConfirm": "Möchtest du das aktuelle Tip Cards-Set vom Server löschen?",
       "setFunding": {
         "headline": "Alle aufladen",
         "intro": "Du kannst die Tip Cards einzeln aufladen, indem du den QR-Code einer neuen Karte scannst. Wenn du alle Karten eines Sets auf einmal aufladen willst, verwende die Funktion \"Set aufladen\".",
@@ -228,6 +229,10 @@
         "funded": "Aufgeladen",
         "used": "Eingelöst"
       }
+    },
+    "errors": {
+      "unableToSaveSet": "Das Set konnte nicht am Server gespeichert werden.",
+      "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden."
     }
   },
   "lightningQrCode": {
@@ -251,7 +256,8 @@
     "modalLogin": {
       "headline": "Login mit LNURL-Auth",
       "text": "Einloggen und tolle neue Features verwenden! Du benötigst eine App die LNURL-Auth unterstützt.",
-      "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support."
+      "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
+      "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert."
     },
     "buttonLogout": "Ausloggen"
   },

@@ -152,6 +152,7 @@ import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
 import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'

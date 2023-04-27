@@ -182,6 +182,7 @@
         "buttonDeleteCardsSet": "सहेजा गया समूह हटाएं",
         "saveSetConfirm": "वर्तमान टिप कार्ड सेट को स्थानीय संग्रहण का उपयोग करके इस ब्राउज़र में स्थानीय रूप से सहेजा जाएगा।\n\nआप इस टिप कार्ड सेट को एक्सेस करने के लिए URL (एड्रेस बार से) का भी उपयोग कर सकते हैं।\n\nजारी रखें?",
         "deleteSetConfirm": "क्या आप वास्तव में इस ब्राउज़र से वर्तमान टिप कार्ड सेट और इसकी सेटिंग हटाना चाहते हैं?",
+        "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
         "setFunding": {
           "labelAll": "Fund all cards at once",
           "labelUnfunded": "Fund all unfunded cards",
@@ -197,6 +198,10 @@
           "funded": "निधिबद्ध",
           "used": "प्रयुक्त" 
         }
+      },
+      "errors": {
+        "unableToSaveSet": "Unable to save set on server.",
+        "unableToDeleteSet": "Unable to delete set from server."
       }
     },
     "lightningQrCode": {
@@ -220,7 +225,8 @@
       "modalLogin": {
         "headline": "Login using LNURL-Auth",
         "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-        "loginErrorText": "Something went wrong. Please try again later or contact support."
+        "loginErrorText": "Something went wrong. Please try again later or contact support.",
+        "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
       },
       "buttonLogout": "Logout"
     },

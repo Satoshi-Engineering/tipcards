@@ -180,6 +180,7 @@
       "buttonDeleteCardsSet": "Borrar juego",
       "saveSetConfirm": "El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?",
       "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -195,6 +196,10 @@
         "funded": "Cargadas",
         "used": "Canjeadas"
       }
+    },
+    "errors": {
+      "unableToSaveSet": "Unable to save set on server.",
+      "unableToDeleteSet": "Unable to delete set from server."
     }
   },
   "lightningQrCode": {
@@ -218,7 +223,8 @@
     "modalLogin": {
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support."
+      "loginErrorText": "Something went wrong. Please try again later or contact support.",
+      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
     },
     "buttonLogout": "Logout"
   },

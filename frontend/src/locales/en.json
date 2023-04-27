@@ -197,6 +197,7 @@
       "saveHeadline": "Save",
       "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
       "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
       "setFunding": {
         "headline": "Fund all cards",
         "intro": "You can fund single Tip Cards by scanning the QR code of a new card. If you want to fund all cards of this set at once, use the \"Set funding\" feature.",
@@ -214,6 +215,10 @@
         "funded": "Funded",
         "used": "Redeemed"
       }
+    },
+    "errors": {
+      "unableToSaveSet": "Unable to save set on server.",
+      "unableToDeleteSet": "Unable to delete set from server."
     }
   },
   "lightningQrCode": {
@@ -237,7 +242,8 @@
     "modalLogin": {
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support."
+      "loginErrorText": "Something went wrong. Please try again later or contact support.",
+      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
     },
     "buttonLogout": "Logout"
   },
