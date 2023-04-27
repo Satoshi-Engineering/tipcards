@@ -130,24 +130,71 @@ const deleteCardsSetFromLocalStorage = (id: string) => {
 
 /////
 // server
+const fetching = ref(false)
+const fetchingUserErrorMessages = ref<string[]>([])
 const setsServer = ref<Set[]>([])
-const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
 let abortController: AbortController
 
-/**
- * @param sets
- * @throws
- */
 const loadSetsFromServer = async () => {
+  if (fetching.value) {
+    return
+  }
+  fetching.value = true
+  fetchingUserErrorMessages.value = []
   abortController = new AbortController()
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/`, { signal: abortController.signal })
-    setsServer.value = response.data
+    setsServer.value = response.data.data
   } catch (error) {
     if (!axios.isCancel(error)) {
+      console.error(error)
+      fetchingUserErrorMessages.value.push(t('cardsSets.errors.unableToLoadSetsFromBackend'))
       throw error
     }
+  } finally {
+    fetching.value = false
   }
+}
+
+const saveSetToServer = async (set: Set) => {
+  const existingIndex = setsServer.value.findIndex(({ id }) => id === set.id)
+  if (existingIndex > -1) {
+    setsServer.value[existingIndex] = set
+  } else {
+    setsServer.value.push(set)
+  }
+  
+  const response = await axios.post(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`, set)
+  if (response.data.status !== 'success') {
+    throw response.data
+  }
+
+  // refresh asynchronously
+  setTimeout(() => {
+    try {
+      loadSetsFromServer()
+    } catch (error) {
+      // do nothing as nobody subscribed to this call
+    }
+  }, 0)
+}
+
+const deleteSetFromServer = async (set: Set) => {
+  setsServer.value = setsServer.value.filter(({ id }) => id !== set.id)
+  
+  const response = await axios.delete(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`)
+  if (response.data.status !== 'success') {
+    throw response.data
+  }
+
+  // refresh asynchronously
+  setTimeout(() => {
+    try {
+      loadSetsFromServer()
+    } catch (error) {
+      // do nothing as nobody subscribed to this call
+    }
+  }, 0)
 }
 
 /////
@@ -157,24 +204,25 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
   const { isLoggedIn } = storeToRefs(userStore)
 
   const subscribed = ref(false)
-  const fetching = ref(false)
-  const userErrorMessages = ref<string[]>([])
+  const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
 
   const reload = async () => {
-    fetching.value = true
     loadSetsFromlocalStorage()
+    if (!isLoggedIn.value) {
+      callbacks.forEach(({ resolve }) => resolve())
+      return
+    }
+    if (fetching.value) {
+      return
+    }
     try {
-      if (isLoggedIn.value) {
-        await loadSetsFromServer()
-      }
+      await loadSetsFromServer()
       callbacks.forEach(({ resolve }) => resolve())
     } catch (error) {
-      console.error(error)
-      userErrorMessages.value.push(t('cardsSets.errors.unableToLoadSetsFromBackend'))
       callbacks.forEach(({ reject }) => reject())
+    } finally {
+      callbacks.length = 0
     }
-    callbacks.length = 0
-    fetching.value = false
   }
 
   const subscribe = async () => {
@@ -182,25 +230,29 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     const promise = new Promise((resolve, reject) => {
       callbacks.push({ resolve, reject })
     })
-    if (!fetching.value) {
-      reload()
-    }
+    reload()
     return promise
   }
 
+  /**
+   * @throws
+   */
   const saveSet = async (set: Set) => {
     if (isLoggedIn.value) {
-      // console.log('todo : send to backend')
+      await saveSetToServer(set)
     } else {
       saveCardsSetToLocalStorage(set)
     }
   }
 
-  const deleteSet = async (id: string) => {
+  /**
+   * @throws
+   */
+  const deleteSet = async (set: Set) => {
     if (isLoggedIn.value) {
-      // console.log('todo : send to backend')
+      await deleteSetFromServer(set)
     } else {
-      deleteCardsSetFromLocalStorage(id)
+      deleteCardsSetFromLocalStorage(set.id)
     }
   }
 
@@ -213,9 +265,7 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
       abortController.abort()
       await nextTick()
     }
-    if (!fetching.value) {
-      reload()
-    }
+    reload()
   }, { immediate: true })
 
   const sets = computed(() => [...setsLocalStorage.value, ...setsServer.value])
