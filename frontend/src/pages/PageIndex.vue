@@ -24,7 +24,16 @@
         <HeadlineDefault level="h2" styling="h4">
           {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
-        <div class="flex">
+        <div class="flex flex-col">
+          <div v-if="fetchingUserErrorMessages.length > 0">
+            <ParagraphDefault
+              v-for="message in fetchingUserErrorMessages"
+              class="text-red-500"
+              dir="ltr"
+            >
+              {{ message }}
+            </ParagraphDefault>
+          </div>
           <div
             v-if="sets.length < 1"
             class="mx-auto text-sm text-grey"
@@ -151,7 +160,7 @@ import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@
 const { t, d } = useI18n()
 const cardsStore = useCardsSetsStore()
 const { subscribe } = cardsStore
-const { sets, hasSetsInLocalStorage } = storeToRefs(cardsStore)
+const { sets, hasSetsInLocalStorage, fetchingUserErrorMessages } = storeToRefs(cardsStore)
 
 const sortedSavedCardsSets = computed(() => {
   return [...sets.value]

@@ -148,7 +148,7 @@ const loadSetsFromServer = async () => {
   } catch (error) {
     if (!axios.isCancel(error)) {
       console.error(error)
-      fetchingUserErrorMessages.value.push(t('cardsSets.errors.unableToLoadSetsFromBackend'))
+      fetchingUserErrorMessages.value.push(t('stores.cardsSets.errors.unableToLoadSetsFromBackend'))
       throw error
     }
   } finally {
@@ -278,5 +278,6 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     saveSet,
     deleteSet,
     hasSetsInLocalStorage,
+    fetchingUserErrorMessages,
   }
 })
