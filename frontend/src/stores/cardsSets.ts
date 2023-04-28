@@ -210,6 +210,8 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
 
   const subscribed = ref(false)
   const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
+  const migrating = ref(false)
+  const migratingError = ref(false)
 
   const reload = async () => {
     loadSetsFromlocalStorage()
@@ -261,6 +263,30 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     }
   }
 
+  const migrate = async () => {
+    if (migrating.value) {
+      return
+    }
+    migrating.value = true
+    migratingError.value = false
+    try {
+      await Promise.all(setsLocalStorage.value.map(async (set) => {
+        const setOnServer = setsServer.value.find((currentSet) => currentSet.id === set.id)
+        if (
+          setOnServer == null
+          || Number(set.date) > Number(setOnServer.date)
+        ) {
+          await saveSetToServer(set)
+        }
+        deleteCardsSetFromLocalStorage(set.id)
+      }))
+    } catch (error) {
+      console.error(error)
+      migratingError.value = true
+    }
+    migrating.value = false
+  }
+
   watch(isLoggedIn, async () => {
     if (!subscribed.value) {
       return
@@ -278,10 +304,13 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
 
   return {
     fetching,
+    migrating,
+    migratingError,
     sets,
     subscribe,
     saveSet,
     deleteSet,
+    migrate,
     hasSetsInLocalStorage,
     fetchingUserErrorMessages,
   }

@@ -273,7 +273,9 @@
       "headline": "Sets im Browser (LocalStorage)",
       "text": "Du hast Sets im Browser gespeichert. Um die LNURL-Auth Funktionalität zu nutzen müssen wir diese Sets auf dem Server speichern. Drücke dafür den Button \"Migrieren\". Alternativ kannst du dich auch wieder ausloggen und die Sets vorher löschen.",
       "migrate": "Migrieren",
-      "logout": "Ausloggen"
+      "logout": "Ausloggen",
+      "confirmMigrate": "Jetzt migrieren?",
+      "migratingError": "Migration fehlgeschlagen. Du kannst die Sets händisch löschen und im eingeloggten Zustand neu abspeichern oder dich an den Support wenden."
     }
   }
 }
