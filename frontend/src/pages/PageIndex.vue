@@ -169,7 +169,7 @@ const sortedSavedCardsSets = computed(() => {
     .map((set) => {
       let date = new Date().toISOString()
       if (set.date != null) {
-        date = new Date(set.date).toISOString()
+        date = new Date(set.date * 1000).toISOString()
       }
       let settings = getDefaultSettings()
       if (set.settings != null) {
