@@ -7,11 +7,12 @@
     <template #default>
       {{ $t('components.modalResolveLocalStorage.text') }}
       <ParagraphDefault
-        v-if="migratingError"
+        v-for="(error, index) in migratingErrors"
+        :key="[error, index].join('_')"
         class="text-red-500"
         dir="ltr"
       >
-        {{ $t('components.modalResolveLocalStorage.migratingError') }}
+        {{ error }}
       </ParagraphDefault>
     </template>
     <template #footer>
@@ -34,6 +35,7 @@
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalDefault from '@/components/ModalDefault.vue'
 import { useUserStore } from '@/stores/user'
@@ -43,7 +45,7 @@ const { t } = useI18n()
 const { logout } = useUserStore()
 const setsStore = useCardsSetsStore()
 const { migrate } = setsStore
-const { migrating, migratingError } = storeToRefs(setsStore)
+const { migrating, migratingErrors } = storeToRefs(setsStore)
 
 const onMigrate = () => {
   if (!confirm(t('components.modalResolveLocalStorage.confirmMigrate'))) {

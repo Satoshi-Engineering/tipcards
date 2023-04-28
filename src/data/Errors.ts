@@ -24,6 +24,10 @@ export enum ErrorCode {
   CardNeedsSetFunding = 'CardNeedsSetFunding',
   MissingAuthorizationHeader = 'MissingAuthorizationHeader',
   InvalidAuthorizationHeader = 'InvalidAuthorizationHeader',
+  InvalidInput = 'InvalidInput',
+  SetBelongsToAnotherUser = 'SetBelongsToAnotherUser',
+  SetAlreadyFunded = 'SetAlreadyFunded',
+  SetInvoiceAlreadyExists = 'SetInvoiceAlreadyExists',
 }
 
 export class ErrorWithCode {

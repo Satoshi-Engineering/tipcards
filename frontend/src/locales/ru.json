@@ -235,7 +235,10 @@
   "stores": {
     "cardsSets": {
       "errors": {
-        "unableToLoadSetsFromBackend": "Unable to load sets from the server."
+        "unableToLoadSetsFromBackend": "Unable to load sets from the server.",
+        "unableToMigrateSets": "Migration failed. You can delete the sets manually and save them when logged in.",
+        "setBelongsToAnotherUser": "Unable to save an unnamed set, as it was already saved by another user.",
+        "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user."
       }
     }
   },
@@ -245,8 +248,7 @@
       "text": "You have sets stored locally. To use the LNURL-Auth feature we need to move those to the server. You can do so by clicking \"Migrate\". Alternatively you can log out again and delete them manually first.",
       "migrate": "Migrate",
       "logout": "Logout",
-      "confirmMigrate": "Migrate now?",
-      "migratingError": "Migration failed. You can delete the sets manually and save them when logged in."
+      "confirmMigrate": "Migrate now?"
     }
   }
 }

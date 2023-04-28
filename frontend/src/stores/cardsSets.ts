@@ -3,6 +3,7 @@ import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, nextTick, watch } from 'vue'
 
 import type { Settings, Set } from '@root/data/Set'
+import { ErrorCode } from '@root/data/Errors'
 
 import i18n from '@/modules/initI18n'
 import { useUserStore } from '@/stores/user'
@@ -157,26 +158,31 @@ const loadSetsFromServer = async () => {
 }
 
 const saveSetToServer = async (set: Set) => {
+  const oldSets = setsServer.value
   const existingIndex = setsServer.value.findIndex(({ id }) => id === set.id)
   if (existingIndex > -1) {
     setsServer.value[existingIndex] = set
   } else {
     setsServer.value.push(set)
   }
-
-  const response = await axios.post(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`, set)
-  if (response.data.status !== 'success') {
-    throw response.data
-  }
-
-  // refresh asynchronously
-  setTimeout(() => {
-    try {
-      loadSetsFromServer()
-    } catch (error) {
-      // do nothing as nobody subscribed to this call
+  try {
+    const response = await axios.post(`${BACKEND_API_ORIGIN}/api/set/${set.id}/`, set)
+    if (response.data.status !== 'success') {
+      throw response.data
     }
-  }, 0)
+  } catch (error) {
+    setsServer.value = oldSets
+    throw error
+  } finally {
+    // refresh asynchronously
+    setTimeout(() => {
+      try {
+        loadSetsFromServer()
+      } catch (error) {
+        // do nothing as nobody subscribed to this call
+      }
+    }, 0)
+  }
 }
 
 const deleteSetFromServer = async (setId: string) => {
@@ -211,7 +217,7 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
   const subscribed = ref(false)
   const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
   const migrating = ref(false)
-  const migratingError = ref(false)
+  const migratingErrors = ref<string[]>([])
 
   const reload = async () => {
     loadSetsFromlocalStorage()
@@ -268,21 +274,37 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
       return
     }
     migrating.value = true
-    migratingError.value = false
-    try {
-      await Promise.all(setsLocalStorage.value.map(async (set) => {
-        const setOnServer = setsServer.value.find((currentSet) => currentSet.id === set.id)
-        if (
-          setOnServer == null
-          || Number(set.date) > Number(setOnServer.date)
-        ) {
+    migratingErrors.value = []
+    let hasError = false
+    await Promise.all(setsLocalStorage.value.map(async (set) => {
+      const setOnServer = setsServer.value.find((currentSet) => currentSet.id === set.id)
+      if (
+        setOnServer == null
+        || Number(set.date) > Number(setOnServer.date)
+      ) {
+        try {
           await saveSetToServer(set)
+        } catch (error) {
+          console.error(error)
+          hasError = true
+          if (
+            axios.isAxiosError(error)
+            && error.response?.data?.code === ErrorCode.SetBelongsToAnotherUser
+          ) {
+            migratingErrors.value.push(t(
+              set.settings?.setName != null && set.settings?.setName.length > 0
+                ? 'stores.cardsSets.errors.namedSetBelongsToAnotherUser'
+                : 'stores.cardsSets.errors.setBelongsToAnotherUser',
+              { name: set.settings?.setName },
+            ))
+          }
+          return
         }
-        deleteCardsSetFromLocalStorage(set.id)
-      }))
-    } catch (error) {
-      console.error(error)
-      migratingError.value = true
+      }
+      deleteCardsSetFromLocalStorage(set.id)
+    }))
+    if (hasError) {
+      migratingErrors.value.push(t('stores.cardsSets.errors.unableToMigrateSets'))
     }
     migrating.value = false
   }
@@ -305,7 +327,7 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
   return {
     fetching,
     migrating,
-    migratingError,
+    migratingErrors,
     sets,
     subscribe,
     saveSet,

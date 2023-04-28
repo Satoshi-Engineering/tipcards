@@ -25,6 +25,7 @@ router.get('/', authGuard, async (req: express.Request, res: express.Response) =
     res.status(400).json({
       status: 'error',
       message: 'Invalid input.',
+      code: ErrorCode.InvalidInput,
     })
     return
   }
@@ -55,6 +56,7 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
     res.status(400).json({
       status: 'error',
       message: 'Invalid input.',
+      code: ErrorCode.InvalidInput,
     })
     return
   }
@@ -112,6 +114,7 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
     res.status(403).json({
       status: 'error',
       message: 'This set belongs to another user.',
+      code: ErrorCode.SetBelongsToAnotherUser,
     })
     return
   }
@@ -205,6 +208,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
     res.status(400).json({
       status: 'error',
       message: 'Invalid input.',
+      code: ErrorCode.InvalidInput,
     })
     return
   }
@@ -227,11 +231,13 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
       res.status(400).json({
         status: 'error',
         message: 'Set is already funded.',
+        code: ErrorCode.SetAlreadyFunded,
       })
     } else {
       res.status(400).json({
         status: 'error',
         message: 'Set invoice already exists.',
+        code: ErrorCode.SetInvoiceAlreadyExists,
       })
     }
     return
@@ -333,6 +339,7 @@ const deleteSetRoute = async (req: express.Request, res: express.Response) => {
     res.status(404).json({
       status: 'error',
       message: 'Set not found.',
+      code: ErrorCode.SetNotFound,
     })
     return
   }
@@ -435,6 +442,7 @@ const invoicePaid = async (req: express.Request, res: express.Response) => {
     res.status(404).json({
       status: 'error',
       message: `Set not found. Go to /set-funding/${req.params.setId} to create an invoice.`,
+      code: ErrorCode.SetNotFound,
     })
     return
   }
