@@ -267,5 +267,13 @@
         "unableToLoadSetsFromBackend": "Sets vom Server konnten nicht geladen werden."
       }
     }
+  },
+  "components": {
+    "modalResolveLocalStorage": {
+      "headline": "Sets im Browser (LocalStorage)",
+      "text": "Du hast Sets im Browser gespeichert. Um die LNURL-Auth Funktionalität zu nutzen müssen wir diese Sets auf dem Server speichern. Drücke dafür den Button \"Migrieren\". Alternativ kannst du dich auch wieder ausloggen und die Sets vorher löschen.",
+      "migrate": "Migrieren",
+      "logout": "Ausloggen"
+    }
   }
 }

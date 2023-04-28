@@ -253,5 +253,13 @@
         "unableToLoadSetsFromBackend": "Unable to load sets from the server."
       }
     }
+  },
+  "components": {
+    "modalResolveLocalStorage": {
+      "headline": "Sets stored in your browser (LocalStorage)",
+      "text": "You have sets stored locally. To use the LNURL-Auth feature we need to move those to the server. You can do so by clicking \"Migrate\". Alternatively you can log out again and delete them manually first.",
+      "migrate": "Migrate",
+      "logout": "Logout"
+    }
   }
 }

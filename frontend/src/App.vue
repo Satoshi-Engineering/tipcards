@@ -61,6 +61,7 @@
       </div>
     </footer>
   </div>
+  <ModalResolveLocalStorage v-if="showResolveLocalStorage" />
 </template>
 
 <script setup lang="ts">
@@ -73,7 +74,9 @@ import { LOCALES, setLocale, useI18nHelpers, type LocaleCode } from '@/modules/i
 import I18nT from '@/modules/I18nT'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import BackLink from '@/components/BackLink.vue'
+import ModalResolveLocalStorage from '@/components/ModalResolveLocalStorage.vue'
 import { useUserStore } from '@/stores/user'
+import { useCardsSetsStore } from '@/stores/cardsSets'
 import { SUPPORT_EMAIL } from '@/constants'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 
@@ -134,4 +137,9 @@ const backlink = computed(() => {
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)
 const { logout } = userStore
+
+const cardsSetsStore = useCardsSetsStore()
+const { hasSetsInLocalStorage } = storeToRefs(cardsSetsStore)
+
+const showResolveLocalStorage = computed(() => isLoggedIn.value && hasSetsInLocalStorage.value)
 </script>
