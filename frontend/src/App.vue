@@ -10,7 +10,7 @@
         :only-internal-referrer="backlink.onlyInternalReferrer"
       />
       <div v-if="isLoggedIn" class="col-start-2 p-4 text-right">
-        <LinkDefault @click="logout">
+        <LinkDefault @click="onLogout">
           {{ t('auth.buttonLogout') }}
         </LinkDefault>
       </div>
@@ -137,9 +137,12 @@ const backlink = computed(() => {
 const userStore = useUserStore()
 const { isLoggedIn } = storeToRefs(userStore)
 const { logout } = userStore
+const onLogout = () => {
+  logout()
+  router.push({ name: 'home' })
+}
 
 const cardsSetsStore = useCardsSetsStore()
 const { hasSetsInLocalStorage } = storeToRefs(cardsSetsStore)
-
 const showResolveLocalStorage = computed(() => isLoggedIn.value && hasSetsInLocalStorage.value)
 </script>
