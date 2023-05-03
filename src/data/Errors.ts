@@ -28,6 +28,7 @@ export enum ErrorCode {
   SetBelongsToAnotherUser = 'SetBelongsToAnotherUser',
   SetAlreadyFunded = 'SetAlreadyFunded',
   SetInvoiceAlreadyExists = 'SetInvoiceAlreadyExists',
+  CardLogoNotFound = 'CardLogoNotFound',
 }
 
 export class ErrorWithCode {

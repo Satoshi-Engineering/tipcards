@@ -5,6 +5,7 @@ import { REDIS_BASE_PATH } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
 import { createUserId, type User } from '../../../src/data/User'
+import { ImageType, type ImageMeta } from '../../../src/data/Image'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -280,4 +281,68 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
   }
   await createUser(user)
   return user
+}
+
+/**
+ * @param image ImageMeta
+ * @throws
+ */
+export const createImageMeta = async (image: ImageMeta): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:imagesById:${image.id}:meta`)
+  if (exists) {
+    throw new Error('Image already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:imagesById:${image.id}:meta`, '$', image)
+}
+
+/**
+ * @param imageId string
+ * @throws
+ */
+export const getImageMeta = async (imageId: string): Promise<ImageMeta | null> => {
+  const client = await getClient()
+  const image: ImageMeta | null = await client.json.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:meta`) as ImageMeta | null
+  return image
+}
+
+/**
+ * @param imageId string
+ * @throws
+ */
+export const getImage = async (imageId: string): Promise<Buffer | string | null> => {
+  const imageMeta = await getImageMeta(imageId)
+  if (imageMeta == null) {
+    return null
+  }
+  const client = await getClient()
+  let image: Buffer | string | null = null
+  if (imageMeta.type === ImageType.Svg) {
+    image = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
+  } else if (imageMeta.type === ImageType.Png) {
+    const data = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
+    if (data != null) {
+      image = Buffer.from(data, 'base64')
+    }
+  }
+  return image
+}
+
+/**
+ * @param imageId string
+ * @throws
+ */
+export const getImageAsString = async (imageId: string): Promise<string | null> => {
+  const client = await getClient()
+  const image: string | null = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
+  return image
+}
+
+/**
+ * @param imageId string
+ * @throws
+ */
+export const storeImageString = async (imageMeta: ImageMeta, image: string): Promise<void> => {
+  const client = await getClient()
+  await client.set(`${REDIS_BASE_PATH}:imagesById:${imageMeta.id}:data`, image)
 }

@@ -13,6 +13,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         '@root': fileURLToPath(new URL('../src', import.meta.url)),
+        'crypto': './src/shims/crypto.ts',
       },
     },
     define: {

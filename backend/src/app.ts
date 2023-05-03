@@ -2,8 +2,10 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
+import assets from './api/assets'
 import auth from './api/auth'
 import card from './api/card'
+import cardLogos from './api/cardLogos'
 import dummy from './api/dummy'
 import invoice from './api/invoice'
 import lnurl from './api/lnurl'
@@ -18,8 +20,10 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(helmet())
 app.use(xstAttack())
+app.use('/api/assets', assets)
 app.use('/api/auth', auth)
 app.use('/api/card', card)
+app.use('/api/cardLogos', cardLogos)
 app.use('/api/dummy', dummy)
 app.use('/api/invoice', invoice)
 app.use('/api/lnurl', lnurl)

@@ -131,6 +131,18 @@
         >
         Lightning
       </label>
+      <label
+        v-for="image in availableCardLogos"
+        :key="image.id"
+        class="block"
+      >
+        <input
+          v-model="settings.cardsQrCodeLogo"
+          type="radio"
+          :value="image.id"
+        >
+        {{ image.name }}
+      </label>
       <label class="block">
         <input
           v-model="settings.cardsQrCodeLogo"
@@ -325,12 +337,25 @@
                     :y="0.37 * 256"
                   />
                   <IconLightning
-                    v-if="settings.cardsQrCodeLogo === 'lightning'"
+                    v-else-if="settings.cardsQrCodeLogo === 'lightning'"
                     :width="0.26 * 256"
                     :height="0.26 * 256"
                     :x="0.37 * 256"
                     :y="0.37 * 256"
                   />
+                  <svg
+                    v-else-if="selectedCardLogo != null"
+                    :width="0.26 * 256"
+                    :height="0.26 * 256"
+                    :x="0.37 * 256"
+                    :y="0.37 * 256"
+                  >
+                    <image
+                      :href="`${BACKEND_API_ORIGIN}/api/assets/cardLogos/${selectedCardLogo.id}.${selectedCardLogo.type}`"
+                      :width="0.26 * 256"
+                      :height="0.26 * 256"
+                    />
+                  </svg>
                 </svg>
               </div>
             </a>
@@ -409,6 +434,7 @@
 </template>
 
 <script lang="ts" setup>
+import axios from 'axios'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { storeToRefs } from 'pinia'
@@ -421,6 +447,7 @@ import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
 import type { Settings } from '@root/data/Set'
+import type { ImageMeta } from '@root/data/Image'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -576,6 +603,7 @@ const urlChanged = () => {
 onMounted(() => {
   urlChanged()
   putSettingsIntoUrl()
+  loadAvailableCardLogos()
 })
 
 // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/425
@@ -622,6 +650,29 @@ const setFundingHref = computed(() => {
       settings: route.params.settings,
     },
   }).href
+})
+
+const availableCardLogos = ref<ImageMeta[]>([])
+const loadAvailableCardLogos = async () => {
+  if (!isLoggedIn.value) {
+    return
+  }
+  const response = await axios.get(`${BACKEND_API_ORIGIN}/api/cardLogos/`)
+  availableCardLogos.value = response.data.data
+}
+const availableCardLogosById = computed<Record<string, ImageMeta>>(() => availableCardLogos.value.reduce((byId, image) => ({
+  ...byId,
+  [image.id]: image,
+}), {}))
+
+const selectedCardLogo = computed(() => {
+  if (
+    settings.cardsQrCodeLogo == null
+    || availableCardLogosById.value[settings.cardsQrCodeLogo] == null
+  ) {
+    return null
+  }
+  return availableCardLogosById.value[settings.cardsQrCodeLogo]
 })
 
 ///////////////////////
