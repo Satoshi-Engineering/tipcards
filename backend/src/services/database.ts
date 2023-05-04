@@ -6,7 +6,7 @@ import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
 import { createUserId, type User } from '../../../src/data/User'
 import { ImageType, type ImageMeta } from '../../../src/data/Image'
-import { LandingPageType, type LandingPage } from '../../../src/data/LandingPage'
+import type { LandingPage } from '../../../src/data/LandingPage'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`

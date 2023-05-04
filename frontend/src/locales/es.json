@@ -72,6 +72,10 @@
       "createYourOwnTipCardsHeadline": "Crea tus propias tarjetas de propina ⚡",
       "createYourOwnTipCardsText": "¿Quieres regalar a tus amigos o conocidos unos sats (1 Sat = 0,00000001 Bitcoin) o dar a alguien una propina en forma de Bitcoin? Haz clic en el siguiente botón y configura tus tarjetas de propina personales.",
       "createYourOwnTipCardsButton": "Crear mis propias tarjetas de propinas"
+    },
+    "errors": {
+      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+      "errorInvalidLandingPage": "Unable to load custom landing page."
     }
   },
   "funding": {
@@ -122,6 +126,8 @@
       "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
       "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "landingPagesHeadline": "Landing Page",
+      "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
       "button": "Fund set"
     },
     "resetInvoice": "Reset Set Invoice",

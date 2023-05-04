@@ -72,6 +72,10 @@
         "createYourOwnTipCardsHeadline": "अपने खुद के टिप कार्ड बनाएं",
         "createYourOwnTipCardsText": "क्या आप अपने दोस्तों या सहकर्मियों को कुछ सैट (1 सैट = 0.00000001 बिटकॉइन) देना चाहेंगे या बिटकॉइन में किसी को टिप देना चाहेंगे? निम्नलिखित बटन पर क्लिक करें और अपने व्यक्तिगत टिप कार्ड्स को कॉन्फ़िगर करें।",
         "createYourOwnTipCardsButton": "अपने खुद के टिप कार्ड बनाएं।"
+      },
+      "errors": {
+        "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+        "errorInvalidLandingPage": "Unable to load custom landing page."
       }
     },
     "funding": {
@@ -123,6 +127,8 @@
         "textHint": "Will be displayed in the recipient's wallet",
         "notePlaceholder": "Notes / handed out to",
         "noteHint": "Will be displayed on the status section of your Tip Cards set",
+        "landingPagesHeadline": "Landing Page",
+        "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
         "button": "Fund set"
       },
       "resetInvoice": "Reset Set Invoice",

@@ -160,6 +160,34 @@
             >
             <small class="block">({{ t('setFunding.form.noteHint') }})</small>
           </label>
+          <div v-if="availableLandingPages.length > 0" class="mt-4 mb-2">
+            <div class="mb-2">
+              <HeadlineDefault level="h3" class="mb-0">
+                {{ t('setFunding.form.landingPagesHeadline') }}
+              </HeadlineDefault>
+              <small class="block">({{ t('setFunding.form.landingPagesHint') }})</small>
+            </div>
+            <label class="block">
+              <input
+                v-model="selectedLandingPage"
+                value="default"
+                type="radio"
+              >
+              tipcards.io
+            </label>
+            <label
+              v-for="landingPage in availableLandingPages"
+              :key="landingPage.id"
+              class="block"
+            >
+              <input
+                v-model="selectedLandingPage"
+                type="radio"
+                :value="landingPage.id"
+              >
+              {{ landingPage.name }}
+            </label>
+          </div>
           <div class="flex flex-col items-center mt-4">
             <ButtonDefault
               type="submit"
@@ -184,11 +212,13 @@
 
 <script setup lang="ts">
 import axios from 'axios'
+import { storeToRefs } from 'pinia'
 import { onBeforeMount, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@root/data/Set'
+import type { LandingPage } from '@root/data/LandingPage'
 
 import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -203,6 +233,7 @@ import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
 import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
+import { useUserStore } from '@/stores/user'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 const { t } = useI18n()
@@ -289,6 +320,7 @@ const createInvoice = async () => {
         text: text.value,
         note: note.value,
         cardIndices: cardIndicesToFund.value,
+        landingPageId: selectedLandingPage.value,
       },
     )
     if (response.data.status === 'success' && response.data.data != null) {
@@ -333,4 +365,20 @@ const cardsHref = computed(() => router.resolve({
     settings: route.params.settings,
   },
 }).href)
+
+/////
+// Landing Page
+const userStore = useUserStore()
+const { isLoggedIn } = storeToRefs(userStore)
+const availableLandingPages = ref<LandingPage[]>([])
+const loadAvailableLandingPages = async () => {
+  if (!isLoggedIn.value) {
+    return
+  }
+  const response = await axios.get(`${BACKEND_API_ORIGIN}/api/landingPages/`)
+  availableLandingPages.value = response.data.data
+}
+
+const selectedLandingPage = ref<string>('default')
+onBeforeMount(loadAvailableLandingPages)
 </script>

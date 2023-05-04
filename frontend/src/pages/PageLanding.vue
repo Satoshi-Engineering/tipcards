@@ -1,6 +1,13 @@
 <template>
   <div class="mx-auto w-full max-w-md">
     <div
+      v-if="showLoadingAnimation"
+      class="flex justify-center flex-1 mt-8 px-4"
+    >
+      <AnimatedLoadingWheel />
+    </div>
+    <div
+      v-else-if="showPage"
       class="my-10 mx-auto px-4 w-full max-w-md"
     >
       <HeadlineDefault level="h1" class="mb-8">
@@ -291,6 +298,8 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import { LandingPageType } from '@root/data/LandingPage'
+
 import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -301,15 +310,18 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import { decodeLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
-import { loadCardStatus } from '@/modules/loadCardStatus'
+import { loadCardStatus, loadLandingPageForCard } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
 import FormatBitcoin from '@/components/FormatBitcoin.vue'
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
 
 const { t, te } = useI18n()
 
 const { currentFiat } = useI18nHelpers()
+const { loading, showLoadingAnimation, showContent: showPage } = useDelayedLoadingAnimation()
 
 const spent = ref<boolean | undefined>()
 const amount = ref<number | undefined | null>()
@@ -344,15 +356,19 @@ const cardHash = computed<string | null | undefined>(() => {
 
 const loadLnurlData = async () => {
   if (cardHash.value == null) {
+    loading.value = false
     if (lnurl.value != null && lnurl.value !== '') {
       userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
     }
     return
   }
+  loading.value = true
+
   const cardStatus = await loadCardStatus(cardHash.value, String(route.name))
   const { status, message, card } = cardStatus
 
   if (status === 'error' && message != null) {
+    loading.value = false
     userErrorMessage.value = message
     return
   }
@@ -366,6 +382,26 @@ const loadLnurlData = async () => {
       },
     })
     return
+  }
+
+  if (card.landingPageId != null) {
+    const landingPage = await loadLandingPageForCard(card)
+    if (
+      landingPage?.type === LandingPageType.External
+      && landingPage.url != null
+    ) {
+      try {
+        const target = new URL(landingPage.url)
+        if (lnurl.value != null) {
+          target.searchParams.append('lightning', lnurl.value)
+        }
+        location.href = target.href
+        return
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    userErrorMessage.value = t('landing.errors.errorInvalidLandingPage')
   }
 
   withdrawPending.value = !!card.withdrawPending
@@ -382,6 +418,7 @@ const loadLnurlData = async () => {
     amount.value = cardStatus.amount
   }
 
+  loading.value = false
   setTimeout(loadLnurlData, 10 * 1000)
 }
 

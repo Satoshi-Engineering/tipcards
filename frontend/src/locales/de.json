@@ -94,7 +94,8 @@
       }
     },
     "errors": {
-      "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card."
+      "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card.",
+      "errorInvalidLandingPage": "Benutzerdefinierte Seite konnte nicht geladen werden."
     }
   },
   "funding": {
@@ -148,6 +149,8 @@
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
       "noteHint": "Wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "landingPagesHeadline": "Landing Page",
+      "landingPagesHint": "Diese Seite wird beim Scannen der aufgeladenen Karte angezeigt.",
       "button": "Set aufladen"
     },
     "resetInvoice": "Set-Invoice zurücksetzen",
