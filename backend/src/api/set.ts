@@ -331,7 +331,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   })
 })
 
-const deleteSetRoute = async (req: express.Request, res: express.Response) => {
+const deleteSetRoute = async (req: express.Request, res: express.Response, invoiceOnly = false) => {
   // 1. check if set exists
   let set: Set | null = null
   try {
@@ -356,6 +356,13 @@ const deleteSetRoute = async (req: express.Request, res: express.Response) => {
 
   // 2. delete set if it has no invoice
   if (set.invoice == null) {
+    if (invoiceOnly && set.userId != null) {
+      res.json({
+        status: 'success',
+      })
+      return 
+    }
+
     try {
       await deleteSet(set)
     } catch (error) {
@@ -415,8 +422,13 @@ const deleteSetRoute = async (req: express.Request, res: express.Response) => {
       await deleteCard(card)
     }))
 
-    // delete set
-    await deleteSet(set)
+    // delete set or invoice
+    if (invoiceOnly && set.userId != null) {
+      set.invoice = null
+      await updateSet(set)
+    } else {
+      await deleteSet(set)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -431,8 +443,8 @@ const deleteSetRoute = async (req: express.Request, res: express.Response) => {
   })
 }
 
-router.delete('/:setId', deleteSetRoute)
-router.delete('/invoice/:setId', deleteSetRoute)
+router.delete('/:setId', (req, res) => deleteSetRoute(req, res))
+router.delete('/invoice/:setId', (req, res) => deleteSetRoute(req, res, true))
 
 const invoicePaid = async (req: express.Request, res: express.Response) => {
   // 1. check if set exists
