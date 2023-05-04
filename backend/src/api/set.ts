@@ -62,8 +62,10 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
   }
   const userId: string = res.locals.jwtPayload.id
   let settings: Settings | null | undefined = undefined
+  let created: number | undefined = undefined
+  let date: number | undefined = undefined
   try {
-    ({ settings } = req.body)
+    ({ settings, created, date } = req.body)
   } catch (error) {
     console.error(error)
   }
@@ -89,6 +91,14 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
       userId,
       invoice: null,
       settings,
+      created: Math.floor(+ new Date() / 1000),
+      date: Math.floor(+ new Date() / 1000),
+    }
+    if (created != null) {
+      set.created = created
+    }
+    if (date != null) {
+      set.date = date
     }
   
     try {
@@ -123,6 +133,22 @@ router.post('/:setId', authGuard, async (req: express.Request, res: express.Resp
   set.userId = userId
   if (settings != null) {
     set.settings = settings
+  }
+  if (set.created == null) {
+    if (created != null) {
+      set.created = created
+    } else if (set.date != null) {
+      set.created = set.date
+    } else if (date != null) {
+      set.created = date
+    } else {
+      set.created = Math.floor(+ new Date() / 1000)
+    }
+  }
+  if (date != null) {
+    set.date = date
+  } else {
+    set.date = Math.floor(+ new Date() / 1000)
   }
   try {
     await updateSet(set)
