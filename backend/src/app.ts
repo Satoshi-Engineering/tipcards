@@ -8,6 +8,7 @@ import card from './api/card'
 import cardLogos from './api/cardLogos'
 import dummy from './api/dummy'
 import invoice from './api/invoice'
+import landingPages from './api/landingPages'
 import lnurl from './api/lnurl'
 import lnurlp from './api/lnurlp'
 import set from './api/set'
@@ -26,6 +27,7 @@ app.use('/api/card', card)
 app.use('/api/cardLogos', cardLogos)
 app.use('/api/dummy', dummy)
 app.use('/api/invoice', invoice)
+app.use('/api/landingPages', landingPages)
 app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)

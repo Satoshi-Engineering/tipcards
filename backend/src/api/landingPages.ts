@@ -1,10 +1,10 @@
 import express from 'express'
 
 import { ErrorCode } from '../../../src/data/Errors'
-import type { ImageMeta } from '../../../src/data/Image'
+import type { LandingPage } from '../../../src/data/LandingPage'
 import type { User } from '../../../src/data/User'
 
-import { getUserById, getImageMeta } from '../services/database'
+import { getUserById, getLandingPage } from '../services/database'
 import { authGuard } from '../services/jwt'
 
 const router = express.Router()
@@ -34,13 +34,13 @@ router.get('/', authGuard, async (req: express.Request, res: express.Response) =
     return
   }
 
-  const data: ImageMeta[] = []
-  if (user?.availableCardsLogos != null) {
+  const data: LandingPage[] = []
+  if (user?.availableLandingPages != null) {
     try {
-      await Promise.all(user.availableCardsLogos.map(async (imageId) => {
-        const imageMeta = await getImageMeta(imageId)
-        if (imageMeta != null) {
-          data.push(imageMeta)
+      await Promise.all(user.availableLandingPages.map(async (landingPageId) => {
+        const landingPage = await getLandingPage(landingPageId)
+        if (landingPage != null) {
+          data.push(landingPage)
         }
       }))
     } catch (error: unknown) {

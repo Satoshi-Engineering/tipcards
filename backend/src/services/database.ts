@@ -6,6 +6,7 @@ import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
 import { createUserId, type User } from '../../../src/data/User'
 import { ImageType, type ImageMeta } from '../../../src/data/Image'
+import { LandingPageType, type LandingPage } from '../../../src/data/LandingPage'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -345,4 +346,40 @@ export const getImageAsString = async (imageId: string): Promise<string | null> 
 export const storeImageString = async (imageMeta: ImageMeta, image: string): Promise<void> => {
   const client = await getClient()
   await client.set(`${REDIS_BASE_PATH}:imagesById:${imageMeta.id}:data`, image)
+}
+
+/**
+ * @param landingPage LandingPage
+ * @throws
+ */
+export const createLandingPage = async (landingPage: LandingPage): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`)
+  if (exists) {
+    throw new Error('Landing page already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`, '$', landingPage)
+}
+
+/**
+ * @param landingPage LandingPage
+ * @throws
+ */
+export const updateLandingPage = async (landingPage: LandingPage): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`)
+  if (!exists) {
+    throw new Error('Landing page doesn\'t exist.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`, '$', landingPage)
+}
+
+/**
+ * @param landingPageId string
+ * @throws
+ */
+export const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => {
+  const client = await getClient()
+  const landingPage: LandingPage | null = await client.json.get(`${REDIS_BASE_PATH}:landingPagesById:${landingPageId}:data`) as LandingPage | null
+  return landingPage
 }
