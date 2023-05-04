@@ -271,19 +271,25 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
     })
     return
   }
-  set = {
-    id: req.params.setId,
-    text,
-    note,
-    invoice: {
-      fundedCards: cardIndices,
-      amount,
-      payment_hash,
-      payment_request,
-      created: Math.round(+ new Date() / 1000),
-      paid: null,
-      expired: false,
-    },
+
+  // check if a new set has to be created
+  let insertNewSet = false
+  if (set == null) {
+    insertNewSet = true
+    set = {
+      id: req.params.setId,
+    }
+  }
+  set.text = text
+  set.note = note
+  set.invoice = {
+    fundedCards: cardIndices,
+    amount,
+    payment_hash,
+    payment_request,
+    created: Math.round(+ new Date() / 1000),
+    paid: null,
+    expired: false,
   }
 
   // persist data
@@ -305,7 +311,11 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
         used: null,
       })
     }))
-    await createSet(set)
+    if (insertNewSet) {
+      await createSet(set)
+    } else {
+      await updateSet(set)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
