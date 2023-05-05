@@ -308,7 +308,7 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
-import { decodeLnurl } from '@/modules//lnurlHelpers'
+import { cardHashFromLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus, loadLandingPageForCard } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
@@ -341,17 +341,10 @@ const route = useRoute()
 const lnurl = computed(() => typeof route.query.lightning === 'string' ? route.query.lightning : undefined)
 
 const cardHash = computed<string | null | undefined>(() => {
-  let decodedLnurl: string
   if (typeof lnurl.value !== 'string') {
     return null
   }
-  try {
-    decodedLnurl = decodeLnurl(lnurl.value)
-  } catch (error) {
-    return null
-  }
-  const [, hash] = decodedLnurl.toLowerCase().match(/\/api\/lnurl\/([0-9a-f]+)/) || []
-  return hash
+  return cardHashFromLnurl(lnurl.value)
 })
 
 const loadLnurlData = async () => {

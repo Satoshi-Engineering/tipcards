@@ -458,7 +458,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import { loadCardStatus, type CardStatus } from '@/modules/loadCardStatus'
+import { loadCardStatus, type CardStatusDeprecated } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
 import { useI18nHelpers } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
@@ -832,7 +832,7 @@ const usedCardsTotalAmount = computed(() => usedCards.value.reduce((total, { amo
 const fundedCards = computed(() => cards.value.filter(({ status }) => status === 'funded'))
 const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, { amount }) => total + (amount || 0), 0))
 
-const statusOrder: Record<CardStatus['status'], number> = {
+const statusOrder: Record<CardStatusDeprecated['status'], number> = {
   invoice: 0,
   lnurlp: 0,
   setFunding: 0,
@@ -846,8 +846,8 @@ const cardsStatusList = computed(
   () => cards.value
     .filter(({ status }) => status != null && status !== 'unfunded')
     .sort((a, b) => {
-      if (statusOrder[a.status as CardStatus['status']] !== statusOrder[b.status as CardStatus['status']]) {
-        return statusOrder[a.status as CardStatus['status']] - statusOrder[b.status as CardStatus['status']]
+      if (statusOrder[a.status as CardStatusDeprecated['status']] !== statusOrder[b.status as CardStatusDeprecated['status']]) {
+        return statusOrder[a.status as CardStatusDeprecated['status']] - statusOrder[b.status as CardStatusDeprecated['status']]
       }
       if (a.usedDate != null && b.usedDate != null) {
         return b.usedDate - a.usedDate

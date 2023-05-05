@@ -16,3 +16,15 @@ export const decodeLnurl = (encoded: string) => {
 
   return Buffer.from(requestByteArray).toString()
 }
+
+export const cardHashFromLnurl = (lnurl: string): string | null => {
+  let cardHash: string | null = null
+  let decodedLnurl: string
+  try {
+    decodedLnurl = decodeLnurl(lnurl)
+  } catch (error) {
+    return null
+  }
+  [, cardHash] = decodedLnurl.toLowerCase().match(/\/api\/lnurl\/([0-9a-f]+)/) || [undefined, null]
+  return cardHash
+}
