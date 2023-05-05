@@ -41,6 +41,8 @@ frontend-setup-env:
     # Compare env vars with .env.example
     - |
      cat .env.production | while read line; do
+        # Exclude comments
+        if [[ "$line" =~ ^# ]]; then continue; fi
         # Exclude non key=var lines
         if [[ "$line" != *\=* ]]; then continue; fi
         # String split to KEY and VALUE
