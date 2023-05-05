@@ -1,13 +1,17 @@
 <template>
-  <div class="mx-auto w-full max-w-md">
+  <div
+    v-if="!showPage"
+    class="fixed w-screen h-screen top-0 left-0 bg-white flex"
+  >
     <div
       v-if="showLoadingAnimation"
       class="flex justify-center flex-1 mt-8 px-4"
     >
       <AnimatedLoadingWheel />
     </div>
+  </div>
+  <div v-else class="mx-auto w-full max-w-md">
     <div
-      v-else-if="showPage"
       class="my-10 mx-auto px-4 w-full max-w-md"
     >
       <HeadlineDefault level="h1" class="mb-8">
