@@ -345,15 +345,15 @@
                   />
                   <svg
                     v-else-if="selectedCardLogo != null"
-                    :width="0.26 * 256"
-                    :height="0.26 * 256"
-                    :x="0.37 * 256"
-                    :y="0.37 * 256"
+                    :width="0.3 * 256"
+                    :height="0.3 * 256"
+                    :x="0.35 * 256"
+                    :y="0.35 * 256"
                   >
                     <image
                       :href="`${BACKEND_API_ORIGIN}/api/assets/cardLogos/${selectedCardLogo.id}.${selectedCardLogo.type}`"
-                      :width="0.26 * 256"
-                      :height="0.26 * 256"
+                      :width="0.3 * 256"
+                      :height="0.3 * 256"
                     />
                   </svg>
                 </svg>
