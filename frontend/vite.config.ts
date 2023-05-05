@@ -8,12 +8,25 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  let input: Record<string, string> = {
-    'index': resolve(__dirname, 'index.html'),
+  let build: Record<string, object> = {
+    input: {
+      'index': resolve(__dirname, 'index.html'),
+    },
   }
   if (env.BUILD_MAINTENANCE) {
-    input = {
-      'maintenance': resolve(__dirname, 'index.maintenance.html'),
+    build = {
+      input: {
+        'maintenance': resolve(__dirname, 'index.maintenance.html'),
+      },
+    }
+  }
+  if (env.VITE_BUILD_LIBS) {
+    build = {
+      lib: {
+        entry: resolve(__dirname, 'src/lib/externalCardStatus.ts'),
+        name: 'externalCardStatus',
+        fileName: 'externalCardStatus',
+      },
     }
   }
 
@@ -31,10 +44,6 @@ export default defineConfig(({ mode }) => {
       __VUE_I18N_LEGACY_API__: false,
       __INTLIFY_PROD_DEVTOOLS__: false,
     },
-    build: {
-      rollupOptions: {
-        input,
-      },
-    },
+    build,
   }
 })

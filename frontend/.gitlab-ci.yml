@@ -88,6 +88,7 @@ frontend-build:
   script:
     - cd frontend
     - npm run build
+    - VITE_BUILD_LIBS=1 npm run build
 
 .frontend-deploy_config:
   image: alpine  
