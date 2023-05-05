@@ -8,7 +8,7 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  let build: Record<string, object> = {
+  let build: Record<string, string | object> = {
     input: {
       'index': resolve(__dirname, 'index.html'),
     },
@@ -27,6 +27,7 @@ export default defineConfig(({ mode }) => {
         name: 'externalCardStatus',
         fileName: 'externalCardStatus',
       },
+      outDir: 'dist-libs',
     }
   }
 

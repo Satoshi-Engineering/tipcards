@@ -89,6 +89,7 @@ frontend-build:
     - cd frontend
     - npm run build
     - VITE_BUILD_LIBS=1 npm run build
+    - mv dist-libs/externalCardStatus* dist
 
 .frontend-deploy_config:
   image: alpine  
