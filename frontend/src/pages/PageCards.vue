@@ -58,7 +58,7 @@
         </div>
         <ul class="w-full my-5">
           <li
-            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, viewed } in cardsStatusList"
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed } in cardsStatusList"
             :key="cardHash"
             class="py-1 border-b border-grey"
           >
@@ -69,7 +69,13 @@
               :shared="shared"
               :amount="amount || undefined"
               :note="note || undefined"
-              :url="status === 'setFunding' ? setFundingHref : urlPreview"
+              :url="
+                status === 'setFunding'
+                  ? setFundingHref
+                  : fundedDate == null
+                    ? urlFunding
+                    : urlPreview
+              "
               :viewed="viewed"
             />
           </li>
@@ -341,7 +347,15 @@
             class="absolute w-full h-full"
             :class="{ 'opacity-50': card.status === 'used' }"
           >
-            <a :href="card.status === 'setFunding' ? setFundingHref : card.urlPreview">
+            <a
+              :href="
+                card.status === 'setFunding'
+                  ? setFundingHref
+                  : card.fundedDate == null
+                    ? card.urlFunding
+                    : card.urlPreview
+              "
+            >
               <div
                 class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
@@ -713,6 +727,7 @@ type Card = {
   cardHash: string,
   url: string,
   urlPreview: string,
+  urlFunding: string,
   lnurl: string,
   status: string | null,
   amount: number | null,
@@ -782,10 +797,15 @@ const generateNewCardSkeleton = async (index: number) => {
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
   const url = getCardUrl(lnurlEncoded, 'landing')
   const urlPreview = getCardUrl(lnurlEncoded, 'preview')
+  const urlFunding = router.resolve({
+    name: 'funding',
+    params: { lang: route.params.lang, cardHash },
+  }).href
   return {
     cardHash,
     url,
     urlPreview,
+    urlFunding,
     lnurl: lnurlEncoded,
     status: null,
     amount: null,
