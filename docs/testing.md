@@ -10,9 +10,11 @@
 * Check print preview
 * Download PNGs (is the QR codes logo correctly rendered)
 * Set funding
+  * Reset card
   * Message
   * Note
 * Single funding via invoice
+  * Reset card
   * Message
   * Note
 * Single funding via LNURLp
