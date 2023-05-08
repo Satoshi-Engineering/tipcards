@@ -113,44 +113,72 @@
         />
       </label>
       <div class="mb-2">
-        {{ t('cards.settings.cardQrCodeLogoLabel') }}:
+        <div class="mb-2">
+          {{ t('cards.settings.cardQrCodeLogoLabel') }}:
+        </div>
+        <label class="block">
+          <input
+            v-model="settings.cardsQrCodeLogo"
+            value="bitcoin"
+            type="radio"
+          >
+          Bitcoin
+        </label>
+        <label class="block">
+          <input
+            v-model="settings.cardsQrCodeLogo"
+            value="lightning"
+            type="radio"
+          >
+          Lightning
+        </label>
+        <label
+          v-for="image in availableCardLogos"
+          :key="image.id"
+          class="block"
+        >
+          <input
+            v-model="settings.cardsQrCodeLogo"
+            type="radio"
+            :value="image.id"
+          >
+          {{ image.name }}
+        </label>
+        <label class="block">
+          <input
+            v-model="settings.cardsQrCodeLogo"
+            value=""
+            type="radio"
+          >
+          {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
+        </label>
       </div>
-      <label class="block">
-        <input
-          v-model="settings.cardsQrCodeLogo"
-          value="bitcoin"
-          type="radio"
+      <div v-if="availableLandingPages.length > 0" class="mb-2">
+        <div class="mb-2">
+          {{ t('setFunding.form.landingPagesHeadline') }}
+          <small class="block">({{ t('setFunding.form.landingPagesHint') }})</small>
+        </div>
+        <label class="block">
+          <input
+            v-model="settings.landingPage"
+            value="default"
+            type="radio"
+          >
+          tipcards.io
+        </label>
+        <label
+          v-for="landingPage in availableLandingPages"
+          :key="landingPage.id"
+          class="block"
         >
-        Bitcoin
-      </label>
-      <label class="block">
-        <input
-          v-model="settings.cardsQrCodeLogo"
-          value="lightning"
-          type="radio"
-        >
-        Lightning
-      </label>
-      <label
-        v-for="image in availableCardLogos"
-        :key="image.id"
-        class="block"
-      >
-        <input
-          v-model="settings.cardsQrCodeLogo"
-          type="radio"
-          :value="image.id"
-        >
-        {{ image.name }}
-      </label>
-      <label class="block">
-        <input
-          v-model="settings.cardsQrCodeLogo"
-          value=""
-          type="radio"
-        >
-        {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
-      </label>
+          <input
+            v-model="settings.landingPage"
+            type="radio"
+            :value="landingPage.id"
+          >
+          {{ landingPage.name }}
+        </label>
+      </div>
     </div>
     <div class="px-4">
       <HeadlineDefault level="h2">
@@ -448,6 +476,7 @@ import isEqual from 'lodash.isequal'
 
 import type { Settings } from '@root/data/Set'
 import type { ImageMeta } from '@root/data/Image'
+import { LandingPageType, type LandingPage } from '@root/data/LandingPage'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -718,6 +747,19 @@ onBeforeMount(() => {
 })
 
 const getCardUrl = (lnurlEncoded: string, landingPageType: 'landing' | 'preview') => {
+  if (
+    selectedLandingPage.value != null
+    && selectedLandingPage.value.type === LandingPageType.External
+    && selectedLandingPage.value.url != null
+  ) {
+    const path = new URL(selectedLandingPage.value.url)
+    path.searchParams.append('lightning', lnurlEncoded.toUpperCase())
+    if (landingPageType === 'preview') {
+      path.searchParams.append('type', 'preview')
+    }
+    return path.href
+  }
+
   const routeHref = router.resolve({ name: landingPageType, params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
   if (landingPageType === 'preview') {
     return routeHref
@@ -862,6 +904,27 @@ const cardsStatusList = computed(
     }),
 )
 
+/////
+// Landing Page
+const availableLandingPages = ref<LandingPage[]>([])
+const loadAvailableLandingPages = async () => {
+  if (!isLoggedIn.value) {
+    return
+  }
+  const response = await axios.get(`${BACKEND_API_ORIGIN}/api/landingPages/`)
+  availableLandingPages.value = response.data.data
+}
+const landingPagesById = computed<Record<string,LandingPage>>(() => availableLandingPages.value.reduce((landingPages, landingPage) => ({
+  ...landingPages,
+  [landingPage.id]: landingPage,
+}), {}))
+const selectedLandingPage = computed(() => {
+  if (settings.landingPage == null || landingPagesById.value[settings.landingPage] == null) {
+    return null
+  }
+  return landingPagesById.value[settings.landingPage]
+})
+onBeforeMount(loadAvailableLandingPages)
 </script>
 
 <style>

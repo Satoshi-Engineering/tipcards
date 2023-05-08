@@ -1,5 +1,6 @@
 import { cardHashFromLnurl } from '@/modules/lnurlHelpers'
 import { loadCard, getCardStatusForCard } from '@/modules/loadCardStatus'
+import { TIPCARDS_ORIGIN } from '@/constants'
 
 const callables: CallableFunction[] = []
 
@@ -22,8 +23,19 @@ const loadCardStatusInternal = async (cardHash: string) => {
     return
   }
   try {
-    const card = await loadCard(cardHash)
+    let origin = 'landing'
+    if (new URL(location.href).searchParams.get('type') === 'preview') {
+      origin = 'preview'
+    }
+    const card = await loadCard(cardHash, origin)
     const status = getCardStatusForCard(card)
+    if (!['funded', 'withdrawPending', 'recentlyWithdrawn', 'withdrawn'].includes(status.status)) {
+      const tipcardsUrl = new URL(TIPCARDS_ORIGIN)
+      tipcardsUrl.pathname = `/funding/${cardHash}`
+      location.href = tipcardsUrl.href
+      return
+    }
+
     callables.forEach((callable) => callable({
       status: 'success',
       data: status,

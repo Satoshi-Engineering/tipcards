@@ -1,8 +1,6 @@
 import axios from 'axios'
 
 import type { Card, CardStatus, CardStatusStatus } from '@root/data/Card'
-import type { SuccessResponse } from '@root/data/Response'
-import type { LandingPage } from '@root/data/LandingPage'
 
 import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
 import { BACKEND_API_ORIGIN } from '@/constants'
@@ -178,33 +176,6 @@ export const loadCardStatus = async (cardHash: string, origin: string | undefine
     status: 'unfunded',
     card,
   }
-}
-
-export const loadLandingPageForCard = async (card: Card): Promise<LandingPage | null> => {
-  if (card.landingPageId == null) {
-    return null
-  }
-  let responseData: SuccessResponse
-  try {
-    const response = await axios.get(
-      `${BACKEND_API_ORIGIN}/api/landingPages/${card.landingPageId}`,
-      {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache',
-          'Expires': '0',
-        },
-      },
-    )
-    responseData = response.data
-  } catch (error) {
-    console.error(error)
-    return null
-  }
-  if (responseData.status !== 'success') {
-    return null
-  }
-  return responseData.data as LandingPage
 }
 
 export const getCardStatusForCard = (card: Card): CardStatus => {

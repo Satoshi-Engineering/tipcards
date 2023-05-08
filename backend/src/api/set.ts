@@ -224,10 +224,9 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   let amountPerCard: number | undefined = undefined
   let text = ''
   let note = ''
-  let landingPageId = 'default'
   let cardIndices: number[] = []
   try {
-    ({ amountPerCard, text, note, cardIndices, landingPageId } = req.body)
+    ({ amountPerCard, text, note, cardIndices } = req.body)
   } catch (error) {
     console.error(error)
   }
@@ -311,7 +310,6 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   set.date = Math.floor(+ new Date() / 1000)
   set.text = text
   set.note = note
-  set.landingPageId = landingPageId !== 'default' ? landingPageId : undefined
   set.invoice = {
     fundedCards: cardIndices,
     amount,
@@ -330,7 +328,6 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
         cardHash,
         text,
         note,
-        landingPageId: landingPageId !== 'default' ? landingPageId : undefined,
         setFunding: {
           amount: typeof amountPerCard === 'number' ? amountPerCard : 0,
           created: Math.round(+ new Date() / 1000),

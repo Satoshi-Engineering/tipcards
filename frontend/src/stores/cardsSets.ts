@@ -17,6 +17,7 @@ export const initialSettings: Settings = {
   cardCopytext: 'You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.',
   cardsQrCodeLogo: 'bitcoin',
   setName: '',
+  landingPage: 'default',
 }
 
 export const getDefaultSettings = (): Settings => ({

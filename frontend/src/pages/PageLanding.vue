@@ -302,8 +302,6 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
-import { LandingPageType } from '@root/data/LandingPage'
-
 import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -314,7 +312,7 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import { cardHashFromLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
-import { loadCardStatus, loadLandingPageForCard } from '@/modules/loadCardStatus'
+import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import router from '@/router'
@@ -379,26 +377,6 @@ const loadLnurlData = async () => {
       },
     })
     return
-  }
-
-  if (card.landingPageId != null) {
-    const landingPage = await loadLandingPageForCard(card)
-    if (
-      landingPage?.type === LandingPageType.External
-      && landingPage.url != null
-    ) {
-      try {
-        const target = new URL(landingPage.url)
-        if (lnurl.value != null) {
-          target.searchParams.append('lightning', lnurl.value)
-        }
-        location.href = target.href
-        return
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    userErrorMessage.value = t('landing.errors.errorInvalidLandingPage')
   }
 
   withdrawPending.value = !!card.withdrawPending
