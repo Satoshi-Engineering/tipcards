@@ -279,6 +279,7 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
   user = {
     id: createUserId(),
     lnurlAuthKey,
+    created: Math.floor(+ new Date() / 1000),
   }
   await createUser(user)
   return user
