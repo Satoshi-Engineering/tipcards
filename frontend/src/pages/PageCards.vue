@@ -271,8 +271,8 @@
       <ButtonWithTooltip
         class="text-sm min-w-[170px]"
         :href="setFundingHref"
-        :disabled="cardsStatusList.length !== 0"
-        :tooltip="cardsStatusList.length !== 0 ? t('cards.actions.setFunding.disabledReason') : undefined"
+        :disabled="setFundingDisabled"
+        :tooltip="setFundingDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
       >
         {{ t('cards.actions.setFunding.button') }}
       </ButtonWithTooltip>
@@ -488,7 +488,7 @@ import { useRoute, useRouter } from 'vue-router'
 import throttle from 'lodash.throttle'
 import isEqual from 'lodash.isequal'
 
-import type { Settings } from '@root/data/Set'
+import type { Settings, Set } from '@root/data/Set'
 import type { ImageMeta } from '@root/data/Image'
 import { LandingPageType, type LandingPage } from '@root/data/LandingPage'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
@@ -819,8 +819,36 @@ const generateNewCardSkeleton = async (index: number) => {
   }
 }
 
+const setFundingDisabled = computed(() => {
+  if (
+    set.value != null
+    && set.value.invoice != null
+    && set.value.invoice.paid == null
+  ) {
+    // there is already a (not paid) set-funding invoice, allow the user to view it
+    return false
+  }
+
+  // there are cards with data, by design no set-funding is allowed
+  return cardsStatusList.value.length !== 0
+})
+
+const set = ref<Set>()
 const reloadingStatusForCards = ref(false)
 const reloadStatusForCards = throttle(async () => {
+  // load set to trigger set funding invoice check (if webhook didn't work)
+  try {
+    const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${setId.value}`)
+    if (response.data.status === 'success' && response.data.data != null) {
+      set.value = response.data.data
+    } else {
+      set.value = undefined
+    }
+  } catch(error) {
+    set.value = undefined
+    console.error(error)
+  }
+
   reloadingStatusForCards.value = true
   await Promise.all(cards.value.map(async (card) => {
     // the URLs need to change in case the language was switched
