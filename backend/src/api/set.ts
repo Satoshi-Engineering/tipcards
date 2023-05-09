@@ -521,7 +521,7 @@ const invoicePaid = async (req: express.Request, res: express.Response) => {
   })
 }
 
-router.get('/invoice/paid/:cardHash', invoicePaid)
-router.post('/invoice/paid/:cardHash', invoicePaid)
+router.get('/invoice/paid/:setId', invoicePaid)
+router.post('/invoice/paid/:setId', invoicePaid)
 
 export default router
