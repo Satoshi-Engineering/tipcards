@@ -186,7 +186,14 @@ export const getSetById = async (setId: string): Promise<Set | null> => {
 
 export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
   const client = await getClient()
-  const result = await client.ft.search(INDEX_SETS_BY_USER_ID, `@userId:${userId.replace(/-/g, '')}`)
+  const result = await client.ft.search(
+    INDEX_SETS_BY_USER_ID,
+    `@userId:${userId.replace(/-/g, '')}`,
+    { LIMIT: { from: 0, size: 1000 } },
+  )
+  if (result.total > result.documents.length) {
+    console.error(`User ${userId} has more than ${result.documents.length} sets. This is currently not supported.`)
+  }
   return result.documents
     .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:setsById:[A-z0-9-]+:data$`).test(id))
     .map(({ value }) => value as Set)
