@@ -31,4 +31,4 @@ coverage
 *.sw?
 /docs/examples/redis/.env
 
-backend/data/statistics/*
+files/

@@ -91,30 +91,6 @@ backend-build:
   script:
     - cd backend
     - npm run build
-    # Copy statistics data from CI files
-    - |
-      if [ "$CI_COMMIT_BRANCH" == "main" ]; then
-        export STATISTICS_PREPEND_FILE=$STATISTICS_PREPEND_FILE_MAIN
-        export STATISTICS_EXCLUDE_FILE=$STATISTICS_EXCLUDE_FILE_MAIN
-      fi
-      if [ "$CI_COMMIT_BRANCH" == "develop" ]; then
-        export STATISTICS_PREPEND_FILE=$STATISTICS_PREPEND_FILE_DEVELOP
-        export STATISTICS_EXCLUDE_FILE=$STATISTICS_EXCLUDE_FILE_DEVELOP
-      fi
-    - |
-      if [ -f "$STATISTICS_PREPEND_FILE" ]; then
-        mkdir -p data/statistics
-        cp $STATISTICS_PREPEND_FILE data/statistics/prepend.json
-      else
-        echo -e "$STATISTICS_PREPEND_FILE not found in CI variables. Skipping."
-      fi
-    - |
-      if [ -f "$STATISTICS_EXCLUDE_FILE" ]; then
-        mkdir -p data/statistics
-        cp $STATISTICS_EXCLUDE_FILE data/statistics/exclude.json
-      else
-        echo -e "$STATISTICS_EXCLUDE_FILE not found in CI variables. Skipping."
-      fi
 
 .backend-deploy_config:
   image: alpine

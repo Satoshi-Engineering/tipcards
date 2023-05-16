@@ -4,7 +4,7 @@ import express from 'express'
 import axios from 'axios'
 import { DateTime } from 'luxon'
 
-import { SUPPORT_TOKENS, LNBITS_INVOICE_READ_KEY } from '../constants'
+import { STATISTICS_TOKENS, STATISTICS_PREPEND_FILE, STATISTICS_EXCLUDE_FILE, LNBITS_INVOICE_READ_KEY } from '../constants'
 import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const authenticateUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -13,7 +13,7 @@ const authenticateUser = (req: express.Request, res: express.Response, next: exp
   if (bearer && bearer.startsWith('Bearer ')) {
     token = bearer.substring(7)
   }
-  if (SUPPORT_TOKENS.includes(token)) {
+  if (STATISTICS_TOKENS.includes(token)) {
     return next()
   }
 
@@ -41,9 +41,12 @@ const statisticsInitial = {
   weekly: [] as Record<string, number | string>[],
 }
 
-const loadJsonIfExists = <T>(relativeFilepath: string, fallbackValue: T): T => {
+const loadJsonIfExists = <T>(filepath: string | undefined, fallbackValue: T): T => {
+  if (typeof filepath !== 'string') {
+    return fallbackValue
+  }
   try {
-    const resolvedFilepath = path.resolve(__dirname, relativeFilepath)
+    const resolvedFilepath = path.resolve(filepath)
     if (!existsSync(resolvedFilepath)) {
       return fallbackValue
     }
@@ -82,8 +85,8 @@ router.get('/', async (req: express.Request, res: express.Response) => {
   }
   const statistics = { ...statisticsInitial }
 
-  const paymentsToPrepend = loadJsonIfExists<Record<string, unknown>[]>('../../data/statistics/prepend.json', [])
-  const paymentHashesToExclude = loadJsonIfExists<string[]>('../../data/statistics/exclude.json.json', [])
+  const paymentsToPrepend = loadJsonIfExists<Record<string, unknown>[]>(STATISTICS_PREPEND_FILE, [])
+  const paymentHashesToExclude = loadJsonIfExists<string[]>(STATISTICS_EXCLUDE_FILE, [])
 
   const payments = [...paymentsToPrepend, ...response.data].filter(({ payment_hash }) => !paymentHashesToExclude.includes(payment_hash))
   payments.sort((a, b) => b.time - a.time)
