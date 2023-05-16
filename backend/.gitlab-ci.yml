@@ -96,11 +96,15 @@ backend-build:
       if [ -f "$STATISTICS_PREPEND_FILE" ]; then
         mkdir -p data/statistics
         cp $STATISTICS_PREPEND_FILE data/statistics/prepend.json
+      else
+        echo -e "$STATISTICS_PREPEND_FILE not found in CI variables. Skipping."
       fi
     - |
       if [ -f "$STATISTICS_EXCLUDE_FILE" ]; then
         mkdir -p data/statistics
         cp $STATISTICS_EXCLUDE_FILE data/statistics/exclude.json
+      else
+        echo -e "$STATISTICS_EXCLUDE_FILE not found in CI variables. Skipping."
       fi
 
 .backend-deploy_config:
