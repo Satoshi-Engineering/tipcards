@@ -485,7 +485,7 @@ import sanitizeHtml from 'sanitize-html'
 import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import throttle from 'lodash.throttle'
+import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
 import type { Settings, Set } from '@root/data/Set'
@@ -835,7 +835,7 @@ const setFundingDisabled = computed(() => {
 
 const set = ref<Set>()
 const reloadingStatusForCards = ref(false)
-const reloadStatusForCards = throttle(async () => {
+const reloadStatusForCards = debounce(async () => {
   // load set to trigger set funding invoice check (if webhook didn't work)
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${setId.value}`)
