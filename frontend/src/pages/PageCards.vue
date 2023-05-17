@@ -91,10 +91,11 @@
           {{ t('cards.settings.numberOfCards') }}:
         </span>
         <input
-          v-model="settings.numberOfCards"
+          v-model.lazy.number="settings.numberOfCards"
           type="number"
           inputmode="numeric"
           min="1"
+          max="100"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
       </label>
@@ -103,7 +104,7 @@
           {{ t('cards.settings.cardHeadline') }}:
         </span>
         <input
-          v-model="settings.cardHeadline"
+          v-model.lazy.trim="settings.cardHeadline"
           type="text"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
@@ -113,7 +114,7 @@
           {{ t('cards.settings.cardText') }}:
         </span>
         <textarea
-          v-model="settings.cardCopytext"
+          v-model.lazy.trim="settings.cardCopytext"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
           rows="4"
         />
