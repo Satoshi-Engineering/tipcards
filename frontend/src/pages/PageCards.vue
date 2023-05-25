@@ -896,13 +896,16 @@ const downloadZip = async (format: 'png' | 'svg' = 'png') => {
     return
   }
   const fileExtension = format
-  await Promise.all(Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg:not(.qr-code-svg--used)'))
+  await Promise.all(Array.from(cardsContainer.value.querySelectorAll('.qr-code-svg'))
     .map(async (svgEl, index) => {
+      if (svgEl.matches('.qr-code-svg--used')) {
+        return
+      }
       let fileContent: string | Blob = svgEl.outerHTML
       if (format === 'png') {
         fileContent = (await svgToPng({ width: 2000, height: 2000, svg: svgEl.outerHTML }) || 'error')
       }
-      zip.file(`qrCode_${index}_${setId.value}.${fileExtension}`, fileContent)
+      zip.file(`qrCode_${index + 1}_${setId.value}.${fileExtension}`, fileContent)
     }))
   const zipFileContent = await zip.generateAsync({ type: 'blob' })
   saveAs(zipFileContent, `qrCodes_${setId.value}_${fileExtension}.zip`)
