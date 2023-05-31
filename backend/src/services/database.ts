@@ -1,7 +1,7 @@
 import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
-import { REDIS_BASE_PATH } from '../constants'
+import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
 import { createUserId, type User } from '../../../src/data/User'
@@ -49,7 +49,7 @@ export const getClient = async () => {
   }
   connecting = true
 
-  const newClient = createClient({ url: `redis://:${process.env.REDIS_PASSPHRASE}@127.0.0.1:6379` })
+  const newClient = createClient({ url: `redis://:${process.env.REDIS_PASSPHRASE}@${REDIS_URL}` })
   newClient.on('end', resetClient)
   newClient.on('error', async (error) => {
     // redis is automatically trying to re-connect. let him try for some time

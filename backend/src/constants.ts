@@ -24,6 +24,11 @@ if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PA
   REDIS_BASE_PATH = process.env.REDIS_BASE_PATH
 }
 
+let REDIS_URL = '127.0.0.1:6379'
+if (typeof process.env.REDIS_URL === 'string' && process.env.REDIS_URL.length > 0) {
+  REDIS_URL = process.env.REDIS_URL
+}
+
 export {
   EXPRESS_PORT,
   LNURL_PORT,
@@ -31,6 +36,7 @@ export {
   WEB_PORT,
   NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
+  REDIS_URL,
 }
 
 export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
