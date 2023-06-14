@@ -109,7 +109,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
   let offset = 0
   while (paymentRequests.length < servedPaymentRequests) {
     try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments?limit=20&offset=${offset}`, {
+      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments?limit=20&offset=${offset}&sortby=time&direction=desc`, {
         headers: {
           'Content-type': 'application/json',
           'X-Api-Key': LNBITS_ADMIN_KEY,
@@ -128,6 +128,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
       }
       // check at least 200 payment requests
       if (offset > 10) {
+        console.error(ErrorCode.LnurlpTooManyPaymentRequests, card.cardHash)
         break
       }
     } catch (error) {
