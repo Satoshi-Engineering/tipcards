@@ -126,8 +126,8 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
           }
         })
       }
-      // check at least 200 payment requests
-      if (offset > 10) {
+      // check at least 2000 payment requests
+      if (offset > 100) {
         console.error(ErrorCode.LnurlpTooManyPaymentRequests, card.cardHash)
         break
       }
