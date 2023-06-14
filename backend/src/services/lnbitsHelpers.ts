@@ -238,7 +238,14 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
         },
       })
     } catch (error) {
-      console.error(ErrorCode.UnableToRemoveLnurlpLink, error)
+      // if the delete request returns 404 and has data, then the lnurlp has already been deleted (probably by lnbits)
+      if (
+        !axios.isAxiosError(error)
+        || error.response?.status !== 404
+        || error.response?.data === null
+      ) {
+        console.error(ErrorCode.UnableToRemoveLnurlpLink, error)        
+      }
     }
   }
 
