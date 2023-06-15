@@ -106,7 +106,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
 
   // 2. query payment requests for lnurlp
   const paymentRequests: string[] = []
-  const limit = 100
+  const limit = 500
   let offset = 0
   while (paymentRequests.length < servedPaymentRequests) {
     try {
@@ -126,11 +126,6 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
             paymentRequests.push(payment.payment_hash)
           }
         })
-      }
-      // check at least 2000 payment requests
-      if (offset > limit * 20) {
-        console.error(ErrorCode.LnurlpTooManyPaymentRequests, card.cardHash)
-        break
       }
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsPaymentRequests)
