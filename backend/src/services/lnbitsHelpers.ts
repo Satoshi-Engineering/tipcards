@@ -117,6 +117,9 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
         },
       })
       if (Array.isArray(response.data)) {
+        if (response.data.length === 0) {
+          break
+        }
         response.data.forEach((payment) => {
           // do not add payments that are already recorded
           if (card.lnurlp?.payment_hash != null && card.lnurlp.payment_hash.includes(payment.payment_hash)) {
@@ -126,6 +129,9 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
             paymentRequests.push(payment.payment_hash)
           }
         })
+      } else {
+        console.error(ErrorCode.LnbitsPaymentRequestsMalformedResponse, card.cardHash)
+        break
       }
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsPaymentRequests)

@@ -30,6 +30,7 @@ export enum ErrorCode {
   SetInvoiceAlreadyExists = 'SetInvoiceAlreadyExists',
   CardLogoNotFound = 'CardLogoNotFound',
   LnurlpTooManyPaymentRequests = 'LnurlpTooManyPaymentRequests',
+  LnbitsPaymentRequestsMalformedResponse = 'LnbitsPaymentRequestsMalformedResponse',
 }
 
 export class ErrorWithCode {
