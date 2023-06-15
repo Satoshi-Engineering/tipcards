@@ -244,7 +244,7 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
         || error.response?.status !== 404
         || error.response?.data === null
       ) {
-        console.error(ErrorCode.UnableToRemoveLnurlpLink, error)        
+        console.error(ErrorCode.UnableToRemoveLnurlpLink, error)
       }
     }
   }
