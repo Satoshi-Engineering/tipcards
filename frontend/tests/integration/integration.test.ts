@@ -5,7 +5,7 @@
 import axios from 'axios'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
-import { Builder, By } from 'selenium-webdriver'
+import { Builder, By, until } from 'selenium-webdriver'
 import * as chrome from 'selenium-webdriver/chrome'
 import { Browser, PageLoadStrategy } from 'selenium-webdriver/lib/capabilities'
 
@@ -50,6 +50,7 @@ describe(`webclient test on ${config.TEST_ORIGIN}`, () => {
 
     await driver.manage().window().setRect({ width: 1280, height: 1024 })
     await driver.navigate().to(config.TEST_ORIGIN as string)
+    await driver.wait(until.elementLocated(By.css('header + div')), 5000)
     const elements = await driver.findElements(By.css('h1'))
     expect(elements.length === 1)
     const titleText = await elements[0].getText()
