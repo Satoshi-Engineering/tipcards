@@ -38,6 +38,19 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue';
     <ParagraphDefault>
       <LinkDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE">See the full license terms for more details.</LinkDefault>
     </ParagraphDefault>
+    <HeadlineDefault level="h3">
+      Custodial service
+    </HeadlineDefault>
+    <ParagraphDefault>
+      Please note that Lightning Tip Cards is a custodial service and should not be used as a long-term storage for your sats.
+      We highly recommend <em>not</em> to leave a significant amount on a Tip Card for a longer time.
+    </ParagraphDefault>
+    <ParagraphDefault>
+      In the unlikely case we ever need to take down our service, we will keep your sats available to withdraw for another 6 months and afterwards donate the remaining to one or more organizations of our choice.
+    </ParagraphDefault>
+    <ParagraphDefault>
+      If you want to use Tip Cards using your own Lightning node, you can use our open source code and set up your own instance of Lightning Tip Cards.
+    </ParagraphDefault>
   </div>
 </template>
 
