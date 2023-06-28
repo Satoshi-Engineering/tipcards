@@ -29,6 +29,11 @@ if (typeof process.env.REDIS_URL === 'string' && process.env.REDIS_URL.length > 
   REDIS_URL = process.env.REDIS_URL
 }
 
+let LNBITS_ORIGIN = 'https://legend.lnbits.com'
+if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.length > 0) {
+  LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
+}
+
 export {
   EXPRESS_PORT,
   LNURL_PORT,
@@ -37,6 +42,7 @@ export {
   NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
   REDIS_URL,
+  LNBITS_ORIGIN
 }
 
 export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''

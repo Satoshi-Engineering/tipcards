@@ -3,11 +3,11 @@ import express from 'express'
 
 import { getCardByHash, createCard, deleteCard } from '../services/database'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
+import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
+
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
-import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
 

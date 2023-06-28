@@ -8,6 +8,8 @@ import {
   getLnurlpForNewCard,
   getLnurlpForCard,
 } from '../services/lnbitsHelpers'
+import { LNBITS_ORIGIN } from '../constants'
+
 import type { Card } from '../../../src/data/Card'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
@@ -127,7 +129,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   let lnurl = null
   try {
-    const lnurls = await loadLnurlsFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
+    const lnurls = await loadLnurlsFromLnbitsByWithdrawId(LNBITS_ORIGIN, card.lnbitsWithdrawId)
     lnurl = lnurls[0]
   } catch (error) {
     console.error(ErrorCode.UnableToGetLnurl, error)

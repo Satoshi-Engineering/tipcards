@@ -1,14 +1,12 @@
 import axios from 'axios'
 
-import { LNBITS_ORIGIN } from '../constants'
-
 /**
  * @param withdrawId string
  * @throws
  */
-export const loadLnurlsFromLnbitsByWithdrawId = async (withdrawId: string): Promise<string[]> => {
+export const loadLnurlsFromLnbitsByWithdrawId = async (lnbitsOrigin: string, withdrawId: string): Promise<string[]> => {
   const response = await axios.get(
-    `${LNBITS_ORIGIN}/withdraw/csv/${withdrawId}`,
+    `${lnbitsOrigin}/withdraw/csv/${withdrawId}`,
     {
       headers: {
         'Cache-Control': 'no-cache',

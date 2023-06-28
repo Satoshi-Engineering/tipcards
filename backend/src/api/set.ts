@@ -9,11 +9,11 @@ import {
 import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
 import { authGuard } from '../services/jwt'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY } from '../constants'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
+
 import type { Card } from '../../../src/data/Card'
 import type { Settings, Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { LNBITS_ORIGIN } from '../../../src/constants'
 
 const router = express.Router()
 

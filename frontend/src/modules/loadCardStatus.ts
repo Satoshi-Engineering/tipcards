@@ -3,8 +3,7 @@ import axios from 'axios'
 import type { Card, CardStatus, CardStatusStatus } from '@root/data/Card'
 
 import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
-import { BACKEND_API_ORIGIN } from '@/constants'
-import { LNBITS_ORIGIN } from '@root/constants'
+import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
 
 /**
  * @param cardHash

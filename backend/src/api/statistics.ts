@@ -4,8 +4,10 @@ import express from 'express'
 import axios from 'axios'
 import { DateTime } from 'luxon'
 
-import { STATISTICS_TOKENS, STATISTICS_PREPEND_FILE, STATISTICS_EXCLUDE_FILE, LNBITS_INVOICE_READ_KEY } from '../constants'
-import { LNBITS_ORIGIN } from '../../../src/constants'
+import {
+  STATISTICS_TOKENS, STATISTICS_PREPEND_FILE, STATISTICS_EXCLUDE_FILE,
+  LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN,
+} from '../constants'
 
 const authenticateUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   let token = ''

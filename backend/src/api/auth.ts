@@ -6,9 +6,10 @@ import { Server, Socket } from 'socket.io'
 
 import { getUserByLnurlAuthKeyOrCreateNew } from '../services/database'
 import { createJWT } from '../services/jwt'
+import { LNBITS_ORIGIN } from '../constants'
+
 import { ErrorCode } from '../../../src/data/Errors'
 import { TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
-import { LNBITS_ORIGIN } from '../../../src/constants'
 
 /////
 // LNURL SERVICE
