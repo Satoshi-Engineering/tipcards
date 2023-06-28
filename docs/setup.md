@@ -69,6 +69,7 @@ cd ..
   * enter a name for your wallet and click "add a new wallet"
   * make sure to save the link (e.g. in your bookmarks) as this is where your Tip Cards' sats will go
   * click on "Api docs" to the right and note "Admin key" and "Invoice/read key"
+  * go to "extensions" and enable "LNURLp" and "withdraw" extensions
 
 4. Build and serve the backend
 ```bash
