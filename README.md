@@ -24,6 +24,10 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 `#satohsiengineeringcrew` is `#happy2help`
 
+## Host your own Tip Cars
+
+[Install guide](docs/setup.md)
+
 ## Setup for development
 
 ### Prerequisites
