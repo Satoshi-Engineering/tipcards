@@ -70,6 +70,7 @@ cd ..
   * make sure to save the link (e.g. in your bookmarks) as this is where your Tip Cards' sats will go
   * click on "Api docs" to the right and note "Admin key" and "Invoice/read key"
   * go to "extensions" and enable "LNURLp" and "withdraw" extensions
+  * HINT: create an invoice and put some sats into the wallet, as withdrawing funded Tip Cards can cost some sats for routing fees
 
 4. Build and serve the backend
 ```bash
