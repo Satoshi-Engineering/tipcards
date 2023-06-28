@@ -1,10 +1,12 @@
-1. install git
+# Install dependencies
+
+1. Git
 ```bash
 sudo apt-get update
 sudo apt-get install -y git
 ```
 
-1. install docker-ce according to https://docs.docker.com/engine/install/debian/
+2. Docker
 ```bash
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl gnupg
@@ -19,19 +21,20 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-1. install nodejs
+3. Nodejs + Pm2
 ```bash
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
+sudo npm install pm2 -g
 ```
 
-1. install nginx
+4. Nginx
 ```bash
 sudo apt-get update
 sudo apt-get install -y nginx
 ```
 
-1. install certbot
+5. certbot
 ```bash
 sudo apt-get update
 sudo apt-get install -y snapd
@@ -41,17 +44,14 @@ sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-1. install pm2
-```bash
-sudo npm install pm2 -g
-```
+# Install Tip Cards application
 
-1. clone tipcards
+1. Clone git project
 ```bash
 git clone https://github.com/Satoshi-Engineering/tip-cards.git
 ```
 
-1. install redis
+2. Install the database
 ```bash
 cp -r tip-cards/docs/examples/redis/ .
 cp redis/.env.example redis/.env
@@ -64,13 +64,13 @@ sudo docker compose up -d
 cd ..
 ```
 
-1. create a wallet in your lnbits instance you want to use (probably https://legend.lnbits.com)
-* go to https://legend.lnbits.com
-* enter a name for your wallet and click "add a new wallet"
-* make sure to save the link (e.g. in your bookmarks) as this is where your tip cards sats will go
-* click on "Api docs" to the right and note "Admin key" and "Invoice/read key"
+3. Create a wallet in the lnbits instance you want to use (probably https://legend.lnbits.com)
+  * go to https://legend.lnbits.com
+  * enter a name for your wallet and click "add a new wallet"
+  * make sure to save the link (e.g. in your bookmarks) as this is where your Tip Cards' sats will go
+  * click on "Api docs" to the right and note "Admin key" and "Invoice/read key"
 
-1. build+run backend
+4. Build and serve the backend
 ```bash
 cd tip-cards
 npm ci
@@ -88,7 +88,7 @@ pm2 start build/backend/index.js
 cd ..
 ```
 
-1. build frontend
+5. Build the frontend
 ```bash
 cd frontend
 npm ci
@@ -96,7 +96,7 @@ npm run build
 cd ..
 ```
 
-1. configure nginx
+6. Configure nginx
 ```bash
 sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
@@ -106,7 +106,7 @@ sudo ln -s /etc/nginx/sites-available/tip-cards /etc/nginx/sites-enabled/tip-car
 sudo /etc/init.d/nginx reload
 ```
 
-1. configure certbot
+7. Add ssl certificate
 ```bash
 sudo certbot --nginx
 ```
