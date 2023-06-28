@@ -3,7 +3,7 @@ version: '3.8'
 services:
   redis:
     container_name: redis
-    image: redislabs/rejson:latest
+    image: redislabs/rejson:2.0.11
     restart: always
     ports:
       - '127.0.0.1:6379:6379'

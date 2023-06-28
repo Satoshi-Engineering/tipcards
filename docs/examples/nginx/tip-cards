@@ -1,43 +1,37 @@
 server {
-  default_server;
-    listen 80 default_server;
+  listen 80 default_server;
 
-    error_page 500 502 503 504 /500.html;
-    location /500.html {
-      root /var/www/html;
-    }
+  location / {
+    root /var/www/tip-cards/www;
+    try_files $uri /index.html;
+  }
 
-    location / {
-      root /var/www/tip-cards/www;
-      try_files $uri /index.html /500.html;
-    }
+  location /api {
+      proxy_pass http://localhost:4000;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+  }
 
-    location /api {
-        proxy_pass http://localhost:4000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+  location /lnurl {
+      proxy_pass http://localhost:4001;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection 'upgrade';
+      proxy_set_header Host $host;
+      proxy_cache_bypass $http_upgrade;
+  }
 
-    location /lnurl {
-        proxy_pass http://localhost:4001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
+  location /socket.io {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
 
-    location /socket.io {
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
+      proxy_pass http://localhost:4000;
 
-        proxy_pass http://localhost:4000;
-
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-    }
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+  }
 }
