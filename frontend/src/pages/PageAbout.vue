@@ -15,7 +15,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue';
     <ParagraphDefault>
       You are free to setup your own version of Lightning Tip Cards or to support us by creating issues, contributing translations, bug fixes or new features via Pull Requests on Github.
     </ParagraphDefault>
-    <ParagraphDefault class="text-center my-10">
+    <ParagraphDefault class="text-center my-12">
       <LinkDefault
         href="https://github.com/Satoshi-Engineering/tip-cards"
         title="Lightning Tip Cards on Github"
@@ -38,7 +38,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue';
     <ParagraphDefault>
       <LinkDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE">See the full license terms for more details.</LinkDefault>
     </ParagraphDefault>
-    <HeadlineDefault level="h3">
+    <HeadlineDefault level="h2" class="mt-8">
       Custodial service
     </HeadlineDefault>
     <ParagraphDefault>
