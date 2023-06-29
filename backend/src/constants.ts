@@ -42,7 +42,7 @@ export {
   NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
   REDIS_URL,
-  LNBITS_ORIGIN
+  LNBITS_ORIGIN,
 }
 
 export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
