@@ -3,9 +3,10 @@ import express from 'express'
 import type http from 'http'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
+import cookieParser from 'cookie-parser'
 
 import { getUserByLnurlAuthKeyOrCreateNew } from '../services/database'
-import { createJWT } from '../services/jwt'
+import { createAccessToken, createRefreshToken, authGuardRefreshToken } from '../services/jwt'
 import { LNBITS_ORIGIN } from '../constants'
 
 import { ErrorCode } from '../../../src/data/Errors'
@@ -36,15 +37,16 @@ lnurlServer.on('login', async (event: LoginEvent) => {
   // `hash` - the hash of the secret for the LNURL used to login
   const { key, hash } = event
   loggedIn[hash] = key
+  setTimeout(() => {
+    delete loggedIn[hash]
+  }, 1000 * 60 * 15)
 
   if (socketsByHash[hash] == null) {
     return
   }
 
   try {
-    const user = await getUserByLnurlAuthKeyOrCreateNew(key)
-    const jwt = await createJWT(user)
-    socketsByHash[hash].emit('loggedIn', { jwt })
+    socketsByHash[hash].emit('loggedIn')
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     socketsByHash[hash].emit('error')
@@ -69,9 +71,7 @@ export const initSocketIo = (server: http.Server) => {
         return
       }
       try {
-        const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
-        const jwt = await createJWT(user)
-        socketsByHash[hash].emit('loggedIn', { jwt })
+        socketsByHash[hash].emit('loggedIn')
       } catch (error) {
         console.error(ErrorCode.UnknownDatabaseError, error)
         socketsByHash[hash].emit('error')
@@ -104,6 +104,7 @@ router.get('/create', async (req: express.Request, res: express.Response) => {
     },
   })
 })
+
 router.get('/status/:hash', async (req: express.Request, res: express.Response) => {
   const hash = req.params.hash
   if (loggedIn[hash] == null) {
@@ -121,15 +122,25 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
     return
   }
   try {
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
     const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
-    const jwt = await createJWT(user)
-    res.json({
-      status: 'success',
-      data: {
-        key: loggedIn[hash],
-        jwt,
-      },
-    })
+    const refreshToken = await createRefreshToken(user, expires)
+    const accessToken = await createAccessToken(user)
+    res
+      .cookie('refresh_token', refreshToken, {
+        expires,
+        httpOnly: true,
+        secure: true,
+        sameSite: true,
+      })
+      .json({
+        status: 'success',
+        data: {
+          key: loggedIn[hash],
+          accessToken,
+        },
+      })
+    delete loggedIn[hash]
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(403).json({
@@ -138,6 +149,47 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
     })
   }
 })
+
+router.get('/refresh', cookieParser(), authGuardRefreshToken, async (req: express.Request, res: express.Response) => {
+  const { lnurlAuthKey } = res.locals.refreshTokenPayload
+  try {
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
+    const user = await getUserByLnurlAuthKeyOrCreateNew(lnurlAuthKey)
+    const refreshToken = await createRefreshToken(user, expires)
+    const accessToken = await createAccessToken(user)
+    res
+      .cookie('refresh_token', refreshToken, {
+        expires,
+        httpOnly: true,
+        secure: true,
+        sameSite: true,
+      })
+      .json({
+        status: 'success',
+        data: {
+          key: lnurlAuthKey,
+          accessToken,
+        },
+      })
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
+    })
+  }
+})
+
+router.post('/logout', async (req: express.Request, res: express.Response) => {
+  res
+    .clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    })
+    .json({ status: 'success' })
+})
+
 router.get('/debug', async (req: express.Request, res: express.Response) => {
   if (process.env.LNURL_AUTH_DEBUG !== '1') {
     res.status(403).json({
@@ -153,9 +205,7 @@ router.get('/debug', async (req: express.Request, res: express.Response) => {
     const key = 'debugKey'
     loggedIn[hash] = key
     try {
-      const user = await getUserByLnurlAuthKeyOrCreateNew(key)
-      const jwt = await createJWT(user)
-      socketsByHash[hash].emit('loggedIn', { jwt })
+      socketsByHash[hash].emit('loggedIn')
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       socketsByHash[hash].emit('error')

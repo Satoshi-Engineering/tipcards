@@ -22,8 +22,9 @@ export enum ErrorCode {
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
   CardNeedsSetFunding = 'CardNeedsSetFunding',
-  MissingAuthorizationHeader = 'MissingAuthorizationHeader',
-  InvalidAuthorizationHeader = 'InvalidAuthorizationHeader',
+  AccessTokenMissing = 'AccessTokenMissing',
+  AccessTokenInvalid = 'AccessTokenInvalid',
+  AccessTokenExpired = 'AccessTokenExpired',
   InvalidInput = 'InvalidInput',
   SetBelongsToAnotherUser = 'SetBelongsToAnotherUser',
   SetAlreadyFunded = 'SetAlreadyFunded',
@@ -31,6 +32,9 @@ export enum ErrorCode {
   CardLogoNotFound = 'CardLogoNotFound',
   LnurlpTooManyPaymentRequests = 'LnurlpTooManyPaymentRequests',
   LnbitsPaymentRequestsMalformedResponse = 'LnbitsPaymentRequestsMalformedResponse',
+  RefreshTokenMissing = 'RefreshTokenMissing',
+  RefreshTokenInvalid = 'RefreshTokenInvalid',
+  RefreshTokenExpired = 'RefreshTokenExpired',
 }
 
 export class ErrorWithCode {

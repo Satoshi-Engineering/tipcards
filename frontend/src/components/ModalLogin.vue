@@ -57,8 +57,11 @@ const connectSocket = () => {
   socket.on('error', () => {
     error.value = true
   })
-  socket.on('loggedIn', ({ jwt }) => {
-    login({ jwt })
+  socket.on('loggedIn', async () => {
+    if (hash.value == null) {
+      return
+    }
+    login(hash.value)
     emit('close')
   })
   socket.on('connect', () => {

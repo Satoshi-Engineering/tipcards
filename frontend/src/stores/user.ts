@@ -4,26 +4,18 @@ import { computed, ref } from 'vue'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const TIPCARDS_AUTH_USER = 'tipcardsAuthUser'
+const REFRESH_ROUTE = `${BACKEND_API_ORIGIN}/api/auth/refresh`
 
 export const useUserStore = defineStore('user', () => {
-  const jwt = ref<string>()
-  const jwtCookie = document.cookie
-    .split(';')
-    .map((cookie) => cookie.trim().split('='))
-    .find((cookie) => cookie[0] === TIPCARDS_AUTH_USER)
-  if (jwtCookie != null) {
-    jwt.value = jwtCookie[1]
-  }
-
-  const isLoggedIn = computed(() => jwt.value != null)
+  const accessToken = ref<string | undefined | null>(undefined)
+  const isLoggedIn = computed(() => accessToken.value != null)
 
   const id = computed(() => {
-    if (jwt.value == null) {
+    if (accessToken.value == null) {
       return undefined
     }
     try {
-      const payload = JSON.parse(atob(jwt.value.split('.')[1]))
+      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
       return payload.id
     } catch (error) {
       console.error(error)
@@ -32,11 +24,11 @@ export const useUserStore = defineStore('user', () => {
   })
 
   const lnurlAuthKey = computed(() => {
-    if (jwt.value == null) {
+    if (accessToken.value == null) {
       return undefined
     }
     try {
-      const payload = JSON.parse(atob(jwt.value.split('.')[1]))
+      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
       return payload.lnurlAuthKey
     } catch (error) {
       console.error(error)
@@ -44,37 +36,82 @@ export const useUserStore = defineStore('user', () => {
     return undefined
   })
 
-  const login = (payload: { jwt: string }) => {
-    jwt.value = payload.jwt
-
-    document.cookie = `${TIPCARDS_AUTH_USER}=${jwt.value};max-age=${60 * 60 * 24};secure`
+  const login = async (hash: string) => {
+    try {
+      const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/status/${hash}`)
+      if (typeof response.data.data?.accessToken === 'string') {
+        accessToken.value = response.data.data.accessToken
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  const logout = () => {
-    jwt.value = undefined
-
-    document.cookie = `${TIPCARDS_AUTH_USER}=;max-age=0;secure`
+  const logout = async () => {
+    accessToken.value = null
+    try {
+      await axios.post(`${BACKEND_API_ORIGIN}/api/auth/logout`)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  axios.interceptors.request.use((config) => {
+  const refreshAccessToken = async () => {
+    try {
+      const response = await axios.get(REFRESH_ROUTE)
+      if (typeof response.data.data?.accessToken === 'string') {
+        accessToken.value = response.data.data.accessToken
+      } else {
+        accessToken.value = undefined
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.status === 401) {
+        accessToken.value = null
+      } else {
+        accessToken.value = undefined
+      }
+    }
+  }
+  refreshAccessToken()
+
+  axios.interceptors.request.use(async (config) => {
+    if (config.url === REFRESH_ROUTE) {
+      return config
+    }
     if (
-      jwt.value == null
+      accessToken.value === null
       || config.url == null
       || config.url.indexOf(BACKEND_API_ORIGIN) < 0
     ) {
       return config
     }
+    if (accessToken.value === undefined) {
+      await refreshAccessToken()
+    }
+    if (accessToken.value == null) {
+      return config
+    }
+
+    try {
+      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
+      if (payload.exp < + new Date() / 1000) {
+        await refreshAccessToken()
+      }
+    } catch (error) {
+      return config
+    }
+
     return {
       ...config,
       headers: {
         ...config.headers,
-        Authorization: jwt.value,
+        Authorization: accessToken.value,
       },
     } as InternalAxiosRequestConfig<any>
   })
 
   axios.interceptors.response.use(undefined, (error) => {
-    if (error.config.url == null || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
+    if (error.config?.url == null || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
       return Promise.reject(error)
     }
     if (error.response.status === 401) {

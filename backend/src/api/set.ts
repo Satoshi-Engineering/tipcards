@@ -8,7 +8,7 @@ import {
 } from '../services/database'
 import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
-import { authGuard } from '../services/jwt'
+import { authGuardAccessToken } from '../services/jwt'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
 
 import type { Card } from '../../../src/data/Card'
@@ -20,7 +20,7 @@ const router = express.Router()
 /**
  * get all sets from the current user
  */
-router.get('/', authGuard, async (req: express.Request, res: express.Response) => {
+router.get('/', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
   if (typeof res.locals.jwtPayload?.id !== 'string') {
     res.status(400).json({
       status: 'error',
@@ -51,7 +51,7 @@ router.get('/', authGuard, async (req: express.Request, res: express.Response) =
   })
 })
 
-router.post('/:setId', authGuard, async (req: express.Request, res: express.Response) => {
+router.post('/:setId', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
   if (typeof res.locals.jwtPayload?.id !== 'string') {
     res.status(400).json({
       status: 'error',

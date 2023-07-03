@@ -5,11 +5,11 @@ import type { ImageMeta } from '../../../src/data/Image'
 import type { User } from '../../../src/data/User'
 
 import { getUserById, getImageMeta } from '../services/database'
-import { authGuard } from '../services/jwt'
+import { authGuardAccessToken } from '../services/jwt'
 
 const router = express.Router()
 
-router.get('/', authGuard, async (req: express.Request, res: express.Response) => {
+router.get('/', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
   if (typeof res.locals.jwtPayload?.id !== 'string') {
     res.status(400).json({
       status: 'error',
