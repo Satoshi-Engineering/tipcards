@@ -1,7 +1,8 @@
 {
   "general": {
     "back": "Back",
-    "cards": "{count} card | {count} cards"
+    "cards": "{count} card | {count} cards",
+    "userAccount": "Account"
   },
   "nav": {
     "index": "Home",
@@ -224,6 +225,14 @@
       "unableToDeleteSet": "Unable to delete set from server."
     }
   },
+  "userAccount": {
+    "title": "Your Account",
+    "form": {
+      "emailAddress": "Email address",
+      "emailAddressHint": "In case you lose your lightning wallet or device that you used to authenticate.",
+      "save": "Save"
+    }
+  },
   "lightningQrCode": {
     "buttonOpenInWallet": "Open in wallet",
     "copyToClipboard": {
@@ -248,7 +257,8 @@
       "loginErrorText": "Something went wrong. Please try again later or contact support.",
       "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
     },
-    "buttonLogout": "Logout"
+    "buttonLogout": "Logout",
+    "buttonLogoutAllOtherDevices": "Logout all other devices"
   },
   "stores": {
     "cardsSets": {

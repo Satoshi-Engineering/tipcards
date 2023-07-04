@@ -232,7 +232,7 @@ router.post('/logoutAllOtherDevices', cookieParser(), authGuardRefreshToken, asy
   const oldRefreshToken = req.cookies?.refresh_token
   if (oldRefreshToken != null) {
     try {
-      const { id } = JSON.parse(atob(oldRefreshToken.value.split('.')[1]))
+      const { id } = JSON.parse(atob(oldRefreshToken.split('.')[1]))
       const user = await getUserById(id)
       if (user?.allowedRefreshTokens != null) {
         user.allowedRefreshTokens = user.allowedRefreshTokens

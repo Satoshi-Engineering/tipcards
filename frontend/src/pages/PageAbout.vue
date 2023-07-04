@@ -1,6 +1,3 @@
-
-import HeadlineDefault from '@/components/typography/HeadlineDefault.vue';
-
 <template>
   <div class="mt-3 mx-auto w-full max-w-md px-4">
     <HeadlineDefault level="h1">

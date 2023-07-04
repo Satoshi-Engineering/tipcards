@@ -10,6 +10,7 @@ const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
 const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/PageStatistics.vue')
+const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -93,6 +94,15 @@ const router = createRouter({
           path: 'auth',
           name: 'auth',
           component: PageAuthDevelopment,
+        },
+        {
+          path: 'user-account',
+          name: 'user-account',
+          component: PageUserAccount,
+          meta: {
+            title: () => i18n.global.t('userAccount.title'),
+            backlink: true,
+          },
         },
         {
           path: 'statistics',

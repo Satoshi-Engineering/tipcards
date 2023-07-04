@@ -1,7 +1,8 @@
 {
   "general": {
     "back": "Zurück",
-    "cards": "{count} Karte | {count} Karten"
+    "cards": "{count} Karte | {count} Karten",
+    "userAccount": "Account"
   },
   "nav": {
     "index": "Home",
@@ -238,6 +239,14 @@
       "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden."
     }
   },
+  "userAccount": {
+    "title": "Dein Account",
+    "form": {
+      "emailAddress": "E-Mail-Adresse",
+      "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
+      "save": "Speichern"
+    }
+  },
   "lightningQrCode": {
     "buttonOpenInWallet": "In der Wallet öffnen",
     "copyToClipboard": {
@@ -262,7 +271,8 @@
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
       "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert."
     },
-    "buttonLogout": "Ausloggen"
+    "buttonLogout": "Ausloggen",
+    "buttonLogoutAllOtherDevices": "Alle anderen Geräte ausloggen"
   },
   "stores": {
     "cardsSets": {

@@ -9,7 +9,12 @@ const STATUS_ROUTE_PREFIX = `${BACKEND_API_ORIGIN}/api/auth/status`
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref<string | undefined | null>(undefined)
-  const isLoggedIn = computed(() => accessToken.value != null)
+  const isLoggedIn = computed(() => {
+    if (accessToken.value === undefined) {
+      return undefined
+    }
+    return accessToken.value != null
+  })
 
   const id = computed(() => {
     if (accessToken.value == null) {
