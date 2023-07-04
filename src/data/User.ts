@@ -8,4 +8,5 @@ export type User = {
   created: number // unix timestamp
   availableCardsLogos?: string[] | null // list of image ids
   availableLandingPages?: string[] | null // list of landing page ids
+  allowedRefreshTokens?: string[][] | null // every device can have up to two valid refresh tokens. when creating a third via refreshing delete the first/oldest
 }

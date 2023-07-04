@@ -248,6 +248,19 @@ export const createUser = async (user: User): Promise<void> => {
 }
 
 /**
+ * @param user User
+ * @throws
+ */
+export const updateUser = async (user: User): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:usersById:${user.id}:data`)
+  if (!exists) {
+    throw new Error('User doesn\'t exist.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:usersById:${user.id}:data`, '$', user)
+}
+
+/**
  * @param userId string
  * @throws
  */

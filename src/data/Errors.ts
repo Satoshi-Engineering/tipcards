@@ -35,6 +35,7 @@ export enum ErrorCode {
   RefreshTokenMissing = 'RefreshTokenMissing',
   RefreshTokenInvalid = 'RefreshTokenInvalid',
   RefreshTokenExpired = 'RefreshTokenExpired',
+  RefreshTokenDenied = 'RefreshTokenDenied',
 }
 
 export class ErrorWithCode {

@@ -8,6 +8,8 @@ import {
 import { ErrorCode } from '../../../src/data/Errors'
 import type { User } from '../../../src/data/User'
 
+import { getUserById } from './database'
+
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const FILENAME = 'lnurl.auth.pem'
 const alg = 'RS256'
@@ -88,6 +90,20 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       })
       return
     }
+
+    const user = await getUserById(String(payload.id))
+    if (
+      user?.allowedRefreshTokens == null
+      || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(req.cookies.refresh_token))
+    ) {
+      res.status(401).json({
+        status: 'error',
+        message: 'Refresh token denied.',
+        code: ErrorCode.RefreshTokenDenied,
+      })
+      return
+    }
+
     res.locals.refreshTokenPayload = payload
     next()
   } catch (error) {
