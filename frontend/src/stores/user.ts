@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 const REFRESH_ROUTE = `${BACKEND_API_ORIGIN}/api/auth/refresh`
+const STATUS_ROUTE_PREFIX = `${BACKEND_API_ORIGIN}/api/auth/status`
 
 export const useUserStore = defineStore('user', () => {
   const accessToken = ref<string | undefined | null>(undefined)
@@ -38,7 +39,7 @@ export const useUserStore = defineStore('user', () => {
 
   const login = async (hash: string) => {
     try {
-      const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/status/${hash}`)
+      const response = await axios.get(`${STATUS_ROUTE_PREFIX}/${hash}`)
       if (typeof response.data.data?.accessToken === 'string') {
         accessToken.value = response.data.data.accessToken
       }
@@ -65,7 +66,7 @@ export const useUserStore = defineStore('user', () => {
         accessToken.value = undefined
       }
     } catch (error) {
-      if (axios.isAxiosError(error) && error.status === 401) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
         accessToken.value = null
       } else {
         accessToken.value = undefined
@@ -75,7 +76,7 @@ export const useUserStore = defineStore('user', () => {
   refreshAccessToken()
 
   axios.interceptors.request.use(async (config) => {
-    if (config.url === REFRESH_ROUTE) {
+    if (config.url === REFRESH_ROUTE || config.url?.startsWith(STATUS_ROUTE_PREFIX)) {
       return config
     }
     if (
@@ -120,5 +121,5 @@ export const useUserStore = defineStore('user', () => {
     return Promise.reject(error)
   })
 
-  return { isLoggedIn, id, lnurlAuthKey, login, logout }
+  return { isLoggedIn, id, lnurlAuthKey, accessToken, login, logout }
 })
