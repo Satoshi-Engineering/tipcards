@@ -129,4 +129,4 @@ Deployment is done via Gitlab CI/CD, see .gitlab-ci.yml
 # Tip us
 
 If you like this project, please adapt the landingpage to your local stores, that
-accept bitcoin or even extend it. Why not [send some tip love?](https://legend.lnbits.com/tipjar/523)
+accept bitcoin or even extend it. Why not [send some tip love?](https://lnbits.thespielplatz.com/tipjar/2)
