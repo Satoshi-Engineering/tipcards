@@ -184,21 +184,17 @@ export const useUserStore = defineStore('user', () => {
     ) {
       throw error
     }
-    try {
-      await refreshAccessToken()
-      return await axios.create()({
-        ...error.config,
-        meta: {
-          isRetry: true,
-        },
-        headers: {
-          ...error.config.headers,
-          Authorization: accessToken.value,
-        },
-      })
-    } catch (errorRetry) {
-      throw errorRetry
-    }
+    await refreshAccessToken()
+    return await axios.create()({
+      ...error.config,
+      meta: {
+        isRetry: true,
+      },
+      headers: {
+        ...error.config.headers,
+        Authorization: accessToken.value,
+      },
+    })
   })
 
   return { isLoggedIn, showModalLogin, modalLoginUserMessage, userId, lnurlAuthKey, accessToken, login, logout }
