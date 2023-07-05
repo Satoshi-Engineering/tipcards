@@ -52,6 +52,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
 
 import { Profile } from '@root/data/User'
 
@@ -62,7 +63,9 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 
 const router = useRouter()
-const { isLoggedIn, logout } = useUserStore()
+const userStore = useUserStore()
+const { logout } = userStore
+const { isLoggedIn } = storeToRefs(userStore)
 const { t } = useI18n()
 
 const profile = ref(Profile.parse({}))
@@ -114,7 +117,7 @@ const logoutAllOtherDevices = async () => {
 }
 
 watchEffect(() => {
-  if (isLoggedIn === false) {
+  if (isLoggedIn.value === false) {
     router.push({ name: 'home' })
   }
 })
