@@ -14,23 +14,37 @@
       v-else-if="lnurl != null"
       :value="lnurl"
       :error="error ? $t('auth.modalLogin.loginErrorText') : undefined"
+      :success="isLoggedIn"
     />
+    <div class="mt-12 text-center">
+      <ButtonDefault
+        class="text-sm min-w-[170px]"
+        :variant="isLoggedIn ? undefined : 'outline'"
+        @click="$emit('close')"
+      >
+        {{ $t('auth.modalLogin.close') }}
+      </ButtonDefault>
+    </div>
   </ModalDefault>
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios'
+import { storeToRefs } from 'pinia'
 import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import ModalDefault from '@/components/ModalDefault.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
 import { useUserStore } from '@/stores/user'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const emit = defineEmits(['close'])
-const { login } = useUserStore()
+defineEmits(['close'])
+const userStore = useUserStore()
+const { login } = userStore
+const { isLoggedIn } = storeToRefs(userStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
@@ -62,7 +76,6 @@ const connectSocket = () => {
       return
     }
     login(hash.value)
-    emit('close')
   })
   socket.on('connect', () => {
     socket.emit('waitForLogin', { hash: hash.value })

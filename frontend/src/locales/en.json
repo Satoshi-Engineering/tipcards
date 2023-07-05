@@ -260,7 +260,8 @@
       "headline": "Login using LNURL-Auth",
       "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
       "loginErrorText": "Something went wrong. Please try again later or contact support.",
-      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
+      "cookieWarning": "Your logged in state will be stored as a cookie until you log out.",
+      "close": "Close"
     },
     "buttonLogout": "Logout",
     "buttonLogoutAllOtherDevices": "Logout all other devices"
