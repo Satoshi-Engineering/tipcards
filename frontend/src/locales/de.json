@@ -280,7 +280,12 @@
       "close": "Schließen"
     },
     "buttonLogout": "Ausloggen",
-    "buttonLogoutAllOtherDevices": "Alle anderen Geräte ausloggen"
+    "buttonLogoutAllOtherDevices": "Alle anderen Geräte ausloggen",
+    "errors": {
+      "refreshTokenExpired": "Dein Login ist abgelaufen. Dies passiert automatisch wenn du 28 Tage lang nicht aktiv warst.",
+      "refreshTokenDenied": "Du hast dich auf einem anderen Gerät ausgeloggt.",
+      "refreshTokenDefaultError": "Du wurdest ausgeloggt."
+    }
   },
   "stores": {
     "cardsSets": {

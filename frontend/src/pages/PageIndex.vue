@@ -11,7 +11,7 @@
         by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a>
       </p>
       <p v-if="showLoginButton && !isLoggedIn">
-        <ButtonDefault @click="showLogin = true">
+        <ButtonDefault @click="showModalLogin = true">
           {{ t('index.buttonLogin') }}
         </ButtonDefault>
       </p>
@@ -130,10 +130,6 @@
       </div>
     </div>
   </div>
-  <ModalLogin
-    v-if="showLogin"
-    @close="showLogin = false"
-  />
 </template>
 
 <script setup lang="ts">
@@ -145,7 +141,6 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import ModalLogin from '@/components/ModalLogin.vue'
 import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'
 import { useUserStore } from '@/stores/user'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
@@ -202,8 +197,7 @@ onMounted(async () => {
 
 // auth
 const userStore = useUserStore()
-const { isLoggedIn } = storeToRefs(userStore)
+const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
 const { features } = useNewFeatures()
 const showLoginButton = computed(() => features.value.includes(FEATURE_AUTH))
-const showLogin = ref(false)
 </script>

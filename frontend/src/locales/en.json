@@ -266,7 +266,12 @@
       "close": "Close"
     },
     "buttonLogout": "Logout",
-    "buttonLogoutAllOtherDevices": "Logout all other devices"
+    "buttonLogoutAllOtherDevices": "Logout all other devices",
+    "errors": {
+      "refreshTokenExpired": "Your login expired. This happens when you are inactive for more than 28 days.",
+      "refreshTokenDenied": "You logged out on another device.",
+      "refreshTokenDefaultError": "You were logged out."
+    }
   },
   "stores": {
     "cardsSets": {

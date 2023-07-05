@@ -122,9 +122,8 @@ router.get('/status/:hash', async (req, res) => {
     return
   }
   try {
-    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
     const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
-    const refreshToken = await createRefreshToken(user, expires)
+    const refreshToken = await createRefreshToken(user)
     const accessToken = await createAccessToken(user)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
@@ -133,7 +132,6 @@ router.get('/status/:hash', async (req, res) => {
     await updateUser(user)
     res
       .cookie('refresh_token', refreshToken, {
-        expires,
         httpOnly: true,
         secure: true,
         sameSite: true,

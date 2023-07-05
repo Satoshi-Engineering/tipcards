@@ -1,5 +1,8 @@
 <template>
   <ModalDefault :headline="$t('auth.modalLogin.headline')" @close="$emit('close')">
+    <p v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
+      {{ modalLoginUserMessage }}
+    </p>
     <p v-if="!error" class="mb-3">
       {{ $t('auth.modalLogin.text') }}
     </p>
@@ -52,7 +55,7 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 defineEmits(['close'])
 const userStore = useUserStore()
 const { login } = userStore
-const { isLoggedIn } = storeToRefs(userStore)
+const { isLoggedIn, modalLoginUserMessage } = storeToRefs(userStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
@@ -85,6 +88,7 @@ const connectSocket = () => {
       return
     }
     await login(hash.value)
+    modalLoginUserMessage.value = null
     try {
       const { data } = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/profile`)
       if (typeof data.data?.email !== 'string' || data.data.email.length === 0) {

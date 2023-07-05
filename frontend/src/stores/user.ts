@@ -1,13 +1,17 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
+import { ErrorCode } from '@root/data/Errors'
 
 const REFRESH_ROUTE = `${BACKEND_API_ORIGIN}/api/auth/refresh`
 const STATUS_ROUTE_PREFIX = `${BACKEND_API_ORIGIN}/api/auth/status`
 
 export const useUserStore = defineStore('user', () => {
+  const { t } = useI18n()
+
   const accessToken = ref<string | undefined | null>(undefined)
   const isLoggedIn = computed(() => {
     if (accessToken.value === undefined) {
@@ -15,8 +19,16 @@ export const useUserStore = defineStore('user', () => {
     }
     return accessToken.value != null
   })
+  const showModalLogin = ref(false)
+  const modalLoginUserMessage = ref<string | null>()
 
-  const id = computed(() => {
+  watch(showModalLogin, (newVal, oldVal) => {
+    if (oldVal === true && newVal === false) {
+      modalLoginUserMessage.value = null
+    }
+  })
+
+  const userId = computed(() => {
     if (accessToken.value == null) {
       return undefined
     }
@@ -79,20 +91,45 @@ export const useUserStore = defineStore('user', () => {
       } else {
         accessToken.value = undefined
       }
-      refreshCallbacks.forEach(({ resolve }) => resolve())
+      refreshCallbacks.forEach(({ resolve }) => resolve(response))
+      return response
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
+        switch (error.response?.data?.code) {
+          case ErrorCode.RefreshTokenExpired:
+            modalLoginUserMessage.value = t('auth.errors.refreshTokenExpired')
+            showModalLogin.value = true
+            break
+          case ErrorCode.RefreshTokenDenied:
+            modalLoginUserMessage.value = t('auth.errors.refreshTokenDenied')
+            showModalLogin.value = true
+            break
+          default:
+            if (accessToken.value != null) {
+              showModalLogin.value = true
+              modalLoginUserMessage.value = t('auth.errors.refreshTokenDefaultError')
+            } else {
+              // initial check - user remains logged out
+            }
+        }
         accessToken.value = null
       } else {
         accessToken.value = undefined
       }
-      refreshCallbacks.forEach(({ reject }) => reject())
+      refreshCallbacks.forEach(({ reject }) => reject(error))
+      throw error
     } finally {
       refreshCallbacks.length = 0
       refreshingAccessToken = false
     }
   }
-  refreshAccessToken()
+  (async () => {
+    try {
+      await refreshAccessToken()
+    } catch (error) {
+      // initial check - user remains logged out
+    }
+  })()
 
   axios.interceptors.request.use(async (config) => {
     if (config.url === REFRESH_ROUTE || config.url?.startsWith(STATUS_ROUTE_PREFIX)) {
@@ -106,7 +143,11 @@ export const useUserStore = defineStore('user', () => {
       return config
     }
     if (accessToken.value === undefined) {
-      await refreshAccessToken()
+      try {
+        await refreshAccessToken()
+      } catch (error) {
+        return config
+      }
     }
     if (accessToken.value == null) {
       return config
@@ -118,6 +159,9 @@ export const useUserStore = defineStore('user', () => {
         await refreshAccessToken()
       }
     } catch (error) {
+      return config
+    }
+    if (accessToken.value == null) {
       return config
     }
 
@@ -152,11 +196,10 @@ export const useUserStore = defineStore('user', () => {
           Authorization: accessToken.value,
         },
       })
-    } catch (error) {
-      logout()
-      throw error
+    } catch (errorRetry) {
+      throw errorRetry
     }
   })
 
-  return { isLoggedIn, id, lnurlAuthKey, accessToken, login, logout }
+  return { isLoggedIn, showModalLogin, modalLoginUserMessage, userId, lnurlAuthKey, accessToken, login, logout }
 })

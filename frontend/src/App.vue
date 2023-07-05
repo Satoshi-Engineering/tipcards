@@ -62,6 +62,10 @@
     </footer>
   </div>
   <ModalResolveLocalStorage v-if="showResolveLocalStorage" />
+  <ModalLogin
+    v-if="showModalLogin"
+    @close="showModalLogin = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -79,6 +83,7 @@ import { useUserStore } from '@/stores/user'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { SUPPORT_EMAIL } from '@/constants'
 import { useSeoHelpers } from '@/modules/seoHelpers'
+import ModalLogin from '@/components/ModalLogin.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -135,7 +140,7 @@ const backlink = computed(() => {
 })
 
 const userStore = useUserStore()
-const { isLoggedIn } = storeToRefs(userStore)
+const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
 
 const cardsSetsStore = useCardsSetsStore()
 const { hasSetsInLocalStorage } = storeToRefs(cardsSetsStore)

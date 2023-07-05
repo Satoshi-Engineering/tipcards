@@ -3,6 +3,7 @@ import fs from 'fs'
 import {
   generateKeyPair, type KeyLike, SignJWT, jwtVerify,
   importSPKI, importPKCS8, exportSPKI, exportPKCS8,
+  errors,
 } from 'jose'
 
 import { ErrorCode } from '../../../src/data/Errors'
@@ -43,14 +44,14 @@ const loadKeys = async () => {
   return { publicKey, privateKey }
 }
 
-export const createRefreshToken = async ({ id, lnurlAuthKey }: User, expires: Date) => {
+export const createRefreshToken = async ({ id, lnurlAuthKey }: User) => {
   const { privateKey } = await loadKeys()
   return new SignJWT({ id, lnurlAuthKey })
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer(ISSUER)
     .setAudience(AUDIENCE_REFRESH_TOKEN)
-    .setExpirationTime(Math.floor(expires.getTime() / 1000))
+    .setExpirationTime('28 days')
     .sign(privateKey)
 }
 
@@ -83,11 +84,18 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       audience: AUDIENCE_REFRESH_TOKEN,
     })
     if (payload.exp == null || payload.exp * 1000 < + new Date()) {
-      res.status(401).json({
-        status: 'error',
-        message: 'Refresh token expired.',
-        code: ErrorCode.RefreshTokenExpired,
-      })
+      res
+        .clearCookie('refresh_token', {
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        })
+        .status(401)
+        .json({
+          status: 'error',
+          message: 'Refresh token expired.',
+          code: ErrorCode.RefreshTokenExpired,
+        })
       return
     }
 
@@ -96,22 +104,42 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       user?.allowedRefreshTokens == null
       || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(req.cookies.refresh_token))
     ) {
-      res.status(401).json({
-        status: 'error',
-        message: 'Refresh token denied.',
-        code: ErrorCode.RefreshTokenDenied,
-      })
+      res
+        .clearCookie('refresh_token', {
+          httpOnly: true,
+          secure: true,
+          sameSite: true,
+        })
+        .status(401)
+        .json({
+          status: 'error',
+          message: 'Refresh token denied.',
+          code: ErrorCode.RefreshTokenDenied,
+        })
       return
     }
 
     res.locals.userId = payload.id
     next()
   } catch (error) {
-    res.status(401).json({
-      status: 'error',
-      message: 'Invalid refresh token.',
-      code: ErrorCode.RefreshTokenInvalid,
-    })
+    let message = 'Invalid refresh token.'
+    let code = ErrorCode.RefreshTokenInvalid
+    if (error instanceof errors.JWTExpired) {
+      message = 'Refresh token expired.'
+      code = ErrorCode.RefreshTokenExpired
+    }
+    res
+      .clearCookie('refresh_token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: true,
+      })
+      .status(401)
+      .json({
+        status: 'error',
+        message,
+        code,
+      })
   }
 }
 
@@ -125,8 +153,7 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
       })
       return
     }
-    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
-    const refreshToken = await createRefreshToken(user, expires)
+    const refreshToken = await createRefreshToken(user)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
@@ -142,7 +169,6 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
     })
     await updateUser(user)
     res.cookie('refresh_token', refreshToken, {
-      expires,
       httpOnly: true,
       secure: true,
       sameSite: true,
@@ -185,10 +211,16 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
     res.locals.jwtPayload = payload
     next()
   } catch (error) {
+    let message = 'Invalid authorization token.'
+    let code = ErrorCode.AccessTokenInvalid
+    if (error instanceof errors.JWTExpired) {
+      message = 'Authorization expired.'
+      code = ErrorCode.AccessTokenExpired
+    }
     res.status(401).json({
       status: 'error',
-      message: 'Invalid authorization token.',
-      code: ErrorCode.AccessTokenInvalid,
+      message,
+      code,
     })
   }
 }
