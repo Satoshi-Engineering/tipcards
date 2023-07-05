@@ -3,14 +3,16 @@
     v-if="isLoggedIn"
     class="mt-3 mx-auto w-full max-w-md px-4"
   >
-    <HeadlineDefault level="h2">{{ $t('userAccount.title') }}</HeadlineDefault>
+    <HeadlineDefault level="h2">
+      {{ $t('userAccount.title') }}
+    </HeadlineDefault>
     <form class="block my-10" @submit.prevent="save">
       <label class="block mb-2">
         <span class="block">
           {{ $t('userAccount.form.emailAddress') }}:
         </span>
         <input
-          v-model.lazy.trim="emailAddress"
+          v-model.lazy.trim="profileInternal.email"
           type="email"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
         >
@@ -43,9 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue'
+import { ref, reactive, computed, watchEffect, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import isEqual from 'lodash.isequal'
+
+import { Profile } from '@root/data/User'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { useUserStore } from '@/stores/user' 
@@ -55,14 +60,32 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 const router = useRouter()
 const { isLoggedIn, logout } = useUserStore()
 
-const emailAddress = ref<string | undefined>()
+const profile = ref(Profile.parse({}))
+const profileInternal = reactive(Profile.parse({}))
 
-const isSaved = computed(() => false)
+onBeforeMount(async () => {
+  try {
+    const { data } = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/profile`)
+    profile.value = Profile.parse(data.data)
+    Object.assign(profileInternal, profile.value)
+  } catch (error) {
+    // TODO: show error to user
+    console.error(error)
+  }
+})
+
+const isSaved = computed(() => isEqual(profile.value, profileInternal))
 
 const saving = ref(false)
 const save = async () => {
   saving.value = true
-  await new Promise((resolve) => setTimeout(resolve, 1234))
+  try {
+    const { data } = await axios.post(`${BACKEND_API_ORIGIN}/api/auth/profile`, profileInternal)
+    profile.value = Profile.parse(data.data)
+  } catch (error) {
+    // TODO: show error to user
+    console.error(error)
+  }
   saving.value = false
 }
 
