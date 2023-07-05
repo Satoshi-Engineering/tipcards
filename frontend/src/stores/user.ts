@@ -62,7 +62,16 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  let refreshingAccessToken = false
+  const refreshCallbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
   const refreshAccessToken = async () => {
+    if (refreshingAccessToken) {
+      const promise = new Promise((resolve, reject) => {
+        refreshCallbacks.push({ resolve, reject })
+      })
+      return promise
+    }
+    refreshingAccessToken = true
     try {
       const response = await axios.get(REFRESH_ROUTE)
       if (typeof response.data.data?.accessToken === 'string') {
@@ -70,12 +79,17 @@ export const useUserStore = defineStore('user', () => {
       } else {
         accessToken.value = undefined
       }
+      refreshCallbacks.forEach(({ resolve }) => resolve())
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         accessToken.value = null
       } else {
         accessToken.value = undefined
       }
+      refreshCallbacks.forEach(({ reject }) => reject())
+    } finally {
+      refreshCallbacks.length = 0
+      refreshingAccessToken = false
     }
   }
   refreshAccessToken()
@@ -116,14 +130,32 @@ export const useUserStore = defineStore('user', () => {
     } as InternalAxiosRequestConfig<any>
   })
 
-  axios.interceptors.response.use(undefined, (error) => {
-    if (error.config?.url == null || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
-      return Promise.reject(error)
+  axios.interceptors.response.use(undefined, async (error) => {
+    if (
+      error.config?.url == null
+      || error.config.meta?.isRetry === true
+      || error.config.url === REFRESH_ROUTE
+      || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0
+      || error.response.status !== 401
+    ) {
+      throw error
     }
-    if (error.response.status === 401) {
+    try {
+      await refreshAccessToken()
+      return await axios.create()({
+        ...error.config,
+        meta: {
+          isRetry: true,
+        },
+        headers: {
+          ...error.config.headers,
+          Authorization: accessToken.value,
+        },
+      })
+    } catch (error) {
       logout()
+      throw error
     }
-    return Promise.reject(error)
   })
 
   return { isLoggedIn, id, lnurlAuthKey, accessToken, login, logout }
