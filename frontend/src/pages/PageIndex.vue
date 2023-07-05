@@ -25,16 +25,7 @@
           {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
         <div class="flex flex-col">
-          <div v-if="fetchingUserErrorMessages.length > 0">
-            <ParagraphDefault
-              v-for="message in fetchingUserErrorMessages"
-              :key="message"
-              class="text-red-500"
-              dir="ltr"
-            >
-              {{ message }}
-            </ParagraphDefault>
-          </div>
+          <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
           <div
             v-if="sets.length < 1"
             class="mx-auto text-sm text-grey"
@@ -152,7 +143,7 @@ import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
 import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'

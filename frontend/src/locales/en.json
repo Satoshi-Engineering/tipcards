@@ -231,6 +231,11 @@
       "emailAddress": "Email address",
       "emailAddressHint": "In case you lose your lightning wallet or device that you used to authenticate.",
       "save": "Save"
+    },
+    "errors": {
+      "unableToFetchProfile": "Error while loading profile data. Please retry or check your internet connection.",
+      "unableToSaveProfile": "Error while saving profile data. Please retry or check your internet connection.",
+      "unableToLogoutAllOtherDevices": "Error while logging out all other devices. Please retry or check your internet connection"
     }
   },
   "lightningQrCode": {

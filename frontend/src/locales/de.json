@@ -245,6 +245,11 @@
       "emailAddress": "E-Mail-Adresse",
       "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
       "save": "Speichern"
+    },
+    "errors": {
+      "unableToFetchProfile": "Profildaten konnten nicht geladen werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
+      "unableToSaveProfile": "Profildaten konnten nicht gespeichert werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
+      "unableToLogoutAllOtherDevices": "Beim Logout deiner anderen Geräte ist ein Fehler aufgetreten. Versuche es erneut oder überprüfe deine Internetverbindung."
     }
   },
   "lightningQrCode": {

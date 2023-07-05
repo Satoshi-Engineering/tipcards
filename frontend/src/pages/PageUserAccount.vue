@@ -28,6 +28,7 @@
         <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
         <i v-else-if="!saving" class="bi bi-exclamation-square ml-1" />
       </ButtonDefault>
+      <UserErrorMessages :user-error-messages="profileUserErrorMessages" />
     </form>
     <div class="my-10">
       <HeadlineDefault level="h3">
@@ -40,6 +41,7 @@
       <ButtonDefault class="text-sm min-w-[170px]" @click="logoutAllOtherDevices">
         {{ $t('auth.buttonLogoutAllOtherDevices') }}
       </ButtonDefault>
+      <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
     </div>
   </div>
 </template>
@@ -49,6 +51,7 @@ import { ref, reactive, computed, watchEffect, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import isEqual from 'lodash.isequal'
+import { useI18n } from 'vue-i18n'
 
 import { Profile } from '@root/data/User'
 
@@ -56,12 +59,15 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 import { useUserStore } from '@/stores/user' 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
 
 const router = useRouter()
 const { isLoggedIn, logout } = useUserStore()
+const { t } = useI18n()
 
 const profile = ref(Profile.parse({}))
 const profileInternal = reactive(Profile.parse({}))
+const profileUserErrorMessages = ref<string[]>([])
 
 onBeforeMount(async () => {
   try {
@@ -69,8 +75,8 @@ onBeforeMount(async () => {
     profile.value = Profile.parse(data.data)
     Object.assign(profileInternal, profile.value)
   } catch (error) {
-    // TODO: show error to user
     console.error(error)
+    profileUserErrorMessages.value.push(t('userAccount.errors.unableToFetchProfile'))
   }
 })
 
@@ -78,16 +84,19 @@ const isSaved = computed(() => isEqual(profile.value, profileInternal))
 
 const saving = ref(false)
 const save = async () => {
+  profileUserErrorMessages.value = []
   saving.value = true
   try {
     const { data } = await axios.post(`${BACKEND_API_ORIGIN}/api/auth/profile`, profileInternal)
     profile.value = Profile.parse(data.data)
   } catch (error) {
-    // TODO: show error to user
     console.error(error)
+    profileUserErrorMessages.value.push(t('userAccount.errors.unableToSaveProfile'))
   }
   saving.value = false
 }
+
+const logoutUserErrorMessages = ref<string[]>([])
 
 const onLogout = () => {
   logout()
@@ -95,11 +104,12 @@ const onLogout = () => {
 }
 
 const logoutAllOtherDevices = async () => {
+  logoutUserErrorMessages.value = []
   try {
     await axios.post(`${BACKEND_API_ORIGIN}/api/auth/logoutAllOtherDevices`)
   } catch (error) {
-    // TODO: show error to user
     console.error(error)
+    logoutUserErrorMessages.value.push(t('userAccount.errors.unableToLogoutAllOtherDevices'))
   }
 }
 
