@@ -32,7 +32,8 @@
     "vue-tsc": "^0.40.9"
   },
   "dependencies": {
-    "buffer": "^6.0.3"
+    "buffer": "^6.0.3",
+    "zod": "^3.21.4"
   },
   "overrides": {
     "semver": "^7.5.3",

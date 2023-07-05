@@ -7,10 +7,10 @@ import cookieParser from 'cookie-parser'
 
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
 import { createAccessToken, createRefreshToken, authGuardRefreshToken } from '../services/jwt'
-import { LNBITS_ORIGIN } from '../constants'
+import { LNBITS_ORIGIN, TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 
+import { Profile } from '../../../src/data/User'
 import { ErrorCode } from '../../../src/data/Errors'
-import { TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 
 /////
 // LNURL SERVICE
@@ -153,10 +153,12 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
 })
 
 router.get('/refresh', cookieParser(), authGuardRefreshToken, async (req: express.Request, res: express.Response) => {
-  const { id } = res.locals.refreshTokenPayload
+  const { userId } = res.locals
+
+  // TODO: move create refresh token into authGuardRefreshToken or into a new middleware
   try {
     const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
-    const user = await getUserById(id)
+    const user = await getUserById(userId)
     if (user == null) {
       res.status(404).json({
         status: 'error',
@@ -229,26 +231,77 @@ router.post('/logout', cookieParser(), async (req: express.Request, res: express
 })
 
 router.post('/logoutAllOtherDevices', cookieParser(), authGuardRefreshToken, async (req: express.Request, res: express.Response) => {
-  const oldRefreshToken = req.cookies?.refresh_token
-  if (oldRefreshToken != null) {
-    try {
-      const { id } = JSON.parse(atob(oldRefreshToken.split('.')[1]))
-      const user = await getUserById(id)
-      if (user?.allowedRefreshTokens != null) {
-        user.allowedRefreshTokens = user.allowedRefreshTokens
-          .filter((currentRefreshTokens) => currentRefreshTokens.includes(oldRefreshToken))
-        await updateUser(user)
-      }
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(403).json({
+  try {
+    const { userId } = res.locals
+    const user = await getUserById(userId)
+    if (user?.allowedRefreshTokens != null) {
+      user.allowedRefreshTokens = user.allowedRefreshTokens
+        .filter((currentRefreshTokens) => currentRefreshTokens.includes(req.cookies?.refresh_token))
+      await updateUser(user)
+    }
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
+    })
+    return
+  }
+  res.json({ status: 'success' })
+})
+
+router.get('/profile', cookieParser(), authGuardRefreshToken, async (req, res) => {
+  try {
+    const { userId } = res.locals
+    const user = await getUserById(userId)
+    res.json({ 
+      status: 'success',
+      data: user?.profile,
+   })
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
+    })
+    return
+  }
+})
+
+router.post('/profile', cookieParser(), authGuardRefreshToken, async (req, res) => {
+  const parseResult  = Profile.safeParse(req.body)
+  if (!parseResult.success) {
+    res.status(400).json({
+      status: 'error',
+      data: parseResult.error,
+    })
+    return
+  }
+  const { data: profile } = parseResult
+  try {
+    const { userId } = res.locals
+    const user = await getUserById(userId)
+    if (user == null) {
+      res.status(404).json({
         status: 'error',
-        data: 'unknown database error',
+        data: 'user not found',
       })
       return
     }
+    user.profile = profile
+    await updateUser(user)
+    res.json({ 
+      status: 'success',
+      data: profile,
+   })
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
+    })
+    return
   }
-  res.json({ status: 'success' })
 })
 
 router.get('/debug', async (req: express.Request, res: express.Response) => {

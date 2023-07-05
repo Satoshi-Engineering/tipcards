@@ -104,7 +104,7 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       return
     }
 
-    res.locals.refreshTokenPayload = payload
+    res.locals.userId = payload.id
     next()
   } catch (error) {
     res.status(401).json({
