@@ -275,6 +275,8 @@
       "text": "Einloggen und tolle neue Features verwenden! Du benötigst eine App die LNURL-Auth unterstützt.",
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
       "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert.",
+      "emailHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast, kannst du deine E-Mail-Adresse hinterlegen.",
+      "emailCta": "E-Mail-Adresse auf der Account-Seite eintragen",
       "close": "Schließen"
     },
     "buttonLogout": "Ausloggen",
