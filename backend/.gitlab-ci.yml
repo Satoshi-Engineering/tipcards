@@ -19,6 +19,7 @@
       - backend/node_modules
       - backend/.env
       - backend/ecosystem.config.js
+      - node_modules
 
 # ------------- STAGE SETUP
 backend-setup-env:
@@ -128,7 +129,6 @@ backend-build:
         exit 1
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
-    - cd backend
     # RSYNC Dist
     - rsync -atv --delete --progress ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
     - | 
@@ -137,7 +137,7 @@ backend-build:
       # 1) Stop pm2
       if [ -d $DEPLOY_PATH/dist-node ]; then
         cd $DEPLOY_PATH/dist-node
-        PM2_HOME=/var/www/.pm2/ pm2 delete ecosystem.config.js --only $PM2_APP_NAME
+        PM2_HOME=/var/www/.pm2/ pm2 delete $PM2_APP_NAME
         cd $DEPLOY_PATH
       else
         echo "No $DEPLOY_PATH/dist-node dir found, skipping pm2 delete"
@@ -155,7 +155,7 @@ backend-build:
       mv $DEPLOY_PATH/dist-node-next $DEPLOY_PATH/dist-node
 
       # 5) Start pm2
-      cd $DEPLOY_PATH/dist-node      
+      cd $DEPLOY_PATH/dist-node/backend      
       PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.js --only $PM2_APP_NAME
 
       # 6) save pm2
