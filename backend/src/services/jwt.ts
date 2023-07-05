@@ -8,7 +8,7 @@ import {
 import { ErrorCode } from '../../../src/data/Errors'
 import type { User } from '../../../src/data/User'
 
-import { getUserById } from './database'
+import { getUserById, updateUser } from './database'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const FILENAME = 'lnurl.auth.pem'
@@ -111,6 +111,48 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       status: 'error',
       message: 'Invalid refresh token.',
       code: ErrorCode.RefreshTokenInvalid,
+    })
+  }
+}
+
+export const cycleRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = await getUserById(res.locals.userId)
+    if (user == null) {
+      res.status(404).json({
+        status: 'error',
+        message: 'User not found.',
+      })
+      return
+    }
+    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
+    const refreshToken = await createRefreshToken(user, expires)
+    if (user.allowedRefreshTokens == null) {
+      user.allowedRefreshTokens = []
+    }
+    const oldRefreshToken = req.cookies?.refresh_token
+    user.allowedRefreshTokens = user.allowedRefreshTokens.map((currentRefreshTokens) => {
+      if (!currentRefreshTokens.includes(oldRefreshToken)) {
+        return currentRefreshTokens
+      }
+      if (currentRefreshTokens.length === 1) {
+        return [...currentRefreshTokens, refreshToken]
+      }
+      return [currentRefreshTokens[currentRefreshTokens.length - 1], refreshToken]
+    })
+    await updateUser(user)
+    res.cookie('refresh_token', refreshToken, {
+      expires,
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+    })
+    next()
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(403).json({
+      status: 'error',
+      data: 'unknown database error',
     })
   }
 }

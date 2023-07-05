@@ -6,7 +6,7 @@ import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
-import { createAccessToken, createRefreshToken, authGuardRefreshToken } from '../services/jwt'
+import { createAccessToken, createRefreshToken, authGuardRefreshToken, cycleRefreshToken } from '../services/jwt'
 import { LNBITS_ORIGIN, TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
 
 import { Profile } from '../../../src/data/User'
@@ -91,7 +91,7 @@ export const initSocketIo = (server: http.Server) => {
 /////
 // ROUTES
 const router = express.Router()
-router.get('/create', async (req: express.Request, res: express.Response) => {
+router.get('/create', async (_, res) => {
   const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = createHash('sha256').update(secret).digest('hex')
@@ -105,7 +105,7 @@ router.get('/create', async (req: express.Request, res: express.Response) => {
   })
 })
 
-router.get('/status/:hash', async (req: express.Request, res: express.Response) => {
+router.get('/status/:hash', async (req, res) => {
   const hash = req.params.hash
   if (loggedIn[hash] == null) {
     res.status(404).json({
@@ -152,57 +152,39 @@ router.get('/status/:hash', async (req: express.Request, res: express.Response) 
   }
 })
 
-router.get('/refresh', cookieParser(), authGuardRefreshToken, async (req: express.Request, res: express.Response) => {
-  const { userId } = res.locals
+router.get(
+  '/refresh',
+  cookieParser(),
+  authGuardRefreshToken,
+  cycleRefreshToken,
+  async (_, res) => {
+    const { userId } = res.locals
 
-  // TODO: move create refresh token into authGuardRefreshToken or into a new middleware
-  try {
-    const expires = new Date(Date.now() + 1000 * 60 * 60 * 24 * 28)
-    const user = await getUserById(userId)
-    if (user == null) {
-      res.status(404).json({
-        status: 'error',
-        data: 'User not found.',
-      })
-      return
-    }
-    const refreshToken = await createRefreshToken(user, expires)
-    const accessToken = await createAccessToken(user)
-    if (user.allowedRefreshTokens == null) {
-      user.allowedRefreshTokens = []
-    }
-    const oldRefreshToken = req.cookies?.refresh_token
-    user.allowedRefreshTokens = user.allowedRefreshTokens.map((currentRefreshTokens) => {
-      if (!currentRefreshTokens.includes(oldRefreshToken)) {
-        return currentRefreshTokens
+    try {
+      const user = await getUserById(userId)
+      if (user == null) {
+        res.status(404).json({
+          status: 'error',
+          data: 'User not found.',
+        })
+        return
       }
-      if (currentRefreshTokens.length === 1) {
-        return [...currentRefreshTokens, refreshToken]
-      }
-      return [currentRefreshTokens[currentRefreshTokens.length - 1], refreshToken]
-    })
-    await updateUser(user)
-    res
-      .cookie('refresh_token', refreshToken, {
-        expires,
-        httpOnly: true,
-        secure: true,
-        sameSite: true,
-      })
-      .json({
+      const accessToken = await createAccessToken(user)
+      res.json({
         status: 'success',
         data: { accessToken },
       })
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(403).json({
-      status: 'error',
-      data: 'unknown database error',
-    })
-  }
-})
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      res.status(403).json({
+        status: 'error',
+        data: 'unknown database error',
+      })
+    }
+  },
+)
 
-router.post('/logout', cookieParser(), async (req: express.Request, res: express.Response) => {
+router.post('/logout', cookieParser(), async (req, res) => {
   const oldRefreshToken = req.cookies?.refresh_token
   res.clearCookie('refresh_token', {
     httpOnly: true,
@@ -230,104 +212,96 @@ router.post('/logout', cookieParser(), async (req: express.Request, res: express
   res.json({ status: 'success' })
 })
 
-router.post('/logoutAllOtherDevices', cookieParser(), authGuardRefreshToken, async (req: express.Request, res: express.Response) => {
-  try {
-    const { userId } = res.locals
-    const user = await getUserById(userId)
-    if (user?.allowedRefreshTokens != null) {
-      user.allowedRefreshTokens = user.allowedRefreshTokens
-        .filter((currentRefreshTokens) => currentRefreshTokens.includes(req.cookies?.refresh_token))
-      await updateUser(user)
-    }
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(403).json({
-      status: 'error',
-      data: 'unknown database error',
-    })
-    return
-  }
-  res.json({ status: 'success' })
-})
-
-router.get('/profile', cookieParser(), authGuardRefreshToken, async (req, res) => {
-  try {
-    const { userId } = res.locals
-    const user = await getUserById(userId)
-    res.json({ 
-      status: 'success',
-      data: user?.profile,
-   })
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(403).json({
-      status: 'error',
-      data: 'unknown database error',
-    })
-    return
-  }
-})
-
-router.post('/profile', cookieParser(), authGuardRefreshToken, async (req, res) => {
-  const parseResult  = Profile.safeParse(req.body)
-  if (!parseResult.success) {
-    res.status(400).json({
-      status: 'error',
-      data: parseResult.error,
-    })
-    return
-  }
-  const { data: profile } = parseResult
-  try {
-    const { userId } = res.locals
-    const user = await getUserById(userId)
-    if (user == null) {
-      res.status(404).json({
+router.post(
+  '/logoutAllOtherDevices',
+  cookieParser(),
+  authGuardRefreshToken,
+  cycleRefreshToken,
+  async (req, res) => {
+    try {
+      const { userId } = res.locals
+      const user = await getUserById(userId)
+      if (user?.allowedRefreshTokens != null) {
+        user.allowedRefreshTokens = user.allowedRefreshTokens
+          .filter((currentRefreshTokens) => currentRefreshTokens.includes(req.cookies?.refresh_token))
+        await updateUser(user)
+      }
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      res.status(403).json({
         status: 'error',
-        data: 'user not found',
+        data: 'unknown database error',
       })
       return
     }
-    user.profile = profile
-    await updateUser(user)
-    res.json({ 
-      status: 'success',
-      data: profile,
-   })
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(403).json({
-      status: 'error',
-      data: 'unknown database error',
-    })
-    return
-  }
-})
+    res.json({ status: 'success' })
+  },
+)
 
-router.get('/debug', async (req: express.Request, res: express.Response) => {
-  if (process.env.LNURL_AUTH_DEBUG !== '1') {
-    res.status(403).json({
-      status: 'error',
-    })
-    return
-  }
-  Object.keys(socketsByHash).forEach(async (hash) => {
-    if (req.query.error != null) {
-      socketsByHash[hash].emit('error')
-      return
-    }
-    const key = 'debugKey'
-    loggedIn[hash] = key
+router.get(
+  '/profile',
+  cookieParser(),
+  authGuardRefreshToken,
+  cycleRefreshToken,
+  async (_, res) => {
     try {
-      socketsByHash[hash].emit('loggedIn')
+      const { userId } = res.locals
+      const user = await getUserById(userId)
+      res.json({ 
+        status: 'success',
+        data: user?.profile,
+    })
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
-      socketsByHash[hash].emit('error')
+      res.status(403).json({
+        status: 'error',
+        data: 'unknown database error',
+      })
+      return
     }
-  })
-  res.json({
-    status: 'success',
-  })
-})
+  },
+)
+
+router.post(
+  '/profile',
+  cookieParser(),
+  authGuardRefreshToken,
+  cycleRefreshToken,
+  async (req, res) => {
+    const parseResult  = Profile.safeParse(req.body)
+    if (!parseResult.success) {
+      res.status(400).json({
+        status: 'error',
+        data: parseResult.error,
+      })
+      return
+    }
+    const { data: profile } = parseResult
+    try {
+      const { userId } = res.locals
+      const user = await getUserById(userId)
+      if (user == null) {
+        res.status(404).json({
+          status: 'error',
+          data: 'user not found',
+        })
+        return
+      }
+      user.profile = profile
+      await updateUser(user)
+      res.json({ 
+        status: 'success',
+        data: profile,
+    })
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      res.status(403).json({
+        status: 'error',
+        data: 'unknown database error',
+      })
+      return
+    }
+  },
+)
 
 export default router
