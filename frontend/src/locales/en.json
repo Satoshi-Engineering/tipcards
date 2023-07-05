@@ -232,6 +232,7 @@
       "emailAddressHint": "In case you lose your lightning wallet or device that you used to authenticate.",
       "save": "Save"
     },
+    "logoutAllOtherDevicesHint": "It can take up to 5 minutes until this affects your other devices.",
     "errors": {
       "unableToFetchProfile": "Error while loading profile data. Please retry or check your internet connection.",
       "unableToSaveProfile": "Error while saving profile data. Please retry or check your internet connection.",

@@ -15,13 +15,14 @@
           v-model.lazy.trim="profileInternal.email"
           type="email"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
+          :disabled="fetching || saving"
         >
         <small class="block">({{ $t('userAccount.form.emailAddressHint') }})</small>
       </label>
       <ButtonDefault
         class="text-sm min-w-[170px]"
         type="submit"
-        :disabled="saving"
+        :disabled="fetching || saving"
         :loading="saving"
       >
         {{ $t('userAccount.form.save') }}
@@ -38,9 +39,16 @@
         {{ $t('auth.buttonLogout') }}
       </ButtonDefault>
       <br>
-      <ButtonDefault class="text-sm min-w-[170px]" @click="logoutAllOtherDevices">
+      <ButtonDefault
+        class="text-sm min-w-[170px]"
+        :disabled="loggingOutAllOtherDevices"
+        :loading="loggingOutAllOtherDevices"
+        @click="logoutAllOtherDevices"
+      >
         {{ $t('auth.buttonLogoutAllOtherDevices') }}
+        <i v-if="loggingOutAllOtherDevicesSuccess" class="bi bi-check-square-fill ml-1" />
       </ButtonDefault>
+      <small class="block">({{ $t('userAccount.logoutAllOtherDevicesHint') }})</small>
       <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
     </div>
   </div>
@@ -72,7 +80,9 @@ const profile = ref(Profile.parse({}))
 const profileInternal = reactive(Profile.parse({}))
 const profileUserErrorMessages = ref<string[]>([])
 
+const fetching = ref(false)
 onBeforeMount(async () => {
+  fetching.value = true
   try {
     const { data } = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/profile`)
     profile.value = Profile.parse(data.data)
@@ -81,8 +91,8 @@ onBeforeMount(async () => {
     console.error(error)
     profileUserErrorMessages.value.push(t('userAccount.errors.unableToFetchProfile'))
   }
+  fetching.value = false
 })
-
 const isSaved = computed(() => isEqual(profile.value, profileInternal))
 
 const saving = ref(false)
@@ -106,14 +116,20 @@ const onLogout = () => {
   router.push({ name: 'home' })
 }
 
+const loggingOutAllOtherDevices = ref(false)
+const loggingOutAllOtherDevicesSuccess = ref(false)
 const logoutAllOtherDevices = async () => {
+  loggingOutAllOtherDevices.value = true
+  loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
     await axios.post(`${BACKEND_API_ORIGIN}/api/auth/logoutAllOtherDevices`)
+  loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
     console.error(error)
     logoutUserErrorMessages.value.push(t('userAccount.errors.unableToLogoutAllOtherDevices'))
   }
+  loggingOutAllOtherDevices.value = false
 }
 
 watchEffect(() => {

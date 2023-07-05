@@ -246,6 +246,7 @@
       "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
       "save": "Speichern"
     },
+    "logoutAllOtherDevicesHint": "Es kann bis zu 5 Minuten dauern, bis diese Änderung auf den anderen Geräten wirksam wird.",
     "errors": {
       "unableToFetchProfile": "Profildaten konnten nicht geladen werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
       "unableToSaveProfile": "Profildaten konnten nicht gespeichert werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
