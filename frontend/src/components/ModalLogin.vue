@@ -1,17 +1,15 @@
 <template>
   <ModalDefault :headline="$t('auth.modalLogin.headline')" @close="$emit('close')">
-    <p v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
+    <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
       {{ modalLoginUserMessage }}
-    </p>
-    <p v-if="!error" class="mb-3">
-      {{ $t('auth.modalLogin.text') }}
-    </p>
-    <p v-else class="mb-4 text-red-500">
+    </ParagraphDefault>
+    <ParagraphDefault v-if="error" class="mb-4 text-red-500">
       {{ $t('auth.modalLogin.loginErrorText') }}
-    </p>
-    <p class="mb-4">
-      {{ $t('auth.modalLogin.cookieWarning') }}
-    </p>
+    </ParagraphDefault>
+    <ParagraphDefault v-else-if="!isLoggedIn" class="mb-3">
+      {{ $t('auth.modalLogin.text') }}
+    </ParagraphDefault>
+    
     <AnimatedLoadingWheel v-if="fetchingLogin" />
     <LightningQrCode
       v-else-if="lnurl != null"
@@ -19,14 +17,17 @@
       :error="error ? $t('auth.modalLogin.loginErrorText') : undefined"
       :success="isLoggedIn"
     />
-    <p v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
+    <ParagraphDefault v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
       {{ $t('auth.modalLogin.emailHint') }}
       <br>
-      <LinkDefault :to="{ name: 'user-account' }">
+      <LinkDefault :to="{ name: 'user-account' }" @click="$emit('close')">
         {{ $t('auth.modalLogin.emailCta') }}
       </LinkDefault>
-    </p>
-    <div class="mt-12 text-center">
+    </ParagraphDefault>
+    <ParagraphDefault v-if="!isLoggedIn" class="mt-12 text-sm text-grey">
+      {{ $t('auth.modalLogin.cookieWarning') }}
+    </ParagraphDefault>
+    <div class="text-center">
       <ButtonDefault
         class="text-sm min-w-[170px]"
         :variant="isLoggedIn ? undefined : 'outline'"
@@ -49,6 +50,7 @@ import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import { useUserStore } from '@/stores/user'
 import { BACKEND_API_ORIGIN } from '@/constants'
 

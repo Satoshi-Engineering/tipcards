@@ -231,7 +231,7 @@
       </ParagraphDefault>
       <ButtonDefault
         class="text-sm min-w-[170px]"
-        :disabled="saving || (!isLoggedIn && !hasBeenSaved)"
+        :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
         :loading="saving"
         @click="saveCardsSet"
       >
@@ -526,6 +526,7 @@ import svgToPng from '@/modules/svgToPng'
 import { useI18nHelpers } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
+import useNewFeatures from '@/modules/useNewFeatures'
 import I18nT from '@/modules/I18nT'
 import {
   getDefaultSettings,
@@ -542,6 +543,7 @@ const { t } = useI18n()
 const { currentTextDirection } = useI18nHelpers()
 const { setDocumentTitle } = useSeoHelpers()
 
+const { features } = useNewFeatures()
 const userStore = useUserStore()
 const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
 

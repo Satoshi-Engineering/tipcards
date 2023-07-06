@@ -260,7 +260,7 @@
   "auth": {
     "modalLogin": {
       "headline": "Login using LNURL-Auth",
-      "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
+      "text": "You need a lightning app that supports LNURL-Auth.",
       "loginErrorText": "Something went wrong. Please try again later or contact support.",
       "cookieWarning": "Your logged in state will be stored as a cookie until you log out.",
       "emailHint": "For the case you lose your lightning wallet or device that you used to authenticate, you can store your email address.",

@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, nextTick } from 'vue'
+import { computed, nextTick, watchEffect } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -150,4 +150,10 @@ const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
 const cardsSetsStore = useCardsSetsStore()
 const { hasSetsInLocalStorage } = storeToRefs(cardsSetsStore)
 const showResolveLocalStorage = computed(() => isLoggedIn.value && hasSetsInLocalStorage.value)
+
+watchEffect(() => {
+  if (showResolveLocalStorage.value) {
+    showModalLogin.value = false
+  }
+})
 </script>
