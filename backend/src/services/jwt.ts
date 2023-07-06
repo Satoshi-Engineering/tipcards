@@ -169,9 +169,10 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
     })
     await updateUser(user)
     res.cookie('refresh_token', refreshToken, {
+      expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
       httpOnly: true,
       secure: true,
-      sameSite: true,
+      sameSite: process.env.LNURL_AUTH_DEBUG === '1' ? false : true,
     })
     next()
   } catch (error) {
