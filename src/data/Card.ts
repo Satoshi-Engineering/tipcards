@@ -14,7 +14,7 @@ export type Card = {
     shared?: boolean,
     amount: number | null,
     payment_hash: string[] | null,
-    id: number,
+    id: number | string,
     created: number, // unix timestamp
     paid: number | null, // unix timestamp
     expired?: boolean,

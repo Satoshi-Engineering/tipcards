@@ -125,7 +125,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
           if (card.lnurlp?.payment_hash != null && card.lnurlp.payment_hash.includes(payment.payment_hash)) {
             return
           }
-          if (payment.extra.tag === 'lnurlp' && payment.extra.link === card.lnurlp?.id) {
+          if (payment.extra.tag === 'lnurlp' && card.lnurlp?.id != null && String(payment.extra.link) === String(card.lnurlp?.id)) {
             paymentRequests.push(payment.payment_hash)
           }
         })
@@ -220,8 +220,8 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
         'X-Api-Key': LNBITS_ADMIN_KEY,
       },
     })
-    if (typeof response.data.id === 'string') {
-      card.lnbitsWithdrawId = response.data.id
+    if (typeof response.data.id === 'string' || typeof response.data.id === 'number') {
+      card.lnbitsWithdrawId = String(response.data.id)
     } else {
       throw new ErrorWithCode('Missing withdrawId after creating withdraw link at lnbits.', ErrorCode.UnableToCreateLnbitsWithdrawLink)
     }
@@ -349,7 +349,7 @@ export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
 export const getLnurlpForCard = async (card: Card, shared: undefined | boolean = undefined): Promise<unknown> => {
   let id
   if (card.lnurlp?.id != null) {
-    id = card.lnurlp.id
+    id = String(card.lnurlp.id)
     if (typeof shared === 'boolean') {
       card.lnurlp.shared = shared
     }
@@ -366,7 +366,7 @@ export const getLnurlpForCard = async (card: Card, shared: undefined | boolean =
           'X-Api-Key': LNBITS_ADMIN_KEY,
         },
       })
-      id = response.data.id
+      id = String(response.data.id)
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToCreateLnurlP)
     }
