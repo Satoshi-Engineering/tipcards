@@ -15,10 +15,18 @@
           {{ t('index.buttonCreate') }}
         </ButtonDefault>
       </p>
-      <div class="mt-24">
+      <div class="mt-24" v-if="isLoggedIn || hasSetsInLocalStorage">
         <HeadlineDefault level="h2" styling="h4">
           {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
+        <div v-if="hasSetsInLocalStorage" class="max-w-lg mb-5 mx-auto text-sm text-grey">
+          <I18nT keypath="localStorageDeprecation.loginCta">
+            <template #loginCtaAction>
+              <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
+            </template>
+          </I18nT>
+          <br><LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
+        </div>
         <div class="flex flex-col">
           <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
           <div
@@ -70,6 +78,9 @@
                   {{ t('index.unnamedSetNameFallback') }}
                 </span>
               </LinkDefault>
+              <template v-if="!isLoggedIn">
+                &nbsp;<LinkDefault @click="showModalDeprecation = true" class="no-underline">⚠️</LinkDefault>
+              </template>
             </li>
           </ul>
         </div>
@@ -125,23 +136,38 @@
       </div>
     </div>
   </div>
+  <ModalLocalStorageDeprecation
+    v-if="showModalDeprecation"
+    @login="onLogin"
+    @close="showModalDeprecation = false"
+  />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
+import { useUserStore } from '@/stores/user'
+import I18nT from '@/modules/I18nT'
 
 const { t, d } = useI18n()
 const cardsStore = useCardsSetsStore()
 const { subscribe } = cardsStore
 const { sets, hasSetsInLocalStorage, fetchingUserErrorMessages } = storeToRefs(cardsStore)
+const { isLoggedIn, showModalLogin } = storeToRefs(useUserStore())
+const showModalDeprecation = ref(false)
+
+const onLogin = () => {
+  showModalDeprecation.value = false
+  showModalLogin.value = true
+}
 
 const sortedSavedCardsSets = computed(() => {
   return [...sets.value]

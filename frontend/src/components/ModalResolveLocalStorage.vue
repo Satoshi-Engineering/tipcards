@@ -5,7 +5,9 @@
     :show-close-button="false"
   >
     <template #default>
-      {{ $t('components.modalResolveLocalStorage.text') }}
+      <ParagraphDefault>
+        {{ $t('components.modalResolveLocalStorage.text') }}
+      </ParagraphDefault>
       <ParagraphDefault
         v-for="(error, index) in migratingErrors"
         :key="[error, index].join('_')"
@@ -24,7 +26,7 @@
       >
         {{ $t('components.modalResolveLocalStorage.migrate') }}
       </ButtonDefault>
-      <ButtonDefault variant="outline" @click="logout">
+      <ButtonDefault variant="no-border" @click="logout">
         {{ $t('components.modalResolveLocalStorage.logout') }}
       </ButtonDefault>
     </template>

@@ -204,6 +204,7 @@
           v-model="settings.setName"
           type="text"
           class="w-full border my-1 px-3 py-2 focus:outline-none"
+          :disabled="saving"
         >
       </label>
       <div v-if="savingError != null">
@@ -216,9 +217,21 @@
           {{ deletingError }}
         </ParagraphDefault>
       </div>
+      <ParagraphDefault v-if="hasBeenSaved && !isLoggedIn" class="text-sm text-grey">
+        <LinkDefault @click="showModalDeprecation = true" class="no-underline">⚠️</LinkDefault>
+        {{ $t('localStorageDeprecation.setSavedLocally') }}
+        <LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
+      </ParagraphDefault>
+      <ParagraphDefault v-if="!isLoggedIn" class="text-sm">
+        <I18nT keypath="localStorageDeprecation.loginCta">
+          <template #loginCtaAction>
+            <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
+          </template>
+        </I18nT>
+      </ParagraphDefault>
       <ButtonDefault
         class="text-sm min-w-[170px]"
-        :disabled="saving"
+        :disabled="saving || (!isLoggedIn && !hasBeenSaved)"
         :loading="saving"
         @click="saveCardsSet"
       >
@@ -474,6 +487,11 @@
       </div>
     </div>
   </div>
+  <ModalLocalStorageDeprecation
+    v-if="showModalDeprecation"
+    @login="onLogin"
+    @close="showModalDeprecation = false"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -494,6 +512,7 @@ import type { ImageMeta } from '@root/data/Image'
 import { LandingPageType, type LandingPage } from '@root/data/LandingPage'
 import { encodeLnurl } from '@root/modules/lnurlHelpers'
 
+import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -507,6 +526,7 @@ import svgToPng from '@/modules/svgToPng'
 import { useI18nHelpers } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
+import I18nT from '@/modules/I18nT'
 import {
   getDefaultSettings,
   encodeCardsSetSettings,
@@ -523,11 +543,17 @@ const { currentTextDirection } = useI18nHelpers()
 const { setDocumentTitle } = useSeoHelpers()
 
 const userStore = useUserStore()
-const { isLoggedIn } = storeToRefs(userStore)
+const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
 
 const cardsStore = useCardsSetsStore()
 const { subscribe, saveSet, deleteSet } = cardsStore
 const { sets } = storeToRefs(cardsStore)
+const showModalDeprecation = ref(false)
+
+const onLogin = () => {
+  showModalDeprecation.value = false
+  showModalLogin.value = true
+}
 
 ///////////////////////
 // CARDS SETS + SETTINGS

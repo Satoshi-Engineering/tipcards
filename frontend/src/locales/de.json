@@ -163,7 +163,7 @@
     "buttonLogin": "Einloggen mit LNURL-Auth",
     "buttonCreate": "Erstelle dein Tip Cards-Set",
     "savedCardsSetsHeadline": "Gespeicherte Tip Cards-Sets",
-    "noSavedCardsSetsMessage": "In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert",
+    "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set",
     "youtube": {
       "create": {
@@ -301,11 +301,22 @@
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Sets im Browser (LocalStorage)",
-      "text": "Du hast Sets im Browser gespeichert. Um die LNURL-Auth Funktionalität zu nutzen müssen wir diese Sets auf dem Server speichern. Drücke dafür den Button \"Migrieren\". Alternativ kannst du dich auch wieder ausloggen und die Sets vorher löschen.",
-      "migrate": "Migrieren",
+      "headline": "Tip Cards-Sets übertragen",
+      "text": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Übertrage sie in deinen Account um von all deinen Geräten darauf zugreifen zu können.",
+      "migrate": "Sets übertragen",
       "logout": "Ausloggen",
-      "confirmMigrate": "Jetzt migrieren?"
+      "confirmMigrate": "Jetzt übertragen?"
     }
+  },
+  "localStorageDeprecation": {
+    "loginCta": "{loginCtaAction}, um deine Sets dauerhaft zu speichern.",
+    "loginCtaAction": "Log dich ein",
+    "setSavedLocally": "Dieses Set ist lokal im Browser gespeichert.",
+    "moreInfo": "Mehr Infos",
+    "modalHeadline": "Speichere deine Sets dauerhaft",
+    "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
+    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 27. November 2023 hier sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
+    "modalLogin": "Sets übertragen",
+    "modalClose": "Später"
   }
 }

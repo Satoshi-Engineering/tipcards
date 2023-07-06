@@ -149,7 +149,7 @@
     "buttonLogin": "Login using LNURL-Auth",
     "buttonCreate": "Create your Tip Cards set ⚡",
     "savedCardsSetsHeadline": "Saved Tip Cards sets",
-    "noSavedCardsSetsMessage": "No saved Tip Cards sets found in this browser",
+    "noSavedCardsSetsMessage": "You do not have any saved sets yet",
     "unnamedSetNameFallback": "Unnamed set",
     "youtube": {
       "create": {
@@ -287,11 +287,22 @@
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Sets stored in your browser (LocalStorage)",
-      "text": "You have sets stored locally. To use the LNURL-Auth feature we need to move those to the server. You can do so by clicking \"Migrate\". Alternatively you can log out again and delete them manually first.",
-      "migrate": "Migrate",
+      "headline": "Transfer Tip Cards sets",
+      "text": "Your Tip Cards sets are currently stored locally in your browser. Transfer them to your account to access them from all your devices.",
+      "migrate": "Transfer sets",
       "logout": "Logout",
-      "confirmMigrate": "Migrate now?"
+      "confirmMigrate": "Transfer now?"
     }
+  },
+  "localStorageDeprecation": {
+    "loginCta": "{loginCtaAction} to permanently save your sets.",
+    "loginCtaAction": "Log in",
+    "setSavedLocally": "This set is saved locally in the browser.",
+    "moreInfo": "More info",
+    "modalHeadline": "Permanently save your sets",
+    "modalText": "Your Tip Cards sets are currently stored locally in the browser. This means you can only see them on this device. Log in to save your sets in your account and get access from all your devices.",
+    "modalDeprecationHint": "Your local sets will remain visible here until November 27, 2023. Please make sure you transfer them to your account before that date. Alternatively, you can bookmark the set links.",
+    "modalLogin": "Transfer sets",
+    "modalClose": "Later"
   }
 }
