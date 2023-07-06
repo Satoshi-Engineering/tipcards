@@ -10,11 +10,6 @@
       <p class="mb-4">
         by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a>
       </p>
-      <p v-if="showLoginButton && !isLoggedIn">
-        <ButtonDefault @click="showModalLogin = true">
-          {{ t('index.buttonLogin') }}
-        </ButtonDefault>
-      </p>
       <p>
         <ButtonDefault @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })">
           {{ t('index.buttonCreate') }}
@@ -141,8 +136,6 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import useNewFeatures, { FEATURE_AUTH } from '@/modules/useNewFeatures'
-import { useUserStore } from '@/stores/user'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
 
 const { t, d } = useI18n()
@@ -194,10 +187,4 @@ onMounted(async () => {
     location.href = `${originMapping[location.origin]}${location.pathname}${location.search}${location.hash}`
   }
 })
-
-// auth
-const userStore = useUserStore()
-const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
-const { features } = useNewFeatures()
-const showLoginButton = computed(() => features.value.includes(FEATURE_AUTH))
 </script>

@@ -2,7 +2,8 @@
   "general": {
     "back": "Zurück",
     "cards": "{count} Karte | {count} Karten",
-    "userAccount": "Account"
+    "userAccount": "Account",
+    "login": "Login"
   },
   "nav": {
     "index": "Home",

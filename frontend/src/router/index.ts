@@ -7,7 +7,6 @@ const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
-const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
@@ -89,11 +88,6 @@ const router = createRouter({
             title: () => 'About',
             backlink: true,
           },
-        },
-        {
-          path: 'auth',
-          name: 'auth',
-          component: PageAuthDevelopment,
         },
         {
           path: 'user-account',

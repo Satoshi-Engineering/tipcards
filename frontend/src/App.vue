@@ -14,6 +14,11 @@
           {{ t('general.userAccount') }}
         </LinkDefault>
       </div>
+      <div v-else class="col-start-2 p-4 text-right">
+        <LinkDefault @click="showModalLogin = true">
+          {{ t('general.login') }}
+        </LinkDefault>
+      </div>
     </header>
     <RouterView />
     <footer class="mx-auto mt-auto pt-20 px-4 pb-2 w-full max-w-md text-xs text-grey print:hidden">
