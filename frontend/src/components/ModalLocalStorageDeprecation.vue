@@ -26,4 +26,6 @@
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalDefault from '@/components/ModalDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+
+defineEmits(['login', 'close'])
 </script>

@@ -15,7 +15,7 @@
           {{ t('index.buttonCreate') }}
         </ButtonDefault>
       </p>
-      <div class="mt-24" v-if="isLoggedIn || hasSetsInLocalStorage">
+      <div v-if="isLoggedIn || hasSetsInLocalStorage" class="mt-24">
         <HeadlineDefault level="h2" styling="h4">
           {{ t('index.savedCardsSetsHeadline') }}
         </HeadlineDefault>
@@ -79,7 +79,7 @@
                 </span>
               </LinkDefault>
               <template v-if="!isLoggedIn">
-                &nbsp;<LinkDefault @click="showModalDeprecation = true" class="no-underline">⚠️</LinkDefault>
+                &nbsp;<LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
               </template>
             </li>
           </ul>
