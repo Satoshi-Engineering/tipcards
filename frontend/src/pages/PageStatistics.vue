@@ -173,7 +173,7 @@ const loadStats = async () => {
   try {
     response = await axios.get(`${BACKEND_API_ORIGIN}/api/statistics`, {
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        StatisticsAuthorization: `Bearer ${apiKey}`,
       },
     })
     fetching.value = false

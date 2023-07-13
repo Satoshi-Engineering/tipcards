@@ -11,7 +11,7 @@ import {
 
 const authenticateUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   let token = ''
-  const bearer = req.header('Authorization')
+  const bearer = req.header('StatisticsAuthorization')
   if (bearer && bearer.startsWith('Bearer ')) {
     token = bearer.substring(7)
   }

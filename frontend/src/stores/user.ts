@@ -180,7 +180,7 @@ export const useUserStore = defineStore('user', () => {
       || error.config.meta?.isRetry === true
       || error.config.url === REFRESH_ROUTE
       || error.config.url.indexOf(BACKEND_API_ORIGIN) < 0
-      || error.response.status !== 401
+      || error.response?.status !== 401
     ) {
       throw error
     }
