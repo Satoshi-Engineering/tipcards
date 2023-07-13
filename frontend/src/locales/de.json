@@ -213,6 +213,7 @@
       "setName": "Set-Name",
       "saveHeadline": "Speichern",
       "buttonSaveCardsSet": "Set speichern",
+      "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL (siehe Browser-Adressleiste) verwenden, um später erneut auf dieses Set zuzugreifen.",
       "buttonDeleteCardsSet": "Set löschen",
       "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
       "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
@@ -274,7 +275,7 @@
   "auth": {
     "modalLogin": {
       "headline": "Login mit LNURL-Auth",
-      "text": "Du benötigst eine App die LNURL-Auth unterstützt.",
+      "text": "Du benötigst eine App, die LNURL-Auth unterstützt.",
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
       "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert.",
       "emailHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast, kannst du deine E-Mail-Adresse hinterlegen.",
@@ -314,8 +315,8 @@
     "setSavedLocally": "Dieses Set ist lokal im Browser gespeichert.",
     "moreInfo": "Mehr Infos",
     "modalHeadline": "Speichere deine Sets dauerhaft",
-    "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
-    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 27. November 2023 hier sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
+    "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
+    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 27. November 2023 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
     "modalLogin": "Sets übertragen",
     "modalClose": "Später"
   }

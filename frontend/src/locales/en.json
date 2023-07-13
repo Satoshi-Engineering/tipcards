@@ -198,6 +198,7 @@
       "buttonDownloadPngs": "Download PNGs",
       "setName": "Set name",
       "buttonSaveCardsSet": "Save Tip Cards set",
+      "buttonSaveDisabledTooltip": "You can only save new sets when you are logged in. Alternatively you can use the URL (from the address bar) to access this set.",
       "buttonDeleteCardsSet": "Delete saved set",
       "saveHeadline": "Save",
       "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
@@ -301,7 +302,7 @@
     "moreInfo": "More info",
     "modalHeadline": "Permanently save your sets",
     "modalText": "Your Tip Cards sets are currently stored locally in the browser. This means you can only see them on this device. Log in to save your sets in your account and get access from all your devices.",
-    "modalDeprecationHint": "Your local sets will remain visible here until November 27, 2023. Please make sure you transfer them to your account before that date. Alternatively, you can bookmark the set links.",
+    "modalDeprecationHint": "Your local sets will remain visible here until November 27, 2023. Please make sure you transfer them to your account before that date. Don't worry: There will still be a recovery option for your old sets afterwards. Alternatively, you can bookmark the set links.",
     "modalLogin": "Transfer sets",
     "modalClose": "Later"
   }

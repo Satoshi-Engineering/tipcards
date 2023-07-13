@@ -218,7 +218,7 @@
         </ParagraphDefault>
       </div>
       <ParagraphDefault v-if="hasBeenSaved && !isLoggedIn" class="text-sm text-grey">
-        <LinkDefault @click="showModalDeprecation = true" class="no-underline">⚠️</LinkDefault>
+        <LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
         {{ $t('localStorageDeprecation.setSavedLocally') }}
         <LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
       </ParagraphDefault>
@@ -229,16 +229,17 @@
           </template>
         </I18nT>
       </ParagraphDefault>
-      <ButtonDefault
+      <ButtonWithTooltip
         class="text-sm min-w-[170px]"
         :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
+        :tooltip="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal')) ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
         :loading="saving"
         @click="saveCardsSet"
       >
         {{ t('cards.actions.buttonSaveCardsSet') }}
         <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
         <i v-if="showSaveWarning && !saving" class="bi bi-exclamation-square ml-1" />
-      </ButtonDefault>
+      </ButtonWithTooltip>
       &nbsp;
       <br class="xs:hidden">
       <ButtonDefault
