@@ -24,9 +24,11 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 `#satohsiengineeringcrew` is `#happy2help`
 
+
 ## Host your own Tip Cars
 
 [Install guide](docs/setup.md)
+
 
 ## Setup for development
 
@@ -75,21 +77,10 @@ via lnbits and there are transaction costs.
 your lightning apps will refuse to work because there is no ssl connection)
   - We use BlueWallet Deskop app for testing (it can access localhost) 
 
+
+## Tools
+
 ### VSCode
-
-### Ngrok
-
-Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
-
-1. Copy backend/.env.example into backend/.env
-2. Go to https://ngrok.com and create an account
-3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
-4. Run `npm run proxy` in the backend directory. This starts an express server that proxies all requests to your other services that we will start later.
-5. Run `npm run ngrok` in the backend directory. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
-6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
-7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
-8. Run `npm run dev` in frontend/ and backend/ directories.
-
 
 #### Extensions
 
@@ -109,6 +100,20 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 * Disable "TypeScript and JavaScript Language Support" for Workspace only
 
 
+### Ngrok
+
+Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
+
+1. Copy backend/.env.example into backend/.env
+2. Go to https://ngrok.com and create an account
+3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
+4. Run `npm run proxy` in the backend directory. This starts an express server that proxies all requests to your other services that we will start later.
+5. Run `npm run ngrok` in the backend directory. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
+6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
+7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
+8. Run `npm run dev` in frontend/ and backend/ directories.
+
+
 ## Run from source
 
 Start the frontend server on http://localhost:5173
@@ -126,7 +131,8 @@ cd backend && npm run dev
 
 Deployment is done via Gitlab CI/CD, see .gitlab-ci.yml
 
-# Tip us
+
+## Tip us
 
 If you like this project, please adapt the landingpage to your local stores, that
 accept bitcoin or even extend it. Why not [send some tip love?](https://lnbits.thespielplatz.com/tipjar/2)
