@@ -1,122 +1,122 @@
 {
   "general": {
-    "back": "Назад",
-    "cards": "{count} карта | {count} карты | {count} карт"
+    "back": "Zpět",
+    "cards": "{count} karta | {count} karty | {count} karet"
   },
   "nav": {
-    "index": "Домой",
-    "cards": "Создать",
-    "preview": "Целевая страница",
-    "about": "О нас"
+    "index": "Domů",
+    "cards": "Založit",
+    "preview": "Vstupní stránka",
+    "about": "O nás"
   },
   "footer": {
-    "support": "Какие либо вопросы или ваш отзыв? Или вы нашли проблему или ошибку? Не стесняйтесь связаться с нами: {email}."
+    "support": "Nějaké dotazy nebo zpětná vazba? Nebo jste našli problém nebo chybu? Neváhejte nás kontaktovat: {email}."
   },
   "landing": {
-    "title": "Получите ваш биткойн",
-    "titlePreview": "Предпросмотр – Получите ваш биткойн",
-    "introGreeting": "Приветствуем!",
+    "title": "Získejte svůj bitcoin",
+    "titlePreview": "Náhled - získejte svůj bitcoin",
+    "introGreeting": "Ahoj!",
     "introMessageReceiveBtc": {
-      "message": "Вы на пороге получения {amountAndUnit}",
-      "amountAndUnit": "{amount} биткойн",
+      "message": "Právě se chystáte obdržet {amountAndUnit}",
+      "amountAndUnit": "{amount} bitcoin",
       "amountAndUnitBtc": "{amount} BTC",
       "footnoteFiat": "{btc} = {fiat}",
-      "footnote": "через Lightning"
+      "footnote": "přes síť Lightning"
     },
     "introMessagePreview": {
-      "headline": "Просканируйте Lightning Карту Чаевых, чтобы получить сколько-то биткойна.",
-      "message": "Вы можете получить биткойн на бирже обмена (например {exchange}), через биткойн-банкомат (например {atm}) или у криптоброкера (e.g. {broker}) и т.д.."
+      "headline": "Naskenujte Dýško-Kartu a získejte nějaké bitcoiny.",
+      "message": "You can also get bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "introMessageAlreadyUsed": {
-      "headline": "It seems that this QR code has already been used.",
+      "headline": "Zdá se, že tento QR kód již byl použit.",
       "message": "But don't worry: You can get your own bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "introMessageJustReceived": {
-      "headline": "Your QR code has just been used. {emoji}",
+      "headline": "Váš QR kód byl právě použit. {emoji}",
       "message": "You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "sectionBitcoin": {
       "paragraphs": {
-        "0": "Bitcoin is a <strong>digital currency</strong>.",
-        "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",
-        "2": "Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!"
+        "0": "Bitcoin je <strong>digitální měna</strong>.",
+        "1": "Je spravován všemi členy bitcoinové sítě, což znamená, že <strong>není pod kontrolou</strong> žádné centrální banky, vlády nebo společnosti.",
+        "2": "Transakce (včetně mezinárodních) jsou stejně snadné jako skenování QR kódu. Jen to zkuste!"
       }
     },
     "sectionWallet": {
-      "headline": "Download a wallet",
-      "explanation": "To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.<br>For every-day use and small amounts, a smartphone app is most convenient.",
-      "recommendation": "For starters we recommend {walletOfSatoshi}.",
-      "button": "Download Wallet of Satoshi",
-      "other": "You can also try {wallet0}, {wallet1}, {wallet2} or any other Lightning wallet*.",
-      "otherFootnote": "* that understands Lightning and LNURL"
+      "headline": "Stáhněte si peněženku",
+      "explanation": "Chcete-li přijímat, ukládat a utrácet své bitcoiny, potřebujete <strong>peněženku Lightning</strong>.<br>Pro každodenní použití a malé množství je nejvhodnější aplikace pro chytré telefony.",
+      "recommendation": "Pro začátek doporučujeme {walletOfSatoshi}.",
+      "button": "Stáhnout Wallet of Satoshi",
+      "other": "Můžete také vyzkoušet {wallet0}, {wallet1}, {wallet2}, nebo jakoukoli jinou peněženku Lightning*.",
+      "otherFootnote": "* který chápe Lightning a LNURL"
     },
     "sectionReceive": {
-      "headline": "Receive your bitcoin",
+      "headline": "Získejte svůj bitcoin",
       "statusNormal": {
-        "explanation": "As soon as your wallet is installed,",
-        "step1": "<strong>tap</strong> the QR code below, or",
-        "step2": "<strong>scan</strong> the QR code on your tip card again<br>(using your wallet app)"
+        "explanation": "Jakmile je vaše peněženka nainstalována,",
+        "step1": "<strong>klepněte</strong> na QR kód níže, nebo",
+        "step2": "<strong>znovu naskenujte</strong> QR kód na Dýško-Kartě<br>(pomocí aplikace Peněženka)"
       },
       "statusReceived": {
-        "congrats": "Congrats!",
-        "message": "The bitcoin were just transferred to your wallet."
+        "congrats": "Gratulujeme!",
+        "message": "Bitcoin byl právě přenesen do vaší peněženky."
       }
     },
     "sectionUse": {
-      "headline": "Use your bitcoin",
-      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl* them.",
-      "messageFootnote": "* to hodl = to hold, to save up",
-      "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
+      "headline": "Použijte svůj bitcoin",
+      "message": "Nyní můžete své bitcoiny utratit v obchodě nebo na webu, který bitcoiny přijímá, přenést je do Lightning peněženky svého přítele nebo kolegy nebo je jen hodl*.",
+      "messageFootnote": "* to hodl = hold - držet (angličtině), ušetřit",
+      "examplesIntro": "Zde je několik webových stránek, kde můžete platit Bitcoiny přes Lightning:",
       "examples": {
-        "saltNDaisy": "Buy some sustainable granola",
-        "satoshistore": "Shop Bitcoin Outfits",
-        "aprycotMedia": "Bitcoin books, media and more",
-        "copiaro": "Hardware Wallets & HODL tools",
-        "lightningnetworkstores": "Find out what else you could do online",
-        "coinpages": "Find stores that accept bitcoin"
+        "saltNDaisy": "Kupte si udržitelnou granolu",
+        "satoshistore": "Nakupujte Bitcoinové Oblečení",
+        "aprycotMedia": "Bitcoin Knihy, média a další",
+        "copiaro": "Hardwarové peněženky a nástroje HODL",
+        "lightningnetworkstores": "Zjistěte, co jiného můžete dělat online",
+        "coinpages": "Najděte obchody, které přijímají bitcoiny"
       },
-      "createYourOwnTipCardsHeadline": "Create your own Tip Cards",
-      "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.",
-      "createYourOwnTipCardsButton": "Create my own Tip Cards"
+      "createYourOwnTipCardsHeadline": "Vytvořte si vlastní Dýško-Karty",
+      "createYourOwnTipCardsText": "Chtěli byste dát svým přátelům nebo kolegům pár Sat (1 Sat = 0.00000001 Bitcoin) nebo dát někomu spropitné v Bitcoin? Klikněte na následující tlačítko a nakonfigurujte své osobní Dýško-Karty.",
+      "createYourOwnTipCardsButton": "Vytvořte si vlastní Dýško-Karty"
     },
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
-      "errorInvalidLandingPage": "Unable to load custom landing page."
+      "errorInvalidLnurl": "Zdá se, že LNURL není z platné Dýško-Karty.",
+      "errorInvalidLandingPage": "Nelze načíst vlastní vstupní stránku."
     }
   },
   "funding": {
-    "title": "Fund your Tip Card",
-    "headline": "Fund this Tip Card",
-    "headlineFunded": "Tip Card has been funded",
-    "headlineUsed": "Tip Card successfully redeemed",
-    "headlineSetFunding": "Tip Card Funding",
-    "text": "This tip card has not been funded with sats yet. Specify the amount and the message you want the recipient to see in their wallet.",
-    "textFunded": "This Tip Card is already funded with ({amountAndUnit}) and can be given to somebody who is in need of some orange pilling.",
-    "textUsed": "This card was funded with {amountAndUnit} and has been redeemed.",
-    "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
+    "title": "Financujte svou Dýško-Kartu",
+    "headline": "Financujte tuto Dýško-Kartu",
+    "headlineFunded": "Dýško-Karta byla financována",
+    "headlineUsed": "Dýško-Karta úspěšně uplatněna",
+    "headlineSetFunding": "Financování Dýško-Karty",
+    "text": "Tato Dýško-Karta ještě nebyla financována sats. Zadejte částku a zprávu, kterou má příjemce vidět ve své peněžence.",
+    "textFunded": "Tato Dýško-Karta je již financována ({amountAndUnit}) a může být podána někomu, kdo potřebuje oranžovou pilulku.",
+    "textUsed": "Tato Dýško-Karta byla financována {amountAndUnit} a byla vykoupena.",
+    "textSetFunding": "Tato Dýško-Karta bude financována, jakmile bude zaplacena Lightning faktura sady. Prosím, vraťte se později.",
     "amountAndUnit": "{amount} BTC",
     "form": {
-      "textHint": "Will be displayed in the recipient's wallet",
-      "notePlaceholder": "Notes / handed out to",
-      "noteHint": "Will be displayed on the status section of your Tip Cards set",
-      "button": "Fund card"
+      "textHint": "Zobrazí se v peněžence příjemce",
+      "notePlaceholder": "Poznámky / rozdány",
+      "noteHint": "Zobrazí se ve stavové části sady vašich Dýško-Karet",
+      "button": "Financujte kartu"
     },
-    "invoiceText": "Fund your Tip Card with {amount} sats:",
-    "invoiceExpired": "The lightning invoice for this card has expired. Please reset the Tip Card to continue.",
-    "resetInvoice": "Reset Tip Card",
-    "resetDisabledTooltip": "This card is already funded with sats.",
+    "invoiceText": "Financujte svou Dýško-Kartu {amount} sats:",
+    "invoiceExpired": "Lightning Faktura tuto kartu vypršela. Chcete-li pokračovat - resetujte Dýško-Kartu.",
+    "resetInvoice": "Resetovat Dýško-Kartu",
+    "resetDisabledTooltip": "Tato karta je již financována sats.",
     "lnurlp": {
-      "text": "Scan the QR code with your wallet app or click {buttonOpenInWallet} to fund the card. You can enter the desired amount in the wallet app."
+      "text": "Naskenujte QR kód pomocí aplikace Peněženka nebo kliknutím na {buttonOpenInWallet} kartu financujte. Požadovanou částku můžete zadat v aplikaci Peněženka."
     },
-    "lnurlpExpired": "Unfortunately the payment link for this Tip Card expired. Reset the card to continue.",
-    "lnurlpFundedExpired": "Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.",
+    "lnurlpExpired": "Platební odkaz na tuto Dýško-Kartu bohužel vypršel. Resetujte kartu a pokračujte.",
+    "lnurlpFundedExpired": "Platební odkaz na tuto Dýško-Kartu bohužel vypršel. Dokončete financování a pokračujte.",
     "shared": {
-      "text": "Scan and pay the QR Code as many times as you want and {buttonFinish} as soon as you're done.",
-      "textEmpty": "This Tip Card is still empty. As soon as there are some Sats on it you can complete the card.",
-      "textPartiallyFunded": "This Tip Card is already funded with {amountAndUnit}. As soon as you complete the funding the Bitcoin can be withdrawn.",
-      "buttonFinish": "Complete Funding",
-      "finishDisabledTooltip": "You need to fund this card first.",
-      "buttonMakeShared": "Activate shared funding on this Tip Card"
+      "text": "Naskenujte a zaplaťte QR kód tolikrát, kolikrát chcete, a stiskněte tlačítko {buttonFinish}, jakmile budete hotovi.",
+      "textEmpty": "Tato Dýško-Karta je stále prázdná. Jak na kartě budou saty, můžete kartu dokončit.",
+      "textPartiallyFunded": "Tato Dýško-Karta je již financována částkou {amountAndUnit}. Jakmile dokončíte financování, může být Bitcoin stažen.",
+      "buttonFinish": "Kompletní Financování",
+      "finishDisabledTooltip": "Nejprve musíte tuto kartu financovat.",
+      "buttonMakeShared": "Aktivujte sdílené financování na této Dýško-Kartě"
     }
   },
   "setFunding": {
