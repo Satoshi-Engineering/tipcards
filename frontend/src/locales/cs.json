@@ -120,35 +120,35 @@
     }
   },
   "setFunding": {
-    "title": "Set funding",
-    "headline": "Set funding",
-    "setName": "Set name: {setName}",
+    "title": "Nastavit financování",
+    "headline": "Nastavit financování",
+    "setName": "Název sady: {setName}",
     "amountAndUnit": "{amount} BTC",
-    "text": "This set has {numberOfCardsToFund} cards with no sats on them. Specify the amount per card and the message you want the recipient to see in their wallet. The total invoice will be {amountAndUnit}.",
-    "textFundingNotPossible": "Some cards of this set have already been used. Create a new set to fund a whole set.",
-    "invoiceText": "Fund {numberOfCardsToFund} cards by paying a single invoice of {amountAndUnit}.",
+    "text": "Tato sada obsahuje {numberOfCardsToFund} kartu bez sats. Zadejte částku na kartu a zprávu, kterou má příjemce vidět ve své peněžence. Celková faktura bude {amountAndUnit}. | Tato sada obsahuje {numberOfCardsToFund} karty bez sats. Zadejte částku na kartu a zprávu, kterou má příjemce vidět ve své peněžence. Celková faktura bude {amountAndUnit}. | Tato sada obsahuje {numberOfCardsToFund} karet bez sats. Zadejte částku na kartu a zprávu, kterou má příjemce vidět ve své peněžence. Celková faktura bude {amountAndUnit}.",
+    "textFundingNotPossible": "Některé karty této sady již byly použity. Vytvořte novou sadu pro financování celé sady.",
+    "invoiceText": "Financujte {numberOfCardsToFund} kartu zaplacením jedné faktury ve výši {amountAndUnit}. | Financujte {numberOfCardsToFund} karty zaplacením jedné faktury ve výši {amountAndUnit}. | Financujte {numberOfCardsToFund} karet zaplacením jedné faktury ve výši {amountAndUnit}.",
     "textFunded": "All {numberOfCardsToFund} cards of this set have been funded with {amountAndUnitPerCard} each.",
     "form": {
-      "amountLabel": "Amount per card",
-      "smallAmountWarning": "Warning: Small amounts per card may cause issues for the recipient when trying to receive their sats. We recommend to use a minimum of 210 sats per card.",
-      "totalAmountLabel": "Total amount",
-      "textHint": "Will be displayed in the recipient's wallet",
-      "notePlaceholder": "Notes / handed out to",
-      "noteHint": "Will be displayed on the status section of your Tip Cards set",
-      "landingPagesHeadline": "Landing Page",
-      "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
-      "button": "Fund set"
+      "amountLabel": "Částka za kartu",
+      "smallAmountWarning": "Upozornění: malé částky na kartu mohou příjemci způsobit problémy při pokusu o přijetí sats. Doporučujeme použít minimálně 210 sats na kartu.",
+      "totalAmountLabel": "Částka",
+      "textHint": "Zobrazí se v peněžence příjemce",
+      "notePlaceholder": "Poznámky / rozdány",
+      "noteHint": "Zobrazí se ve stavové části sady vašich Dýško-Karet",
+      "landingPagesHeadline": "Vstupní Stránka",
+      "landingPagesHint": "Tato stránka se zobrazí, když je naskenován QR kód financované karty.",
+      "button": "Financovat sadu"
     },
-    "resetInvoice": "Reset Set Invoice",
-    "resetDisabledTooltip": "This set has already been funded",
-    "backToSet": "Back to the cards"
+    "resetInvoice": "Resetujte fakturu sady",
+    "resetDisabledTooltip": "Tato sada již byla financována",
+    "backToSet": "Zpět na karty"
   },
   "index": {
     "buttonLogin": "Login using LNURL-Auth",
     "buttonCreate": "Create your Tip Cards set ⚡",
     "savedCardsSetsHeadline": "Saved Tip Cards sets",
     "noSavedCardsSetsMessage": "No saved Tip Cards sets found in this browser",
-    "unnamedSetNameFallback": "Unnamed set",
+    "unnamedSetNameFallback": "Nepojmenovaná sada",
     "youtube": {
       "create": {
         "label": "Create",
@@ -186,7 +186,7 @@
       "defaults": {
         "cardHeadline": "Hey :)",
         "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.",
-        "invoiceText": "Have fun with Bitcoin :)"
+        "invoiceText": "Bavte se s Bitcoinem :)"
       }
     },
     "actions": {

@@ -98,7 +98,7 @@ export const setLocale = async (locale: LocaleCode | undefined = 'en') => {
 
 (async () => {
   await setLocale(getPreferredLocale())
-  await nextTick()
+  // await nextTick() // commented because nextTick() is already in setLocale -> loadLocaleMessages
   await loadLocaleMessages('en') // load EN locale so that the fallback terms are available
 })()
 
