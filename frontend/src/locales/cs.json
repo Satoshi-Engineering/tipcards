@@ -144,129 +144,129 @@
     "backToSet": "Zpět na karty"
   },
   "index": {
-    "buttonLogin": "Login using LNURL-Auth",
-    "buttonCreate": "Create your Tip Cards set ⚡",
-    "savedCardsSetsHeadline": "Saved Tip Cards sets",
-    "noSavedCardsSetsMessage": "No saved Tip Cards sets found in this browser",
+    "buttonLogin": "Přihlášení pomocí LNURL-Auth",
+    "buttonCreate": "Vytvořte si sadu Dýško-Karet ⚡",
+    "savedCardsSetsHeadline": "Uložené Dýško-Karty sady",
+    "noSavedCardsSetsMessage": "V tomto prohlížeči nebyly nalezeny žádné uložené sady Dýško-Karet",
     "unnamedSetNameFallback": "Nepojmenovaná sada",
     "youtube": {
       "create": {
-        "label": "Create",
+        "label": "Vytvořit",
         "link": "https://youtu.be/R6p7fUKu4MY"
       },
       "use": {
-        "label": "Use",
+        "label": "Použít",
         "link": "https://youtu.be/bFeEPbupdx8"
       }
     }
   },
   "cards": {
-    "title": "Tip Cards Set",
+    "title": "Sada Dýško-Karet",
     "status": {
-      "headline": "Status",
-      "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.",
-      "labelUsed": "Redeemed",
-      "labelFunded": "Funded",
-      "labelPendingFunding": "Waiting to be paid",
-      "labelPendingSharedFunding": "Shared funding in progress",
-      "labelPendingSetFunding": "Set funding in progress",
-      "labelNote": "Note",
-      "labelViewed": "Viewed by recipient",
-      "reload": "Reload"
+      "headline": "Stav",
+      "noCards": "Dosud nebyly financovány žádné Dýško-Karty. Stav všech karet z této sady najdete zde po financování vaší první Dýško-Karty.",
+      "labelUsed": "Uplatnit",
+      "labelFunded": "Financovaný",
+      "labelPendingFunding": "Čekání na zaplacení",
+      "labelPendingSharedFunding": "Probíhá sdílené financování",
+      "labelPendingSetFunding": "Nastavení financování probíhá",
+      "labelNote": "Poznámka",
+      "labelViewed": "Zobrazení příjemcem",
+      "reload": "Znovu načíst"
     },
     "settings": {
-      "headline": "Configuration",
-      "numberOfCards": "Number of cards",
-      "cardHeadline": "Card headline",
-      "cardText": "Card text",
-      "cardQrCodeLogoLabel": "Logo on QR codes",
+      "headline": "Konfigurace",
+      "numberOfCards": "Počet karet",
+      "cardHeadline": "Titulek karty",
+      "cardText": "Text karty",
+      "cardQrCodeLogoLabel": "Logo na QR kódech",
       "cardQrCodeLogo": {
-        "noLogo": "No logo"
+        "noLogo": "Žádné logo"
       },
       "defaults": {
-        "cardHeadline": "Hey :)",
-        "cardCopytext": "You got a tip. 🎉\nScan this QR code and learn how to receive bitcoin.",
+        "cardHeadline": "Ahoj :)",
+        "cardCopytext": "Dostali jste zlomkové části Bitcoinu (satoši, také sats). 🎉\nNaskenujte tento QR kód a zjistěte, jak získat své mince!",
         "invoiceText": "Bavte se s Bitcoinem :)"
       }
     },
     "actions": {
-      "headline": "Actions",
-      "printHeadline": "Print",
-      "buttonPrint": "Print Tip Cards",
-      "buttonDownloadPngs": "Download PNGs",
-      "setName": "Set name",
-      "buttonSaveCardsSet": "Save Tip Cards set",
-      "buttonDeleteCardsSet": "Delete saved set",
-      "saveHeadline": "Save",
-      "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",
-      "deleteSetConfirm": "Do you really want to delete the current Tip Cards set and its settings from this browser?",
-      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
+      "headline": "Postup",
+      "printHeadline": "Tisek",
+      "buttonPrint": "Tisk Dýško-Karty",
+      "buttonDownloadPngs": "Stáhněte si soubory PNG",
+      "setName": "Nastavit název",
+      "buttonSaveCardsSet": "Uložte sadu Dýško-Karet",
+      "buttonDeleteCardsSet": "Smazat uloženou sadu",
+      "saveHeadline": "Uložit",
+      "saveSetConfirm": "Aktuální sada Dýško-Karet bude uložena lokálně v tomto prohlížeči pomocí localStorage.\n\nMůžete také použít adresu URL (z adresního řádku) pro přístup k této sadě Dýško-Karet.\n\nPokračovat?",
+      "deleteSetConfirm": "Opravdu chcete z tohoto prohlížeče odstranit aktuální sadu Dýško-Karet a její nastavení?",
+      "deleteSetOnServerConfirm": "Opravdu chcete odstranit aktuální sadu Dýško-Karet ze serveru?",
       "setFunding": {
-        "headline": "Fund all cards",
-        "intro": "You can fund single Tip Cards by scanning the QR code of a new card. If you want to fund all cards of this set at once, use the \"Set funding\" feature.",
-        "label": "Fund all cards at once",
-        "button": "Fund set",
-        "disabledReason": "Some cards of this set have already been used. Create a new set to fund a whole set."
+        "headline": "Financujte všechny karty",
+        "intro": "Jednu kartu můžete financovat naskenováním QR kódu nové karty. Pokud chcete financovat všechny karty této sady najednou, použijte funkci \"Nastavit financování\".",
+        "label": "Financujte všechny karty najednou",
+        "button": "Financovat sadu",
+        "disabledReason": "Některé karty této sady již byly použity. Vytvořte novou sadu pro financování celé sady."
       }
     },
     "cards": {
-      "headline": "Tip Cards",
-      "filterLabel": "Display cards:",
+      "headline": "Dýško-Karty",
+      "filterLabel": "Zobrazit karty:",
       "filter": {
-        "all": "All",
-        "unfunded": "Unfunded",
-        "funded": "Funded",
-        "used": "Redeemed"
+        "all": "Všechny",
+        "unfunded": "Nefinancované",
+        "funded": "Financované",
+        "used": "Použité"
       }
     },
     "errors": {
-      "unableToSaveSet": "Unable to save set on server.",
-      "unableToDeleteSet": "Unable to delete set from server."
+      "unableToSaveSet": "Nelze uložit sadu na server.",
+      "unableToDeleteSet": "Nelze odstranit sadu ze serveru."
     }
   },
   "lightningQrCode": {
-    "buttonOpenInWallet": "Open in wallet",
+    "buttonOpenInWallet": "Otevřít v peněžence",
     "copyToClipboard": {
       "lnurl": {
-        "beforeCopy": "You can also {action} to paste it into your wallet app.",
-        "beforeCopyAction": "copy the LNURL to your clipboard",
-        "afterCopySuccess": "Copied successfully.",
-        "afterCopyNextStep": "Paste it into<br>your wallet app now :)"
+        "beforeCopy": "\"Můžete také {action} vložit do aplikace Peněženka.",
+        "beforeCopyAction": "zkopírujte LNURL do schránky",
+        "afterCopySuccess": "Úspěšně zkopírováno.",
+        "afterCopyNextStep": "Vložte jej nyní<br>do aplikace Peněženka :)"
       },
       "invoice": {
-        "beforeCopy": "You can also {action} to paste it into your wallet app.",
-        "beforeCopyAction": "copy the invoice to your clipboard",
-        "afterCopySuccess": "Copied successfully.",
-        "afterCopyNextStep": "Paste it into<br>your wallet app now :)"
+        "beforeCopy": "Můžete také {action} vložit do aplikace Peněženka.",
+        "beforeCopyAction": "zkopírujte fakturu do schránky",
+        "afterCopySuccess": "Úspěšně zkopírováno.",
+        "afterCopyNextStep": "Vložte jej nyní<br>>do aplikace Peněženka :)"
       }
     }
   },
   "auth": {
     "modalLogin": {
-      "headline": "Login using LNURL-Auth",
-      "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support.",
-      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
+      "headline": "Přihlášení pomocí LNURL-Auth",
+      "text": "Přihlaste se a užijte si některé skvělé funkce! Potřebujete aplikaci lightning, která podporuje LNURL-Auth.",
+      "loginErrorText": "Něco se pokazilo. Zkuste to prosím později nebo kontaktujte podporu.",
+      "cookieWarning": "Váš přihlášený stav bude uložen jako cookie, dokud se neodhlásíte."
     },
-    "buttonLogout": "Logout"
+    "buttonLogout": "Odhlášení"
   },
   "stores": {
     "cardsSets": {
       "errors": {
-        "unableToLoadSetsFromBackend": "Unable to load sets from the server.",
-        "unableToMigrateSets": "Migration failed. You can delete the sets manually and save them when logged in.",
-        "setBelongsToAnotherUser": "Unable to save an unnamed set, as it was already saved by another user.",
-        "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user."
+        "unableToLoadSetsFromBackend": "Nelze načíst sady ze serveru.",
+        "unableToMigrateSets": "Migrace selhala. Sady můžete odstranit ručně a uložit je při přihlášení.",
+        "setBelongsToAnotherUser": "Nelze uložit nepojmenovanou sadu, protože ji již uložil jiný uživatel.",
+        "namedSetBelongsToAnotherUser": "Nelze uložit {name}, protože byl již uložen jiným uživatelem."
       }
     }
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Sets stored in your browser (LocalStorage)",
-      "text": "You have sets stored locally. To use the LNURL-Auth feature we need to move those to the server. You can do so by clicking \"Migrate\". Alternatively you can log out again and delete them manually first.",
-      "migrate": "Migrate",
-      "logout": "Logout",
-      "confirmMigrate": "Migrate now?"
+      "headline": "Soubory uložené ve Vašem prohlížeči (místní úložiště localStorage)",
+      "text": "Máte sady uložené lokálně. Chcete-li použít funkci LNURL-Auth, musíme je přesunout na server. Můžete tak učinit kliknutím na \"Migrovat\". Případně se můžete znovu odhlásit a nejprve je ručně odstranit.",
+      "migrate": "Migrovat",
+      "logout": "Odhlášení",
+      "confirmMigrate": "Migrovat teď?"
     }
   }
 }
