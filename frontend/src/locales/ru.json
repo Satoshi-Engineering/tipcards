@@ -10,7 +10,7 @@
     "about": "О нас"
   },
   "footer": {
-    "support": "Какие либо вопросы или ваш отзыв? Или вы нашли проблему или ошибку? Не стесняйтесь связаться с нами: {email}."
+    "support": "Есть вопросы или предложения? Нашли проблему или ошибку? Свяжитесь с нами: {email}."
   },
   "landing": {
     "title": "Получите ваш биткойн",
@@ -21,54 +21,54 @@
       "amountAndUnit": "{amount} биткойн",
       "amountAndUnitBtc": "{amount} BTC",
       "footnoteFiat": "{btc} = {fiat}",
-      "footnote": "через Lightning"
+      "footnote": "через сеть Lightning"
     },
     "introMessagePreview": {
-      "headline": "Просканируйте Lightning Карту Чаевых, чтобы получить сколько-то биткойна.",
+      "headline": "Просканируйте Lightning Купон-Карту, чтобы получить немного биткойна.",
       "message": "Вы можете получить биткойн на бирже обмена (например {exchange}), через биткойн-банкомат (например {atm}) или у криптоброкера (e.g. {broker}) и т.д.."
     },
     "introMessageAlreadyUsed": {
-      "headline": "It seems that this QR code has already been used.",
+      "headline": "Похоже, что этот QR код уже был использован.",
       "message": "But don't worry: You can get your own bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "introMessageJustReceived": {
-      "headline": "Your QR code has just been used. {emoji}",
+      "headline": "Ваш QR код только что был использован. {emoji}",
       "message": "You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "sectionBitcoin": {
       "paragraphs": {
-        "0": "Bitcoin is a <strong>digital currency</strong>.",
-        "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",
-        "2": "Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!"
+        "0": "Биткойн это <strong>цифровая валюта</strong>.",
+        "1": "Он управляется всеми участниками сети, что означает, что он <strong>не подконтролен</strong> банкам, правительствам или какой либо компании.",
+        "2": "Отправка и получение (включая внутреннее использование) легко осуществляется через сканирование QR кода. Давайте попробуем!"
       }
     },
     "sectionWallet": {
-      "headline": "Download a wallet",
-      "explanation": "To receive, store and spend your bitcoin, you need a <strong>Lightning wallet</strong>.<br>For every-day use and small amounts, a smartphone app is most convenient.",
-      "recommendation": "For starters we recommend {walletOfSatoshi}.",
-      "button": "Download Wallet of Satoshi",
-      "other": "You can also try {wallet0}, {wallet1}, {wallet2} or any other Lightning wallet*.",
-      "otherFootnote": "* that understands Lightning and LNURL"
+      "headline": "Загрузить кошелёк",
+      "explanation": "Для приёма, хранения и отправки вашего биткойна, вам необходим <strong>Lightning кошелёк</strong>.<br>Для ежедневного использования и малых сумм наиболее удобны мобильные приложения в телефонах.",
+      "recommendation": "Для начинающих мы рекомендуем {walletOfSatoshi}.",
+      "button": "Загрузить Wallet of Satoshi",
+      "other": "Вы также можете попробовать {wallet0}, {wallet1}, {wallet2} или любой другой Lightning кошелёк*.",
+      "otherFootnote": "* который работает с Lightning и LNURL"
     },
     "sectionReceive": {
-      "headline": "Receive your bitcoin",
+      "headline": "Получите свои биткоины",
       "statusNormal": {
-        "explanation": "As soon as your wallet is installed,",
-        "step1": "<strong>tap</strong> the QR code below, or",
-        "step2": "<strong>scan</strong> the QR code on your tip card again<br>(using your wallet app)"
+        "explanation": "Как только ваш кошелек установлен,",
+        "step1": "<strong>коснитесь</strong> QR кода ниже, или",
+        "step2": "<strong>просканируйте</strong> QR код на вашей Купон карте снова<br>(с помощью приложения кошелька)"
       },
       "statusReceived": {
-        "congrats": "Congrats!",
-        "message": "The bitcoin were just transferred to your wallet."
+        "congrats": "Поздравляем!",
+        "message": "Биткойн был отправлен на ваш кошелёк."
       }
     },
     "sectionUse": {
-      "headline": "Use your bitcoin",
-      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl* them.",
-      "messageFootnote": "* to hodl = to hold, to save up",
-      "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
+      "headline": "Используйте ваши биткоины",
+      "message": "Теперь вы можете потратить свои биткоины в магазине или на сайте, принимающем биткоины, перевести их на кошелек Lightning вашего друга или коллеги, или просто ХОДЛить* их.",
+      "messageFootnote": "* ХОДЛить значит хранить и накапливать, это - один из множества мемов биткоин-сообщества",
+      "examplesIntro": "Вот несколько сайтов, где вы можете расплатиться биткойном через Lightning:",
       "examples": {
-        "saltNDaisy": "Buy some sustainable granola",
+        "saltNDaisy": "Купите экологически чистые мюсли",
         "satoshistore": "Shop Bitcoin Outfits",
         "aprycotMedia": "Bitcoin books, media and more",
         "copiaro": "Hardware Wallets & HODL tools",
