@@ -118,6 +118,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
       })
       if (Array.isArray(response.data)) {
         if (response.data.length === 0) {
+          console.error(ErrorCode.LnbitsLnurlpPaymentsNotFound, card.cardHash)
           break
         }
         response.data.forEach((payment) => {
