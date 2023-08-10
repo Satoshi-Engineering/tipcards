@@ -7,6 +7,7 @@ import type { Set } from '../../../src/data/Set'
 import { createUserId, type User } from '../../../src/data/User'
 import { ImageType, type ImageMeta } from '../../../src/data/Image'
 import type { LandingPage } from '../../../src/data/LandingPage'
+import { ErrorCode } from '../../../src/data/Errors'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -192,7 +193,7 @@ export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
     { LIMIT: { from: 0, size: 1000 } },
   )
   if (result.total > result.documents.length) {
-    console.error(`User ${userId} has more than ${result.documents.length} sets. This is currently not supported.`)
+    console.error(ErrorCode.TooManySetsForUser, `User ${userId} has more than ${result.documents.length} sets. This is currently not supported.`)
   }
   return result.documents
     .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:setsById:[A-z0-9-]+:data$`).test(id))
@@ -280,11 +281,13 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
   const user = result.documents
     .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:usersById:[A-z0-9-]+:data$`).test(id))
     .map(({ value }) => value as User)
-    .find((user) => user.lnurlAuthKey === lnurlAuthKey)
-  if (user == null) {
+  if (user.length === 0) {
     return null
+  } else if (user.length > 1) {
+    console.error(ErrorCode.FoundMultipleUsersForLnurlAuthKey)
+    return user.sort((a, b) => a.created - b.created)[0] // select the oldest
   }
-  return user
+  return user[0]
 }
 
 /**

@@ -37,6 +37,8 @@ export enum ErrorCode {
   RefreshTokenExpired = 'RefreshTokenExpired',
   RefreshTokenDenied = 'RefreshTokenDenied',
   LnbitsLnurlpPaymentsNotFound = 'LnbitsLnurlpPaymentsNotFound',
+  TooManySetsForUser = 'TooManySetsForUser',
+  FoundMultipleUsersForLnurlAuthKey = 'FoundMultipleUsersForLnurlAuthKey',
 }
 
 export class ErrorWithCode {
