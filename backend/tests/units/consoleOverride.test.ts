@@ -33,7 +33,10 @@ describe('Console helper which overides the default console functions', () => {
       expect(code).toBe(0)
       stdoutLines.forEach((v, i) => {
         expect(v).toMatch(new RegExp(/[[0-9\-: ]*] /g))
-        expect(v).toContain(stdoutData[i])
+        // strip ansi characters (colorization of console outputs)
+        // eslint-disable-next-line no-control-regex
+        const justText = v.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')
+        expect(justText).toContain(stdoutData[i])
       })
       stderrLines.forEach((v, i) => {
         expect(v).toMatch(new RegExp(/[[0-9\-: ]*] /g))
