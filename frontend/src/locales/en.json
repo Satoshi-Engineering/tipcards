@@ -198,7 +198,7 @@
       "buttonDownloadPngs": "Download PNGs",
       "setName": "Set name",
       "buttonSaveCardsSet": "Save Tip Cards set",
-      "buttonSaveDisabledTooltip": "You can only save new sets when you are logged in. Alternatively you can use the URL (from the address bar) to access this set.",
+      "buttonSaveDisabledTooltip": "You can only save new sets when you are logged in. Alternatively you can use the URL to access this set.",
       "buttonDeleteCardsSet": "Delete saved set",
       "saveHeadline": "Save",
       "saveSetConfirm": "The current Tip Cards set will be saved locally in this browser, using localStorage.\n\nYou can also use the URL (from the address bar) to access this Tip Cards set.\n\nContinue?",

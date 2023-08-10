@@ -213,7 +213,7 @@
       "setName": "Set-Name",
       "saveHeadline": "Speichern",
       "buttonSaveCardsSet": "Set speichern",
-      "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL (siehe Browser-Adressleiste) verwenden, um später erneut auf dieses Set zuzugreifen.",
+      "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL verwenden, um später erneut auf dieses Set zuzugreifen.",
       "buttonDeleteCardsSet": "Set löschen",
       "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
       "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
