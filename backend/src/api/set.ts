@@ -323,7 +323,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   // persist data
   try {
     await Promise.all(cardIndices.map(async (index) => {
-      const cardHash = await hashSha256(`${req.params.setId}/${index}`)
+      const cardHash = hashSha256(`${req.params.setId}/${index}`)
       await createCard({
         cardHash,
         text,
@@ -442,7 +442,7 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
       if (set == null) {
         return
       }
-      const cardHash = await hashSha256(`${set.id}/${cardIndex}`)
+      const cardHash = hashSha256(`${set.id}/${cardIndex}`)
       const card: Card | null = await getCardByHash(cardHash)
       if (card?.setFunding == null) {
         return

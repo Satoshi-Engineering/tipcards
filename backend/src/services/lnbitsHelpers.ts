@@ -460,7 +460,7 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
   try {
     // update all cards -> paid
     await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
-      const cardHash = await hashSha256(`${set.id}/${cardIndex}`)
+      const cardHash = hashSha256(`${set.id}/${cardIndex}`)
       const card: Card | null = await getCardByHash(cardHash)
       if (card?.setFunding == null) {
         return
