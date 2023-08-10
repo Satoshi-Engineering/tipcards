@@ -300,7 +300,7 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
     return user
   }
   user = {
-    id: createUserId(),
+    id: createUserId(lnurlAuthKey),
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
   }

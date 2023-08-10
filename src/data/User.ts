@@ -1,8 +1,14 @@
 import { z } from 'zod'
-
 import { randomUUID } from 'crypto'
 
-export const createUserId = () => randomUUID().replace(/-/g, '') // redis search cannot process hyphens (-) in indices
+import hashSha256 from 'backend/src/services/hashSha256'
+
+export const createUserId = (lnurlAuthKey?: string): string => {
+  if (lnurlAuthKey != null) {
+    return hashSha256(lnurlAuthKey)
+  }
+  return randomUUID().replace(/-/g, '') // redis search cannot process hyphens (-) in indices
+}
 
 export const Profile = z.object({
   email: z.string().default(''), // email is used for account recovery only. it's not even validated if it belongs to the user.
