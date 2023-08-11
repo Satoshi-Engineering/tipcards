@@ -4,10 +4,11 @@ import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunct
 import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
-import { createUserId, type User } from '../../../src/data/User'
+import type { User } from '../../../src/data/User'
 import { ImageType, type ImageMeta } from '../../../src/data/Image'
 import type { LandingPage } from '../../../src/data/LandingPage'
 import { ErrorCode } from '../../../src/data/Errors'
+import hashSha256 from './hashSha256'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -299,8 +300,9 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
   if (user != null) {
     return user
   }
+  const userId = hashSha256(lnurlAuthKey)
   user = {
-    id: createUserId(lnurlAuthKey),
+    id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
   }
