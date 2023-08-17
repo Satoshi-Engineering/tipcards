@@ -4,7 +4,7 @@ import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunct
 import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 import type { Card } from '../../../src/data/Card'
 import type { Set } from '../../../src/data/Set'
-import type { User } from '../../../src/data/User'
+import { User as ZodUser, type User } from '../../../src/data/User'
 import { ImageType, type ImageMeta } from '../../../src/data/Image'
 import type { LandingPage } from '../../../src/data/LandingPage'
 import { ErrorCode } from '../../../src/data/Errors'
@@ -289,6 +289,23 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
     return user.sort((a, b) => a.created - b.created)[0] // select the oldest
   }
   return user[0]
+}
+
+/**
+ * @throws
+ */
+export const getAllUsers = async (): Promise<User[]> => {
+  const client = await getClient()
+  const users: User[] = []
+  for await (
+    const key of client.scanIterator({
+      MATCH: `${REDIS_BASE_PATH}:usersById:*:data`,
+    })
+  ) {
+    const userResult = await client.json.get(key)
+    users.push(ZodUser.parse(userResult))
+  }
+  return users
 }
 
 /**

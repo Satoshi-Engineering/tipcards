@@ -6,12 +6,14 @@ export const Profile = z.object({
 
 export type Profile = z.infer<typeof Profile>
 
-export type User = {
-  id: string // uuid but without hyphens (see above)
-  lnurlAuthKey: string // lnurl auth key
-  created: number // unix timestamp
-  availableCardsLogos?: string[] | null // list of image ids
-  availableLandingPages?: string[] | null // list of landing page ids
-  allowedRefreshTokens?: string[][] | null // every device can have up to two valid refresh tokens. when creating a third via refreshing delete the first/oldest
-  profile?: Profile
-}
+export const User = z.object({
+  id: z.string(), // uuid but without hyphens (see above)
+  lnurlAuthKey: z.string(), // lnurl auth key
+  created: z.number(), // unix timestamp
+  availableCardsLogos: z.string().array().nullable().optional(), // list of image ids
+  availableLandingPages: z.string().array().nullable().optional(), // list of landing page ids
+  allowedRefreshTokens: z.string().array().array().nullable().optional(), // every device can have up to two valid refresh tokens. when creating a third via refreshing delete the first/oldest
+  profile: Profile.optional(),
+})
+
+export type User = z.infer<typeof User>

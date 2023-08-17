@@ -15,6 +15,7 @@ import set from './api/set'
 import withdraw from './api/withdraw'
 import statistics from './api/statistics'
 import xstAttack from './xstAttack'
+import './worker'
 
 const app = express()
 app.use(bodyParser.json())
