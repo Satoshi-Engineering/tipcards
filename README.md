@@ -55,7 +55,7 @@ git config core.hooksPath .githooks
 * Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host. The modules `rejson` and `redisearch` are required.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
   * See [Example](docs/examples/redis) 
-* Create your own wallet on https://legend.lnbits.com/ or set your preferred lnbits instance in `src/constants.ts`
+* Create your own wallet on https://legend.lnbits.com/ or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env` (see below)
 * Create a `backend/.env` file (or copy it from `backend/.env.example`) and set the following variables:
   - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
   - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
