@@ -97,7 +97,7 @@
     "amountAndUnit": "{amount} BTC",
     "form": {
       "textHint": "Zobrazí se v peněžence příjemce",
-      "notePlaceholder": "Poznámky / rozdání",
+      "notePlaceholder": "Poznámka / věnování",
       "noteHint": "Zobrazí se ve stavové části sady vašich Dýško-Karet",
       "button": "Nabijte kartu"
     },
@@ -133,7 +133,7 @@
       "smallAmountWarning": "Upozornění: malé částky na kartu mohou příjemci způsobit problémy při pokusu o přijetí satů. Doporučujeme použít minimálně 210 satů na kartu.",
       "totalAmountLabel": "Částka",
       "textHint": "Zobrazí se v peněžence příjemce",
-      "notePlaceholder": "Poznámky / rozdání",
+      "notePlaceholder": "Poznámka / věnování",
       "noteHint": "Zobrazí se ve stavové části sady vašich Dýško-Karet",
       "landingPagesHeadline": "Vstupní Stránka",
       "landingPagesHint": "Tato stránka se zobrazí, když je naskenován QR kód financované karty.",
