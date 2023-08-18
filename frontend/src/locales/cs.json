@@ -109,7 +109,7 @@
       "text": "Naskenujte QR kód pomocí lighting pěněženky nebo kliknutím na {buttonOpenInWallet} kartu nabijete. Požadovanou částku můžete zadat ve vaší penězence."
     },
     "lnurlpExpired": "Platební odkaz na tuto Dýško-Kartu bohužel vypršel. Resetujte kartu a pokračujte.",
-    "lnurlpFundedExpired": "Platební odkaz na tuto Dýško-Kartu bohužel vypršel. Dokončete nabiti a pokračujte.",
+    "lnurlpFundedExpired": "Platební odkaz na tuto Dýško-Kartu bohužel vypršel. Dokončete nabití a pokračujte.",
     "shared": {
       "text": "Naskenujte a zaplaťte QR kód tolikrát, kolikrát chcete, a stiskněte tlačítko {buttonFinish}, jakmile budete hotovi.",
       "textEmpty": "Tato Dýško-Karta je stále prázdná. Jak na kartě budou saty, můžete kartu dokončit.",
