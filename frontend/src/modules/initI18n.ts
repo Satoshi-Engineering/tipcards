@@ -1,6 +1,6 @@
 import { nextTick, computed } from 'vue'
 import { createI18n } from 'vue-i18n'
-import {czechPluralRules, russianPluralRules} from '@/modules/initI18nPlurals'
+import { czechPluralRules, russianPluralRules } from '@/modules/initI18nPlurals'
 
 import en from '@/locales/en.json'
 
