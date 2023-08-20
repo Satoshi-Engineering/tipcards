@@ -140,7 +140,7 @@
           </label>
           <div class="block leading-tight my-3">
             {{ t('setFunding.form.totalAmountLabel') }}:
-            <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (1E8), 8, 8) }) }}</strong>
+            <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / 1E8, 8, 8) }) }}</strong>
           </div>
           <label class="block mb-2">
             <input
