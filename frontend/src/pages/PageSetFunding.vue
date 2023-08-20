@@ -220,7 +220,7 @@ const amountPerCard = ref(2100)
 let textValue = ''
 
 const text = computed( {
-  get: () => { return currentLocale.value && textValue === '' ? t('cards.settings.defaults.invoiceText') : textValue },
+  get: () => currentLocale.value && textValue === '' ? t('cards.settings.defaults.invoiceText') : textValue,
   set: (val) => textValue = val,
 } )
 
