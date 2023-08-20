@@ -222,7 +222,7 @@ let textValue = ''
 const text = computed({
   get: () => currentLocale.value && textValue === '' ? t('cards.settings.defaults.invoiceText') : textValue,
   set: (val) => textValue = val,
-} )
+})
 
 const textIsDirty = ref(false)
 const note = ref<string>()
