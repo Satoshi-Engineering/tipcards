@@ -94,7 +94,8 @@ vi .env
 npm ci
 npm run build
 pm2 start build/backend/index.js
-sudo pm2 startup
+pm2 startup
+# Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
 cd ..
 ```
 
