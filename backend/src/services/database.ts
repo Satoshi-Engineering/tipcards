@@ -285,7 +285,7 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
   if (user.length === 0) {
     return null
   } else if (user.length > 1) {
-    console.error(ErrorCode.FoundMultipleUsersForLnurlAuthKey)
+    console.error(ErrorCode.FoundMultipleUsersForLnurlAuthKey, lnurlAuthKey)
     return user.sort((a, b) => a.created - b.created)[0] // select the oldest
   }
   return user[0]
