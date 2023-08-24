@@ -94,6 +94,7 @@ vi .env
 npm ci
 npm run build
 pm2 start build/backend/index.js
+sudo pm2 startup
 cd ..
 ```
 
