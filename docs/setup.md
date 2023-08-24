@@ -29,7 +29,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 3. Nodejs + Pm2
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo npm install pm2 -g
 ```
