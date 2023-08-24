@@ -1,3 +1,9 @@
+# System requirements
+- 8 gb disk space
+- 2 gb ram
+- not a big demand on the CPU
+- debian bullseye or later recommended
+
 # Install dependencies
 
 1. Git
