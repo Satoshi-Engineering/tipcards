@@ -52,7 +52,8 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # Install Tip Cards application
 
-1. Clone git project
+1. Clone git project  
+**Attention:** if you run everything directly as root, make sure to switch to another directory than `/root` (e.g. `/opt`), otherwise nginx cannot access your source files later on.
 ```bash
 git clone https://github.com/Satoshi-Engineering/tip-cards.git
 ```
@@ -110,6 +111,9 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
 sudo mkdir -p /var/www/tip-cards
 sudo ln -s `pwd`/frontend/dist /var/www/tip-cards/www
+sudo chown -R www-data:www-data /var/www/tip-cards
+# make sure www-data can read your Tip Cards files
+# e.g. if you installed the Tip Cards project directly as root then it probably cannot access /root/tip-cards
 sudo ln -s /etc/nginx/sites-available/tip-cards /etc/nginx/sites-enabled/tip-cards
 sudo /etc/init.d/nginx reload
 ```
