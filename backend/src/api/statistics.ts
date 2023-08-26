@@ -9,32 +9,11 @@ import { canAccessStatistics } from '../../../src/modules/checkAccessTokenPermis
 import { authGuardPermissions } from '../services/authGuardPermissions'
 import { authGuardAccessToken } from '../services/jwt'
 import {
-  STATISTICS_TOKENS, STATISTICS_PREPEND_FILE, STATISTICS_EXCLUDE_FILE,
+  STATISTICS_PREPEND_FILE, STATISTICS_EXCLUDE_FILE,
   LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN,
 } from '../constants'
 
-const authenticateUser = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  let token = ''
-  const bearer = req.header('StatisticsAuthorization')
-  if (bearer && bearer.startsWith('Bearer ')) {
-    token = bearer.substring(7)
-  }
-  if (STATISTICS_TOKENS.includes(token)) {
-    return next()
-  }
-
-  res
-    .status(401)
-    .json({
-      status: 'error',
-      message: 'Not authorized.',
-    })
-    .end()
-}
-
 const router = express.Router()
-
-router.use(authenticateUser)
 
 ////////////////
 //////// STATISTICS
