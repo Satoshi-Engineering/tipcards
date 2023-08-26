@@ -40,9 +40,11 @@ export enum ErrorCode {
   TooManySetsForUser = 'TooManySetsForUser',
   FoundMultipleUsersForLnurlAuthKey = 'FoundMultipleUsersForLnurlAuthKey',
   UnableToGetAllUsers = 'UnableToGetAllUsers',
+  PermissionsMissing = 'PermissionsMissing',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
+  ZodErrorParsingAccessTokenPayload = 'ZodErrorParsingAccessTokenPayload',
 }
 
 export class ErrorWithCode {

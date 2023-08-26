@@ -2,23 +2,24 @@ import express from 'express'
 
 import { ErrorCode } from '../../../src/data/Errors'
 import type { LandingPage } from '../../../src/data/LandingPage'
-import type { User } from '../../../src/data/User'
+import type { AccessTokenPayload, User } from '../../../src/data/User'
 
 import { getUserById, getLandingPage } from '../services/database'
 import { authGuardAccessToken } from '../services/jwt'
 
 const router = express.Router()
 
-router.get('/', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
-  if (typeof res.locals.jwtPayload?.id !== 'string') {
-    res.status(400).json({
+router.get('/', authGuardAccessToken, async (_, res) => {
+  const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
+  if (accessTokenPayload == null) {
+    res.status(401).json({
       status: 'error',
-      message: 'Invalid input.',
-      code: ErrorCode.InvalidInput,
+      message: 'Authorization payload missing.',
+      code: ErrorCode.AccessTokenMissing,
     })
     return
   }
-  const userId: string = res.locals.jwtPayload.id
+  const userId: string = accessTokenPayload.id
 
   // load user from database
   let user: User | null = null

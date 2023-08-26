@@ -14,22 +14,24 @@ import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../
 import type { Card } from '../../../src/data/Card'
 import type { Settings, Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+import { AccessTokenPayload } from '../../../src/data/User'
 
 const router = express.Router()
 
 /**
  * get all sets from the current user
  */
-router.get('/', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
-  if (typeof res.locals.jwtPayload?.id !== 'string') {
-    res.status(400).json({
+router.get('/', authGuardAccessToken, async (_, res) => {
+  const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
+  if (accessTokenPayload == null) {
+    res.status(401).json({
       status: 'error',
-      message: 'Invalid input.',
-      code: ErrorCode.InvalidInput,
+      message: 'Authorization payload missing.',
+      code: ErrorCode.AccessTokenMissing,
     })
     return
   }
-  const userId: string = res.locals.jwtPayload.id
+  const userId: string = accessTokenPayload.id
 
   // load set from database
   let sets: Set[] | null = null
@@ -51,16 +53,17 @@ router.get('/', authGuardAccessToken, async (req: express.Request, res: express.
   })
 })
 
-router.post('/:setId', authGuardAccessToken, async (req: express.Request, res: express.Response) => {
-  if (typeof res.locals.jwtPayload?.id !== 'string') {
-    res.status(400).json({
+router.post('/:setId', authGuardAccessToken, async (req, res) => {
+  const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
+  if (accessTokenPayload == null) {
+    res.status(401).json({
       status: 'error',
-      message: 'Invalid input.',
-      code: ErrorCode.InvalidInput,
+      message: 'Authorization payload missing.',
+      code: ErrorCode.AccessTokenMissing,
     })
     return
   }
-  const userId: string = res.locals.jwtPayload.id
+  const userId: string = accessTokenPayload.id
   let settings: Settings | null | undefined = undefined
   let created: number | undefined = undefined
   let date: number | undefined = undefined

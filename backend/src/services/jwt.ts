@@ -5,9 +5,13 @@ import {
   importSPKI, importPKCS8, exportSPKI, exportPKCS8,
   errors,
 } from 'jose'
+import { ZodError } from 'zod'
 
 import { ErrorCode } from '../../../src/data/Errors'
-import type { User } from '../../../src/data/User'
+import {
+  type User,
+  AccessTokenPayload as ZodAccessTokenPayload, AccessTokenPayload,
+} from '../../../src/data/User'
 
 import { getUserById, updateUser } from './database'
 
@@ -55,9 +59,10 @@ export const createRefreshToken = async ({ id, lnurlAuthKey }: User) => {
     .sign(privateKey)
 }
 
-export const createAccessToken = async ({ id, lnurlAuthKey }: User) => {
+export const createAccessToken = async ({ id, lnurlAuthKey, permissions }: User) => {
   const { privateKey } = await loadKeys()
-  return new SignJWT({ id, lnurlAuthKey })
+  const payload: AccessTokenPayload = { id, lnurlAuthKey, permissions }
+  return new SignJWT(payload)
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer(ISSUER)
@@ -209,7 +214,7 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
       })
       return
     }
-    res.locals.jwtPayload = payload
+    res.locals.accessTokenPayload = ZodAccessTokenPayload.parse(payload)
     next()
   } catch (error) {
     let message = 'Invalid authorization token.'
@@ -217,6 +222,10 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
     if (error instanceof errors.JWTExpired) {
       message = 'Authorization expired.'
       code = ErrorCode.AccessTokenExpired
+    } else if (error instanceof ZodError) {
+      message = 'JWT payload parsing failed.'
+      code = ErrorCode.ZodErrorParsingAccessTokenPayload
+      console.error(code, error)
     }
     res.status(401).json({
       status: 'error',
