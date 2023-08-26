@@ -14,7 +14,7 @@ import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../
 import type { Card } from '../../../src/data/Card'
 import type { Settings, Set } from '../../../src/data/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { AccessTokenPayload } from '../../../src/data/User'
+import type { AccessTokenPayload } from '../../../src/data/User'
 
 const router = express.Router()
 

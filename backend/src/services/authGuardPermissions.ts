@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 
 import type { CheckAccessTokenPermissions } from '../../../src/modules/checkAccessTokenPermissions'
-import { AccessTokenPayload } from '../../../src/data/User'
+import type { AccessTokenPayload } from '../../../src/data/User'
 import { ErrorCode } from '../../../src/data/Errors'
 
 export const authGuardPermissions = (callable: CheckAccessTokenPermissions) =>
