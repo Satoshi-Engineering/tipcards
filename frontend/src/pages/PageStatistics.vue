@@ -6,29 +6,11 @@
       </HeadlineDefault>
     </div>
 
-    <div v-if="statistics == null" class="p-4">
-      <form @submit.prevent="onSubmit">
-        <label class="block mb-1">
-          <span class="block">
-            Statistics Auth Token:
-          </span>
-          <input
-            v-model="apiKeyInputValue"
-            type="password"
-            autocomplete="current-password"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
-            :disabled="fetching"
-          >
-        </label>
-        <ButtonDefault
-          type="submit"
-          class="text-sm mt-4"
-          :loading="fetching"
-          :disabled="!apiKeyInputValue || fetching"
-        >
-          Load
-        </ButtonDefault>
-      </form>
+    <div v-if="!isLoggedIn || statistics == null" class="p-4">
+      You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
+    </div>
+    <div v-else-if="!hasPermissions">
+      You are missing permissions to access the statistics. Talk to an admin to get them.
     </div>
     <div v-else class="p-4">
       <HeadlineDefault level="h2">
@@ -145,16 +127,25 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { ref, computed, watchEffect } from 'vue'
 
+import { canAccessStatistics } from '@root/modules/checkAccessTokenPermissions'
+
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import { useUserStore } from '@/stores/user'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const SESSION_STORAGE_KEY = 'STATISTICS_KEY'
+const userStore = useUserStore()
+const { isLoggedIn, showModalLogin, accessTokenPayload } = storeToRefs(userStore)
 
-const apiKeyInputValue = ref<string | undefined>(undefined)
-let apiKey: string | null = null
+const hasPermissions = computed(() => {
+  if (accessTokenPayload.value == null) {
+    return false
+  }
+  return canAccessStatistics(accessTokenPayload.value)
+})
 
 const fetching = ref(false)
 
@@ -171,11 +162,7 @@ const loadStats = async () => {
   fetching.value = true
   let response
   try {
-    response = await axios.get(`${BACKEND_API_ORIGIN}/api/statistics`, {
-      headers: {
-        StatisticsAuthorization: `Bearer ${apiKey}`,
-      },
-    })
+    response = await axios.get(`${BACKEND_API_ORIGIN}/api/statistics`)
     fetching.value = false
     statistics.value = response.data.data
   } catch (error) {
@@ -183,28 +170,13 @@ const loadStats = async () => {
     console.error(error)
     return
   }
-
 }
 
-onMounted(async () => {
-  apiKey = sessionStorage.getItem(SESSION_STORAGE_KEY)
-  if (apiKey == null || apiKey === '') {
+watchEffect(() => {
+  if (!hasPermissions.value) {
+    statistics.value = undefined
     return
   }
-  await loadStats()
+  loadStats()
 })
-
-const onSubmit = async () => {
-  if (apiKeyInputValue.value == null) {
-    return
-  }
-  apiKey = apiKeyInputValue.value
-  await loadStats()
-  if (statistics.value == null) {
-    return
-  }
-  if (location.hostname === 'localhost') {
-    sessionStorage.setItem(SESSION_STORAGE_KEY, apiKey)
-  }
-}
 </script>

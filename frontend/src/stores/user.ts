@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
 import { ErrorCode } from '@root/data/Errors'
+import { AccessTokenPayload } from '@root/data/User'
 
 const REFRESH_ROUTE = `${BACKEND_API_ORIGIN}/api/auth/refresh`
 const STATUS_ROUTE_PREFIX = `${BACKEND_API_ORIGIN}/api/auth/status`
@@ -21,37 +22,25 @@ export const useUserStore = defineStore('user', () => {
   })
   const showModalLogin = ref(false)
   const modalLoginUserMessage = ref<string | null>()
+  const accessTokenPayload = computed(() => {
+    if (accessToken.value == null) {
+      return null
+    }
+    try {
+      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
+      return AccessTokenPayload.parse(payload)
+    } catch (error) {
+      console.error(error)
+    }
+    return null
+  })
+  const userId = computed(() => accessTokenPayload.value?.lnurlAuthKey)
+  const lnurlAuthKey = computed(() => accessTokenPayload.value?.lnurlAuthKey)
 
   watch(showModalLogin, (newVal, oldVal) => {
     if (oldVal === true && newVal === false) {
       modalLoginUserMessage.value = null
     }
-  })
-
-  const userId = computed(() => {
-    if (accessToken.value == null) {
-      return undefined
-    }
-    try {
-      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
-      return payload.id
-    } catch (error) {
-      console.error(error)
-    }
-    return undefined
-  })
-
-  const lnurlAuthKey = computed(() => {
-    if (accessToken.value == null) {
-      return undefined
-    }
-    try {
-      const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
-      return payload.lnurlAuthKey
-    } catch (error) {
-      console.error(error)
-    }
-    return undefined
   })
 
   const login = async (hash: string) => {
@@ -197,5 +186,9 @@ export const useUserStore = defineStore('user', () => {
     })
   })
 
-  return { isLoggedIn, showModalLogin, modalLoginUserMessage, userId, lnurlAuthKey, accessToken, login, logout }
+  return {
+    isLoggedIn, showModalLogin, modalLoginUserMessage,
+    userId, lnurlAuthKey, accessToken, accessTokenPayload,
+    login, logout,
+  }
 })
