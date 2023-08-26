@@ -6,13 +6,16 @@
       </HeadlineDefault>
     </div>
 
-    <div v-if="!isLoggedIn || statistics == null" class="p-4">
+    <div v-if="!isLoggedIn" class="p-4">
       You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
     </div>
     <div v-else-if="!hasPermissions">
       You are missing permissions to access the statistics. Talk to an admin to get them.
     </div>
-    <div v-else class="p-4">
+    <div v-else-if="fetching">
+      Fetching data from backend ...
+    </div>
+    <div v-else-if="statistics != null" class="p-4">
       <HeadlineDefault level="h2">
         Weekly
       </HeadlineDefault>
