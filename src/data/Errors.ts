@@ -39,7 +39,10 @@ export enum ErrorCode {
   LnbitsLnurlpPaymentsNotFound = 'LnbitsLnurlpPaymentsNotFound',
   TooManySetsForUser = 'TooManySetsForUser',
   FoundMultipleUsersForLnurlAuthKey = 'FoundMultipleUsersForLnurlAuthKey',
-  UnableToGetAllUsers = 'UnableToGetAllUsers'
+  UnableToGetAllUsers = 'UnableToGetAllUsers',
+
+  ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
+  ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
 }
 
 export class ErrorWithCode {

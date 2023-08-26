@@ -281,7 +281,15 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
   const result = await client.ft.search(INDEX_USER_BY_LNURL_AUTH_KEY, `@lnurlAuthKey:${lnurlAuthKey}`)
   const user = result.documents
     .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:usersById:[A-z0-9-]+:data$`).test(id))
-    .map(({ value }) => value as User)
+    .map(({ value }) => {
+      try {
+        return ZodUser.parse(value)
+      } catch (error) {
+        console.error(ErrorCode.ZodErrorParsingUserByLnurlAuthKey, lnurlAuthKey, error)
+        return null
+      }
+    })
+    .filter((user) => user != null) as User[]
   if (user.length === 0) {
     return null
   } else if (user.length > 1) {
@@ -303,7 +311,11 @@ export const getAllUsers = async (): Promise<User[]> => {
     })
   ) {
     const userResult = await client.json.get(key)
-    users.push(ZodUser.parse(userResult))
+    try {
+      users.push(ZodUser.parse(userResult))
+    } catch (error) {
+      console.error(ErrorCode.ZodErrorParsingUserByKey, key, error)
+    }
   }
   return users
 }
