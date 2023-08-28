@@ -230,6 +230,10 @@
   "userAccount": {
     "title": "Your Account",
     "form": {
+      "accountName": "Account name",
+      "accountNameHint": "Internal account name, if you use multiple accounts/lightning nodes.",
+      "displayName": "Display name",
+      "displayNameHint": "For future features. Used only if you want to show your name to other Tip Cards users.",
       "emailAddress": "Email address",
       "emailAddressHint": "In case you lose your lightning wallet or device that you used to authenticate.",
       "save": "Save"

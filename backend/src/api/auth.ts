@@ -288,10 +288,10 @@ router.post(
       }
       user.profile = profile
       await updateUser(user)
-      res.json({ 
+      res.json({
         status: 'success',
         data: profile,
-    })
+      })
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(403).json({

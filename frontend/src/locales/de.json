@@ -244,6 +244,10 @@
   "userAccount": {
     "title": "Dein Account",
     "form": {
+      "accountName": "Account Name",
+      "accountNameHint": "Interne Account Bezeichnung, falls du mehrere Accounts/Lightning Nodes benutzt.",
+      "displayName": "Anzeige Name",
+      "displayNameHint": "Für zukünftige Features. Wird nur verwendet falls du anderen Tip Cards Nutzern deinen Namen anzeigen möchtest.",
       "emailAddress": "E-Mail-Adresse",
       "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
       "save": "Speichern"

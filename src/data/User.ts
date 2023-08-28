@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 export const Profile = z.object({
+  accountName: z.string().default(''), // for support and for the user if he has more than one accounts
+  displayName: z.string().default(''), // for future features where the name might be displayed
   email: z.string().default(''), // email is used for account recovery only. it's not even validated if it belongs to the user.
 }).default({})
 

@@ -9,6 +9,30 @@
     <form class="block my-10" @submit.prevent="save">
       <label class="block mb-2">
         <span class="block">
+          {{ $t('userAccount.form.accountName') }}:
+        </span>
+        <input
+          v-model.lazy.trim="profileInternal.accountName"
+          type="text"
+          class="w-full border my-1 px-3 py-2 focus:outline-none"
+          :disabled="fetching || saving"
+        >
+        <small class="block">({{ $t('userAccount.form.accountNameHint') }})</small>
+      </label>
+      <label class="block mb-2">
+        <span class="block">
+          {{ $t('userAccount.form.displayName') }}:
+        </span>
+        <input
+          v-model.lazy.trim="profileInternal.displayName"
+          type="text"
+          class="w-full border my-1 px-3 py-2 focus:outline-none"
+          :disabled="fetching || saving"
+        >
+        <small class="block">({{ $t('userAccount.form.displayNameHint') }})</small>
+      </label>
+      <label class="block mb-2">
+        <span class="block">
           {{ $t('userAccount.form.emailAddress') }}:
         </span>
         <input
