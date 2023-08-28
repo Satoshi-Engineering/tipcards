@@ -7,7 +7,11 @@ import cookieParser from 'cookie-parser'
 
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
 import { createAccessToken, createRefreshToken, authGuardRefreshToken, cycleRefreshToken } from '../services/jwt'
-import { LNBITS_ORIGIN, TIPCARDS_ORIGIN, LNBITS_ADMIN_KEY } from '../constants'
+import {
+  LNURL_PORT,
+  TIPCARDS_ORIGIN, TIPCARDS_AUTH_ORIGIN,
+  LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
+} from '../constants'
 
 import { Profile } from '../../../src/data/User'
 import { ErrorCode } from '../../../src/data/Errors'
@@ -16,8 +20,8 @@ import { ErrorCode } from '../../../src/data/Errors'
 // LNURL SERVICE
 const lnurlServer = lnurl.createServer({
   host: 'localhost',
-  port: process.env.LNURL_PORT || 4001,
-  url: process.env.TIPCARDS_API_ORIGIN || 'https://dev.tipcards.sate.tools',
+  port: LNURL_PORT,
+  url: TIPCARDS_AUTH_ORIGIN,
   lightning: {
     backend: 'lnbits',
     config: {

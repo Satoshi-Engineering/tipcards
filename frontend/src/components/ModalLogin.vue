@@ -52,7 +52,7 @@ import ButtonDefault from '@/components/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import { useUserStore } from '@/stores/user'
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 defineEmits(['close'])
 const userStore = useUserStore()
@@ -68,7 +68,7 @@ let socket: Socket
 
 onBeforeMount(async () => {
   try {
-    const response = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/create`)
+    const response = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/create`)
     if (response.data.status === 'success') {
       lnurl.value = response.data.data.encoded
       hash.value = response.data.data.hash
@@ -81,7 +81,7 @@ onBeforeMount(async () => {
   error.value = false
 })
 const connectSocket = () => {
-  socket = io(BACKEND_API_ORIGIN)
+  socket = io(TIPCARDS_AUTH_ORIGIN)
   socket.on('error', () => {
     error.value = true
   })
@@ -92,7 +92,7 @@ const connectSocket = () => {
     await login(hash.value)
     modalLoginUserMessage.value = null
     try {
-      const { data } = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/profile`)
+      const { data } = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`)
       if (typeof data.data?.email !== 'string' || data.data.email.length === 0) {
         missingEmail.value = true
       }

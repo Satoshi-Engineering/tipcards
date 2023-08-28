@@ -3,12 +3,12 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { BACKEND_API_ORIGIN, TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import { ErrorCode } from '@root/data/Errors'
 import { AccessTokenPayload } from '@root/data/User'
 
-const REFRESH_ROUTE = `${BACKEND_API_ORIGIN}/api/auth/refresh`
-const STATUS_ROUTE_PREFIX = `${BACKEND_API_ORIGIN}/api/auth/status`
+const REFRESH_ROUTE = `${TIPCARDS_AUTH_ORIGIN}/api/auth/refresh`
+const STATUS_ROUTE_PREFIX = `${TIPCARDS_AUTH_ORIGIN}/api/auth/status`
 
 export const useUserStore = defineStore('user', () => {
   const { t } = useI18n()
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', () => {
   const logout = async () => {
     accessToken.value = null
     try {
-      await axios.post(`${BACKEND_API_ORIGIN}/api/auth/logout`)
+      await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/logout`)
     } catch (error) {
       console.error(error)
     }

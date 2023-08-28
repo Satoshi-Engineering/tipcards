@@ -88,7 +88,7 @@ import { storeToRefs } from 'pinia'
 
 import { Profile } from '@root/data/User'
 
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import { useUserStore } from '@/stores/user' 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -108,7 +108,7 @@ const fetching = ref(false)
 onBeforeMount(async () => {
   fetching.value = true
   try {
-    const { data } = await axios.get(`${BACKEND_API_ORIGIN}/api/auth/profile`)
+    const { data } = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`)
     profile.value = Profile.parse(data.data)
     Object.assign(profileInternal, profile.value)
   } catch (error) {
@@ -124,7 +124,7 @@ const save = async () => {
   profileUserErrorMessages.value = []
   saving.value = true
   try {
-    const { data } = await axios.post(`${BACKEND_API_ORIGIN}/api/auth/profile`, profileInternal)
+    const { data } = await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`, profileInternal)
     profile.value = Profile.parse(data.data)
   } catch (error) {
     console.error(error)
@@ -147,7 +147,7 @@ const logoutAllOtherDevices = async () => {
   loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
-    await axios.post(`${BACKEND_API_ORIGIN}/api/auth/logoutAllOtherDevices`)
+    await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/logoutAllOtherDevices`)
   loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
     console.error(error)
