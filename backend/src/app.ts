@@ -2,6 +2,7 @@ import bodyParser from 'body-parser'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
+
 import assets from './api/assets'
 import auth from './api/auth'
 import card from './api/card'
@@ -17,9 +18,25 @@ import statistics from './api/statistics'
 import xstAttack from './xstAttack'
 import './worker'
 
+import {
+  TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN,
+  TIPCARDS_AUTH_ORIGIN,
+} from './constants'
+
+const whitelist = [TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, TIPCARDS_AUTH_ORIGIN, 'http://localhost:5173']
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    if (typeof origin === 'string' && !whitelist.includes(origin)) {
+      callback(new Error('Not allowed by CORS'))
+      return
+    }
+    callback(null, true)
+  },
+}
+
 const app = express()
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors(corsOptions))
 app.use(helmet())
 app.use(xstAttack())
 app.use('/api/assets', assets)
