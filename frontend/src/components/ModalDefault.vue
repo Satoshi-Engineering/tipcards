@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-center items-center fixed top-0 left-0 right-0 w-full h-full p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
+    class="flex justify-center items-center fixed z-10 top-0 left-0 right-0 w-full h-full p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
     @click="onBackdropClick"
   >
     <div

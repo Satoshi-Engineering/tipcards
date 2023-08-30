@@ -1,5 +1,5 @@
 <template>
-  <ModalDefault :headline="$t('localStorageDeprecation.modalHeadline')">
+  <ModalDefault :headline="$t('localStorageDeprecation.modalHeadline')" @close="$emit('close')">
     <template #default>
       <ParagraphDefault>
         {{ $t('localStorageDeprecation.modalText') }}
