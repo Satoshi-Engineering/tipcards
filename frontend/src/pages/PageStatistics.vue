@@ -9,10 +9,10 @@
     <div v-if="!isLoggedIn" class="p-4">
       You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
     </div>
-    <div v-else-if="!hasPermissions">
+    <div v-else-if="!hasPermissions" class="p-4">
       You are missing permissions to access the statistics. Talk to an admin to get them.
     </div>
-    <div v-else-if="fetching">
+    <div v-else-if="fetching" class="p-4">
       Fetching data from backend ...
     </div>
     <div v-else-if="statistics != null" class="p-4">
