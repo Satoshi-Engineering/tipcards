@@ -121,10 +121,13 @@ export const useUserStore = defineStore('user', () => {
   })()
 
   axios.interceptors.request.use(async (config) => {
+    console.warn('interceptor', config.url, config.withCredentials)
     if (config.url != null && new URL(config.url).origin === TIPCARDS_AUTH_ORIGIN) {
       config.withCredentials = true
+      console.warn('for fil', config.withCredentials)
     }
     if (config.url === REFRESH_ROUTE || config.url?.startsWith(STATUS_ROUTE_PREFIX)) {
+      console.warn(config.withCredentials)
       return config
     }
     if (
