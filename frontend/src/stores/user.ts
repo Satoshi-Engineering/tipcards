@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
     }
     refreshingAccessToken = true
     try {
-      const response = await axios.get(REFRESH_ROUTE,{ withCredentials: true })
+      const response = await axios.get(REFRESH_ROUTE)
       if (typeof response.data.data?.accessToken === 'string') {
         accessToken.value = response.data.data.accessToken
       } else {
@@ -121,6 +121,9 @@ export const useUserStore = defineStore('user', () => {
   })()
 
   axios.interceptors.request.use(async (config) => {
+    if (config.url != null && new URL(config.url).origin === TIPCARDS_AUTH_ORIGIN) {
+      config.withCredentials = true
+    }
     if (config.url === REFRESH_ROUTE || config.url?.startsWith(STATUS_ROUTE_PREFIX)) {
       return config
     }
