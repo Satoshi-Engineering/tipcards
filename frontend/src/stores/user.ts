@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', () => {
     }
     refreshingAccessToken = true
     try {
-      const response = await axios.get(REFRESH_ROUTE)
+      const response = await axios.get(REFRESH_ROUTE,{ withCredentials: true })
       if (typeof response.data.data?.accessToken === 'string') {
         accessToken.value = response.data.data.accessToken
       } else {

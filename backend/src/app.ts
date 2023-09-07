@@ -32,6 +32,7 @@ const corsOptions: cors.CorsOptions = {
     }
     callback(null, true)
   },
+  credentials: true,
 }
 
 const app = express()
