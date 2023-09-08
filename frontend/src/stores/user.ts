@@ -112,13 +112,6 @@ export const useUserStore = defineStore('user', () => {
       refreshingAccessToken = false
     }
   }
-  (async () => {
-    try {
-      await refreshAccessToken()
-    } catch (error) {
-      // initial check - user remains logged out
-    }
-  })()
 
   axios.interceptors.request.use(async (config) => {
     console.warn('interceptor', config.url, config.withCredentials)
@@ -191,6 +184,14 @@ export const useUserStore = defineStore('user', () => {
       },
     })
   })
+
+  ;(async () => {
+    try {
+      await refreshAccessToken()
+    } catch (error) {
+      // initial check - user remains logged out
+    }
+  })()
 
   return {
     isLoggedIn, showModalLogin, modalLoginUserMessage,
