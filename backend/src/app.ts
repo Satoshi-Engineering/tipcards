@@ -27,7 +27,7 @@ const whitelist = [TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, TIPCARDS_AUTH_ORIGIN, '
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     if (typeof origin === 'string' && !whitelist.includes(origin)) {
-      callback(new Error('Not allowed by CORS'))
+      callback(null, false)
       return
     }
     callback(null, true)
