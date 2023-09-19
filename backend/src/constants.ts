@@ -55,7 +55,20 @@ let TIPCARDS_AUTH_ORIGIN = TIPCARDS_API_ORIGIN
 if (typeof process.env.TIPCARDS_AUTH_ORIGIN === 'string' && process.env.TIPCARDS_AUTH_ORIGIN.length > 0) {
   TIPCARDS_AUTH_ORIGIN = process.env.TIPCARDS_AUTH_ORIGIN
 }
-export { TIPCARDS_AUTH_ORIGIN }
+
+let CORS_WHITELIST_EXTEND: string[] = []
+if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {
+  try {
+    CORS_WHITELIST_EXTEND = z.string().array().parse(JSON.parse(process.env.CORS_WHITELIST_EXTEND))
+  } catch (error) {
+    console.error(ErrorCode.UnableToParseEnvVar, {
+      error,
+      constant: 'CORS_WHITELIST_EXTEND',
+      envValue: process.env.CORS_WHITELIST_EXTEND,
+    })
+  }
+}
+export { TIPCARDS_AUTH_ORIGIN, CORS_WHITELIST_EXTEND }
 
 export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
@@ -68,7 +81,7 @@ let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = {}
 if (typeof process.env.JWT_AUDIENCES_PER_ISSUER === 'string' && process.env.JWT_AUDIENCES_PER_ISSUER.length > 0) {
   try {
     JWT_AUDIENCES_PER_ISSUER = z
-      .record(z.string().min(1), z.array(z.string()))
+      .record(z.string().min(1), z.string().array())
       .parse(JSON.parse(process.env.JWT_AUDIENCES_PER_ISSUER))
   } catch (error) {
     console.error(ErrorCode.UnableToParseEnvVar, {

@@ -19,11 +19,18 @@ import xstAttack from './xstAttack'
 import './worker'
 
 import {
-  TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN,
-  TIPCARDS_AUTH_ORIGIN,
+  TIPCARDS_ORIGIN,
+  CORS_WHITELIST_EXTEND,
+  JWT_AUDIENCES_PER_ISSUER,
 } from './constants'
 
-const whitelist = [TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, TIPCARDS_AUTH_ORIGIN, 'http://localhost:5173']
+const whitelist = [
+  TIPCARDS_ORIGIN,
+  ...CORS_WHITELIST_EXTEND,
+  ...Object
+    .values(JWT_AUDIENCES_PER_ISSUER)
+    .reduce((audiences, audiencesPerIssuer) => [...audiences, ...audiencesPerIssuer], []),
+]
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     if (typeof origin === 'string' && !whitelist.includes(origin)) {
