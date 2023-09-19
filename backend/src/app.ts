@@ -15,6 +15,7 @@ import lnurlp from './api/lnurlp'
 import set from './api/set'
 import withdraw from './api/withdraw'
 import statistics from './api/statistics'
+import { getAllLandingPages } from './services/database'
 import xstAttack from './xstAttack'
 import './worker'
 
@@ -31,6 +32,19 @@ const whitelist = [
     .values(JWT_AUDIENCES_PER_ISSUER)
     .reduce((audiences, audiencesPerIssuer) => [...audiences, ...audiencesPerIssuer], []),
 ]
+;(async () => {
+  try {
+    const landingPages = await getAllLandingPages()
+    landingPages.forEach((landingPage) => {
+      if (landingPage.url == null) {
+        return
+      }
+      whitelist.push(new URL(landingPage.url).origin)
+    })
+  } catch (error) {
+    console.error('Unable to load landingPages for cors whitelisting', error)
+  }
+})()
 const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     if (typeof origin === 'string' && !whitelist.includes(origin)) {

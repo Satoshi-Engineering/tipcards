@@ -439,3 +439,20 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
   const landingPage: LandingPage | null = await client.json.get(`${REDIS_BASE_PATH}:landingPagesById:${landingPageId}:data`) as LandingPage | null
   return landingPage
 }
+
+/**
+ * @throws
+ */
+export const getAllLandingPages = async (): Promise<LandingPage[]> => {
+  const client = await getClient()
+  const landingPages: LandingPage[] = []
+  for await (
+    const key of client.scanIterator({
+      MATCH: `${REDIS_BASE_PATH}:landingPagesById:*:data`,
+    })
+  ) {
+    const landingPageResult = await client.json.get(key)
+    landingPages.push(landingPageResult as LandingPage)
+  }
+  return landingPages
+}
