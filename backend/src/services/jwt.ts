@@ -233,7 +233,7 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
   }
   const appsForAuthService = Object.entries(JWT_AUDIENCES_PER_ISSUER).find(([, apps]) => apps.includes(host))
   if (appsForAuthService == null) {
-    console.error('Invalid host while checking refresh token', {
+    console.error('Invalid host while checking access token', {
       host,
       allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
     })
