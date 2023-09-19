@@ -77,7 +77,9 @@ export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || un
 
 /////
 // LNURL JWT AUTH
-let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = {}
+const defaultIssuer = new URL(TIPCARDS_AUTH_ORIGIN).host
+const defaultAudience = new URL(TIPCARDS_API_ORIGIN).host
+let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = { [defaultIssuer]: [defaultAudience] }
 if (typeof process.env.JWT_AUDIENCES_PER_ISSUER === 'string' && process.env.JWT_AUDIENCES_PER_ISSUER.length > 0) {
   try {
     JWT_AUDIENCES_PER_ISSUER = z
