@@ -320,7 +320,7 @@
     "moreInfo": "Mehr Infos",
     "modalHeadline": "Speichere deine Sets dauerhaft",
     "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
-    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 27. November 2023 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
+    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
     "modalLogin": "Sets übertragen",
     "modalClose": "Später"
   }
