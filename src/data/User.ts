@@ -17,6 +17,7 @@ export type PermissionsEnum = z.infer<typeof PermissionsEnum>
 export const User = z.object({
   id: z.string(), // uuid but without hyphens (see above)
   lnurlAuthKey: z.string(), // lnurl auth key
+  lnurlAuthHost: z.string().default('auth.tipcards.io'), // domain used for lnurl auth service, that is also issuing the jwts
   created: z.number(), // unix timestamp
   availableCardsLogos: z.string().array().nullable().optional(), // list of image ids
   availableLandingPages: z.string().array().nullable().optional(), // list of landing page ids

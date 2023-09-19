@@ -41,6 +41,7 @@ export enum ErrorCode {
   FoundMultipleUsersForLnurlAuthKey = 'FoundMultipleUsersForLnurlAuthKey',
   UnableToGetAllUsers = 'UnableToGetAllUsers',
   PermissionsMissing = 'PermissionsMissing',
+  UnableToParseEnvVar = 'UnableToParseEnvVar',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',

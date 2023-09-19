@@ -1,3 +1,7 @@
+import z from 'zod'
+
+import { ErrorCode } from '../../src/data/Errors'
+
 let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
@@ -57,3 +61,21 @@ export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
 export const STATISTICS_PREPEND_FILE = process.env.STATISTICS_PREPEND_FILE || undefined
 export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || undefined
+
+/////
+// LNURL JWT AUTH
+let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = {}
+if (typeof process.env.JWT_AUDIENCES_PER_ISSUER === 'string' && process.env.JWT_AUDIENCES_PER_ISSUER.length > 0) {
+  try {
+    JWT_AUDIENCES_PER_ISSUER = z
+      .record(z.string().min(1), z.array(z.string()))
+      .parse(JSON.parse(process.env.JWT_AUDIENCES_PER_ISSUER))
+  } catch (error) {
+    console.error(ErrorCode.UnableToParseEnvVar, {
+      error,
+      constant: 'JWT_AUDIENCES_PER_ISSUER',
+      envValue: process.env.JWT_AUDIENCES_PER_ISSUER,
+    })
+  }
+}
+export { JWT_AUDIENCES_PER_ISSUER }

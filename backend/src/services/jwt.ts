@@ -14,14 +14,11 @@ import {
 } from '../../../src/data/User'
 
 import { getUserById, updateUser } from './database'
+import { JWT_AUDIENCES_PER_ISSUER } from '../constants'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const FILENAME = 'lnurl.auth.pem'
 const alg = 'RS256'
-
-const ISSUER = 'tipcards:auth'
-const AUDIENCE_REFRESH_TOKEN = 'tipcards:auth'
-const AUDIENCE_ACCESS_TOKEN = 'tipcards'
 
 let publicKey: KeyLike
 let privateKey: KeyLike
@@ -48,30 +45,46 @@ const loadKeys = async () => {
   return { publicKey, privateKey }
 }
 
-export const createRefreshToken = async ({ id, lnurlAuthKey }: User) => {
+export const createRefreshToken = async ({ id, lnurlAuthKey }: User, issuer: string) => {
   const { privateKey } = await loadKeys()
   return new SignJWT({ id, lnurlAuthKey })
     .setProtectedHeader({ alg })
     .setIssuedAt()
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE_REFRESH_TOKEN)
+    .setIssuer(issuer)
+    .setAudience(issuer)
     .setExpirationTime('28 days')
     .sign(privateKey)
 }
 
-export const createAccessToken = async ({ id, lnurlAuthKey, permissions }: User) => {
+export const createAccessToken = async ({ id, lnurlAuthKey, permissions }: User, issuer: string, audiences: string[]) => {
   const { privateKey } = await loadKeys()
   const payload: AccessTokenPayload = { id, lnurlAuthKey, permissions }
   return new SignJWT(payload)
     .setProtectedHeader({ alg })
     .setIssuedAt()
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE_ACCESS_TOKEN)
+    .setIssuer(issuer)
+    .setAudience(audiences)
     .setExpirationTime('5 minutes')
     .sign(privateKey)
 }
 
 export const authGuardRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  const host = req.get('host')
+  if (
+    typeof host !== 'string'
+    || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(host)
+  ) {
+    console.error('Invalid host while checking refresh token', {
+      host,
+      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+
   const { publicKey } = await loadKeys()
 
   if (req.cookies?.refresh_token == null) {
@@ -85,8 +98,8 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
 
   try {
     const { payload } = await jwtVerify(req.cookies.refresh_token, publicKey, {
-      issuer: ISSUER,
-      audience: AUDIENCE_REFRESH_TOKEN,
+      issuer: host,
+      audience: host,
     })
     if (payload.exp == null || payload.exp * 1000 < + new Date()) {
       res
@@ -149,6 +162,22 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
 }
 
 export const cycleRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  const issuer = req.get('host')
+  if (
+    typeof issuer !== 'string'
+    || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(issuer)
+  ) {
+    console.error('Invalid host while cycling refresh token', {
+      host: issuer,
+      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+
   try {
     const user = await getUserById(res.locals.userId)
     if (user == null) {
@@ -158,7 +187,7 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
       })
       return
     }
-    const refreshToken = await createRefreshToken(user)
+    const refreshToken = await createRefreshToken(user, issuer)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
@@ -190,6 +219,32 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
 }
 
 export const authGuardAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+  const host = req.get('host')
+  if (typeof host !== 'string') {
+    console.error('Invalid host while checking access token', {
+      host,
+      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+  const appsForAuthService = Object.entries(JWT_AUDIENCES_PER_ISSUER).find(([, apps]) => apps.includes(host))
+  if (appsForAuthService == null) {
+    console.error('Invalid host while checking refresh token', {
+      host,
+      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+  const [issuer] = appsForAuthService
+
   const { publicKey } = await loadKeys()
 
   if (req.headers.authorization == null) {
@@ -203,8 +258,8 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
 
   try {
     const { payload } = await jwtVerify(req.headers.authorization, publicKey, {
-      issuer: ISSUER,
-      audience: AUDIENCE_ACCESS_TOKEN,
+      issuer,
+      audience: host,
     })
     if (payload.exp == null || payload.exp * 1000 < + new Date()) {
       res.status(401).json({

@@ -11,6 +11,7 @@ import {
   LNURL_PORT,
   TIPCARDS_ORIGIN, TIPCARDS_AUTH_ORIGIN,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
+  JWT_AUDIENCES_PER_ISSUER,
 } from '../constants'
 
 import { Profile } from '../../../src/data/User'
@@ -110,6 +111,22 @@ router.get('/create', async (_, res) => {
 })
 
 router.get('/status/:hash', async (req, res) => {
+  const jwtIssuer = req.get('host')
+  if (
+    typeof jwtIssuer !== 'string'
+    || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(jwtIssuer)
+  ) {
+    console.error('Invalid host while querying login status for user', {
+      host: jwtIssuer,
+      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+
   const hash = req.params.hash
   if (loggedIn[hash] == null) {
     res.status(404).json({
@@ -126,9 +143,9 @@ router.get('/status/:hash', async (req, res) => {
     return
   }
   try {
-    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
-    const refreshToken = await createRefreshToken(user)
-    const accessToken = await createAccessToken(user)
+    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash], jwtIssuer)
+    const refreshToken = await createRefreshToken(user, jwtIssuer)
+    const accessToken = await createAccessToken(user, jwtIssuer, JWT_AUDIENCES_PER_ISSUER[jwtIssuer])
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
@@ -160,7 +177,23 @@ router.get(
   cookieParser(),
   authGuardRefreshToken,
   cycleRefreshToken,
-  async (_, res) => {
+  async (req, res) => {
+    const jwtIssuer = req.get('host')
+    if (
+      typeof jwtIssuer !== 'string'
+      || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(jwtIssuer)
+    ) {
+      console.error('Invalid host while refreshing refresh token', {
+        host: jwtIssuer,
+        allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
+      })
+      res.status(400).json({
+        status: 'error',
+        data: 'Invalid auth service host.',
+      })
+      return
+    }
+
     const { userId } = res.locals
 
     try {
@@ -172,7 +205,7 @@ router.get(
         })
         return
       }
-      const accessToken = await createAccessToken(user)
+      const accessToken = await createAccessToken(user, jwtIssuer, JWT_AUDIENCES_PER_ISSUER[jwtIssuer])
       res.json({
         status: 'success',
         data: { accessToken },

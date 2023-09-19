@@ -11,6 +11,13 @@ import {
 
 const app = express()
 app.use('/api', proxy(`localhost:${EXPRESS_PORT}`, {
+  proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+    const host = srcReq.get('host')
+    if (typeof host === 'string' && proxyReqOpts.headers != null) {
+      proxyReqOpts.headers.host = host
+    }
+    return proxyReqOpts
+  },
   proxyReqPathResolver: (req: express.Request) => `/api${req.url}`,
 }))
 app.use('/socket.io', proxy(`localhost:${EXPRESS_PORT}`, {
