@@ -155,7 +155,7 @@ router.get('/status/:hash', async (req, res) => {
         expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
         httpOnly: true,
         secure: true,
-        sameSite: process.env.LNURL_AUTH_DEBUG === '1' ? false : true,
+        sameSite: false,
       })
       .json({
         status: 'success',
@@ -224,7 +224,7 @@ router.post('/logout', cookieParser(), async (req, res) => {
   res.clearCookie('refresh_token', {
     httpOnly: true,
     secure: true,
-    sameSite: true,
+    sameSite: false,
   })
   if (oldRefreshToken != null) {
     try {
