@@ -5,6 +5,7 @@ import {
   importSPKI, importPKCS8, exportSPKI, exportPKCS8,
   errors,
 } from 'jose'
+import path from 'path'
 import { ZodError } from 'zod'
 
 import { ErrorCode } from '../../../src/data/Errors'
@@ -14,10 +15,12 @@ import {
 } from '../../../src/data/User'
 
 import { getUserById, updateUser } from './database'
-import { JWT_AUDIENCES_PER_ISSUER } from '../constants'
+import { JWT_AUTH_KEY_DIRECTORY, JWT_AUDIENCES_PER_ISSUER } from '../constants'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
+const filenamePublicResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME_PUBLIC)
 const FILENAME = 'lnurl.auth.pem'
+const filenameResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME)
 const alg = 'RS256'
 
 let publicKey: KeyLike
@@ -27,17 +30,17 @@ const loadKeys = async () => {
     return { publicKey, privateKey }
   }
   try {
-    if (fs.existsSync(FILENAME_PUBLIC) && fs.existsSync(FILENAME)) {
-      let data = fs.readFileSync(FILENAME_PUBLIC, 'utf8')
+    if (fs.existsSync(filenamePublicResolved) && fs.existsSync(filenameResolved)) {
+      let data = fs.readFileSync(filenamePublicResolved, 'utf8')
       publicKey = await importSPKI(data, alg)
-      data = fs.readFileSync(FILENAME, 'utf8')
+      data = fs.readFileSync(filenameResolved, 'utf8')
       privateKey = await importPKCS8(data, alg)
     } else {
       ({ publicKey, privateKey } = await generateKeyPair(alg))
       const spkiPem = await exportSPKI(publicKey)
-      fs.writeFileSync(FILENAME_PUBLIC, spkiPem)
+      fs.writeFileSync(filenamePublicResolved, spkiPem)
       const pkcs8Pem = await exportPKCS8(privateKey)
-      fs.writeFileSync(FILENAME, pkcs8Pem)
+      fs.writeFileSync(filenameResolved, pkcs8Pem)
     }
   } catch (error) {
     console.error(error)

@@ -77,6 +77,7 @@ export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || un
 
 /////
 // LNURL JWT AUTH
+export const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
 const defaultIssuer = new URL(TIPCARDS_AUTH_ORIGIN).host
 const defaultAudience = new URL(TIPCARDS_API_ORIGIN).host
 let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = { [defaultIssuer]: [defaultAudience] }
