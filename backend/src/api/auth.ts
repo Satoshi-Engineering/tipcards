@@ -183,7 +183,7 @@ router.get(
       typeof jwtIssuer !== 'string'
       || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(jwtIssuer)
     ) {
-      console.error('Invalid host while refreshing refresh token', {
+      console.warn('Invalid host while refreshing refresh token', {
         host: jwtIssuer,
         allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
       })
