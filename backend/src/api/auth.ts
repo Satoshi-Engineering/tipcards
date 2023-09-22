@@ -5,11 +5,12 @@ import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
+import corsOptions from '../services/corsOptions'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
 import { createAccessToken, createRefreshToken, authGuardRefreshToken, cycleRefreshToken } from '../services/jwt'
 import {
   LNURL_PORT,
-  TIPCARDS_ORIGIN, TIPCARDS_AUTH_ORIGIN,
+  TIPCARDS_AUTH_ORIGIN,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUDIENCES_PER_ISSUER,
 } from '../constants'
@@ -64,9 +65,7 @@ const socketsByHash: Record<string, Socket> = {}
 const hashesBySocketId: Record<string, string> = {}
 export const initSocketIo = (server: http.Server) => {
   const io = new Server(server, {
-    cors: {
-      origin: (process.env.LNURL_AUTH_DEBUG === '1') ? '*' : TIPCARDS_ORIGIN,
-    },
+    cors: (process.env.LNURL_AUTH_DEBUG === '1') ? { origin: '*' } : corsOptions,
   })
   io.on('connection', (socket) => {
     socket.on('waitForLogin', async ({ hash }) => {
