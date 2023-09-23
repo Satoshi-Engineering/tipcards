@@ -77,7 +77,7 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
     typeof host !== 'string'
     || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(host)
   ) {
-    console.error('Invalid host while checking refresh token', {
+    console.warn('Invalid host while checking refresh token', {
       host,
       allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
     })
