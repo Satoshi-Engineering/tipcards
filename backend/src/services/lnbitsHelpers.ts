@@ -116,22 +116,35 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
           'X-Api-Key': LNBITS_ADMIN_KEY,
         },
       })
-      if (Array.isArray(response.data)) {
-        if (response.data.length === 0) {
-          console.error(ErrorCode.LnbitsLnurlpPaymentsNotFound, card.cardHash)
-          break
+      if (!Array.isArray(response.data)) {
+        console.error(ErrorCode.LnbitsPaymentRequestsMalformedResponse, card.cardHash, response.data)
+        break
+      }
+      if (response.data.length === 0) {
+        // if invoices are expired they get removed by lnbits/lnd garbage collection
+        // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/664#note_10306
+        break
+      }
+      const paymentsOlderThanLnurlp = response.data.some((payment) => {
+        // invoices are older than the lnurlp, we can stop looking
+        if (card.lnurlp?.created != null && card.lnurlp.created > payment.created) {
+          return true
         }
-        response.data.forEach((payment) => {
-          // do not add payments that are already recorded
-          if (card.lnurlp?.payment_hash != null && card.lnurlp.payment_hash.includes(payment.payment_hash)) {
-            return
-          }
-          if (payment.extra.tag === 'lnurlp' && card.lnurlp?.id != null && String(payment.extra.link) === String(card.lnurlp?.id)) {
-            paymentRequests.push(payment.payment_hash)
-          }
-        })
-      } else {
-        console.error(ErrorCode.LnbitsPaymentRequestsMalformedResponse, card.cardHash)
+        // check if the payment belongs to the lnurlp link
+        if (
+          payment.extra.tag !== 'lnurlp'
+          || card.lnurlp?.id == null
+          || String(payment.extra.link) !== String(card.lnurlp?.id)
+        ) {
+          return false
+        }
+        // do not add payments that are already recorded
+        if (card.lnurlp?.payment_hash != null && card.lnurlp.payment_hash.includes(payment.payment_hash)) {
+          return false
+        }
+        paymentRequests.push(payment.payment_hash)
+      })
+      if (paymentsOlderThanLnurlp) {
         break
       }
     } catch (error) {
