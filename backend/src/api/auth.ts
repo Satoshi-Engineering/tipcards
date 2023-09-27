@@ -1,18 +1,23 @@
 import { createHash } from 'crypto'
 import express from 'express'
 import type http from 'http'
-import lnurl from 'lnurl'
+import { exportSPKI } from 'jose'
+import lnurl, { type LnurlServer } from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
 import corsOptions from '../services/corsOptions'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
-import { createAccessToken, createRefreshToken, authGuardRefreshToken, cycleRefreshToken } from '../services/jwt'
+import {
+  getPublicKey,
+  createAccessToken, createRefreshToken, cycleRefreshToken,
+  authGuardRefreshToken,
+} from '../services/jwt'
 import {
   LNURL_PORT,
-  TIPCARDS_AUTH_ORIGIN,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUDIENCES_PER_ISSUER,
+  JWT_AUTH_ORIGIN_PER_ISSUER,
 } from '../constants'
 
 import { Profile } from '../../../src/data/User'
@@ -20,43 +25,48 @@ import { ErrorCode } from '../../../src/data/Errors'
 
 /////
 // LNURL SERVICE
-const lnurlServer = lnurl.createServer({
-  host: 'localhost',
-  port: LNURL_PORT,
-  url: TIPCARDS_AUTH_ORIGIN,
-  lightning: {
-    backend: 'lnbits',
-    config: {
-      baseUrl: LNBITS_ORIGIN,
-      adminKey: LNBITS_ADMIN_KEY,
-    },
-  },
-})
-
 type LoginEvent = {
   key: string,
   hash: string,
 }
 const loggedIn: Record<string, string> = {}
-lnurlServer.on('login', async (event: LoginEvent) => {
-  // `key` - the public key as provided by the LNURL wallet app
-  // `hash` - the hash of the secret for the LNURL used to login
-  const { key, hash } = event
-  loggedIn[hash] = key
-  setTimeout(() => {
-    delete loggedIn[hash]
-  }, 1000 * 60 * 15)
+const lnurlServerByHost: Record<string, LnurlServer> = {}
+Object.entries(JWT_AUTH_ORIGIN_PER_ISSUER).forEach(([host, authOrigin]) => {
+  const lnurlServer = lnurl.createServer({
+    host: 'localhost',
+    port: LNURL_PORT,
+    url: authOrigin,
+    lightning: {
+      backend: 'lnbits',
+      config: {
+        baseUrl: LNBITS_ORIGIN,
+        adminKey: LNBITS_ADMIN_KEY,
+      },
+    },
+  })
 
-  if (socketsByHash[hash] == null) {
-    return
-  }
+  lnurlServer.on('login', async (event: LoginEvent) => {
+    // `key` - the public key as provided by the LNURL wallet app
+    // `hash` - the hash of the secret for the LNURL used to login
+    const { key, hash } = event
+    loggedIn[hash] = key
+    setTimeout(() => {
+      delete loggedIn[hash]
+    }, 1000 * 60 * 15)
 
-  try {
-    socketsByHash[hash].emit('loggedIn')
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    socketsByHash[hash].emit('error')
-  }
+    if (socketsByHash[hash] == null) {
+      return
+    }
+
+    try {
+      socketsByHash[hash].emit('loggedIn')
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      socketsByHash[hash].emit('error')
+    }
+  })
+
+  lnurlServerByHost[host] = lnurlServer
 })
 
 /////
@@ -95,8 +105,30 @@ export const initSocketIo = (server: http.Server) => {
 /////
 // ROUTES
 const router = express.Router()
-router.get('/create', async (_, res) => {
-  const result = await lnurlServer.generateNewUrl('login')
+
+router.get('/publicKey', async (_, res) => {
+  const publicKey = await getPublicKey()
+  const spkiPem = await exportSPKI(publicKey)
+  res.json({
+    status: 'success',
+    data: spkiPem,
+  })
+})
+
+router.get('/create', async (req, res) => {
+  const host = req.get('host')
+  if (host == null || lnurlServerByHost[host] == null) {
+    console.error('Invalid host creating lnurl auth', {
+      host,
+      allowedAuthServices: JWT_AUTH_ORIGIN_PER_ISSUER,
+    })
+    res.status(400).json({
+      status: 'error',
+      data: 'Invalid auth service host.',
+    })
+    return
+  }
+  const result = await lnurlServerByHost[host].generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = createHash('sha256').update(secret).digest('hex')
   delete loggedIn[hash]

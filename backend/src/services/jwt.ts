@@ -48,6 +48,11 @@ const loadKeys = async () => {
   return { publicKey, privateKey }
 }
 
+export const getPublicKey = async () => {
+  const { publicKey } = await loadKeys()
+  return publicKey
+}
+
 export const createRefreshToken = async ({ id, lnurlAuthKey }: User, issuer: string) => {
   const { privateKey } = await loadKeys()
   return new SignJWT({ id, lnurlAuthKey })
