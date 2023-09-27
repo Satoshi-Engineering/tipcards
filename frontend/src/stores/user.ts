@@ -34,7 +34,7 @@ export const useUserStore = defineStore('user', () => {
     }
     return null
   })
-  const userId = computed(() => accessTokenPayload.value?.lnurlAuthKey)
+  const userId = computed(() => accessTokenPayload.value?.id)
   const lnurlAuthKey = computed(() => accessTokenPayload.value?.lnurlAuthKey)
 
   watch(showModalLogin, (newVal, oldVal) => {
