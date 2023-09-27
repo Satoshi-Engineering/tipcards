@@ -324,7 +324,7 @@ export const getAllUsers = async (): Promise<User[]> => {
  * @param lnurlAuthKey string
  * @throws
  */
-export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string, lnurlAuthHost: string): Promise<User> => {
+export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Promise<User> => {
   let user = await getUserByLnurlAuthKey(lnurlAuthKey)
   if (user != null) {
     return user
@@ -334,7 +334,6 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string, lnu
     id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
-    lnurlAuthHost,
   }
   await createUser(user)
   return user

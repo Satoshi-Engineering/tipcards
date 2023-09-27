@@ -4,15 +4,11 @@ import { getAllLandingPages } from './database'
 import {
   TIPCARDS_ORIGIN,
   CORS_WHITELIST_EXTEND,
-  JWT_AUDIENCES_PER_ISSUER,
 } from '../constants'
 
 const whitelist = [
   TIPCARDS_ORIGIN,
   ...CORS_WHITELIST_EXTEND,
-  ...Object
-    .values(JWT_AUDIENCES_PER_ISSUER)
-    .reduce((audiences, audiencesPerIssuer) => [...audiences, ...audiencesPerIssuer], []),
 ]
 ;(async () => {
   try {

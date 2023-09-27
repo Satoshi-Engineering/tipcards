@@ -51,10 +51,6 @@ export {
 
 export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
 export const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
-let TIPCARDS_AUTH_ORIGIN = TIPCARDS_API_ORIGIN
-if (typeof process.env.TIPCARDS_AUTH_ORIGIN === 'string' && process.env.TIPCARDS_AUTH_ORIGIN.length > 0) {
-  TIPCARDS_AUTH_ORIGIN = process.env.TIPCARDS_AUTH_ORIGIN
-}
 
 let CORS_WHITELIST_EXTEND: string[] = []
 if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {
@@ -68,7 +64,7 @@ if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WH
     })
   }
 }
-export { TIPCARDS_AUTH_ORIGIN, CORS_WHITELIST_EXTEND }
+export { CORS_WHITELIST_EXTEND }
 
 export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
@@ -77,38 +73,36 @@ export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || un
 
 /////
 // LNURL JWT AUTH
-export const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
-const defaultIssuer = new URL(TIPCARDS_AUTH_ORIGIN).host
-const defaultAudience = new URL(TIPCARDS_API_ORIGIN).host
+let JWT_AUTH_ORIGIN = TIPCARDS_API_ORIGIN
+if (typeof process.env.JWT_AUTH_ORIGIN === 'string' && process.env.JWT_AUTH_ORIGIN.length > 0) {
+  JWT_AUTH_ORIGIN = process.env.JWT_AUTH_ORIGIN
+}
 
-let JWT_AUDIENCES_PER_ISSUER: Record<string, string[]> = { [defaultIssuer]: [defaultAudience] }
-if (typeof process.env.JWT_AUDIENCES_PER_ISSUER === 'string' && process.env.JWT_AUDIENCES_PER_ISSUER.length > 0) {
+const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
+
+let JWT_AUTH_ISSUER = new URL(JWT_AUTH_ORIGIN).host
+if (typeof process.env.JWT_AUTH_ISSUER === 'string' && process.env.JWT_AUTH_ISSUER.length > 0) {
+  JWT_AUTH_ISSUER = process.env.JWT_AUTH_ISSUER
+}
+
+let JWT_AUTH_AUDIENCE = [new URL(TIPCARDS_API_ORIGIN).host]
+if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AUDIENCE.length > 0) {
   try {
-    JWT_AUDIENCES_PER_ISSUER = z
-      .record(z.string().min(1), z.string().array())
-      .parse(JSON.parse(process.env.JWT_AUDIENCES_PER_ISSUER))
+    JWT_AUTH_AUDIENCE = z
+      .string().array()
+      .parse(JSON.parse(process.env.JWT_AUTH_AUDIENCE))
   } catch (error) {
     console.error(ErrorCode.UnableToParseEnvVar, {
       error,
-      constant: 'JWT_AUDIENCES_PER_ISSUER',
-      envValue: process.env.JWT_AUDIENCES_PER_ISSUER,
+      constant: 'JWT_AUTH_AUDIENCE',
+      envValue: process.env.JWT_AUTH_AUDIENCE,
     })
   }
 }
 
-let JWT_AUTH_ORIGIN_PER_ISSUER: Record<string, string> = { [defaultIssuer]: TIPCARDS_AUTH_ORIGIN }
-if (typeof process.env.JWT_AUTH_ORIGIN_PER_ISSUER === 'string' && process.env.JWT_AUTH_ORIGIN_PER_ISSUER.length > 0) {
-  try {
-    JWT_AUTH_ORIGIN_PER_ISSUER = z
-      .record(z.string().min(1), z.string().min(1))
-      .parse(JSON.parse(process.env.JWT_AUTH_ORIGIN_PER_ISSUER))
-  } catch (error) {
-    console.error(ErrorCode.UnableToParseEnvVar, {
-      error,
-      constant: 'JWT_AUTH_ORIGIN_PER_ISSUER',
-      envValue: process.env.JWT_AUTH_ORIGIN_PER_ISSUER,
-    })
-  }
+export {
+  JWT_AUTH_ORIGIN,
+  JWT_AUTH_KEY_DIRECTORY,
+  JWT_AUTH_ISSUER,
+  JWT_AUTH_AUDIENCE,
 }
-
-export { JWT_AUDIENCES_PER_ISSUER, JWT_AUTH_ORIGIN_PER_ISSUER }

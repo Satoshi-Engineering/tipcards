@@ -2,7 +2,7 @@ import { createHash } from 'crypto'
 import express from 'express'
 import type http from 'http'
 import { exportSPKI } from 'jose'
-import lnurl, { type LnurlServer } from 'lnurl'
+import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
@@ -16,8 +16,7 @@ import {
 import {
   LNURL_PORT,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
-  JWT_AUDIENCES_PER_ISSUER,
-  JWT_AUTH_ORIGIN_PER_ISSUER,
+  JWT_AUTH_ORIGIN,
 } from '../constants'
 
 import { Profile } from '../../../src/data/User'
@@ -30,43 +29,38 @@ type LoginEvent = {
   hash: string,
 }
 const loggedIn: Record<string, string> = {}
-const lnurlServerByHost: Record<string, LnurlServer> = {}
-Object.entries(JWT_AUTH_ORIGIN_PER_ISSUER).forEach(([host, authOrigin]) => {
-  const lnurlServer = lnurl.createServer({
-    host: 'localhost',
-    port: LNURL_PORT,
-    url: authOrigin,
-    lightning: {
-      backend: 'lnbits',
-      config: {
-        baseUrl: LNBITS_ORIGIN,
-        adminKey: LNBITS_ADMIN_KEY,
-      },
+
+const lnurlServer = lnurl.createServer({
+  host: 'localhost',
+  port: LNURL_PORT,
+  url: JWT_AUTH_ORIGIN,
+  lightning: {
+    backend: 'lnbits',
+    config: {
+      baseUrl: LNBITS_ORIGIN,
+      adminKey: LNBITS_ADMIN_KEY,
     },
-  })
+  },
+})
+lnurlServer.on('login', async (event: LoginEvent) => {
+  // `key` - the public key as provided by the LNURL wallet app
+  // `hash` - the hash of the secret for the LNURL used to login
+  const { key, hash } = event
+  loggedIn[hash] = key
+  setTimeout(() => {
+    delete loggedIn[hash]
+  }, 1000 * 60 * 15)
 
-  lnurlServer.on('login', async (event: LoginEvent) => {
-    // `key` - the public key as provided by the LNURL wallet app
-    // `hash` - the hash of the secret for the LNURL used to login
-    const { key, hash } = event
-    loggedIn[hash] = key
-    setTimeout(() => {
-      delete loggedIn[hash]
-    }, 1000 * 60 * 15)
+  if (socketsByHash[hash] == null) {
+    return
+  }
 
-    if (socketsByHash[hash] == null) {
-      return
-    }
-
-    try {
-      socketsByHash[hash].emit('loggedIn')
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      socketsByHash[hash].emit('error')
-    }
-  })
-
-  lnurlServerByHost[host] = lnurlServer
+  try {
+    socketsByHash[hash].emit('loggedIn')
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    socketsByHash[hash].emit('error')
+  }
 })
 
 /////
@@ -115,20 +109,8 @@ router.get('/publicKey', async (_, res) => {
   })
 })
 
-router.get('/create', async (req, res) => {
-  const host = req.get('host')
-  if (host == null || lnurlServerByHost[host] == null) {
-    console.error('Invalid host creating lnurl auth', {
-      host,
-      allowedAuthServices: JWT_AUTH_ORIGIN_PER_ISSUER,
-    })
-    res.status(400).json({
-      status: 'error',
-      data: 'Invalid auth service host.',
-    })
-    return
-  }
-  const result = await lnurlServerByHost[host].generateNewUrl('login')
+router.get('/create', async (_, res) => {
+  const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = createHash('sha256').update(secret).digest('hex')
   delete loggedIn[hash]
@@ -142,22 +124,6 @@ router.get('/create', async (req, res) => {
 })
 
 router.get('/status/:hash', async (req, res) => {
-  const jwtIssuer = req.get('host')
-  if (
-    typeof jwtIssuer !== 'string'
-    || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(jwtIssuer)
-  ) {
-    console.error('Invalid host while querying login status for user', {
-      host: jwtIssuer,
-      allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
-    })
-    res.status(400).json({
-      status: 'error',
-      data: 'Invalid auth service host.',
-    })
-    return
-  }
-
   const hash = req.params.hash
   if (loggedIn[hash] == null) {
     res.status(404).json({
@@ -174,9 +140,9 @@ router.get('/status/:hash', async (req, res) => {
     return
   }
   try {
-    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash], jwtIssuer)
-    const refreshToken = await createRefreshToken(user, jwtIssuer)
-    const accessToken = await createAccessToken(user, jwtIssuer, JWT_AUDIENCES_PER_ISSUER[jwtIssuer])
+    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
+    const refreshToken = await createRefreshToken(user)
+    const accessToken = await createAccessToken(user)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
@@ -208,23 +174,7 @@ router.get(
   cookieParser(),
   authGuardRefreshToken,
   cycleRefreshToken,
-  async (req, res) => {
-    const jwtIssuer = req.get('host')
-    if (
-      typeof jwtIssuer !== 'string'
-      || !Object.keys(JWT_AUDIENCES_PER_ISSUER).includes(jwtIssuer)
-    ) {
-      console.error('Invalid host while refreshing refresh token', {
-        host: jwtIssuer,
-        allowedAuthServices: JWT_AUDIENCES_PER_ISSUER,
-      })
-      res.status(400).json({
-        status: 'error',
-        data: 'Invalid auth service host.',
-      })
-      return
-    }
-
+  async (_, res) => {
     const { userId } = res.locals
 
     try {
@@ -236,7 +186,7 @@ router.get(
         })
         return
       }
-      const accessToken = await createAccessToken(user, jwtIssuer, JWT_AUDIENCES_PER_ISSUER[jwtIssuer])
+      const accessToken = await createAccessToken(user)
       res.json({
         status: 'success',
         data: { accessToken },
