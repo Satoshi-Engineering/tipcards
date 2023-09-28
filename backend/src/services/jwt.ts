@@ -110,7 +110,7 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
         .clearCookie('refresh_token', {
           httpOnly: true,
           secure: true,
-          sameSite: true,
+          sameSite: 'none',
         })
         .status(401)
         .json({
@@ -130,7 +130,7 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
         .clearCookie('refresh_token', {
           httpOnly: true,
           secure: true,
-          sameSite: true,
+          sameSite: 'none',
         })
         .status(401)
         .json({
@@ -154,7 +154,7 @@ export const authGuardRefreshToken = async (req: Request, res: Response, next: N
       .clearCookie('refresh_token', {
         httpOnly: true,
         secure: true,
-        sameSite: true,
+        sameSite: 'none',
       })
       .status(401)
       .json({
@@ -194,7 +194,7 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
       expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
       httpOnly: true,
       secure: true,
-      sameSite: process.env.LNURL_AUTH_DEBUG === '1' ? false : true,
+      sameSite: 'none',
     })
     next()
   } catch (error) {
