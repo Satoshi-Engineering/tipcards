@@ -1,0 +1,93 @@
+setup-backend-env:
+  stage: setup
+  rules:
+    - !reference [.shared_config, rules, web_and_push]
+    - !reference [.shared_config, rules, deployable_branches]
+  cache:
+    key: backend-env-$CI_COMMIT_REF_SLUG
+    paths:
+      - backend/.env
+    policy: pull-push
+  script:
+    # get the .env variables for the environment
+    - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$ENV_FILE_MAIN; fi
+    - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$ENV_FILE_DEVELOP; fi
+    - cd backend
+    - |
+      # Check if env file exists
+      if [ -f "$ENV_FILE" ]; then
+        cp $ENV_FILE .env
+      else
+        echo -e "\e[31mERROR:ENV_FILE_[ENVIRONMENT/BRANCH] not set in Gitlab CI/CD variables\e[0m"
+        exit 1
+      fi
+    # Compare env vars with .env.example
+    - |
+      cat .env.example | while read line; do
+        # Exclude comments
+        if [[ "$line" =~ ^# ]]; then continue; fi
+        # Exclude non key=var lines
+        if [[ "$line" != *\=* ]]; then continue; fi
+        # String split to KEY and VALUE
+        savedIFS="$IFS"
+        IFS="\="
+        set x $line
+        KEY=$2
+        IFS="$savedIFS"
+        # Find key in .env file
+        echo "Checking: $KEY"
+        if grep -Fq "$KEY=" .env
+        then
+          echo "✅ $KEY"
+        else
+          echo -e "\e[31mERROR:ENV variable $KEY not set in Gitlab CI/CD variables\e[0m"
+          exit 1
+        fi	
+      done
+
+setup-frontend-env:
+  stage: setup
+  rules:
+    - !reference [.shared_config, rules, web_and_push]
+    - !reference [.shared_config, rules, deployable_branches]
+  cache:
+    key: frontend-env-$CI_COMMIT_REF_SLUG
+    paths:
+      - frontend/.env.production.local
+    policy: pull-push
+  script:
+    # get the .env variables for the environment
+    - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$FRONTEND_ENV_FILE_MAIN; fi
+    - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$FRONTEND_ENV_FILE_DEVELOP; fi
+    - cd frontend
+    - |
+      # Check if env file exists
+      if [ -f "$ENV_FILE" ]; then
+        cp $ENV_FILE .env.production.local
+      else
+        echo -e "\e[31mERROR:FRONTEND_ENV_FILE_[ENVIRONMENT/BRANCH] not set in Gitlab CI/CD variables\e[0m"
+        exit 1
+      fi
+    # Compare env vars with .env.example
+    - |
+      cat .env.production | while read line; do
+        # Exclude comments
+        if [[ "$line" =~ ^# ]]; then continue; fi
+        # Exclude non key=var lines
+        if [[ "$line" != *\=* ]]; then continue; fi
+        # String split to KEY and VALUE
+        savedIFS="$IFS"
+        IFS="\="
+        set x $line
+        KEY=$2
+        IFS="$savedIFS"
+        # Find key in .env file
+        echo "Checking: $KEY"
+        if grep -Fq "$KEY=" .env.production.local
+        then
+          echo "✅ $KEY"
+        else
+          echo -e "\e[31mERROR:ENV variable $KEY not set in Gitlab CI/CD variables\e[0m"
+          exit 1
+        fi	
+      done

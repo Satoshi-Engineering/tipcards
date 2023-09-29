@@ -1,0 +1,50 @@
+test-integration-backend:
+  stage: integration
+  rules:
+    - !reference [.shared_config, rules, deployable_branches]
+    - !reference [.shared_config, rules, web_and_push_and_schedule]
+    # Exclude other schedules
+    - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
+      when: never
+  cache:
+    - !reference [.shared_config, cache, node_modules_backend]
+    - !reference [.shared_config, cache, env_backend]
+  variables:
+    NODE_ENV: test
+  script:
+    - cd backend
+    - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
+    - npm run test-integration
+
+test-integration-frontend:
+  stage: integration
+  rules:
+    - !reference [.shared_config, rules, deployable_branches]
+    - !reference [.shared_config, rules, web_and_push_and_schedule]
+    # Exclude other schedules
+    - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
+      when: never
+  services:
+    - name: selenium/standalone-chrome
+      alias: selenium-chrome
+  cache:
+    - !reference [.shared_config, cache, node_modules_frontend]
+  variables:
+    NODE_ENV: test
+  script:
+    - cd frontend
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "main" ]
+      then 
+        echo "Running on main branch"
+        echo "TEST_ORIGIN=$TEST_ORIGIN_MAIN" > .env.test.local
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
+      then
+        echo "Running on develop branch"
+        echo "TEST_ORIGIN=$TEST_ORIGIN_DEVELOP" > .env.test.local
+      else
+        echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
+        exit 1
+      fi
+    - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
+    - npm run test-integration

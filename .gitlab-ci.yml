@@ -1,91 +1,45 @@
-# ------------- INFO
-# Cache is deleted after completion of the pipeline.
-
 # ------------- VARIABLES
 # Configure them in https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/-/settings/ci_cd
-# There are also frontend/backend specific variables. Look for them in sub-directories.
+# ----- GLOBAL
 # - DEPLOY_USER
 # - DEPLOY_USER_SSH_KEY # can be found in sate access
+# ----- BACKEND
+# - BACKEND_DEPLOY_SERVER_MAIN
+# - BACKEND_DEPLOY_SERVER_DEVELOP
+# - BACKEND_DEPLOY_PATH_MAIN
+# - BACKEND_DEPLOY_PATH_DEVELOP
+# - PM2_APP_NAME_MAIN # used to identifiy in ecosystem.config.js
+# - PM2_APP_NAME_DEVELOP # used to identifiy in ecosystem.config.js
+# - ENV_FILE_MAIN
+# - ENV_FILE_DEVELOP
+# ----- FRONTEND
+# - FRONTEND_DEPLOY_SERVER_MAIN
+# - FRONTEND_DEPLOY_SERVER_DEVELOP
+# - FRONTEND_DEPLOY_PATH_MAIN
+# - FRONTEND_DEPLOY_PATH_DEVELOP
+# - TEST_ORIGIN_MAIN
+# - TEST_ORIGIN_DEVELOP
+# - FRONTEND_ENV_FILE_MAIN
+# - FRONTEND_ENV_FILE_DEVELOP
 
 image: node:16.14-alpine
 
 # ------------- STAGES
 # List of stages for jobs, and their order of execution
 stages:
+  - install
   - setup
   - test
+  - build
   - deploy
-  - cleanup
   - integration
-
-# ------------- BASE CONFIG OF THE JOBS
-# Define a hidden jobs to be used with extends.
-# Globally define only run on main & develop and NOT on schedule.
-.base_config:
-  rules:
-    ### Sources
-    # push   For pipelines triggered by a git push event, including for branches and tags.
-    # web    For pipelines created by using Run pipeline button in the GitLab UI, from the project’s CI/CD > Pipelines section.
-    - if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: on_success
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    policy: pull # only pull the cache
-    paths:
-      - .npm
-      - node_modules
-      - backend/node_modules
-      - backend/.env
-      - backend/ecosystem.config.js
-      - frontend/.npm
-      - frontend/node_modules
-      - frontend/.env.production.local
-
-# Branches which have a deploy environment.
-.deployable_branches_rules:
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
-      when: never
-    - when: on_success
-
-# ------------- STAGE SETUP
-setup:
-  stage: setup
-  extends: .base_config
-  cache:
-    policy: pull-push # Upload the cache after it's done
-  script:
-    - npm ci --cache .npm --prefer-offline
-
-# ------------- STAGE TEST
-audit:
-  stage: test
-  extends: .base_config
-  script:
-    - npm audit
-
-lint:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run lint
-
-typecheck:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run typecheck
-
-test-units:
-  stage: test
-  extends: .base_config
-  script:
-    - npm run test-units
 
 # ------------- INCLUDES
 include:
-  - 'backend/.gitlab-ci.yml'
-  - 'frontend/.gitlab-ci.yml'
+  - 'gitlab-ci/.shared_config.yml'
+  - 'gitlab-ci/install.yml'
+  - 'gitlab-ci/setup.yml'
+  - 'gitlab-ci/test.yml'
+  - 'gitlab-ci/build.yml'
+  - 'gitlab-ci/deploy.yml'
+  - 'gitlab-ci/integration.yml'
