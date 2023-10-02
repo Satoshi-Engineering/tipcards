@@ -69,12 +69,11 @@ deploy-backend-develop:
   extends: .deploy_backend
   rules:
     - !reference [.shared_config, rules, web_and_push]
-    - !reference [.shared_config, rules, deployable_branches]
+    - if: $CI_COMMIT_BRANCH != 'develop'
+      when: never
     - changes:
       - backend/**/*
       - package-lock.json
-    - if: $CI_COMMIT_BRANCH != 'develop'
-      when: never
   environment:
     name: develop
 
@@ -82,12 +81,11 @@ deploy-backend-main:
   extends: .deploy_backend
   rules:
     - !reference [.shared_config, rules, web_and_push]
-    - !reference [.shared_config, rules, deployable_branches]
+    - if: $CI_COMMIT_BRANCH != 'main'
+      when: never
     - changes:
       - backend/**/*
       - package-lock.json
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
   environment:
     name: main
 
@@ -136,12 +134,11 @@ deploy-frontend-develop:
   extends: .deploy_frontend
   rules:
     - !reference [.shared_config, rules, web_and_push]
-    - !reference [.shared_config, rules, deployable_branches]
+    - if: $CI_COMMIT_BRANCH != 'develop'
+      when: never
     - changes:
       - frontend/**/*
       - package-lock.json
-    - if: $CI_COMMIT_BRANCH != 'develop'
-      when: never
   environment:
     name: develop
 
@@ -149,11 +146,10 @@ deploy-frontend-main:
   extends: .deploy_frontend
   rules:
     - !reference [.shared_config, rules, web_and_push]
-    - !reference [.shared_config, rules, deployable_branches]
+    - if: $CI_COMMIT_BRANCH != 'main'
+      when: never
     - changes:
       - frontend/**/*
       - package-lock.json
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
   environment:
     name: main
