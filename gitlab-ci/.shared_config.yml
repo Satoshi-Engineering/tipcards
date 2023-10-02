@@ -9,6 +9,9 @@
     deployable_branches:
       if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
       when: never
+    nightly_integration:
+      - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
+        when: never
   cache:
     npm:
       key: npm-cache

@@ -3,6 +3,7 @@ setup-backend-env:
   rules:
     - !reference [.shared_config, rules, web_and_push]
     - !reference [.shared_config, rules, deployable_branches]
+    - when: always
   cache:
     key: backend-env-$CI_COMMIT_REF_SLUG
     paths:
@@ -50,6 +51,7 @@ setup-frontend-env:
   rules:
     - !reference [.shared_config, rules, web_and_push]
     - !reference [.shared_config, rules, deployable_branches]
+    - when: always
   cache:
     key: frontend-env-$CI_COMMIT_REF_SLUG
     paths:

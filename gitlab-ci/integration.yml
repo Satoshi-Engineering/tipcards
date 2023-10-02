@@ -3,9 +3,8 @@ test-integration-backend:
   rules:
     - !reference [.shared_config, rules, deployable_branches]
     - !reference [.shared_config, rules, web_and_push_and_schedule]
-    # Exclude other schedules
-    - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
-      when: never
+    - !reference [.shared_config, rules, nightly_integration]
+    - when: always
   cache:
     - !reference [.shared_config, cache, node_modules_backend]
     - !reference [.shared_config, cache, env_backend]
@@ -21,9 +20,8 @@ test-integration-frontend:
   rules:
     - !reference [.shared_config, rules, deployable_branches]
     - !reference [.shared_config, rules, web_and_push_and_schedule]
-    # Exclude other schedules
-    - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
-      when: never
+    - !reference [.shared_config, rules, nightly_integration]
+    - when: always
   services:
     - name: selenium/standalone-chrome
       alias: selenium-chrome
