@@ -153,17 +153,22 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
+import { useAuthStore } from '@/stores/auth'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
-import { useUserStore } from '@/stores/user'
+import { useModalLoginStore } from '@/stores/modalLogin'
 import I18nT from '@/modules/I18nT'
 
 const { t, d } = useI18n()
+
+const { isLoggedIn } = storeToRefs(useAuthStore())
+
 const cardsStore = useCardsSetsStore()
 const { subscribe } = cardsStore
 const { sets, hasSetsInLocalStorage, fetchingUserErrorMessages } = storeToRefs(cardsStore)
-const { isLoggedIn, showModalLogin } = storeToRefs(useUserStore())
-const showModalDeprecation = ref(false)
 
+const { showModalLogin } = storeToRefs(useModalLoginStore())
+
+const showModalDeprecation = ref(false)
 const onLogin = () => {
   showModalDeprecation.value = false
   showModalLogin.value = true

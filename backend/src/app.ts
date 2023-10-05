@@ -1,3 +1,4 @@
+import { createExpressMiddleware } from '@trpc/server/adapters/express'
 import bodyParser from 'body-parser'
 import express from 'express'
 import cors from 'cors'
@@ -15,11 +16,11 @@ import lnurlp from './api/lnurlp'
 import set from './api/set'
 import withdraw from './api/withdraw'
 import statistics from './api/statistics'
-import xstAttack from './xstAttack'
+import { appRouter, onError } from './trpc'
+import { createContext } from './trpc/trpc'
 import corsOptions from './services/corsOptions'
+import xstAttack from './xstAttack'
 import './worker'
-
-
 
 const app = express()
 app.use(bodyParser.json())
@@ -38,5 +39,13 @@ app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
 app.use('/api/statistics', statistics)
+app.use(
+  '/trpc',
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+    onError,
+  }),
+)
 
 export default app

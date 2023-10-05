@@ -86,18 +86,18 @@ import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
-import { Profile } from '@root/data/User'
+import { Profile } from '@shared/data/User'
 
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
-import { useUserStore } from '@/stores/user' 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
+import { useAuthStore } from '@/stores/auth' 
 
 const router = useRouter()
-const userStore = useUserStore()
-const { logout } = userStore
-const { isLoggedIn } = storeToRefs(userStore)
+const authStore = useAuthStore()
+const { logout } = authStore
+const { isLoggedIn } = storeToRefs(authStore)
 const { t } = useI18n()
 
 const profile = ref(Profile.parse({}))

@@ -40,11 +40,11 @@ import { useI18n } from 'vue-i18n'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import ModalDefault from '@/components/ModalDefault.vue'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 
 const { t } = useI18n()
-const { logout } = useUserStore()
+const { logout } = useAuthStore()
 const setsStore = useCardsSetsStore()
 const { migrate } = setsStore
 const { migrating, migratingErrors } = storeToRefs(setsStore)

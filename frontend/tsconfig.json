@@ -5,7 +5,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@root/*": ["../src/*"]
+      "@shared/*": ["../src/*"],
+      "@backend/*": ["../backend/src/*"]
     },
     "lib": ["ESNext", "dom"],
     "types": ["jest", "node"],

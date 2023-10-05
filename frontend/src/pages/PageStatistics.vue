@@ -133,15 +133,16 @@ import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
 
-import { canAccessStatistics } from '@root/modules/checkAccessTokenPermissions'
+import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
+import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const userStore = useUserStore()
-const { isLoggedIn, showModalLogin, accessTokenPayload } = storeToRefs(userStore)
+const { isLoggedIn, accessTokenPayload } = storeToRefs(useAuthStore())
+const { showModalLogin } = storeToRefs(useModalLoginStore())
 
 const hasPermissions = computed(() => {
   if (accessTokenPayload.value == null) {

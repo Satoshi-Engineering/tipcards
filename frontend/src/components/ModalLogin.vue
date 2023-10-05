@@ -51,13 +51,17 @@ import LightningQrCode from '@/components/LightningQrCode.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
+import { useModalLoginStore } from '@/stores/modalLogin'
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 defineEmits(['close'])
-const userStore = useUserStore()
-const { login } = userStore
-const { isLoggedIn, modalLoginUserMessage } = storeToRefs(userStore)
+const authStore = useAuthStore()
+const { login } = authStore
+const { isLoggedIn } = storeToRefs(authStore)
+
+const modalLoginStore = useModalLoginStore()
+const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()

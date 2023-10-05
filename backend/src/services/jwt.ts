@@ -206,6 +206,22 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
   }
 }
 
+/**
+ * @throws jose errors
+ * @throws ZodError
+ */
+export const validateJwt = async (jwt: string, audience: string): Promise<AccessTokenPayload> => {
+  const { publicKey } = await loadKeys()
+  const { payload } = await jwtVerify(jwt, publicKey, {
+    issuer: JWT_AUTH_ISSUER,
+    audience,
+  })
+  if (payload.exp == null || payload.exp * 1000 < + new Date()) {
+    throw new errors.JWTExpired('Authorization expired.')
+  }
+  return ZodAccessTokenPayload.parse(payload)
+}
+
 export const authGuardAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   const host = req.get('host')
   if (typeof host !== 'string') {
@@ -226,21 +242,9 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
     return
   }
 
-  const { publicKey } = await loadKeys()
   try {
-    const { payload } = await jwtVerify(req.headers.authorization, publicKey, {
-      issuer: JWT_AUTH_ISSUER,
-      audience: host,
-    })
-    if (payload.exp == null || payload.exp * 1000 < + new Date()) {
-      res.status(401).json({
-        status: 'error',
-        message: 'Authorization expired.',
-        code: ErrorCode.AccessTokenExpired,
-      })
-      return
-    }
-    res.locals.accessTokenPayload = ZodAccessTokenPayload.parse(payload)
+    const accessToken = await validateJwt(req.headers.authorization, host)
+    res.locals.accessTokenPayload = accessToken
     next()
   } catch (error) {
     let message = 'Invalid authorization token.'

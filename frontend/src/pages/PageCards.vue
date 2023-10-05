@@ -508,10 +508,10 @@ import { useRoute, useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
-import type { Settings, Set } from '@root/data/Set'
-import type { ImageMeta } from '@root/data/Image'
-import { LandingPageType, type LandingPage } from '@root/data/LandingPage'
-import { encodeLnurl } from '@root/modules/lnurlHelpers'
+import type { Settings, Set } from '@shared/data/Set'
+import type { ImageMeta } from '@shared/data/Image'
+import { LandingPageType, type LandingPage } from '@shared/data/LandingPage'
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -529,13 +529,14 @@ import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
 import useNewFeatures from '@/modules/useNewFeatures'
 import I18nT from '@/modules/I18nT'
+import { useAuthStore } from '@/stores/auth'
 import {
   getDefaultSettings,
   encodeCardsSetSettings,
   decodeCardsSetSettings,
   useCardsSetsStore,
 } from '@/stores/cardsSets'
-import { useUserStore } from '@/stores/user'
+import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 const route = useRoute()
@@ -545,14 +546,16 @@ const { currentTextDirection } = useI18nHelpers()
 const { setDocumentTitle } = useSeoHelpers()
 
 const { features } = useNewFeatures()
-const userStore = useUserStore()
-const { isLoggedIn, showModalLogin } = storeToRefs(userStore)
+
+const { isLoggedIn } = storeToRefs(useAuthStore())
 
 const cardsStore = useCardsSetsStore()
 const { subscribe, saveSet, deleteSet } = cardsStore
 const { sets } = storeToRefs(cardsStore)
-const showModalDeprecation = ref(false)
 
+const { showModalLogin } = storeToRefs(useModalLoginStore())
+
+const showModalDeprecation = ref(false)
 const onLogin = () => {
   showModalDeprecation.value = false
   showModalLogin.value = true

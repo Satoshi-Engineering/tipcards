@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import type { Card, CardStatus, CardStatusStatus } from '@root/data/Card'
+import type { Card, CardStatus, CardStatusStatus } from '@shared/data/Card'
 
 import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
 import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
@@ -43,7 +43,7 @@ export const loadCard = async (cardHash: string, origin: string | undefined = un
 }
 
 /**
- * @deprecated use @root/data/Card/CardStatus instead
+ * @deprecated use @shared/data/Card/CardStatus instead
  */
 export type CardStatusDeprecated = {
   status: 'error' | 'unfunded' | 'funded' | 'used' | 'invoice' | 'lnurlp' | 'setFunding'

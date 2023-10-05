@@ -7,6 +7,8 @@ import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 
 const router = express.Router()
 
+router.get('/')
+
 router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
   let card: Card | null = null
 

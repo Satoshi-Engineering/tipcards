@@ -188,7 +188,7 @@ import { onBeforeMount, ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { Set, Settings } from '@root/data/Set'
+import type { Set, Settings } from '@shared/data/Set'
 
 import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'

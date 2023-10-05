@@ -30,6 +30,7 @@ build-frontend:
       - package-lock.json
   cache:
     - !reference [.shared_config, cache, node_modules_root]
+    - !reference [.shared_config, cache, node_modules_backend]
     - !reference [.shared_config, cache, node_modules_frontend]
     - !reference [.shared_config, cache, env_frontend]
   artifacts:

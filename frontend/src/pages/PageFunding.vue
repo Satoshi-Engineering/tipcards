@@ -315,7 +315,7 @@ import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { BACKEND_API_ORIGIN } from '@/constants'
-import { encodeLnurl } from '@root/modules/lnurlHelpers'
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 const { t } = useI18n()
 const route = useRoute()
