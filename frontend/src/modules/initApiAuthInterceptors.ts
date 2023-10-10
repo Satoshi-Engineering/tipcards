@@ -1,10 +1,20 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 
 import { useAuthStore } from '@/stores/auth'
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { BACKEND_API_ORIGIN, TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 const initApiAuthInterceptors = () => {
   const { getValidAccessToken } = useAuthStore()
+
+  axios.interceptors.request.use(async (config) => {
+    if (config.url == null || config.url.indexOf(TIPCARDS_AUTH_ORIGIN) < 0) {
+      return config
+    }
+    return {
+      ...config,
+      withCredentials: true,
+    }
+  })
 
   axios.interceptors.request.use(async (config) => {
     if (config.url == null || config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
