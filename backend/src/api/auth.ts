@@ -6,6 +6,9 @@ import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
+import { Profile } from '../../../src/data/redis/User'
+import { ErrorCode } from '../../../src/data/Errors'
+
 import corsOptions from '../services/corsOptions'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
 import {
@@ -18,9 +21,6 @@ import {
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUTH_ORIGIN,
 } from '../constants'
-
-import { Profile } from '../../../src/data/User'
-import { ErrorCode } from '../../../src/data/Errors'
 
 /////
 // LNURL SERVICE

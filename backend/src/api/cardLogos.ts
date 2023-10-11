@@ -1,8 +1,9 @@
 import express from 'express'
 
+import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
+import type { Image as ImageMeta } from '../../../src/data/redis/Image'
+import type { User } from '../../../src/data/redis/User'
 import { ErrorCode } from '../../../src/data/Errors'
-import type { ImageMeta } from '../../../src/data/Image'
-import type { AccessTokenPayload, User } from '../../../src/data/User'
 
 import { getUserById, getImageMeta } from '../services/database'
 import { authGuardAccessToken } from '../services/jwt'

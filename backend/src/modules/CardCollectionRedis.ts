@@ -1,9 +1,9 @@
-import type { Card as CardRedis } from '../../../src/data/Card'
-import type { Set as SetRedis } from '../../../src/data/Set'
+import type { Card as CardRedis } from '../../../src/data/redis/Card'
+import type { Set as SetRedis } from '../../../src/data/redis/Set'
 
 import { getSetById, getCardByHash } from '../services/database'
 import hashSha256 from '../services/hashSha256'
-import { CardFromCardDatabase } from '../trpc/data/transforms/CardFromCardDatabase'
+import { CardFromCardRedis } from '../trpc/data/transforms/CardFromCardRedis'
 
 export default class CardCollectionRedis {
   /**
@@ -24,7 +24,7 @@ export default class CardCollectionRedis {
    * @throws ErrorWithCode
    */
   async toTRpcResponse() {
-    return Promise.all(this.cards.map((card) => CardFromCardDatabase.parseAsync(card)))
+    return Promise.all(this.cards.map((card) => CardFromCardRedis.parseAsync(card)))
   }
 
   private readonly cardHashes: string[]

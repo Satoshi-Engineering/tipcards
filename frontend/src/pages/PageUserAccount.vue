@@ -86,7 +86,7 @@ import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
-import { Profile } from '@shared/data/User'
+import { Profile } from '@shared/data/redis/User'
 
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import ButtonDefault from '@/components/ButtonDefault.vue'

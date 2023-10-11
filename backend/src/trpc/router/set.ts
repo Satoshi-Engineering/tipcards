@@ -1,7 +1,7 @@
 import CardCollectionRedis from '../../modules/CardCollectionRedis'
 import { getSetsByUserId } from '../../services/database'
 
-import { SetFromSetDatabase } from '../data/transforms/SetFromSetDatabase'
+import { SetFromSetRedis } from '../data/transforms/SetFromSetRedis'
 import { Card } from '../data/Card'
 import { Set } from '../data/Set'
 import { router, publicProcedure } from '../trpc'
@@ -12,7 +12,7 @@ export const setRouter = router({
     .output(Set.array())
     .query(async ({ ctx }) => {
       const setsDatabase = await getSetsByUserId(ctx.accessToken.id)
-      return setsDatabase.map((set) => SetFromSetDatabase.parse(set))
+      return setsDatabase.map((set) => SetFromSetRedis.parse(set))
     }),
 
   getCards: publicProcedure

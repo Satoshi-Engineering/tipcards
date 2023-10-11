@@ -2,11 +2,11 @@ import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
-import type { Card } from '../../../src/data/Card'
-import type { Set } from '../../../src/data/Set'
-import { User as ZodUser, type User } from '../../../src/data/User'
-import { ImageType, type ImageMeta } from '../../../src/data/Image'
-import type { LandingPage } from '../../../src/data/LandingPage'
+import type { Card } from '../../../src/data/redis/Card'
+import type { Set } from '../../../src/data/redis/Set'
+import { User as ZodUser, type User } from '../../../src/data/redis/User'
+import { Type as ImageType, type Image as ImageMeta } from '../../../src/data/redis/Image'
+import type { LandingPage } from '../../../src/data/redis/LandingPage'
 import { ErrorCode } from '../../../src/data/Errors'
 import hashSha256 from './hashSha256'
 
@@ -373,9 +373,9 @@ export const getImage = async (imageId: string): Promise<Buffer | string | null>
   }
   const client = await getClient()
   let image: Buffer | string | null = null
-  if (imageMeta.type === ImageType.Svg) {
+  if (imageMeta.type === ImageType.enum.svg) {
     image = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
-  } else if (imageMeta.type === ImageType.Png) {
+  } else if (imageMeta.type === ImageType.enum.png) {
     const data = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
     if (data != null) {
       image = Buffer.from(data, 'base64')

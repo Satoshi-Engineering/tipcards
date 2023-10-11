@@ -2,9 +2,9 @@ import axios, { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
+import { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import { AccessTokenFromResponse } from '@shared/data/api/Response'
 import { ErrorCode } from '@shared/data/Errors'
-import { AccessTokenPayload } from '@shared/data/User'
-import { AccessTokenFromResponse } from '@shared/data/Response'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'
 import i18n from '@/modules/initI18n'

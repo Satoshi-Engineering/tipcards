@@ -1,6 +1,11 @@
 import axios from 'axios'
 import express from 'express'
 
+import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
+import type { Card } from '../../../src/data/api/Card'
+import type { Settings, Set } from '../../../src/data/redis/Set'
+import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+
 import {
   getSetById, getSetsByUserId,
   createSet, deleteSet, updateSet,
@@ -10,11 +15,6 @@ import hashSha256 from '../services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
 import { authGuardAccessToken } from '../services/jwt'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
-
-import type { Card } from '../../../src/data/Card'
-import type { Settings, Set } from '../../../src/data/Set'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import type { AccessTokenPayload } from '../../../src/data/User'
 
 const router = express.Router()
 

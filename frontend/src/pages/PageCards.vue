@@ -508,9 +508,9 @@ import { useRoute, useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
-import type { Settings, Set } from '@shared/data/Set'
-import type { ImageMeta } from '@shared/data/Image'
-import { LandingPageType, type LandingPage } from '@shared/data/LandingPage'
+import type { Settings, Set } from '@shared/data/redis/Set'
+import type { Image as ImageMeta } from '@shared/data/redis/Image'
+import { Type as LandingPageType, type LandingPage } from '@shared/data/redis/LandingPage'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
@@ -797,7 +797,7 @@ onBeforeMount(() => {
 const getCardUrl = (lnurlEncoded: string, landingPageType: 'landing' | 'preview') => {
   if (
     selectedLandingPage.value != null
-    && selectedLandingPage.value.type === LandingPageType.External
+    && selectedLandingPage.value.type === LandingPageType.enum.external
     && selectedLandingPage.value.url != null
   ) {
     const path = new URL(selectedLandingPage.value.url)

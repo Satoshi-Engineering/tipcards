@@ -1,6 +1,7 @@
-import { getAllUsers } from '../services/database'
+import type { User } from '../../../src/data/redis/User'
 import { ErrorCode } from '../../../src/data/Errors'
-import type { User } from '../../../src/data/User'
+
+import { getAllUsers } from '../services/database'
 
 const alreadyReportedDuplicates = new Set()
 

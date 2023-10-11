@@ -1,7 +1,7 @@
 import { type Request, type Response, type NextFunction, Router } from 'express'
 
 import { ErrorCode } from '../../../src/data/Errors'
-import { ImageType, type ImageMeta } from '../../../src/data/Image'
+import { Type as ImageType, type Image as ImageMeta } from '../../../src/data/redis/Image'
 
 import { getImageAsString, getImageMeta } from '../services/database'
 
@@ -43,10 +43,10 @@ router.get('/cardLogos/:image', crossOriginResources, async (req: Request, res: 
     return
   }
 
-  if (imageMeta.type === ImageType.Svg) {
+  if (imageMeta.type === ImageType.enum.svg) {
     res.setHeader('Content-Type','image/svg+xml')
     res.end(image)
-  } else if (imageMeta.type === ImageType.Png) {
+  } else if (imageMeta.type === ImageType.enum.png) {
     res.setHeader('Content-Type','image/png')
     res.end(Buffer.from(image, 'base64'))
   }

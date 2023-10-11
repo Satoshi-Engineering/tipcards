@@ -1,8 +1,9 @@
 import express from 'express'
 
+import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
+import type { LandingPage } from '../../../src/data/redis/LandingPage'
+import type { User } from '../../../src/data/redis/User'
 import { ErrorCode } from '../../../src/data/Errors'
-import type { LandingPage } from '../../../src/data/LandingPage'
-import type { AccessTokenPayload, User } from '../../../src/data/User'
 
 import { getUserById, getLandingPage } from '../services/database'
 import { authGuardAccessToken } from '../services/jwt'

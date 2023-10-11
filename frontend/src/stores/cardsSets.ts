@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, nextTick, watch } from 'vue'
 
-import type { Settings, Set } from '@shared/data/Set'
+import type { Settings, Set } from '@shared/data/redis/Set'
 import { ErrorCode } from '@shared/data/Errors'
 
 import i18n from '@/modules/initI18n'

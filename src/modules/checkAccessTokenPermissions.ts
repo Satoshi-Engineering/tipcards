@@ -1,4 +1,5 @@
-import { PermissionsEnum, type AccessTokenPayload } from '../data/User'
+import type { AccessTokenPayload } from '../data/api/AccessTokenPayload'
+import { PermissionsEnum } from '../data/redis/User'
 
 export type CheckAccessTokenPermissions = (accessTokenPayload: AccessTokenPayload) => boolean
 

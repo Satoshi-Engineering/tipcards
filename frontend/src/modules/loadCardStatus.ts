@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-import type { Card, CardStatus, CardStatusStatus } from '@shared/data/Card'
+import type { Card } from '@shared/data/api/Card'
+import { CardStatusEnum as ZodCardStatusEnum } from '@shared/data/api/CardStatus'
+import type { CardStatus, CardStatusEnum } from '@shared/data/api/CardStatus'
 
 import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
 import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
@@ -181,7 +183,7 @@ export const getCardStatusForCard = (card: Card): CardStatus => {
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${card.cardHash}`
   const lnurl = encodeLnurl(lnurlDecoded)
 
-  let status: CardStatusStatus = 'unfunded'
+  let status: CardStatusEnum = ZodCardStatusEnum.enum.unfunded
   let amount
   let createdDate
   let fundedDate

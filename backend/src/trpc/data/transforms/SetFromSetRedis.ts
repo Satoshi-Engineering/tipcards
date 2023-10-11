@@ -1,8 +1,8 @@
-import { Set as SetDatabase } from '../../../../../src/data/Set'
+import { Set as SetRedis } from '../../../../../src/data/redis/Set'
 
 import { Set } from '../Set'
 
-export const SetFromSetDatabase = SetDatabase.transform((set) => Set.parse({
+export const SetFromSetRedis = SetRedis.transform((set) => Set.parse({
   id: set.id,
   name: set.settings?.setName,
   created: set.created != null ? new Date(set.created * 1000) : new Date(),

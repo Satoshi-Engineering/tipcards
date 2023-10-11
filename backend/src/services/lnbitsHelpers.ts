@@ -4,8 +4,8 @@ import { getCardByHash, createCard, updateCard, updateSet } from './database'
 import hashSha256 from './hashSha256'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
 
-import type { Card } from '../../../src/data/Card'
-import type { Set } from '../../../src/data/Set'
+import type { Card } from '../../../src/data/api/Card'
+import type { Set } from '../../../src/data/redis/Set'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
 
 /**

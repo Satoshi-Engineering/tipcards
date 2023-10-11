@@ -3,7 +3,7 @@ import type { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import type { Request } from 'express'
 import superjson from 'superjson'
 
-import type { AccessTokenPayload } from '../../../src/data/User'
+import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
 
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')
