@@ -22,10 +22,10 @@ export const Card = z.object({
   lnurl: z.string(),
   invoice: z.object({
     isSet: z.boolean().default(false),
-    expired: z.date().optional(),
+    expired: z.boolean().default(false),
   }).optional(),
   lnurlp: z.object({
-    expired: z.date().optional(),
+    expired: z.boolean().default(false),
   }).optional(),
   amount: z.object({
     pending: z.number().optional(),

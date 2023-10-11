@@ -10,7 +10,6 @@ export const Card = z.object({
     payment_request: z.string(),
     created: z.number(), // unix timestamp
     paid: z.number().nullable(), // unix timestamp
-    expired: z.boolean().optional(),
   }).nullable(),
   lnurlp: z.object({
     shared: z.boolean().optional(),
@@ -19,13 +18,11 @@ export const Card = z.object({
     id: z.union([z.number(), z.string()]),
     created: z.number(), // unix timestamp
     paid: z.number().nullable(), // unix timestamp
-    expired: z.boolean().optional(),
   }).nullable(), // gets created if the user scans an unfunded card with a wallet
   setFunding: z.object({
     amount: z.number(),
     created: z.number(), // unix timestamp
     paid: z.number().nullable(), // unix timestamp
-    expired: z.boolean().optional(),
   }).optional(), // card is funded via set-funding
   lnbitsWithdrawId: z.string().nullable(), // gets set as soon as the card is funded
   landingPageViewed: z.number().optional(), // store the first time the landing page was viewed after it has been funded
