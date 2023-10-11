@@ -9,7 +9,7 @@ export const cardRouter = router({
   bulkWithdraw: publicProcedure
     .input(Card.shape.hash.array())
     .output(BulkWithdraw)
-    .query(async () => {
+    .mutation(async () => {
       return BulkWithdraw.parse({})
     }),
 })

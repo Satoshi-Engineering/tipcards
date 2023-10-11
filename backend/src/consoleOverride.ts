@@ -54,7 +54,11 @@ export default () => {
         if (value instanceof Error) {
           return value.stack
         }
-        return JSON.stringify(value)
+        try {
+          return JSON.stringify(value)
+        } catch (error) {
+          return 'Unable to stringify value, check error logs'
+        }
       })
       .join('\n')
     send({ message })

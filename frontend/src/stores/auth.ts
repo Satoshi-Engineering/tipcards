@@ -72,7 +72,7 @@ const logout = async () => {
   }
 }
 
-const accessTokenNeedsRefresh = computed(() => {
+const accessTokenNeedsRefresh = () => {
   if (accessToken.value === null) {
     return false
   }
@@ -80,7 +80,7 @@ const accessTokenNeedsRefresh = computed(() => {
     return true
   }
   return isAccessTokenExpired()
-})
+}
 
 const isAccessTokenExpired = () => {
   if (accessToken.value == null) {
@@ -99,7 +99,7 @@ const isAccessTokenExpired = () => {
  * @throws AxiosError
  */
 const getValidAccessToken = async (forceRefresh = false): Promise<string | null> => {
-  if (!accessTokenNeedsRefresh.value && !forceRefresh) {
+  if (!accessTokenNeedsRefresh() && !forceRefresh) {
     return accessToken.value || null
   }
 

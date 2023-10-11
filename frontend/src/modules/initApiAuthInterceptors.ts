@@ -37,7 +37,7 @@ const initApiAuthInterceptors = () => {
         ...config.headers,
         Authorization: accessToken,
       },
-    } as InternalAxiosRequestConfig<any>
+    } as InternalAxiosRequestConfig<unknown>
   })
   
   // retry request on 401

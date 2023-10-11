@@ -1,29 +1,35 @@
-export type Settings = {
-  numberOfCards: number
-  cardHeadline: string
-  cardCopytext: string
-  cardsQrCodeLogo: string
-  setName?: string
-  landingPage?: string // id of the landingpage
-}
+import z from 'zod'
 
-export type Set = {
-  id: string
-  settings?: Settings | null
-  created?: number // unix timestamp
-  date?: number // unix timestamp of latest update
+export const Settings = z.object({
+  numberOfCards: z.number(),
+  cardHeadline: z.string(),
+  cardCopytext: z.string(),
+  cardsQrCodeLogo: z.string(),
+  setName: z.string().optional(),
+  landingPage: z.string().optional(), // id of the landingpage
+})
 
-  userId?: string | null
+export type Settings = z.infer<typeof Settings>
 
-  text?: string // this text is used if cards are funded via set-funding
-  note?: string // this note is used if cards are funded via set-funding
-  invoice?: {
-    fundedCards: number[] // list of card indices (e.g. [0, 1, 2, 5, 7])
-    amount: number // total amount
-    payment_hash: string
-    payment_request: string
-    created: number // unix timestamp
-    paid: number | null // unix timestamp
-    expired?: boolean
-  } | null
-}
+export const Set = z.object({
+  id: z.string(),
+  settings: Settings.optional().nullable(),
+  created: z.number().optional(), // unix timestamp
+  date: z.number().optional(), // unix timestamp of latest update
+
+  userId: z.string().optional().nullable(),
+
+  text: z.string().optional(), // this text is used if cards are funded via set-funding
+  note: z.string().optional(), // this note is used if cards are funded via set-funding
+  invoice: z.object({
+    fundedCards: z.number().array(), // list of card indices (e.g. [0, 1, 2, 5, 7])
+    amount: z.number(), // total amount
+    payment_hash: z.string(),
+    payment_request: z.string(),
+    created: z.number(), // unix timestamp
+    paid: z.number().nullable(), // unix timestamp
+    expired: z.boolean().optional(),
+  }).optional().nullable(),
+})
+
+export type Set = z.infer<typeof Set>
