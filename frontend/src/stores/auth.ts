@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 
 import { ErrorCode } from '@shared/data/Errors'
 import { AccessTokenPayload } from '@shared/data/User'
+import { AccessTokenFromResponse } from '@shared/data/Response'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'
 import i18n from '@/modules/initI18n'
@@ -126,11 +127,7 @@ const getNewAccessToken = async (route: string): Promise<string | null> => {
   const isInitialCheck = accessToken.value === undefined
   try {
     const response = await axios.get(route, { withCredentials: true })
-    if (typeof response.data.data?.accessToken === 'string') {
-      accessToken.value = response.data.data.accessToken
-    } else {
-      accessToken.value = undefined
-    }
+    accessToken.value = AccessTokenFromResponse.parse(response.data)
     callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     return accessToken.value || null
   } catch (error) {

@@ -1,3 +1,5 @@
+import z from 'zod'
+
 export enum ErrorCode {
   UnknownDatabaseError = 'UnknownDatabaseError',
   CardByHashNotFound = 'CardByHashNotFound',
@@ -47,6 +49,10 @@ export enum ErrorCode {
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
   ZodErrorParsingAccessTokenPayload = 'ZodErrorParsingAccessTokenPayload',
 }
+
+export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
+
+export type ErrorCodeEnum = z.infer<typeof ErrorCodeEnum>
 
 export class ErrorWithCode {
   error: unknown

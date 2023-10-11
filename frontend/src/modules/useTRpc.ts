@@ -14,7 +14,12 @@ const client = createTRPCProxyClient<AppRouter>({
     httpBatchLink({
       url: `${BACKEND_API_ORIGIN}/trpc`,
       headers: async () => {
-        const accessToken = await getValidAccessToken()
+        let accessToken: string | null
+        try {
+          accessToken = await getValidAccessToken()
+        } catch (error) {
+          accessToken = null
+        }
         return {
           Authorization: accessToken || '',
         }

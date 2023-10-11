@@ -13,7 +13,7 @@
         <p v-if="cardsBySet[set.id] == null || cardsBySet[set.id].length === 0">
           No cards in the set.
         </p>
-        <tempalte v-else>
+        <template v-else>
           <h5>
             Cards:
           </h5>
@@ -22,11 +22,11 @@
               {{ card.hash }}
             </li>
           </ul>
-        </tempalte>
+        </template>
       </li>
     </ul>
 
-    <ButtonDefault variant="outline" @click="reload">
+    <ButtonDefault variant="outline" @click="safeReload">
       reload
     </ButtonDefault>
   </div>
@@ -61,5 +61,14 @@ const reload = async () => {
   }), {} as Record<SetId, Card[]>)
 }
 
-onBeforeMount(reload)
+const safeReload = async () => {
+  try {
+    await reload()
+  } catch (error) {
+    // todo : add error handling (i.e. show error to user)
+    console.error(error)
+  }
+}
+
+onBeforeMount(safeReload)
 </script>
