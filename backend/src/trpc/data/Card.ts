@@ -9,8 +9,6 @@ import z from 'zod'
  *   - withdrawPending : the user clicked on "receive sats" in his:her lightning wallet (i.e. the invoice was sent from the wallet app to lnbits) but the payment wasn't successfully completed yet
  *   - recentlyWithdrawn : the payment from lnbits to the user wallet was successfully completed not less than 5 mintues ago
  *   - withdrawn : same as above, but longer ago
- * 
- * todo : make a helper function for every state (e.g. isUnfunded)
  */
 export const Card = z.object({
   hash: z.string(),
@@ -38,4 +36,5 @@ export const Card = z.object({
   withdrawPending: z.boolean().default(false), // if this is true the user clicked on "receive sats" in the wallet app but the invoice isn't paid yet
   withdrawn: z.date().optional(),
 })
+
 export type Card = z.infer<typeof Card>

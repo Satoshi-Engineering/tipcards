@@ -281,7 +281,7 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
  * 
  * @param card Card
  * @param persist Bool
- * @throws
+ * @throws ErrorWithCode
  */
 export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Card> => {
   if (card.lnbitsWithdrawId == null || card.used != null) {
