@@ -16,9 +16,6 @@ import {
 } from '../trpc'
 
 // eslint-disable-next-line no-console
-console.log('todo : on webhook of a card withdraw check if the card still has a withdrawId or if it was deleted. if deleted raise an error')
-
-// eslint-disable-next-line no-console
 console.log('todo : allow the possibility to reset a bulkWithdraw, either directly or from a single card. this should also be possible if the bulkwithdraw was aborted midway, so the user can recover from an error')
 
 export const cardRouter = router({
@@ -129,7 +126,7 @@ export const cardRouter = router({
         uses: 1,
         wait_time: 1,
         is_unique: true,
-        webhook_url: `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/used/${bulkWithdrawId}`,
+        webhook_url: `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/withdrawn/${bulkWithdrawId}`,
       }, {
         headers: {
           'Content-type': 'application/json',

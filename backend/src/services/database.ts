@@ -2,7 +2,7 @@ import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
-import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
+import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
 import { Card as ZodCard, type Card } from '../../../src/data/redis/Card'
 import { Set as ZodSet, type Set } from '../../../src/data/redis/Set'
 import { User as ZodUser, type User } from '../../../src/data/redis/User'
@@ -473,7 +473,6 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
 }
 
 /**
- * @param bulkWithdraw BulkWithdraw
  * @throws
  */
 export const createBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
@@ -481,6 +480,30 @@ export const createBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<vo
   const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
   if (exists) {
     throw new Error('BulkWithdraw already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`, '$', bulkWithdraw)
+}
+
+/**
+ * @throws
+ */
+export const getBulkWithdrawById = async (id: string): Promise<BulkWithdraw | null> => {
+  const client = await getClient()
+  const bulkWithdraw = await client.json.get(`${REDIS_BASE_PATH}:bulkWithdrawById:${id}:data`)
+  if (bulkWithdraw == null) {
+    return null
+  }
+  return ZodBulkWithdraw.parse(bulkWithdraw)
+}
+
+/**
+ * @throws
+ */
+export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
+  if (!exists) {
+    throw new Error('BulkWithdraw doesn\'t exist.')
   }
   await client.json.set(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`, '$', bulkWithdraw)
 }
