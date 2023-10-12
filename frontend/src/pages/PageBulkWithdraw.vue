@@ -29,6 +29,9 @@
     <ButtonDefault variant="outline" @click="safeReload">
       reload
     </ButtonDefault>
+    <ButtonDefault @click="withdraw">
+      withdraw
+    </ButtonDefault>
   </div>
 </template>
 
@@ -71,4 +74,14 @@ const safeReload = async () => {
 }
 
 onBeforeMount(safeReload)
+
+type CardHash = z.infer<typeof Card.shape.hash>
+const withdraw = async () => {
+  client.card.bulkWithdraw.mutate(
+    Object.values(cardsBySet.value).reduce((cardHashes, cards) => [
+      ...cardHashes,
+      ...cards.map((card) => card.hash),
+    ], [] as CardHash[]),
+  )
+}
 </script>

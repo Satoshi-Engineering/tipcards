@@ -2,6 +2,7 @@ import axios from 'axios'
 import express from 'express'
 
 import type { Card } from '../../../src/data/api/Card'
+import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
 import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
@@ -25,7 +26,10 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   // load card from database
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

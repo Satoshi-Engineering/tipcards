@@ -1,7 +1,7 @@
 import type z from 'zod'
 
-import { Card as CardApi } from '../../../../../src/data/api/Card'
-import { Card as CardRedis } from '../../../../../src/data/redis/Card'
+import type { Card as CardRedis } from '../../../../../src/data/redis/Card'
+import { cardApiFromCardRedis } from '../../../../../src/data/transforms/cardApiFromCardRedis'
 import { encodeLnurl } from '../../../../../src/modules/lnurlHelpers'
 
 import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '../../../services/lnbitsHelpers'
@@ -14,7 +14,7 @@ type Amount = z.infer<typeof Card.shape.amount>
  * @throws ZodError
  * @throws ErrorWithCode
  */
-export const CardFromCardRedis = CardRedis.transform(async (card) => Card.parse({
+export const cardFromCardRedis = async (card: CardRedis) => Card.parse({
   hash: card.cardHash,
   created: mapCreated(card),
   shared: card.lnurlp?.shared,
@@ -27,10 +27,10 @@ export const CardFromCardRedis = CardRedis.transform(async (card) => Card.parse(
   lnurlp: await mapLnurlp(card),
   amount: mapAmount(card),
   funded: mapFunded(card),
-  isBulkWithdraw: false,
+  isLockedByBulkWithdraw: !!card.isLockedByBulkWithdraw,
   withdrawPending: await mapWithdrawPending(card),
   withdrawn: mapWithdrawn(card),
-}))
+})
 
 const mapCreated = (card: CardRedis) => {
   let created = new Date()
@@ -46,7 +46,7 @@ const mapCreated = (card: CardRedis) => {
 
 const mapInvoice = async (card: CardRedis) => {
   if (card.invoice != null) {
-    const cardApi = await checkIfCardInvoiceIsPaid(CardApi.parse(card))
+    const cardApi = await checkIfCardInvoiceIsPaid(cardApiFromCardRedis(card))
     return {
       isSet: false,
       expired: !!cardApi.invoice?.expired,
@@ -64,7 +64,7 @@ const mapLnurlp = async (card: CardRedis) => {
   if (card.lnurlp == null) {
     return undefined
   }
-  const cardApi = await checkIfCardLnurlpIsPaid(CardApi.parse(card))
+  const cardApi = await checkIfCardLnurlpIsPaid(cardApiFromCardRedis(card))
   return {
     expired: !!cardApi.lnurlp?.expired,
   }
@@ -72,8 +72,8 @@ const mapLnurlp = async (card: CardRedis) => {
 
 const mapAmount = (card: CardRedis) => {
   const amount: Amount = {
-    pending: undefined,
-    funded: undefined,
+    pending: null,
+    funded: null,
   }
   if (card.invoice != null) {
     if (card.invoice.paid) {
@@ -94,7 +94,7 @@ const mapAmount = (card: CardRedis) => {
 }
 
 const mapWithdrawPending = async (card: CardRedis) => {
-  const cardApi = CardApi.parse(card)
+  const cardApi = cardApiFromCardRedis(card)
   let withdrawPending = false
   if (mapFunded(cardApi) && !mapWithdrawn) {
     await checkIfCardIsUsed(cardApi)
@@ -114,4 +114,5 @@ const mapFunded = (card: CardRedis) => {
   }
   return funded
 }
+
 const mapWithdrawn = (card: CardRedis) => card.used != null ? new Date(card.used * 1000) : undefined

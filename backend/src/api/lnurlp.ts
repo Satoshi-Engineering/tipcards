@@ -1,6 +1,8 @@
 import express from 'express'
 
 import type { Card } from '../../../src/data/api/Card'
+import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 
@@ -29,7 +31,10 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   // check if card/invoice already exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -48,11 +53,15 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       note,
       invoice: null,
       lnurlp: null,
+      setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
       used: null,
+      withdrawPending: false,
     }
     try {
-      await createCard(card)
+      await createCard(cardRedisFromCardApi(card))
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -109,7 +118,10 @@ const cardPaid = async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -176,7 +188,10 @@ router.post('/update/:cardHash', async (req: express.Request, res: express.Respo
   // check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -242,7 +257,10 @@ router.post('/finish/:cardHash', async (req: express.Request, res: express.Respo
   // check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

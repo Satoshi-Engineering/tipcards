@@ -2,11 +2,12 @@ import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
 import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
-import type { Card } from '../../../src/data/redis/Card'
-import type { Set } from '../../../src/data/redis/Set'
+import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
+import { Card as ZodCard, type Card } from '../../../src/data/redis/Card'
+import { Set as ZodSet, type Set } from '../../../src/data/redis/Set'
 import { User as ZodUser, type User } from '../../../src/data/redis/User'
-import { Type as ImageType, type Image as ImageMeta } from '../../../src/data/redis/Image'
-import type { LandingPage } from '../../../src/data/redis/LandingPage'
+import { Type as ImageType, Image as ZodImage, type Image as ImageMeta } from '../../../src/data/redis/Image'
+import { LandingPage as ZodLandingPage, type LandingPage } from '../../../src/data/redis/LandingPage'
 import { ErrorCode } from '../../../src/data/Errors'
 import hashSha256 from './hashSha256'
 
@@ -119,8 +120,11 @@ export const getClient = async () => {
  */
 export const getCardByHash = async (cardHash: string): Promise<Card | null> => {
   const client = await getClient()
-  const card: Card | null = await client.json.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:data`) as Card | null
-  return card
+  const card = await client.json.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:data`)
+  if (card == null) {
+    return null
+  }
+  return ZodCard.parse(card)
 }
 
 /**
@@ -182,8 +186,11 @@ export const getAllCardHashes = async (): Promise<string[]> => {
  */
 export const getSetById = async (setId: string): Promise<Set | null> => {
   const client = await getClient()
-  const set: Set | null = await client.json.get(`${REDIS_BASE_PATH}:setsById:${setId}:data`) as Set | null
-  return set
+  const set = await client.json.get(`${REDIS_BASE_PATH}:setsById:${setId}:data`)
+  if (set == null) {
+    return null
+  }
+  return ZodSet.parse(set)
 }
 
 export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
@@ -198,7 +205,7 @@ export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
   }
   return result.documents
     .filter(({ id }) => new RegExp(`^${REDIS_BASE_PATH}:setsById:[A-z0-9-]+:data$`).test(id))
-    .map(({ value }) => value as Set)
+    .map(({ value }) => ZodSet.parse(value))
 }
 
 /**
@@ -268,8 +275,11 @@ export const updateUser = async (user: User): Promise<void> => {
  */
 export const getUserById = async (userId: string): Promise<User | null> => {
   const client = await getClient()
-  const user: User | null = await client.json.get(`${REDIS_BASE_PATH}:usersById:${userId}:data`) as User | null
-  return user
+  const user = await client.json.get(`${REDIS_BASE_PATH}:usersById:${userId}:data`)
+  if (user == null) {
+    return null
+  }
+  return ZodUser.parse(user)
 }
 
 /**
@@ -296,7 +306,7 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<User 
     console.error(ErrorCode.FoundMultipleUsersForLnurlAuthKey, lnurlAuthKey)
     return user.sort((a, b) => a.created - b.created)[0] // select the oldest
   }
-  return user[0]
+  return ZodUser.parse(user[0])
 }
 
 /**
@@ -330,11 +340,11 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
     return user
   }
   const userId = hashSha256(lnurlAuthKey)
-  user = {
+  user = ZodUser.parse({
     id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
-  }
+  })
   await createUser(user)
   return user
 }
@@ -358,8 +368,11 @@ export const createImageMeta = async (image: ImageMeta): Promise<void> => {
  */
 export const getImageMeta = async (imageId: string): Promise<ImageMeta | null> => {
   const client = await getClient()
-  const image: ImageMeta | null = await client.json.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:meta`) as ImageMeta | null
-  return image
+  const image = await client.json.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:meta`)
+  if (image == null) {
+    return null
+  }
+  return ZodImage.parse(image)
 }
 
 /**
@@ -435,8 +448,11 @@ export const updateLandingPage = async (landingPage: LandingPage): Promise<void>
  */
 export const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => {
   const client = await getClient()
-  const landingPage: LandingPage | null = await client.json.get(`${REDIS_BASE_PATH}:landingPagesById:${landingPageId}:data`) as LandingPage | null
-  return landingPage
+  const landingPage = await client.json.get(`${REDIS_BASE_PATH}:landingPagesById:${landingPageId}:data`)
+  if (landingPage == null) {
+    return null
+  }
+  return ZodLandingPage.parse(landingPage)
 }
 
 /**
@@ -451,7 +467,20 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
     })
   ) {
     const landingPageResult = await client.json.get(key)
-    landingPages.push(landingPageResult as LandingPage)
+    landingPages.push(ZodLandingPage.parse(landingPageResult))
   }
   return landingPages
+}
+
+/**
+ * @param bulkWithdraw BulkWithdraw
+ * @throws
+ */
+export const createBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
+  if (exists) {
+    throw new Error('BulkWithdraw already exists.')
+  }
+  await client.json.set(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`, '$', bulkWithdraw)
 }

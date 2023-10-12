@@ -1,6 +1,7 @@
 import express from 'express'
 
 import type { Card } from '../../../src/data/api/Card'
+import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
 
@@ -14,7 +15,10 @@ const cardUsed = async (req: express.Request, res: express.Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

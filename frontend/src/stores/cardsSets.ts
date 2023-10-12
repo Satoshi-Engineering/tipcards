@@ -96,6 +96,10 @@ const toSet = (set: SetWithEncodedSettings): Set => {
     settings: decodeCardsSetSettings(set.settings),
     created,
     date: Math.floor(+ new Date(set.date) / 1000),
+    userId: null,
+    text: '',
+    note: '',
+    invoice: null,
   }
 }
 

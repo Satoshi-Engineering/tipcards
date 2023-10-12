@@ -14,27 +14,27 @@ export const Card = z.object({
   hash: z.string(),
   created: z.date().default(() => new Date()),
   shared: z.boolean().default(false),
-  landingPageViewed: z.date().optional(),
-  textForWithdraw: z.string().optional(),
-  noteForStatusPage: z.string().optional(),
+  landingPageViewed: z.date().nullable().default(null),
+  textForWithdraw: z.string().default(''),
+  noteForStatusPage: z.string().default(''),
 
   // calculated fields
   lnurl: z.string(),
   invoice: z.object({
     isSet: z.boolean().default(false),
     expired: z.boolean().default(false),
-  }).optional(),
+  }).nullable().default(null),
   lnurlp: z.object({
     expired: z.boolean().default(false),
-  }).optional(),
+  }).nullable().default(null),
   amount: z.object({
-    pending: z.number().optional(),
-    funded: z.number().optional(),
+    pending: z.number().nullable().default(null),
+    funded: z.number().nullable().default(null),
   }),
-  funded: z.date().optional(),
-  isBulkWithdraw: z.boolean().default(false),
-  withdrawPending: z.boolean().default(false), // if this is true the user clicked on "receive sats" in the wallet app but the invoice isn't paid yet
-  withdrawn: z.date().optional(),
+  funded: z.date().nullable().default(null),
+  isLockedByBulkWithdraw: z.boolean().default(false),
+  withdrawPending: z.boolean().default(false).describe('if this is true the user clicked on "receive sats" in the wallet app but the invoice isn\'t paid yet'),
+  withdrawn: z.date().nullable().default(null),
 })
 
 export type Card = z.infer<typeof Card>

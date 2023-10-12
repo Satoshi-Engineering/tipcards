@@ -13,10 +13,10 @@ export type CardStatusEnum = z.infer<typeof CardStatusEnum>
 export const CardStatus = z.object({
   lnurl: z.string(),
   status: CardStatusEnum,
-  amount: z.number().optional(),
-  createdDate: z.number().optional(),
-  fundedDate: z.number().optional(),
-  withdrawnDate: z.number().optional(),
+  amount: z.number().nullable().default(null),
+  createdDate: z.number().nullable().default(null),
+  fundedDate: z.number().nullable().default(null),
+  withdrawnDate: z.number().nullable().default(null),
 })
 
 export type CardStatus = z.infer<typeof CardStatus>

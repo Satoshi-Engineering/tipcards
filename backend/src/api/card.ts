@@ -1,6 +1,8 @@
 import express from 'express'
 
-import type { Card } from '../../../src/data/api/Card'
+import type { Card as CardApi } from '../../../src/data/api/Card'
+import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 
 import { getCardByHash, updateCard } from '../services/database'
@@ -11,11 +13,14 @@ const router = express.Router()
 router.get('/')
 
 router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
-  let card: Card | null = null
+  let card: CardApi | null = null
 
   // load card from database
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -91,7 +96,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   ) {
     card.landingPageViewed = Math.round(+ new Date() / 1000)
     try {
-      await updateCard(card)
+      await updateCard(cardRedisFromCardApi(card))
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
     }

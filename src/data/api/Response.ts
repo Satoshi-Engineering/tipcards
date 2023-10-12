@@ -11,7 +11,7 @@ export type SuccessResponse = z.infer<typeof SuccessResponse>
 
 export const ErrorResponse = z.object({
   status: z.literal('error'),
-  message: z.string(), // a message intended for the user (but not localized)
+  message: z.string().describe('a message intended for the user (but not localized)'),
   code: ErrorCodeEnum,
   data: z.unknown().optional(),
 })
@@ -20,7 +20,7 @@ export type ErrorResponse = z.infer<typeof ErrorResponse>
 
 export const LnurlErrorResponse = z.object({
   status: z.literal('ERROR'),
-  reason: z.string(), // a message intended for the user (but not localized)
+  reason: z.string().describe('a message intended for the user (but not localized)'),
   code: ErrorCodeEnum,
   data: z.unknown().optional(),
 })

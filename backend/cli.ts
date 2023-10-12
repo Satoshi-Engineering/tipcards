@@ -2,6 +2,8 @@
 import 'dotenv/config'
 import readline from 'readline'
 
+import { cardApiFromCardRedis } from '../src/data/transforms/cardApiFromCardRedis'
+
 import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from './src/services/database'
 import { getCardIsUsedFromLnbits } from './src/services/lnbitsHelpers'
 
@@ -21,7 +23,7 @@ const clearUnusedCards = async () => {
       continue
     }
     try {
-      const used = await getCardIsUsedFromLnbits(card)
+      const used = await getCardIsUsedFromLnbits(cardApiFromCardRedis(card))
       if (!used) {
         console.log(`\nCard ${card.cardHash} is not used and needs database update.`)
       }

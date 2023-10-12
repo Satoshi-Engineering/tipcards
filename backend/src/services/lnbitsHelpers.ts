@@ -1,12 +1,18 @@
 import axios from 'axios'
+import z from 'zod'
 
 import { getCardByHash, createCard, updateCard, updateSet } from './database'
 import hashSha256 from './hashSha256'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
 
-import type { Card } from '../../../src/data/api/Card'
+import { Card as ZodCardApi, type Card as CardApi } from '../../../src/data/api/Card'
+import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
 import type { Set } from '../../../src/data/redis/Set'
+import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
+
+// eslint-disable-next-line no-console
+console.log('todo : make sure all funcs recognize bulkWithdrawId')
 
 /**
  * Checks if the card invoice has been paid.
@@ -15,10 +21,10 @@ import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
  *  - manipulates the given card
  *  - updates the card in the database
  * 
- * @param card Card
+ * @param card CardApi
  * @throws ErrorWithCode
  */
-export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
+export const checkIfCardInvoiceIsPaid = async (card: CardApi): Promise<CardApi> => {
   if (
     card.lnbitsWithdrawId != null
     || card.invoice == null
@@ -50,7 +56,7 @@ export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
   }
   try {
-    await updateCard(card)
+    await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
@@ -64,10 +70,10 @@ export const checkIfCardInvoiceIsPaid = async (card: Card): Promise<Card> => {
  *  - manipulates the given card
  *  - updates the card in the database
  * 
- * @param card Card
+ * @param card CardApi
  * @throws ErrorWithCode
  */
-export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): Promise<Card> => {
+export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false): Promise<CardApi> => {
   if (
     card.lnbitsWithdrawId != null
     || card.lnurlp == null
@@ -186,7 +192,7 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
   }
 
   try {
-    await updateCard(card)
+    await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
@@ -199,10 +205,10 @@ export const checkIfCardLnurlpIsPaid = async (card: Card, closeShared = false): 
  *  - manipulates the given card
  *  - updates the card in the database
  * 
- * @param card 
+ * @param card CardApi
  * @throws ErrorWithCode
  */
-export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<Card> => {
+export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promise<CardApi> => {
   await checkIfCardInvoiceIsPaid(card)
   if (card.invoice?.paid == null) {
     await checkIfCardLnurlpIsPaid(card)
@@ -265,7 +271,7 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
   }
 
   try {
-    await updateCard(card)
+    await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
@@ -279,11 +285,11 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: Card): Promise<
  *  - manipulates the given card
  *  - updates the card in the database
  * 
- * @param card Card
+ * @param card CardApi
  * @param persist Bool
  * @throws ErrorWithCode
  */
-export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Card> => {
+export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise<CardApi> => {
   if (card.lnbitsWithdrawId == null || card.used != null) {
     return card
   }
@@ -312,7 +318,7 @@ export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Ca
   }
 
   try {
-    await updateCard(card)
+    await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
@@ -322,10 +328,10 @@ export const checkIfCardIsUsed = async (card: Card, persist = false): Promise<Ca
 /**
  * Checks if the card has been used.
  * 
- * @param card Card
+ * @param card CardApi
  * @throws
  */
-export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
+export const getCardIsUsedFromLnbits = async (card: CardApi): Promise<boolean> => {
   if (card.lnbitsWithdrawId == null) {
     return false
   }
@@ -356,11 +362,11 @@ export const getCardIsUsedFromLnbits = async (card: Card): Promise<boolean> => {
  *  - manipulates the given card
  *  - updates the card in the database
  * 
- * @param card Card
+ * @param card CardApi
  * @param shared Boolean
  * @throws
  */
-export const getLnurlpForCard = async (card: Card, shared: undefined | boolean = undefined): Promise<unknown> => {
+export const getLnurlpForCard = async (card: CardApi, shared: undefined | boolean = undefined): Promise<unknown> => {
   let id
   if (card.lnurlp?.id != null) {
     id = String(card.lnurlp.id)
@@ -392,10 +398,11 @@ export const getLnurlpForCard = async (card: Card, shared: undefined | boolean =
       id,
       created: Math.round(+ new Date() / 1000),
       paid: null,
+      expired: false,
     }
   }
   try {
-    await updateCard(card)
+    await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
@@ -409,16 +416,16 @@ export const getLnurlpForCard = async (card: Card, shared: undefined | boolean =
 }
 
 export const getLnurlpForNewCard = async (cardHash: string, shared = false): Promise<unknown> => {
-  const card: Card = {
+  const card = ZodCardApi.parse({
     cardHash,
     text: 'Have fun with Bitcoin :)',
     invoice: null,
     lnurlp: null,
     lnbitsWithdrawId: null,
     used: null,
-  }
+  })
   try {
-    await createCard(card)
+    await createCard(cardRedisFromCardApi(card))
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     throw error
@@ -474,7 +481,7 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
     // update all cards -> paid
     await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
       const cardHash = hashSha256(`${set.id}/${cardIndex}`)
-      const card: Card | null = await getCardByHash(cardHash)
+      const card = await getCardByHash(cardHash)
       if (card?.setFunding == null) {
         return
       }
@@ -488,4 +495,23 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
   return set
+}
+
+/**
+ * 
+ * @throws ZodError
+ * @throws AxiosError
+ */
+export const isBulkWithdrawWithdrawn = async (bulkWithdraw: BulkWithdraw): Promise<boolean> => {
+  if (bulkWithdraw.withdrawn != null) {
+    return true
+  }
+  const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${bulkWithdraw.lnbitsWithdrawId}`, {
+    headers: {
+      'Content-type': 'application/json',
+      'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+    },
+  })
+  const used = z.object({ used: z.number() }).transform(({ used }) => used).parse(response.data)
+  return used > 0
 }

@@ -37,6 +37,12 @@ export const loadCard = async (cardHash: string, origin: string | undefined = un
         lnurlp: null,
         lnbitsWithdrawId: null,
         used: null,
+        text: '',
+        note: '',
+        setFunding: null,
+        landingPageViewed: null,
+        isLockedByBulkWithdraw: false,
+        withdrawPending: false,
       }
     }
     console.error(error)
@@ -184,21 +190,21 @@ export const getCardStatusForCard = (card: Card): CardStatus => {
   const lnurl = encodeLnurl(lnurlDecoded)
 
   let status: CardStatusEnum = ZodCardStatusEnum.enum.unfunded
-  let amount
-  let createdDate
-  let fundedDate
-  let withdrawnDate
+  let amount: number | null = null
+  let createdDate: number | null = null
+  let fundedDate: number | null = null
+  let withdrawnDate: number | null = null
 
   if (card.invoice != null) {
     status = card.invoice.expired ? 'invoiceExpired' : 'invoiceFunding'
     amount = card.invoice.amount
     createdDate = card.invoice.created
-    fundedDate = card.invoice.paid != null ? card.invoice.paid : undefined
+    fundedDate = card.invoice.paid != null ? card.invoice.paid : null
   } else if (card.lnurlp != null) {
     status = card.lnurlp.expired ? 'lnurlpExpired' : 'lnurlpFunding'
-    amount = card.lnurlp.amount != null ? card.lnurlp.amount : undefined
+    amount = card.lnurlp.amount != null ? card.lnurlp.amount : null
     createdDate = card.lnurlp.created
-    fundedDate = card.lnurlp.paid != null ? card.lnurlp.paid : undefined
+    fundedDate = card.lnurlp.paid != null ? card.lnurlp.paid : null
     if (card.lnurlp.shared) {
       status = card.lnurlp.expired
         ? amount != null && amount > 0 ? 'lnurlpSharedExpiredFunded' : 'lnurlpSharedExpiredEmpty'
@@ -208,7 +214,7 @@ export const getCardStatusForCard = (card: Card): CardStatus => {
     status = card.setFunding.expired ? 'setInvoiceExpired' : 'setInvoiceFunding'
     amount = card.setFunding.amount
     createdDate = card.setFunding.created
-    fundedDate = card.setFunding.paid != null ? card.setFunding.paid : undefined
+    fundedDate = card.setFunding.paid != null ? card.setFunding.paid : null
   }
 
   if (fundedDate != null) {

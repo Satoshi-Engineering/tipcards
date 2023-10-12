@@ -5,31 +5,31 @@ export const Settings = z.object({
   cardHeadline: z.string(),
   cardCopytext: z.string(),
   cardsQrCodeLogo: z.string(),
-  setName: z.string().optional(),
-  landingPage: z.string().optional(), // id of the landingpage
+  setName: z.string().default(''),
+  landingPage: z.string().nullable().default(null).describe('id of the landingpage'),
 })
 
 export type Settings = z.infer<typeof Settings>
 
 export const Set = z.object({
   id: z.string(),
-  settings: Settings.optional().nullable(),
-  created: z.number().optional(), // unix timestamp
-  date: z.number().optional(), // unix timestamp of latest update
+  settings: Settings.nullable().default(null),
+  created: z.number().default(() => + new Date() / 1000).describe('unix timestamp'),
+  date: z.number().nullable().default(null).describe('unix timestamp of latest update'),
 
-  userId: z.string().optional().nullable(),
+  userId: z.string().nullable().default(null),
 
-  text: z.string().optional(), // this text is used if cards are funded via set-funding
-  note: z.string().optional(), // this note is used if cards are funded via set-funding
+  text: z.string().default('').describe('this text is used if cards are funded via set-funding'),
+  note: z.string().default('').describe('this note is used if cards are funded via set-funding'),
   invoice: z.object({
-    fundedCards: z.number().array(), // list of card indices (e.g. [0, 1, 2, 5, 7])
-    amount: z.number(), // total amount
+    fundedCards: z.number().array().describe('list of card indices (e.g. [0, 1, 2, 5, 7])'),
+    amount: z.number().describe('total amount'),
     payment_hash: z.string(),
     payment_request: z.string(),
-    created: z.number(), // unix timestamp
-    paid: z.number().nullable(), // unix timestamp
-    expired: z.boolean().optional(),
-  }).optional().nullable(),
+    created: z.number().describe('unix timestamp'),
+    paid: z.number().nullable().default(null).describe('unix timestamp'),
+    expired: z.boolean().default(false),
+  }).nullable().default(null),
 })
 
 export type Set = z.infer<typeof Set>

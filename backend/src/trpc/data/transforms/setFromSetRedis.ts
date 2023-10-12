@@ -1,8 +1,8 @@
-import { Set as SetRedis } from '../../../../../src/data/redis/Set'
+import type { Set as SetRedis } from '../../../../../src/data/redis/Set'
 
 import { Set } from '../Set'
 
-export const SetFromSetRedis = SetRedis.transform((set) => Set.parse({
+export const setFromSetRedis = (set: SetRedis) => Set.parse({
   id: set.id,
   name: set.settings?.setName,
   created: set.created != null ? new Date(set.created * 1000) : new Date(),
@@ -12,4 +12,4 @@ export const SetFromSetRedis = SetRedis.transform((set) => Set.parse({
   cardCopytext: set.settings?.cardCopytext,
   cardImage: set.settings?.cardsQrCodeLogo,
   landingPage: set.settings?.landingPage,
-}))
+})

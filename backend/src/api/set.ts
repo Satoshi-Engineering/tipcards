@@ -2,7 +2,6 @@ import axios from 'axios'
 import express from 'express'
 
 import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
-import type { Card } from '../../../src/data/api/Card'
 import type { Settings, Set } from '../../../src/data/redis/Set'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 
@@ -64,9 +63,9 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
     return
   }
   const userId: string = accessTokenPayload.id
-  let settings: Settings | null | undefined = undefined
-  let created: number | undefined = undefined
-  let date: number | undefined = undefined
+  let settings: Settings | null = null
+  let created: number | null = null
+  let date: number | null = null
   try {
     ({ settings, created, date } = req.body)
   } catch (error) {
@@ -96,6 +95,8 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
       settings,
       created: Math.floor(+ new Date() / 1000),
       date: Math.floor(+ new Date() / 1000),
+      text: '',
+      note: '',
     }
     if (created != null) {
       set.created = created
@@ -308,6 +309,12 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
     set = {
       id: req.params.setId,
       created: Math.floor(+ new Date() / 1000),
+      date: Math.floor(+ new Date() / 1000),
+      text: '',
+      note: '',
+      invoice: null,
+      settings: null,
+      userId: null,
     }
   }
   set.date = Math.floor(+ new Date() / 1000)
@@ -340,6 +347,8 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
         lnurlp: null,
         lnbitsWithdrawId: null,
         used: null,
+        landingPageViewed: null,
+        isLockedByBulkWithdraw: false,
       })
     }))
     if (insertNewSet) {
@@ -446,11 +455,11 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
         return
       }
       const cardHash = hashSha256(`${set.id}/${cardIndex}`)
-      const card: Card | null = await getCardByHash(cardHash)
-      if (card?.setFunding == null) {
+      const cardRedis = await getCardByHash(cardHash)
+      if (cardRedis?.setFunding == null) {
         return
       }
-      await deleteCard(card)
+      await deleteCard(cardRedis)
     }))
 
     // delete set or invoice

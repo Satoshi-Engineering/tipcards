@@ -592,6 +592,10 @@ const saveCardsSet = async () => {
       settings,
       date: Math.floor(+ new Date() / 1000),
       created,
+      userId: null,
+      text: '',
+      note: '',
+      invoice: null,
     })
   } catch (error) {
     console.error(error)
