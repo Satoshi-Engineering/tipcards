@@ -11,9 +11,6 @@ import type { Set } from '../../../src/data/redis/Set'
 import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
 
-// eslint-disable-next-line no-console
-console.log('todo : make sure all funcs recognize bulkWithdrawId')
-
 /**
  * Checks if the card invoice has been paid.
  * 
@@ -25,6 +22,10 @@ console.log('todo : make sure all funcs recognize bulkWithdrawId')
  * @throws ErrorWithCode
  */
 export const checkIfCardInvoiceIsPaid = async (card: CardApi): Promise<CardApi> => {
+  if (card.isLockedByBulkWithdraw) {
+    return card
+  }
+
   if (
     card.lnbitsWithdrawId != null
     || card.invoice == null
@@ -74,6 +75,10 @@ export const checkIfCardInvoiceIsPaid = async (card: CardApi): Promise<CardApi> 
  * @throws ErrorWithCode
  */
 export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false): Promise<CardApi> => {
+  if (card.isLockedByBulkWithdraw) {
+    return card
+  }
+
   if (
     card.lnbitsWithdrawId != null
     || card.lnurlp == null
@@ -209,6 +214,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
  * @throws ErrorWithCode
  */
 export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promise<CardApi> => {
+  if (card.isLockedByBulkWithdraw) {
+    return card
+  }
+
   await checkIfCardInvoiceIsPaid(card)
   if (card.invoice?.paid == null) {
     await checkIfCardLnurlpIsPaid(card)
@@ -290,7 +299,11 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
  * @throws ErrorWithCode
  */
 export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise<CardApi> => {
-  if (card.lnbitsWithdrawId == null || card.used != null) {
+  if (
+    card.lnbitsWithdrawId == null
+    || card.used != null
+    || card.isLockedByBulkWithdraw
+  ) {
     return card
   }
   try {
@@ -332,7 +345,7 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
  * @throws
  */
 export const getCardIsUsedFromLnbits = async (card: CardApi): Promise<boolean> => {
-  if (card.lnbitsWithdrawId == null) {
+  if (card.lnbitsWithdrawId == null || card.isLockedByBulkWithdraw) {
     return false
   }
   try {
@@ -367,6 +380,10 @@ export const getCardIsUsedFromLnbits = async (card: CardApi): Promise<boolean> =
  * @throws
  */
 export const getLnurlpForCard = async (card: CardApi, shared: undefined | boolean = undefined): Promise<unknown> => {
+  if (card.isLockedByBulkWithdraw) {
+    return card
+  }
+
   let id
   if (card.lnurlp?.id != null) {
     id = String(card.lnurlp.id)

@@ -208,6 +208,13 @@ router.post('/update/:cardHash', async (req: express.Request, res: express.Respo
     })
     return
   }
+  if (card.isLockedByBulkWithdraw) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This Tip Card is locked by bulk withdraw.',
+    })
+    return
+  }
   if (card.lnurlp == null) {
     res.status(400).json({
       status: 'error',
