@@ -118,8 +118,8 @@ export const getClient = async () => {
 }
 
 /**
- * @param cardHash string
- * @throws
+ * @throws ZodError
+ * @throws unknown
  */
 export const getCardByHash = async (cardHash: string): Promise<Card | null> => {
   const client = await getClient()
@@ -144,8 +144,7 @@ export const createCard = async (card: Card): Promise<void> => {
 }
 
 /**
- * @param card Card
- * @throws
+ * @throws unknown
  */
 export const updateCard = async (card: Card): Promise<void> => {
   const client = await getClient()

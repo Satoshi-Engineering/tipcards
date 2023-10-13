@@ -1,4 +1,4 @@
-import CardCollectionRedis from '../../modules/CardCollectionRedis'
+import CardCollection from '../../modules/CardCollection'
 import { getSetsByUserId } from '../../services/database'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis'
@@ -19,7 +19,7 @@ export const setRouter = router({
     .input(Set.shape.id)
     .output(Card.array())
     .query(async ({ input: setId }) => {
-      const cards = await CardCollectionRedis.fromSetId(setId)
+      const cards = await CardCollection.fromSetId(setId)
       return await cards.toTRpcResponse()
     }),
 })

@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { ErrorWithCode } from '../../../src/data/Errors'
 
 import NotFoundError from '../errors/NotFoundError'
+import UserError from '../errors/UserError'
 
 import { router, createContext } from './trpc'
 import { bulkWithdrawRouter } from './router/bulkWithdraw'
@@ -19,7 +20,13 @@ export const appRouter = router({
 export type AppRouter = typeof appRouter
 
 export const onError: OnErrorFunction<AppRouter, Request> = (opts) => {
-  if (opts.error.cause instanceof NotFoundError) {
+  if (opts.error.cause instanceof UserError) {
+    opts.error = new TRPCError({
+      code: 'BAD_REQUEST',
+      message: opts.error.cause.message,
+      cause: opts.error.cause,
+    })
+  } else if (opts.error.cause instanceof NotFoundError) {
     opts.error = new TRPCError({
       code: 'NOT_FOUND',
       message: opts.error.cause.message,

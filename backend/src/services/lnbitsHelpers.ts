@@ -1,15 +1,30 @@
 import axios from 'axios'
 import z from 'zod'
 
-import { getCardByHash, createCard, updateCard, updateSet } from './database'
-import hashSha256 from './hashSha256'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
-
 import { Card as ZodCardApi, type Card as CardApi } from '../../../src/data/api/Card'
 import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
 import type { Set } from '../../../src/data/redis/Set'
 import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
+
+import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
+import { getCardByHash, createCard, updateCard, updateSet } from './database'
+import hashSha256 from './hashSha256'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
+
+const axiosOptionsWithReadHeaders = {
+  headers: {
+    'Content-type': 'application/json',
+    'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+  },
+}
+
+const axiosOptionsWithAdminHeaders = {
+  headers: {
+    'Content-type': 'application/json',
+    'X-Api-Key': LNBITS_ADMIN_KEY,
+  },
+}
 
 /**
  * Checks if the card invoice has been paid.
@@ -34,12 +49,10 @@ export const checkIfCardInvoiceIsPaid = async (card: CardApi): Promise<CardApi> 
     return card
   }
   try {
-    const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-      },
-    })
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/api/v1/payments/${card.invoice.payment_hash}`,
+      axiosOptionsWithReadHeaders,
+    )
     if (typeof response.data.paid !== 'boolean') {
       throw new ErrorWithCode('Missing paid status when checking invoice status at lnbits.', ErrorCode.UnableToGetLnbitsInvoiceStatus)
     }
@@ -90,12 +103,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
   // 1. check if payment requests were created
   let servedPaymentRequests: number
   try {
-    const response = await axios.get(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/${card.lnurlp.id}`, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_ADMIN_KEY,
-      },
-    })
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/lnurlp/api/v1/links/${card.lnurlp.id}`,
+      axiosOptionsWithAdminHeaders,
+    )
     if (response.data.served_pr === 0) {
       return card
     }
@@ -121,12 +132,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
   let offset = 0
   while (paymentRequests.length < servedPaymentRequests) {
     try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments?limit=${limit}&offset=${offset}&sortby=time&direction=desc`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_ADMIN_KEY,
-        },
-      })
+      const response = await axios.get(
+        `${LNBITS_ORIGIN}/api/v1/payments?limit=${limit}&offset=${offset}&sortby=time&direction=desc`,
+        axiosOptionsWithAdminHeaders,
+      )
       if (!Array.isArray(response.data)) {
         console.error(ErrorCode.LnbitsPaymentRequestsMalformedResponse, card.cardHash, response.data)
         break
@@ -173,12 +182,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
       break
     }
     try {
-      const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${paymentRequest}`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_ADMIN_KEY,
-        },
-      })
+      const response = await axios.get(
+        `${LNBITS_ORIGIN}/api/v1/payments/${paymentRequest}`,
+        axiosOptionsWithAdminHeaders,
+      )
       if (response.data.paid === true) {
         amount += Math.round(response.data.details.amount / 1000)
         payment_hash.push(response.data.details.payment_hash)
@@ -235,20 +242,19 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
     return card
   }
   try {
-    const response = await axios.post(`${LNBITS_ORIGIN}/withdraw/api/v1/links`, {
-      title: card.text,
-      min_withdrawable: amount,
-      max_withdrawable: amount,
-      uses: 1,
-      wait_time: 1,
-      is_unique: true,
-      webhook_url: `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
-    }, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_ADMIN_KEY,
+    const response = await axios.post(
+      `${LNBITS_ORIGIN}/withdraw/api/v1/links`,
+      {
+        title: card.text,
+        min_withdrawable: amount,
+        max_withdrawable: amount,
+        uses: 1,
+        wait_time: 1,
+        is_unique: true,
+        webhook_url: `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
       },
-    })
+      axiosOptionsWithAdminHeaders,
+    )
     if (typeof response.data.id === 'string' || typeof response.data.id === 'number') {
       card.lnbitsWithdrawId = String(response.data.id)
     } else {
@@ -261,12 +267,10 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
   // remove lnurlp as soon as withdraw link is created to avoid paying more sats into a card that cannot be funded anymore
   if (card.lnurlp?.id != null) {
     try {
-      await axios.delete(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/${card.lnurlp.id}`, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_ADMIN_KEY,
-        },
-      })
+      await axios.delete(
+        `${LNBITS_ORIGIN}/lnurlp/api/v1/links/${card.lnurlp.id}`,
+        axiosOptionsWithAdminHeaders,
+      )
     } catch (error) {
       // if the delete request returns 404 and has data, then the lnurlp has already been deleted (probably by lnbits)
       if (
@@ -307,12 +311,10 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
     return card
   }
   try {
-    const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-      },
-    })
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`,
+      axiosOptionsWithReadHeaders,
+    )
     if (typeof response.data.used !== 'number') {
       throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
     }
@@ -349,12 +351,10 @@ export const getCardIsUsedFromLnbits = async (card: CardApi): Promise<boolean> =
     return false
   }
   try {
-    const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-      },
-    })
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`,
+      axiosOptionsWithReadHeaders,
+    )
     if (typeof response.data.used !== 'number') {
       throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
     }
@@ -392,17 +392,16 @@ export const getLnurlpForCard = async (card: CardApi, shared: undefined | boolea
     }
   } else {
     try {
-      const response = await axios.post(`${LNBITS_ORIGIN}/lnurlp/api/v1/links/`, {
-        description: 'Fund your tipcard!',
-        min: 210,
-        max: 210000,
-        webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurlp/paid/${card.cardHash}`,
-      }, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_ADMIN_KEY,
+      const response = await axios.post(
+        `${LNBITS_ORIGIN}/lnurlp/api/v1/links/`,
+        {
+          description: 'Fund your tipcard!',
+          min: 210,
+          max: 210000,
+          webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurlp/paid/${card.cardHash}`,
         },
-      })
+        axiosOptionsWithAdminHeaders,
+      )
       id = String(response.data.id)
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToCreateLnurlP)
@@ -468,12 +467,10 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
     return set
   }
   try {
-    const response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments/${set.invoice.payment_hash}`, {
-      headers: {
-        'Content-type': 'application/json',
-        'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-      },
-    })
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/api/v1/payments/${set.invoice.payment_hash}`,
+      axiosOptionsWithReadHeaders,
+    )
     if (typeof response.data.paid !== 'boolean') {
       throw new ErrorWithCode('Missing paid status when checking invoice status at lnbits.', ErrorCode.UnableToGetLnbitsInvoiceStatus)
     }
@@ -523,12 +520,65 @@ export const isBulkWithdrawWithdrawn = async (bulkWithdraw: BulkWithdraw): Promi
   if (bulkWithdraw.withdrawn != null) {
     return true
   }
-  const response = await axios.get(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${bulkWithdraw.lnbitsWithdrawId}`, {
-    headers: {
-      'Content-type': 'application/json',
-      'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-    },
-  })
+  const response = await axios.get(
+    `${LNBITS_ORIGIN}/withdraw/api/v1/links/${bulkWithdraw.lnbitsWithdrawId}`,
+    axiosOptionsWithReadHeaders,
+  )
   const used = z.object({ used: z.number() }).transform(({ used }) => used).parse(response.data)
   return used > 0
+}
+
+/**
+ * info about deleting withdrawId:
+ *  - delete just deletes the lnurl without checking if there are any uses
+ *  - I cannot set the uses to 0, min 1 is allowed by the api
+ *  - the payment_requests do not contain the withdraw id/link, only the info that they were created by a withdraw
+ *  - the "wait_time" property is in seconds and also applies to the first withdraw, so we could use that maybe
+ *  - I set the wait time to 100 years for an old withdraw, I could still use it :(
+ *  - I could set the max_amount to 1 satoshi, then delete it, if it still has 0 uses (then the user can at most claim 1 satoshi)
+ * 
+ * @throws WithdrawAlreadyUsedError
+ * @throws AxiosError
+ */
+export const deleteWithdrawIfNotUsed = async (lnbitsWithdrawId: string, title: string, webhook_url: string) => {
+  const response = await axios.put(
+    `${LNBITS_ORIGIN}/withdraw/api/v1/links/${lnbitsWithdrawId}`,
+    {
+      title,
+      min_withdrawable: 1,
+      max_withdrawable: 1,
+      uses: 1,
+      wait_time: 1,
+      is_unique: true,
+      webhook_url,
+    },
+    axiosOptionsWithAdminHeaders,
+  )
+  const used = z.object({ used: z.number() }).transform(({ used }) => used).parse(response.data)
+  if (used > 0) {
+    throw new WithdrawAlreadyUsedError(`Lnbits withdraw ${lnbitsWithdrawId} is already used.`)
+  }
+  await axios.delete(`${LNBITS_ORIGIN}/withdraw/api/v1/links/${lnbitsWithdrawId}`, axiosOptionsWithAdminHeaders)
+}
+
+/**
+ * @throws AxiosError
+ */
+export const createWithdrawLink = async (title: string, amount: number, webhook_url: string) => {
+  const response = await axios.post(
+    `${LNBITS_ORIGIN}/withdraw/api/v1/links`,
+    {
+      title,
+      min_withdrawable: amount,
+      max_withdrawable: amount,
+      uses: 1,
+      wait_time: 1,
+      is_unique: true,
+      webhook_url,
+    },
+    axiosOptionsWithAdminHeaders,
+  )
+  const lnbitsWithdrawId = String(response.data.id)
+  const lnbitsWithdrawLnurl = response.data.lnurl
+  return { lnbitsWithdrawId, lnbitsWithdrawLnurl }
 }
