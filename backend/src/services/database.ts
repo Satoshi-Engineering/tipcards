@@ -1,7 +1,6 @@
 import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
-import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
 import { Card as ZodCard, type Card } from '../../../src/data/redis/Card'
 import { Set as ZodSet, type Set } from '../../../src/data/redis/Set'
@@ -9,7 +8,11 @@ import { User as ZodUser, type User } from '../../../src/data/redis/User'
 import { Type as ImageType, Image as ZodImage, type Image as ImageMeta } from '../../../src/data/redis/Image'
 import { LandingPage as ZodLandingPage, type LandingPage } from '../../../src/data/redis/LandingPage'
 import { ErrorCode } from '../../../src/data/Errors'
+
 import hashSha256 from './hashSha256'
+import AlreadyExistsError from '../errors/AlreadyExistsError'
+import NotFoundError from '../errors/NotFoundError'
+import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -473,37 +476,70 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
 }
 
 /**
- * @throws
+ * @throws AlreadyExistsError
+ * @throws unknown
  */
 export const createBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
   if (exists) {
-    throw new Error('BulkWithdraw already exists.')
+    throw new AlreadyExistsError(`Unable to create bulkWithdraw ${bulkWithdraw.id} in Redis. It already exists.`)
   }
   await client.json.set(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`, '$', bulkWithdraw)
 }
 
 /**
- * @throws
+ * @throws NotFoundError
+ * @throws unknown
  */
-export const getBulkWithdrawById = async (id: string): Promise<BulkWithdraw | null> => {
+export const getBulkWithdrawById = async (id: string): Promise<BulkWithdraw> => {
   const client = await getClient()
   const bulkWithdraw = await client.json.get(`${REDIS_BASE_PATH}:bulkWithdrawById:${id}:data`)
   if (bulkWithdraw == null) {
-    return null
+    throw new NotFoundError('BulkWithdraw doesn\'t exist.')
   }
   return ZodBulkWithdraw.parse(bulkWithdraw)
 }
 
 /**
- * @throws
+ * @throws NotFoundError
+ * @throws unknown
  */
 export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
   if (!exists) {
-    throw new Error('BulkWithdraw doesn\'t exist.')
+    throw new NotFoundError('BulkWithdraw doesn\'t exist.')
   }
   await client.json.set(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`, '$', bulkWithdraw)
+}
+
+/**
+ * @throws NotFoundError
+ * @throws unknown
+ */
+export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
+  const client = await getClient()
+  const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
+  if (!exists) {
+    throw new NotFoundError('BulkWithdraw doesn\'t exist.')
+  }
+  await client.del(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
+}
+
+/**
+ * @throws unknown
+ */
+export const getAllBulkWithdraws = async (): Promise<BulkWithdraw[]> => {
+  const client = await getClient()
+  const bulkWithdraws: BulkWithdraw[] = []
+  for await (
+    const key of client.scanIterator({
+      MATCH: `${REDIS_BASE_PATH}:bulkWithdrawById:*:data`,
+    })
+  ) {
+    const bulkWithdraw = await client.json.get(key)
+    bulkWithdraws.push(ZodBulkWithdraw.parse(bulkWithdraw))
+  }
+  return bulkWithdraws
 }

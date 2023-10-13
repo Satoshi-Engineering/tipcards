@@ -77,7 +77,7 @@ onBeforeMount(safeReload)
 
 type CardHash = z.infer<typeof Card.shape.hash>
 const withdraw = async () => {
-  client.card.bulkWithdraw.mutate(
+  client.bulkWithdraw.createForCards.mutate(
     Object.values(cardsBySet.value).reduce((cardHashes, cards) => [
       ...cardHashes,
       ...cards.map((card) => card.hash),
