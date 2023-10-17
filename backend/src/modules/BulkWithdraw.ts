@@ -3,13 +3,10 @@ import type z from 'zod'
 import type { BulkWithdraw as BulkWithdrawRedis } from '../../../src/data/redis/BulkWithdraw'
 import type { Card as CardRedis } from '../../../src/data/redis/Card'
 
-import CardNotFundedError from '../errors/CardNotFundedError'
-import CardWithdrawnError from '../errors/CardWithdrawnError'
 import NotFoundError from '../errors/NotFoundError'
 import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
 import CardCollection from './CardCollection'
 import {
-  updateCard,
   createBulkWithdraw,
   getAllBulkWithdraws, getBulkWithdrawById,
   updateBulkWithdraw, deleteBulkWithdraw,
@@ -24,7 +21,7 @@ type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 
 export default class BulkWithdraw {
   static fromCardCollection(cards: CardCollection) {
-    return new BulkWithdraw(cards.getCards())
+    return new BulkWithdraw(cards)
   }
 
   /**
@@ -46,8 +43,8 @@ export default class BulkWithdraw {
   }
 
   static async fromBulkWithdrawRedis(bulkWithdrawRedis: BulkWithdrawRedis) {
-    const cardCollection = await CardCollection.fromCardHashes(bulkWithdrawRedis.cards)
-    const bulkWithdraw = new BulkWithdraw(cardCollection.getCards())
+    const cards = await CardCollection.fromCardHashes(bulkWithdrawRedis.cards)
+    const bulkWithdraw = new BulkWithdraw(cards)
     bulkWithdraw.bulkWithdrawRedis = bulkWithdrawRedis
     return bulkWithdraw
   }
@@ -60,9 +57,9 @@ export default class BulkWithdraw {
    * @throws unknown
    */
   async create() {
-    const amount = this.getFundedAmountForCollection()
-    await this.lockAllCards()
-    await this.removeLnbitsWithdrawsFromCollection()
+    const amount = this.cards.getFundedAmount()
+    await this.cards.lockByBulkWithdraw()
+    await this.cards.removeLnbitsWithdrawLinks()
     await this.createBulkWithdraw(amount)
   }
 
@@ -72,7 +69,7 @@ export default class BulkWithdraw {
    */
   async delete() {
     await this.removeLnbitsWithdraw()
-    await this.releaseAllLockedCards()
+    await this.cards.releaseBulkWithdrawLock()
     await deleteBulkWithdraw(this.bulkWithdrawRedis)
   }
 
@@ -93,9 +90,9 @@ export default class BulkWithdraw {
     return bulkWithdrawRedis
   }
 
-  public readonly cards: CardRedis[]
+  public readonly cards: CardCollection
   private _bulkWithdrawRedis: BulkWithdrawRedis | undefined = undefined
-  private constructor(cards: CardRedis[]) {
+  private constructor(cards: CardCollection) {
     this.cards = cards
   }
 
@@ -110,66 +107,8 @@ export default class BulkWithdraw {
     this._bulkWithdrawRedis = bulkWithdrawRedis
   }
 
-  /**
-   * @throws CardNotFundedError
-   * @throws CardWithdrawnError
-   */
-  private getFundedAmountForCollection() {
-    return this.cards.reduce((total, card) => {
-      if (card.used) {
-        throw new CardWithdrawnError(`Card ${card.cardHash} is already withdrawn.`)
-      }
-      return total + this.getFundedAmountForCard(card)
-    }, 0)
-  }
-
-  /**
-   * @throws CardNotFundedError
-   */
-  private getFundedAmountForCard(card: CardRedis) {
-    let amount: number | null = null
-    if (card.invoice?.paid != null) {
-      amount = card.invoice.amount
-    } else if (card.lnurlp?.paid != null && card.lnurlp.amount != null) {
-      amount = card.lnurlp.amount
-    } else if (card.setFunding?.paid != null) {
-      amount = card.setFunding.amount
-    }
-    if (amount == null) {
-      throw new CardNotFundedError(`Card ${card.cardHash} is not funded.`)
-    }
-    return amount
-  }
-
-  /**
-   * @throws unknown
-   */
-  private async lockAllCards() {
-    await Promise.all(this.cards.map(async (card) => {
-      card.isLockedByBulkWithdraw = true
-      await updateCard(card)
-    }))
-  }
-
-  private async removeLnbitsWithdrawsFromCollection() {
-    await Promise.all(this.cards.map(async (card) => await this.removeLnbitsWithdrawFromCard(card)))
-  }
-
-  /**
-   * @throws WithdrawAlreadyUsedError
-   * @throws AxiosError
-   */
-  private async removeLnbitsWithdrawFromCard(card: CardRedis) {
-    if (card.lnbitsWithdrawId == null) {
-      return
-    }
-    await deleteWithdrawIfNotUsed(card.lnbitsWithdrawId, card.text, `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`)
-    card.lnbitsWithdrawId = null
-    await updateCard(card)
-  }
-
   private createBulkWithdrawIdForCollection() {
-    return hashSha256(this.cards.map((card) => card.cardHash).join(''))
+    return hashSha256(this.cards.cardHashes.join(''))
   }
 
   private async createBulkWithdraw(amount: number) {
@@ -179,7 +118,7 @@ export default class BulkWithdraw {
       id,
       amount,
       lnbitsWithdrawId,
-      lnbitsWithdrawLnurl
+      lnbitsWithdrawLnurl,
     }) 
   }
 
@@ -212,7 +151,7 @@ export default class BulkWithdraw {
       id,
       created: new Date(),
       amount,
-      cards: this.cards.map((card) => card.cardHash),
+      cards: this.cards.cardHashes,
       lnbitsWithdrawId,
       lnurl: lnbitsWithdrawLnurl,
       withdrawn: null,
@@ -239,15 +178,5 @@ export default class BulkWithdraw {
     )
     this.bulkWithdrawRedis.lnbitsWithdrawId = null
     await updateBulkWithdraw(this.bulkWithdrawRedis)
-  }
-
-  /**
-   * @throws unknown
-   */
-  private async releaseAllLockedCards() {
-    await Promise.all(this.cards.map(async (card) => {
-      card.isLockedByBulkWithdraw = false
-      await updateCard(card)
-    }))
   }
 }
