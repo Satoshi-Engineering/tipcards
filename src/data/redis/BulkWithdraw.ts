@@ -7,7 +7,7 @@ export const BulkWithdraw = z.object({
   created: z.date(),
   amount: z.number(),
   cards: Card.shape.cardHash.array(),
-  lnbitsWithdrawId: z.string(),
+  lnbitsWithdrawId: z.string().nullable().default(null),
   lnurl: z.string(),
   withdrawn: z.date().nullable().default(null),
 })

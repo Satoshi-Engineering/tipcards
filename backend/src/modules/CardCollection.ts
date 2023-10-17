@@ -1,15 +1,15 @@
-import z from 'zod'
+import type z from 'zod'
 
-import { Card as ZodCardRedis, type Card as CardRedis } from '../../../src/data/redis/Card'
-import { Set as ZodSetRedis, type Set as SetRedis } from '../../../src/data/redis/Set'
+import type { Card as CardRedis } from '../../../src/data/redis/Card'
+import type { Set as SetRedis } from '../../../src/data/redis/Set'
 
 import NotFoundError from '../errors/NotFoundError'
 import { getSetById, getCardByHash } from '../services/database'
 import hashSha256 from '../services/hashSha256'
 import { cardFromCardRedis } from '../trpc/data/transforms/cardFromCardRedis'
 
-type CardHash = z.infer<typeof ZodCardRedis.shape.cardHash>
-type SetId = z.infer<typeof ZodSetRedis.shape.id>
+type CardHash = z.infer<typeof CardRedis.shape.cardHash>
+type SetId = z.infer<typeof SetRedis.shape.id>
 
 export default class CardCollection {
   /**
