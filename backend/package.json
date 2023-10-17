@@ -6,6 +6,7 @@
     "build": "rm -rf ./build/* && tsc",
     "typecheck": "tsc --noEmit",
     "test": "jest",
+    "test-watch-changes": "jest -o --onlyChanges",
     "test-units": "jest tests/units",
     "test-integration": "jest tests/integration",
     "tmp-dev": "nodemon tmpDevelop.ts",
