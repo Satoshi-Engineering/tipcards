@@ -65,7 +65,7 @@ const bulkWithdrawWithdrawn = async (req: express.Request, res: express.Response
   }
 
   // 3. update database and return withdraw
-  bulkWithdraw.withdrawn = new Date()
+  bulkWithdraw.withdrawn = Math.round(+ new Date() / 1000)
   try {
     await updateBulkWithdraw(bulkWithdraw)
     await Promise.all(bulkWithdraw.cards.map(async (cardHash) => {
@@ -73,7 +73,7 @@ const bulkWithdrawWithdrawn = async (req: express.Request, res: express.Response
       if (card == null) {
         return
       }
-      card.used = + new Date() / 1000
+      card.used = Math.round(+ new Date() / 1000)
       await updateCard(card)
     }))
   } catch (error) {
