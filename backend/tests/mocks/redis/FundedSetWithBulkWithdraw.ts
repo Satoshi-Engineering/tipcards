@@ -35,7 +35,7 @@ export const CARD_FUNDED_LNURLP = Card.parse({
 })
 
 export const BULK_WITHDRAW = BulkWithdraw.parse({
-  id: 'test-bulk-withdraw-id',
+  id: 'c84209c7dab604d27280dd2e993f8b0ed7edcfddc1e14fd248ee179175723c8f',
   created: new Date(),
   amount: 300,
   cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
