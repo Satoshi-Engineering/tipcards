@@ -86,7 +86,9 @@ describe('TRpc Router Set', () => {
 const safeCall = async (callback: CallableFunction) => {
   try {
     await callback()
-  } catch (error) {}
+  } catch (error) {
+    // linter complains about empty block
+  }
 }
 
 const initCard = async (card: Card) => {

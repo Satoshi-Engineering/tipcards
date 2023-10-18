@@ -12,6 +12,13 @@ test-integration-backend:
     NODE_ENV: test
   script:
     - cd backend
+    - |
+      if [ -f "$BACKEND_ENV_FILE_TEST" ]; then
+        cp $BACKEND_ENV_FILE_TEST .env.test
+      else
+        echo -e "\e[31mERROR:BACKEND_ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
+        exit 1
+      fi
     - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
     - npm run test-integration
 

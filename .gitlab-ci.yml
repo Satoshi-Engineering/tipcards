@@ -12,6 +12,7 @@
 # - PM2_APP_NAME_DEVELOP # used to identifiy in ecosystem.config.js
 # - ENV_FILE_MAIN
 # - ENV_FILE_DEVELOP
+# - BACKEND_ENV_FILE_TEST # overwrites ENV_FILE_XY during integration tests
 # ----- FRONTEND
 # - FRONTEND_DEPLOY_SERVER_MAIN
 # - FRONTEND_DEPLOY_SERVER_DEVELOP
