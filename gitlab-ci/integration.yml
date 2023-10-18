@@ -6,6 +6,7 @@ test-integration-backend:
     - !reference [.shared_config, rules, deployable_branches]
     - when: always
   cache:
+    - !reference [.shared_config, cache, node_modules_root]
     - !reference [.shared_config, cache, node_modules_backend]
     - !reference [.shared_config, cache, env_backend]
   variables:
