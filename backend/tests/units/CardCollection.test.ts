@@ -1,6 +1,6 @@
 import '../mocks/process.env'
 import '../mocks/axios'
-import { initBulkWithdraws, initCards, initSets } from '../mocks/redis'
+import { initCards, initSets } from '../mocks/redis'
 
 import CardNotFundedError from '../../src/errors/CardNotFundedError'
 import CardCollection from '../../src/modules/CardCollection'

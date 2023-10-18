@@ -6,7 +6,6 @@ import type { Set } from '../../../src/data/redis/Set'
 
 import NotFoundError from '../../src/errors/NotFoundError'
 import {
-  getClient,
   createCard, deleteCard,
   createSet, deleteSet,
 } from '../../src/services/database'
@@ -42,10 +41,6 @@ beforeAll(async () => {
     jwt,
     accessToken: null,
   })
-})
-
-afterAll(async () => {
-  (await getClient()).quit()
 })
 
 describe('TRpc Router Set', () => {
