@@ -1,20 +1,24 @@
 import '../mocks/process.env'
-import {
-  SET, SET_FUNDED,
-  CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP,
-} from '../mocks/redis'
+import '../mocks/axios'
+import '../mocks/redis'
 
 import CardNotFundedError from '../../src/errors/CardNotFundedError'
 import CardCollection from '../../src/modules/CardCollection'
 
-describe('Load cards from database and manipulate them', () => {
-  it('loads cards for a set', async () => {
-    const cards = await CardCollection.fromSetId(SET.id)
-    expect(cards.length).toBe(8)
+import { SET_EMPTY } from '../mocks/redis/EmptySet'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from '../mocks/redis/FundedSetWithBulkWithdraw'
+import { SET_UNFUNDED } from '../mocks/redis/SetWithUnfundedCards'
+
+describe('CardCollection', () => {
+  it('load no cards for an empty set', async () => {
+    const cards = await CardCollection.fromSetId(SET_EMPTY.id)
+    expect(cards.length).toBe(0)
+    const amount = cards.getFundedAmount()
+    expect(amount).toBe(0)
   })
 
-  it('should throw not funded error', async () => {
-    const cards = await CardCollection.fromSetId(SET.id)
+  it('should throw error if not funded', async () => {
+    const cards = await CardCollection.fromSetId(SET_UNFUNDED.id)
     expect(() => cards.getFundedAmount()).toThrow(CardNotFundedError)
   })
 

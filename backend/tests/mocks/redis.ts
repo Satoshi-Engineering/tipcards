@@ -1,51 +1,26 @@
+import { SET_EMPTY } from './redis/EmptySet'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from './redis/FundedSetWithBulkWithdraw'
+import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from './redis/SetWithUnfundedCards'
+
 export const regexSet = /tipcards:develop:setsById:(?<id>[a-z0-9-]+):data/
 export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-z0-9-]+):data/
 export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-z0-9-]+):data/
 
-export const SET = {
-  id: 'test-set-id',
+const SetsById = {
+  [SET_EMPTY.id]: SET_EMPTY,
+  [SET_FUNDED.id]: SET_FUNDED,
+  [SET_UNFUNDED.id]: SET_UNFUNDED,
 }
 
-export const SET_FUNDED = {
-  id: 'funded-test-set-id',
-  settings: {
-    numberOfCards: 2,
-    cardHeadline: '',
-    cardCopytext: '',
-    cardsQrCodeLogo: '',
-  },
+const CardsByHash = {
+  [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
+  [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
+  [CARD_UNFUNDED_INVOICE.cardHash]: CARD_UNFUNDED_INVOICE,
+  [CARD_UNFUNDED_LNURLP.cardHash]: CARD_UNFUNDED_LNURLP,
 }
 
-export const CARD_FUNDED_INVOICE = {
-  cardHash: '74035b374f98f919d47a5a9bfc7b75c150f0b9b7a06c58016bc4490675406def',
-  invoice: {
-    amount: 100,
-    payment_hash: '',
-    payment_request: '',
-    created: 123,
-    paid: 1234,
-  },
-}
-
-export const CARD_FUNDED_LNURLP = {
-  cardHash: '23ff7cadab5a1bdeceb2ec2329a232e34c27b0454686ebf1db555195882c765a',
-  lnurlp: {
-    amount: 200,
-    payment_hash: [],
-    id: '123',
-    created: 123,
-    paid: 12345,
-  },
-}
-
-export const BULK_WITHDRAW = {
-  id: 'test-bulk-withdraw-id',
-  created: new Date(),
-  amount: 300,
-  cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
-  lnbitsWithdrawId: 'lnurlw123',
-  lnurl: 'lnurl1dp68gurn8ghj7ar9wd6zuarfwp3kzunywvhxjmcnw2sew',
-  withdrawn: null,
+const BulkWithdrawById = {
+  [BULK_WITHDRAW.id]: BULK_WITHDRAW,
 }
 
 jest.mock('redis', () => ({
@@ -54,15 +29,20 @@ jest.mock('redis', () => ({
     quit: async () => undefined,
     connect: async () => undefined,
     exists: jest.fn().mockImplementation(async (path: string) => {
-        if (path.match(regexSet)) {
-          return true
-        } else if (path.match(regexCard)) {
-          return true
-        } else if (path.match(regexBulkWithdraw)?.groups?.id === BULK_WITHDRAW.id) {
-          return true
-        }
-        return null
-      }),
+      if (path.match(regexSet)) {
+        const setId = path.match(regexSet)?.groups?.id || ''
+        return SetsById[setId] != null
+      }
+      if (path.match(regexCard)) {
+        const cardHash = path.match(regexCard)?.groups?.hash || ''
+        return CardsByHash[cardHash] != null
+      }
+      if (path.match(regexBulkWithdraw)) {
+        const bulkWithdrawId = path.match(regexBulkWithdraw)?.groups?.id || ''
+        return BulkWithdrawById[bulkWithdrawId] != null
+      }
+      return false
+    }),
     scanIterator: async () => [],
     del: async () => undefined,
     ft: {
@@ -76,46 +56,17 @@ jest.mock('redis', () => ({
     json: {
       set: async () => undefined,
       get: jest.fn().mockImplementation(async (path: string) => {
-        // mock sets
-        if (path.match(regexSet)?.groups?.id === SET.id) {
-          return SET
-        }
-        if (path.match(regexSet)?.groups?.id === SET_FUNDED.id) {
-          return SET_FUNDED
-        }
         if (path.match(regexSet)) {
-          return {
-            id: path.match(regexSet)?.groups?.id,
-          }
-        }
-
-        // mock cards
-        if (path.match(regexCard)?.groups?.hash === CARD_FUNDED_INVOICE.cardHash) {
-          return CARD_FUNDED_INVOICE
-        }
-        if (path.match(regexCard)?.groups?.hash === CARD_FUNDED_LNURLP.cardHash) {
-          return CARD_FUNDED_LNURLP
+          const setId = path.match(regexSet)?.groups?.id || ''
+          return SetsById[setId] || null
         }
         if (path.match(regexCard)) {
-          return {
-            cardHash: path.match(regexCard)?.groups?.hash,
-          }
-        }
-
-        // mock bulkWithdraw
-        if (path.match(regexBulkWithdraw)?.groups?.hash === BULK_WITHDRAW.id) {
-          return BULK_WITHDRAW
+          const cardHash = path.match(regexCard)?.groups?.hash || ''
+          return CardsByHash[cardHash] || null
         }
         if (path.match(regexBulkWithdraw)) {
-          return {
-            id: path.match(regexBulkWithdraw)?.groups?.id,
-            created: new Date(),
-            amount: 300,
-            cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
-            lnbitsWithdrawId: 'lnurlw123',
-            lnurl: 'lnurl1dp68gurn8ghj7ar9wd6zuarfwp3kzunywvhxjmcnw2sew',
-            withdrawn: null,
-          }
+          const bulkWithdrawId = path.match(regexBulkWithdraw)?.groups?.id || ''
+          return BulkWithdrawById[bulkWithdrawId] || null
         }
 
         return null

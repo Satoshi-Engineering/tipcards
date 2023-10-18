@@ -1,5 +1,6 @@
 import axios from 'axios'
-import 'dotenv/config'
+
+import './initEnv'
 
 describe('dummy api', () => {
   it('returns success state', async () => {
