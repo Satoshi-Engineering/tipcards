@@ -5,13 +5,13 @@ import { Image } from './Image'
 
 export const Set = z.object({
   id: z.string(),
-  name: z.string().optional(),
+  name: z.string().default(''),
   created: z.date().default(() => new Date()),
   changed: z.date().default(() => new Date()),
   numberOfCards: z.number().default(8),
-  cardHeadline: z.string().optional(),
-  cardCopytext: z.string().optional(),
-  cardImage: Image.shape.id.optional(),
-  landingPage: LandingPage.shape.id.optional(),
+  cardHeadline: z.string(),
+  cardCopytext: z.string(),
+  cardImage: Image.shape.id.nullable().default(null),
+  landingPage: LandingPage.shape.id.nullable().default(null),
 })
 export type Set = z.infer<typeof Set>
