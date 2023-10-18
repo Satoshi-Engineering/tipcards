@@ -512,7 +512,6 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
 }
 
 /**
- * 
  * @throws ZodError
  * @throws AxiosError
  */

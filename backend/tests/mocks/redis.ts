@@ -1,5 +1,6 @@
 export const regexSet = /tipcards:develop:setsById:(?<id>[a-z0-9-]+):data/
 export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-z0-9-]+):data/
+export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-z0-9-]+):data/
 
 export const SET = {
   id: 'test-set-id',
@@ -37,6 +38,16 @@ export const CARD_FUNDED_LNURLP = {
   },
 }
 
+export const BULK_WITHDRAW = {
+  id: 'test-bulk-withdraw-id',
+  created: new Date(),
+  amount: 300,
+  cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
+  lnbitsWithdrawId: 'lnurlw123',
+  lnurl: 'lnurl1dp68gurn8ghj7ar9wd6zuarfwp3kzunywvhxjmcnw2sew',
+  withdrawn: null,
+}
+
 jest.mock('redis', () => ({
   createClient: () => ({
     on: () => undefined,
@@ -47,10 +58,13 @@ jest.mock('redis', () => ({
           return true
         } else if (path.match(regexCard)) {
           return true
+        } else if (path.match(regexBulkWithdraw)?.groups?.id === BULK_WITHDRAW.id) {
+          return true
         }
         return null
       }),
     scanIterator: async () => [],
+    del: async () => undefined,
     ft: {
       dropIndex: async () => undefined,
       create: async () => undefined,
@@ -74,6 +88,7 @@ jest.mock('redis', () => ({
             id: path.match(regexSet)?.groups?.id,
           }
         }
+
         // mock cards
         if (path.match(regexCard)?.groups?.hash === CARD_FUNDED_INVOICE.cardHash) {
           return CARD_FUNDED_INVOICE
@@ -86,6 +101,23 @@ jest.mock('redis', () => ({
             cardHash: path.match(regexCard)?.groups?.hash,
           }
         }
+
+        // mock bulkWithdraw
+        if (path.match(regexBulkWithdraw)?.groups?.hash === BULK_WITHDRAW.id) {
+          return BULK_WITHDRAW
+        }
+        if (path.match(regexBulkWithdraw)) {
+          return {
+            id: path.match(regexBulkWithdraw)?.groups?.id,
+            created: new Date(),
+            amount: 300,
+            cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
+            lnbitsWithdrawId: 'lnurlw123',
+            lnurl: 'lnurl1dp68gurn8ghj7ar9wd6zuarfwp3kzunywvhxjmcnw2sew',
+            withdrawn: null,
+          }
+        }
+
         return null
       }),
     },

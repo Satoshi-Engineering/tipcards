@@ -154,6 +154,7 @@ export default class BulkWithdraw {
       cards: this.cards.cardHashes,
       lnbitsWithdrawId,
       lnurl: lnbitsWithdrawLnurl,
+      lnbitsWithdrawDeleted: null,
       withdrawn: null,
     }
     await createBulkWithdraw(this.bulkWithdrawRedis)
@@ -176,7 +177,7 @@ export default class BulkWithdraw {
       `Bulk withdrawing ${this.cards.length} cards.`,
       `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/withdrawn/${this.bulkWithdrawRedis.id}`,
     )
-    this.bulkWithdrawRedis.lnbitsWithdrawId = null
+    this.bulkWithdrawRedis.lnbitsWithdrawDeleted = new Date()
     await updateBulkWithdraw(this.bulkWithdrawRedis)
   }
 }
