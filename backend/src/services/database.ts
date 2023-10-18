@@ -72,7 +72,7 @@ export const getClient = async () => {
   })
 
   // abort connecting after set timeout to prevent endless waiting (e.g. for FE requests)
-  setTimeout(async () => {
+  const connectTimeout = setTimeout(async () => {
     if (client == newClient) {
       return
     }
@@ -111,6 +111,7 @@ export const getClient = async () => {
   })
 
   client = newClient
+  clearTimeout(connectTimeout)
   connecting = false
   callbacks.forEach(resolve => resolve())
   callbacks = []
