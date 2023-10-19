@@ -38,19 +38,8 @@ if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.l
   LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
 }
 
-export {
-  EXPRESS_PORT,
-  LNURL_PORT,
-  PROXY_PORT,
-  WEB_PORT,
-  NGROK_AUTH_TOKEN,
-  REDIS_BASE_PATH,
-  REDIS_URL,
-  LNBITS_ORIGIN,
-}
-
-export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
-export const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
+let TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
+let TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
 
 let CORS_WHITELIST_EXTEND: string[] = []
 if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {
@@ -64,7 +53,6 @@ if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WH
     })
   }
 }
-export { CORS_WHITELIST_EXTEND }
 
 export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
@@ -100,7 +88,28 @@ if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AU
   }
 }
 
+/////
+// NGROK
+if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
+  TIPCARDS_ORIGIN = process.env.NGROK_OVERRIDE
+  TIPCARDS_API_ORIGIN = process.env.NGROK_OVERRIDE
+  JWT_AUTH_ORIGIN = process.env.NGROK_OVERRIDE
+  JWT_AUTH_ISSUER = new URL(process.env.NGROK_OVERRIDE).host
+  JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
+}
+
 export {
+  EXPRESS_PORT,
+  LNURL_PORT,
+  PROXY_PORT,
+  WEB_PORT,
+  NGROK_AUTH_TOKEN,
+  REDIS_BASE_PATH,
+  REDIS_URL,
+  LNBITS_ORIGIN,
+  TIPCARDS_ORIGIN,
+  TIPCARDS_API_ORIGIN,
+  CORS_WHITELIST_EXTEND,
   JWT_AUTH_ORIGIN,
   JWT_AUTH_KEY_DIRECTORY,
   JWT_AUTH_ISSUER,

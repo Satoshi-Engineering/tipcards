@@ -8,6 +8,11 @@ if (typeof import.meta.env.VITE_TIPCARDS_AUTH_ORIGIN === 'string' && import.meta
   authOrigin = import.meta.env.VITE_TIPCARDS_AUTH_ORIGIN
 }
 
+if (typeof import.meta.env.VITE_NGROK_OVERRIDE === 'string' && import.meta.env.VITE_NGROK_OVERRIDE.length > 0) {
+  backendApiOrigin = import.meta.env.VITE_NGROK_OVERRIDE
+  authOrigin = import.meta.env.VITE_NGROK_OVERRIDE
+}
+
 export const BACKEND_API_ORIGIN = backendApiOrigin
 export const TIPCARDS_AUTH_ORIGIN = authOrigin
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || null
