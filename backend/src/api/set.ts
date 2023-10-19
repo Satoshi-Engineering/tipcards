@@ -420,7 +420,7 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
     return
   }
 
-  // 3. check if invoice is already paid and used
+  // 3. check if invoice is already paid
   try {
     await checkIfSetInvoiceIsPaid(set)
   } catch (error: unknown) {
@@ -438,7 +438,7 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
     })
     return
   }
-  if (set.invoice?.paid != null) {
+  if (invoiceOnly && set.invoice?.paid != null) {
     res.status(400).json({
       status: 'error',
       message: 'This set invoice is already funded and cannot be deleted anymore!',
@@ -447,20 +447,22 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
     return
   }
 
-  // 3. delete set+cards in database
+  // 4. delete set+cards in database
   try {
-    // delete all cards
-    await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
-      if (set == null) {
-        return
-      }
-      const cardHash = hashSha256(`${set.id}/${cardIndex}`)
-      const cardRedis = await getCardByHash(cardHash)
-      if (cardRedis?.setFunding == null) {
-        return
-      }
-      await deleteCard(cardRedis)
-    }))
+    // delete all unfunded cards
+    if (invoiceOnly && set.invoice?.paid == null) {
+      await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
+        if (set == null) {
+          return
+        }
+        const cardHash = hashSha256(`${set.id}/${cardIndex}`)
+        const cardRedis = await getCardByHash(cardHash)
+        if (cardRedis?.setFunding == null) {
+          return
+        }
+        await deleteCard(cardRedis)
+      }))
+    }
 
     // delete set or invoice
     if (invoiceOnly && set.userId != null) {
