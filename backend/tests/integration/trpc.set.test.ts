@@ -1,14 +1,9 @@
 import { TRPCError } from '@trpc/server'
 
 import './initEnv'
-import type { Card } from '../../../src/data/redis/Card'
-import type { Set } from '../../../src/data/redis/Set'
+import { initCard, initSet } from './initRedis'
 
 import NotFoundError from '../../src/errors/NotFoundError'
-import {
-  createCard, deleteCard,
-  createSet, deleteSet,
-} from '../../src/services/database'
 import { createAccessToken } from '../../src/services/jwt'
 import { setRouter } from '../../src/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '../../src/constants'
@@ -77,21 +72,3 @@ describe('TRpc Router Set', () => {
     expect(cards.length).toBe(2)
   })
 })
-
-const safeCall = async (callback: CallableFunction) => {
-  try {
-    await callback()
-  } catch (error) {
-    // linter complains about empty block
-  }
-}
-
-const initCard = async (card: Card) => {
-  await safeCall(() => deleteCard(card))
-  await createCard(card)
-}
-
-const initSet = async (set: Set) => {
-  await safeCall(() => deleteSet(set))
-  await createSet(set)
-}

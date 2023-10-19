@@ -1,13 +1,8 @@
 import axios from 'axios'
-import './initEnv'
-import type { Card } from '../../../src/data/redis/Card'
-import type { Set } from '../../../src/data/redis/Set'
 
-import {
-  createCard, deleteCard,
-  createSet, deleteSet,
-  deleteBulkWithdraw,
-} from '../../src/services/database'
+import './initEnv'
+import { initCard, initSet, deleteBulkWithdraw } from './initRedis'
+
 import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
 import { bulkWithdrawRouter } from '../../src/trpc/router/bulkWithdraw'
 import { setRouter } from '../../src/trpc/router/set'
@@ -30,7 +25,7 @@ const callerSet = setRouter.createCaller({
 
 beforeAll(async () => {
   await Promise.all([
-    safeCall(() => deleteBulkWithdraw(BULK_WITHDRAW)),
+    deleteBulkWithdraw(BULK_WITHDRAW),
     initCard(CARD_FUNDED_INVOICE),
     initCard(CARD_FUNDED_LNURLP),
     initSet(SET_FUNDED),
@@ -40,15 +35,16 @@ beforeAll(async () => {
 })
 
 describe('TRpc Router BulkWithdraw', () => {
-  it('throws error unknown cards', async () => {
+  it('throws an error if a card doesnt exist', async () => {
     await expect(() => callerBulkWithdraw.createForCards([CARD_FUNDED_INVOICE.cardHash, 'somerandomcardhash'])).rejects.toThrow(Error)
   })
 
-  it('throws error for unfunded cards', async () => {
+  it('throws an error if a card is not funded', async () => {
     await expect(() => callerBulkWithdraw.createForCards([CARD_FUNDED_INVOICE.cardHash, CARD_UNFUNDED_LNURLP.cardHash])).rejects.toThrow(Error)
   })
 
-  it('should create and delete bulkWithdraw', async () => {
+  // todo : move to sub functions
+  it('creates and deletes a bulkWithdraw', async () => {
     // create bulkWithdraw
     const bulkWithdraw = await callerBulkWithdraw.createForCards([CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash])
     expect(bulkWithdraw.amount).toBe(300)
@@ -92,21 +88,3 @@ describe('TRpc Router BulkWithdraw', () => {
     ]))
   })
 })
-
-const safeCall = async (callback: CallableFunction) => {
-  try {
-    await callback()
-  } catch (error) {
-    // linter complains about empty block
-  }
-}
-
-const initCard = async (card: Card) => {
-  await safeCall(() => deleteCard(card))
-  await createCard(card)
-}
-
-const initSet = async (set: Set) => {
-  await safeCall(() => deleteSet(set))
-  await createSet(set)
-}
