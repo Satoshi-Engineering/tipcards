@@ -81,17 +81,16 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watchEffect, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
 import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
 import { Profile } from '@shared/data/redis/User'
 
-import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
+import useAuthService from '@/modules/useAuthService'
 import { useAuthStore } from '@/stores/auth' 
 
 const router = useRouter()
@@ -99,6 +98,7 @@ const authStore = useAuthStore()
 const { logout } = authStore
 const { isLoggedIn } = storeToRefs(authStore)
 const { t } = useI18n()
+const authService = useAuthService()
 
 const profile = ref(Profile.parse({}))
 const profileInternal = reactive(Profile.parse({}))
@@ -108,7 +108,7 @@ const fetching = ref(false)
 onBeforeMount(async () => {
   fetching.value = true
   try {
-    const { data } = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`)
+    const { data } = await authService.get('profile')
     profile.value = Profile.parse(data.data)
     Object.assign(profileInternal, profile.value)
   } catch (error) {
@@ -124,7 +124,7 @@ const save = async () => {
   profileUserErrorMessages.value = []
   saving.value = true
   try {
-    const { data } = await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`, profileInternal)
+    const { data } = await authService.post('profile', profileInternal)
     profile.value = Profile.parse(data.data)
   } catch (error) {
     console.error(error)
@@ -147,8 +147,8 @@ const logoutAllOtherDevices = async () => {
   loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
-    await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/logoutAllOtherDevices`)
-  loggingOutAllOtherDevicesSuccess.value = true
+    await authService.post('logoutAllOtherDevices')
+    loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
     console.error(error)
     logoutUserErrorMessages.value.push(t('userAccount.errors.unableToLogoutAllOtherDevices'))

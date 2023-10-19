@@ -50,6 +50,10 @@ const initApiAuthInterceptors = () => {
     ) {
       throw error
     }
+    // do not retry calls to auth service
+    if (error.config?.url.indexOf(`${TIPCARDS_AUTH_ORIGIN}/api/auth/`) === 0) {
+      throw error
+    }
     const accessToken = await getValidAccessToken(true)
     return await axios.create()({
       ...error.config,
