@@ -10,10 +10,12 @@ import UserError from '../errors/UserError'
 
 import { router, createContext } from './trpc'
 import { bulkWithdrawRouter } from './router/bulkWithdraw'
+import { cardRouter } from './router/card'
 import { setRouter } from './router/set'
  
 export const appRouter = router({
   bulkWithdraw: bulkWithdrawRouter,
+  card: cardRouter,
   set: setRouter,
 })
  
