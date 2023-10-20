@@ -32,6 +32,7 @@ import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 const props = defineProps({
   amountToWithdraw: {
     type: Number,
+    required: true,
   },
 })
 

@@ -21,19 +21,30 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
+
+import type { Set } from '@shared/data/redis/Set'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import useSetFunding from '@/modules/useSetFunding'
+import useSetFunding, { type Card } from '@/modules/useSetFunding'
 
-const props = defineProps(['set', 'cards'])
+const props = defineProps({
+  set: {
+    type: Object as PropType<Set>,
+    default: undefined,
+  },
+  cards: {
+    type: Array as PropType<Card[]>,
+    required: true,
+  },
+})
 
 const { t } = useI18n()
 
 const { setFundingHref, setFundingDisabled } = useSetFunding()
 
-const buttonDisabled = computed(() => setFundingDisabled(props.set, props.cards))
+const buttonDisabled = computed(() => setFundingDisabled(props.cards, props.set))
 </script>

@@ -3,7 +3,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { Set } from '@shared/data/redis/Set'
 
-type Card = {
+export type Card = {
   cardHash: string,
   url: string,
   urlPreview: string,
@@ -39,7 +39,7 @@ export default () => {
     }).href
   })
 
-  const setFundingDisabled = (set: Set, cards: Card[]) => {
+  const setFundingDisabled = (cards: Card[], set?: Set) => {
     if (
       set?.invoice != null
       && set.invoice.paid == null
