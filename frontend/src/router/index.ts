@@ -106,10 +106,21 @@ const router = createRouter({
           meta: { title: () => 'Statistics' },
         },
         {
-          path: 'bulk-withdraw',
+          path: 'bulk-withdraw/:setId/:settings?',
           name: 'bulk-withdraw',
           component: PageBulkWithdraw,
-          meta: { title: () => i18n.global.t('bulkWithdraw.title') },
+          meta: {
+            title: () => i18n.global.t('bulkWithdraw.title'),
+            backlink: (route: RouteLocationNormalizedLoaded) => 
+              router.resolve({
+                name: 'cards',
+                params: {
+                  lang: route.params.lang,
+                  setId: route.params.setId,
+                  settings: route.params.settings,
+                },
+              }),
+          },
         },
       ],
     },
