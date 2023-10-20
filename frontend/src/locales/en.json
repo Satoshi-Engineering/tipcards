@@ -316,5 +316,13 @@
     "modalDeprecationHint": "Your local sets will remain visible here until January 31, 2024. Please make sure you transfer them to your account before that date. Don't worry: There will still be a recovery option for your old sets afterwards. Alternatively, you can bookmark the set links.",
     "modalLogin": "Transfer sets",
     "modalClose": "Later"
+  },
+  "bulkWithdraw": {
+    "title": "Withdraw set funds",
+    "headline": "Withdraw set funds",
+    "setName": "Set-Name: {setName}",
+    "amountAndUnit": "{amount} BTC",
+    "withdrawExists": "There is already a withdraw link for this set. You have to reset it first to create a new one.",
+    "buttonReset": "Reset"
   }
 }

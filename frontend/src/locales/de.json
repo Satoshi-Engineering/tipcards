@@ -330,5 +330,13 @@
     "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
     "modalLogin": "Sets übertragen",
     "modalClose": "Später"
+  },
+  "bulkWithdraw": {
+    "title": "Set leeren",
+    "headline": "Set leeren",
+    "setName": "Set-Name: {setName}",
+    "amountAndUnit": "{amount} BTC",
+    "withdrawExists": "Es existiert bereits ein Withdraw-Link für dieses Set. Du musst ihn zuerst zurücksetzen um einen neuen zu erstellen.",
+    "buttonReset": "Zurücksetzen"
   }
 }
