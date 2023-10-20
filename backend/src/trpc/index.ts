@@ -23,29 +23,16 @@ export type AppRouter = typeof appRouter
 
 export const onError: OnErrorFunction<AppRouter, Request> = (opts) => {
   if (opts.error.cause instanceof UserError) {
-    opts.error = new TRPCError({
-      code: 'BAD_REQUEST',
-      message: opts.error.cause.message,
-      cause: opts.error.cause,
-    })
+    (opts.error.code as string) = 'BAD_REQUEST'
+    ;(opts.error.message as string) = opts.error.cause.message
   } else if (opts.error.cause instanceof NotFoundError) {
-    opts.error = new TRPCError({
-      code: 'NOT_FOUND',
-      message: opts.error.cause.message,
-      cause: opts.error.cause,
-    })
+    (opts.error.code as string) = 'NOT_FOUND'
+    ;(opts.error.message as string) = opts.error.cause.message
   } else if (opts.error.cause instanceof ErrorWithCode) {
-    opts.error = new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: `Error with code: ${opts.error.cause.code}`,
-      cause: opts.error.cause.error,
-    })
+    (opts.error.message as string) = `Error with code: ${opts.error.cause.code}`
+    ;(opts.error.cause as unknown) = opts.error.cause.error
   } else if (opts.error.cause instanceof ZodError) {
-    opts.error = new TRPCError({
-      code: 'INTERNAL_SERVER_ERROR',
-      message: 'Unexpected zod parsing error.',
-      cause: opts.error.cause,
-    })
+    (opts.error.message as string) = 'Unexpected zod parsing error.'
   }
 
   if (opts.error.code === 'INTERNAL_SERVER_ERROR') {
