@@ -210,6 +210,13 @@
         "label": "Fund all cards at once",
         "button": "Fund set",
         "disabledReason": "Some cards of this set have already been used. Create a new set to fund a whole set."
+      },
+      "bulkWithdraw": {
+        "headline": "Withdraw all Satoshis",
+        "intro": "You can get back the Satoshis from your Tip Cards by scanning the QR code of the card. If you want to withdraw the whole set at once, click on \"Withdraw Satoshis\".",
+        "label": "Withdraw all Satoshis at once",
+        "button": "Withdraw Satoshis",
+        "disabledReason": "There are no funded cards in this set."
       }
     },
     "cards": {

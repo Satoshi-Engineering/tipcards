@@ -273,25 +273,16 @@
         {{ t('cards.actions.buttonDownloadPngs') }}
       </ButtonDefault>
     </div>
-    <div class="px-4 my-5">
-      <HeadlineDefault level="h3" class="mb-2">
-        {{ t('cards.actions.setFunding.headline') }}
-      </HeadlineDefault>
-      <ParagraphDefault class="text-sm">
-        {{ t('cards.actions.setFunding.intro') }}
-      </ParagraphDefault>
-      <div class="mb-2">
-        {{ t('cards.actions.setFunding.label') }}:
-      </div>
-      <ButtonWithTooltip
-        class="text-sm min-w-[170px]"
-        :href="setFundingHref"
-        :disabled="setFundingDisabled"
-        :tooltip="setFundingDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
-      >
-        {{ t('cards.actions.setFunding.button') }}
-      </ButtonWithTooltip>
-    </div>
+    <SetFunding
+      class="my-5"
+      :set="set"
+      :cards="cards"
+    />
+    <BulkWithdraw
+      v-if="isLoggedIn"
+      class="my-5"
+      :amount-to-withdraw="fundedCardsTotalAmount"
+    />
   </div>
   <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
     <HeadlineDefault level="h2">
@@ -513,6 +504,8 @@ import type { Image as ImageMeta } from '@shared/data/redis/Image'
 import { Type as LandingPageType, type LandingPage } from '@shared/data/redis/LandingPage'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
+import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
+import SetFunding from '@/components/cardActions/SetFunding.vue'
 import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import IconLightning from '@/components/svgs/IconLightning.vue'
@@ -529,6 +522,7 @@ import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
 import useNewFeatures from '@/modules/useNewFeatures'
 import I18nT from '@/modules/I18nT'
+import useSetFunding from '@/modules/useSetFunding'
 import { useAuthStore } from '@/stores/auth'
 import {
   getDefaultSettings,
@@ -718,19 +712,7 @@ const showSaveWarning = computed(() => {
   return false
 })
 
-const setFundingHref = computed(() => {
-  if (setId.value == null) {
-    return ''
-  }
-  return router.resolve({
-    name: 'set-funding',
-    params: {
-      lang: route.params.lang,
-      setId: route.params.setId,
-      settings: route.params.settings,
-    },
-  }).href
-})
+const { setFundingHref } = useSetFunding()
 
 const availableCardLogos = ref<ImageMeta[]>([])
 const loadAvailableCardLogos = async () => {
@@ -855,20 +837,6 @@ const generateNewCardSkeleton = async (index: number) => {
     qrCodeSvg: getQrCodeForUrl(url),
   }
 }
-
-const setFundingDisabled = computed(() => {
-  if (
-    set.value != null
-    && set.value.invoice != null
-    && set.value.invoice.paid == null
-  ) {
-    // there is already a (not paid) set-funding invoice, allow the user to view it
-    return false
-  }
-
-  // there are cards with data, by design no set-funding is allowed
-  return cardsStatusList.value.length !== 0
-})
 
 const set = ref<Set>()
 const reloadingStatusForCards = ref(false)

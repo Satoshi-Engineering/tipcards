@@ -224,6 +224,13 @@
         "label": "Alle Karten auf einmal aufladen",
         "button": "Set aufladen",
         "disabledReason": "In diesem Set befinden sich bereits verwendete Karten. Erstelle ein neues Set, um alle Karten auf einmal aufzuladen."
+      },
+      "bulkWithdraw": {
+        "headline": "Alle Satoshis abziehen",
+        "intro": "Du kannst dir die Satoshis deiner Tip Cards zurück holen indem du den QR-Code dieser Karte scannst. Wenn du das ganze Set auf einmal abziehen möchtest, dann klicke auf \"Satoshis abziehen\".",
+        "label": "Alle Satoshis auf einmal abziehen",
+        "button": "Satoshis abziehen",
+        "disabledReason": "In diesem Set befinden sich keine aufgeladenen Karten."
       }
     },
     "cards": {
