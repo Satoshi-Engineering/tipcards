@@ -106,7 +106,7 @@ const router = createRouter({
           meta: { title: () => 'Statistics' },
         },
         {
-          path: 'bulk-withdraw/:setId/:settings?',
+          path: 'bulk-withdraw/:setId?/:settings?',
           name: 'bulk-withdraw',
           component: PageBulkWithdraw,
           meta: {

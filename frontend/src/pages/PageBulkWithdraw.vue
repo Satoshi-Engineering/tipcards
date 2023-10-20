@@ -36,16 +36,62 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import type z from 'zod'
+
+import type { Settings } from '@shared/data/redis/Set'
 
 import type { Card } from '@backend/trpc/data/Card'
 import type { Set } from '@backend/trpc/data/Set'
 
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
+import {
+  getDefaultSettings,
+  decodeCardsSetSettings,
+} from '@/stores/cardsSets'
+
+const route = useRoute()
+const router = useRouter()
 
 const { client } = useTRpc()
+
+const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
+const settings = reactive<Settings>(getDefaultSettings())
+const cards = ref<Card[]>()
+
+onBeforeMount(() => {
+  if (setId.value == null) {
+    router.replace({ name: 'home', params: { lang: route.params.lang } })
+    return
+  }
+  loadSettingsFromUrl()
+  loadCards()
+})
+
+const loadSettingsFromUrl = () => {
+  const settingsEncoded = String(route.params.settings)
+  try {
+    Object.assign(settings, decodeCardsSetSettings(settingsEncoded))
+  } catch (e) {
+    // do nothing
+  }
+}
+
+const loadCards = async () => {
+  cards.value = await Promise.all([...new Array(settings.numberOfCards).keys()].map(
+    async (cardIndex) => client.card.getByHash.query(await hashSha256(`${setId.value}/${cardIndex}`)),
+  ))
+}
+
+// todo : if there is an active bulk withdraw for a card show info to user (with a reset button)
+// todo : if there are no funded cards show info to user (with a back button)
+// todo : show the list of cards that are funded (like status list on PageCards) + button for withdraw creation
+// todo : on withdraw creaton show withdraw link
+// todo : handle loading states
+// todo : handle errors
 
 type SetId = z.infer<typeof Set.shape.id>
 
