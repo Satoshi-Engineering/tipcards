@@ -237,20 +237,18 @@ const loadSetData = async () => {
     console.error(error)
   }
 
-  if (set.value == null) {
-    const cardIndicesNotUnfundedLocal: number[] = []
-    try {
-      await Promise.all([...new Array(settings.numberOfCards).keys()].map(async (index) => {
-        const cardHash = await hashSha256(`${route.params.setId}/${index}`)
-        const { status } = await loadCardStatus(cardHash, 'cards')
-        if (status !== 'unfunded') {
-          cardIndicesNotUnfundedLocal.push(index)
-        }
-      }))
-      cardIndicesNotUnfunded.value = cardIndicesNotUnfundedLocal
-    } catch (error) {
-      console.error(error)
-    }
+  const cardIndicesNotUnfundedLocal: number[] = []
+  try {
+    await Promise.all([...new Array(settings.numberOfCards).keys()].map(async (index) => {
+      const cardHash = await hashSha256(`${route.params.setId}/${index}`)
+      const { status } = await loadCardStatus(cardHash, 'cards')
+      if (status !== 'unfunded') {
+        cardIndicesNotUnfundedLocal.push(index)
+      }
+    }))
+    cardIndicesNotUnfunded.value = cardIndicesNotUnfundedLocal
+  } catch (error) {
+    console.error(error)
   }
   initializing.value = false
 
