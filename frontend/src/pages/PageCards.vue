@@ -28,34 +28,20 @@
         {{ t('cards.status.noCards') }}
       </ParagraphDefault>
       <div v-else>
-        <div class="grid grid-cols-2 gap-3">
-          <div
-            class="border flex flex-col"
-          >
-            <div class="p-2 flex-1">
-              <strong class="text-4xl">{{ usedCards.length }}</strong>
-              <div class="text-sm text-lightningpurple uppercase">
-                {{ t('cards.status.labelUsed', 2) }}
-              </div>
-            </div>
-            <div class="border-t p-2">
-              <strong>{{ usedCardsTotalAmount }}</strong> sats
-            </div>
-          </div>
-          <div
-            class="border flex flex-col"
-          >
-            <div class="p-2 flex-1">
-              <strong class="text-4xl">{{ fundedCards.length }}</strong>
-              <div class="text-sm text-btcorange uppercase">
-                {{ t('cards.status.labelFunded', 2) }}
-              </div>
-            </div>
-            <div class="border-t p-2">
-              <strong>{{ fundedCardsTotalAmount }}</strong> sats
-            </div>
-          </div>
-        </div>
+        <CardsSummaryContainer>
+          <CardsSummary
+            color="lightningpurple"
+            :cards-count="usedCards.length"
+            :title="$t('cards.status.labelUsed', 2)"
+            :sats="usedCardsTotalAmount"
+          />
+          <CardsSummary
+            color="btcorange"
+            :cards-count="fundedCards.length"
+            :title="$t('cards.status.labelFunded', 2)"
+            :sats="fundedCardsTotalAmount"
+          />
+        </CardsSummaryContainer>
         <ul class="w-full my-5">
           <li
             v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed } in cardsStatusList"
@@ -515,6 +501,8 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import CardsSummary from '@/components/CardsSummary.vue'
+import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
 import { loadCardStatus, type CardStatusDeprecated } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
 import { useI18nHelpers } from '@/modules/initI18n'

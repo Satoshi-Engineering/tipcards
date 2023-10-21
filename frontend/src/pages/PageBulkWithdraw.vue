@@ -37,6 +37,42 @@
         {{ $t('general.back') }}
       </ButtonDefault>
     </div>
+    <div v-else-if="fundedCards != null">
+      <CardsSummaryContainer>
+        <CardsSummary
+          :cards-count="fundedCards.length"
+          :title="$t('cards.status.labelFunded', 2)"
+          :sats="fundedCardsTotalAmount"
+        />
+      </CardsSummaryContainer>
+
+      <p class="mt-4 mb-6">
+        todo : add some explanation text + button to create withdraw link here
+      </p>
+
+      <ul class="w-full my-5">
+        <li
+          v-for="{
+            status, fundedDate, usedDate, shared,
+            amount, note, cardHash,
+            urlPreview, viewed,
+          } in fundedCardsForStatusComponent"
+          :key="cardHash"
+          class="py-1 border-b border-grey"
+        >
+          <CardStatus
+            :status="status || undefined"
+            :funded-date="fundedDate || undefined"
+            :used-date="usedDate || undefined"
+            :shared="shared"
+            :amount="amount || undefined"
+            :note="note || undefined"
+            :url="urlPreview"
+            :viewed="viewed"
+          />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -45,11 +81,15 @@ import { computed, onBeforeMount, ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Settings } from '@shared/data/redis/Set'
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import type { Card } from '@backend/trpc/data/Card'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import CardsSummary from '@/components/CardsSummary.vue'
+import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
+import CardStatus from '@/components/CardStatus.vue'
 import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
 import useBacklink from '@/modules/useBackLink'
@@ -59,6 +99,7 @@ import {
   decodeCardsSetSettings,
 } from '@/stores/cardsSets'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 const route = useRoute()
 const router = useRouter()
@@ -110,9 +151,34 @@ const fundedCards = computed(() => cards.value?.filter((card) =>
   && card.withdrawn == null,
 ))
 
-// todo : if there are no funded cards show info to user (with a back button)
-// todo : show the list of cards that are funded (like status list on PageCards) + button for withdraw creation
-// todo : on withdraw creaton show withdraw link
+const fundedCardsTotalAmount = computed(() => {
+  if (fundedCards.value == null) {
+    return 0
+  }
+  return fundedCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0)
+})
+
+// todo : move this into a composable and also use it from PageCards.
+// but ideally also refactor <CardStatus> component to accept trpc/data/Card directly and only add necessary data (basically just the url)
+const fundedCardsForStatusComponent = computed(() => fundedCards.value?.map((card) => ({
+  cardHash: card.hash,
+  status: 'funded',
+  fundedDate: card.funded != null ? card.funded.getTime() / 1000 : null,
+  usedDate: card.withdrawn != null ? card.withdrawn.getTime() / 1000 : null,
+  shared: card.shared,
+  amount: card.amount.funded,
+  note: card.noteForStatusPage,
+  // todo : use func from composable (see above) that also handles external url and both landingpage types ('landing' and 'preview')
+  urlPreview: router.resolve({
+    name: 'preview',
+    params: { lang: route.params.lang },
+    query: { lightning: encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${card.hash}`).toUpperCase() },
+  }).href,
+  viewed: card.landingPageViewed != null,
+})))
+
+// todo : add button for withdraw creation
+// todo : on withdraw creation show withdraw link
 // todo : handle loading states
 // todo : handle errors
 // todo : clean up file (move stuff into sub-components or composables)
