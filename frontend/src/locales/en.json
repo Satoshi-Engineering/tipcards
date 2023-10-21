@@ -323,6 +323,7 @@
     "setName": "Set-Name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "There is already a withdraw link for this set. You have to reset it first to create a new one.",
-    "buttonReset": "Reset"
+    "buttonReset": "Reset",
+    "noFundedCards": "There are no funded Tip Cards in this set."
   }
 }

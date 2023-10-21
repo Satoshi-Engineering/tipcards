@@ -10,18 +10,18 @@ export default () => {
     && (
       !route.meta.onlyInternalReferrer
       || isReferrerFromApplication.value
-    )
+    ),
   )
 
   const routeUsesBacklink = computed( () =>
     route.meta.backlink === true
     || typeof route.meta.backlink === 'string'
-    || typeof route.meta.backlink === 'function'
+    || typeof route.meta.backlink === 'function',
   )
 
   const routeDefinesBackTarget = computed(() =>
     typeof route.meta.backlink === 'string'
-    || typeof route.meta.backlink === 'function'
+    || typeof route.meta.backlink === 'function',
   )
 
   const to = computed(() => {
@@ -73,7 +73,7 @@ export default () => {
     && (
       !routeDefinesBackTarget.value
       || routeBackTargetIsSameAsReferrer.value
-    )
+    ),
   )
 
   const canWeGoBackInHistory = computed(() => history.length > 1 && isReferrerFromApplication.value)

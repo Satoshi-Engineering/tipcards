@@ -337,6 +337,7 @@
     "setName": "Set-Name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "Es existiert bereits ein Withdraw-Link für dieses Set. Du musst ihn zuerst zurücksetzen um einen neuen zu erstellen.",
-    "buttonReset": "Zurücksetzen"
+    "buttonReset": "Zurücksetzen",
+    "noFundedCards": "In diesem Set befinden sich keine aufgeladenen Tip Cards."
   }
 }
