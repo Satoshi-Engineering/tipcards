@@ -1,5 +1,4 @@
 import type { OnErrorFunction } from '@trpc/server/dist/internals/types'
-import { TRPCError } from '@trpc/server'
 import type { Request } from 'express'
 import { ZodError } from 'zod'
 
