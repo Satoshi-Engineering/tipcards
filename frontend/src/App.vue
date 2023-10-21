@@ -3,12 +3,7 @@
     <header
       class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden"
     >
-      <BackLink
-        v-if="backlink != null"
-        class="p-4"
-        :to="backlink.to"
-        :only-internal-referrer="backlink.onlyInternalReferrer"
-      />
+      <BackLink class="p-4" />
       <div v-if="isLoggedIn === true" class="col-start-2 p-4 text-right">
         <LinkDefault :to="{ name: 'user-account' }">
           {{ t('general.userAccount') }}
@@ -122,28 +117,6 @@ const navLinks = [
   { routeName: 'preview', labelKey: 'nav.preview' },
   { routeName: 'about', labelKey: 'nav.about' },
 ]
-
-const backlink = computed(() => {
-  if (route.meta.backlink === true) {
-    return {
-      to: undefined,
-      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
-    }
-  }
-  if (typeof route.meta.backlink === 'string') {
-    return {
-      to: { name: route.meta.backlink },
-      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
-    }
-  }
-  if (typeof route.meta.backlink === 'function') {
-    return {
-      to: route.meta.backlink(route),
-      onlyInternalReferrer: !!route.meta.backlinkOnlyInternalReferrer,
-    }
-  }
-  return null
-})
 
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
