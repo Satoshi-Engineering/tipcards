@@ -1,22 +1,23 @@
 <template>
   <div class="border flex flex-col">
     <div class="p-2 flex-1">
-      <strong class="text-4xl">{{ cardsCount }}</strong>
+      <strong
+        class="text-4xl"
+        :class="{ 'opacity-0': loading }"
+      >{{ cardsCount }}</strong>
       <div
-        v-if="color === 'btcorange'"
-        class="text-sm text-btcorange uppercase"
-      >
-        {{ title }}
-      </div>
-      <div
-        v-else-if="color === 'lightningpurple'"
-        class="text-sm text-lightningpurple uppercase"
+        class="text-sm  uppercase"
+        :class="{
+          'opacity-0': loading,
+          'text-btcorange': color === 'btcorange',
+          'text-lightningpurple': color === 'lightningpurple',
+        }"
       >
         {{ title }}
       </div>
     </div>
     <div class="border-t p-2">
-      <strong>{{ sats }}</strong> sats
+      <span :class="{ 'opacity-0': loading }"><strong>{{ sats }}</strong> sats</span>
     </div>
   </div>
 </template>
@@ -25,6 +26,10 @@
 import type { PropType } from 'vue'
 
 defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   color: {
     type: String as PropType<'btcorange' | 'lightningpurple'>,
     default: 'btcorange',
