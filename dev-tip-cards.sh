@@ -35,10 +35,16 @@ NGROK_URL=`grep 'ngrok running on' ngrok.log |sed -e 's#ngrok running on ##'`
 
 echo "Address is: $NGROK_URL"
 
-sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' .env
+if [[ $OSTYPE == 'darwin'* ]];
+then
+  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env
+  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.development.local
+else
+  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env
+  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.development.local
+fi
 
 cd $TIP_CARDS_DIR/frontend
-sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' .env.development.local
 npm run dev 2>&1 >frontend.log &
 
 FRONTEND_PID=$!
@@ -58,7 +64,14 @@ kill_proc $NGROK_PID
 kill_proc $FRONTEND_PID
 kill_proc $BACKEND_PID
 
-sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env
-sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.development.local
+if [[ $OSTYPE == 'darwin'* ]];
+then
+  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env
+  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.development.local
+else
+  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env
+  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.development.local
+fi
 
 echo "Stopped"
+echo
