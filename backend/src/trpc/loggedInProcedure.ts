@@ -1,4 +1,4 @@
-import { validateJwt } from './middleware/validateJwt'
+import { validatePermissions } from './middleware/validatePermissions'
 import { publicProcedure } from './trpc'
 
-export const loggedInProcedure = publicProcedure.use(validateJwt)
+export const loggedInProcedure = publicProcedure.use(validatePermissions)

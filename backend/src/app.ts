@@ -15,7 +15,6 @@ import lnurl from './api/lnurl'
 import lnurlp from './api/lnurlp'
 import set from './api/set'
 import withdraw from './api/withdraw'
-import statistics from './api/statistics'
 import { appRouter, onError } from './trpc'
 import { createContext } from './trpc/trpc'
 import corsOptions from './services/corsOptions'
@@ -38,7 +37,6 @@ app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
-app.use('/api/statistics', statistics)
 app.use(
   '/trpc',
   createExpressMiddleware({

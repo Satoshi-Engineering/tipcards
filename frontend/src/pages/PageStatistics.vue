@@ -25,7 +25,7 @@
             Week
           </th>
           <th class="px-2 text-left">
-            Movements
+            Transactions
           </th>
           <th class="px-2 text-right">
             Fundings
@@ -40,19 +40,19 @@
             sats
           </th>
         </tr>
-        <tr v-for="stats in statistics.weekly" :key="stats.week">
+        <tr v-for="stats in statistics.weekly" :key="stats.periodLabel">
           <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
-            {{ stats.week }}
+            {{ stats.periodLabel }}
           </th>
           <td class="px-2 text-right w-48">
             <div
               :style="`background: linear-gradient(
                 to right,
-                #fb923c ${stats.movementsPercent}%,
-                transparent ${stats.movementsPercent}%
+                #fb923c ${stats.transactionsPercent}%,
+                transparent ${stats.transactionsPercent}%
               )`"
             >
-              {{ stats.movementsCount }}
+              {{ stats.transactionsCount }}
             </div>
           </td>
           <td class="px-2 text-right">
@@ -78,7 +78,7 @@
             Day
           </th>
           <th class="px-2 text-left">
-            Movements
+            Transactions
           </th>
           <th class="px-2 text-right">
             Fundings
@@ -93,9 +93,9 @@
             sats
           </th>
         </tr>
-        <tr v-for="stats in statistics.daily" :key="stats.day">
+        <tr v-for="stats in statistics.daily" :key="stats.periodLabel">
           <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
-            {{ stats.day }}
+            {{ stats.periodLabel }}
           </th>
           <td
             class="px-2 text-right w-48"
@@ -103,11 +103,11 @@
             <div
               :style="`background: linear-gradient(
                 to right,
-                #fb923c ${stats.movementsPercent}%,
-                transparent ${stats.movementsPercent}%
+                #fb923c ${stats.transactionsPercent}%,
+                transparent ${stats.transactionsPercent}%
               )`"
             >
-              {{ stats.movementsCount }}
+              {{ stats.transactionsCount }}
             </div>
           </td>
           <td class="px-2 text-right">
@@ -129,20 +129,22 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
+import useTRpc from '@/modules/useTRpc'
 
 import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
+import type { StatisticsPeriod } from '@backend/trpc/data/StatisticsPeriod'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import { BACKEND_API_ORIGIN } from '@/constants'
 
 const { isLoggedIn, accessTokenPayload } = storeToRefs(useAuthStore())
 const { showModalLogin } = storeToRefs(useModalLoginStore())
+
+const { client } = useTRpc()
 
 const hasPermissions = computed(() => {
   if (accessTokenPayload.value == null) {
@@ -153,32 +155,54 @@ const hasPermissions = computed(() => {
 
 const fetching = ref(false)
 
-const statisticsInitial = {
-  maxMovementsDaily: 0,
-  maxMovementsWeekly: 0,
-  daily: [] as Record<string, number | string>[],
-  weekly: [] as Record<string, number | string>[],
+const statisticsRaw = ref<{ daily: StatisticsPeriod[], weekly: StatisticsPeriod[] }>()
+
+const addPercentagesToPeriods = (periods: StatisticsPeriod[]) => {
+  const maxTransactionsPerPeriod = Math.max(...periods.map((period) => period.fundingCount + period.withdrawCount))
+  const maxAmountPerPeriod = Math.max(...periods.map((period) => Math.max(period.fundingAmount, period.withdrawAmount)))
+  
+  return statisticsRaw.value?.daily.map((period) => ({
+    ...period,
+    transactionsCount: period.fundingCount + period.withdrawCount,
+    transactionsPercent: Math.round(
+      (period.fundingCount + period.withdrawCount) / maxTransactionsPerPeriod * 10000,
+    ) / 100,
+    withdrawAmountPercent: Math.round(
+      period.withdrawAmount / maxAmountPerPeriod * 10000,
+    ) / 100,
+    fundingAmountPercent: Math.round(
+      period.fundingAmount / maxAmountPerPeriod * 10000,
+    ) / 100,
+  }))
 }
 
-const statistics = ref<typeof statisticsInitial | undefined>(undefined)
+const statistics = computed(() => {
+  if (statisticsRaw.value == null) {
+    return
+  }
+  const daily = addPercentagesToPeriods(statisticsRaw.value.daily)
+  const weekly = addPercentagesToPeriods(statisticsRaw.value.weekly)
+  return {
+    daily,
+    weekly,
+  }
+})
 
 const loadStats = async () => {
   fetching.value = true
-  let response
   try {
-    response = await axios.get(`${BACKEND_API_ORIGIN}/api/statistics`)
-    fetching.value = false
-    statistics.value = response.data.data
+    statisticsRaw.value = await client.statistics.getFull.query()
   } catch (error) {
-    fetching.value = false
     console.error(error)
     return
-  }
+  } finally {
+    fetching.value = false
+  } 
 }
 
 watchEffect(() => {
   if (!hasPermissions.value) {
-    statistics.value = undefined
+    statisticsRaw.value = undefined
     return
   }
   loadStats()

@@ -4,6 +4,7 @@ import type { Request } from 'express'
 import superjson from 'superjson'
 
 import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
+import type { PermissionsEnum } from '../../../src/data/redis/User'
 
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')
@@ -25,6 +26,9 @@ export type Context = {
   jwt: string | null,
   accessToken: AccessTokenPayload | null,
 }
+export type Meta = {
+  requiredPermissions: PermissionsEnum[],
+}
 export const createContext = (opts: CreateExpressContextOptions): Context => {
   return {
     host: getHostFromRequest(opts.req),
@@ -33,8 +37,11 @@ export const createContext = (opts: CreateExpressContextOptions): Context => {
   }
 }
 
-const tRpc = initTRPC.context<typeof createContext>().create({
+const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
   transformer: superjson,
+  defaultMeta: {
+    requiredPermissions: [],
+  },
 })
  
 export const router = tRpc.router
