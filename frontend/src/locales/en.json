@@ -212,10 +212,10 @@
         "disabledReason": "Some cards of this set have already been used. Create a new set to fund a whole set."
       },
       "bulkWithdraw": {
-        "headline": "Withdraw all Satoshis",
+        "headline": "Get back all unused Satoshis",
         "intro": "You can get back the Satoshis from your Tip Cards by scanning the QR code of the card. If you want to withdraw the whole set at once, click on \"Withdraw Satoshis\".",
         "label": "Withdraw all Satoshis at once",
-        "button": "Withdraw Satoshis",
+        "button": "Redraw remaining sats",
         "disabledReason": "There are no funded cards in this set."
       }
     },
@@ -318,14 +318,14 @@
     "modalClose": "Later"
   },
   "bulkWithdraw": {
-    "title": "Withdraw set funds",
-    "headline": "Withdraw set funds",
-    "setName": "Set-Name: {setName}",
+    "title": "Redraw sats",
+    "headline": "Redraw sats",
+    "setName": "Set name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "There is already a withdraw link for this set. You have to reset it first to create a new one.",
     "buttonReset": "Reset",
     "noFundedCards": "There are no funded Tip Cards in this set.",
-    "description": "Click \"create\" to create a Lnurl withdraw link.",
-    "buttonCreate": "Create"
+    "description": "Click \"Redraw sats\" and scan the QR code to get back all unused sats from the displayed Tip Cards.",
+    "buttonCreate": "Redraw sats"
   }
 }
