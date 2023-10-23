@@ -146,7 +146,7 @@
           {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
         </label>
       </div>
-      <div v-if="availableLandingPages.length > 0" class="mb-2">
+      <div v-if="landingPages?.length" class="mb-2">
         <div class="mb-2">
           {{ t('setFunding.form.landingPagesHeadline') }}
           <small class="block">({{ t('setFunding.form.landingPagesHint') }})</small>
@@ -160,7 +160,7 @@
           tipcards.io
         </label>
         <label
-          v-for="landingPage in availableLandingPages"
+          v-for="landingPage in landingPages"
           :key="landingPage.id"
           class="block"
         >
@@ -487,7 +487,6 @@ import isEqual from 'lodash.isequal'
 
 import type { Settings, Set } from '@shared/data/redis/Set'
 import type { Image as ImageMeta } from '@shared/data/redis/Image'
-import { Type as LandingPageType, type LandingPage } from '@shared/data/redis/LandingPage'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
@@ -509,6 +508,7 @@ import { useI18nHelpers } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 import hashSha256 from '@/modules/hashSha256'
 import useNewFeatures from '@/modules/useNewFeatures'
+import useLandingPages from '@/modules/useLandingPages'
 import I18nT from '@/modules/I18nT'
 import useSetFunding from '@/modules/useSetFunding'
 import { useAuthStore } from '@/stores/auth'
@@ -768,27 +768,6 @@ onBeforeMount(() => {
   }
 })
 
-const getCardUrl = (lnurlEncoded: string, landingPageType: 'landing' | 'preview') => {
-  if (
-    selectedLandingPage.value != null
-    && selectedLandingPage.value.type === LandingPageType.enum.external
-    && selectedLandingPage.value.url != null
-  ) {
-    const path = new URL(selectedLandingPage.value.url)
-    path.searchParams.append('lightning', lnurlEncoded.toUpperCase())
-    if (landingPageType === 'preview') {
-      path.searchParams.append('type', 'preview')
-    }
-    return path.href
-  }
-
-  const routeHref = router.resolve({ name: landingPageType, params: { lang: route.params.lang }, query: { lightning: lnurlEncoded.toUpperCase() } }).href
-  if (landingPageType === 'preview') {
-    return routeHref
-  }
-  return `${location.protocol}//${location.host}${routeHref}`
-}
-
 const getQrCodeForUrl = (url: string) => 
   new QRCode({
         content: url,
@@ -802,8 +781,8 @@ const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
-  const url = getCardUrl(lnurlEncoded, 'landing')
-  const urlPreview = getCardUrl(lnurlEncoded, 'preview')
+  const url = getLandingPageUrl(cardHash, 'landing', settings.landingPage || undefined)
+  const urlPreview = getLandingPageUrl(cardHash, 'preview', settings.landingPage || undefined)
   const urlFunding = router.resolve({
     name: 'funding',
     params: { lang: route.params.lang, cardHash },
@@ -845,8 +824,8 @@ const reloadStatusForCards = debounce(async () => {
   reloadingStatusForCards.value = true
   await Promise.all(cards.value.map(async (card) => {
     // the URLs need to change in case the language was switched
-    card.url = getCardUrl(card.lnurl, 'landing')
-    card.urlPreview = getCardUrl(card.lnurl, 'preview')
+    card.url = getLandingPageUrl(card.cardHash, 'landing', settings.landingPage || undefined)
+    card.urlPreview = getLandingPageUrl(card.cardHash, 'preview', settings.landingPage || undefined)
     card.qrCodeSvg = getQrCodeForUrl(card.url)
     const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash, 'cards')
     if (status === 'error') {
@@ -950,25 +929,7 @@ const cardsStatusList = computed(
 
 /////
 // Landing Page
-const availableLandingPages = ref<LandingPage[]>([])
-const loadAvailableLandingPages = async () => {
-  if (!isLoggedIn.value) {
-    return
-  }
-  const response = await axios.get(`${BACKEND_API_ORIGIN}/api/landingPages/`)
-  availableLandingPages.value = response.data.data
-}
-const landingPagesById = computed<Record<string,LandingPage>>(() => availableLandingPages.value.reduce((landingPages, landingPage) => ({
-  ...landingPages,
-  [landingPage.id]: landingPage,
-}), {}))
-const selectedLandingPage = computed(() => {
-  if (settings.landingPage == null || landingPagesById.value[settings.landingPage] == null) {
-    return null
-  }
-  return landingPagesById.value[settings.landingPage]
-})
-onBeforeMount(loadAvailableLandingPages)
+const { landingPages, getLandingPageUrl } = useLandingPages()
 </script>
 
 <style>

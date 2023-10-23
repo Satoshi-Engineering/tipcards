@@ -53,22 +53,23 @@
       <ul class="w-full my-5">
         <li
           v-for="{
-            status, fundedDate, usedDate, shared,
-            amount, note, cardHash,
-            urlPreview, viewed,
-          } in fundedCardsForStatusComponent"
-          :key="cardHash"
+            hash,
+            shared, amount, noteForStatusPage,
+            funded, withdrawn,
+            landingPageViewed,
+          } in fundedCards"
+          :key="hash"
           class="py-1 border-b border-grey"
         >
           <CardStatus
-            :status="status || undefined"
-            :funded-date="fundedDate || undefined"
-            :used-date="usedDate || undefined"
+            status="funded"
+            :funded-date="funded != null ? funded.getTime() / 1000 : undefined"
+            :used-date="withdrawn != null ? withdrawn.getTime() / 1000 : undefined"
             :shared="shared"
-            :amount="amount || undefined"
-            :note="note || undefined"
-            :url="urlPreview"
-            :viewed="viewed"
+            :amount="amount.funded || undefined"
+            :note="noteForStatusPage"
+            :url="getLandingPageUrl(hash, 'preview', settings.landingPage || undefined)"
+            :viewed="landingPageViewed != null"
           />
         </li>
       </ul>
@@ -81,7 +82,6 @@ import { computed, onBeforeMount, ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Settings } from '@shared/data/redis/Set'
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import type { Card } from '@backend/trpc/data/Card'
 
@@ -93,18 +93,19 @@ import CardStatus from '@/components/CardStatus.vue'
 import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
 import useBacklink from '@/modules/useBackLink'
+import useLandingPages from '@/modules/useLandingPages'
 import useTRpc from '@/modules/useTRpc'
 import {
   getDefaultSettings,
   decodeCardsSetSettings,
 } from '@/stores/cardsSets'
 import ButtonDefault from '@/components/ButtonDefault.vue'
-import { BACKEND_API_ORIGIN } from '@/constants'
 
 const route = useRoute()
 const router = useRouter()
 
 const { to, onBacklinkClick } = useBacklink()
+const { getLandingPageUrl } = useLandingPages()
 const { client } = useTRpc()
 
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
@@ -157,25 +158,6 @@ const fundedCardsTotalAmount = computed(() => {
   }
   return fundedCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0)
 })
-
-// todo : move this into a composable and also use it from PageCards.
-// but ideally also refactor <CardStatus> component to accept trpc/data/Card directly and only add necessary data (basically just the url)
-const fundedCardsForStatusComponent = computed(() => fundedCards.value?.map((card) => ({
-  cardHash: card.hash,
-  status: 'funded',
-  fundedDate: card.funded != null ? card.funded.getTime() / 1000 : null,
-  usedDate: card.withdrawn != null ? card.withdrawn.getTime() / 1000 : null,
-  shared: card.shared,
-  amount: card.amount.funded,
-  note: card.noteForStatusPage,
-  // todo : use func from composable (see above) that also handles external url and both landingpage types ('landing' and 'preview')
-  urlPreview: router.resolve({
-    name: 'preview',
-    params: { lang: route.params.lang },
-    query: { lightning: encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${card.hash}`).toUpperCase() },
-  }).href,
-  viewed: card.landingPageViewed != null,
-})))
 
 // todo : add button for withdraw creation
 // todo : on withdraw creation show withdraw link

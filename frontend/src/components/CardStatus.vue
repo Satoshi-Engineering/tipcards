@@ -50,7 +50,7 @@
         </div>
       </div>
       <div
-        v-if="note != null"
+        v-if="!!note"
       >
         {{ t('cards.status.labelNote') }}: <strong class="font-medium">{{ note }}</strong>
       </div>
