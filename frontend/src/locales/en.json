@@ -324,6 +324,8 @@
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "There is already a withdraw link for this set. You have to reset it first to create a new one.",
     "buttonReset": "Reset",
-    "noFundedCards": "There are no funded Tip Cards in this set."
+    "noFundedCards": "There are no funded Tip Cards in this set.",
+    "description": "Click \"create\" to create a Lnurl withdraw link.",
+    "buttonCreate": "Create"
   }
 }

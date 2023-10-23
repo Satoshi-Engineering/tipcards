@@ -8,6 +8,14 @@ import { BulkWithdraw as BulkWithdrawTrpc } from '../data/BulkWithdraw'
 import { router, publicProcedure } from '../trpc'
 
 export const bulkWithdrawRouter = router({
+  getById: publicProcedure
+    .input(BulkWithdrawTrpc.shape.id)
+    .output(BulkWithdrawTrpc)
+    .query(async ({ input }) => {
+      const bulkWithdraw = await BulkWithdraw.fromId(input)
+      return bulkWithdraw.toTRpcResponse()
+    }),
+
   createForCards: publicProcedure
     .input(Card.shape.hash.array())
     .output(BulkWithdrawTrpc)

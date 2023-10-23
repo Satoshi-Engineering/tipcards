@@ -130,7 +130,7 @@ export default class BulkWithdraw {
     amount: number,
   }) {
     return await createWithdrawLink(
-      `Bulk withdrawing ${this.cards.length} cards.`,
+      `Bulk withdrawing ${this.cards.length} card(s).`,
       amount,
       `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/withdrawn/${id}`,
     )

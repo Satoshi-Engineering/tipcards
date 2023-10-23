@@ -46,11 +46,37 @@
         />
       </CardsSummaryContainer>
 
-      <p class="mt-4 mb-6">
-        todo : add some explanation text + button to create withdraw link here
-      </p>
+      <template v-if="bulkWithdraw != null">
+        <LightningQrCode
+          :value="bulkWithdraw.lnurl"
+          :success="bulkWithdraw.withdrawn != null"
+          :pending="bulkWithdraw.withdrawPending"
+        />
+        <div class="flex justify-center">
+          <ButtonWithTooltip
+            type="submit"
+            variant="outline"
+            @click="resetBulkWithdraw"
+          >
+            {{ $t('bulkWithdraw.buttonReset') }} 
+          </ButtonWithTooltip>
+        </div>
+      </template>
 
-      <ul class="w-full my-5">
+      <template v-else>
+        <p class="mt-4">
+          {{ $t('bulkWithdraw.description') }}
+        </p>
+
+        <ButtonDefault
+          class="mt-4"
+          @click="create"
+        >
+          {{ $t('bulkWithdraw.buttonCreate') }}
+        </ButtonDefault>
+      </template>
+
+      <ul class="w-full mt-6">
         <li
           v-for="{
             hash,
@@ -84,6 +110,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { Settings } from '@shared/data/redis/Set'
 
 import type { Card } from '@backend/trpc/data/Card'
+import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
@@ -100,6 +127,7 @@ import {
   decodeCardsSetSettings,
 } from '@/stores/cardsSets'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import LightningQrCode from '@/components/LightningQrCode.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -136,13 +164,27 @@ const loadCards = async () => {
   ))
 }
 
-const cardLockedByWithdraw = computed(() => cards.value?.find((card) => card.isLockedByBulkWithdraw))
+const cardLockedByWithdraw = computed(() => cards.value?.find((card) => card.isLockedByBulkWithdraw && !card.withdrawn))
 
 const resetBulkWithdraw = async () => {
+  await resetBulkWithdrawFromId()
+  await resetBulkWithdrawFromCard()
+}
+
+const resetBulkWithdrawFromId = async () => {
+  if (bulkWithdraw.value == null) {
+    return
+  }
+  await client.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
+  bulkWithdraw.value = undefined
+}
+
+const resetBulkWithdrawFromCard = async () => {
   if (cardLockedByWithdraw.value == null) {
     return
   }
   await client.bulkWithdraw.deleteByCardHash.mutate(cardLockedByWithdraw.value.hash)
+  await loadCards()
 }
 
 const fundedCards = computed(() => cards.value?.filter((card) => 
@@ -159,9 +201,24 @@ const fundedCardsTotalAmount = computed(() => {
   return fundedCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0)
 })
 
-// todo : add button for withdraw creation
-// todo : on withdraw creation show withdraw link
+const bulkWithdraw = ref<BulkWithdraw>()
+const create = async () => {
+  if (fundedCards.value == null) {
+    return
+  }
+  bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(fundedCards.value.map((card) => card.hash))
+  setTimeout(updateBulkWithdraw, 5000)
+}
+
+const updateBulkWithdraw = async () => {
+  if (bulkWithdraw.value == null) {
+    return
+  }
+  bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
+  setTimeout(updateBulkWithdraw, 5000)
+}
+
+// todo : clean up file (move stuff into sub-components or composables)
 // todo : handle loading states
 // todo : handle errors
-// todo : clean up file (move stuff into sub-components or composables)
 </script>

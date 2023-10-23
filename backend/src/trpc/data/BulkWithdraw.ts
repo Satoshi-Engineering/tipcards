@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const BulkWithdraw = z.object({
+  id: z.string(),
   lnurl: z.string(),
   created: z.date(),
   amount: z.number(),
