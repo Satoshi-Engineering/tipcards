@@ -479,13 +479,13 @@ import JSZip from 'jszip'
 import { storeToRefs } from 'pinia'
 import QRCode from 'qrcode-svg'
 import sanitizeHtml from 'sanitize-html'
-import { onMounted, ref, reactive, watch, computed, onBeforeMount } from 'vue'
+import { onMounted, ref, watch, computed, onBeforeMount, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
-import type { Settings, Set } from '@shared/data/redis/Set'
+import type { Set } from '@shared/data/redis/Set'
 import type { Image as ImageMeta } from '@shared/data/redis/Image'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
@@ -511,13 +511,9 @@ import useNewFeatures from '@/modules/useNewFeatures'
 import useLandingPages from '@/modules/useLandingPages'
 import I18nT from '@/modules/I18nT'
 import useSetFunding from '@/modules/useSetFunding'
+import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import { useAuthStore } from '@/stores/auth'
-import {
-  getDefaultSettings,
-  encodeCardsSetSettings,
-  decodeCardsSetSettings,
-  useCardsSetsStore,
-} from '@/stores/cardsSets'
+import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
@@ -546,8 +542,8 @@ const onLogin = () => {
 ///////////////////////
 // CARDS SETS + SETTINGS
 //
+const { settings } = useSetSettingsFromUrl()
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
-const settings = reactive(getDefaultSettings())
 const saving = ref(false)
 const savingError = ref<string>()
 const deleting = ref(false)
@@ -622,56 +618,25 @@ const currentSetUrlQrCode = computed(() => new QRCode({
   }).svg(),
 )
 
-const putSettingsIntoUrl = async () => {
-  if (setId.value == null) {
-    return
-  }
-
-  let settingsForUrl = ''
-  if (!isEqual(settings, getDefaultSettings())) {
-    settingsForUrl = encodeCardsSetSettings(settings)
-  }
-  
-  router.replace({
-    ...route,
-    params: {
-      ...route.params,
-      settings: settingsForUrl,
-    },
-  })
-
-  setDocumentTitle(settings.setName !== '' ? settings.setName : t('index.unnamedSetNameFallback'))
-}
-
-watch(settings, () => {
-  putSettingsIntoUrl()
-  repopulateCards()
+watchEffect(() => {
+  setDocumentTitle(settings.setName || t('index.unnamedSetNameFallback'))
 })
 
-const urlChanged = () => {
-  const settingsEncoded = String(route.params.settings)
-  let settingsDecoded: Settings | undefined = undefined
-  try {
-    settingsDecoded = decodeCardsSetSettings(settingsEncoded)
-  } catch (e) {
-    // do nothing
-  }
-  Object.assign(settings, settingsDecoded)
-  repopulateCards()
+const initializeCards = async () => {
+  await repopulateCards()
   subscribe()
   currentSetUrl.value = document.location.href
 }
 
+watch(settings, initializeCards)
+
 onMounted(() => {
-  urlChanged()
-  putSettingsIntoUrl()
   loadAvailableCardLogos()
+  initializeCards()
 })
 
 // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/425
 window.addEventListener('pageshow', () => reloadStatusForCards())
-
-watch(() => route.fullPath, urlChanged)
 
 const hasBeenSaved = computed(() => {
   return sets.value.some(({ id }) => id === setId.value)

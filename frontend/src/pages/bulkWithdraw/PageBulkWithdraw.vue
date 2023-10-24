@@ -55,10 +55,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref, reactive } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-import type { Settings } from '@shared/data/redis/Set'
 
 import type { Card } from '@backend/trpc/data/Card'
 import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
@@ -69,10 +67,7 @@ import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
 import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
-import {
-  getDefaultSettings,
-  decodeCardsSetSettings,
-} from '@/stores/cardsSets'
+import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 
 import BulkWithdrawQRCode from './components/BulkWithdrawQRCode.vue'
 import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
@@ -85,12 +80,12 @@ const route = useRoute()
 const router = useRouter()
 
 const { client } = useTRpc()
+const { settings } = useSetSettingsFromUrl()
 
 const requestFailed = ref(false)
 const initializing = ref(true)
 
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
-const settings = reactive<Settings>(getDefaultSettings())
 const cards = ref<Card[]>()
 
 onBeforeMount(() => {
@@ -98,18 +93,8 @@ onBeforeMount(() => {
     router.replace({ name: 'home', params: { lang: route.params.lang } })
     return
   }
-  loadSettingsFromUrl()
   loadCards()
 })
-
-const loadSettingsFromUrl = () => {
-  const settingsEncoded = String(route.params.settings)
-  try {
-    Object.assign(settings, decodeCardsSetSettings(settingsEncoded))
-  } catch (e) {
-    // do nothing
-  }
-}
 
 const loadCards = async () => {
   try {
