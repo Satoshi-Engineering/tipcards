@@ -6,6 +6,7 @@
     >
       {{ $t('bulkWithdraw.headline') }}
     </HeadlineDefault>
+
     <p class="my-3">
       <Translation keypath="bulkWithdraw.setName">
         <template #setName>
@@ -23,76 +24,28 @@
       />
     </CardsSummaryContainer>
 
-    <div v-if="requestFailed">
-      <p class="text-red-500 mb-2">
-        {{ $t('bulkWithdraw.genericErrorMessage') }}
-      </p>
-      <LinkDefault
-        variant="no-border"
-        @click="reload()"
-      >
-        {{ $t('bulkWithdraw.reload') }}
-      </LinkDefault>
-    </div>
+    <RequestFailed v-if="requestFailed" />
 
-    <div v-else-if="cardLockedByWithdraw != null">
-      <p class="mb-4">
-        {{ $t('bulkWithdraw.withdrawExists') }}
-      </p>
-      <ButtonWithTooltip
-        type="submit"
-        variant="outline"
-        @click="resetBulkWithdraw"
-      >
-        {{ $t('bulkWithdraw.buttonReset') }} 
-      </ButtonWithTooltip>
-    </div>
+    <BulkWithdrawExists
+      v-else-if="cardLockedByWithdraw != null"
+      :resetting="resetting"
+      @reset="resetBulkWithdraw"
+    />
 
-    <div v-else-if="fundedCards?.length === 0">
-      <p class="mb-4">
-        {{ $t('bulkWithdraw.noFundedCards') }}
-      </p>
-      <ButtonDefault
-        variant="outline"
-        :href="router.resolve(to).href"
-        @click="onBacklinkClick"
-      >
-        {{ $t('general.back') }}
-      </ButtonDefault>
-    </div>
+    <NoContent v-else-if="fundedCards?.length === 0" />
 
-    <div v-else-if="bulkWithdraw != null">
-      <LightningQrCode
-        :value="bulkWithdraw.lnurl"
-        :success="bulkWithdraw.withdrawn != null"
-        :pending="bulkWithdraw.withdrawPending || resetting"
-      />
-      <div class="flex justify-center">
-        <ButtonWithTooltip
-          type="submit"
-          variant="outline"
-          :disabled="resetting"
-          @click="resetBulkWithdraw"
-        >
-          {{ $t('bulkWithdraw.buttonReset') }} 
-        </ButtonWithTooltip>
-      </div>
-    </div>
+    <BulkWithdrawQRCode
+      v-else-if="bulkWithdraw != null"
+      :bulk-withdraw="bulkWithdraw"
+      :resetting="resetting"
+      @reset="resetBulkWithdraw"
+    />
 
-    <div v-else-if="fundedCards != null">
-      <p class="mt-4">
-        {{ $t('bulkWithdraw.description') }}
-      </p>
-
-      <ButtonDefault
-        class="mt-4"
-        :loading="creating"
-        :disabled="creating"
-        @click="create"
-      >
-        {{ $t('bulkWithdraw.buttonCreate') }}
-      </ButtonDefault>
-    </div>
+    <CreateBulkWithdraw
+      v-else-if="fundedCards != null"
+      :creating="creating"
+      @create="create"
+    />
 
     <CardsList
       class="w-full mt-6"
@@ -110,27 +63,27 @@ import type { Settings } from '@shared/data/redis/Set'
 import type { Card } from '@backend/trpc/data/Card'
 import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
 
-import CardsList from '@/components/bulkWithdraw/CardsList.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
-import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CardsSummary from '@/components/CardsSummary.vue'
 import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
 import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
-import useBacklink from '@/modules/useBackLink'
 import useTRpc from '@/modules/useTRpc'
 import {
   getDefaultSettings,
   decodeCardsSetSettings,
 } from '@/stores/cardsSets'
-import ButtonDefault from '@/components/ButtonDefault.vue'
-import LightningQrCode from '@/components/LightningQrCode.vue'
+
+import BulkWithdrawQRCode from './components/BulkWithdrawQRCode.vue'
+import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
+import CardsList from './components/CardsList.vue'
+import CreateBulkWithdraw from './components/CreateBulkWithdraw.vue'
+import RequestFailed from './components/RequestFailed.vue'
+import NoContent from './components/NoContent.vue'
 
 const route = useRoute()
 const router = useRouter()
 
-const { to, onBacklinkClick } = useBacklink()
 const { client } = useTRpc()
 
 const requestFailed = ref(false)
@@ -239,6 +192,4 @@ const updateBulkWithdraw = async () => {
   setTimeout(updateBulkWithdraw, 5000)
   bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
 }
-
-const reload = () => location.reload()
 </script>
