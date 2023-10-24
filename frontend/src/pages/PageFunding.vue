@@ -372,10 +372,10 @@ const loadLnurlData = async () => {
   if (card?.lnurlp?.expired === true) {
     lnurlpExpired.value = true
   }
-  if (card?.text != null && !textIsDirty.value) {
+  if (!!card?.text && !textIsDirty.value) {
     text.value = card.text
   }
-  if (card?.note != null && !noteIsDirty.value) {
+  if (!!card?.note && !noteIsDirty.value) {
     note.value = card.note
   }
   if (status === 'funded' || status === 'used') {
