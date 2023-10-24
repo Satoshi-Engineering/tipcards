@@ -81,8 +81,8 @@
       "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.",
       "createYourOwnTipCardsButton": "Create my own Tip Cards"
     },
-    "bulkWithdrawExists": "There is a return link for this Tip Card. You have to reset it first to use the card.",
-    "bulkWithdrawResetError": "The return link could not be reset.",
+    "bulkWithdrawExists": "A recall of this Tip Card is currently in progress. You have to cancel it first to use the card.",
+    "bulkWithdrawResetError": "An error occurred when cancelling the recall.",
     "errors": {
       "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
       "errorInvalidLandingPage": "Unable to load custom landing page."
@@ -174,7 +174,7 @@
       "labelPendingFunding": "Waiting to be paid",
       "labelPendingSharedFunding": "Shared funding in progress",
       "labelPendingSetFunding": "Set funding in progress",
-      "labelIsLockedByBulkWithdraw": "Redraw in progress",
+      "labelIsLockedByBulkWithdraw": "Withdraw in progress",
       "labelNote": "Note",
       "labelViewed": "Viewed by recipient",
       "reload": "Reload"
@@ -216,9 +216,9 @@
       },
       "bulkWithdraw": {
         "headline": "Get back all unused Satoshis",
-        "intro": "You can get back the Satoshis from your Tip Cards by scanning the QR code of the card. If you want to withdraw the whole set at once, click on \"Withdraw Satoshis\".",
+        "intro": "If you want to withdraw all remaining sats from the whole set at once, click on \"Withdraw remaining sats\".",
         "label": "Withdraw all Satoshis at once",
-        "button": "Redraw remaining sats",
+        "button": "Withdraw remaining sats",
         "disabledReason": "There are no funded cards in this set."
       }
     },
@@ -321,14 +321,16 @@
     "modalClose": "Later"
   },
   "bulkWithdraw": {
-    "title": "Redraw sats",
-    "headline": "Redraw sats",
+    "title": "Withdraw remaining sats",
+    "headline": "Withdraw sats",
     "setName": "Set name: {setName}",
     "amountAndUnit": "{amount} BTC",
-    "withdrawExists": "There is already a withdraw link for this set. You have to reset it first to create a new one.",
+    "withdrawExists": "Withdrawal is currently in progress. You have to reset it first to display a new QR code.",
     "buttonReset": "Reset",
     "noFundedCards": "There are no funded Tip Cards in this set.",
-    "description": "Click \"Redraw sats\" and scan the QR code to get back all unused sats from the displayed Tip Cards.",
-    "buttonCreate": "Redraw sats"
+    "description": "Click \"Withdraw all sats\" and scan the QR code to get back all unused sats from the displayed Tip Cards.",
+    "buttonCreate": "Withdraw all sats",
+    "genericErrorMessage": "An error occurred.",
+    "reload": "Reload"
   }
 }
