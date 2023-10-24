@@ -386,6 +386,7 @@ const loadLnurlData = async () => {
 
   const cardStatus = await loadCardStatus(cardHash.value, String(route.name))
   const { status, message, card } = cardStatus
+  isLockedByBulkWithdraw.value = !!cardStatus.card?.isLockedByBulkWithdraw
 
   if (status === 'error' && message != null) {
     loading.value = false
@@ -420,7 +421,6 @@ const loadLnurlData = async () => {
   if (cardStatus.amount != null) {
     amount.value = cardStatus.amount
   }
-  isLockedByBulkWithdraw.value = !!cardStatus.card?.isLockedByBulkWithdraw
 
   loading.value = false
   setTimeout(loadLnurlData, 10 * 1000)

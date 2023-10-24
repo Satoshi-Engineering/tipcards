@@ -237,7 +237,16 @@ router.delete('/delete/:cardHash', async (req: express.Request, res: express.Res
     return
   }
 
-  // 2. check if invoice is already paid and used
+  // 2. check if card is locked
+  if (card.isLockedByBulkWithdraw) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This card is locked by bulk withdraw!',
+    })
+    return
+  }
+
+  // 3. check if invoice is already paid and used
   try {
     await checkIfCardIsPaidAndCreateWithdrawId(card)
   } catch (error: unknown) {
