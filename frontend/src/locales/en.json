@@ -81,6 +81,8 @@
       "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal Tip Cards.",
       "createYourOwnTipCardsButton": "Create my own Tip Cards"
     },
+    "bulkWithdrawExists": "There is a return link for this Tip Card. You have to reset it first to use the card.",
+    "bulkWithdrawResetError": "The return link could not be reset.",
     "errors": {
       "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
       "errorInvalidLandingPage": "Unable to load custom landing page."

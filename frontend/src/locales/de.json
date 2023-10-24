@@ -95,6 +95,8 @@
         "linkHref": "https://pretix.eu/btc/23/c/bPCDAshzq/"
       }
     },
+    "bulkWithdrawExists": "Für diese Tip Card existiert ein Zurückhol-Link. Du musst ihn zuerst zurücksetzen um die Karte zu verwenden.",
+    "bulkWithdrawResetError": "Der Zurückhol-Link konnte nicht zurückgesetzt werden.",
     "errors": {
       "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card.",
       "errorInvalidLandingPage": "Benutzerdefinierte Seite konnte nicht geladen werden."
