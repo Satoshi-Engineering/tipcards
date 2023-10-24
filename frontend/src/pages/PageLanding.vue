@@ -17,6 +17,7 @@
       <HeadlineDefault level="h1" class="mb-8">
         <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
       </HeadlineDefault>
+
       <div v-if="userErrorMessage != null" class="my-4">
         <ParagraphDefault
           class="text-red-500"
@@ -25,6 +26,21 @@
           {{ userErrorMessage }}
         </ParagraphDefault>
       </div>
+
+      <div v-if="showContent === 'isLockedByBulkWithdraw'">
+        <p class="mb-4">
+          {{ $t('landing.bulkWithdrawExists') }}
+        </p>
+        <ButtonDefault
+          type="submit"
+          variant="outline"
+          :disabled="resettingBulkWithdraw"
+          @click="resetBulkWithdraw"
+        >
+          {{ $t('bulkWithdraw.buttonReset') }} 
+        </ButtonDefault>
+      </div>
+
       <div v-if="showContent === 'spendable'">
         <HeadlineDefault level="h2" styling="h1">
           <I18nT keypath="landing.introMessageReceiveBtc.message">
@@ -72,6 +88,7 @@
           * {{ t('landing.introMessageReceiveBtc.footnote') }}
         </ParagraphDefault>
       </div>
+
       <div v-if="showContent === 'preview'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessagePreview.headline') }}
@@ -90,6 +107,7 @@
           </I18nT>
         </ParagraphDefault>
       </div>
+
       <div v-if="showContent === 'used'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessageAlreadyUsed.headline') }}
@@ -108,6 +126,7 @@
           </I18nT>
         </ParagraphDefault>
       </div>
+
       <div v-if="showContent === 'recentlyUsed'">
         <HeadlineDefault level="h2" styling="h1">
           {{ t('landing.introMessageJustReceived.headline', { emoji: '🥳' }) }}
@@ -126,6 +145,7 @@
           </I18nT>
         </ParagraphDefault>
       </div>
+
       <div class="my-10">
         <IconBitcoin class="w-16 mb-3 ltr:float-right ltr:ml-3 rtl:float-left rtl:mr-3" />
         <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
@@ -134,9 +154,10 @@
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.2'))" />
         <!-- eslint-enable vue/no-v-html, vue/no-v-text-v-html-on-component -->
       </div>
+
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="showContent !== 'used' && showContent !== 'preview'">1. </span>{{ t('landing.sectionWallet.headline') }}
+          <span v-if="showContent !== 'used' && showContent !== 'preview' && showContent !== 'isLockedByBulkWithdraw'">1. </span>{{ t('landing.sectionWallet.headline') }}
         </HeadlineDefault>
         <!-- eslint-disable-next-line vue/no-v-html, vue/no-v-text-v-html-on-component -->
         <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionWallet.explanation'))" />
@@ -178,7 +199,8 @@
           <small>{{ t('landing.sectionWallet.otherFootnote') }}</small>
         </ParagraphDefault>
       </div>
-      <div v-if="showContent !== 'used' && showContent !== 'preview'" class="my-10">
+
+      <div v-if="showContent !== 'used' && showContent !== 'preview' && showContent !== 'isLockedByBulkWithdraw'" class="my-10">
         <HeadlineDefault level="h2">
           2. {{ t('landing.sectionReceive.headline') }}
         </HeadlineDefault>
@@ -203,9 +225,10 @@
           :error="userErrorMessage"
         />
       </div>
+
       <div class="my-10">
         <HeadlineDefault level="h2">
-          <span v-if="showContent !== 'used' && showContent !== 'preview'">3. </span>{{ t('landing.sectionUse.headline') }}
+          <span v-if="showContent !== 'used' && showContent !== 'preview' && showContent !== 'isLockedByBulkWithdraw'">3. </span>{{ t('landing.sectionUse.headline') }}
         </HeadlineDefault>
         <ParagraphDefault>
           {{ t('landing.sectionUse.message') }}
@@ -315,6 +338,7 @@ import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
 import sanitizeI18n from '@/modules/sanitizeI18n'
+import useTRpc from '@/modules/useTRpc'
 import router from '@/router'
 import FormatBitcoin from '@/components/FormatBitcoin.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
@@ -330,6 +354,7 @@ const amount = ref<number | undefined | null>()
 const userErrorMessage = ref<string | undefined>()
 const withdrawPending = ref(false)
 const cardUsed = ref<number | undefined>()
+const isLockedByBulkWithdraw = ref(false)
 
 const amountInFiat = computed(() => {
   if (amount.value == null || rateBtcFiat.value == null) {
@@ -368,7 +393,10 @@ const loadLnurlData = async () => {
     return
   }
 
-  if (card == null || !['used', 'funded'].includes(status)) {
+  if (
+    card == null
+    || (!['used', 'funded'].includes(status) && !isLockedByBulkWithdraw.value)
+  ) {
     router.replace({
       name: 'funding',
       params: {
@@ -392,12 +420,17 @@ const loadLnurlData = async () => {
   if (cardStatus.amount != null) {
     amount.value = cardStatus.amount
   }
+  isLockedByBulkWithdraw.value = !!cardStatus.card?.isLockedByBulkWithdraw
 
   loading.value = false
   setTimeout(loadLnurlData, 10 * 1000)
 }
 
-const showContent = computed<'preview' | 'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+  if (isLockedByBulkWithdraw.value) {
+    return 'isLockedByBulkWithdraw'
+  }
+
   if (cardHash.value == null) {
     return 'preview'
   }
@@ -422,4 +455,24 @@ const showContent = computed<'preview' | 'spendable' | 'used' | 'recentlyUsed' |
 onMounted(loadLnurlData)
 
 watch(() => route.params.lang, loadLnurlData)
+
+/////
+// BULK WITHDRAW
+const { client } = useTRpc()
+const resettingBulkWithdraw = ref(false)
+const resetBulkWithdraw = async () => {
+  if (cardHash.value == null) {
+    return
+  }
+  userErrorMessage.value = undefined
+  resettingBulkWithdraw.value = true
+  try {
+    await client.bulkWithdraw.deleteByCardHash.mutate(cardHash.value)
+    await loadLnurlData()
+  } catch (error) {
+    console.error(error)
+    userErrorMessage.value = t('landing.bulkWithdrawResetError')
+  }
+  resettingBulkWithdraw.value = false
+}
 </script>
