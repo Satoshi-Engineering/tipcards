@@ -44,6 +44,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       status: 'success',
       data: card,
     })
+    return
   }
 
   // check if invoice is already paid and get withdrawId
