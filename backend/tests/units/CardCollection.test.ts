@@ -10,7 +10,7 @@ import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from '../mocks/re
 import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../mocks/redis/SetWithUnfundedCards'
 
 describe('CardCollection', () => {
-  it('load no cards for an empty set', async () => {
+  it('should load no cards when loading an empty set', async () => {
     initSets({
       [SET_EMPTY.id]: SET_EMPTY,
     })
@@ -20,7 +20,7 @@ describe('CardCollection', () => {
     expect(amount).toBe(0)
   })
 
-  it('should throw error if not funded', async () => {
+  it('should throw an error, if the amount is caluclated for a not funded set', async () => {
     initCards({
       [CARD_UNFUNDED_INVOICE.cardHash]: CARD_UNFUNDED_INVOICE,
       [CARD_UNFUNDED_LNURLP.cardHash]: CARD_UNFUNDED_LNURLP,
@@ -32,7 +32,7 @@ describe('CardCollection', () => {
     expect(() => cards.getFundedAmount()).toThrow(CardNotFundedError)
   })
 
-  it('should calculate the funded amount', async () => {
+  it('should calculate the funded amount for a set', async () => {
     initCards({
       [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
       [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
@@ -45,7 +45,7 @@ describe('CardCollection', () => {
     expect(amount).toBe(300)
   })
 
-  it('should lock and release all cards', async () => {
+  it('should lock and release all cards for a set', async () => {
     initCards({
       [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
       [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
