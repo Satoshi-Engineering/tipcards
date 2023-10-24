@@ -172,6 +172,7 @@
       "labelPendingFunding": "Waiting to be paid",
       "labelPendingSharedFunding": "Shared funding in progress",
       "labelPendingSetFunding": "Set funding in progress",
+      "labelIsLockedByBulkWithdraw": "Redraw in progress",
       "labelNote": "Note",
       "labelViewed": "Viewed by recipient",
       "reload": "Reload"

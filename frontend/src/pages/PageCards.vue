@@ -424,6 +424,12 @@
             <span class="m-auto">Error</span>
           </div>
           <div
+            v-else-if="card.isLockedByBulkWithdraw"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+          >
+            <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
+          </div>
+          <div
             v-else-if="card.amount != null && card.status === 'funded'"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
           >
@@ -710,6 +716,7 @@ type Card = {
   createdDate: number | null,
   viewed: boolean,
   qrCodeSvg: string,
+  isLockedByBulkWithdraw: boolean,
 }
 const cards = ref<Card[]>([])
 const userErrorMessage = ref<string | undefined>(undefined)
@@ -767,6 +774,7 @@ const generateNewCardSkeleton = async (index: number) => {
     viewed: false,
     shared: false,
     qrCodeSvg: getQrCodeForUrl(url),
+    isLockedByBulkWithdraw: false,
   }
 }
 
@@ -806,6 +814,7 @@ const reloadStatusForCards = debounce(async () => {
     card.usedDate = cardData?.used || null
     card.createdDate = createdDate || null
     card.viewed = cardData?.landingPageViewed != null
+    card.isLockedByBulkWithdraw = !!cardData?.isLockedByBulkWithdraw
   }))
   reloadingStatusForCards.value = false
 }, 1000)

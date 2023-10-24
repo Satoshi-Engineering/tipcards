@@ -181,6 +181,7 @@ export const loadCardStatus = async (cardHash: string, origin: string | undefine
   }
   return {
     status: 'unfunded',
+    fundedDate,
     card,
   }
 }
