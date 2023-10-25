@@ -351,7 +351,7 @@
             >
               <div
                 class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
-                :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
+                :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw  }"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -359,7 +359,7 @@
                   height="100%"
                   viewBox="0 0 256 256"
                   class="qr-code-svg"
-                  :class="{ 'qr-code-svg--used': card.status === 'used' }"
+                  :class="{ 'qr-code-svg--used': card.status === 'used' || card.isLockedByBulkWithdraw  }"
                 >
                   <!-- eslint-disable vue/no-v-html -->
                   <g v-html="card.qrCodeSvg" />
@@ -396,7 +396,7 @@
             </a>
             <div
               class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
-              :class="{ 'opacity-50 blur-sm': card.status === 'used' }"
+              :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
               :dir="currentTextDirection"
             >
               <div>
@@ -425,6 +425,12 @@
             <span class="m-auto">Error</span>
           </div>
           <div
+            v-else-if="card.amount != null && card.status === 'used'"
+            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
+          >
+            <span class="m-auto">{{ card.amount }} sats</span>
+          </div>
+          <div
             v-else-if="card.isLockedByBulkWithdraw"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
           >
@@ -433,12 +439,6 @@
           <div
             v-else-if="card.amount != null && card.status === 'funded'"
             class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
-          >
-            <span class="m-auto">{{ card.amount }} sats</span>
-          </div>
-          <div
-            v-else-if="card.amount != null && card.status === 'used'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
           >
             <span class="m-auto">{{ card.amount }} sats</span>
           </div>

@@ -185,6 +185,7 @@
       "headline": "Status",
       "noCards": "Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.",
       "labelUsed": "Eingelöst",
+      "labelBulkWithdrawn": "Zurückgeholt",
       "labelFunded": "Aufgeladen",
       "labelPendingFunding": "Warte auf Bezahlung",
       "labelPendingSharedFunding": "Wird gemeinsam aufgeladen",

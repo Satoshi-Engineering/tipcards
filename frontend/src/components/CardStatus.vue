@@ -13,7 +13,8 @@
       <div class="flex justify-between">
         <a :href="url">
           <div v-if="(status === 'used' && usedDate != null)">
-            <strong>{{ t('cards.status.labelUsed', 1) }}:</strong>
+            <strong v-if="isLockedByBulkWithdraw">{{ t('cards.status.labelBulkWithdrawn', 1) }}:</strong>
+            <strong v-else>{{ t('cards.status.labelUsed', 1) }}:</strong>
             {{
               $d(usedDate * 1000, {
                 year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'

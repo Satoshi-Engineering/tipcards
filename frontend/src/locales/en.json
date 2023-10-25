@@ -171,6 +171,7 @@
       "headline": "Status",
       "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.",
       "labelUsed": "Redeemed",
+      "labelBulkWithdrawn": "Redrawn",
       "labelFunded": "Funded",
       "labelPendingFunding": "Waiting to be paid",
       "labelPendingSharedFunding": "Shared funding in progress",

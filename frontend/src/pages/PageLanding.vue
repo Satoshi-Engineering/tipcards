@@ -428,6 +428,13 @@ const loadLnurlData = async () => {
 }
 
 const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' | 'used' | 'recentlyUsed' | null>(() => {
+  if (cardUsed.value != null) {
+    if ((+ new Date() / 1000) - cardUsed.value < 5 * 60) {
+      return 'recentlyUsed'
+    }
+    return 'used'
+  }
+
   if (isLockedByBulkWithdraw.value) {
     return 'isLockedByBulkWithdraw'
   }
@@ -444,12 +451,6 @@ const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' 
     return 'spendable'
   }
 
-  if (cardUsed.value != null) {
-    if ((+ new Date() / 1000) - cardUsed.value < 5 * 60) {
-      return 'recentlyUsed'
-    }
-    return 'used'
-  }
   return null
 })
 
