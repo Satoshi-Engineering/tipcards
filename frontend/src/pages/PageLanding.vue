@@ -29,9 +29,10 @@
 
       <div v-if="showContent === 'isLockedByBulkWithdraw'">
         <p class="mb-4">
-          {{ $t('landing.bulkWithdrawExists') }}
+          {{ withdrawPending ? $t('landing.bulkWithdrawPending') : $t('landing.bulkWithdrawExists') }}
         </p>
         <ButtonDefault
+          v-if="!withdrawPending"
           type="submit"
           variant="outline"
           :disabled="resettingBulkWithdraw"

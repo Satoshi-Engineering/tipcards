@@ -96,6 +96,7 @@
       }
     },
     "bulkWithdrawExists": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Wenn du die Karte verwenden möchtest, musst du das Zurückholen abbrechen.",
+    "bulkWithdrawPending": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
     "bulkWithdrawResetError": "Beim Abbruch des Zurückholens ist ein Fehler aufgetreten.",
     "errors": {
       "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card.",
@@ -340,6 +341,7 @@
     "setName": "Set-Name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "Das Zurückholen der verbleibenden Sats wurde bereits gestartet. Du musst abbrechen, um einen neuen QR-Code anzuzeigen.",
+    "withdrawPending": "Das Zurückholen der verbleibenden Sats wurde bereits gestartet. Warte bis diese in deiner Lightning Wallet angekommen sind. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
     "buttonReset": "Zurückholen abbrechen",
     "noFundedCards": "In diesem Set befinden sich keine aufgeladenen Tip Cards.",
     "description": "Klicke auf \"Jetzt zurückholen\" und scanne den angezeigten QR-Code, um die Sats der ausgewählten Tip Cards zurückzuholen.",

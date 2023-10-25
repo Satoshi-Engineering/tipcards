@@ -28,7 +28,7 @@ export const cardFromCardRedis = async (card: CardRedis) => Card.parse({
   amount: mapAmount(card),
   funded: mapFunded(card),
   isLockedByBulkWithdraw: !!card.isLockedByBulkWithdraw,
-  withdrawPending: await mapWithdrawPending(card),
+  withdrawPending: await isWithdrawPending(card),
   withdrawn: mapWithdrawn(card),
 })
 
@@ -93,14 +93,13 @@ const mapAmount = (card: CardRedis) => {
   return amount
 }
 
-const mapWithdrawPending = async (card: CardRedis) => {
-  const cardApi = cardApiFromCardRedis(card)
-  let withdrawPending = false
-  if (mapFunded(cardApi) && !mapWithdrawn) {
-    await checkIfCardIsUsed(cardApi)
-    withdrawPending = !!cardApi.withdrawPending
+const isWithdrawPending = async (card: CardRedis) => {
+  if (!isFunded(card) || isWithdrawn(card)) {
+    return false
   }
-  return withdrawPending
+  const cardApi = cardApiFromCardRedis(card)
+  await checkIfCardIsUsed(cardApi)
+  return cardApi.withdrawPending
 }
 
 const mapFunded = (card: CardRedis) => {
@@ -115,4 +114,8 @@ const mapFunded = (card: CardRedis) => {
   return funded
 }
 
+const isFunded = (card: CardRedis) => mapFunded(card) != null
+
 const mapWithdrawn = (card: CardRedis) => card.used != null ? new Date(card.used * 1000) : undefined
+
+const isWithdrawn = (card: CardRedis) => mapWithdrawn(card) != null

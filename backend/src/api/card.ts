@@ -39,14 +39,6 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     return
   }
 
-  if (card.isLockedByBulkWithdraw) {
-    res.json({
-      status: 'success',
-      data: card,
-    })
-    return
-  }
-
   // check if invoice is already paid and get withdrawId
   if (card.lnbitsWithdrawId == null) {
     try {
@@ -67,7 +59,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       return
     }
   }
-  if (card.lnbitsWithdrawId == null) {
+  if (card.lnbitsWithdrawId == null && !card.isLockedByBulkWithdraw) {
     res.json({
       status: 'success',
       data: card,

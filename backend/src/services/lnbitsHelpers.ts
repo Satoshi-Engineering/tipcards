@@ -2,12 +2,13 @@ import axios from 'axios'
 import z from 'zod'
 
 import { Card as ZodCardApi, type Card as CardApi } from '../../../src/data/api/Card'
-import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
+import type { BulkWithdraw as BulkWithdrawRedis } from '../../../src/data/redis/BulkWithdraw'
 import type { Set } from '../../../src/data/redis/Set'
 import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
 import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
 
 import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
+import BulkWithdraw from '../modules/BulkWithdraw'
 import { getCardByHash, createCard, updateCard, updateSet } from './database'
 import hashSha256 from './hashSha256'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
@@ -303,13 +304,28 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
  * @throws ErrorWithCode
  */
 export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise<CardApi> => {
-  if (
-    card.lnbitsWithdrawId == null
-    || card.used != null
-    || card.isLockedByBulkWithdraw
-  ) {
+  if (card.used != null) {
     return card
   }
+
+  if (card.isLockedByBulkWithdraw) {
+    try {
+      const bulkWithdraw = await BulkWithdraw.fromCardHash(card.cardHash)
+      const bulkWithdrawTrpc = await bulkWithdraw.toTRpcResponse()
+      if (bulkWithdrawTrpc.withdrawn != null) {
+        await setCardToUsed(card, bulkWithdrawTrpc.withdrawn)
+      }
+      card.withdrawPending = bulkWithdrawTrpc.withdrawPending
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsBulkWithdrawStatus)
+    }
+    return card
+  }
+
+  if (card.lnbitsWithdrawId == null) {
+    return card
+  }
+
   try {
     const response = await axios.get(
       `${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`,
@@ -320,24 +336,29 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
     }
     if (response.data.used > 0) {
       if (persist) {
-        card.used = Math.round(+ new Date() / 1000)
+        await setCardToUsed(card, new Date())
       } else {
         card.withdrawPending = true
       }
     }
   } catch (error) {
+    if (error instanceof ErrorWithCode) {
+      throw error
+    }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
   }
-  if (card.used == null || !persist) {
-    return card
-  }
 
+  return card
+}
+
+/** @throw */
+export const setCardToUsed = async (card: CardApi, date: Date) => {
+  card.used = Math.round(+ date / 1000)
   try {
     await updateCard(cardRedisFromCardApi(card))
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
-  return card
 }
 
 /**
@@ -515,7 +536,7 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
  * @throws ZodError
  * @throws AxiosError
  */
-export const isBulkWithdrawWithdrawn = async (bulkWithdraw: BulkWithdraw): Promise<boolean> => {
+export const isBulkWithdrawWithdrawn = async (bulkWithdraw: BulkWithdrawRedis): Promise<boolean> => {
   if (bulkWithdraw.withdrawn != null) {
     return true
   }

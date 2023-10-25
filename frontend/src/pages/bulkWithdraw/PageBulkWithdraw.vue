@@ -26,6 +26,10 @@
 
     <RequestFailed v-if="requestFailed" />
 
+    <div v-else-if="bulkWithdrawPending">
+      {{ $t('bulkWithdraw.withdrawPending') }} 
+    </div>
+
     <BulkWithdrawQRCode
       v-else-if="bulkWithdraw != null"
       :bulk-withdraw="bulkWithdraw"
@@ -110,6 +114,8 @@ const loadCards = async () => {
 
 const cardLockedByWithdraw = computed(() => cards.value?.find((card) => card.isLockedByBulkWithdraw && !card.withdrawn))
 
+const bulkWithdrawPending = computed(() => cards.value?.find((card) => card.isLockedByBulkWithdraw && card.withdrawPending))
+
 const resetting = ref(false)
 const resetBulkWithdraw = async () => {
   resetting.value = true
@@ -142,9 +148,10 @@ const resetBulkWithdrawFromCard = async () => {
 
 const fundedCards = computed(() => cards.value?.filter((card) => 
   card.funded != null
-  && !card.withdrawPending
-  && card.withdrawn == null,
+  && !isCardWithdrawn(card)
 ))
+
+const isCardWithdrawn = (card: Card) => card.withdrawn != null || (card.withdrawPending && !card.isLockedByBulkWithdraw)
 
 const fundedCardsTotalAmount = computed(() => {
   if (fundedCards.value == null) {

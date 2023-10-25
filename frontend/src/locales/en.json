@@ -82,6 +82,7 @@
       "createYourOwnTipCardsButton": "Create my own Tip Cards"
     },
     "bulkWithdrawExists": "A recall of this Tip Card is currently in progress. You have to cancel it first to use the card.",
+    "bulkWithdrawPending": "The sats from this Tip Card are being retrieved. If this takes more than a few minutes, please contact support.",
     "bulkWithdrawResetError": "An error occurred when cancelling the recall.",
     "errors": {
       "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
@@ -326,6 +327,7 @@
     "setName": "Set name: {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "Withdrawal is currently in progress. You have to reset it first to display a new QR code.",
+    "withdrawPending": "The retrieval of the remaining sats has already been started. Wait until they have arrived in your lightning wallet. If this takes more than a few minutes, please contact support.",
     "buttonReset": "Reset",
     "noFundedCards": "There are no funded Tip Cards in this set.",
     "description": "Click \"Withdraw all sats\" and scan the QR code to get back all unused sats from the displayed Tip Cards.",

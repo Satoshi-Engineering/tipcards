@@ -44,6 +44,7 @@ export enum ErrorCode {
   UnableToGetAllUsers = 'UnableToGetAllUsers',
   PermissionsMissing = 'PermissionsMissing',
   UnableToParseEnvVar = 'UnableToParseEnvVar',
+  UnableToGetLnbitsBulkWithdrawStatus = 'UnableToGetLnbitsBulkWithdrawStatus',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
