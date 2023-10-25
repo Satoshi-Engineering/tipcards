@@ -41,7 +41,20 @@ jest.mock('redis', () => ({
       }
       return false
     }),
-    scanIterator: async () => [],
+    scanIterator: ({ MATCH }: { MATCH: string }) => {
+      if (MATCH.includes('bulkWithdrawById')) {
+        return (async function* () {
+          for (const bulkWithdrawId in bulkWithdrawsById) {
+            yield `tipcards:develop:bulkWithdrawById:${bulkWithdrawId}:data`
+          }
+        })()
+      }
+      return (async function* () {
+        for (const value in []) {
+          yield value
+        }
+      })()
+    },
     del: async () => undefined,
     ft: {
       dropIndex: async () => undefined,

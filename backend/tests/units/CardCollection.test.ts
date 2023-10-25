@@ -1,12 +1,12 @@
 import '../mocks/process.env'
 import '../mocks/axios'
-import { initCards, initSets } from '../mocks/redis'
+import { initBulkWithdraws, initCards, initSets } from '../mocks/redis'
 
 import CardNotFundedError from '../../src/errors/CardNotFundedError'
 import CardCollection from '../../src/modules/CardCollection'
 
 import { SET_EMPTY } from '../mocks/redis/EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from '../mocks/redis/FundedSetWithBulkWithdraw'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../mocks/redis/FundedSetWithBulkWithdraw'
 import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../mocks/redis/SetWithUnfundedCards'
 
 describe('CardCollection', () => {
@@ -52,6 +52,9 @@ describe('CardCollection', () => {
     })
     initSets({
       [SET_FUNDED.id]: SET_FUNDED,
+    })
+    initBulkWithdraws({
+      [BULK_WITHDRAW.id]: BULK_WITHDRAW,
     })
     const cards = await CardCollection.fromSetId(SET_FUNDED.id)
     await cards.lockByBulkWithdraw()
