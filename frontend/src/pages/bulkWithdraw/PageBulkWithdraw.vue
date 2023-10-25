@@ -26,6 +26,13 @@
 
     <RequestFailed v-if="requestFailed" />
 
+    <BulkWithdrawQRCode
+      v-else-if="bulkWithdraw != null"
+      :bulk-withdraw="bulkWithdraw"
+      :resetting="resetting"
+      @reset="resetBulkWithdraw"
+    />
+
     <BulkWithdrawExists
       v-else-if="cardLockedByWithdraw != null"
       :resetting="resetting"
@@ -33,13 +40,6 @@
     />
 
     <NoContent v-else-if="fundedCards?.length === 0" />
-
-    <BulkWithdrawQRCode
-      v-else-if="bulkWithdraw != null"
-      :bulk-withdraw="bulkWithdraw"
-      :resetting="resetting"
-      @reset="resetBulkWithdraw"
-    />
 
     <CreateBulkWithdraw
       v-else-if="fundedCards != null"
@@ -128,6 +128,7 @@ const resetBulkWithdrawFromId = async () => {
     return
   }
   await client.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
+  await loadCards()
   bulkWithdraw.value = undefined
 }
 
@@ -141,7 +142,6 @@ const resetBulkWithdrawFromCard = async () => {
 
 const fundedCards = computed(() => cards.value?.filter((card) => 
   card.funded != null
-  && !card.isLockedByBulkWithdraw
   && !card.withdrawPending
   && card.withdrawn == null,
 ))
@@ -162,6 +162,7 @@ const create = async () => {
   creating.value = true
   try {
     bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(fundedCards.value.map((card) => card.hash))
+    await loadCards()
   } catch (error) {
     console.error(error)
     requestFailed.value = true

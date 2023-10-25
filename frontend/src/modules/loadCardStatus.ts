@@ -139,7 +139,7 @@ export const loadCardStatus = async (cardHash: string, origin: string | undefine
       card,
     }
   }
-  if (card.lnbitsWithdrawId != null) {
+  if (card.lnbitsWithdrawId != null || card.isLockedByBulkWithdraw) {
     return {
       status: 'funded',
       amount,

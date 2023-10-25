@@ -6,7 +6,7 @@
         'bg-btcorange': status === 'funded',
         'bg-lightningpurple': status === 'used',
         'bg-red-500': status === 'error',
-        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding',
+        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw,
       }"
     />
     <div class="flex-1">
@@ -20,7 +20,10 @@
               })
             }}
           </div>
-          <div v-if="((status === 'funded' || status === 'used') && fundedDate != null)">
+          <div v-else-if="isLockedByBulkWithdraw">
+            <strong>{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</strong>
+          </div>
+          <div v-else-if="((status === 'funded' || status === 'used') && fundedDate != null)">
             <strong v-if="status !== 'used'">{{ t('cards.status.labelFunded', 1) }}:</strong>
             <span v-else>{{ t('cards.status.labelFunded', 1) }}:</span>
             {{
@@ -99,6 +102,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  isLockedByBulkWithdraw: {
+    type: Boolean,
+    default: false,
+  }
 })
 
 const { t } = useI18n()

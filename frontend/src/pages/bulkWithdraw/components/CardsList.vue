@@ -5,6 +5,7 @@
         hash,
         shared, amount, noteForStatusPage,
         funded, withdrawn,
+        isLockedByBulkWithdraw,
         landingPageViewed,
       } in fundedCards"
       :key="hash"
@@ -19,6 +20,7 @@
         :note="noteForStatusPage"
         :url="getLandingPageUrl(hash, 'preview', settings.landingPage || undefined)"
         :viewed="landingPageViewed != null"
+        :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
       />
     </li>
   </ul>

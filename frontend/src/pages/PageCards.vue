@@ -44,7 +44,7 @@
         </CardsSummaryContainer>
         <ul class="w-full my-5">
           <li
-            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed } in cardsStatusList"
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
             :key="cardHash"
             class="py-1 border-b border-grey"
           >
@@ -63,6 +63,7 @@
                     : urlPreview
               "
               :viewed="viewed"
+              :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
             />
           </li>
         </ul>
