@@ -105,7 +105,7 @@ defineProps({
   isLockedByBulkWithdraw: {
     type: Boolean,
     default: false,
-  }
+  },
 })
 
 const { t } = useI18n()

@@ -146,10 +146,7 @@ const resetBulkWithdrawFromCard = async () => {
   await loadCards()
 }
 
-const fundedCards = computed(() => cards.value?.filter((card) => 
-  card.funded != null
-  && !isCardWithdrawn(card)
-))
+const fundedCards = computed(() => cards.value?.filter((card) => card.funded != null && !isCardWithdrawn(card)))
 
 const isCardWithdrawn = (card: Card) => card.withdrawn != null || (card.withdrawPending && !card.isLockedByBulkWithdraw)
 
