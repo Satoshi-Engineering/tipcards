@@ -1,16 +1,16 @@
 import { TRPCError } from '@trpc/server'
 
-import './initEnv'
-import { initCard, initSet } from './initRedis'
+import '../initEnv'
+import { initCard, initSet } from '../initRedis'
 
-import NotFoundError from '../../src/errors/NotFoundError'
-import { createAccessToken } from '../../src/services/jwt'
-import { setRouter } from '../../src/trpc/router/set'
-import { TIPCARDS_API_ORIGIN } from '../../src/constants'
+import NotFoundError from '../../../src/errors/NotFoundError'
+import { createAccessToken } from '../../../src/services/jwt'
+import { setRouter } from '../../../src/trpc/router/set'
+import { TIPCARDS_API_ORIGIN } from '../../../src/constants'
 
-import { SET_EMPTY } from '../mocks/redis/EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from '../mocks/redis/FundedSetWithBulkWithdraw'
-import { USER, USER_SET_FUNDED, USER_CARD_FUNDED_INVOICE, USER_CARD_FUNDED_LNURLP } from '../mocks/redis/UserWithSet'
+import { SET_EMPTY } from './EmptySet'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from './FundedSetWithBulkWithdraw'
+import { USER, USER_SET_FUNDED, USER_CARD_FUNDED_INVOICE, USER_CARD_FUNDED_LNURLP } from './UserWithSet'
 
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

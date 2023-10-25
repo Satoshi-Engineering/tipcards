@@ -1,16 +1,16 @@
 import axios from 'axios'
 
-import './initEnv'
-import { initCard, initSet, deleteBulkWithdraw as deleteBulkWithdrawRedis } from './initRedis'
+import '../initEnv'
+import { initCard, initSet, deleteBulkWithdraw as deleteBulkWithdrawRedis } from '../initRedis'
 
-import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
-import { BulkWithdraw } from '../../src/trpc/data/BulkWithdraw'
-import { bulkWithdrawRouter } from '../../src/trpc/router/bulkWithdraw'
-import { setRouter } from '../../src/trpc/router/set'
-import { TIPCARDS_API_ORIGIN } from '../../src/constants'
+import { decodeLnurl } from '../../../../src/modules/lnurlHelpers'
+import { BulkWithdraw } from '../../../src/trpc/data/BulkWithdraw'
+import { bulkWithdrawRouter } from '../../../src/trpc/router/bulkWithdraw'
+import { setRouter } from '../../../src/trpc/router/set'
+import { TIPCARDS_API_ORIGIN } from '../../../src/constants'
 
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../mocks/redis/FundedSetWithBulkWithdraw'
-import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../mocks/redis/SetWithUnfundedCards'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from './FundedSetWithBulkWithdraw'
+import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from './SetWithUnfundedCards'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
