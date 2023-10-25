@@ -132,7 +132,7 @@ export default class BulkWithdraw {
     return await createWithdrawLink(
       `Bulk withdrawing ${this.cards.length} card(s).`,
       amount,
-      `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/withdrawn/${id}`,
+      `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${id}`,
     )
   }
 
@@ -175,7 +175,7 @@ export default class BulkWithdraw {
     await deleteWithdrawIfNotUsed(
       this.bulkWithdrawRedis.lnbitsWithdrawId,
       `Bulk withdrawing ${this.cards.length} cards.`,
-      `${TIPCARDS_API_ORIGIN}/api/bulk-withdraw/withdrawn/${this.bulkWithdrawRedis.id}`,
+      `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${this.bulkWithdrawRedis.id}`,
     )
     this.bulkWithdrawRedis.lnbitsWithdrawDeleted = Math.round(+ new Date() / 1000)
     await updateBulkWithdraw(this.bulkWithdrawRedis)
