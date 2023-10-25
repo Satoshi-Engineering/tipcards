@@ -351,7 +351,7 @@
             >
               <div
                 class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
-                :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw  }"
+                :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -359,7 +359,7 @@
                   height="100%"
                   viewBox="0 0 256 256"
                   class="qr-code-svg"
-                  :class="{ 'qr-code-svg--used': card.status === 'used' || card.isLockedByBulkWithdraw  }"
+                  :class="{ 'qr-code-svg--used': card.status === 'used' || card.isLockedByBulkWithdraw }"
                 >
                   <!-- eslint-disable vue/no-v-html -->
                   <g v-html="card.qrCodeSvg" />
