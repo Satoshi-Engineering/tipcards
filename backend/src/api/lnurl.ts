@@ -5,7 +5,6 @@ import type { Card } from '../../../src/data/api/Card'
 import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
 import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
 import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
-import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
 
 import { getCardByHash } from '../services/database'
 import {
@@ -13,8 +12,8 @@ import {
   checkIfCardIsUsed,
   getLnurlpForNewCard,
   getLnurlpForCard,
+  loadCurrentLnurlFromLnbitsByWithdrawId,
 } from '../services/lnbitsHelpers'
-import { LNBITS_ORIGIN } from '../constants'
 
 const router = express.Router()
 
@@ -133,8 +132,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   let lnurl = null
   try {
-    const lnurls = await loadLnurlsFromLnbitsByWithdrawId(LNBITS_ORIGIN, card.lnbitsWithdrawId)
-    lnurl = lnurls[0]
+    lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
   } catch (error) {
     console.error(ErrorCode.UnableToGetLnurl, error)
     res.status(500).json({

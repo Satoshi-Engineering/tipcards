@@ -602,3 +602,15 @@ export const createWithdrawLink = async (title: string, amount: number, webhook_
   const lnbitsWithdrawLnurl = response.data.lnurl
   return { lnbitsWithdrawId, lnbitsWithdrawLnurl }
 }
+
+/**
+ * @param withdrawId string
+ * @throws
+ */
+export const loadCurrentLnurlFromLnbitsByWithdrawId = async (withdrawId: string): Promise<string> => {
+  const response = await axios.get(
+    `${LNBITS_ORIGIN}/withdraw/api/v1/links/${withdrawId}`,
+    axiosOptionsWithReadHeaders,
+  )
+  return response.data.lnurl.toLowerCase()
+}
