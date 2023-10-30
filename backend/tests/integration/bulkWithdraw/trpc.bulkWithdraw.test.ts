@@ -58,7 +58,7 @@ describe('TRpc Router BulkWithdraw', () => {
 const createBulkWithdraw = async () => {
   const bulkWithdraw = await callerBulkWithdraw.createForCards([CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash])
   expect(bulkWithdraw.amount).toBe(300)
-  expect(bulkWithdraw.numberOfCards).toBe(2)
+  expect(bulkWithdraw.cards.length).toBe(2)
   return bulkWithdraw
 }
 
