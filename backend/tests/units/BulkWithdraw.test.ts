@@ -44,7 +44,7 @@ describe('BulkWithdraw', () => {
     await bulkWithdraw.create()
     const apiData = await bulkWithdraw.toTRpcResponse()
     expect(apiData.amount).toBe(300)
-    expect(apiData.numberOfCards).toBe(2)
+    expect(apiData.cards.length).toBe(2)
     expect(typeof apiData.lnurl).toBe('string')
   })
 
@@ -59,7 +59,7 @@ describe('BulkWithdraw', () => {
     const bulkWithdraw = await BulkWithdraw.fromId(BULK_WITHDRAW.id)
     const apiData = await bulkWithdraw.toTRpcResponse()
     expect(apiData.amount).toBe(300)
-    expect(apiData.numberOfCards).toBe(2)
+    expect(apiData.cards.length).toBe(2)
     await bulkWithdraw.delete()
     await expect(() => bulkWithdraw.toTRpcResponse()).rejects.toThrow(WithdrawDeletedError)
   })

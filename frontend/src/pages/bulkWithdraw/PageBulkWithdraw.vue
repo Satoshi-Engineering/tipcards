@@ -18,8 +18,9 @@
     <CardsSummaryContainer class="mb-4">
       <CardsSummary
         :loading="initializing"
-        :cards-count="fundedCards?.length || 0"
-        :title="$t('cards.status.labelFunded', 2)"
+        :cards-count="usableCards.length"
+        :color="bulkWithdraw?.withdrawn ? 'lightningpurple' : 'btcorange'"
+        :title="bulkWithdraw?.withdrawn ? $t('cards.status.labelBulkWithdrawn', 2) : $t('cards.status.labelFunded', 2)"
         :sats="fundedCardsTotalAmount"
       />
     </CardsSummaryContainer>
@@ -43,17 +44,17 @@
       @reset="resetBulkWithdraw"
     />
 
-    <NoContent v-else-if="fundedCards?.length === 0" />
+    <NoContent v-else-if="usableCards.length === 0 && !initializing" />
 
     <CreateBulkWithdraw
-      v-else-if="fundedCards != null"
+      v-else-if="!initializing"
       :creating="creating"
       @create="create"
     />
 
     <CardsList
       class="w-full mt-6"
-      :funded-cards="fundedCards || []"
+      :cards="usableCards"
     />
   </div>
 </template>
@@ -90,27 +91,45 @@ const requestFailed = ref(false)
 const initializing = ref(true)
 
 const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
-const cards = ref<Card[]>()
+const cards = ref<Card[]>([])
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   if (setId.value == null) {
     router.replace({ name: 'home', params: { lang: route.params.lang } })
     return
   }
-  loadCards()
+  await initCardHashesForSet()
+  await loadCards()
+  initializing.value = false
 })
 
 const loadCards = async () => {
   try {
-    cards.value = await Promise.all([...new Array(settings.numberOfCards).keys()].map(
-      async (cardIndex) => client.card.getByHash.query(await hashSha256(`${setId.value}/${cardIndex}`)),
+    cards.value = await Promise.all(cardHashes.value.map(
+      async (cardHash) => client.card.getByHash.query(cardHash),
     ))
   } catch (error) {
     console.error(error)
     requestFailed.value = true
   }
-    initializing.value = false
 }
+
+const cardHashes = computed(() => {
+  if (bulkWithdraw.value == null) {
+    return cardHashesForSet.value
+  }
+  return cardHashesForBulkWithdraw.value
+})
+
+const cardHashesForSet = ref<string[]>([])
+const initCardHashesForSet = async () => {
+  cardHashesForSet.value = await Promise.all(
+    [...new Array(settings.numberOfCards).keys()]
+      .map(async (cardIndex) => await hashSha256(`${setId.value}/${cardIndex}`)),
+  )
+}
+
+const cardHashesForBulkWithdraw = computed(() => bulkWithdraw.value?.cards || [])
 
 const cardLockedByWithdraw = computed(() => cards.value?.find((card) => card.isLockedByBulkWithdraw && !card.withdrawn))
 
@@ -146,26 +165,23 @@ const resetBulkWithdrawFromCard = async () => {
   await loadCards()
 }
 
-const fundedCards = computed(() => cards.value?.filter((card) => card.funded != null && !isCardWithdrawn(card)))
+const usableCards = computed(() => {
+  if (bulkWithdraw.value == null) {
+    return cards.value.filter((card) => card.funded != null && !isCardWithdrawn(card))
+  }
+  return cards.value.filter((card) => bulkWithdraw.value?.cards.includes(card.hash))
+})
 
 const isCardWithdrawn = (card: Card) => card.withdrawn != null || (card.withdrawPending && !card.isLockedByBulkWithdraw)
 
-const fundedCardsTotalAmount = computed(() => {
-  if (fundedCards.value == null) {
-    return 0
-  }
-  return fundedCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0)
-})
+const fundedCardsTotalAmount = computed(() => usableCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0))
 
 const creating = ref(false)
 const bulkWithdraw = ref<BulkWithdraw>()
 const create = async () => {
-  if (fundedCards.value == null) {
-    return
-  }
   creating.value = true
   try {
-    bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(fundedCards.value.map((card) => card.hash))
+    bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
     await loadCards()
   } catch (error) {
     console.error(error)
@@ -181,5 +197,6 @@ const updateBulkWithdraw = async () => {
   }
   setTimeout(updateBulkWithdraw, 5000)
   bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
+  await loadCards()
 }
 </script>

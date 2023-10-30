@@ -19,7 +19,7 @@ export const bulkWithdrawFromBulkWithdrawRedis = async (bulkWithdraw: BulkWithdr
     lnurl: bulkWithdraw.lnurl,
     created: new Date(bulkWithdraw.created * 1000),
     amount: bulkWithdraw.amount,
-    numberOfCards: bulkWithdraw.cards.length,
+    cards: bulkWithdraw.cards,
     withdrawPending: await isBulkWithdrawWithdrawn(bulkWithdraw),
     withdrawn: bulkWithdraw.withdrawn != null ? new Date(bulkWithdraw.withdrawn * 1000) : null,
   }

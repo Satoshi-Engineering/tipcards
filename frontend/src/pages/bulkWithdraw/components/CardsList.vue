@@ -7,12 +7,12 @@
         funded, withdrawn,
         isLockedByBulkWithdraw,
         landingPageViewed,
-      } in fundedCards"
+      } in cards"
       :key="hash"
       class="py-1 border-b border-grey"
     >
       <CardStatus
-        status="funded"
+        :status="withdrawn != null ? 'used' : 'funded'"
         :funded-date="funded != null ? funded.getTime() / 1000 : undefined"
         :used-date="withdrawn != null ? withdrawn.getTime() / 1000 : undefined"
         :shared="shared"
@@ -43,7 +43,7 @@ const route = useRoute()
 const { getLandingPageUrl } = useLandingPages()
 
 defineProps({
-  fundedCards: {
+  cards: {
     type: Array as PropType<Card[]>,
     required: true,
   },
