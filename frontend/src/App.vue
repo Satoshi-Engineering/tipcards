@@ -1,6 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col" :dir="currentTextDirection">
     <header
+      v-if="!route.meta.hideHeader"
       class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden"
     >
       <BackLink class="p-4" />
