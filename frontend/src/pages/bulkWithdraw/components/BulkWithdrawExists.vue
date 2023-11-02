@@ -1,15 +1,14 @@
 <template>
   <div>
     <p class="mb-4">
-      {{ $t('bulkWithdraw.withdrawExists') }}
+      ⚠️ {{ $t('bulkWithdraw.withdrawExists') }}
     </p>
     <ButtonWithTooltip
       type="submit"
-      variant="outline"
-      :disabled="resetting"
-      @click="$emit('reset')"
+      :disabled="restarting"
+      @click="$emit('restart')"
     >
-      {{ $t('bulkWithdraw.buttonReset') }} 
+      {{ $t('bulkWithdraw.buttonRestart') }} 
     </ButtonWithTooltip>
   </div>
 </template>
@@ -18,11 +17,11 @@
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 
 defineProps({
-  resetting: {
+  restarting: {
     type: Boolean,
     default: false,
   },
 })
 
-defineEmits(['reset'])
+defineEmits(['restart'])
 </script>

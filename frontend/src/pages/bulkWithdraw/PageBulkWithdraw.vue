@@ -40,19 +40,14 @@
 
     <BulkWithdrawExists
       v-else-if="cardLockedByWithdraw != null"
-      :resetting="resetting"
-      @reset="resetBulkWithdraw"
+      :restarting="resetting || initializing"
+      @restart="restartBulkWithdraw"
     />
 
     <NoContent v-else-if="usableCards.length === 0 && !initializing" />
 
-    <CreateBulkWithdraw
-      v-else-if="!initializing"
-      :creating="creating"
-      @create="create"
-    />
-
     <CardsList
+      v-if="!initializing"
       class="w-full mt-6"
       :cards="usableCards"
     />
@@ -73,11 +68,11 @@ import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
+import useBacklink from '@/modules/useBackLink'
 
 import BulkWithdrawQRCode from './components/BulkWithdrawQRCode.vue'
 import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
 import CardsList from './components/CardsList.vue'
-import CreateBulkWithdraw from './components/CreateBulkWithdraw.vue'
 import RequestFailed from './components/RequestFailed.vue'
 import NoContent from './components/NoContent.vue'
 
@@ -100,6 +95,7 @@ onBeforeMount(async () => {
   }
   await initCardHashesForSet()
   await loadCards()
+  await createIfPossible()
   initializing.value = false
 })
 
@@ -140,7 +136,7 @@ const resetBulkWithdraw = async () => {
   resetting.value = true
   try {
     await resetBulkWithdrawFromId()
-    await resetBulkWithdrawFromCard()
+    goBack()
   } catch (error) {
     console.error(error)
     requestFailed.value = true
@@ -148,6 +144,7 @@ const resetBulkWithdraw = async () => {
   resetting.value = false
 }
 
+const { goBack } = useBacklink()
 const resetBulkWithdrawFromId = async () => {
   if (bulkWithdraw.value == null) {
     return
@@ -155,6 +152,24 @@ const resetBulkWithdrawFromId = async () => {
   await client.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
   await loadCards()
   bulkWithdraw.value = undefined
+}
+
+const restartBulkWithdraw = async () => {
+  resetting.value = true
+  try {
+    await resetBulkWithdrawFromCard()
+  } catch (error) {
+    console.error(error)
+    requestFailed.value = true
+    return
+  } finally {
+    resetting.value = false
+  }
+
+  initializing.value = true
+  await loadCards()
+  await createIfPossible()
+  initializing.value = false
 }
 
 const resetBulkWithdrawFromCard = async () => {
@@ -178,6 +193,22 @@ const fundedCardsTotalAmount = computed(() => usableCards.value.reduce((total, c
 
 const creating = ref(false)
 const bulkWithdraw = ref<BulkWithdraw>()
+
+const createIfPossible = async () => {
+  if (!isBulkWithdrawPossible.value) {
+    return
+  }
+  await create()
+}
+
+const isBulkWithdrawPossible = computed(() =>
+  !requestFailed.value
+  && !bulkWithdrawPending.value
+  && bulkWithdraw.value == null
+  && cardLockedByWithdraw.value == null
+  && usableCards.value.length > 0
+)
+
 const create = async () => {
   creating.value = true
   try {

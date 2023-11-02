@@ -59,12 +59,20 @@ export default () => {
     return false
   })
 
-  const onBacklinkClick = (event?: Event) => {
+  const onBacklinkClick = (event: Event) => {
     if (shouldWeGoBackInHistory.value) {
-      event?.preventDefault()
-      router.go(-1)
+      event.preventDefault()
+      goBack()
     } else {
       return followDefaultAction()
+    }
+  }
+
+  const goBack = () => {
+    if (shouldWeGoBackInHistory.value) {
+      router.go(-1)
+    } else {
+      router.push(to.value)
     }
   }
 
@@ -91,5 +99,6 @@ export default () => {
     showBacklink,
     to,
     onBacklinkClick,
+    goBack,
   }
 }

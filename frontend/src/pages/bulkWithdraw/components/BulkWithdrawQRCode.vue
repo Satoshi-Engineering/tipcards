@@ -1,5 +1,9 @@
 <template>
   <div>
+    <p class="mt-4">
+      {{ $t('bulkWithdraw.description') }}
+    </p>
+
     <LightningQrCode
       :value="bulkWithdraw.lnurl"
       :success="bulkWithdraw.withdrawn != null"
