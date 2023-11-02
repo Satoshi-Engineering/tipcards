@@ -217,7 +217,7 @@ const isBulkWithdrawPossible = computed(() =>
   && !bulkWithdrawPending.value
   && bulkWithdraw.value == null
   && cardLockedByWithdraw.value == null
-  && usableCards.value.length > 0
+  && usableCards.value.length > 0,
 )
 
 /** @throws */
