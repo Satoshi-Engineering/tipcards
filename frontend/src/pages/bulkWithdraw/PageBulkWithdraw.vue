@@ -17,6 +17,7 @@
 
     <CardsSummaryContainer class="mb-4">
       <CardsSummary
+        class="col-span-2"
         :loading="initializing"
         :cards-count="usableCards.length"
         :color="bulkWithdraw?.withdrawn ? 'lightningpurple' : 'btcorange'"
