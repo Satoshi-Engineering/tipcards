@@ -6,18 +6,25 @@
     "./index.ts",
     "./cli.ts",
     "./src/**/*.ts",
-    "./src/**/*.json"
   ],
   "compilerOptions": {
-    "target": "es6",
+    "paths": {
+      "@backend/*": ["./src/*"],
+      "@shared/*": ["../shared/src/*"],
+    },
+    "target": "ESNext",
+    "lib": ["ESNext"],
     "module": "commonjs",
-    "outDir": "./build",
+    "rootDir": "./",
+    "moduleResolution": "node",
+    "types": ["node", "jest"],
+    "outDir": "../dist/backend",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "resolveJsonModule": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ]
-  }
+    "skipLibCheck": true
+  },
+  "references": [
+    { "path" : "../shared/tsconfig.json" }
+  ]
 }

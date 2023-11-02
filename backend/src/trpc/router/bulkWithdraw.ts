@@ -1,4 +1,4 @@
-import { BulkWithdraw as ZodBulkWithdrawRedis } from '../../../../src/data/redis/BulkWithdraw'
+import { BulkWithdraw as ZodBulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
 
 import CardCollection from '../../modules/CardCollection'
 import BulkWithdraw from '../../modules/BulkWithdraw'

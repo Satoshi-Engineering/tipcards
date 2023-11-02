@@ -1,8 +1,8 @@
 import axios from 'axios'
 import z from 'zod'
-import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
-import type { StatisticsPeriod } from '../trpc/data/StatisticsPeriod'
-import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE, STATISTICS_PREPEND_FILE } from '../constants'
+import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
+import type { StatisticsPeriod } from '@backend/trpc/data/StatisticsPeriod'
+import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE, STATISTICS_PREPEND_FILE } from '@backend/constants'
 import loadJsonIfExists from '../services/loadJsonIfExists'
 import { DateTime } from 'luxon'
 
@@ -46,7 +46,7 @@ export default class Statistics {
 
     const paymentsFromLnbits = await Statistics.loadPaymentsFromLnbits()
     const payments = [
-        ...paymentsToPrepend, 
+        ...paymentsToPrepend,
         ...paymentsFromLnbits,
       ]
       .filter(

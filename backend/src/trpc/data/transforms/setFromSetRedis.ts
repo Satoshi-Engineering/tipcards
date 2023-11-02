@@ -1,4 +1,4 @@
-import type { Set as SetRedis } from '../../../../../src/data/redis/Set'
+import type { Set as SetRedis } from '@shared/data/redis/Set'
 
 import { Set } from '../Set'
 

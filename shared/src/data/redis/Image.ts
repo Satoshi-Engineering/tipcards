@@ -1,7 +1,4 @@
-import { randomUUID } from 'crypto'
 import z from 'zod'
-
-export const createImageId = () => randomUUID().replace(/-/g, '') // redis search cannot process hyphens (-) in indices
 
 export const Type = z.enum(['svg', 'png'])
 

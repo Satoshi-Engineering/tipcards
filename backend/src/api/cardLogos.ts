@@ -1,9 +1,9 @@
 import express from 'express'
 
-import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
-import type { Image as ImageMeta } from '../../../src/data/redis/Image'
-import type { User } from '../../../src/data/redis/User'
-import { ErrorCode } from '../../../src/data/Errors'
+import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import type { Image as ImageMeta } from '@shared/data/redis/Image'
+import type { User } from '@shared/data/redis/User'
+import { ErrorCode } from '@shared/data/Errors'
 
 import { getUserById, getImageMeta } from '../services/database'
 import { authGuardAccessToken } from '../services/jwt'

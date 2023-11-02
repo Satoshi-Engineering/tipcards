@@ -2,7 +2,7 @@ import type { OnErrorFunction } from '@trpc/server/dist/internals/types'
 import type { Request } from 'express'
 import { ZodError } from 'zod'
 
-import { ErrorWithCode } from '../../../src/data/Errors'
+import { ErrorWithCode } from '@shared/data/Errors'
 
 import NotFoundError from '../errors/NotFoundError'
 import UserError from '../errors/UserError'
@@ -19,7 +19,7 @@ export const appRouter = router({
   set: setRouter,
   statistics: statisticsRouter,
 })
- 
+
 export type AppRouter = typeof appRouter
 
 export const onError: OnErrorFunction<AppRouter, Request> = (opts) => {

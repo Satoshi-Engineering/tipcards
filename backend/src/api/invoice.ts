@@ -1,11 +1,11 @@
 import axios from 'axios'
 import express from 'express'
 
-import type { Card as CardApi } from '../../../src/data/api/Card'
-import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import type { Card as CardApi } from '@shared/data/api/Card'
+import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { getCardByHash, createCard, deleteCard } from '../services/database'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'

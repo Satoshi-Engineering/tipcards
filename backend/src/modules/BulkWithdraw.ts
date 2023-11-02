@@ -1,7 +1,7 @@
 import type z from 'zod'
 
-import type { BulkWithdraw as BulkWithdrawRedis } from '../../../src/data/redis/BulkWithdraw'
-import type { Card as CardRedis } from '../../../src/data/redis/Card'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
+import type { Card as CardRedis } from '@shared/data/redis/Card'
 
 import NotFoundError from '../errors/NotFoundError'
 import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
@@ -119,7 +119,7 @@ export default class BulkWithdraw {
       amount,
       lnbitsWithdrawId,
       lnbitsWithdrawLnurl,
-    }) 
+    })
   }
 
   private async createLnbitsWithdrawLink({

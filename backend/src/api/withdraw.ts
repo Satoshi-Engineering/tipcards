@@ -1,9 +1,9 @@
 import express from 'express'
 
-import type { Card } from '../../../src/data/api/Card'
-import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import type { Card } from '@shared/data/api/Card'
+import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { getCardByHash } from '../services/database'
 import { checkIfCardIsUsed } from '../services/lnbitsHelpers'

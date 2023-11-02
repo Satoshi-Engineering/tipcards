@@ -1,9 +1,9 @@
 import { type Request, type Response, type NextFunction, Router } from 'express'
 
-import { ErrorCode } from '../../../src/data/Errors'
-import { Type as ImageType, type Image as ImageMeta } from '../../../src/data/redis/Image'
+import { ErrorCode } from '@shared/data/Errors'
+import { Type as ImageType, type Image as ImageMeta } from '@shared/data/redis/Image'
 
-import { getImageAsString, getImageMeta } from '../services/database'
+import { getImageAsString, getImageMeta } from '@backend/services/database'
 
 const router = Router()
 

@@ -1,10 +1,10 @@
 import express from 'express'
 
-import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+import type { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
-import { getBulkWithdrawById, updateBulkWithdraw, getCardByHash, updateCard } from '../services/database'
-import { isBulkWithdrawWithdrawn } from '../services/lnbitsHelpers'
+import { getBulkWithdrawById, updateBulkWithdraw, getCardByHash, updateCard } from '@backend/services/database'
+import { isBulkWithdrawWithdrawn } from '@backend/services/lnbitsHelpers'
 
 const router = express.Router()
 
@@ -61,7 +61,7 @@ const bulkWithdrawWithdrawn = async (req: express.Request, res: express.Response
       status: 'error',
       message: 'BulkWithdraw not withdrawn.',
     })
-    return 
+    return
   }
 
   // 3. update database and return withdraw

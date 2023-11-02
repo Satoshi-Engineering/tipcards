@@ -1,9 +1,9 @@
 import axios from 'axios'
 import express from 'express'
 
-import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
-import type { Settings, Set } from '../../../src/data/redis/Set'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import type { Settings, Set } from '@shared/data/redis/Set'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
 import {
   getSetById, getSetsByUserId,
@@ -104,7 +104,7 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
     if (date != null) {
       set.date = date
     }
-  
+
     try {
       await createSet(set)
     } catch (error) {
@@ -400,7 +400,7 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
       res.json({
         status: 'success',
       })
-      return 
+      return
     }
 
     try {

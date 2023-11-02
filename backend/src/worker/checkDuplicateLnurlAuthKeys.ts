@@ -1,5 +1,5 @@
-import type { User } from '../../../src/data/redis/User'
-import { ErrorCode } from '../../../src/data/Errors'
+import type { User } from '@shared/data/redis/User'
+import { ErrorCode } from '@shared/data/Errors'
 
 import { getAllUsers } from '../services/database'
 
@@ -12,7 +12,7 @@ const checkDuplicateLnurlAuthKeys = async () => {
   } catch (error) {
     console.error(ErrorCode.UnableToGetAllUsers, error)
   }
-  
+
   const userIdsByLnurlAuthKey: Record<string, string[]> = {}
   const duplicatesToReport: Record<string, string[]> = {}
 
@@ -24,7 +24,7 @@ const checkDuplicateLnurlAuthKeys = async () => {
     }
     userIdsForLnurlAuthKey.push(user.id)
     userIdsByLnurlAuthKey[user.lnurlAuthKey] = userIdsForLnurlAuthKey
-    
+
     if (previouslyFoundIds != null && !alreadyReportedDuplicates.has(user.lnurlAuthKey)) {
       duplicatesToReport[user.lnurlAuthKey] = userIdsForLnurlAuthKey
     }

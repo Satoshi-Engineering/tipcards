@@ -1,6 +1,6 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '../../../src/data/redis/Card'
+import type { Card as CardRedis } from '@shared/data/redis/Card'
 
 import { getCardByHash } from '../services/database'
 import { cardFromCardRedis } from '../trpc/data/transforms/cardFromCardRedis'

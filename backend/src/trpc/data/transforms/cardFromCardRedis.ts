@@ -1,11 +1,11 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '../../../../../src/data/redis/Card'
-import { cardApiFromCardRedis } from '../../../../../src/data/transforms/cardApiFromCardRedis'
-import { encodeLnurl } from '../../../../../src/modules/lnurlHelpers'
+import type { Card as CardRedis } from '@shared/data/redis/Card'
+import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
-import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '../../../services/lnbitsHelpers'
-import { TIPCARDS_API_ORIGIN } from '../../../constants'
+import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 import { Card } from '../Card'
 
 type Amount = z.infer<typeof Card.shape.amount>

@@ -1,6 +1,6 @@
-import { Card } from '../../../../src/data/redis/Card'
-import { Set } from '../../../../src/data/redis/Set'
-import { BulkWithdraw } from '../../../../src/data/redis/BulkWithdraw'
+import { Card } from '../../../../shared/src/data/redis/Card'
+import { Set } from '../../../../shared/src/data/redis/Set'
+import { BulkWithdraw } from '../../../../shared/src/data/redis/BulkWithdraw'
 
 export const SET_FUNDED = Set.parse({
   id: 'funded-test-set-id',

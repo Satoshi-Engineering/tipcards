@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { ErrorCode } from '../../src/data/Errors'
+import { ErrorCode } from '@shared/data/Errors'
 
 let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {

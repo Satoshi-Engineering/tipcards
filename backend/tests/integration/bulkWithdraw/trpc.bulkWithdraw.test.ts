@@ -3,7 +3,7 @@ import axios from 'axios'
 import '../initEnv'
 import { initCard, initSet, deleteBulkWithdraw as deleteBulkWithdrawRedis } from '../initRedis'
 
-import { decodeLnurl } from '../../../../src/modules/lnurlHelpers'
+import { decodeLnurl } from '../../../../shared/src/modules/lnurlHelpers'
 import { BulkWithdraw } from '../../../src/trpc/data/BulkWithdraw'
 import { bulkWithdrawRouter } from '../../../src/trpc/router/bulkWithdraw'
 import { setRouter } from '../../../src/trpc/router/set'

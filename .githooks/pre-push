@@ -3,16 +3,7 @@
 # exit if any command in the script exits with a code != 0
 set -e
 
-# audit
 npm audit
-cd frontend && npm audit && cd ..
-cd backend && npm audit && cd ..
-
-# lint + typecheck
 npm run lint
 npm run typecheck
-cd frontend && npm run typecheck && cd ..
-cd backend && npm run typecheck && cd ..
-
-# unit test
 npm run test-units

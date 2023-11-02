@@ -6,21 +6,21 @@ import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
-import { Profile } from '../../../src/data/redis/User'
-import { ErrorCode } from '../../../src/data/Errors'
+import { Profile } from '@shared/data/redis/User'
+import { ErrorCode } from '@shared/data/Errors'
 
-import corsOptions from '../services/corsOptions'
-import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '../services/database'
+import corsOptions from '@backend/services/corsOptions'
+import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/services/database'
 import {
   getPublicKey,
   createAccessToken, createRefreshToken, cycleRefreshToken,
   authGuardRefreshToken,
-} from '../services/jwt'
+} from '@backend/services/jwt'
 import {
   LNURL_PORT,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUTH_ORIGIN,
-} from '../constants'
+} from '@backend/constants'
 
 /////
 // LNURL SERVICE
@@ -264,7 +264,7 @@ router.get(
     try {
       const { userId } = res.locals
       const user = await getUserById(userId)
-      res.json({ 
+      res.json({
         status: 'success',
         data: user?.profile,
     })

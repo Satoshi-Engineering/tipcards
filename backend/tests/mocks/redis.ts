@@ -1,6 +1,6 @@
-import type { BulkWithdraw } from '../../../src/data/redis/BulkWithdraw'
-import type { Card } from '../../../src/data/redis/Card'
-import type { Set } from '../../../src/data/redis/Set'
+import type { BulkWithdraw } from '../../../shared/src/data/redis/BulkWithdraw'
+import type { Card } from '../../../shared/src/data/redis/Card'
+import type { Set } from '../../../shared/src/data/redis/Set'
 
 export const regexSet = /tipcards:develop:setsById:(?<id>[a-z0-9-]+):data/
 export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-z0-9-]+):data/

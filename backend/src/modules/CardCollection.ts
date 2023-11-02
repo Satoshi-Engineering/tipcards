@@ -1,7 +1,7 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '../../../src/data/redis/Card'
-import type { Set as SetRedis } from '../../../src/data/redis/Set'
+import type { Card as CardRedis } from '@shared/data/redis/Card'
+import type { Set as SetRedis } from '@shared/data/redis/Set'
 
 import CardNotFundedError from '../errors/CardNotFundedError'
 import CardWithdrawnError from '../errors/CardWithdrawnError'

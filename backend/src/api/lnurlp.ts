@@ -1,10 +1,10 @@
 import express from 'express'
 
-import type { Card } from '../../../src/data/api/Card'
-import { cardApiFromCardRedis } from '../../../src/data/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import type { Card } from '@shared/data/api/Card'
+import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { createCard, getCardByHash, updateCard } from '../services/database'
 import {
@@ -72,7 +72,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       return
     }
   }
-  
+
   // check status of card
   if (card.invoice != null) {
     if (card.invoice.paid != null) {

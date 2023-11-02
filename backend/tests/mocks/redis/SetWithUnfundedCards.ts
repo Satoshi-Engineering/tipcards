@@ -1,5 +1,5 @@
-import { Card } from '../../../../src/data/redis/Card'
-import { Set } from '../../../../src/data/redis/Set'
+import { Card } from '../../../../shared/src/data/redis/Card'
+import { Set } from '../../../../shared/src/data/redis/Set'
 
 export const SET_UNFUNDED = Set.parse({
   id: 'unfunded-test-set-id',

@@ -1,24 +1,24 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "../src/**/*"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@shared/*": ["../src/*"],
+      "@shared/*": ["../shared/src/*"],
       "@backend/*": ["../backend/src/*"]
     },
-    "lib": ["ESNext", "dom"],
-    "types": ["jest", "node"],
+    "target": "ESNext",
+    "types": [ "jest" ],
     "typeRoots": [
       "./src/types",
-      "./node_modules/@types"
-    ]
+      "../node_modules/@types"
+    ],
+    "outDir": "../dist/frontend",
   },
 
   "references": [
-    {
-      "path": "./tsconfig.vite-config.json"
-    }
+    { "path": "./tsconfig.vite-config.json" },
+    { "path" : "../shared/tsconfig.json" }
   ]
 }

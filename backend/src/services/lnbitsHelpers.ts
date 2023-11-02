@@ -1,11 +1,11 @@
 import axios from 'axios'
 import z from 'zod'
 
-import { Card as ZodCardApi, type Card as CardApi } from '../../../src/data/api/Card'
-import type { BulkWithdraw as BulkWithdrawRedis } from '../../../src/data/redis/BulkWithdraw'
-import type { Set } from '../../../src/data/redis/Set'
-import { cardRedisFromCardApi } from '../../../src/data/transforms/cardRedisFromCardApi'
-import { ErrorWithCode, ErrorCode } from '../../../src/data/Errors'
+import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
+import type { Set } from '@shared/data/redis/Set'
+import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
+import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
 
 import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
 import BulkWithdraw from '../modules/BulkWithdraw'
@@ -29,11 +29,11 @@ const axiosOptionsWithAdminHeaders = {
 
 /**
  * Checks if the card invoice has been paid.
- * 
+ *
  * Side-effects:
  *  - manipulates the given card
  *  - updates the card in the database
- * 
+ *
  * @param card CardApi
  * @throws ErrorWithCode
  */
@@ -80,11 +80,11 @@ export const checkIfCardInvoiceIsPaid = async (card: CardApi): Promise<CardApi> 
 
 /**
  * Checks if the card lnurlp has been paid.
- * 
+ *
  * Side-effects:
  *  - manipulates the given card
  *  - updates the card in the database
- * 
+ *
  * @param card CardApi
  * @throws ErrorWithCode
  */
@@ -217,7 +217,7 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
  * Side-effects:
  *  - manipulates the given card
  *  - updates the card in the database
- * 
+ *
  * @param card CardApi
  * @throws ErrorWithCode
  */
@@ -294,11 +294,11 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
 
 /**
  * Checks if the card has been used.
- * 
+ *
  * Side-effects:
  *  - manipulates the given card
  *  - updates the card in the database
- * 
+ *
  * @param card CardApi
  * @param persist Bool
  * @throws ErrorWithCode
@@ -363,7 +363,7 @@ export const setCardToUsed = async (card: CardApi, date: Date) => {
 
 /**
  * Checks if the card has been used.
- * 
+ *
  * @param card CardApi
  * @throws
  */
@@ -391,11 +391,11 @@ export const getCardIsUsedFromLnbits = async (card: CardApi): Promise<boolean> =
 
 /**
  * Creates lnurlp for a card.
- * 
+ *
  * Side-effects:
  *  - manipulates the given card
  *  - updates the card in the database
- * 
+ *
  * @param card CardApi
  * @param shared Boolean
  * @throws
@@ -472,11 +472,11 @@ export const getLnurlpForNewCard = async (cardHash: string, shared = false): Pro
 
 /**
  * Checks if the set invoice has been paid.
- * 
+ *
  * Side-effects:
  *  - manipulates the given set
  *  - updates the set and cards (specified in set.invoice.fundedCards) in the database
- * 
+ *
  * @param set Set
  * @throws ErrorWithCode
  */
@@ -556,7 +556,7 @@ export const isBulkWithdrawWithdrawn = async (bulkWithdraw: BulkWithdrawRedis): 
  *  - the "wait_time" property is in seconds and also applies to the first withdraw, so we could use that maybe
  *  - I set the wait time to 100 years for an old withdraw, I could still use it :(
  *  - I could set the max_amount to 1 satoshi, then delete it, if it still has 0 uses (then the user can at most claim 1 satoshi)
- * 
+ *
  * @throws WithdrawAlreadyUsedError
  * @throws AxiosError
  */

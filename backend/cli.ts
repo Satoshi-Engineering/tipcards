@@ -2,10 +2,10 @@
 import 'dotenv/config'
 import readline from 'readline'
 
-import { cardApiFromCardRedis } from '../src/data/transforms/cardApiFromCardRedis'
+import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
 
-import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from './src/services/database'
-import { getCardIsUsedFromLnbits } from './src/services/lnbitsHelpers'
+import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from '@backend/services/database'
+import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
 
 const clearUnusedCards = async () => {
   let hashes: string[] = []

@@ -8,9 +8,9 @@ import {
 import path from 'path'
 import { ZodError } from 'zod'
 
-import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
-import type { User } from '../../../src/data/redis/User'
-import { ErrorCode } from '../../../src/data/Errors'
+import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import type { User } from '@shared/data/redis/User'
+import { ErrorCode } from '@shared/data/Errors'
 
 import { getUserById, updateUser } from './database'
 import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '../constants'

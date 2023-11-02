@@ -6,5 +6,3 @@ set -e
 # lint + typecheck
 npm run lint
 npm run typecheck
-cd frontend && npm run typecheck && cd ..
-cd backend && npm run typecheck && cd ..

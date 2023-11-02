@@ -12,7 +12,6 @@ module.exports = {
   env: {
     'vue/setup-compiler-macros': true,
     node: true,
-    browser: true,
   },
   ignorePatterns: [
     '**/*.min.js',
@@ -33,7 +32,7 @@ module.exports = {
     }],
     'vue/no-multiple-template-root': 0,
     'vue/max-attributes-per-line': ['warn', {
-      singleline: { max: 2 },      
+      singleline: { max: 2 },
       multiline: { max: 1 },
     }],
     'eol-last': ['error', 'always'],

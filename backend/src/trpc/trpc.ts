@@ -3,8 +3,8 @@ import type { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import type { Request } from 'express'
 import superjson from 'superjson'
 
-import type { AccessTokenPayload } from '../../../src/data/api/AccessTokenPayload'
-import type { PermissionsEnum } from '../../../src/data/redis/User'
+import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import type { PermissionsEnum } from '@shared/data/redis/User'
 
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')
@@ -43,7 +43,7 @@ const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
     requiredPermissions: [],
   },
 })
- 
+
 export const router = tRpc.router
 export const middleware = tRpc.middleware
 export const publicProcedure = tRpc.procedure

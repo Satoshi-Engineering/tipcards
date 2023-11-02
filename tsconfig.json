@@ -1,27 +1,9 @@
+/* ONLY FOR RUNTIME */
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": [
-    "backend/index.ts",
-    "env.d.ts",
-    "src/**/*",
-    "src/**/*.vue"
-  ],
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@backend/*": ["./dist/backend/src/*"],
+      "@shared/*": ["./dist/shared/src/*"],
     },
-    "lib": ["ESNext", "dom"],
-    "types": ["jest", "node"],
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types"
-    ]
   },
-  "references": [
-    {
-      "path": "frontend/tsconfig.vite-config.json"
-    }
-  ]
 }
