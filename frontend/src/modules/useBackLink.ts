@@ -8,7 +8,7 @@ export default () => {
   const showBacklink = computed(() =>
     routeUsesBacklink.value
     && (
-      !route.meta.onlyInternalReferrer
+      !route.meta.backlinkOnlyInternalReferrer
       || isReferrerFromApplication.value
     ),
   )
