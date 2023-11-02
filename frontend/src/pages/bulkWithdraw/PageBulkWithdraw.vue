@@ -27,16 +27,16 @@
 
     <RequestFailed v-if="requestFailed" />
 
-    <div v-else-if="bulkWithdrawPending">
-      {{ $t('bulkWithdraw.withdrawPending') }} 
-    </div>
-
     <BulkWithdrawQRCode
       v-else-if="bulkWithdraw != null"
       :bulk-withdraw="bulkWithdraw"
       :resetting="resetting"
       @reset="resetBulkWithdraw"
     />
+
+    <div v-else-if="bulkWithdrawPending">
+      {{ $t('bulkWithdraw.withdrawPending') }} 
+    </div>
 
     <BulkWithdrawExists
       v-else-if="cardLockedByWithdraw != null"
@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Card } from '@backend/trpc/data/Card'
@@ -94,21 +94,28 @@ onBeforeMount(async () => {
     router.replace({ name: 'home', params: { lang: route.params.lang } })
     return
   }
-  await initCardHashesForSet()
-  await loadCards()
-  await createIfPossible()
-  initializing.value = false
-})
-
-const loadCards = async () => {
   try {
-    cards.value = await Promise.all(cardHashes.value.map(
-      async (cardHash) => client.card.getByHash.query(cardHash),
-    ))
-  } catch (error) {
+    await initCardHashesForSet()
+    await initBulkWithdraw()
+  } catch (error: unknown) {
     console.error(error)
     requestFailed.value = true
+  } finally {
+    initializing.value = false
   }
+})
+
+/** @throws */
+const initBulkWithdraw = async () => {
+  await loadCards()
+  await createIfPossible()
+}
+
+/** @throws */
+const loadCards = async () => {
+  cards.value = await Promise.all(cardHashes.value.map(
+    async (cardHash) => client.card.getByHash.query(cardHash),
+  ))
 }
 
 const cardHashes = computed(() => {
@@ -141,11 +148,14 @@ const resetBulkWithdraw = async () => {
   } catch (error) {
     console.error(error)
     requestFailed.value = true
+  } finally {
+    resetting.value = false
   }
-  resetting.value = false
 }
 
 const { goBack } = useBacklink()
+
+/** @throws */
 const resetBulkWithdrawFromId = async () => {
   if (bulkWithdraw.value == null) {
     return
@@ -159,20 +169,19 @@ const restartBulkWithdraw = async () => {
   resetting.value = true
   try {
     await resetBulkWithdrawFromCard()
+    initializing.value = true
+    await initBulkWithdraw()
   } catch (error) {
     console.error(error)
     requestFailed.value = true
     return
   } finally {
     resetting.value = false
+    initializing.value = false
   }
-
-  initializing.value = true
-  await loadCards()
-  await createIfPossible()
-  initializing.value = false
 }
 
+/** @throws */
 const resetBulkWithdrawFromCard = async () => {
   if (cardLockedByWithdraw.value == null) {
     return
@@ -192,9 +201,9 @@ const isCardWithdrawn = (card: Card) => card.withdrawn != null || (card.withdraw
 
 const fundedCardsTotalAmount = computed(() => usableCards.value.reduce((total, card) => total + (card.amount.funded || 0), 0))
 
-const creating = ref(false)
 const bulkWithdraw = ref<BulkWithdraw>()
 
+/** @throws */
 const createIfPossible = async () => {
   if (!isBulkWithdrawPossible.value) {
     return
@@ -210,25 +219,28 @@ const isBulkWithdrawPossible = computed(() =>
   && usableCards.value.length > 0
 )
 
+/** @throws */
 const create = async () => {
-  creating.value = true
-  try {
-    bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
-    await loadCards()
-  } catch (error) {
-    console.error(error)
-    requestFailed.value = true
-  }
-  creating.value = false
-  setTimeout(updateBulkWithdraw, 5000)
+  bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
 }
 
 const updateBulkWithdraw = async () => {
   if (bulkWithdraw.value == null) {
     return
   }
-  setTimeout(updateBulkWithdraw, 5000)
-  bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
-  await loadCards()
+  try {
+    bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
+    await loadCards()
+  } catch (error: unknown) {
+    console.error(error)
+  } finally {
+    setTimeout(updateBulkWithdraw, 5000)
+  }
 }
+
+watch(bulkWithdraw, async (_, oldVal) => {
+  if (oldVal == null) {
+    setTimeout(updateBulkWithdraw, 5000)
+  }
+})
 </script>
