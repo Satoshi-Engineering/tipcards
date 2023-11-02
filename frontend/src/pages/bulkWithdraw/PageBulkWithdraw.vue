@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Card } from '@backend/trpc/data/Card'
@@ -222,9 +222,11 @@ const isBulkWithdrawPossible = computed(() =>
 /** @throws */
 const create = async () => {
   bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
+  await loadCards()
+  setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
 }
 
-const updateBulkWithdraw = async () => {
+const pollBulkWithdrawAndCardsStatus = async () => {
   if (bulkWithdraw.value == null) {
     return
   }
@@ -234,13 +236,7 @@ const updateBulkWithdraw = async () => {
   } catch (error: unknown) {
     console.error(error)
   } finally {
-    setTimeout(updateBulkWithdraw, 5000)
+    setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
   }
 }
-
-watch(bulkWithdraw, async (_, oldVal) => {
-  if (oldVal == null) {
-    setTimeout(updateBulkWithdraw, 5000)
-  }
-})
 </script>
