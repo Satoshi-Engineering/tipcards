@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p class="text-red-500 mb-2">
+    <ParagraphDefault class="text-red-500 mb-2">
       {{ $t('bulkWithdraw.genericErrorMessage') }}
-    </p>
+    </ParagraphDefault>
     <LinkDefault
       variant="no-border"
       @click="reload()"
@@ -14,6 +14,7 @@
 
 <script lang="ts" setup>
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
 const reload = () => location.reload()
 </script>

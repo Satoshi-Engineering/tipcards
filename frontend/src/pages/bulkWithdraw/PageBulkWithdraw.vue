@@ -7,13 +7,13 @@
       {{ $t('bulkWithdraw.headline') }}
     </HeadlineDefault>
 
-    <p class="my-3">
+    <ParagraphDefault class="my-3">
       <Translation keypath="bulkWithdraw.setName">
         <template #setName>
           <strong>{{ settings.setName || $t('index.unnamedSetNameFallback') }}</strong>
         </template>
       </Translation>
-    </p>
+    </ParagraphDefault>
 
     <CardsSummaryContainer class="mb-4">
       <CardsSummary
@@ -62,6 +62,7 @@ import type { Card } from '@backend/trpc/data/Card'
 import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import CardsSummary from '@/components/CardsSummary.vue'
 import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
 import Translation from '@/modules/I18nT'

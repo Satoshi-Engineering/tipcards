@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p class="mb-4">
+    <ParagraphDefault class="mb-4">
       {{ $t('bulkWithdraw.noFundedCards') }}
-    </p>
+    </ParagraphDefault>
     <ButtonDefault
       variant="outline"
       :href="router.resolve(to).href"
@@ -16,8 +16,9 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 
-import useBacklink from '@/modules/useBackLink'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
+import useBacklink from '@/modules/useBackLink'
 
 const router = useRouter()
 

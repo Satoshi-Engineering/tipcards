@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p class="mb-4">
+    <ParagraphDefault class="mb-4">
       ⚠️ {{ $t('bulkWithdraw.withdrawExists') }}
-    </p>
+    </ParagraphDefault>
     <ButtonWithTooltip
       type="submit"
       :disabled="restarting"
@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts" setup>
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 
 defineProps({
