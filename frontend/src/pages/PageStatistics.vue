@@ -1,131 +1,133 @@
 <template>
-  <div class="flex flex-col flex-1 mx-auto w-full max-w-4xl">
-    <div class="p-4">
-      <HeadlineDefault level="h1">
-        Statistics
-      </HeadlineDefault>
-    </div>
+  <DefaultLayout>
+    <div class="flex flex-col flex-1 mx-auto w-full max-w-4xl">
+      <div class="p-4">
+        <HeadlineDefault level="h1">
+          Statistics
+        </HeadlineDefault>
+      </div>
 
-    <div v-if="!isLoggedIn" class="p-4">
-      You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
-    </div>
-    <div v-else-if="!hasPermissions" class="p-4">
-      You are missing permissions to access the statistics. Talk to an admin to get them.
-    </div>
-    <div v-else-if="fetching" class="p-4">
-      Fetching data from backend ...
-    </div>
-    <div v-else-if="statistics != null" class="p-4">
-      <HeadlineDefault level="h2">
-        Weekly
-      </HeadlineDefault>
-      <table class="w-full -mx-2">
-        <tr class="sticky top-0 bg-white z-20">
-          <th class="px-2 sticky left-0 bg-white z-10 text-left">
-            Week
-          </th>
-          <th class="px-2 text-left">
-            Transactions
-          </th>
-          <th class="px-2 text-right">
-            Fundings
-          </th>
-          <th class="px-2 text-right">
-            sats
-          </th>
-          <th class="px-2 text-right">
-            Withdrawals
-          </th>
-          <th class="px-2 text-right">
-            sats
-          </th>
-        </tr>
-        <tr v-for="stats in statistics.weekly" :key="stats.periodLabel">
-          <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
-            {{ stats.periodLabel }}
-          </th>
-          <td class="px-2 text-right w-48">
-            <div
-              :style="`background: linear-gradient(
-                to right,
-                #fb923c ${stats.transactionsPercent}%,
-                transparent ${stats.transactionsPercent}%
-              )`"
+      <div v-if="!isLoggedIn" class="p-4">
+        You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
+      </div>
+      <div v-else-if="!hasPermissions" class="p-4">
+        You are missing permissions to access the statistics. Talk to an admin to get them.
+      </div>
+      <div v-else-if="fetching" class="p-4">
+        Fetching data from backend ...
+      </div>
+      <div v-else-if="statistics != null" class="p-4">
+        <HeadlineDefault level="h2">
+          Weekly
+        </HeadlineDefault>
+        <table class="w-full -mx-2">
+          <tr class="sticky top-0 bg-white z-20">
+            <th class="px-2 sticky left-0 bg-white z-10 text-left">
+              Week
+            </th>
+            <th class="px-2 text-left">
+              Transactions
+            </th>
+            <th class="px-2 text-right">
+              Fundings
+            </th>
+            <th class="px-2 text-right">
+              sats
+            </th>
+            <th class="px-2 text-right">
+              Withdrawals
+            </th>
+            <th class="px-2 text-right">
+              sats
+            </th>
+          </tr>
+          <tr v-for="stats in statistics.weekly" :key="stats.periodLabel">
+            <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
+              {{ stats.periodLabel }}
+            </th>
+            <td class="px-2 text-right w-48">
+              <div
+                :style="`background: linear-gradient(
+                  to right,
+                  #fb923c ${stats.transactionsPercent}%,
+                  transparent ${stats.transactionsPercent}%
+                )`"
+              >
+                {{ stats.transactionsCount }}
+              </div>
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.fundingCount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.fundingAmount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.withdrawCount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.withdrawAmount }}
+            </td>
+          </tr>
+        </table>
+        <HeadlineDefault level="h2">
+          Daily
+        </HeadlineDefault>
+        <table class="w-full -mx-2">
+          <tr class="sticky top-0 bg-white z-20">
+            <th class="px-2 sticky left-0 bg-white z-10 text-left">
+              Day
+            </th>
+            <th class="px-2 text-left">
+              Transactions
+            </th>
+            <th class="px-2 text-right">
+              Fundings
+            </th>
+            <th class="px-2 text-right">
+              sats
+            </th>
+            <th class="px-2 text-right">
+              Withdrawals
+            </th>
+            <th class="px-2 text-right">
+              sats
+            </th>
+          </tr>
+          <tr v-for="stats in statistics.daily" :key="stats.periodLabel">
+            <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
+              {{ stats.periodLabel }}
+            </th>
+            <td
+              class="px-2 text-right w-48"
             >
-              {{ stats.transactionsCount }}
-            </div>
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.fundingCount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.fundingAmount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.withdrawCount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.withdrawAmount }}
-          </td>
-        </tr>
-      </table>
-      <HeadlineDefault level="h2">
-        Daily
-      </HeadlineDefault>
-      <table class="w-full -mx-2">
-        <tr class="sticky top-0 bg-white z-20">
-          <th class="px-2 sticky left-0 bg-white z-10 text-left">
-            Day
-          </th>
-          <th class="px-2 text-left">
-            Transactions
-          </th>
-          <th class="px-2 text-right">
-            Fundings
-          </th>
-          <th class="px-2 text-right">
-            sats
-          </th>
-          <th class="px-2 text-right">
-            Withdrawals
-          </th>
-          <th class="px-2 text-right">
-            sats
-          </th>
-        </tr>
-        <tr v-for="stats in statistics.daily" :key="stats.periodLabel">
-          <th class="px-2 whitespace-nowrap w-28 sticky left-0 bg-white font-semibold z-10 text-left">
-            {{ stats.periodLabel }}
-          </th>
-          <td
-            class="px-2 text-right w-48"
-          >
-            <div
-              :style="`background: linear-gradient(
-                to right,
-                #fb923c ${stats.transactionsPercent}%,
-                transparent ${stats.transactionsPercent}%
-              )`"
-            >
-              {{ stats.transactionsCount }}
-            </div>
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.fundingCount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.fundingAmount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.withdrawCount }}
-          </td>
-          <td class="px-2 text-right">
-            {{ stats.withdrawAmount }}
-          </td>
-        </tr>
-      </table>
+              <div
+                :style="`background: linear-gradient(
+                  to right,
+                  #fb923c ${stats.transactionsPercent}%,
+                  transparent ${stats.transactionsPercent}%
+                )`"
+              >
+                {{ stats.transactionsCount }}
+              </div>
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.fundingCount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.fundingAmount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.withdrawCount }}
+            </td>
+            <td class="px-2 text-right">
+              {{ stats.withdrawAmount }}
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
@@ -140,6 +142,8 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
+
+import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const { isLoggedIn, accessTokenPayload } = storeToRefs(useAuthStore())
 const { showModalLogin } = storeToRefs(useModalLoginStore())

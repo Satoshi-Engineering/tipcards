@@ -1,477 +1,479 @@
 <template>
-  <div class="mb-1 print:hidden max-w-md w-full m-auto">
-    <div
-      v-for="userWarning in userWarnings"
-      :key="userWarning"
-      class="bg-yellow-300 p-4 mb-1"
-    >
-      {{ userWarning }}
-    </div>
-    <div class="p-4 mb-3">
-      <div class="my-2 flex justify-between items-center">
-        <HeadlineDefault level="h2" class="!my-0">
-          {{ t('cards.status.headline') }}
-        </HeadlineDefault>
-        <ButtonDefault
-          variant="no-border"
-          class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
-          :disabled="reloadingStatusForCards"
-          @click="reloadStatusForCards()"
+  <DefaultLayout>
+    <div class="mb-1 print:hidden max-w-md w-full m-auto">
+      <div
+        v-for="userWarning in userWarnings"
+        :key="userWarning"
+        class="bg-yellow-300 p-4 mb-1"
+      >
+        {{ userWarning }}
+      </div>
+      <div class="p-4 mb-3">
+        <div class="my-2 flex justify-between items-center">
+          <HeadlineDefault level="h2" class="!my-0">
+            {{ t('cards.status.headline') }}
+          </HeadlineDefault>
+          <ButtonDefault
+            variant="no-border"
+            class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
+            :disabled="reloadingStatusForCards"
+            @click="reloadStatusForCards()"
+          >
+            {{ t('cards.status.reload') }}
+          </ButtonDefault>
+        </div>
+        <ParagraphDefault
+          v-if="cardsStatusList.length == 0"
+          class="text-sm text-grey"
         >
-          {{ t('cards.status.reload') }}
+          {{ t('cards.status.noCards') }}
+        </ParagraphDefault>
+        <div v-else>
+          <CardsSummaryContainer>
+            <CardsSummary
+              color="lightningpurple"
+              :cards-count="usedCards.length"
+              :title="$t('cards.status.labelUsed', 2)"
+              :sats="usedCardsTotalAmount"
+            />
+            <CardsSummary
+              color="btcorange"
+              :cards-count="fundedCards.length"
+              :title="$t('cards.status.labelFunded', 2)"
+              :sats="fundedCardsTotalAmount"
+            />
+          </CardsSummaryContainer>
+          <ul class="w-full my-5">
+            <li
+              v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
+              :key="cardHash"
+              class="py-1 border-b border-grey"
+            >
+              <CardStatusComponent
+                :status="status || undefined"
+                :funded-date="fundedDate || undefined"
+                :used-date="usedDate || undefined"
+                :shared="shared"
+                :amount="amount || undefined"
+                :note="note || undefined"
+                :url="
+                  status === 'setFunding'
+                    ? setFundingHref
+                    : fundedDate == null
+                      ? urlFunding
+                      : urlPreview
+                "
+                :viewed="viewed"
+                :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="p-4 mb-3">
+        <HeadlineDefault level="h2">
+          {{ t('cards.settings.headline') }}
+        </HeadlineDefault>
+        <label class="block mb-2">
+          <span class="block">
+            {{ t('cards.settings.numberOfCards') }}:
+          </span>
+          <input
+            v-model.lazy.number="settings.numberOfCards"
+            type="number"
+            inputmode="numeric"
+            min="1"
+            max="100"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+          >
+        </label>
+        <label class="block mb-2">
+          <span class="block">
+            {{ t('cards.settings.cardHeadline') }}:
+          </span>
+          <input
+            v-model.lazy.trim="settings.cardHeadline"
+            type="text"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+          >
+        </label>
+        <label class="block mb-2">
+          <span class="block">
+            {{ t('cards.settings.cardText') }}:
+          </span>
+          <textarea
+            v-model.lazy.trim="settings.cardCopytext"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            rows="4"
+          />
+        </label>
+        <div class="mb-2">
+          <div class="mb-2">
+            {{ t('cards.settings.cardQrCodeLogoLabel') }}:
+          </div>
+          <label class="block">
+            <input
+              v-model="settings.cardsQrCodeLogo"
+              value="bitcoin"
+              type="radio"
+            >
+            Bitcoin
+          </label>
+          <label class="block">
+            <input
+              v-model="settings.cardsQrCodeLogo"
+              value="lightning"
+              type="radio"
+            >
+            Lightning
+          </label>
+          <label
+            v-for="image in availableCardLogos"
+            :key="image.id"
+            class="block"
+          >
+            <input
+              v-model="settings.cardsQrCodeLogo"
+              type="radio"
+              :value="image.id"
+            >
+            {{ image.name }}
+          </label>
+          <label class="block">
+            <input
+              v-model="settings.cardsQrCodeLogo"
+              value=""
+              type="radio"
+            >
+            {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
+          </label>
+        </div>
+        <div v-if="landingPages?.length" class="mb-2">
+          <div class="mb-2">
+            {{ t('setFunding.form.landingPagesHeadline') }}
+            <small class="block">({{ t('setFunding.form.landingPagesHint') }})</small>
+          </div>
+          <label class="block">
+            <input
+              v-model="settings.landingPage"
+              value="default"
+              type="radio"
+            >
+            tipcards.io
+          </label>
+          <label
+            v-for="landingPage in landingPages"
+            :key="landingPage.id"
+            class="block"
+          >
+            <input
+              v-model="settings.landingPage"
+              type="radio"
+              :value="landingPage.id"
+            >
+            {{ landingPage.name }}
+          </label>
+        </div>
+      </div>
+      <div class="px-4">
+        <HeadlineDefault level="h2">
+          {{ t('cards.actions.headline') }}
+        </HeadlineDefault>
+      </div>
+      <div class="px-4 my-5">
+        <HeadlineDefault level="h3" class="mb-2">
+          {{ t('cards.actions.saveHeadline') }}
+        </HeadlineDefault>
+        <label class="block mb-1">
+          <span class="block">
+            {{ t('cards.actions.setName') }}:
+          </span>
+          <input
+            v-model="settings.setName"
+            type="text"
+            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            :disabled="saving"
+          >
+        </label>
+        <div v-if="savingError != null">
+          <ParagraphDefault class="text-red-500" dir="ltr">
+            {{ savingError }}
+          </ParagraphDefault>
+        </div>
+        <div v-if="deletingError != null">
+          <ParagraphDefault class="text-red-500" dir="ltr">
+            {{ deletingError }}
+          </ParagraphDefault>
+        </div>
+        <ParagraphDefault v-if="hasBeenSaved && !isLoggedIn" class="text-sm text-grey">
+          <LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
+          {{ $t('localStorageDeprecation.setSavedLocally') }}
+          <LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
+        </ParagraphDefault>
+        <ParagraphDefault v-if="!isLoggedIn" class="text-sm">
+          <I18nT keypath="localStorageDeprecation.loginCta">
+            <template #loginCtaAction>
+              <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
+            </template>
+          </I18nT>
+        </ParagraphDefault>
+        <ButtonWithTooltip
+          class="text-sm min-w-[170px]"
+          :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
+          :tooltip="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal')) ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
+          :loading="saving"
+          @click="saveCardsSet"
+        >
+          {{ t('cards.actions.buttonSaveCardsSet') }}
+          <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
+          <i v-if="showSaveWarning && !saving" class="bi bi-exclamation-square ml-1" />
+        </ButtonWithTooltip>
+        &nbsp;
+        <br class="xs:hidden">
+        <ButtonDefault
+          v-if="isSaved"
+          variant="no-border"
+          class="text-sm"
+          :disabled="deleting"
+          :loading="deleting"
+          @click="deleteCardsSet"
+        >
+          {{ t('cards.actions.buttonDeleteCardsSet') }}
         </ButtonDefault>
       </div>
-      <ParagraphDefault
-        v-if="cardsStatusList.length == 0"
-        class="text-sm text-grey"
-      >
-        {{ t('cards.status.noCards') }}
-      </ParagraphDefault>
-      <div v-else>
-        <CardsSummaryContainer>
-          <CardsSummary
-            color="lightningpurple"
-            :cards-count="usedCards.length"
-            :title="$t('cards.status.labelUsed', 2)"
-            :sats="usedCardsTotalAmount"
-          />
-          <CardsSummary
-            color="btcorange"
-            :cards-count="fundedCards.length"
-            :title="$t('cards.status.labelFunded', 2)"
-            :sats="fundedCardsTotalAmount"
-          />
-        </CardsSummaryContainer>
-        <ul class="w-full my-5">
-          <li
-            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
-            :key="cardHash"
-            class="py-1 border-b border-grey"
-          >
-            <CardStatusComponent
-              :status="status || undefined"
-              :funded-date="fundedDate || undefined"
-              :used-date="usedDate || undefined"
-              :shared="shared"
-              :amount="amount || undefined"
-              :note="note || undefined"
-              :url="
-                status === 'setFunding'
-                  ? setFundingHref
-                  : fundedDate == null
-                    ? urlFunding
-                    : urlPreview
-              "
-              :viewed="viewed"
-              :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
-            />
-          </li>
-        </ul>
+      <div class="px-4 my-5">
+        <HeadlineDefault level="h3" class="mb-2">
+          {{ t('cards.actions.printHeadline') }}
+        </HeadlineDefault>
+        <ButtonDefault
+          class="text-sm min-w-[170px]"
+          @click="printCards()"
+        >
+          {{ t('cards.actions.buttonPrint') }}
+        </ButtonDefault>
+        &nbsp;
+        <br class="xs:hidden">
+        <ButtonDefault
+          variant="no-border"
+          class="text-sm"
+          @click="downloadZip()"
+        >
+          {{ t('cards.actions.buttonDownloadPngs') }}
+        </ButtonDefault>
       </div>
+      <SetFunding
+        class="my-5"
+        :set="set"
+        :cards="cards"
+      />
+      <BulkWithdraw
+        v-if="isLoggedIn"
+        class="my-5"
+        :amount-to-withdraw="fundedCardsTotalAmount"
+      />
     </div>
-    <div class="p-4 mb-3">
+    <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
       <HeadlineDefault level="h2">
-        {{ t('cards.settings.headline') }}
+        {{ t('cards.cards.headline') }}
       </HeadlineDefault>
-      <label class="block mb-2">
-        <span class="block">
-          {{ t('cards.settings.numberOfCards') }}:
-        </span>
-        <input
-          v-model.lazy.number="settings.numberOfCards"
-          type="number"
-          inputmode="numeric"
-          min="1"
-          max="100"
-          class="w-full border my-1 px-3 py-2 focus:outline-none"
-        >
-      </label>
-      <label class="block mb-2">
-        <span class="block">
-          {{ t('cards.settings.cardHeadline') }}:
-        </span>
-        <input
-          v-model.lazy.trim="settings.cardHeadline"
-          type="text"
-          class="w-full border my-1 px-3 py-2 focus:outline-none"
-        >
-      </label>
-      <label class="block mb-2">
-        <span class="block">
-          {{ t('cards.settings.cardText') }}:
-        </span>
-        <textarea
-          v-model.lazy.trim="settings.cardCopytext"
-          class="w-full border my-1 px-3 py-2 focus:outline-none"
-          rows="4"
-        />
-      </label>
-      <div class="mb-2">
-        <div class="mb-2">
-          {{ t('cards.settings.cardQrCodeLogoLabel') }}:
-        </div>
-        <label class="block">
-          <input
-            v-model="settings.cardsQrCodeLogo"
-            value="bitcoin"
-            type="radio"
+      <div v-if="cards.length > 0">
+        <label class="block mb-2">
+          <span class="block">
+            {{ t('cards.cards.filterLabel') }}
+          </span>
+          <select
+            v-model="cardsFilter"
+            class="w-full border my-1 px-3 py-2"
           >
-          Bitcoin
-        </label>
-        <label class="block">
-          <input
-            v-model="settings.cardsQrCodeLogo"
-            value="lightning"
-            type="radio"
-          >
-          Lightning
-        </label>
-        <label
-          v-for="image in availableCardLogos"
-          :key="image.id"
-          class="block"
-        >
-          <input
-            v-model="settings.cardsQrCodeLogo"
-            type="radio"
-            :value="image.id"
-          >
-          {{ image.name }}
-        </label>
-        <label class="block">
-          <input
-            v-model="settings.cardsQrCodeLogo"
-            value=""
-            type="radio"
-          >
-          {{ t('cards.settings.cardQrCodeLogo.noLogo') }}
+            <option value="">
+              {{ t('cards.cards.filter.all') }} ({{ cards.length }})
+            </option>
+            <option value="unfunded">
+              {{ t('cards.cards.filter.unfunded') }} ({{ cards.filter(card => card.status === 'unfunded').length }})
+            </option>
+            <option value="funded">
+              {{ t('cards.cards.filter.funded') }} ({{ cards.filter(card => card.status === 'funded').length }})
+            </option>
+            <option value="used">
+              {{ t('cards.cards.filter.used') }} ({{ cards.filter(card => card.status === 'used').length }})
+            </option>
+          </select>
         </label>
       </div>
-      <div v-if="landingPages?.length" class="mb-2">
-        <div class="mb-2">
-          {{ t('setFunding.form.landingPagesHeadline') }}
-          <small class="block">({{ t('setFunding.form.landingPagesHint') }})</small>
-        </div>
-        <label class="block">
-          <input
-            v-model="settings.landingPage"
-            value="default"
-            type="radio"
-          >
-          tipcards.io
-        </label>
-        <label
-          v-for="landingPage in landingPages"
-          :key="landingPage.id"
-          class="block"
-        >
-          <input
-            v-model="settings.landingPage"
-            type="radio"
-            :value="landingPage.id"
-          >
-          {{ landingPage.name }}
-        </label>
+      <div v-if="userErrorMessage != null">
+        <p class="text-red-500 text-align-center" dir="ltr">
+          {{ userErrorMessage }}
+        </p>
       </div>
     </div>
-    <div class="px-4">
-      <HeadlineDefault level="h2">
-        {{ t('cards.actions.headline') }}
-      </HeadlineDefault>
-    </div>
-    <div class="px-4 my-5">
-      <HeadlineDefault level="h3" class="mb-2">
-        {{ t('cards.actions.saveHeadline') }}
-      </HeadlineDefault>
-      <label class="block mb-1">
-        <span class="block">
-          {{ t('cards.actions.setName') }}:
-        </span>
-        <input
-          v-model="settings.setName"
-          type="text"
-          class="w-full border my-1 px-3 py-2 focus:outline-none"
-          :disabled="saving"
-        >
-      </label>
-      <div v-if="savingError != null">
-        <ParagraphDefault class="text-red-500" dir="ltr">
-          {{ savingError }}
-        </ParagraphDefault>
-      </div>
-      <div v-if="deletingError != null">
-        <ParagraphDefault class="text-red-500" dir="ltr">
-          {{ deletingError }}
-        </ParagraphDefault>
-      </div>
-      <ParagraphDefault v-if="hasBeenSaved && !isLoggedIn" class="text-sm text-grey">
-        <LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
-        {{ $t('localStorageDeprecation.setSavedLocally') }}
-        <LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
-      </ParagraphDefault>
-      <ParagraphDefault v-if="!isLoggedIn" class="text-sm">
-        <I18nT keypath="localStorageDeprecation.loginCta">
-          <template #loginCtaAction>
-            <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
-          </template>
-        </I18nT>
-      </ParagraphDefault>
-      <ButtonWithTooltip
-        class="text-sm min-w-[170px]"
-        :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
-        :tooltip="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal')) ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
-        :loading="saving"
-        @click="saveCardsSet"
-      >
-        {{ t('cards.actions.buttonSaveCardsSet') }}
-        <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
-        <i v-if="showSaveWarning && !saving" class="bi bi-exclamation-square ml-1" />
-      </ButtonWithTooltip>
-      &nbsp;
-      <br class="xs:hidden">
-      <ButtonDefault
-        v-if="isSaved"
-        variant="no-border"
-        class="text-sm"
-        :disabled="deleting"
-        :loading="deleting"
-        @click="deleteCardsSet"
-      >
-        {{ t('cards.actions.buttonDeleteCardsSet') }}
-      </ButtonDefault>
-    </div>
-    <div class="px-4 my-5">
-      <HeadlineDefault level="h3" class="mb-2">
-        {{ t('cards.actions.printHeadline') }}
-      </HeadlineDefault>
-      <ButtonDefault
-        class="text-sm min-w-[170px]"
-        @click="printCards()"
-      >
-        {{ t('cards.actions.buttonPrint') }}
-      </ButtonDefault>
-      &nbsp;
-      <br class="xs:hidden">
-      <ButtonDefault
-        variant="no-border"
-        class="text-sm"
-        @click="downloadZip()"
-      >
-        {{ t('cards.actions.buttonDownloadPngs') }}
-      </ButtonDefault>
-    </div>
-    <SetFunding
-      class="my-5"
-      :set="set"
-      :cards="cards"
-    />
-    <BulkWithdraw
-      v-if="isLoggedIn"
-      class="my-5"
-      :amount-to-withdraw="fundedCardsTotalAmount"
-    />
-  </div>
-  <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
-    <HeadlineDefault level="h2">
-      {{ t('cards.cards.headline') }}
-    </HeadlineDefault>
-    <div v-if="cards.length > 0">
-      <label class="block mb-2">
-        <span class="block">
-          {{ t('cards.cards.filterLabel') }}
-        </span>
-        <select
-          v-model="cardsFilter"
-          class="w-full border my-1 px-3 py-2"
-        >
-          <option value="">
-            {{ t('cards.cards.filter.all') }} ({{ cards.length }})
-          </option>
-          <option value="unfunded">
-            {{ t('cards.cards.filter.unfunded') }} ({{ cards.filter(card => card.status === 'unfunded').length }})
-          </option>
-          <option value="funded">
-            {{ t('cards.cards.filter.funded') }} ({{ cards.filter(card => card.status === 'funded').length }})
-          </option>
-          <option value="used">
-            {{ t('cards.cards.filter.used') }} ({{ cards.filter(card => card.status === 'used').length }})
-          </option>
-        </select>
-      </label>
-    </div>
-    <div v-if="userErrorMessage != null">
-      <p class="text-red-500 text-align-center" dir="ltr">
-        {{ userErrorMessage }}
-      </p>
-    </div>
-  </div>
-  <div v-if="cards.length > 0" dir="ltr">
-    <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
-      <div class="w-[210mm] mx-auto p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
-        <div>
-          Set ID:<br>
-          <LinkDefault :href="currentSetUrl">{{ setId }}</LinkDefault>
-        </div>
-        <!-- eslint-disable vue/no-v-html -->
-        <div
-          class="inline-block w-[30mm] aspect-square mx-6"
-          v-html="currentSetUrlQrCode"
-        />
-        <!-- eslint-enable vue/no-v-html -->
-      </div>
-      <div
-        ref="cardsContainer"
-        class="relative w-[210mm] mx-auto px-[15mm] py-[10mm] border-t print:border-0"
-      >
-        <div
-          v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
-          :key="card.url"
-          class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
-        >
-          <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-          <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-          <div class="hidden group-first:block [inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-          <div class="hidden group-last:block [inset-inline-start:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-
-          <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-          <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+    <div v-if="cards.length > 0" dir="ltr">
+      <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
+        <div class="w-[210mm] mx-auto p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
+          <div>
+            Set ID:<br>
+            <LinkDefault :href="currentSetUrl">{{ setId }}</LinkDefault>
+          </div>
+          <!-- eslint-disable vue/no-v-html -->
           <div
-            v-if="card.url != ''"
-            class="absolute w-full h-full"
-            :class="{ 'opacity-50': card.status === 'used' }"
+            class="inline-block w-[30mm] aspect-square mx-6"
+            v-html="currentSetUrlQrCode"
+          />
+          <!-- eslint-enable vue/no-v-html -->
+        </div>
+        <div
+          ref="cardsContainer"
+          class="relative w-[210mm] mx-auto px-[15mm] py-[10mm] border-t print:border-0"
+        >
+          <div
+            v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
+            :key="card.url"
+            class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
           >
-            <a
-              :href="
-                card.status === 'setFunding'
-                  ? setFundingHref
-                  : card.fundedDate == null
-                    ? card.urlFunding
-                    : card.urlPreview
-              "
+            <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+            <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+            <div class="hidden group-first:block [inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+            <div class="hidden group-last:block [inset-inline-start:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+
+            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
+            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+            <div
+              v-if="card.url != ''"
+              class="absolute w-full h-full"
+              :class="{ 'opacity-50': card.status === 'used' }"
             >
-              <div
-                class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
-                :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
+              <a
+                :href="
+                  card.status === 'setFunding'
+                    ? setFundingHref
+                    : card.fundedDate == null
+                      ? card.urlFunding
+                      : card.urlPreview
+                "
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100%"
-                  height="100%"
-                  viewBox="0 0 256 256"
-                  class="qr-code-svg"
-                  :class="{ 'qr-code-svg--used': card.status === 'used' || card.isLockedByBulkWithdraw }"
+                <div
+                  class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
+                  :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
                 >
-                  <!-- eslint-disable vue/no-v-html -->
-                  <g v-html="card.qrCodeSvg" />
-                  <!-- eslint-enable vue/no-v-html -->
-                  <IconBitcoin
-                    v-if="settings.cardsQrCodeLogo === 'bitcoin'"
-                    :width="0.26 * 256"
-                    :height="0.26 * 256"
-                    :x="0.37 * 256"
-                    :y="0.37 * 256"
-                  />
-                  <IconLightning
-                    v-else-if="settings.cardsQrCodeLogo === 'lightning'"
-                    :width="0.26 * 256"
-                    :height="0.26 * 256"
-                    :x="0.37 * 256"
-                    :y="0.37 * 256"
-                  />
                   <svg
-                    v-else-if="selectedCardLogo != null"
-                    :width="0.3 * 256"
-                    :height="0.3 * 256"
-                    :x="0.35 * 256"
-                    :y="0.35 * 256"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="100%"
+                    height="100%"
+                    viewBox="0 0 256 256"
+                    class="qr-code-svg"
+                    :class="{ 'qr-code-svg--used': card.status === 'used' || card.isLockedByBulkWithdraw }"
                   >
-                    <image
-                      :href="`${BACKEND_API_ORIGIN}/api/assets/cardLogos/${selectedCardLogo.id}.${selectedCardLogo.type}`"
+                    <!-- eslint-disable vue/no-v-html -->
+                    <g v-html="card.qrCodeSvg" />
+                    <!-- eslint-enable vue/no-v-html -->
+                    <IconBitcoin
+                      v-if="settings.cardsQrCodeLogo === 'bitcoin'"
+                      :width="0.26 * 256"
+                      :height="0.26 * 256"
+                      :x="0.37 * 256"
+                      :y="0.37 * 256"
+                    />
+                    <IconLightning
+                      v-else-if="settings.cardsQrCodeLogo === 'lightning'"
+                      :width="0.26 * 256"
+                      :height="0.26 * 256"
+                      :x="0.37 * 256"
+                      :y="0.37 * 256"
+                    />
+                    <svg
+                      v-else-if="selectedCardLogo != null"
                       :width="0.3 * 256"
                       :height="0.3 * 256"
-                    />
+                      :x="0.35 * 256"
+                      :y="0.35 * 256"
+                    >
+                      <image
+                        :href="`${BACKEND_API_ORIGIN}/api/assets/cardLogos/${selectedCardLogo.id}.${selectedCardLogo.type}`"
+                        :width="0.3 * 256"
+                        :height="0.3 * 256"
+                      />
+                    </svg>
                   </svg>
-                </svg>
-              </div>
-            </a>
-            <div
-              class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
-              :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
-              :dir="currentTextDirection"
-            >
-              <div>
-                <HeadlineDefault
-                  v-if="settings.cardHeadline !== ''"
-                  level="h1"
-                  styling="h4"
-                  class="mb-1"
-                >
-                  {{ settings.cardHeadline }}
-                </HeadlineDefault>
-                <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
-                <ParagraphDefault
-                  v-if="settings.cardCopytext !== ''"
-                  class="text-sm leading-tight"
-                  v-html="sanitizeHtml(cardCopytextComputed)"
-                />
-                <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+                </div>
+              </a>
+              <div
+                class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
+                :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
+                :dir="currentTextDirection"
+              >
+                <div>
+                  <HeadlineDefault
+                    v-if="settings.cardHeadline !== ''"
+                    level="h1"
+                    styling="h4"
+                    class="mb-1"
+                  >
+                    {{ settings.cardHeadline }}
+                  </HeadlineDefault>
+                  <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
+                  <ParagraphDefault
+                    v-if="settings.cardCopytext !== ''"
+                    class="text-sm leading-tight"
+                    v-html="sanitizeHtml(cardCopytextComputed)"
+                  />
+                  <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            v-if="card.status === 'error'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
-          >
-            <span class="m-auto">Error</span>
-          </div>
-          <div
-            v-else-if="card.amount != null && card.status === 'used'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
-          >
-            <span class="m-auto">{{ card.amount }} sats</span>
-          </div>
-          <div
-            v-else-if="card.isLockedByBulkWithdraw"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
-          >
-            <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
-          </div>
-          <div
-            v-else-if="card.amount != null && card.status === 'funded'"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
-          >
-            <span class="m-auto">{{ card.amount }} sats</span>
-          </div>
-          <div
-            v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
-            class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
-          >
-            <span
-              v-if="card.status === 'lnurlp' && card.shared"
-              :title="card.status"
-              class="m-auto"
+            <div
+              v-if="card.status === 'error'"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-500 text-white text-xs break-anywhere print:hidden"
             >
-              {{ t('cards.status.labelPendingSharedFunding') }}
-            </span>
-            <span
-              v-else-if="(card.status === 'lnurlp' || card.status === 'invoice')"
-              :title="card.status"
-              class="m-auto"
+              <span class="m-auto">Error</span>
+            </div>
+            <div
+              v-else-if="card.amount != null && card.status === 'used'"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
             >
-              {{ t('cards.status.labelPendingFunding') }}
-            </span>
-            <span
-              v-else-if="card.status === 'setFunding'"
-              :title="card.status"
-              class="m-auto"
+              <span class="m-auto">{{ card.amount }} sats</span>
+            </div>
+            <div
+              v-else-if="card.isLockedByBulkWithdraw"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
             >
-              {{ t('cards.status.labelPendingSetFunding') }}
-            </span>
+              <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
+            </div>
+            <div
+              v-else-if="card.amount != null && card.status === 'funded'"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-btcorange text-white text-xs break-anywhere"
+            >
+              <span class="m-auto">{{ card.amount }} sats</span>
+            </div>
+            <div
+              v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-grey text-white text-xs break-anywhere print:hidden"
+            >
+              <span
+                v-if="card.status === 'lnurlp' && card.shared"
+                :title="card.status"
+                class="m-auto"
+              >
+                {{ t('cards.status.labelPendingSharedFunding') }}
+              </span>
+              <span
+                v-else-if="(card.status === 'lnurlp' || card.status === 'invoice')"
+                :title="card.status"
+                class="m-auto"
+              >
+                {{ t('cards.status.labelPendingFunding') }}
+              </span>
+              <span
+                v-else-if="card.status === 'setFunding'"
+                :title="card.status"
+                class="m-auto"
+              >
+                {{ t('cards.status.labelPendingSetFunding') }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </DefaultLayout>
   <ModalLocalStorageDeprecation
     v-if="showModalDeprecation"
     @login="onLogin"
@@ -523,6 +525,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
+
+import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const route = useRoute()
 const router = useRouter()

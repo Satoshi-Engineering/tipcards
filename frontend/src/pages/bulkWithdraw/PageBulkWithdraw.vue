@@ -1,58 +1,60 @@
 <template>
-  <div class="mt-3 mx-auto w-full max-w-md px-4">
-    <HeadlineDefault
-      level="h1"
-      class="mt-10"
-    >
-      {{ $t('bulkWithdraw.headline') }}
-    </HeadlineDefault>
+  <DefaultLayout>
+    <div class="mt-3 mx-auto w-full max-w-md px-4">
+      <HeadlineDefault
+        level="h1"
+        class="mt-10"
+      >
+        {{ $t('bulkWithdraw.headline') }}
+      </HeadlineDefault>
 
-    <ParagraphDefault class="my-3">
-      <Translation keypath="bulkWithdraw.setName">
-        <template #setName>
-          <strong>{{ settings.setName || $t('index.unnamedSetNameFallback') }}</strong>
-        </template>
-      </Translation>
-    </ParagraphDefault>
+      <ParagraphDefault class="my-3">
+        <Translation keypath="bulkWithdraw.setName">
+          <template #setName>
+            <strong>{{ settings.setName || $t('index.unnamedSetNameFallback') }}</strong>
+          </template>
+        </Translation>
+      </ParagraphDefault>
 
-    <CardsSummaryContainer class="mb-4">
-      <CardsSummary
-        class="col-span-2"
-        :loading="initializing"
-        :cards-count="usableCards.length"
-        :color="bulkWithdraw?.withdrawn ? 'lightningpurple' : 'btcorange'"
-        :title="bulkWithdraw?.withdrawn ? $t('cards.status.labelBulkWithdrawn', 2) : $t('cards.status.labelFunded', 2)"
-        :sats="fundedCardsTotalAmount"
+      <CardsSummaryContainer class="mb-4">
+        <CardsSummary
+          class="col-span-2"
+          :loading="initializing"
+          :cards-count="usableCards.length"
+          :color="bulkWithdraw?.withdrawn ? 'lightningpurple' : 'btcorange'"
+          :title="bulkWithdraw?.withdrawn ? $t('cards.status.labelBulkWithdrawn', 2) : $t('cards.status.labelFunded', 2)"
+          :sats="fundedCardsTotalAmount"
+        />
+      </CardsSummaryContainer>
+
+      <RequestFailed v-if="requestFailed" />
+
+      <BulkWithdrawQRCode
+        v-else-if="bulkWithdraw != null"
+        :bulk-withdraw="bulkWithdraw"
+        :resetting="resetting"
+        @reset="resetBulkWithdraw"
       />
-    </CardsSummaryContainer>
 
-    <RequestFailed v-if="requestFailed" />
+      <div v-else-if="bulkWithdrawPending">
+        {{ $t('bulkWithdraw.withdrawPending') }} 
+      </div>
 
-    <BulkWithdrawQRCode
-      v-else-if="bulkWithdraw != null"
-      :bulk-withdraw="bulkWithdraw"
-      :resetting="resetting"
-      @reset="resetBulkWithdraw"
-    />
+      <BulkWithdrawExists
+        v-else-if="cardLockedByWithdraw != null"
+        :restarting="resetting || initializing"
+        @restart="restartBulkWithdraw"
+      />
 
-    <div v-else-if="bulkWithdrawPending">
-      {{ $t('bulkWithdraw.withdrawPending') }} 
+      <NoContent v-else-if="usableCards.length === 0 && !initializing" />
+
+      <CardsList
+        v-if="!initializing"
+        class="w-full mt-6"
+        :cards="usableCards"
+      />
     </div>
-
-    <BulkWithdrawExists
-      v-else-if="cardLockedByWithdraw != null"
-      :restarting="resetting || initializing"
-      @restart="restartBulkWithdraw"
-    />
-
-    <NoContent v-else-if="usableCards.length === 0 && !initializing" />
-
-    <CardsList
-      v-if="!initializing"
-      class="w-full mt-6"
-      :cards="usableCards"
-    />
-  </div>
+  </DefaultLayout>
 </template>
 
 <script lang="ts" setup>
@@ -77,6 +79,7 @@ import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
 import CardsList from './components/CardsList.vue'
 import RequestFailed from './components/RequestFailed.vue'
 import NoContent from './components/NoContent.vue'
+import DefaultLayout from '../layouts/DefaultLayout.vue'
 
 const route = useRoute()
 const router = useRouter()

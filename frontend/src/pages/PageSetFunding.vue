@@ -1,185 +1,187 @@
 <template>
-  <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
-    <div
-      v-if="initializing"
-      class="flex justify-center flex-1 mt-8 px-4"
-    >
-      <AnimatedLoadingWheel />
-    </div>
-    <div
-      v-else-if="numberOfCardsToFund !== settings.numberOfCards"
-      class="flex-1 mt-8 px-4"
-    >
-      <HeadlineDefault
-        level="h1"
-        class="mt-10"
+  <DefaultLayout>
+    <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
+      <div
+        v-if="initializing"
+        class="flex justify-center flex-1 mt-8 px-4"
       >
-        {{ t('setFunding.headline') }}
-      </HeadlineDefault>
-      <p class="my-3">
-        <I18nT keypath="setFunding.setName">
-          <template #setName>
-            <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
-          </template>
-        </I18nT>
-      </p>
-      <p>
-        {{ t('setFunding.textFundingNotPossible') }}
-      </p>
-      <ButtonDefault
-        class="text-sm mt-4"
-        :href="cardsHref"
-      >
-        {{ t('setFunding.backToSet') }}
-      </ButtonDefault>
-    </div>
-    <div
-      v-else
-      class="flex-1 mt-8 px-4"
-    >
-      <HeadlineDefault
-        level="h1"
-        class="mt-10"
-      >
-        {{ t('setFunding.headline') }}
-      </HeadlineDefault>
-      <p class="my-3">
-        <I18nT keypath="setFunding.setName">
-          <template #setName>
-            <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
-          </template>
-        </I18nT>
-      </p>
-      <div v-if="invoice != null">
-        <ParagraphDefault>
-          <I18nT
-            v-if="funded"
-            keypath="setFunding.textFunded"
-          >
-            <template #numberOfCardsToFund>
-              {{ numberOfCardsToFund }}
-            </template>
-            <template #amountAndUnitPerCard>
-              <strong
-                v-if="invoiceAmount != null"
-                class="inline-block"
-              >
-                {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / numberOfCardsToFund / (100 * 1000 * 1000), 8, 8) }) }}
-              </strong>
-            </template>
-          </I18nT>
-          <I18nT
-            v-else
-            keypath="setFunding.invoiceText"
-          >
-            <template #numberOfCardsToFund>
-              {{ numberOfCardsToFund }}
-            </template>
-            <template #amountAndUnit>
-              <strong
-                v-if="invoiceAmount != null"
-                class="inline-block"
-              >
-                {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8) }) }}
-              </strong>
-            </template>
-          </I18nT>
-        </ParagraphDefault>
-        <LightningQrCode
-          :value="invoice"
-          :success="funded"
-          :error="invoiceExpired ? t('setFunding.invoiceExpired') : undefined"
-        />
-        <p
-          v-if="invoiceExpired"
-          class="mb-4"
-        >
-          {{ t('setFunding.invoiceExpired') }}
-        </p>
-        <div class="flex justify-center">
-          <ButtonWithTooltip
-            type="submit"
-            variant="outline"
-            :disabled="funded"
-            :tooltip="funded ? t('setFunding.resetDisabledTooltip') : undefined"
-            @click="resetInvoice"
-          >
-            {{ t('setFunding.resetInvoice') }} 
-          </ButtonWithTooltip>
-        </div>
-      </div>
-      <div v-else>
-        <ParagraphDefault class="mb-8">
-          <I18nT keypath="setFunding.text">
-            <template #numberOfCardsToFund>
-              {{ numberOfCardsToFund }}
-            </template>
-            <template #amountAndUnit>
-              <strong class="inline-block">
-                {{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}
-              </strong>
-            </template>
-          </I18nT>
-        </ParagraphDefault>
-        <form @submit.prevent="createInvoice">
-          <label class="block mb-2">
-            <span class="block">
-              {{ t('setFunding.form.amountLabel') }}:
-            </span>
-            <SatsAmountSelector
-              :amount-sats="amountPerCard"
-              :rate-btc-eur="rateBtcEur"
-              :min="21"
-              :disabled="creatingInvoice"
-              @update="amountPerCard = $event"
-            />
-            <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3 text-sm text-btcorange-effect">
-              {{ t('setFunding.form.smallAmountWarning') }}
-            </small>
-          </label>
-          <div class="block leading-tight my-3">
-            {{ t('setFunding.form.totalAmountLabel') }}:
-            <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}</strong>
-          </div>
-          <label class="block mb-2">
-            <input
-              v-model="text"
-              type="text"
-              class="w-full border my-1 px-3 py-2 focus:outline-none"
-              :disabled="creatingInvoice"
-            >
-            <small class="block">({{ t('setFunding.form.textHint') }})</small>
-          </label>
-          <label class="block mb-2">
-            <input
-              v-model="note"
-              type="text"
-              class="w-full border my-1 px-3 py-2 focus:outline-none"
-              :placeholder="t('setFunding.form.notePlaceholder')"
-              :disabled="creatingInvoice"
-            >
-            <small class="block">({{ t('setFunding.form.noteHint') }})</small>
-          </label>
-          <div class="flex flex-col items-center mt-4">
-            <ButtonDefault
-              type="submit"
-              :disabled="creatingInvoice"
-            >
-              {{ t('setFunding.form.button') }}
-            </ButtonDefault>
-          </div>
-        </form>
+        <AnimatedLoadingWheel />
       </div>
       <div
-        v-if="userErrorMessage != null"
-        class="mt-4"
+        v-else-if="numberOfCardsToFund !== settings.numberOfCards"
+        class="flex-1 mt-8 px-4"
       >
-        <ParagraphDefault class="text-red-500" dir="ltr">
-          {{ userErrorMessage }}
-        </ParagraphDefault>
+        <HeadlineDefault
+          level="h1"
+          class="mt-10"
+        >
+          {{ t('setFunding.headline') }}
+        </HeadlineDefault>
+        <p class="my-3">
+          <I18nT keypath="setFunding.setName">
+            <template #setName>
+              <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
+            </template>
+          </I18nT>
+        </p>
+        <p>
+          {{ t('setFunding.textFundingNotPossible') }}
+        </p>
+        <ButtonDefault
+          class="text-sm mt-4"
+          :href="cardsHref"
+        >
+          {{ t('setFunding.backToSet') }}
+        </ButtonDefault>
+      </div>
+      <div
+        v-else
+        class="flex-1 mt-8 px-4"
+      >
+        <HeadlineDefault
+          level="h1"
+          class="mt-10"
+        >
+          {{ t('setFunding.headline') }}
+        </HeadlineDefault>
+        <p class="my-3">
+          <I18nT keypath="setFunding.setName">
+            <template #setName>
+              <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
+            </template>
+          </I18nT>
+        </p>
+        <div v-if="invoice != null">
+          <ParagraphDefault>
+            <I18nT
+              v-if="funded"
+              keypath="setFunding.textFunded"
+            >
+              <template #numberOfCardsToFund>
+                {{ numberOfCardsToFund }}
+              </template>
+              <template #amountAndUnitPerCard>
+                <strong
+                  v-if="invoiceAmount != null"
+                  class="inline-block"
+                >
+                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / numberOfCardsToFund / (100 * 1000 * 1000), 8, 8) }) }}
+                </strong>
+              </template>
+            </I18nT>
+            <I18nT
+              v-else
+              keypath="setFunding.invoiceText"
+            >
+              <template #numberOfCardsToFund>
+                {{ numberOfCardsToFund }}
+              </template>
+              <template #amountAndUnit>
+                <strong
+                  v-if="invoiceAmount != null"
+                  class="inline-block"
+                >
+                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8) }) }}
+                </strong>
+              </template>
+            </I18nT>
+          </ParagraphDefault>
+          <LightningQrCode
+            :value="invoice"
+            :success="funded"
+            :error="invoiceExpired ? t('setFunding.invoiceExpired') : undefined"
+          />
+          <p
+            v-if="invoiceExpired"
+            class="mb-4"
+          >
+            {{ t('setFunding.invoiceExpired') }}
+          </p>
+          <div class="flex justify-center">
+            <ButtonWithTooltip
+              type="submit"
+              variant="outline"
+              :disabled="funded"
+              :tooltip="funded ? t('setFunding.resetDisabledTooltip') : undefined"
+              @click="resetInvoice"
+            >
+              {{ t('setFunding.resetInvoice') }} 
+            </ButtonWithTooltip>
+          </div>
+        </div>
+        <div v-else>
+          <ParagraphDefault class="mb-8">
+            <I18nT keypath="setFunding.text">
+              <template #numberOfCardsToFund>
+                {{ numberOfCardsToFund }}
+              </template>
+              <template #amountAndUnit>
+                <strong class="inline-block">
+                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}
+                </strong>
+              </template>
+            </I18nT>
+          </ParagraphDefault>
+          <form @submit.prevent="createInvoice">
+            <label class="block mb-2">
+              <span class="block">
+                {{ t('setFunding.form.amountLabel') }}:
+              </span>
+              <SatsAmountSelector
+                :amount-sats="amountPerCard"
+                :rate-btc-eur="rateBtcEur"
+                :min="21"
+                :disabled="creatingInvoice"
+                @update="amountPerCard = $event"
+              />
+              <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3 text-sm text-btcorange-effect">
+                {{ t('setFunding.form.smallAmountWarning') }}
+              </small>
+            </label>
+            <div class="block leading-tight my-3">
+              {{ t('setFunding.form.totalAmountLabel') }}:
+              <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}</strong>
+            </div>
+            <label class="block mb-2">
+              <input
+                v-model="text"
+                type="text"
+                class="w-full border my-1 px-3 py-2 focus:outline-none"
+                :disabled="creatingInvoice"
+              >
+              <small class="block">({{ t('setFunding.form.textHint') }})</small>
+            </label>
+            <label class="block mb-2">
+              <input
+                v-model="note"
+                type="text"
+                class="w-full border my-1 px-3 py-2 focus:outline-none"
+                :placeholder="t('setFunding.form.notePlaceholder')"
+                :disabled="creatingInvoice"
+              >
+              <small class="block">({{ t('setFunding.form.noteHint') }})</small>
+            </label>
+            <div class="flex flex-col items-center mt-4">
+              <ButtonDefault
+                type="submit"
+                :disabled="creatingInvoice"
+              >
+                {{ t('setFunding.form.button') }}
+              </ButtonDefault>
+            </div>
+          </form>
+        </div>
+        <div
+          v-if="userErrorMessage != null"
+          class="mt-4"
+        >
+          <ParagraphDefault class="text-red-500" dir="ltr">
+            {{ userErrorMessage }}
+          </ParagraphDefault>
+        </div>
       </div>
     </div>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script setup lang="ts">
@@ -204,6 +206,8 @@ import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
 import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
 import { BACKEND_API_ORIGIN } from '@/constants'
+
+import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const { t } = useI18n()
 const route = useRoute()
