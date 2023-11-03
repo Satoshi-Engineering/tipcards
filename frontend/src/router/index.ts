@@ -34,7 +34,6 @@ const router = createRouter({
           meta: {
             title: () => i18n.global.t('landing.title'),
             backlink: true,
-            backlinkOnlyInternalReferrer: true,
           },
         },
         {

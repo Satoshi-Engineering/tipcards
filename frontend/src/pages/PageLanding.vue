@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout hide-header>
+  <DefaultLayout :hide-header="hideHeader">
     <div
       v-if="!showPage"
       class="fixed w-screen h-screen top-0 left-0 bg-white flex"
@@ -324,6 +324,7 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia'
 import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -346,6 +347,7 @@ import router from '@/router'
 import FormatBitcoin from '@/components/FormatBitcoin.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
+import { useAuthStore } from '@/stores/auth'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
@@ -353,6 +355,9 @@ const { t, te } = useI18n()
 
 const { currentFiat } = useI18nHelpers()
 const { loading, showLoadingAnimation, showContent: showPage } = useDelayedLoadingAnimation()
+
+const { isLoggedIn } = storeToRefs(useAuthStore())
+const hideHeader = computed(() => !isLoggedIn.value)
 
 const spent = ref<boolean | undefined>()
 const amount = ref<number | undefined | null>()
