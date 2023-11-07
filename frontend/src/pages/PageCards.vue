@@ -639,7 +639,7 @@ const initializeCards = async () => {
   currentSetUrl.value = document.location.href
 }
 
-watch(settings, initializeCards)
+watch([setId, settings], initializeCards)
 
 onMounted(() => {
   loadAvailableCardLogos()
