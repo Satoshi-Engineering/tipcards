@@ -128,11 +128,11 @@ const getNewAccessToken = async (route: string): Promise<string | null> => {
   try {
     const response = await axios.get(route, { withCredentials: true })
     accessToken.value = AccessTokenFromResponse.parse(response.data)
-    callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     return accessToken.value || null
   } catch (error) {
     return resetAccessTokenDependingOnError(error, isInitialCheck)
   } finally {
+    callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     callbacksAwaitingAccessToken.value = []
     fetchingAccessToken.value = false
   }
