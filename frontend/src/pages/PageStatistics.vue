@@ -165,7 +165,7 @@ const addPercentagesToPeriods = (periods: StatisticsPeriod[]) => {
   const maxTransactionsPerPeriod = Math.max(...periods.map((period) => period.fundingCount + period.withdrawCount))
   const maxAmountPerPeriod = Math.max(...periods.map((period) => Math.max(period.fundingAmount, period.withdrawAmount)))
   
-  return statisticsRaw.value?.daily.map((period) => ({
+  return periods.map((period) => ({
     ...period,
     transactionsCount: period.fundingCount + period.withdrawCount,
     transactionsPercent: Math.round(
