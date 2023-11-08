@@ -6,12 +6,12 @@
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
     "test-units": "npm run backend-test-units && npm run frontend-test-units",
 
-    "shared-build": "rm -rf ./dist/shared* && tsc -p ./shared/tsconfig.json",
+    "shared-build": "tsc -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
 
     "frontend-dev": "cd frontend && vite",
     "frontend-preview": "cd frontend && vite preview --port 5050",
-    "frontend-build": "rm -rf ./dist/frontend* && cd frontend && vite build",
+    "frontend-build": "cd frontend && vite build",
     "frontend-typecheck": "vue-tsc -p ./frontend/tsconfig.json --noEmit",
     "frontend-lint": "eslint -c ./frontend/.eslintrc.js ./frontend --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "frontend-test-units": "jest --config ./frontend/jest.config.js ./frontend/tests/units",
@@ -19,7 +19,7 @@
 
     "backend-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./index.ts",
     "backend-cli": "cd backend && ts-node -r tsconfig-paths/register cli.ts",
-    "backend-build": "npm run shared-build && rm -rf ./dist/backend* && tsc -p ./backend/tsconfig.json",
+    "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.json",
     "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-tmp-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./tmpDevelop.ts",
     "backend-test-units": "jest --config ./backend/jest.config.js ./backend/tests/units",
