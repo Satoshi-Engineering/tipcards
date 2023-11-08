@@ -19,29 +19,13 @@
         - .npm/
       when: on_success
       policy: pull-push
-    node_modules_root:
+    node_modules:
       key:
         files:
           - package-lock.json
-        prefix: node_modules_root
+        prefix: node_modules
       paths:
         - node_modules/
-      policy: pull
-    node_modules_backend:
-      key:
-        files:
-          - backend/package-lock.json
-        prefix: node_modules_backend
-      paths:
-        - backend/node_modules/
-      policy: pull
-    node_modules_frontend:
-      key:
-        files:
-          - frontend/package-lock.json
-        prefix: node_modules_frontend
-      paths:
-        - frontend/node_modules/
       policy: pull
     env_backend:
       key: backend-env-$CI_COMMIT_REF_SLUG

@@ -4,22 +4,24 @@ build-backend:
     - !reference [.shared_config, rules, web_and_push]
     - changes:
       - backend/**/*
+      - shared/**/*
       - package-lock.json
   cache:
-    - !reference [.shared_config, cache, node_modules_root]
-    - !reference [.shared_config, cache, node_modules_backend]
+    - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_backend]
   artifacts:
     name: "backend-$CI_COMMIT_REF_SLUG"
     paths:
-      - backend/build
-      - backend/node_modules
-      - backend/.env
-      - backend/ecosystem.config.js
+      - dist
       - node_modules
+      - ecosystem.config.js
+      - .env
+      - tsconfig.json
   script:
-    - cd backend
-    - npm run build
+    - npm run shared-build
+    - npm run backend-build
+    - cp backend/ecosystem.config.js .
+    - if [ -f backend/.env ]; then cp backend/.env .; fi
 
 build-frontend:
   stage: build
@@ -27,18 +29,15 @@ build-frontend:
     - !reference [.shared_config, rules, web_and_push]
     - changes:
       - frontend/**/*
+      - shared/**/*
       - package-lock.json
   cache:
-    - !reference [.shared_config, cache, node_modules_root]
-    - !reference [.shared_config, cache, node_modules_backend]
-    - !reference [.shared_config, cache, node_modules_frontend]
+    - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_frontend]
   artifacts:
     name: "frontend-$CI_COMMIT_REF_SLUG"
     paths: 
-      - frontend/dist
+      - dist/frontend
   script:
-    - cd frontend
-    - npm run build
-    - VITE_BUILD_LIBS=1 npm run build
-    - mv dist-libs/externalCardStatus* dist
+    - npm run frontend-build
+    - VITE_BUILD_LIBS=1 npm run frontend-build

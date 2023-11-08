@@ -8,8 +8,6 @@
 # - BACKEND_DEPLOY_SERVER_DEVELOP
 # - BACKEND_DEPLOY_PATH_MAIN
 # - BACKEND_DEPLOY_PATH_DEVELOP
-# - PM2_APP_NAME_MAIN # used to identifiy in ecosystem.config.js
-# - PM2_APP_NAME_DEVELOP # used to identifiy in ecosystem.config.js
 # - ENV_FILE_MAIN
 # - ENV_FILE_DEVELOP
 # - BACKEND_ENV_FILE_TEST # overwrites ENV_FILE_XY during integration tests
@@ -23,7 +21,7 @@
 # - FRONTEND_ENV_FILE_MAIN
 # - FRONTEND_ENV_FILE_DEVELOP
 
-image: node:16.14-alpine
+image: node:lts-alpine
 
 # ------------- STAGES
 # List of stages for jobs, and their order of execution

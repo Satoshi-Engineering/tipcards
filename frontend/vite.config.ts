@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => {
         name: 'externalCardStatus',
         fileName: 'externalCardStatus',
       },
-      outDir: 'dist-libs',
+      outDir: '../dist/frontend/',
     }
   }
 

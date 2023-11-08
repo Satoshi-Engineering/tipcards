@@ -19,13 +19,11 @@
         echo "Deploying on Environment Main"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_MAIN
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_MAIN
-        export PM2_APP_NAME=$PM2_APP_NAME_MAIN
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]
       then
         echo "Deploying on Environment Develop"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_DEVELOP
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_DEVELOP
-        export PM2_APP_NAME=$PM2_APP_NAME_DEVELOP
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
@@ -39,7 +37,7 @@
       # 1) Stop pm2
       if [ -d $DEPLOY_PATH/dist-node ]; then
         cd $DEPLOY_PATH/dist-node
-        PM2_HOME=/var/www/.pm2/ pm2 delete $PM2_APP_NAME
+        PM2_HOME=/var/www/.pm2/ pm2 delete ecosystem.config.js
         cd $DEPLOY_PATH
       else
         echo "No $DEPLOY_PATH/dist-node dir found, skipping pm2 delete"
@@ -57,8 +55,8 @@
       mv $DEPLOY_PATH/dist-node-next $DEPLOY_PATH/dist-node
 
       # 5) Start pm2
-      cd $DEPLOY_PATH/dist-node/backend      
-      PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.js --only $PM2_APP_NAME
+      cd $DEPLOY_PATH/dist-node      
+      PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.js
 
       # 6) save pm2
       PM2_HOME=/var/www/.pm2/ pm2 save
@@ -73,6 +71,7 @@ deploy-backend-develop:
       when: never
     - changes:
       - backend/**/*
+      - shared/**/*
       - package-lock.json
   environment:
     name: develop
@@ -85,6 +84,7 @@ deploy-backend-main:
       when: never
     - changes:
       - backend/**/*
+      - shared/**/*
       - package-lock.json
   environment:
     name: main
@@ -96,6 +96,7 @@ deploy-backend-main:
     - build-frontend
   variables:
     NODE_ENV: production
+    GIT_STRATEGY: none
   before_script:
     - apk update && apk add openssh-client rsync
     - mkdir ~/.ssh
@@ -121,8 +122,7 @@ deploy-backend-main:
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     - cd frontend
     # 1) RSYNC Dist
-    - mv dist dist-www-next
-    - rsync -atv --delete --progress ./dist-www-next $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
+    - rsync -atv --delete --progress ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
     # 2) Remove old dist-www-previous dir
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-www-previous"
     # 3) Save current dist to previous
@@ -138,6 +138,7 @@ deploy-frontend-develop:
       when: never
     - changes:
       - frontend/**/*
+      - shared/**/*
       - package-lock.json
   environment:
     name: develop
@@ -150,6 +151,7 @@ deploy-frontend-main:
       when: never
     - changes:
       - frontend/**/*
+      - shared/**/*
       - package-lock.json
   environment:
     name: main

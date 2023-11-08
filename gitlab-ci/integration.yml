@@ -6,22 +6,20 @@ test-integration-backend:
     - !reference [.shared_config, rules, deployable_branches]
     - when: always
   cache:
-    - !reference [.shared_config, cache, node_modules_root]
-    - !reference [.shared_config, cache, node_modules_backend]
+    - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_backend]
   variables:
     NODE_ENV: test
   script:
-    - cd backend
     - |
       if [ -f "$BACKEND_ENV_FILE_TEST" ]; then
-        cp $BACKEND_ENV_FILE_TEST .env.test
+        cp $BACKEND_ENV_FILE_TEST backend/.env.test
       else
         echo -e "\e[31mERROR:BACKEND_ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
         exit 1
       fi
     - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
-    - npm run test-integration
+    - npm run backend-test-integration
 
 test-integration-frontend:
   stage: integration
@@ -34,23 +32,22 @@ test-integration-frontend:
     - name: selenium/standalone-chrome
       alias: selenium-chrome
   cache:
-    - !reference [.shared_config, cache, node_modules_frontend]
+    - !reference [.shared_config, cache, node_modules]
   variables:
     NODE_ENV: test
   script:
-    - cd frontend
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]
       then 
         echo "Running on main branch"
-        echo "TEST_ORIGIN=$TEST_ORIGIN_MAIN" > .env.test.local
+        echo "TEST_ORIGIN=$TEST_ORIGIN_MAIN" > frontend/.env.test.local
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]
       then
         echo "Running on develop branch"
-        echo "TEST_ORIGIN=$TEST_ORIGIN_DEVELOP" > .env.test.local
+        echo "TEST_ORIGIN=$TEST_ORIGIN_DEVELOP" > frontend/.env.test.local
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
       fi
     - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
-    - npm run test-integration
+    - npm run frontend-test-integration
