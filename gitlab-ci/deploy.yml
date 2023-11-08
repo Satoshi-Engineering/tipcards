@@ -120,7 +120,6 @@ deploy-backend-main:
         exit 1
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
-    - cd frontend
     # 1) RSYNC Dist
     - rsync -atv --delete --progress ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
     # 2) Remove old dist-www-previous dir
