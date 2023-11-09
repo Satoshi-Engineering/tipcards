@@ -6,6 +6,7 @@
     "./index.ts",
     "./cli.ts",
     "./src/**/*.ts",
+    "./db/**/*.ts"
   ],
   "compilerOptions": {
     "paths": {
