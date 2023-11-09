@@ -1,0 +1,141 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table Set {
+  id      string   [primary key, unique]
+  created DateTime
+  changed DateTime
+}
+
+Table Card {
+  hash    string   [primary key, unique]
+  created DateTime
+  set     string   [ref: > Set.id, null]
+}
+
+Table CardVersion {
+  id                string   [primary key, unique]
+  card              string   [ref: > Card.hash]
+  created           DateTime
+  invoice           string   [ref: > Invoice.paymentHash, null, default: null]
+  lnurlP            string   [ref: - LnurlP.lnbitsId, null, default: null]
+  lnurlW            string   [ref: > LnurlW.lnbitsId, null, default: null]
+  textForWithdraw   string
+  noteForStatusPage string
+  shared            boolean
+  landingPageViewed DateTime [null, default: null]
+}
+
+Table Invoice {
+  amount         integer
+  paymentHash    string   [primary key, unique]
+  paymentRequest string   [unique]
+  created        DateTime
+  paid           DateTime [null, default: null]
+  expiresAt      DateTime
+}
+
+Table LnurlP {
+  lnbitsId  string   [primary key, unique, note: "id from lnbits lnurlp link"]
+  created   DateTime
+  expiresAt DateTime [null, default: null]
+}
+
+Table LnurlW {
+  lnbitsId  string   [primary key, unique, note: "id from lnbits lnurlw link"]
+  created   DateTime
+  expiresAt DateTime [null, default: null]
+  withdrawn DateTime [null, default: null]
+}
+
+Table SetSettings {
+  set           string  [primary key, unique, ref: - Set.id]
+  name          string
+  numberOfCards integer
+  cardHeadline  string
+  cardCopytext  string
+  image         string  [ref: > Image.id]
+  landingPage   string  [ref: > LandingPage.id]
+}
+
+enum image_type {
+  svg
+  png
+}
+
+Table Image {
+  id   string     [primary key, unique]
+  type image_type
+  name string     [note: "display name for UI"]
+}
+
+enum landingPage_type {
+  core     [note: "landing page is integrated into tip cards core, maybe there will be multiple version to choose from in the future"]
+  external [note: "user will be redirected to another page when scanning a funded card"]
+}
+
+Table LandingPage {
+  id   string           [primary key, unique]
+  type landingPage_type
+  name string           [note: "display name for UI"]
+  url  string           [null, default: null, note: "used+required for type external"]
+}
+
+enum permissions {
+  statistics [note: "allow read access to https://tipcards.io/statistics"]
+  support    [note: "allow access to the support dashboard"]
+}
+
+Table User {
+  id           string [primary key, unique]
+  lnurlAuthKey string
+  created      DateTime
+  permissions  permissions [note: "make array if database supports it: permissions[], otherwise json"]
+}
+
+Table UserCanUseSet {
+  user    string  [ref: > User.id]
+  set     string  [ref: > Set.id]
+  canEdit boolean [default: false]
+
+  indexes {
+    (user, set) [pk, unique]
+  }
+}
+
+Table UserCanUseImage {
+  user    string  [ref: > User.id]
+  image   string  [ref: > Image.id]
+  canEdit boolean [default: false]
+
+  indexes {
+    (user, image) [pk, unique]
+  }
+}
+
+Table UserCanUseLandingPage {
+  user        string  [ref: > User.id]
+  landingPage string  [ref: > LandingPage.id]
+  canEdit     boolean [default: false]
+
+  indexes {
+    (user, landingPage) [pk, unique]
+  }
+}
+
+Table AllowedRefreshTokens [note: "every device can have up to two valid refresh tokens. when creating a third via refreshing set current to previous and new value to current"] {
+  user     string [ref: > User.id]
+  current  string [note: "jwt refresh token"]
+  previous string [note: "jwt refresh token"]
+
+  indexes {
+    (user, current) [pk, unique]
+  }
+}
+
+Table Profile {
+  user        string [primary key, unique, ref: - User.id]
+  accountName string [note: "for support and for the user if he has more than one account"]
+  displayName string [note: "for future features where the name might be displayed"]
+  email       string [note: "email is used for account recovery only. it's not even validated as it belongs to the user"]
+}
