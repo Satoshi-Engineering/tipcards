@@ -1,16 +1,16 @@
 import axios from 'axios'
+import '../../initEnv'
 
-import '../initEnv'
-import { initCard, initSet, deleteBulkWithdraw as deleteBulkWithdrawRedis } from '../initRedis'
+import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
-import { decodeLnurl } from '../../../../shared/src/modules/lnurlHelpers'
-import { BulkWithdraw } from '../../../src/trpc/data/BulkWithdraw'
-import { bulkWithdrawRouter } from '../../../src/trpc/router/bulkWithdraw'
-import { setRouter } from '../../../src/trpc/router/set'
-import { TIPCARDS_API_ORIGIN } from '../../../src/constants'
+import { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
+import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
+import { setRouter } from '@backend/trpc/router/set'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
 import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from './FundedSetWithBulkWithdraw'
 import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from './SetWithUnfundedCards'
+import { initCard, initSet, deleteBulkWithdraw as deleteBulkWithdrawRedis } from '../../initRedis'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

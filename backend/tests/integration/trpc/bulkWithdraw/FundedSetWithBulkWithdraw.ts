@@ -1,11 +1,11 @@
-import { Card } from '../../../../shared/src/data/redis/Card'
-import { Set } from '../../../../shared/src/data/redis/Set'
-import { BulkWithdraw } from '../../../../shared/src/data/redis/BulkWithdraw'
+import { Card } from '@shared/data/redis/Card'
+import { Set } from '@shared/data/redis/Set'
+import { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
 
-import hashSha256 from '../../../src/services/hashSha256'
+import hashSha256 from '@backend/services/hashSha256'
 
 export const SET_FUNDED = Set.parse({
-  id: 'setIntegrationTestSetFunded',
+  id: 'bulkWithdrawIntegrationTestSetFunded',
   settings: {
     numberOfCards: 2,
     cardHeadline: '',

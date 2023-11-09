@@ -1,7 +1,8 @@
 import './initEnv'
-import type { BulkWithdraw } from '../../../shared/src/data/redis/BulkWithdraw'
-import type { Card } from '../../../shared/src/data/redis/Card'
-import type { Set } from '../../../shared/src/data/redis/Set'
+
+import type { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
+import type { Card } from '@shared/data/redis/Card'
+import type { Set } from '@shared/data/redis/Set'
 
 import {
   createCard, deleteCard,

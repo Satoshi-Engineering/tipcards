@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-import './initEnv'
+import '../initEnv'
 
 describe('dummy api', () => {
   it('returns success state', async () => {

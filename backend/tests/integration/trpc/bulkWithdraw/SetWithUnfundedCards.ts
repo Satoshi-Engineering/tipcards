@@ -1,7 +1,7 @@
-import { Card } from '../../../../shared/src/data/redis/Card'
-import { Set } from '../../../../shared/src/data/redis/Set'
+import { Card } from '@shared/data/redis/Card'
+import { Set } from '@shared/data/redis/Set'
 
-import hashSha256 from '../../../src/services/hashSha256'
+import hashSha256 from '@backend/services/hashSha256'
 
 export const SET_UNFUNDED = Set.parse({
   id: 'bulkWithdrawIntegrationTestSetUnfunded',

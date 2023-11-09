@@ -1,8 +1,8 @@
-import { User } from '../../../../shared/src/data/redis/User'
-import { Card } from '../../../../shared/src/data/redis/Card'
-import { Set } from '../../../../shared/src/data/redis/Set'
+import { User } from '@shared/data/redis/User'
+import { Card } from '@shared/data/redis/Card'
+import { Set } from '@shared/data/redis/Set'
 
-import hashSha256 from '../../../src/services/hashSha256'
+import hashSha256 from '@backend/services/hashSha256'
 
 export const USER = User.parse({
   id: 'setIntegrationTestUser',
