@@ -1,8 +1,10 @@
-import { Card } from '../../../../shared/src/data/redis/Card'
-import { Set } from '../../../../shared/src/data/redis/Set'
+import { Card } from '@shared/data/redis/Card'
+import { Set } from '@shared/data/redis/Set'
+
+import hashSha256 from '@backend/services/hashSha256'
 
 export const SET_UNFUNDED = Set.parse({
-  id: 'unfunded-test-set-id',
+  id: 'unitTestUnfundedSet',
   settings: {
     numberOfCards: 2,
     cardHeadline: '',
@@ -12,7 +14,7 @@ export const SET_UNFUNDED = Set.parse({
 })
 
 export const CARD_UNFUNDED_INVOICE = Card.parse({
-  cardHash: 'dd81045ed9e86a4c14271de4da91f9f93987032d9f79019a1d8ed9cf226ae0d2',
+  cardHash: hashSha256(`${SET_UNFUNDED.id}/0`),
   invoice: {
     amount: 100,
     payment_hash: '',
@@ -23,7 +25,7 @@ export const CARD_UNFUNDED_INVOICE = Card.parse({
 })
 
 export const CARD_UNFUNDED_LNURLP = Card.parse({
-  cardHash: '3975d648991f6ba5e49c89c801ae04385b8087670037e260c27c35fa1ecf9f43',
+  cardHash: hashSha256(`${SET_UNFUNDED.id}/1`),
   lnurlp: {
     amount: null,
     payment_hash: [],

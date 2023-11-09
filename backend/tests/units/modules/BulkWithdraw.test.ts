@@ -2,14 +2,14 @@ import '../mocks/process.env'
 import '../mocks/axios'
 import { initBulkWithdraws, initCards, initSets } from '../mocks/redis'
 
-import CardNotFundedError from '../../src/errors/CardNotFundedError'
-import WithdrawDeletedError from '../../src/errors/WithdrawDeletedError'
-import BulkWithdraw from '../../src/modules/BulkWithdraw'
-import CardCollection from '../../src/modules/CardCollection'
+import CardNotFundedError from '@backend/errors/CardNotFundedError'
+import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
+import BulkWithdraw from '@backend/modules/BulkWithdraw'
+import CardCollection from '@backend/modules/CardCollection'
 
-import { SET_EMPTY } from '../mocks/redis/EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../mocks/redis/FundedSetWithBulkWithdraw'
-import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../mocks/redis/SetWithUnfundedCards'
+import { SET_EMPTY } from '../data/EmptySet'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw'
+import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards'
 
 describe('BulkWithdraw', () => {
   it('should throw an error if not initialized', async () => {

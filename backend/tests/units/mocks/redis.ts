@@ -1,10 +1,10 @@
-import type { BulkWithdraw } from '../../../shared/src/data/redis/BulkWithdraw'
-import type { Card } from '../../../shared/src/data/redis/Card'
-import type { Set } from '../../../shared/src/data/redis/Set'
+import type { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
+import type { Card } from '@shared/data/redis/Card'
+import type { Set } from '@shared/data/redis/Set'
 
-export const regexSet = /tipcards:develop:setsById:(?<id>[a-z0-9-]+):data/
-export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-z0-9-]+):data/
-export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-z0-9-]+):data/
+export const regexSet = /tipcards:develop:setsById:(?<id>[a-zA-Z0-9-]+):data/
+export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-zA-Z0-9-]+):data/
+export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-zA-Z0-9-]+):data/
 
 let setsById: Record<string, Set> = {}
 export const initSets = (value: Record<string, Set>) => {

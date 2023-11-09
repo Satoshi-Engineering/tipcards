@@ -1,9 +1,11 @@
-import { Card } from '../../../../shared/src/data/redis/Card'
-import { Set } from '../../../../shared/src/data/redis/Set'
-import { BulkWithdraw } from '../../../../shared/src/data/redis/BulkWithdraw'
+import { Card } from '@shared/data/redis/Card'
+import { Set } from '@shared/data/redis/Set'
+import { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
+
+import hashSha256 from '@backend/services/hashSha256'
 
 export const SET_FUNDED = Set.parse({
-  id: 'funded-test-set-id',
+  id: 'unitTestFundedSet',
   settings: {
     numberOfCards: 2,
     cardHeadline: '',
@@ -13,7 +15,7 @@ export const SET_FUNDED = Set.parse({
 })
 
 export const CARD_FUNDED_INVOICE = Card.parse({
-  cardHash: '74035b374f98f919d47a5a9bfc7b75c150f0b9b7a06c58016bc4490675406def',
+  cardHash: hashSha256(`${SET_FUNDED.id}/0`),
   invoice: {
     amount: 100,
     payment_hash: '',
@@ -24,7 +26,7 @@ export const CARD_FUNDED_INVOICE = Card.parse({
 })
 
 export const CARD_FUNDED_LNURLP = Card.parse({
-  cardHash: '23ff7cadab5a1bdeceb2ec2329a232e34c27b0454686ebf1db555195882c765a',
+  cardHash: hashSha256(`${SET_FUNDED.id}/1`),
   lnurlp: {
     amount: 200,
     payment_hash: [],
@@ -35,7 +37,7 @@ export const CARD_FUNDED_LNURLP = Card.parse({
 })
 
 export const BULK_WITHDRAW = BulkWithdraw.parse({
-  id: 'c84209c7dab604d27280dd2e993f8b0ed7edcfddc1e14fd248ee179175723c8f',
+  id: hashSha256(CARD_FUNDED_INVOICE.cardHash + CARD_FUNDED_LNURLP.cardHash),
   created: Math.round(+ new Date() / 1000),
   amount: 300,
   cards: [CARD_FUNDED_INVOICE.cardHash, CARD_FUNDED_LNURLP.cardHash],
