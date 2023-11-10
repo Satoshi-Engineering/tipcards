@@ -1,14 +1,14 @@
-import express from 'express'
+import { Router, type Request, type Response} from 'express'
 
-import type { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
+import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 import { getBulkWithdrawById, updateBulkWithdraw, getCardByHash, updateCard } from '@backend/services/database'
 import { isBulkWithdrawWithdrawn } from '@backend/services/lnbitsHelpers'
 
-const router = express.Router()
+const router = Router()
 
-const bulkWithdrawWithdrawn = async (req: express.Request, res: express.Response) => {
+const bulkWithdrawWithdrawn = async (req: Request, res: Response) => {
   // 1. check if bulkwithdraw exists
   let bulkWithdraw: BulkWithdraw | null = null
   try {

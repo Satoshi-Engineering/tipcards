@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { PermissionsEnum } from '@shared/data/auth/User'
+
 export const Profile = z.object({
   accountName: z.string().default('').describe('for support and for the user if he has more than one accounts'),
   displayName: z.string().default('').describe('for future features where the name might be displayed'),
@@ -7,13 +9,6 @@ export const Profile = z.object({
 }).default({})
 
 export type Profile = z.infer<typeof Profile>
-
-export const PermissionsEnum = z.enum([
-  'statistics', // allow read access to https://tipcards.io/statistics
-  'support', // allow access to the support dashboard
-])
-
-export type PermissionsEnum = z.infer<typeof PermissionsEnum>
 
 export const User = z.object({
   id: z.string().describe('uuid but without hyphens (as redis search cannot process them)'),

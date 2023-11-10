@@ -1,7 +1,6 @@
-import { User } from '@shared/data/redis/User'
-import { Card } from '@shared/data/redis/Card'
-import { Set } from '@shared/data/redis/Set'
-
+import { User } from '@backend/database/redis/data/User'
+import { Card } from '@backend/database/redis/data/Card'
+import { Set } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
 
 export const USER = User.parse({

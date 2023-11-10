@@ -2,7 +2,7 @@ import isEqual from 'lodash.isequal'
 import { computed, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { Settings as ZodSettings, type Settings } from '@shared/data/redis/Set'
+import { Settings as ZodSettings, type Settings } from '@shared/data/api/Set'
 
 import { getDefaultSettings, decodeCardsSetSettings, encodeCardsSetSettings } from '@/stores/cardsSets'
 

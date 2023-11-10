@@ -8,12 +8,13 @@ import {
 import path from 'path'
 import { ZodError } from 'zod'
 
-import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
-import type { User } from '@shared/data/redis/User'
+import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
+import type { User } from '@backend/database/redis/data/User'
+import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
+
 import { getUserById, updateUser } from './database'
-import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '../constants'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const filenamePublicResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME_PUBLIC)

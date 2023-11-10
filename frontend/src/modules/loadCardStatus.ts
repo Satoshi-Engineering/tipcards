@@ -1,11 +1,31 @@
 import axios from 'axios'
+import z from 'zod'
 
 import type { Card } from '@shared/data/api/Card'
-import { CardStatusEnum as ZodCardStatusEnum } from '@shared/data/api/CardStatus'
-import type { CardStatus, CardStatusEnum } from '@shared/data/api/CardStatus'
 
 import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
 import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
+
+export const CardStatusEnum = z.enum([
+  'unfunded',
+  'invoiceFunding', 'lnurlpFunding', 'lnurlpSharedFunding', 'setInvoiceFunding',
+  'invoiceExpired', 'lnurlpExpired', 'lnurlpSharedExpiredEmpty', 'lnurlpSharedExpiredFunded', 'setInvoiceExpired',
+  'funded',
+  'withdrawPending', 'recentlyWithdrawn', 'withdrawn',
+])
+
+export type CardStatusEnum = z.infer<typeof CardStatusEnum>
+
+export const CardStatus = z.object({
+  lnurl: z.string(),
+  status: CardStatusEnum,
+  amount: z.number().nullable().default(null),
+  createdDate: z.number().nullable().default(null),
+  fundedDate: z.number().nullable().default(null),
+  withdrawnDate: z.number().nullable().default(null),
+})
+
+export type CardStatus = z.infer<typeof CardStatus>
 
 /**
  * @param cardHash
@@ -190,7 +210,7 @@ export const getCardStatusForCard = (card: Card): CardStatus => {
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${card.cardHash}`
   const lnurl = encodeLnurl(lnurlDecoded)
 
-  let status: CardStatusEnum = ZodCardStatusEnum.enum.unfunded
+  let status: CardStatusEnum = CardStatusEnum.enum.unfunded
   let amount: number | null = null
   let createdDate: number | null = null
   let fundedDate: number | null = null

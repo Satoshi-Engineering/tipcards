@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { PermissionsEnum } from '@shared/data/redis/User'
+import { PermissionsEnum } from '@shared/data/auth/User'
 import { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
 
 import Statistics from '@backend/modules/Statistics'

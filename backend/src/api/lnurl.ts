@@ -2,18 +2,18 @@ import axios from 'axios'
 import express from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
-import { getCardByHash } from '../services/database'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { getCardByHash } from '@backend/services/database'
 import {
   checkIfCardIsPaidAndCreateWithdrawId,
   checkIfCardIsUsed,
   getLnurlpForNewCard,
   getLnurlpForCard,
   loadCurrentLnurlFromLnbitsByWithdrawId,
-} from '../services/lnbitsHelpers'
+} from '@backend/services/lnbitsHelpers'
 
 const router = express.Router()
 

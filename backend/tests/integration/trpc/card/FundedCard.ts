@@ -1,4 +1,4 @@
-import { Card } from '@shared/data/redis/Card'
+import { Card } from '@backend/database/redis/data/Card'
 
 export const CARD_FUNDED_INVOICE = Card.parse({
   cardHash: 'cardIntegrationTestCardFundedInvoice',

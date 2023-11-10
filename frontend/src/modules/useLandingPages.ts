@@ -4,7 +4,7 @@ import { computed, ref, watchEffect } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type z from 'zod'
 
-import { Type, type LandingPage } from '@shared/data/redis/LandingPage'
+import { Type, type LandingPage } from '@shared/data/api/LandingPage'
 import type { Card } from '@shared/data/trpc/Card'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 

@@ -1,6 +1,6 @@
-import { Card } from '@shared/data/redis/Card'
-import { Set } from '@shared/data/redis/Set'
-import { BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
+import { Card } from '@backend/database/redis/data/Card'
+import { Set } from '@backend/database/redis/data/Set'
+import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 
 import hashSha256 from '@backend/services/hashSha256'
 

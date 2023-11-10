@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { ErrorCodeEnum } from '../Errors'
+import { ErrorCodeEnum } from './Errors'
 
 export const SuccessResponse = z.object({
   status: z.literal('success'),
@@ -35,11 +35,3 @@ export const AccessTokenResponse = z.object({
 })
 
 export type AccessTokenResponse = z.infer<typeof AccessTokenResponse>
-
-export const AccessToken = z.string()
-
-export type AccessToken = z.infer<typeof AccessToken>
-
-export const AccessTokenFromResponse = AccessTokenResponse.transform((response) => AccessToken.parse(response.data.accessToken))
-
-export type AccessTokenFromResponse = z.infer<typeof AccessTokenFromResponse>

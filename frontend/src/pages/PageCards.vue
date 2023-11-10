@@ -494,8 +494,8 @@ import { useRoute, useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
-import type { Set } from '@shared/data/redis/Set'
-import type { Image as ImageMeta } from '@shared/data/redis/Image'
+import type { Set } from '@shared/data/api/Set'
+import type { Image as ImageMeta } from '@shared/data/api/Image'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'

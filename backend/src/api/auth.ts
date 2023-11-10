@@ -1,12 +1,12 @@
 import { createHash } from 'crypto'
-import express from 'express'
+import { Router } from 'express'
 import type http from 'http'
 import { exportSPKI } from 'jose'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
-import { Profile } from '@shared/data/redis/User'
+import { Profile } from '@shared/data/auth/User'
 import { ErrorCode } from '@shared/data/Errors'
 
 import corsOptions from '@backend/services/corsOptions'
@@ -98,7 +98,7 @@ export const initSocketIo = (server: http.Server) => {
 
 /////
 // ROUTES
-const router = express.Router()
+const router = Router()
 
 router.get('/publicKey', async (_, res) => {
   const publicKey = await getPublicKey()
@@ -266,8 +266,8 @@ router.get(
       const user = await getUserById(userId)
       res.json({
         status: 'success',
-        data: user?.profile,
-    })
+        data: Profile.parse(user?.profile),
+      })
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(403).json({

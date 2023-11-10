@@ -1,20 +1,20 @@
 import { type Request, type Response, type NextFunction, Router } from 'express'
 
 import { ErrorCode } from '@shared/data/Errors'
-import { Type as ImageType, type Image as ImageMeta } from '@shared/data/redis/Image'
 
+import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image'
 import { getImageAsString, getImageMeta } from '@backend/services/database'
 
 const router = Router()
 
-export const crossOriginResources = async (req: Request, res: Response, next: NextFunction) => {
+export const crossOriginResources = async (_: Request, res: Response, next: NextFunction) => {
   if (process.env.CROSS_ORIGIN_RESOURCES === '1') {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
   }
   next()
 }
 
-router.get('/cardLogos/:image', crossOriginResources, async (req: Request, res: Response) => {
+router.get('/cardLogos/:image', crossOriginResources, async (req, res) => {
   const imageName = req.params.image
   const imageId = imageName.split('.')[0]
 

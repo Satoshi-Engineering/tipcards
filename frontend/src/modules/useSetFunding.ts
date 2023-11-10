@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { Set } from '@shared/data/redis/Set'
+import type { Set } from '@shared/data/api/Set'
 
 export type Card = {
   cardHash: string,

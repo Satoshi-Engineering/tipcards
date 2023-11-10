@@ -87,7 +87,7 @@ import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
-import { Profile } from '@shared/data/redis/User'
+import { Profile } from '@shared/data/auth/User'
 
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'

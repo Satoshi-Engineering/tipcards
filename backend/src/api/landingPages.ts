@@ -1,14 +1,15 @@
-import express from 'express'
+import { Router } from 'express'
 
-import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
-import type { LandingPage } from '@shared/data/redis/LandingPage'
-import type { User } from '@shared/data/redis/User'
+import { LandingPage as LandingPageApi } from '@shared/data/api/LandingPage'
+import type { AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
-import { getUserById, getLandingPage } from '../services/database'
-import { authGuardAccessToken } from '../services/jwt'
+import type { LandingPage } from '@backend/database/redis/data/LandingPage'
+import type { User } from '@backend/database/redis/data/User'
+import { getUserById, getLandingPage } from '@backend/services/database'
+import { authGuardAccessToken } from '@backend/services/jwt'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/', authGuardAccessToken, async (_, res) => {
   const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
@@ -36,13 +37,13 @@ router.get('/', authGuardAccessToken, async (_, res) => {
     return
   }
 
-  const data: LandingPage[] = []
+  const landingPages: LandingPage[] = []
   if (user?.availableLandingPages != null) {
     try {
       await Promise.all(user.availableLandingPages.map(async (landingPageId) => {
         const landingPage = await getLandingPage(landingPageId)
         if (landingPage != null) {
-          data.push(landingPage)
+          landingPages.push(landingPage)
         }
       }))
     } catch (error: unknown) {
@@ -58,11 +59,11 @@ router.get('/', authGuardAccessToken, async (_, res) => {
 
   res.json({
     status: 'success',
-    data,
+    data: landingPages.map((landingPage) => LandingPageApi.parse(landingPage)),
   })
 })
 
-router.get('/:landingPageId', async (req: express.Request, res: express.Response) => {
+router.get('/:landingPageId', async (req, res) => {
   const landingPageId: string = req.params.landingPageId
 
   // load landing page from database
@@ -70,7 +71,7 @@ router.get('/:landingPageId', async (req: express.Request, res: express.Response
     const landingPage = await getLandingPage(landingPageId)
     res.json({
       status: 'success',
-      data: landingPage,
+      data: LandingPageApi.parse(landingPage),
     })
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)

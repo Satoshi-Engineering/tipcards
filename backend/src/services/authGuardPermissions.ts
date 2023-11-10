@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 
-import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
+import type { AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 import type { CheckAccessTokenPermissions } from '@shared/modules/checkAccessTokenPermissions'
 

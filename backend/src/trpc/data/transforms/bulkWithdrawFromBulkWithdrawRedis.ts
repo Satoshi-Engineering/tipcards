@@ -1,6 +1,6 @@
-import type { BulkWithdraw as BulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
 import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
 import { isBulkWithdrawWithdrawn } from '@backend/services/lnbitsHelpers'
 

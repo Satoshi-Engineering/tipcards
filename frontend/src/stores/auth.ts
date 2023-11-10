@@ -2,8 +2,7 @@ import axios, { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
-import { AccessTokenFromResponse } from '@shared/data/api/Response'
+import { AccessTokenPayload, AccessTokenFromResponse } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'

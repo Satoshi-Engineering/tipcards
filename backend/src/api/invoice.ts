@@ -1,19 +1,19 @@
 import axios from 'axios'
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
 import type { Card as CardApi } from '@shared/data/api/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
-import { getCardByHash, createCard, deleteCard } from '../services/database'
-import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { getCardByHash, createCard, deleteCard } from '@backend/services/database'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
-router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/create/:cardHash', async (req, res) => {
   // amount in sats
   let amount: number | undefined = undefined
   let text = ''
@@ -137,7 +137,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   })
 })
 
-const invoicePaid = async (req: express.Request, res: express.Response) => {
+const invoicePaid = async (req: Request, res: Response) => {
   // 1. check if card exists
   let card: CardApi | null = null
   try {
@@ -212,7 +212,7 @@ const invoicePaid = async (req: express.Request, res: express.Response) => {
 router.get('/paid/:cardHash', invoicePaid)
 router.post('/paid/:cardHash', invoicePaid)
 
-router.delete('/delete/:cardHash', async (req: express.Request, res: express.Response) => {
+router.delete('/delete/:cardHash', async (req, res) => {
   // 1. check if card exists
   let card: CardApi | null = null
   try {

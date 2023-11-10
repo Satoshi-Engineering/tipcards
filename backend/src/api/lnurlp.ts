@@ -1,25 +1,25 @@
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
-import { createCard, getCardByHash, updateCard } from '../services/database'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { createCard, getCardByHash, updateCard } from '@backend/services/database'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
   checkIfCardIsPaidAndCreateWithdrawId,
-} from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '../constants'
+} from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
 /**
  * Create shared funding lnurlp link
  */
-router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/create/:cardHash', async (req, res) => {
   let text = ''
   let note = ''
   try {
@@ -114,7 +114,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
 /**
  * Handle lnurlp link payment. Either single or shared funding.
  */
-const cardPaid = async (req: express.Request, res: express.Response) => {
+const cardPaid = async (req: Request, res: Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
@@ -184,7 +184,7 @@ router.post('/paid/:cardHash', cardPaid)
 /**
  * Update text+note for shared cards
  */
-router.post('/update/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/update/:cardHash', async (req, res) => {
   // check if card exists
   let card: Card | null = null
   try {
@@ -260,7 +260,7 @@ router.post('/update/:cardHash', async (req: express.Request, res: express.Respo
 /**
  * Finish shared funding lnurlp link
  */
-router.post('/finish/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/finish/:cardHash', async (req, res) => {
   // check if card exists
   let card: Card | null = null
   try {

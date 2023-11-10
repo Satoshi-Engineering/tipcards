@@ -1,21 +1,22 @@
 import axios from 'axios'
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
-import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
-import type { Settings, Set } from '@shared/data/redis/Set'
+import type { AccessTokenPayload } from '@shared/data/auth'
+import { Set as SetApi, type Settings } from '@shared/data/api/Set'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
+import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import {
   getSetById, getSetsByUserId,
   createSet, deleteSet, updateSet,
   createCard, deleteCard, getCardByHash,
-} from '../services/database'
-import hashSha256 from '../services/hashSha256'
-import { checkIfSetInvoiceIsPaid } from '../services/lnbitsHelpers'
-import { authGuardAccessToken } from '../services/jwt'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
+} from '@backend/services/database'
+import hashSha256 from '@backend/services/hashSha256'
+import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers'
+import { authGuardAccessToken } from '@backend/services/jwt'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
 /**
  * get all sets from the current user
@@ -33,7 +34,7 @@ router.get('/', authGuardAccessToken, async (_, res) => {
   const userId: string = accessTokenPayload.id
 
   // load set from database
-  let sets: Set[] | null = null
+  let sets: SetRedis[] | null = null
   try {
     sets = await getSetsByUserId(userId)
   } catch (error: unknown) {
@@ -48,7 +49,7 @@ router.get('/', authGuardAccessToken, async (_, res) => {
 
   res.json({
     status: 'success',
-    data: sets,
+    data: sets ? sets.map((set) => SetApi.parse(set)) : null,
   })
 })
 
@@ -72,7 +73,7 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
     console.error(error)
   }
 
-  let set: Set | null = null
+  let set: SetRedis | null = null
   // load set from database
   try {
     set = await getSetById(req.params.setId)
@@ -118,7 +119,7 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
     }
     res.json({
       status: 'success',
-      data: set,
+      data: SetApi.parse(set),
     })
     return
   }
@@ -168,12 +169,12 @@ router.post('/:setId', authGuardAccessToken, async (req, res) => {
 
   res.json({
     status: 'success',
-    data: set,
+    data: SetApi.parse(set),
   })
 })
 
-router.get('/:setId', async (req: express.Request, res: express.Response) => {
-  let set: Set | null = null
+router.get('/:setId', async (req, res) => {
+  let set: SetRedis | null = null
 
   // load set from database
   try {
@@ -219,11 +220,11 @@ router.get('/:setId', async (req: express.Request, res: express.Response) => {
 
   res.json({
     status: 'success',
-    data: set,
+    data: SetApi.parse(set),
   })
 })
 
-router.post('/invoice/:setId', async (req: express.Request, res: express.Response) => {
+router.post('/invoice/:setId', async (req, res) => {
   // amount in sats
   let amountPerCard: number | undefined = undefined
   let text = ''
@@ -244,7 +245,7 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   }
 
   // check if set/invoice already exists
-  let set: Set | null = null
+  let set: SetRedis | null = null
   try {
     set = await getSetById(req.params.setId)
   } catch (error) {
@@ -367,13 +368,13 @@ router.post('/invoice/:setId', async (req: express.Request, res: express.Respons
   }
   res.json({
     status: 'success',
-    data: set,
+    data: SetApi.parse(set),
   })
 })
 
-const deleteSetRoute = async (req: express.Request, res: express.Response, invoiceOnly = false) => {
+const deleteSetRoute = async (req: Request, res: Response, invoiceOnly = false) => {
   // 1. check if set exists
-  let set: Set | null = null
+  let set: SetRedis | null = null
   try {
     set = await getSetById(req.params.setId)
   } catch (error) {
@@ -488,9 +489,9 @@ const deleteSetRoute = async (req: express.Request, res: express.Response, invoi
 router.delete('/:setId', (req, res) => deleteSetRoute(req, res))
 router.delete('/invoice/:setId', (req, res) => deleteSetRoute(req, res, true))
 
-const invoicePaid = async (req: express.Request, res: express.Response) => {
+const invoicePaid = async (req: Request, res: Response) => {
   // 1. check if set exists
-  let set: Set | null = null
+  let set: SetRedis | null = null
   try {
     set = await getSetById(req.params.setId)
   } catch (error) {
@@ -531,7 +532,7 @@ const invoicePaid = async (req: express.Request, res: express.Response) => {
   }
   res.json({
     status: 'success',
-    data: set,
+    data: SetApi.parse(set),
   })
 }
 

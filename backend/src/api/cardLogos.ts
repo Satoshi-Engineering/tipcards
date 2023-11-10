@@ -1,14 +1,15 @@
-import express from 'express'
+import { Router } from 'express'
 
-import type { AccessTokenPayload } from '@shared/data/api/AccessTokenPayload'
-import type { Image as ImageMeta } from '@shared/data/redis/Image'
-import type { User } from '@shared/data/redis/User'
+import { Image as ImageApi } from '@shared/data/api/Image'
+import type { AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
-import { getUserById, getImageMeta } from '../services/database'
-import { authGuardAccessToken } from '../services/jwt'
+import type { User } from '@backend/database/redis/data/User'
+import type { Image as ImageMeta } from '@backend/database/redis/data/Image'
+import { getUserById, getImageMeta } from '@backend/services/database'
+import { authGuardAccessToken } from '@backend/services/jwt'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/', authGuardAccessToken, async (_, res) => {
   const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
@@ -36,13 +37,13 @@ router.get('/', authGuardAccessToken, async (_, res) => {
     return
   }
 
-  const data: ImageMeta[] = []
+  const images: ImageMeta[] = []
   if (user?.availableCardsLogos != null) {
     try {
       await Promise.all(user.availableCardsLogos.map(async (imageId) => {
         const imageMeta = await getImageMeta(imageId)
         if (imageMeta != null) {
-          data.push(imageMeta)
+          images.push(imageMeta)
         }
       }))
     } catch (error: unknown) {
@@ -58,7 +59,7 @@ router.get('/', authGuardAccessToken, async (_, res) => {
 
   res.json({
     status: 'success',
-    data,
+    data: images.map((image) => ImageApi.parse(image)),
   })
 })
 

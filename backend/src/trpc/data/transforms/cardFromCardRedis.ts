@@ -1,10 +1,10 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '@shared/data/redis/Card'
 import { Card } from '@shared/data/trpc/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
+import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '@backend/services/lnbitsHelpers'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 

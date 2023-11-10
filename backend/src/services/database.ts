@@ -1,18 +1,19 @@
 import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
-import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@shared/data/redis/BulkWithdraw'
-import { Card as ZodCard, type Card } from '@shared/data/redis/Card'
-import { Set as ZodSet, type Set } from '@shared/data/redis/Set'
-import { User as ZodUser, type User } from '@shared/data/redis/User'
-import { Type as ImageType, Image as ZodImage, type Image as ImageMeta } from '@shared/data/redis/Image'
-import { LandingPage as ZodLandingPage, type LandingPage } from '@shared/data/redis/LandingPage'
 import { ErrorCode } from '@shared/data/Errors'
 
+import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
+import { Card as ZodCard, type Card } from '@backend/database/redis/data/Card'
+import { Set as ZodSet, type Set } from '@backend/database/redis/data/Set'
+import { User as ZodUser, type User } from '@backend/database/redis/data/User'
+import { Type as ImageType, Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image'
+import { LandingPage as ZodLandingPage, type LandingPage } from '@backend/database/redis/data/LandingPage'
+import AlreadyExistsError from '@backend/errors/AlreadyExistsError'
+import NotFoundError from '@backend/errors/NotFoundError'
+import { REDIS_BASE_PATH, REDIS_URL } from '@backend/constants'
+
 import hashSha256 from './hashSha256'
-import AlreadyExistsError from '../errors/AlreadyExistsError'
-import NotFoundError from '../errors/NotFoundError'
-import { REDIS_BASE_PATH, REDIS_URL } from '../constants'
 
 const REDIS_CONNECT_TIMEOUT = 3 * 1000
 const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`

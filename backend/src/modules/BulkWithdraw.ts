@@ -1,20 +1,20 @@
 import type z from 'zod'
 
-import type { BulkWithdraw as BulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
-import type { Card as CardRedis } from '@shared/data/redis/Card'
-
-import NotFoundError from '../errors/NotFoundError'
-import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
-import CardCollection from './CardCollection'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import NotFoundError from '@backend/errors/NotFoundError'
+import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
 import {
   createBulkWithdraw,
   getAllBulkWithdraws, getBulkWithdrawById,
   updateBulkWithdraw, deleteBulkWithdraw,
-} from '../services/database'
-import hashSha256 from '../services/hashSha256'
-import { deleteWithdrawIfNotUsed, createWithdrawLink } from '../services/lnbitsHelpers'
-import { bulkWithdrawFromBulkWithdrawRedis } from '../trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis'
-import { TIPCARDS_API_ORIGIN } from '../constants'
+} from '@backend/services/database'
+import hashSha256 from '@backend/services/hashSha256'
+import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers'
+import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+
+import CardCollection from './CardCollection'
 
 type BulkWithdrawId = z.infer<typeof BulkWithdrawRedis.shape.id>
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>

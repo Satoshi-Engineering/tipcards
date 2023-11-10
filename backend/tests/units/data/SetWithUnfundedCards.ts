@@ -1,5 +1,5 @@
-import { Card } from '@shared/data/redis/Card'
-import { Set } from '@shared/data/redis/Set'
+import { Card } from '@backend/database/redis/data/Card'
+import { Set } from '@backend/database/redis/data/Set'
 
 import hashSha256 from '@backend/services/hashSha256'
 

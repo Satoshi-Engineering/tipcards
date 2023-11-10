@@ -2,16 +2,17 @@ import axios from 'axios'
 import z from 'zod'
 
 import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
-import type { Set } from '@shared/data/redis/Set'
-import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
 
-import WithdrawAlreadyUsedError from '../errors/WithdrawAlreadyUsedError'
-import BulkWithdraw from '../modules/BulkWithdraw'
+import type { Set } from '@backend/database/redis/data/Set'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
+import BulkWithdraw from '@backend/modules/BulkWithdraw'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
+
 import { getCardByHash, createCard, updateCard, updateSet } from './database'
 import hashSha256 from './hashSha256'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '../constants'
 
 const axiosOptionsWithReadHeaders = {
   headers: {

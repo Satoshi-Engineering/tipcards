@@ -24,7 +24,7 @@
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import type { Set } from '@shared/data/redis/Set'
+import type { Set } from '@shared/data/api/Set'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

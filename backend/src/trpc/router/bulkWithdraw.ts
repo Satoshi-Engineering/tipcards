@@ -1,4 +1,3 @@
-import { BulkWithdraw as ZodBulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
 import { Card } from '@shared/data/trpc/Card'
 import { BulkWithdraw as BulkWithdrawTrpc } from '@shared/data/trpc/BulkWithdraw'
 
@@ -27,7 +26,7 @@ export const bulkWithdrawRouter = router({
     }),
 
   deleteById: publicProcedure
-    .input(ZodBulkWithdrawRedis.shape.id)
+    .input(BulkWithdrawTrpc.shape.id)
     .mutation(async ({ input }) => {
       const bulkWithdraw = await BulkWithdraw.fromId(input)
       await bulkWithdraw.delete()

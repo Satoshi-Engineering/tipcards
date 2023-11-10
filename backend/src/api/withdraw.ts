@@ -1,17 +1,17 @@
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
-import { getCardByHash } from '../services/database'
-import { checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '../constants'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { getCardByHash } from '@backend/services/database'
+import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
-const cardUsed = async (req: express.Request, res: express.Response) => {
+const cardUsed = async (req: Request, res: Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {

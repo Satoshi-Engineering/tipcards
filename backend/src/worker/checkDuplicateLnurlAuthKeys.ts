@@ -1,5 +1,6 @@
-import type { User } from '@shared/data/redis/User'
 import { ErrorCode } from '@shared/data/Errors'
+
+import type { User } from '@backend/database/redis/data/User'
 
 import { getAllUsers } from '../services/database'
 

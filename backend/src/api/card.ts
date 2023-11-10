@@ -1,18 +1,18 @@
-import express from 'express'
+import { Router } from 'express'
 
 import type { Card as CardApi } from '@shared/data/api/Card'
-import { cardApiFromCardRedis } from '@shared/data/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '@shared/data/transforms/cardRedisFromCardApi'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
-import { getCardByHash, updateCard } from '../services/database'
-import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { getCardByHash, updateCard } from '@backend/services/database'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
-const router = express.Router()
+const router = Router()
 
 router.get('/')
 
-router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
+router.get('/:cardHash', async (req, res) => {
   let card: CardApi | null = null
 
   // load card from database
