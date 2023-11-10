@@ -1,6 +1,6 @@
 import '../mocks/process.env'
 import '../mocks/axios'
-import { initBulkWithdraws, initCards, initSets } from '../mocks/redis'
+import { addBulkWithdraws, addCards, addSets } from '../mocks/redis'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
@@ -13,32 +13,22 @@ import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfu
 
 describe('BulkWithdraw', () => {
   it('should throw an error if not initialized', async () => {
-    initSets({
-      [SET_EMPTY.id]: SET_EMPTY,
-    })
+    addSets(SET_EMPTY)
     const cards = await CardCollection.fromSetId(SET_EMPTY.id)
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await expect(() => bulkWithdraw.toTRpcResponse()).rejects.toThrow(Error)
   })
 
   it('should throw an error if not funded', async () => {
-    initCards({
-      [CARD_UNFUNDED_INVOICE.cardHash]: CARD_UNFUNDED_INVOICE,
-      [CARD_UNFUNDED_LNURLP.cardHash]: CARD_UNFUNDED_LNURLP,
-    })
+    addCards(CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP)
     const cards = await CardCollection.fromCardHashes([CARD_UNFUNDED_INVOICE.cardHash, CARD_UNFUNDED_LNURLP.cardHash])
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await expect(() => bulkWithdraw.create()).rejects.toThrow(CardNotFundedError)
   })
 
   it('should create a new bulkWithdraw for a funded set', async () => {
-    initCards({
-      [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
-      [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
-    })
-    initSets({
-      [SET_FUNDED.id]: SET_FUNDED,
-    })
+    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
+    addSets(SET_FUNDED)
     const cards = await CardCollection.fromSetId(SET_FUNDED.id)
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await bulkWithdraw.create()
@@ -49,13 +39,8 @@ describe('BulkWithdraw', () => {
   })
 
   it('should delete a bulkwithdraw', async () => {
-    initCards({
-      [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
-      [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
-    })
-    initBulkWithdraws({
-      [BULK_WITHDRAW.id]: BULK_WITHDRAW,
-    })
+    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
+    addBulkWithdraws(BULK_WITHDRAW)
     const bulkWithdraw = await BulkWithdraw.fromId(BULK_WITHDRAW.id)
     const apiData = await bulkWithdraw.toTRpcResponse()
     expect(apiData.amount).toBe(300)

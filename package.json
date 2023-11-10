@@ -5,6 +5,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
     "test-units": "npm run backend-test-units && npm run frontend-test-units",
+    "test-changes": "jest --config ./backend/jest.config.js --onlyChanged --watch",
     "shared-build": "tsc -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
     "frontend-dev": "cd frontend && vite",

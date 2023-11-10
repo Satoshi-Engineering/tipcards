@@ -6,19 +6,25 @@ export const regexSet = /tipcards:develop:setsById:(?<id>[a-zA-Z0-9-]+):data/
 export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-zA-Z0-9-]+):data/
 export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-zA-Z0-9-]+):data/
 
-let setsById: Record<string, Set> = {}
-export const initSets = (value: Record<string, Set>) => {
-  setsById = value
+const setsById: Record<string, Set> = {}
+const cardsByHash: Record<string, Card> = {}
+const bulkWithdrawsById: Record<string, BulkWithdraw> = {}
+
+export const addSets = (...sets: Set[]) => {
+  addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set})))
+}
+export const addCards = (...cards: Card[]) => {
+  addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.cardHash, item: card})))
+}
+export const addBulkWithdraws = (...bulkWithdraws: BulkWithdraw[]) => {
+  addItemsToTable(bulkWithdrawsById, bulkWithdraws.map((bulkWithdraw) => ({ key: bulkWithdraw.id, item: bulkWithdraw})))
 }
 
-let cardsByHash: Record<string, Card> = {}
-export const initCards = (value: Record<string, Card>) => {
-  cardsByHash = value
+const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
+  items.forEach((item) => addItemToTable(table, item))
 }
-
-let bulkWithdrawsById: Record<string, BulkWithdraw> = {}
-export const initBulkWithdraws = (value: Record<string, BulkWithdraw>) => {
-  bulkWithdrawsById = value
+const addItemToTable = <I>(table: Record<string, I>, { key, item }: { key: string, item: I }) => {
+  table[key] = item
 }
 
 jest.mock('redis', () => ({

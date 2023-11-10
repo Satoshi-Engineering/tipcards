@@ -1,6 +1,6 @@
 import '../mocks/process.env'
 import '../mocks/axios'
-import { initBulkWithdraws, initCards, initSets } from '../mocks/redis'
+import { addBulkWithdraws, addCards, addSets } from '../mocks/redis'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError'
 import CardCollection from '@backend/modules/CardCollection'
@@ -11,9 +11,7 @@ import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../da
 
 describe('CardCollection', () => {
   it('should load no cards when loading an empty set', async () => {
-    initSets({
-      [SET_EMPTY.id]: SET_EMPTY,
-    })
+    addSets(SET_EMPTY)
     const cards = await CardCollection.fromSetId(SET_EMPTY.id)
     expect(cards.length).toBe(0)
     const amount = cards.getFundedAmount()
@@ -21,41 +19,24 @@ describe('CardCollection', () => {
   })
 
   it('should throw an error, if the amount is caluclated for a not funded set', async () => {
-    initCards({
-      [CARD_UNFUNDED_INVOICE.cardHash]: CARD_UNFUNDED_INVOICE,
-      [CARD_UNFUNDED_LNURLP.cardHash]: CARD_UNFUNDED_LNURLP,
-    })
-    initSets({
-      [SET_UNFUNDED.id]: SET_UNFUNDED,
-    })
+    addCards(CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP)
+    addSets(SET_UNFUNDED)
     const cards = await CardCollection.fromSetId(SET_UNFUNDED.id)
     expect(() => cards.getFundedAmount()).toThrow(CardNotFundedError)
   })
 
   it('should calculate the funded amount for a set', async () => {
-    initCards({
-      [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
-      [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
-    })
-    initSets({
-      [SET_FUNDED.id]: SET_FUNDED,
-    })
+    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
+    addSets(SET_FUNDED)
     const cards = await CardCollection.fromSetId(SET_FUNDED.id)
     const amount = cards.getFundedAmount()
     expect(amount).toBe(300)
   })
 
   it('should lock and release all cards for a set', async () => {
-    initCards({
-      [CARD_FUNDED_INVOICE.cardHash]: CARD_FUNDED_INVOICE,
-      [CARD_FUNDED_LNURLP.cardHash]: CARD_FUNDED_LNURLP,
-    })
-    initSets({
-      [SET_FUNDED.id]: SET_FUNDED,
-    })
-    initBulkWithdraws({
-      [BULK_WITHDRAW.id]: BULK_WITHDRAW,
-    })
+    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
+    addSets(SET_FUNDED)
+    addBulkWithdraws(BULK_WITHDRAW)
     const cards = await CardCollection.fromSetId(SET_FUNDED.id)
     await cards.lockByBulkWithdraw()
     let apiData = await cards.toTRpcResponse()
