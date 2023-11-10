@@ -12,9 +12,8 @@ import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } 
 import { ErrorCode } from '@shared/data/Errors'
 
 import type { User } from '@backend/database/redis/data/User'
+import { getUserById, updateUser } from '@backend/database/redis/queries'
 import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
-
-import { getUserById, updateUser } from './database'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const filenamePublicResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME_PUBLIC)

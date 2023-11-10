@@ -1,7 +1,7 @@
 import type z from 'zod'
 
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { getCardByHash } from '@backend/services/database'
+import { getCardByHash } from '@backend/database/redis/queries'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis'
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>

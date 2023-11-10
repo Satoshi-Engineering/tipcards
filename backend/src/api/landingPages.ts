@@ -6,7 +6,7 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import type { LandingPage } from '@backend/database/redis/data/LandingPage'
 import type { User } from '@backend/database/redis/data/User'
-import { getUserById, getLandingPage } from '@backend/services/database'
+import { getUserById, getLandingPage } from '@backend/database/redis/queries'
 import { authGuardAccessToken } from '@backend/services/jwt'
 
 const router = Router()

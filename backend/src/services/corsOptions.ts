@@ -1,10 +1,10 @@
 import type { CorsOptions } from 'cors'
 
-import { getAllLandingPages } from './database'
+import { getAllLandingPages } from '@backend/database/redis/queries'
 import {
   TIPCARDS_ORIGIN,
   CORS_WHITELIST_EXTEND,
-} from '../constants'
+} from '@backend/constants'
 
 const whitelist = [
   TIPCARDS_ORIGIN,

@@ -10,7 +10,7 @@ import {
   getSetById, getSetsByUserId,
   createSet, deleteSet, updateSet,
   createCard, deleteCard, getCardByHash,
-} from '@backend/services/database'
+} from '@backend/database/redis/queries'
 import hashSha256 from '@backend/services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers'
 import { authGuardAccessToken } from '@backend/services/jwt'

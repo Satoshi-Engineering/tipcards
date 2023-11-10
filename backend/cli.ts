@@ -3,7 +3,7 @@ import 'dotenv/config'
 import readline from 'readline'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from '@backend/services/database'
+import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
 import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
 
 const clearUnusedCards = async () => {

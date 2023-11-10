@@ -10,7 +10,7 @@ import { Profile } from '@shared/data/auth/User'
 import { ErrorCode } from '@shared/data/Errors'
 
 import corsOptions from '@backend/services/corsOptions'
-import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/services/database'
+import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/redis/queries'
 import {
   getPublicKey,
   createAccessToken, createRefreshToken, cycleRefreshToken,

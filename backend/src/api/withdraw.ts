@@ -5,7 +5,7 @@ import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { getCardByHash } from '@backend/services/database'
+import { getCardByHash } from '@backend/database/redis/queries'
 import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '@backend/constants'
 

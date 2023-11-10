@@ -5,7 +5,7 @@ import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
-import { getCardByHash, updateCard } from '@backend/services/database'
+import { getCardByHash, updateCard } from '@backend/database/redis/queries'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
 const router = Router()

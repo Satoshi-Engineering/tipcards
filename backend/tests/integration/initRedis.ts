@@ -8,7 +8,7 @@ import {
   createCard, deleteCard,
   createSet, deleteSet,
   deleteBulkWithdraw as deleteBulkWithdrawRedis,
-} from '../../src/services/database'
+} from '@backend/database/redis/queries'
 
 export const initCard = async (card: Card) => {
   await safeCall(() => deleteCard(card))

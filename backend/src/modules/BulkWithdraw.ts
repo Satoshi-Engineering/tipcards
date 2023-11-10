@@ -8,7 +8,7 @@ import {
   createBulkWithdraw,
   getAllBulkWithdraws, getBulkWithdrawById,
   updateBulkWithdraw, deleteBulkWithdraw,
-} from '@backend/services/database'
+} from '@backend/database/redis/queries'
 import hashSha256 from '@backend/services/hashSha256'
 import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers'
 import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis'
