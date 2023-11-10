@@ -1,0 +1,68 @@
+import type { Card } from '@backend/database/drizzle/schema/Card'
+import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
+import type { CardVersionHasInvoice } from '@backend/database/drizzle/schema/CardVersionHasInvoice'
+import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
+import type { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
+
+const cardVersionsById: Record<string, CardVersion> = {}
+const cardVersionInvoices: CardVersionHasInvoice[] = []
+const invoicesByPaymentHash: Record<string, Invoice> = {}
+const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
+
+export const addCardVersions = (...cardVersions: CardVersion[]) => {
+  addItemsToTable(cardVersionsById, cardVersions.map((cardVersion) => ({ key: cardVersion.id, item: cardVersion })))
+}
+export const addInvoices = (...invoices: Invoice[]) => {
+  addItemsToTable(invoicesByPaymentHash, invoices.map((invoice) => ({ key: invoice.paymentHash, item: invoice })))
+}
+export const addCardVersionInvoices = (...newCardVersionInvoices: CardVersionHasInvoice[]) => {
+  cardVersionInvoices.push(...newCardVersionInvoices)
+}
+export const addLnurlPs = (...lnurlps: LnurlP[]) => {
+  addItemsToTable(lnurlPsByLnbitsId, lnurlps.map((lnurlp) => ({ key: lnurlp.lnbitsId, item: lnurlp })))
+}
+
+const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
+  items.forEach((item) => addItemToTable(table, item))
+}
+const addItemToTable = <I>(table: Record<string, I>, { key, item }: { key: string, item: I }) => {
+  table[key] = item
+}
+
+const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
+  const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
+  if (cards.length === 0) {
+    return null
+  }
+  return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
+}
+
+export const getLnurlPForCard = async (cardVersion: CardVersion): Promise<LnurlP | null> => {
+  if (cardVersion.lnurlP == null || lnurlPsByLnbitsId[cardVersion.lnurlP] == null) {
+    return null
+  }
+  return lnurlPsByLnbitsId[cardVersion.lnurlP]
+}
+
+export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invoice[]> => {
+  const paymentHashes = cardVersionInvoices
+    .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
+    .map((cardVersionInvoice) => cardVersionInvoice.invoice)
+  return Object.values(invoicesByPaymentHash).filter((invoice) => paymentHashes.includes(invoice.paymentHash))
+}
+
+export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
+  const cardVersionIds = cardVersionInvoices
+    .filter((cardVersionInvoice) => cardVersionInvoice.invoice === invoice.paymentHash)
+    .map((cardVersionInvoice) => cardVersionInvoice.cardVersion)
+  return Object.values(cardVersionsById).filter((cardVersion) => cardVersionIds.includes(cardVersion.id))
+}
+
+jest.mock('@backend/database/drizzle/queries', () => {
+  return {
+    getLatestCardVersion,
+    getLnurlPForCard,
+    getInvoicesForCard,
+    getCardsForInvoice,
+  }
+})
