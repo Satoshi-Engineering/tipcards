@@ -133,13 +133,13 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
-import useTRpc from '@/modules/useTRpc'
 
+import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
 import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
-import type { StatisticsPeriod } from '@backend/trpc/data/StatisticsPeriod'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 

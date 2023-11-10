@@ -31,8 +31,7 @@ import { onBeforeMount, reactive, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { Settings } from '@shared/data/redis/Set'
-
-import type { Card } from '@backend/trpc/data/Card'
+import type { Card } from '@shared/data/trpc/Card'
 
 import CardStatus from '@/components/CardStatus.vue'
 import useLandingPages from '@/modules/useLandingPages'

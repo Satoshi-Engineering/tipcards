@@ -1,9 +1,9 @@
 import axios from 'axios'
 import '../../initEnv'
 
+import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
-import { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'

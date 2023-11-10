@@ -35,7 +35,7 @@
 import type { PropType } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
+import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'

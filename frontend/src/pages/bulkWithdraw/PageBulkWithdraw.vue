@@ -61,8 +61,8 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { Card } from '@backend/trpc/data/Card'
-import type { BulkWithdraw } from '@backend/trpc/data/BulkWithdraw'
+import type { Card } from '@shared/data/trpc/Card'
+import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

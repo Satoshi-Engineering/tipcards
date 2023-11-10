@@ -1,6 +1,7 @@
-import Card from '../../modules/Card'
+import { Card as CardTrpc } from '@shared/data/trpc/Card'
 
-import { Card as CardTrpc } from '../data/Card'
+import Card from '@backend/modules/Card'
+
 import { router, publicProcedure } from '../trpc'
 
 export const cardRouter = router({

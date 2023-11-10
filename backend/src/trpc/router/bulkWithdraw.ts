@@ -1,10 +1,10 @@
 import { BulkWithdraw as ZodBulkWithdrawRedis } from '@shared/data/redis/BulkWithdraw'
+import { Card } from '@shared/data/trpc/Card'
+import { BulkWithdraw as BulkWithdrawTrpc } from '@shared/data/trpc/BulkWithdraw'
 
-import CardCollection from '../../modules/CardCollection'
-import BulkWithdraw from '../../modules/BulkWithdraw'
+import CardCollection from '@backend/modules/CardCollection'
+import BulkWithdraw from '@backend/modules/BulkWithdraw'
 
-import { Card } from '../data/Card'
-import { BulkWithdraw as BulkWithdrawTrpc } from '../data/BulkWithdraw'
 import { router, publicProcedure } from '../trpc'
 
 export const bulkWithdrawRouter = router({

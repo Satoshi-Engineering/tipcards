@@ -1,6 +1,5 @@
 import type { Set as SetRedis } from '@shared/data/redis/Set'
-
-import { Set } from '../Set'
+import { Set } from '@shared/data/trpc/Set'
 
 export const setFromSetRedis = (set: SetRedis) => Set.parse({
   id: set.id,

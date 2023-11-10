@@ -1,9 +1,10 @@
-import CardCollection from '../../modules/CardCollection'
-import { getSetsByUserId } from '../../services/database'
+import { Card } from '@shared/data/trpc/Card'
+import { Set } from '@shared/data/trpc/Set'
+
+import CardCollection from '@backend/modules/CardCollection'
+import { getSetsByUserId } from '@backend/services/database'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis'
-import { Card } from '../data/Card'
-import { Set } from '../data/Set'
 import { router, publicProcedure } from '../trpc'
 import { loggedInProcedure } from '../loggedInProcedure'
 

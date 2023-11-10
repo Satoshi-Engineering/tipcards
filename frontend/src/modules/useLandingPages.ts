@@ -5,9 +5,8 @@ import { useRoute, useRouter } from 'vue-router'
 import type z from 'zod'
 
 import { Type, type LandingPage } from '@shared/data/redis/LandingPage'
+import type { Card } from '@shared/data/trpc/Card'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
-
-import type { Card } from '@backend/trpc/data/Card'
 
 import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'

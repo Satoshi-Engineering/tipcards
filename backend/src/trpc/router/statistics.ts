@@ -1,11 +1,12 @@
 import z from 'zod'
 
 import { PermissionsEnum } from '@shared/data/redis/User'
+import { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
 
-import { StatisticsPeriod } from '../data/StatisticsPeriod'
+import Statistics from '@backend/modules/Statistics'
+
 import { router } from '../trpc'
 import { loggedInProcedure } from '../loggedInProcedure'
-import Statistics from '@backend/modules/Statistics'
 
 export const statisticsRouter = router({
   getFull: loggedInProcedure
