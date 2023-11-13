@@ -1,7 +1,7 @@
 import { mysqlTable, varchar, datetime } from 'drizzle-orm/mysql-core'
 
 export const LnurlW = mysqlTable('LnurlW', {
-  lnbitsId: varchar('lnbitsId', { length: 256 }).primaryKey().unique().notNull(), // Note: id from lnbits lnurlw link
+  lnbitsId: varchar('lnbitsId', { length: 36 }).primaryKey().unique().notNull(), // Note: id from lnbits lnurlw link
   created: datetime('created').notNull(),
   expiresAt: datetime('expiresAt'),
   withdrawn: datetime('withdrawn'),

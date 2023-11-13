@@ -5,6 +5,8 @@
 // npm install -D @dbml/core
 // Call from project root
 // npx ts-node scripts/createSchemaFiles/script.ts
+// TODO: remove type string
+// TODO: add type varchar && text
 
 import {getReferences} from './lib/references'
 
@@ -13,7 +15,7 @@ console.info('Create Definitions')
 import { Parser } from '@dbml/core'
 import * as fs from 'fs'
 import { uniqueArray } from './lib/tools.array'
-import { createConfigForType, translateImportType, translateImportTypes } from './lib/types'
+import { createConfigForType, parseEnums, translateImportType, translateImportTypes } from './lib/types'
 import { translateDrizzleObjectName, translateFileName, translateSQLTableName, translateTypeName } from './lib/translateNames'
 
 const DEFINITIONS_FILE = './docs/database.dbml'
@@ -49,7 +51,8 @@ const createFieldEntry = (tableName: string, field) => {
 
   const config = createConfigForType(field.type.type_name)
 
-  let line = `${field.name}: ${translateImportType(field.type.type_name)}('${field.name}'${config})`
+  let line = `${field.name}: `
+  line+=`${translateImportType(field.type.type_name)}('${field.name}'${config})`
   if (field.pk === true) line += '.primaryKey()'
   if (field.unique === true) line += '.unique()'
   if (field.not_null === undefined || field.not_null === true) line += '.notNull()'
@@ -68,8 +71,8 @@ const createSchemaFile = (table) => {
   const typeName = translateTypeName(table.name)
 
   let usedTypes = table.fields.map(field => field.type.type_name)
-  usedTypes = uniqueArray(usedTypes)
   usedTypes = translateImportTypes(usedTypes)
+  usedTypes = uniqueArray(usedTypes)
   usedTypes.unshift('mysqlTable')
 
   const imports = getImports(table.name)
@@ -94,6 +97,11 @@ const createSchemaFile = (table) => {
   fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
 }
 
+// console.log(Object.keys(info.schemas[0]))
+// [ 'name', 'note', 'alias', 'tables', 'enums', 'tableGroups', 'refs' ]
+
+parseEnums(info.schemas[0].enums)
+
 info.schemas[0].tables.forEach(table => {
   if (table.name === 'Card') createSchemaFile(table)
   if (table.name === 'CardVersion') createSchemaFile(table)
@@ -101,4 +109,8 @@ info.schemas[0].tables.forEach(table => {
   if (table.name === 'LnurlP') createSchemaFile(table)
   if (table.name === 'LnurlW') createSchemaFile(table)
   if (table.name === 'Set') createSchemaFile(table)
+
+  //if (table.name === 'Image') createSchemaFile(table)
+  //if (table.name === 'LandingPage') createSchemaFile(table)
+  //if (table.name === 'SetSettings') createSchemaFile(table)
 })
