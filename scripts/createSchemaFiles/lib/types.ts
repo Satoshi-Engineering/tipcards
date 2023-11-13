@@ -3,7 +3,7 @@ const enums = {}
 
 export function parseEnums(enumDefinitions) {
   enumDefinitions.forEach(enumDefinition => {
-    enums[enumDefinition.name] = enumDefinition.values.map(value => value.name)
+    enums[enumDefinition.name] = enumDefinition.values
   })
 }
 
@@ -18,15 +18,24 @@ export function translateImportType(type: string) {
 
   throw new Error(`Type ${type} not translated`)
 }
+
 export function translateImportTypes(array: string[]): string[] {
   return array.map(type => translateImportType(type))
+}
+
+export function getEnums(array: string[]): string[] {
+  return array.filter(type => type in enums)
+}
+
+export function getEnumValueDefinitions(enumName: string): { name:string, note:string }[] {
+  return enums[enumName]
 }
 
 export function createConfigForType(type: string) {
   if (type.startsWith('varchar')) return `, { length: ${type.match(/(?<=\().+?(?=\))/)[0]} }`
 
   if (type in enums) {
-    return `, ['${enums[type].join('\', \'')}']`
+    return `, ${type}`
   }
 
   return ''

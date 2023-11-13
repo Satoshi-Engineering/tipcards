@@ -1,4 +1,4 @@
-export function uniqueArray(array: unknown[]): unknown[] {
+export function uniqueArray(array: string[]): string[] {
   return array.filter((item, pos) => {
     return array.indexOf(item) == pos
   })

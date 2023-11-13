@@ -15,7 +15,13 @@ console.info('Create Definitions')
 import { Parser } from '@dbml/core'
 import * as fs from 'fs'
 import { uniqueArray } from './lib/tools.array'
-import { createConfigForType, parseEnums, translateImportType, translateImportTypes } from './lib/types'
+import {
+  createConfigForType,
+  getEnums, getEnumValueDefinitions,
+  parseEnums,
+  translateImportType,
+  translateImportTypes,
+} from './lib/types'
 import { translateDrizzleObjectName, translateFileName, translateSQLTableName, translateTypeName } from './lib/translateNames'
 
 const DEFINITIONS_FILE = './docs/database.dbml'
@@ -70,21 +76,35 @@ const createSchemaFile = (table) => {
   const drizzleName = translateDrizzleObjectName(table.name)
   const typeName = translateTypeName(table.name)
 
-  let usedTypes = table.fields.map(field => field.type.type_name)
-  usedTypes = translateImportTypes(usedTypes)
+  const fields = table.fields.map(field => field.type.type_name)
+
+  let usedTypes = translateImportTypes(fields)
   usedTypes = uniqueArray(usedTypes)
   usedTypes.unshift('mysqlTable')
 
   const imports = getImports(table.name)
+  const enums = getEnums(fields)
 
   let fileData = ''
-  fileData = `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
 
+  // Imports
+  fileData = `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
   imports.forEach(table => {
     fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
   })
-
   fileData+= '\n'
+
+  // Enums
+  enums.forEach(enumType => {
+    fileData += `const ${enumType}: [string, ...string[]] = [\n`
+    getEnumValueDefinitions(enumType).forEach(enumValueDef => {
+      fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
+    })
+    fileData += ']\n'
+    fileData+= '\n'
+  })
+
+  // Fields
   fileData+= `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
   table.fields.forEach(field => {
     fileData+= `  ${createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
@@ -103,14 +123,18 @@ const createSchemaFile = (table) => {
 parseEnums(info.schemas[0].enums)
 
 info.schemas[0].tables.forEach(table => {
+  /*
   if (table.name === 'Card') createSchemaFile(table)
   if (table.name === 'CardVersion') createSchemaFile(table)
   if (table.name === 'Invoice') createSchemaFile(table)
   if (table.name === 'LnurlP') createSchemaFile(table)
   if (table.name === 'LnurlW') createSchemaFile(table)
   if (table.name === 'Set') createSchemaFile(table)
+  if (table.name === 'Image') createSchemaFile(table)
+  if (table.name === 'LandingPage') createSchemaFile(table)
+  if (table.name === 'SetSettings') createSchemaFile(table)
+  if (table.name === 'User') createSchemaFile(table)
+*/
+  //if (table.name === 'UserCanUseSet') createSchemaFile(table)
 
-  //if (table.name === 'Image') createSchemaFile(table)
-  //if (table.name === 'LandingPage') createSchemaFile(table)
-  //if (table.name === 'SetSettings') createSchemaFile(table)
 })
