@@ -6,9 +6,6 @@
 // Call from project root
 // npx ts-node scripts/createSchemaFiles/script.ts
 
-
-
-
 import {getReferences} from './lib/references'
 
 console.info('Create Definitions')
@@ -20,7 +17,7 @@ import { createConfigForType, translateImportType, translateImportTypes } from '
 import { translateDrizzleObjectName, translateFileName, translateSQLTableName, translateTypeName } from './lib/translateNames'
 
 const DEFINITIONS_FILE = './docs/database.dbml'
-const OUTPUT_DIR = './backend/db/schema'
+const OUTPUT_DIR = './backend/src/database/drizzle/schema'
 
 const dbml = fs.readFileSync(DEFINITIONS_FILE, 'utf-8')
 
@@ -99,4 +96,9 @@ const createSchemaFile = (table) => {
 
 info.schemas[0].tables.forEach(table => {
   if (table.name === 'Card') createSchemaFile(table)
+  if (table.name === 'CardVersion') createSchemaFile(table)
+  if (table.name === 'Invoice') createSchemaFile(table)
+  if (table.name === 'LnurlP') createSchemaFile(table)
+  if (table.name === 'LnurlW') createSchemaFile(table)
+  if (table.name === 'Set') createSchemaFile(table)
 })

@@ -1,11 +1,11 @@
-import {fromCamelCaseToUnderScore, lowerCaseFirst, upperCaseFirst} from './tools.strings'
+import { upperCaseFirst } from './tools.strings'
 
 export function translateSQLTableName(table: string) {
-  return `${fromCamelCaseToUnderScore(table)}s`
+  return `${upperCaseFirst(table)}`
 }
 
 export function translateDrizzleObjectName(table: string) {
-  return `${lowerCaseFirst(table)}`
+  return `${upperCaseFirst(table)}`
 }
 
 export function translateTypeName(table: string){

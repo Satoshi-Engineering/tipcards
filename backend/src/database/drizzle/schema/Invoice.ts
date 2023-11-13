@@ -1,6 +1,6 @@
 import { mysqlTable, int, varchar, datetime } from 'drizzle-orm/mysql-core'
 
-export const invoice = mysqlTable('invoices', {
+export const Invoice = mysqlTable('Invoice', {
   amount: int('amount').notNull(),
   paymentHash: varchar('paymentHash', { length: 256 }).primaryKey().unique().notNull(),
   paymentRequest: varchar('paymentRequest', { length: 256 }).unique().notNull(),
@@ -9,4 +9,4 @@ export const invoice = mysqlTable('invoices', {
   expiresAt: datetime('expiresAt').notNull(),
 })
 
-export type Invoice = typeof invoice.$inferSelect
+export type Invoice = typeof Invoice.$inferSelect

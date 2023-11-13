@@ -18,6 +18,7 @@ export type CardVersion = typeof cardVersion.$inferSelect; // return type when q
 ```
 
 the naming convention is as follows:
-* Drizzle TypeDefinition: lowercase `cardVersion`
-* Type: uppervase `CardVersion`
-* Tablename: lowercase, underscore `card_versions`
+* Drizzle TypeDefinition: uppercase, camelcase `CardVersion`
+* Type: uppercase, camelcase `CardVersion`
+* Tablename: uppercase, camelcase `CardVersion`
+* Filename: uppercase, camelcase `CardVersion`

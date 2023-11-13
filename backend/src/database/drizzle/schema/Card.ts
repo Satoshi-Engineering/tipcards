@@ -1,10 +1,10 @@
 import { mysqlTable, varchar, datetime } from 'drizzle-orm/mysql-core'
-import { set } from './Set'
+import { Set } from './Set'
 
-export const card = mysqlTable('cards', {
+export const Card = mysqlTable('Card', {
   hash: varchar('hash', { length: 256 }).primaryKey().unique().notNull(),
   created: datetime('created').notNull(),
-  set: varchar('set', { length: 256 }).references(() => set.id),
+  set: varchar('set', { length: 256 }).references(() => Set.id),
 })
 
-export type Card = typeof card.$inferSelect
+export type Card = typeof Card.$inferSelect
