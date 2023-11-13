@@ -48,8 +48,9 @@ const getImports = (tableName: string) => {
 
 const getDefault = (dbdefault) => {
   if (dbdefault.type === 'boolean' && dbdefault.value === 'null') return ''
+  if (dbdefault.type === 'boolean') return `.default(${dbdefault.value})`
 
-  throw new Error('Not Implemented!')
+  throw new Error(`Default value for type:${dbdefault.type} Not Implemented!`)
 }
 
 const createFieldEntry = (tableName: string, field) => {
@@ -77,17 +78,18 @@ const createSchemaFile = (table) => {
   const typeName = translateTypeName(table.name)
 
   const fields = table.fields.map(field => field.type.type_name)
-
-  let usedTypes = translateImportTypes(fields)
-  usedTypes = uniqueArray(usedTypes)
-  usedTypes.unshift('mysqlTable')
-
   const imports = getImports(table.name)
   const enums = getEnums(fields)
+  const indexes = table.indexes
 
   let fileData = ''
 
   // Imports
+  let usedTypes = translateImportTypes(fields)
+  usedTypes = uniqueArray(usedTypes)
+  if (indexes.length > 0) usedTypes.unshift('primaryKey')
+  usedTypes.unshift('mysqlTable')
+
   fileData = `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
   imports.forEach(table => {
     fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
@@ -101,15 +103,28 @@ const createSchemaFile = (table) => {
       fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
     })
     fileData += ']\n'
-    fileData+= '\n'
+    fileData += '\n'
   })
 
   // Fields
   fileData+= `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
   table.fields.forEach(field => {
-    fileData+= `  ${createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
+    fileData += `  ${createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
   })
-  fileData+= '})\n'
+
+  // Indexes
+  if (indexes.length <= 0) {
+    fileData += '})\n'
+  } else {
+    fileData += '}, (table) => {\n'
+    fileData += '  return {\n'
+    indexes.forEach(index => {
+      const columns = index.columns.map(column => column.value)
+      fileData += `    pk: primaryKey({ columns: [table.${columns.join(', table.')}] }),\n`
+    })
+    fileData += '  }\n'
+    fileData += '})\n'
+  }
   fileData+= '\n'
   fileData+= `export type ${typeName} = typeof ${drizzleName}.$inferSelect\n`
 
@@ -123,7 +138,6 @@ const createSchemaFile = (table) => {
 parseEnums(info.schemas[0].enums)
 
 info.schemas[0].tables.forEach(table => {
-  /*
   if (table.name === 'Card') createSchemaFile(table)
   if (table.name === 'CardVersion') createSchemaFile(table)
   if (table.name === 'Invoice') createSchemaFile(table)
@@ -134,7 +148,9 @@ info.schemas[0].tables.forEach(table => {
   if (table.name === 'LandingPage') createSchemaFile(table)
   if (table.name === 'SetSettings') createSchemaFile(table)
   if (table.name === 'User') createSchemaFile(table)
-*/
+  if (table.name === 'CardVersionHasInvoice') createSchemaFile(table)
+  if (table.name === 'Profile') createSchemaFile(table)
+
   //if (table.name === 'UserCanUseSet') createSchemaFile(table)
 
 })

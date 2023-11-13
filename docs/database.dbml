@@ -17,7 +17,6 @@ Table CardVersion {
   id                varchar(36) [primary key, unique, note: "uuid"]
   card              varchar(64) [ref: > Card.hash]
   created           DateTime
-  invoice           varchar(64) [ref: > Invoice.paymentHash, null, default: null]
   lnurlP            varchar(36) [ref: - LnurlP.lnbitsId, null, default: null]
   lnurlW            varchar(36) [ref: > LnurlW.lnbitsId, null, default: null]
   textForWithdraw   text
@@ -34,6 +33,11 @@ Table Invoice {
   paid           DateTime    [null, default: null]
   expiresAt      DateTime
   extra          text        [note: "additional info used in lnbits, stores info like lnurlp id that created the invoice"]
+}
+
+Table CardVersionHasInvoice {
+  cardVersion varchar(36) [ref: > CardVersion.id]
+  invoice     varchar(64) [ref: > Invoice.paymentHash]
 }
 
 Table LnurlP {
