@@ -17,7 +17,7 @@
     "backend-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./index.ts",
     "backend-cli": "cd backend && ts-node -r tsconfig-paths/register cli.ts",
     "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.json",
-    "backend-typecheck": "npm run shared-typecheck && tsc -p ./backend/tsconfig.json --noEmit",
+    "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-tmp-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./tmpDevelop.ts",
     "backend-test-units": "jest --config ./backend/jest.config.js ./backend/tests/units",
     "backend-test-integration": "cd backend && jest --config ./jest.config.js ./tests/integration",
