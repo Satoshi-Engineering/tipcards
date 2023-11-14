@@ -355,42 +355,27 @@ const loadLnurlData = async () => {
   cardStatus.value = status || undefined
   cardFundedDate.value = fundedDate || undefined
   usedDate.value = card?.used || undefined
-  if (card?.lnurlp != null) {
-    lnurlp.value = true
-  }
-  if (card?.lnurlp?.shared) {
-    shared.value = true
-  }
-  if (card?.lnurlp != null) {
-    amount.value = typeof card.lnurlp.amount === 'number' ? card.lnurlp.amount : 0
-  }
-  if (card?.invoice?.amount != null) {
-    invoiceAmount.value = card.invoice.amount
-  }
-  if (card?.invoice?.payment_request != null) {
-    invoice.value = card.invoice.payment_request
-  }
-  if (card?.invoice?.expired === true) {
-    invoiceExpired.value = true
-  }
-  if (card?.lnurlp?.expired === true) {
-    lnurlpExpired.value = true
-  }
+  lnurlp.value = card?.lnurlp != null
+  shared.value = !!card?.lnurlp?.shared
+  invoiceAmount.value = card?.invoice?.amount != null ? card.invoice.amount : undefined
+  invoice.value = card?.invoice?.payment_request != null ? card.invoice.payment_request : undefined
+  invoiceExpired.value = !!card?.invoice?.expired
+  lnurlpExpired.value = !!card?.lnurlp?.expired
   if (!!card?.text && !textIsDirty.value) {
     text.value = card.text
   }
   if (!!card?.note && !noteIsDirty.value) {
     note.value = card.note
   }
-  if (status === 'funded' || status === 'used') {
-    funded.value = true
-  }
-  if (card?.landingPageViewed != null) {
-    viewed.value = true
-  }
-  if (card?.setFunding != null) {
-    setFunding.value = true
-    amount.value = typeof card.setFunding.amount === 'number' ? card.setFunding.amount : 0
+  funded.value = status === 'funded' || status === 'used'
+  viewed.value = card?.landingPageViewed != null
+  setFunding.value = card?.setFunding != null
+  if (typeof card?.lnurlp?.amount === 'number') {
+    amount.value = card.lnurlp.amount
+  } else if (typeof card?.setFunding?.amount === 'number') {
+    amount.value = card.setFunding.amount
+  } else {
+    amount.value = 2100
   }
   initializing.value = false
 
