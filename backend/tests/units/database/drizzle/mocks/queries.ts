@@ -3,11 +3,13 @@ import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
 import type { CardVersionHasInvoice } from '@backend/database/drizzle/schema/CardVersionHasInvoice'
 import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
 import type { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
+import type { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
 
 const cardVersionsById: Record<string, CardVersion> = {}
 const cardVersionInvoices: CardVersionHasInvoice[] = []
 const invoicesByPaymentHash: Record<string, Invoice> = {}
 const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
+const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
 
 export const addCardVersions = (...cardVersions: CardVersion[]) => {
   addItemsToTable(cardVersionsById, cardVersions.map((cardVersion) => ({ key: cardVersion.id, item: cardVersion })))
@@ -20,6 +22,9 @@ export const addCardVersionInvoices = (...newCardVersionInvoices: CardVersionHas
 }
 export const addLnurlPs = (...lnurlps: LnurlP[]) => {
   addItemsToTable(lnurlPsByLnbitsId, lnurlps.map((lnurlp) => ({ key: lnurlp.lnbitsId, item: lnurlp })))
+}
+export const addLnurlWs = (...lnurlws: LnurlW[]) => {
+  addItemsToTable(lnurlWsByLnbitsId, lnurlws.map((lnurlw) => ({ key: lnurlw.lnbitsId, item: lnurlw })))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
@@ -44,6 +49,17 @@ export const getLnurlPForCard = async (cardVersion: CardVersion): Promise<LnurlP
   return lnurlPsByLnbitsId[cardVersion.lnurlP]
 }
 
+export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
+  if (cardVersion.lnurlW == null || lnurlWsByLnbitsId[cardVersion.lnurlW] == null) {
+    return null
+  }
+  return lnurlWsByLnbitsId[cardVersion.lnurlW]
+}
+
+export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
+  return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
+}
+
 export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invoice[]> => {
   const paymentHashes = cardVersionInvoices
     .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
@@ -62,6 +78,8 @@ jest.mock('@backend/database/drizzle/queries', () => {
   return {
     getLatestCardVersion,
     getLnurlPForCard,
+    getLnurlWForCard,
+    getCardsForLnurlW,
     getInvoicesForCard,
     getCardsForInvoice,
   }

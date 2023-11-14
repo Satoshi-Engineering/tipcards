@@ -26,7 +26,7 @@ export const INVOICE_FOR_INVOICE_FUNDING: Invoice = {
   paymentHash: 'unitTestInvoiceFundingPaymentHash',
   paymentRequest: 'unitTestInvoiceFundingPaymentRequest',
   created: new Date(),
-  paid: new Date(),
+  paid: null,
   expiresAt: new Date(),
   extra: '',
 }

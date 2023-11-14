@@ -5,6 +5,7 @@ import { CardVersion as CardVersionDrizzle, type CardVersion } from './schema/Ca
 import { Invoice } from './schema/Invoice'
 import { CardVersionHasInvoice } from './schema/CardVersionHasInvoice'
 import { LnurlP } from './schema/LnurlP'
+import { LnurlW } from './schema/LnurlW'
 import { getClient } from './client'
 
 /** @throws */
@@ -54,4 +55,31 @@ export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[
     .innerJoin(CardVersionDrizzle, eq(CardVersionHasInvoice.cardVersion, CardVersionDrizzle.id))
     .where(eq(CardVersionHasInvoice.invoice, invoice.paymentHash))
   return result.map(({ CardVersion }) => CardVersion)
+}
+
+/** @throws */
+export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
+  if (cardVersion.lnurlW == null) {
+    return null
+  }
+  const client = await getClient()
+  const result = await client.select()
+    .from(LnurlW)
+    .where(eq(LnurlW.lnbitsId, cardVersion.lnurlW))
+  if (result.length === 0) {
+    return null
+  }
+  if (result.length > 1) {
+    throw new Error(`More than one withdraw exists for card ${cardVersion.card}`)
+  }
+  return result[0]
+}
+
+/** @throws */
+export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(CardVersionDrizzle)
+    .where(eq(CardVersionDrizzle.lnurlW, lnurlw.lnbitsId))
+  return result
 }

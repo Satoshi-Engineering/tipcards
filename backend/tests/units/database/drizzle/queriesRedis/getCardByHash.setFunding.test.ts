@@ -27,6 +27,7 @@ describe('getCardByHash', () => {
         created: Math.round(INVOICE_FOR_SET_FUNDING.created.getTime() / 1000),
         paid: INVOICE_FOR_SET_FUNDING.paid != null ? Math.round(INVOICE_FOR_SET_FUNDING.paid.getTime() / 1000) : null,
       }),
+      lnbitsWithdrawId: null,
     }))
   })
 })

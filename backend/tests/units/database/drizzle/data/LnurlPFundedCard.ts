@@ -14,6 +14,7 @@ export const LNURLP: LnurlP = {
   lnbitsId: 'unitTestLnurlpId',
   created: new Date(),
   expiresAt: null,
+  finished: new Date(),
 }
 
 export const CARD_VERSION_FUNDED_LNURLP: CardVersion = {

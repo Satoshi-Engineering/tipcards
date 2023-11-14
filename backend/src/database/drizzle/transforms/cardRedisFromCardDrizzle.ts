@@ -1,6 +1,10 @@
 import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
 import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
-import { getLnurlPForCard, getInvoicesForCard, getCardsForInvoice } from '@backend/database/drizzle/queries'
+import {
+  getLnurlPForCard,
+  getInvoicesForCard, getCardsForInvoice,
+  getLnurlWForCard, getCardsForLnurlW,
+} from '@backend/database/drizzle/queries'
 
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
 
@@ -8,6 +12,7 @@ import { Card as CardRedis } from '@backend/database/redis/data/Card'
 export const cardRedisFromCardDrizzle = async (card: CardVersion): Promise<CardRedis> => {
   const lnurlp = await getLnurlpRedisForCard(card)
   const { invoice, setFunding } = await getFundingRedisForCard(card, lnurlp)
+  const { lnbitsWithdrawId, isLockedByBulkWithdraw } = await getWithdrawRedisForCard(card)
 
   return CardRedis.parse({
     cardHash: card.card,
@@ -16,17 +21,17 @@ export const cardRedisFromCardDrizzle = async (card: CardVersion): Promise<CardR
     invoice,
     setFunding,
     lnurlp,
-    lnbitsWithdrawId: null, // todo : load from database
+    lnbitsWithdrawId,
     landingPageViewed: card.landingPageViewed,
-    isLockedByBulkWithdraw: false, // todo : load from database
+    isLockedByBulkWithdraw,
     used: null, // todo : load from database
   })
 }
 
 /** @throws */
 const getLnurlpRedisForCard = async (card: CardVersion): Promise<CardRedis['lnurlp']> => {
-  const lnurlPDrizzle = await getLnurlPForCard(card)
-  if (lnurlPDrizzle == null) {
+  const lnurlp = await getLnurlPForCard(card)
+  if (lnurlp == null) {
     return null
   }
 
@@ -35,9 +40,9 @@ const getLnurlpRedisForCard = async (card: CardVersion): Promise<CardRedis['lnur
     shared: card.sharedFunding,
     amount: await getTotalPaidAmountPerCard(invoices),
     payment_hash: invoices.reduce((total, current) => [...total, current.paymentHash], [] as Invoice['paymentHash'][]),
-    id: lnurlPDrizzle.lnbitsId,
-    created: dateToUnixTimestamp(lnurlPDrizzle.created),
-    paid: null,
+    id: lnurlp.lnbitsId,
+    created: dateToUnixTimestamp(lnurlp.created),
+    paid: dateOrNullToUnixTimestamp(lnurlp.finished),
   }
 }
 
@@ -119,3 +124,18 @@ const dateOrNullToUnixTimestamp = (date: Date | null) => {
 }
 
 const dateToUnixTimestamp = (date: Date) => Math.round(date.getTime() / 1000)
+
+const getWithdrawRedisForCard = async (card: CardVersion): Promise<{
+  lnbitsWithdrawId: CardRedis['lnbitsWithdrawId'],
+  isLockedByBulkWithdraw: CardRedis['isLockedByBulkWithdraw'],
+}> => {
+  const lnurlw = await getLnurlWForCard(card)
+  if (lnurlw == null) {
+    return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false }
+  }
+  const cards = await getCardsForLnurlW(lnurlw)
+  return {
+    lnbitsWithdrawId: lnurlw.lnbitsId,
+    isLockedByBulkWithdraw: cards.length > 1,
+  }
+}

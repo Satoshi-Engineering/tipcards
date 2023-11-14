@@ -14,6 +14,7 @@ export const LNURLP_SHARED_FUNDING: LnurlP = {
   lnbitsId: 'unitTestSharedFundingLnurlp',
   created: new Date(),
   expiresAt: null,
+  finished: null,
 }
 
 export const CARD_VERSION_SHARED_FUNDING: CardVersion = {
