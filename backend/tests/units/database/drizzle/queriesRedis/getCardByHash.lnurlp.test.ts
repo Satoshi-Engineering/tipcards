@@ -1,32 +1,26 @@
 import '../../../mocks/process.env'
-import { addCardVersions, addInvoices, addCardVersionInvoices, addLnurlPs } from '../mocks/queries'
+import { createAndAddCard, createAndAddCardVersion, createAndAddInvoice, createAndAddLnurlP } from '../mocks/data'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-import {
-  CARD_VERSION_FUNDED_LNURLP,
-  LNURLP,
-  INVOICE,
-  CARD_VERSION_INVOICE,
-} from '../data/LnurlPFundedCard'
-
 describe('getCardByHash lnurlp funding', () => {
   it('should return a card funded by lnurlp', async () => {
-    addCardVersions(CARD_VERSION_FUNDED_LNURLP)
-    addLnurlPs(LNURLP)
-    addInvoices(INVOICE)
-    addCardVersionInvoices(CARD_VERSION_INVOICE)
+    const card = createAndAddCard()
+    const cardVersion = createAndAddCardVersion(card)
+    createAndAddLnurlP(cardVersion)
+    const invoice = createAndAddInvoice(500, cardVersion)
+    invoice.paid = new Date()
 
-    const card = await getCardByHash(CARD_VERSION_FUNDED_LNURLP.card)
-    expect(card).toEqual(expect.objectContaining({
-      cardHash: CARD_VERSION_FUNDED_LNURLP.card,
-      text: CARD_VERSION_FUNDED_LNURLP.textForWithdraw,
-      note: CARD_VERSION_FUNDED_LNURLP.noteForStatusPage,
+    const cardRedis = await getCardByHash(card.hash)
+    expect(cardRedis).toEqual(expect.objectContaining({
+      cardHash: card.hash,
+      text: cardVersion.textForWithdraw,
+      note: cardVersion.noteForStatusPage,
       invoice: null,
       lnurlp: expect.objectContaining({
-        amount: 100,
-        payment_hash: expect.arrayContaining([INVOICE.paymentHash]),
-        shared: CARD_VERSION_FUNDED_LNURLP.sharedFunding,
+        amount: 500,
+        payment_hash: expect.arrayContaining([invoice.paymentHash]),
+        shared: false,
       }),
       setFunding: null,
       lnbitsWithdrawId: null,

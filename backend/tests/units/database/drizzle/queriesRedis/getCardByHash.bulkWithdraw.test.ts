@@ -7,13 +7,13 @@ describe('getCardByHash withdrawn card', () => {
   it('should set the used flag', async () => {
     const card1 = createAndAddCard()
     const cardVersion1 = createAndAddCardVersion(card1)
-    const invoice1 = createAndAddInvoice(cardVersion1, 100)
+    const invoice1 = createAndAddInvoice(100, cardVersion1)
     cardVersion1.landingPageViewed = new Date()
     invoice1.paid = new Date()
 
     const card2 = createAndAddCard()
     const cardVersion2 = createAndAddCardVersion(card2)
-    const invoice2 = createAndAddInvoice(cardVersion2, 200)
+    const invoice2 = createAndAddInvoice(200, cardVersion2)
     invoice2.paid = new Date()
 
     const lnurlw = createAndAddLnurlW(cardVersion1, cardVersion2)

@@ -1,37 +1,29 @@
 import '../../../mocks/process.env'
-import { addCardVersions, addInvoices, addCardVersionInvoices, addLnurlPs, addLnurlWs } from '../mocks/queries'
+import { createAndAddCard, createAndAddCardVersion, createAndAddInvoice, createAndAddLnurlP, createAndAddLnurlW } from '../mocks/data'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-import {
-  CARD_VERSION_SHARED_FUNDING, LNURLP_SHARED_FUNDING,
-  INVOICE_SHARED_FUNDING_1, INVOICE_SHARED_FUNDING_2,
-  CARD_VERSION_INVOICE_SHARED_FUNDING_1, CARD_VERSION_INVOICE_SHARED_FUNDING_2,
-} from '../data/LnurlPSharedFunding'
-import {
-  CARD_VERSION_SHARED_FUNDING_FINISHED, LNURLP_SHARED_FUNDING_FINISHED,
-  INVOICE_SHARED_FUNDING_FINISHED_1, INVOICE_SHARED_FUNDING_FINISHED_2,
-  CARD_VERSION_INVOICE_SHARED_FUNDING_FINISHED_1, CARD_VERSION_INVOICE_SHARED_FUNDING_FINISHED_2,
-  LNURL_W_SHARED_FUNDING_FINISHED,
-} from '../data/LnurlPSharedFundingFinished'
-
 describe('getCardByHash shared funding', () => {
   it('should return a card funded by lnurlp shared funding', async () => {
-    addCardVersions(CARD_VERSION_SHARED_FUNDING)
-    addLnurlPs(LNURLP_SHARED_FUNDING)
-    addInvoices(INVOICE_SHARED_FUNDING_1, INVOICE_SHARED_FUNDING_2)
-    addCardVersionInvoices(CARD_VERSION_INVOICE_SHARED_FUNDING_1, CARD_VERSION_INVOICE_SHARED_FUNDING_2)
+    const card = createAndAddCard()
+    const cardVersion = createAndAddCardVersion(card)
+    createAndAddLnurlP(cardVersion)
+    cardVersion.sharedFunding = true
+    const invoice1 = createAndAddInvoice(300, cardVersion)
+    invoice1.paid = new Date()
+    const invoice2 = createAndAddInvoice(600, cardVersion)
+    invoice2.paid = new Date()
 
-    const card = await getCardByHash(CARD_VERSION_SHARED_FUNDING.card)
-    expect(card).toEqual(expect.objectContaining({
-      cardHash: CARD_VERSION_SHARED_FUNDING.card,
-      text: CARD_VERSION_SHARED_FUNDING.textForWithdraw,
-      note: CARD_VERSION_SHARED_FUNDING.noteForStatusPage,
+    const cardRedis = await getCardByHash(card.hash)
+    expect(cardRedis).toEqual(expect.objectContaining({
+      cardHash: card.hash,
+      text: cardVersion.textForWithdraw,
+      note: cardVersion.noteForStatusPage,
       invoice: null,
       lnurlp: expect.objectContaining({
-        amount: INVOICE_SHARED_FUNDING_1.amount + INVOICE_SHARED_FUNDING_2.amount,
-        payment_hash: expect.arrayContaining([INVOICE_SHARED_FUNDING_1.paymentHash, INVOICE_SHARED_FUNDING_2.paymentHash]),
-        shared: CARD_VERSION_SHARED_FUNDING.sharedFunding,
+        amount: 900,
+        payment_hash: expect.arrayContaining([invoice1.paymentHash, invoice2.paymentHash]),
+        shared: true,
         paid: null,
       }),
       setFunding: null,
@@ -43,26 +35,32 @@ describe('getCardByHash shared funding', () => {
   })
 
   it('should set paid for shared funding when a withdraw link exists', async () => {
-    addCardVersions(CARD_VERSION_SHARED_FUNDING_FINISHED)
-    addLnurlPs(LNURLP_SHARED_FUNDING_FINISHED)
-    addInvoices(INVOICE_SHARED_FUNDING_FINISHED_1, INVOICE_SHARED_FUNDING_FINISHED_2)
-    addCardVersionInvoices(CARD_VERSION_INVOICE_SHARED_FUNDING_FINISHED_1, CARD_VERSION_INVOICE_SHARED_FUNDING_FINISHED_2)
-    addLnurlWs(LNURL_W_SHARED_FUNDING_FINISHED)
+    const card = createAndAddCard()
+    const cardVersion = createAndAddCardVersion(card)
+    const lnurlp = createAndAddLnurlP(cardVersion)
+    cardVersion.sharedFunding = true
+    const invoice1 = createAndAddInvoice(400, cardVersion)
+    invoice1.paid = new Date()
+    const invoice2 = createAndAddInvoice(800, cardVersion)
+    invoice2.paid = new Date()
+    lnurlp.finished = new Date()
+    const lnurlw = createAndAddLnurlW(cardVersion)
+    cardVersion.landingPageViewed = new Date()
 
-    const card = await getCardByHash(CARD_VERSION_SHARED_FUNDING_FINISHED.card)
-    expect(card).toEqual(expect.objectContaining({
-      cardHash: CARD_VERSION_SHARED_FUNDING_FINISHED.card,
-      text: CARD_VERSION_SHARED_FUNDING_FINISHED.textForWithdraw,
-      note: CARD_VERSION_SHARED_FUNDING_FINISHED.noteForStatusPage,
+    const cardRedis = await getCardByHash(card.hash)
+    expect(cardRedis).toEqual(expect.objectContaining({
+      cardHash: card.hash,
+      text: cardVersion.textForWithdraw,
+      note: cardVersion.noteForStatusPage,
       invoice: null,
       lnurlp: expect.objectContaining({
-        amount: INVOICE_SHARED_FUNDING_FINISHED_1.amount + INVOICE_SHARED_FUNDING_FINISHED_2.amount,
-        payment_hash: expect.arrayContaining([INVOICE_SHARED_FUNDING_FINISHED_1.paymentHash, INVOICE_SHARED_FUNDING_FINISHED_2.paymentHash]),
-        shared: CARD_VERSION_SHARED_FUNDING_FINISHED.sharedFunding,
+        amount: 1200,
+        payment_hash: expect.arrayContaining([invoice1.paymentHash, invoice2.paymentHash]),
+        shared: true,
         paid: expect.any(Number),
       }),
       setFunding: null,
-      lnbitsWithdrawId: LNURL_W_SHARED_FUNDING_FINISHED.lnbitsId,
+      lnbitsWithdrawId: lnurlw.lnbitsId,
       landingPageViewed: expect.any(Number),
       isLockedByBulkWithdraw: false,
       used: null,

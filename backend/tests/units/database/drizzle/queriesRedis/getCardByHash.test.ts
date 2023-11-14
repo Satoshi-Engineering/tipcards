@@ -1,9 +1,8 @@
 import '../../../mocks/process.env'
-import { addCardVersions } from '../mocks/queries'
+import { createAndAddCard, createAndAddCardVersion } from '../mocks/data'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-import { CARD_VERSION_UNFUNDED } from '../data/UnfundedCard'
 describe('getCardByHash', () => {
   it('should return null for a card that doesn\'t exist', async () => {
     const card = await getCardByHash('some card hash that doesnt exist')
@@ -11,13 +10,14 @@ describe('getCardByHash', () => {
   })
 
   it('should return a card that exists in the database', async () => {
-    addCardVersions(CARD_VERSION_UNFUNDED)
+    const card = createAndAddCard()
+    const cardVersion = createAndAddCardVersion(card)
 
-    const card = await getCardByHash(CARD_VERSION_UNFUNDED.card)
-    expect(card).toEqual(expect.objectContaining({
-      cardHash: CARD_VERSION_UNFUNDED.card,
-      text: CARD_VERSION_UNFUNDED.textForWithdraw,
-      note: CARD_VERSION_UNFUNDED.noteForStatusPage,
+    const cardRedis = await getCardByHash(card.hash)
+    expect(cardRedis).toEqual(expect.objectContaining({
+      cardHash: card.hash,
+      text: cardVersion.textForWithdraw,
+      note: cardVersion.noteForStatusPage,
       invoice: null,
       lnurlp: null,
       setFunding: null,

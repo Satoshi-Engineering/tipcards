@@ -3,10 +3,11 @@ import { randomUUID } from 'crypto'
 import { Card } from '@backend/database/drizzle/schema/Card'
 import { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
 import { Invoice } from '@backend/database/drizzle/schema/Invoice'
+import { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
 import { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
 import hashSha256 from '@backend/services/hashSha256'
 
-import { addCards, addCardVersions, addInvoices, addCardVersionInvoices, addLnurlWs } from './queries'
+import { addCards, addCardVersions, addInvoices, addCardVersionInvoices, addLnurlWs, addLnurlPs } from './queries'
 
 export const createAndAddCard = (): Card => {
   const card = {
@@ -35,7 +36,7 @@ export const createAndAddCardVersion = (card: Card): CardVersion => {
   return cardVersion
 }
 
-export const createAndAddInvoice = (cardVersion: CardVersion, amount: number): Invoice => {
+export const createAndAddInvoice = (amount: number, ...cardVersions: CardVersion[]): Invoice => {
   const invoice = {
     amount,
     paymentHash: hashSha256(randomUUID()),
@@ -46,11 +47,26 @@ export const createAndAddInvoice = (cardVersion: CardVersion, amount: number): I
     extra: '',
   }
   addInvoices(invoice)
-  addCardVersionInvoices({
-    cardVersion: cardVersion.id,
-    invoice: invoice.paymentHash,
+  cardVersions.forEach((cardVersion) => {
+    addCardVersionInvoices({
+      cardVersion: cardVersion.id,
+      invoice: invoice.paymentHash,
+    })
   })
   return invoice
+}
+
+export const createAndAddLnurlP = (cardVersion: CardVersion): LnurlP => {
+  const lnbitsId = hashSha256(randomUUID())
+  const lnurlp = {
+    lnbitsId,
+    created: new Date(),
+    expiresAt: new Date(),
+    finished: null,
+  }
+  addLnurlPs(lnurlp)
+  cardVersion.lnurlP = lnbitsId
+  return lnurlp
 }
 
 export const createAndAddLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
@@ -63,7 +79,7 @@ export const createAndAddLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
   }
   addLnurlWs(lnurlw)
   cardVersions.forEach((cardVersion) => {
-    cardVersion.lnurlW = lnurlw.lnbitsId
+    cardVersion.lnurlW = lnbitsId
   })
   return lnurlw
 }
