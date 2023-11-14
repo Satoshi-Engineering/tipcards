@@ -22,13 +22,13 @@ Table CardVersion {
   textForWithdraw   text
   noteForStatusPage text
   sharedFunding     boolean
-  landingPageViewed DateTime [null, default: null]
+  landingPageViewed DateTime    [null, default: null]
 }
 
 Table Invoice {
   amount         integer
   paymentHash    varchar(64) [primary key, unique, note: "sha256 of payment preimage in hex"]
-  paymentRequest text        [unique]
+  paymentRequest text
   created        DateTime
   paid           DateTime    [null, default: null]
   expiresAt      DateTime
@@ -43,14 +43,14 @@ Table CardVersionHasInvoice {
 Table LnurlP {
   lnbitsId  varchar(36)   [primary key, unique, note: "id from lnbits lnurlp link"]
   created   DateTime
-  expiresAt DateTime [null, default: null]
+  expiresAt DateTime      [null, default: null]
 }
 
 Table LnurlW {
   lnbitsId  varchar(36)   [primary key, unique, note: "id from lnbits lnurlw link"]
   created   DateTime
-  expiresAt DateTime [null, default: null]
-  withdrawn DateTime [null, default: null]
+  expiresAt DateTime      [null, default: null]
+  withdrawn DateTime      [null, default: null]
 }
 
 Table SetSettings {

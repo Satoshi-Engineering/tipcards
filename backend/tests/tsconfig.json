@@ -1,3 +1,4 @@
+/* ONLY FOR VSC IDE for resolving paths */
 {
   "compilerOptions": {
     "paths": {

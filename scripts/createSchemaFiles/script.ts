@@ -5,16 +5,13 @@
 // npm install -D @dbml/core
 // Call from project root
 // npx ts-node scripts/createSchemaFiles/script.ts
-// TODO: remove type string
-// TODO: add type varchar && text
-
-import {getReferences} from './lib/references'
 
 console.info('Create Definitions')
 
 import { Parser } from '@dbml/core'
 import * as fs from 'fs'
 import { uniqueArray } from './lib/tools.array'
+import { getReferences } from './lib/references'
 import {
   createConfigForType,
   getEnums, getEnumValueDefinitions,

@@ -3,7 +3,7 @@ import { mysqlTable, int, varchar, text, datetime } from 'drizzle-orm/mysql-core
 export const Invoice = mysqlTable('Invoice', {
   amount: int('amount').notNull(),
   paymentHash: varchar('paymentHash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of payment preimage in hex
-  paymentRequest: text('paymentRequest').unique().notNull(),
+  paymentRequest: text('paymentRequest').notNull(),
   created: datetime('created').notNull(),
   paid: datetime('paid'),
   expiresAt: datetime('expiresAt').notNull(),
