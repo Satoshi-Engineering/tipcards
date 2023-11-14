@@ -5,12 +5,16 @@ import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
 import type { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
 import type { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
 
+const cardsByHash: Record<string, Card> = {}
 const cardVersionsById: Record<string, CardVersion> = {}
 const cardVersionInvoices: CardVersionHasInvoice[] = []
 const invoicesByPaymentHash: Record<string, Invoice> = {}
 const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
 const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
 
+export const addCards = (...cards: Card[]) => {
+  addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.hash, item: card })))
+}
 export const addCardVersions = (...cardVersions: CardVersion[]) => {
   addItemsToTable(cardVersionsById, cardVersions.map((cardVersion) => ({ key: cardVersion.id, item: cardVersion })))
 }
