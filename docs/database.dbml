@@ -44,6 +44,7 @@ Table LnurlP {
   lnbitsId  varchar(36)   [primary key, unique, note: "id from lnbits lnurlp link"]
   created   DateTime
   expiresAt DateTime      [null, default: null]
+  finished  DateTime      [null, default: null, note: "for shared funding the user has to manually trigger the finishing, for single funding this is set as soon as the first payment is registered"]
 }
 
 Table LnurlW {
