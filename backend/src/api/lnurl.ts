@@ -79,7 +79,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
     if (card.invoice != null) {
-      res.status(400).json({
+      res.status(200).json({
         status: 'ERROR',
         reason: 'This card has an invoice. Pay or reset the invoice first in your browser.',
         code: ErrorCode.CannotCreateLnurlPCardHasInvoice,
@@ -88,7 +88,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     }
 
     if (card.setFunding != null) {
-      res.status(400).json({
+      res.status(200).json({
         status: 'ERROR',
         reason: 'This card is being funded via set funding.',
         code: ErrorCode.CardNeedsSetFunding,
