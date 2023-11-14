@@ -24,6 +24,7 @@ export enum ErrorCode {
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
   CardNeedsSetFunding = 'CardNeedsSetFunding',
+  CannotCreateLnurlPCardHasInvoice = 'CannotCreateLnurlPCardHasInvoice',
   AccessTokenMissing = 'AccessTokenMissing',
   AccessTokenInvalid = 'AccessTokenInvalid',
   AccessTokenExpired = 'AccessTokenExpired',
