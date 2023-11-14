@@ -34,7 +34,7 @@ export const CARD_VERSION_SHARED_FUNDING_FINISHED: CardVersion = {
   textForWithdraw: 'some text',
   noteForStatusPage: 'some note',
   sharedFunding: true,
-  landingPageViewed: null,
+  landingPageViewed: new Date(),
 }
 
 export const INVOICE_SHARED_FUNDING_FINISHED_1: Invoice = {

@@ -36,6 +36,9 @@ describe('getCardByHash shared funding', () => {
       }),
       setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 
@@ -60,6 +63,9 @@ describe('getCardByHash shared funding', () => {
       }),
       setFunding: null,
       lnbitsWithdrawId: LNURL_W_SHARED_FUNDING_FINISHED.lnbitsId,
+      landingPageViewed: expect.any(Number),
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 })

@@ -12,7 +12,7 @@ import { Card as CardRedis } from '@backend/database/redis/data/Card'
 export const cardRedisFromCardDrizzle = async (card: CardVersion): Promise<CardRedis> => {
   const lnurlp = await getLnurlpRedisForCard(card)
   const { invoice, setFunding } = await getFundingRedisForCard(card, lnurlp)
-  const { lnbitsWithdrawId, isLockedByBulkWithdraw } = await getWithdrawRedisForCard(card)
+  const { lnbitsWithdrawId, isLockedByBulkWithdraw, used } = await getWithdrawRedisForCard(card)
 
   return CardRedis.parse({
     cardHash: card.card,
@@ -22,9 +22,9 @@ export const cardRedisFromCardDrizzle = async (card: CardVersion): Promise<CardR
     setFunding,
     lnurlp,
     lnbitsWithdrawId,
-    landingPageViewed: card.landingPageViewed,
+    landingPageViewed: dateOrNullToUnixTimestamp(card.landingPageViewed),
     isLockedByBulkWithdraw,
-    used: null, // todo : load from database
+    used,
   })
 }
 
@@ -128,14 +128,16 @@ const dateToUnixTimestamp = (date: Date) => Math.round(date.getTime() / 1000)
 const getWithdrawRedisForCard = async (card: CardVersion): Promise<{
   lnbitsWithdrawId: CardRedis['lnbitsWithdrawId'],
   isLockedByBulkWithdraw: CardRedis['isLockedByBulkWithdraw'],
+  used: CardRedis['used'],
 }> => {
   const lnurlw = await getLnurlWForCard(card)
   if (lnurlw == null) {
-    return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false }
+    return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false, used: null }
   }
   const cards = await getCardsForLnurlW(lnurlw)
   return {
     lnbitsWithdrawId: lnurlw.lnbitsId,
     isLockedByBulkWithdraw: cards.length > 1,
+    used: dateOrNullToUnixTimestamp(lnurlw.withdrawn),
   }
 }

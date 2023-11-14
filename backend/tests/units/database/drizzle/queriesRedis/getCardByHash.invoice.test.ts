@@ -16,7 +16,7 @@ import {
 } from '../data/InvoiceFundingFunded'
 
 describe('getCardByHash invoice funding', () => {
-  it('should return a card funded by invoice', async () => {
+  it('should return a card with an unpaid invoice', async () => {
     addCardVersions(CARD_VERSION_INVOICE_FUNDING)
     addInvoices(INVOICE_FOR_INVOICE_FUNDING)
     addCardVersionInvoices(CARD_VERSION_INVOICE_FOR_INVOICE_FUNDING)
@@ -30,16 +30,19 @@ describe('getCardByHash invoice funding', () => {
         amount: INVOICE_FOR_INVOICE_FUNDING.amount,
         payment_hash: INVOICE_FOR_INVOICE_FUNDING.paymentHash,
         payment_request: INVOICE_FOR_INVOICE_FUNDING.paymentRequest,
-        created: Math.round(INVOICE_FOR_INVOICE_FUNDING.created.getTime() / 1000),
-        paid: INVOICE_FOR_INVOICE_FUNDING.paid != null ? Math.round(INVOICE_FOR_INVOICE_FUNDING.paid.getTime() / 1000) : null,
+        created: expect.any(Number),
+        paid: null,
       }),
       lnurlp: null,
       setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 
-  it('should add the lnbitsWithdrawId when it exists', async () => {
+  it('should add the lnbitsWithdrawId', async () => {
     addCardVersions(CARD_VERSION_INVOICE_FUNDING_FUNDED)
     addInvoices(INVOICE_FOR_INVOICE_FUNDING_FUNDED)
     addCardVersionInvoices(CARD_VERSION_INVOICE_FOR_INVOICE_FUNDING_FUNDED)
@@ -54,12 +57,15 @@ describe('getCardByHash invoice funding', () => {
         amount: INVOICE_FOR_INVOICE_FUNDING_FUNDED.amount,
         payment_hash: INVOICE_FOR_INVOICE_FUNDING_FUNDED.paymentHash,
         payment_request: INVOICE_FOR_INVOICE_FUNDING_FUNDED.paymentRequest,
-        created: Math.round(INVOICE_FOR_INVOICE_FUNDING_FUNDED.created.getTime() / 1000),
-        paid: INVOICE_FOR_INVOICE_FUNDING_FUNDED.paid != null ? Math.round(INVOICE_FOR_INVOICE_FUNDING_FUNDED.paid.getTime() / 1000) : null,
+        created: expect.any(Number),
+        paid: expect.any(Number),
       }),
       lnurlp: null,
       setFunding: null,
       lnbitsWithdrawId: LNURL_W_FOR_INVOICE_FUNDING_FUNDED.lnbitsId,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 })

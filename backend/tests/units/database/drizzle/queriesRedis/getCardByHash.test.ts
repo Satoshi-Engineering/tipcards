@@ -22,6 +22,9 @@ describe('getCardByHash', () => {
       lnurlp: null,
       setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 })

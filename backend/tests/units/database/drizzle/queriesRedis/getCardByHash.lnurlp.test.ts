@@ -30,6 +30,9 @@ describe('getCardByHash lnurlp funding', () => {
       }),
       setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
     }))
   })
 })
