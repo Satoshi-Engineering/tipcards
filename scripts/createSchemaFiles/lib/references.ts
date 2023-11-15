@@ -1,5 +1,5 @@
 import { translateDrizzleObjectName } from './translateNames'
-import {DBMLSchema} from './types'
+import { DBMLSchema } from './types'
 
 export function getReferences(schema: DBMLSchema, tableName: string, fieldName: string) {
 

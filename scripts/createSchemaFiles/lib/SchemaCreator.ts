@@ -41,19 +41,17 @@ export class SchemaCreator {
     return imports
   }
 
-  public create(table: DBMLTable) {
-    const tableName = translateSQLTableName(table.name)
-    const drizzleName = translateDrizzleObjectName(table.name)
-    const typeName = translateTypeName(table.name)
+  getFields(table: DBMLTable) {
+    return table.fields.map(field => field.type.type_name)
+  }
 
-    const fields = table.fields.map(field => field.type.type_name)
-    const imports = this.getImports(table.name)
-    const enums = getEnums(fields)
+  createImportSection(table: DBMLTable) {
+    const fields = this.getFields(table)
     const indexes = table.indexes
+    const imports = this.getImports(table.name)
 
     let fileData = ''
 
-    // Imports
     let usedTypes = translateImportTypes(fields)
     usedTypes = uniqueArray(usedTypes)
     if (indexes.length > 0) usedTypes.unshift('primaryKey')
@@ -65,7 +63,15 @@ export class SchemaCreator {
     })
     fileData+= '\n'
 
-    // Enums
+    return fileData
+  }
+
+  createEnumSection(table: DBMLTable) {
+    const fields = this.getFields(table)
+    const enums = getEnums(fields)
+
+    let fileData = ''
+
     enums.forEach(enumType => {
       fileData += `const ${enumType}: [string, ...string[]] = [\n`
       getEnumValueDefinitions(enumType).forEach(enumValueDef => {
@@ -75,13 +81,28 @@ export class SchemaCreator {
       fileData += '\n'
     })
 
-    // Fields
-    fileData+= `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
+    return fileData
+  }
+
+  createFieldsSection(table:DBMLTable) {
+    const drizzleName = translateDrizzleObjectName(table.name)
+    const tableName = translateSQLTableName(table.name)
+
+    let fileData = ''
+
+    fileData += `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
     table.fields.forEach(field => {
       fileData += `  ${this.createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
     })
 
-    // Indexes
+    return fileData
+  }
+
+  createIndexesSection(table: DBMLTable) {
+    let fileData = ''
+
+    const indexes = table.indexes
+
     if (indexes.length <= 0) {
       fileData += '})\n'
     } else {
@@ -89,13 +110,32 @@ export class SchemaCreator {
       fileData += '  return {\n'
       indexes.forEach(index => {
         const columns = index.columns.map(column => column.value)
-        fileData += `    pk: primaryKey({ columns: [table.${columns.join(', table.')}] }),\n`
+        fileData += `    pk: primaryKey(table.${columns.join(', table.')}),\n`
       })
       fileData += '  }\n'
       fileData += '})\n'
     }
     fileData+= '\n'
-    fileData+= `export type ${typeName} = typeof ${drizzleName}.$inferSelect\n`
+
+    return fileData
+  }
+
+  createExportTypeSection(table: DBMLTable) {
+    const drizzleName = translateDrizzleObjectName(table.name)
+    const typeName = translateTypeName(table.name)
+
+    return `export type ${typeName} = typeof ${drizzleName}.$inferSelect\n`
+  }
+
+  public create(table: DBMLTable) {
+
+    let fileData = ''
+
+    fileData += this.createImportSection(table)
+    fileData += this.createEnumSection(table)
+    fileData += this.createFieldsSection(table)
+    fileData += this.createIndexesSection(table)
+    fileData += this.createExportTypeSection(table)
 
     return fileData
   }

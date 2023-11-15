@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type DBMLField = {
   name: string
   type: any
@@ -60,4 +62,3 @@ export type DBMLSchema = {
   note: string
   alias: string
 }
-

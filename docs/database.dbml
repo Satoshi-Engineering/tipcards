@@ -130,9 +130,9 @@ Table UserCanUseLandingPage {
 }
 
 Table AllowedRefreshTokens [note: "every device can have up to two valid refresh tokens. when creating a third via refreshing set current to previous and new value to current"] {
-  user     varchar(36) [ref: > User.id]
-  current  text        [note: "jwt refresh token"]
-  previous text        [note: "jwt refresh token"]
+  user     varchar(36)  [ref: > User.id]
+  current  varchar(256) [note: "1 refresh token"]
+  previous text         [note: "jwt refresh token"]
 
   indexes {
     (user, current) [pk, unique]
