@@ -8,7 +8,7 @@ export const UserCanUseLandingPage = mysqlTable('UserCanUseLandingPage', {
   canEdit: boolean('canEdit').notNull().default(false),
 }, (table) => {
   return {
-    pk: primaryKey(table.user, table.landingPage),
+    pk: primaryKey({ columns: [table.user, table.landingPage] }),
   }
 })
 

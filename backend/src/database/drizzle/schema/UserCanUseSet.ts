@@ -8,7 +8,7 @@ export const UserCanUseSet = mysqlTable('UserCanUseSet', {
   canEdit: boolean('canEdit').notNull().default(false),
 }, (table) => {
   return {
-    pk: primaryKey(table.user, table.set),
+    pk: primaryKey({ columns: [table.user, table.set] }),
   }
 })
 

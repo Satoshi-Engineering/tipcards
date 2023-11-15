@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
 
-import { SchemaCreator } from './lib/SchemaCreator'
-
 console.info('Schema Creator')
 
 import { Parser } from '@dbml/core'
@@ -9,6 +7,7 @@ import * as fs from 'fs'
 import { DBMLTable } from './lib/types'
 import { translateFileName } from './lib/translateNames'
 import { deleteSchemaFiles, writeIndexFile } from './lib/dir'
+import { SchemaCreator } from './lib/SchemaCreator'
 
 const DEFINITIONS_FILE = './docs/database.dbml'
 const OUTPUT_DIR = './backend/src/database/drizzle/schema'

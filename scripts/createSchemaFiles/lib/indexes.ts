@@ -4,8 +4,8 @@ export function createIndexEntry(index: DBMLIndex) {
   const columns = index.columns.map(column => column.value)
 
   let fileData = ''
-  const pk = index.pk as unknown as boolean // Due type definition mistake in dbml package, should have been boolean not string
-  if (pk) fileData += `pk: primaryKey(table.${columns.join(', table.')})`
+  const pk = index.pk as unknown as boolean // Due a type definition mismatch the in dbml package, should have been boolean not string
+  if (pk) fileData += `pk: primaryKey({ columns: [table.${columns.join(', table.')}] })`
   if (index.type === undefined && index.unique === undefined && index.pk === undefined) {
     fileData += `${index.name}: primaryKey(table.${columns.join(', table.')})`
   }

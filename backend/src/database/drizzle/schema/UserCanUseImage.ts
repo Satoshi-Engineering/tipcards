@@ -8,7 +8,7 @@ export const UserCanUseImage = mysqlTable('UserCanUseImage', {
   canEdit: boolean('canEdit').notNull().default(false),
 }, (table) => {
   return {
-    pk: primaryKey(table.user, table.image),
+    pk: primaryKey({ columns: [table.user, table.image] }),
   }
 })
 
