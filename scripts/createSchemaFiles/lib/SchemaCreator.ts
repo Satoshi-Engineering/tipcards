@@ -3,6 +3,7 @@ import { DBMLField, DBMLSchema, DBMLTable } from './types'
 import { createConfigForType, getEnums, getEnumValueDefinitions, translateImportType, translateImportTypes, getDefault, parseEnums } from './translateTypes'
 import { uniqueArray } from './tools.array'
 import { getReferences } from './references'
+import { createIndexEntry } from './indexes'
 
 
 export class SchemaCreator {
@@ -109,8 +110,7 @@ export class SchemaCreator {
       fileData += '}, (table) => {\n'
       fileData += '  return {\n'
       indexes.forEach(index => {
-        const columns = index.columns.map(column => column.value)
-        fileData += `    pk: primaryKey(table.${columns.join(', table.')}),\n`
+        fileData += `    ${createIndexEntry(index)},${index.note ? ` // Note: ${index.note}` : ''}\n`
       })
       fileData += '  }\n'
       fileData += '})\n'

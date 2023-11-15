@@ -27,8 +27,9 @@ function writeSchemaFile(table: DBMLTable) {
   fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
 }
 
-function writeSchemaFiles() {
+function writeSchemaFiles(tableName = '') {
   workingSchema.tables.forEach(table => {
+    if (tableName !== '' && table.name !== tableName) return
     console.log(`Creating: ${table.name}`)
     writeSchemaFile(table)
   })
@@ -37,3 +38,5 @@ function writeSchemaFiles() {
 deleteSchemaFiles(OUTPUT_DIR)
 writeSchemaFiles()
 writeIndexFile(OUTPUT_DIR)
+
+//writeSchemaFiles('SingleTableName')

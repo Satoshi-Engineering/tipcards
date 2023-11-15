@@ -13,6 +13,7 @@ import * as dotenv from 'dotenv'
 dotenv.config({ path: './backend/.env' })
 
 const MYSQL_PORT = parseInt(process.env.MYSQL_PORT || '3306')
+const MIGRATIONS_FOLDER = `./dist/drizzle/${process.env.MYSQL_DB_NAME}-migrations`
 
 console.info('Running DB Migration')
 console.info(`Host:      ${process.env.MYSQL_HOST}:${MYSQL_PORT}`)
@@ -32,7 +33,7 @@ const run = async () => {
   const db = drizzle(connection, { mode: 'default', schema: schema })
 
   // This will run migrations on the database, skipping the ones already applied
-  await migrate(db, { migrationsFolder: './dist/drizzle/migrations' })
+  await migrate(db, { migrationsFolder: MIGRATIONS_FOLDER })
 
   // Don't forget to close the connection, otherwise the script will hang
   await connection.end()

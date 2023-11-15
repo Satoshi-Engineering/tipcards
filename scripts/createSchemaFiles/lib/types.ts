@@ -11,19 +11,22 @@ export type DBMLField = {
   increment: boolean
 }
 
+export type DBMLIndex = {
+  columns: {
+    type: any
+    value: any
+  }[]
+  name: string
+  type: any
+  unique: boolean
+  pk: string
+  note: string
+}
+
+
 export type DBMLTable = {
   fields: DBMLField[]
-  indexes: {
-    columns: {
-      type: any
-      value: any
-    }[]
-    name: string
-    type: any
-    unique: boolean
-    pk: string
-    note: string
-  }[]
+  indexes: DBMLIndex[]
   name: string
   alias: string
   note: string
