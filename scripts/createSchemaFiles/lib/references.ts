@@ -1,11 +1,12 @@
 import { translateDrizzleObjectName } from './translateNames'
+import {DBMLSchema} from './types'
 
-export function getReferences(info, tableName: string, fieldName: string) {
+export function getReferences(schema: DBMLSchema, tableName: string, fieldName: string) {
 
   let oneToManyEndpoint = null
   let oneToOneEndpoint = null
 
-  info.schemas[0].refs.forEach(ref => {
+  schema.refs.forEach(ref => {
     const endpoints = ref.endpoints
 
     if (endpoints[1].tableName === tableName && endpoints[1].fieldNames[0] === fieldName

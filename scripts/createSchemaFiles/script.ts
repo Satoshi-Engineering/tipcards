@@ -1,25 +1,14 @@
 /* eslint-disable no-console */
 
-// Purpose: Create Drizzle MySql Schemal file from a dbml file
-// Howto
-// npm install -D @dbml/core
-// Call from project root
-// npx ts-node scripts/createSchemaFiles/script.ts
+import {SchemaCreator} from './lib/SchemaCreator'
 
-console.info('Create Definitions')
+console.info('Schema Creator')
 
 import { Parser } from '@dbml/core'
 import * as fs from 'fs'
-import { uniqueArray } from './lib/tools.array'
-import { getReferences } from './lib/references'
-import {
-  createConfigForType,
-  getEnums, getEnumValueDefinitions,
-  parseEnums,
-  translateImportType,
-  translateImportTypes,
-} from './lib/types'
-import { translateDrizzleObjectName, translateFileName, translateSQLTableName, translateTypeName } from './lib/translateNames'
+import {DBMLTable} from './lib/types'
+import {translateFileName} from './lib/translateNames'
+import {deleteSchemaFiles, writeIndexFile} from './lib/dir'
 
 const DEFINITIONS_FILE = './docs/database.dbml'
 const OUTPUT_DIR = './backend/src/database/drizzle/schema'
@@ -28,113 +17,21 @@ const dbml = fs.readFileSync(DEFINITIONS_FILE, 'utf-8')
 
 const database = Parser.parse(dbml, 'dbml')
 const info = database.export()
+const workingSchema = info.schemas[0]
 
-const getImports = (tableName: string) => {
-  const imports: string[] = []
+const schemaCreate = new SchemaCreator(workingSchema)
 
-  info.schemas[0].refs.forEach(ref => {
-    const endpoints = ref.endpoints
-    if (endpoints[1].tableName === tableName && (endpoints[1].relation === '1' || endpoints[1].relation === '*')) {
-      imports.push(endpoints[0].tableName)
-    }
-  })
-
-  return imports
-}
-
-
-const getDefault = (dbdefault) => {
-  if (dbdefault.type === 'boolean' && dbdefault.value === 'null') return ''
-  if (dbdefault.type === 'boolean') return `.default(${dbdefault.value})`
-
-  throw new Error(`Default value for type:${dbdefault.type} Not Implemented!`)
-}
-
-const createFieldEntry = (tableName: string, field) => {
-  if (field.name === 'lnurlP') console.log(field)
-
-  const config = createConfigForType(field.type.type_name)
-
-  let line = `${field.name}: `
-  line+=`${translateImportType(field.type.type_name)}('${field.name}'${config})`
-  if (field.pk === true) line += '.primaryKey()'
-  if (field.unique === true) line += '.unique()'
-  if (field.not_null === undefined || field.not_null === true) line += '.notNull()'
-  if (field.dbdefault !== undefined) line += getDefault(field.dbdefault)
-  line += getReferences(info, tableName, field.name)
-
-  return line
-}
-
-const createSchemaFile = (table) => {
-  console.log(`Creating: ${table.name}`)
-
+function createSchemaFile(table: DBMLTable) {
   const fileName = `${translateFileName(table.name)}.ts`
-  const tableName = translateSQLTableName(table.name)
-  const drizzleName = translateDrizzleObjectName(table.name)
-  const typeName = translateTypeName(table.name)
-
-  const fields = table.fields.map(field => field.type.type_name)
-  const imports = getImports(table.name)
-  const enums = getEnums(fields)
-  const indexes = table.indexes
-
-  let fileData = ''
-
-  // Imports
-  let usedTypes = translateImportTypes(fields)
-  usedTypes = uniqueArray(usedTypes)
-  if (indexes.length > 0) usedTypes.unshift('primaryKey')
-  usedTypes.unshift('mysqlTable')
-
-  fileData = `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
-  imports.forEach(table => {
-    fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
-  })
-  fileData+= '\n'
-
-  // Enums
-  enums.forEach(enumType => {
-    fileData += `const ${enumType}: [string, ...string[]] = [\n`
-    getEnumValueDefinitions(enumType).forEach(enumValueDef => {
-      fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
-    })
-    fileData += ']\n'
-    fileData += '\n'
-  })
-
-  // Fields
-  fileData+= `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
-  table.fields.forEach(field => {
-    fileData += `  ${createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
-  })
-
-  // Indexes
-  if (indexes.length <= 0) {
-    fileData += '})\n'
-  } else {
-    fileData += '}, (table) => {\n'
-    fileData += '  return {\n'
-    indexes.forEach(index => {
-      const columns = index.columns.map(column => column.value)
-      fileData += `    pk: primaryKey({ columns: [table.${columns.join(', table.')}] }),\n`
-    })
-    fileData += '  }\n'
-    fileData += '})\n'
-  }
-  fileData+= '\n'
-  fileData+= `export type ${typeName} = typeof ${drizzleName}.$inferSelect\n`
-
-  console.log(fileData)
+  const fileData = schemaCreate.create(table)
   fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
 }
 
-// console.log(Object.keys(info.schemas[0]))
-// [ 'name', 'note', 'alias', 'tables', 'enums', 'tableGroups', 'refs' ]
+deleteSchemaFiles(OUTPUT_DIR)
 
-parseEnums(info.schemas[0].enums)
+workingSchema.tables.forEach(table => {
+  console.log(`Creating: ${table.name}`)
 
-info.schemas[0].tables.forEach(table => {
   if (table.name === 'Card') createSchemaFile(table)
   if (table.name === 'CardVersion') createSchemaFile(table)
   if (table.name === 'Invoice') createSchemaFile(table)
@@ -149,5 +46,11 @@ info.schemas[0].tables.forEach(table => {
   if (table.name === 'Profile') createSchemaFile(table)
 
   //if (table.name === 'UserCanUseSet') createSchemaFile(table)
+  //if (table.name === 'UserCanUseImage') createSchemaFile(table)
+  //if (table.name === 'UserCanUseLandingPage') createSchemaFile(table)
+  //if (table.name === 'AllowedRefreshTokens') createSchemaFile(table)
 
+  // createSchemaFile(table)
 })
+
+writeIndexFile(OUTPUT_DIR)
