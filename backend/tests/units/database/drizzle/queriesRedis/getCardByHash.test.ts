@@ -1,5 +1,7 @@
 import '../../../mocks/process.env'
-import { createAndAddCard, createAndAddCardVersion } from '../mocks/data'
+import { addData } from '../mocks/queries'
+
+import { createCard, createCardVersion } from '../../../../drizzleData'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
@@ -10,8 +12,12 @@ describe('getCardByHash', () => {
   })
 
   it('should return a card that exists in the database', async () => {
-    const card = createAndAddCard()
-    const cardVersion = createAndAddCardVersion(card)
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+    })
 
     const cardRedis = await getCardByHash(card.hash)
     expect(cardRedis).toEqual(expect.objectContaining({

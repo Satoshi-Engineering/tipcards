@@ -1,18 +1,27 @@
 import '../../../mocks/process.env'
-import { createAndAddCard, createAndAddCardVersion, createAndAddInvoice, createAndAddLnurlP, createAndAddLnurlW } from '../mocks/data'
+import { addData } from '../mocks/queries'
+
+import { createCard, createCardVersion, createInvoice, createLnurlP, createLnurlW } from '../../../../drizzleData'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
 describe('getCardByHash shared funding', () => {
   it('should return a card funded by lnurlp shared funding', async () => {
-    const card = createAndAddCard()
-    const cardVersion = createAndAddCardVersion(card)
-    createAndAddLnurlP(cardVersion)
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const lnurlp = createLnurlP(cardVersion)
     cardVersion.sharedFunding = true
-    const invoice1 = createAndAddInvoice(300, cardVersion)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionHasInvoice1 } = createInvoice(300, cardVersion)
     invoice1.paid = new Date()
-    const invoice2 = createAndAddInvoice(600, cardVersion)
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionHasInvoice2 } = createInvoice(600, cardVersion)
     invoice2.paid = new Date()
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      invoices: [invoice1, invoice2],
+      cardVersionInvoices: [...cardVersionHasInvoice1, ...cardVersionHasInvoice2],
+      lnurlps: [lnurlp],
+    })
 
     const cardRedis = await getCardByHash(card.hash)
     expect(cardRedis).toEqual(expect.objectContaining({
@@ -35,17 +44,25 @@ describe('getCardByHash shared funding', () => {
   })
 
   it('should set paid for shared funding when a withdraw link exists', async () => {
-    const card = createAndAddCard()
-    const cardVersion = createAndAddCardVersion(card)
-    const lnurlp = createAndAddLnurlP(cardVersion)
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const lnurlp = createLnurlP(cardVersion)
     cardVersion.sharedFunding = true
-    const invoice1 = createAndAddInvoice(400, cardVersion)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionHasInvoice1 } = createInvoice(400, cardVersion)
     invoice1.paid = new Date()
-    const invoice2 = createAndAddInvoice(800, cardVersion)
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionHasInvoice2 } = createInvoice(800, cardVersion)
     invoice2.paid = new Date()
     lnurlp.finished = new Date()
-    const lnurlw = createAndAddLnurlW(cardVersion)
+    const lnurlw = createLnurlW(cardVersion)
     cardVersion.landingPageViewed = new Date()
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      invoices: [invoice1, invoice2],
+      cardVersionInvoices: [...cardVersionHasInvoice1, ...cardVersionHasInvoice2],
+      lnurlps: [lnurlp],
+      lnurlws: [lnurlw],
+    })
 
     const cardRedis = await getCardByHash(card.hash)
     expect(cardRedis).toEqual(expect.objectContaining({

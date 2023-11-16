@@ -30,6 +30,28 @@ export const addLnurlPs = (...lnurlps: LnurlP[]) => {
 export const addLnurlWs = (...lnurlws: LnurlW[]) => {
   addItemsToTable(lnurlWsByLnbitsId, lnurlws.map((lnurlw) => ({ key: lnurlw.lnbitsId, item: lnurlw })))
 }
+export const addData = ({
+  cards,
+  cardVersions,
+  invoices,
+  cardVersionInvoices,
+  lnurlps,
+  lnurlws,
+}: {
+  cards?: Card[],
+  cardVersions?: CardVersion[],
+  invoices?: Invoice[],
+  cardVersionInvoices?: CardVersionHasInvoice[],
+  lnurlps?: LnurlP[],
+  lnurlws?: LnurlW[],
+}) => {
+  addCards(...(cards || []))
+  addCardVersions(...(cardVersions || []))
+  addInvoices(...(invoices || []))
+  addCardVersionInvoices(...(cardVersionInvoices || []))
+  addLnurlPs(...(lnurlps || []))
+  addLnurlWs(...(lnurlws || []))
+}
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
   items.forEach((item) => addItemToTable(table, item))

@@ -1,17 +1,26 @@
 import '../../../mocks/process.env'
-import { createAndAddCard, createAndAddCardVersion, createAndAddInvoice, createAndAddLnurlW } from '../mocks/data'
+import { addData } from '../mocks/queries'
+
+import { createCard, createCardVersion, createInvoice, createLnurlW } from '../../../../drizzleData'
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
 describe('getCardByHash withdrawn card', () => {
   it('should set the used flag', async () => {
-    const card = createAndAddCard()
-    const cardVersion = createAndAddCardVersion(card)
-    const invoice = createAndAddInvoice(200, cardVersion)
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const { invoice, cardVersionsHaveInvoice } = createInvoice(200, cardVersion)
     invoice.paid = new Date()
-    const lnurlw = createAndAddLnurlW(cardVersion)
+    const lnurlw = createLnurlW(cardVersion)
     cardVersion.landingPageViewed = new Date()
     lnurlw.withdrawn = new Date()
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      invoices: [invoice],
+      cardVersionInvoices: [...cardVersionsHaveInvoice],
+      lnurlws: [lnurlw],
+    })
 
     const cardRedis = await getCardByHash(card.hash)
     expect(cardRedis).toEqual(expect.objectContaining({

@@ -3,25 +3,20 @@ import { randomUUID } from 'crypto'
 import { Card } from '@backend/database/drizzle/schema/Card'
 import { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
 import { Invoice } from '@backend/database/drizzle/schema/Invoice'
+import { CardVersionHasInvoice } from '@backend/database/drizzle/schema/CardVersionHasInvoice'
 import { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
 import { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
 import hashSha256 from '@backend/services/hashSha256'
 
-import { addCards, addCardVersions, addInvoices, addCardVersionInvoices, addLnurlWs, addLnurlPs } from './queries'
+export const createCard = (): Card => ({
+  hash: hashSha256(randomUUID()),
+  created: new Date(),
+  set: null,
+})
 
-export const createAndAddCard = (): Card => {
-  const card = {
-    hash: hashSha256(randomUUID()),
-    created: new Date(),
-    set: null,
-  }
-  addCards(card)
-  return card
-}
-
-export const createAndAddCardVersion = (card: Card): CardVersion => {
+export const createCardVersion = (card: Card): CardVersion => {
   const id = randomUUID()
-  const cardVersion = {
+  return {
     id,
     card: card.hash,
     created: new Date(),
@@ -32,11 +27,12 @@ export const createAndAddCardVersion = (card: Card): CardVersion => {
     sharedFunding: false,
     landingPageViewed: null,
   }
-  addCardVersions(cardVersion)
-  return cardVersion
 }
 
-export const createAndAddInvoice = (amount: number, ...cardVersions: CardVersion[]): Invoice => {
+export const createInvoice = (amount: number, ...cardVersions: CardVersion[]): {
+  invoice: Invoice,
+  cardVersionsHaveInvoice: CardVersionHasInvoice[],
+} => {
   const invoice = {
     amount,
     paymentHash: hashSha256(randomUUID()),
@@ -46,40 +42,35 @@ export const createAndAddInvoice = (amount: number, ...cardVersions: CardVersion
     expiresAt: new Date(),
     extra: '',
   }
-  addInvoices(invoice)
-  cardVersions.forEach((cardVersion) => {
-    addCardVersionInvoices({
-      cardVersion: cardVersion.id,
-      invoice: invoice.paymentHash,
-    })
-  })
-  return invoice
+  const cardVersionsHaveInvoice = cardVersions.map((cardVersion) => ({
+    cardVersion: cardVersion.id,
+    invoice: invoice.paymentHash,
+  }))
+  return { invoice, cardVersionsHaveInvoice }
 }
 
-export const createAndAddLnurlP = (cardVersion: CardVersion): LnurlP => {
-  const lnbitsId = hashSha256(randomUUID())
+/** side-effect: updates cardVersion.lnurlP */
+export const createLnurlP = (cardVersion: CardVersion): LnurlP => {
   const lnurlp = {
-    lnbitsId,
+    lnbitsId: hashSha256(randomUUID()),
     created: new Date(),
     expiresAt: new Date(),
     finished: null,
   }
-  addLnurlPs(lnurlp)
-  cardVersion.lnurlP = lnbitsId
+  cardVersion.lnurlP = lnurlp.lnbitsId
   return lnurlp
 }
 
-export const createAndAddLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
-  const lnbitsId = hashSha256(randomUUID())
+/** side-effect: updates cardVersion.lnurlW */
+export const createLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
   const lnurlw = {
-    lnbitsId,
+    lnbitsId: hashSha256(randomUUID()),
     created: new Date(),
     expiresAt: new Date(),
     withdrawn: null,
   }
-  addLnurlWs(lnurlw)
   cardVersions.forEach((cardVersion) => {
-    cardVersion.lnurlW = lnbitsId
+    cardVersion.lnurlW = lnurlw.lnbitsId
   })
   return lnurlw
 }
