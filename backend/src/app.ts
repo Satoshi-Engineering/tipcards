@@ -22,6 +22,8 @@ import corsOptions from './services/corsOptions'
 import xstAttack from './xstAttack'
 import './worker'
 
+import apiDrizzleCard from './api-drizzle/card'
+
 const app = express()
 app.use(bodyParser.json())
 app.use(cors(corsOptions))
@@ -39,6 +41,7 @@ app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
+app.use('/api-drizzle/card', apiDrizzleCard)
 app.use(
   '/trpc',
   createExpressMiddleware({

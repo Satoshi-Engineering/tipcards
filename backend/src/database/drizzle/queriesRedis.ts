@@ -11,3 +11,8 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
   }
   return cardRedisFromCardDrizzle(cardVersion)
 }
+
+/** @throws */
+export const updateCard = async (card: CardRedis): Promise<void> => {
+  // todo : implement
+}
