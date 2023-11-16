@@ -5,13 +5,15 @@ import {
   insertLnurlPs, insertLnurlWs,
 } from '../mocks/queries'
 
-import { createCard as createCardData } from '../../../../redisData'
+import { createCard as createCardData, createInvoice } from '../../../../redisData'
 
 import { createCard } from '@backend/database/drizzle/queriesRedis'
 
 describe('createCard', () => {
   it('should create a blank card', async () => {
     const card = createCardData()
+    const invoice = createInvoice(100)
+    card.invoice = invoice
 
     await createCard(card)
     expect(insertCards).toHaveBeenCalledWith(expect.objectContaining({
@@ -28,8 +30,16 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
+    expect(insertInvoices).toHaveBeenCalledWith(expect.objectContaining({
+      amount: 100,
+      paymentHash: invoice?.payment_hash,
+      paymentRequest: invoice?.payment_request,
+      created: expect.any(Date),
+      paid: null,
+      expiresAt: expect.any(Date),
+      extra: expect.any(String),
+    }))
+    expect(insertCardVersionInvoices).toHaveBeenCalledTimes(1)
     expect(insertLnurlPs).not.toHaveBeenCalled()
     expect(insertLnurlWs).not.toHaveBeenCalled()
   })

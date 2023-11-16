@@ -85,18 +85,33 @@ export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> 
 }
 
 /** @throws */
-export const createCards = async (...cards: Card[]) => {
+export const insertCards = async (...cards: Card[]) => {
   const client = await getClient()
   const result = await client.insert(Card)
     .values(cards)
   return result
 }
 
-
 /** @throws */
-export const createCardVerions = async (...cardVersions: CardVersion[]) => {
+export const insertCardVerions = async (...cardVersions: CardVersion[]) => {
   const client = await getClient()
   const result = await client.insert(CardVersion)
     .values(cardVersions)
+  return result
+}
+
+/** @throws */
+export const insertInvoices = async (...invoices: Invoice[]) => {
+  const client = await getClient()
+  const result = await client.insert(Invoice)
+    .values(invoices)
+  return result
+}
+
+/** @throws */
+export const insertCardVersionInvoices = async (...cardVersionInvoices: CardVersionHasInvoice[]) => {
+  const client = await getClient()
+  const result = await client.insert(CardVersionHasInvoice)
+    .values(cardVersionInvoices)
   return result
 }

@@ -19,3 +19,11 @@ export const createCard = (): Card => {
   }
   return card
 }
+
+export const createInvoice = (amount: number): Card['invoice'] => ({
+  amount,
+  payment_hash: hashSha256(randomUUID()),
+  payment_request: hashSha256(randomUUID()),
+  created: Math.round(+ new Date() / 1000),
+  paid: null,
+})
