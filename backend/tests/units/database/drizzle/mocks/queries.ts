@@ -100,6 +100,13 @@ export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[
   return Object.values(cardVersionsById).filter((cardVersion) => cardVersionIds.includes(cardVersion.id))
 }
 
+export const createCards = jest.fn(async () => undefined)
+export const createCardVerions = jest.fn(async () => undefined)
+export const createInvoices = jest.fn(async () => undefined)
+export const createCardVersionInvoices = jest.fn(async () => undefined)
+export const createLnurlPs = jest.fn(async () => undefined)
+export const createLnurlWs = jest.fn(async () => undefined)
+
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
     getLatestCardVersion,
@@ -108,5 +115,11 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getCardsForLnurlW,
     getInvoicesForCard,
     getCardsForInvoice,
+    createCards,
+    createCardVerions,
+    createInvoices,
+    createCardVersionInvoices,
+    createLnurlPs,
+    createLnurlWs,
   }
 })

@@ -1,7 +1,7 @@
 import { eq, desc } from 'drizzle-orm'
 
-import type { Card } from './schema/Card'
-import { CardVersion as CardVersionDrizzle, type CardVersion } from './schema/CardVersion'
+import { Card } from './schema/Card'
+import { CardVersion } from './schema/CardVersion'
 import { Invoice } from './schema/Invoice'
 import { CardVersionHasInvoice } from './schema/CardVersionHasInvoice'
 import { LnurlP } from './schema/LnurlP'
@@ -12,9 +12,9 @@ import { getClient } from './client'
 export const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
   const client = await getClient()
   const result = await client.select()
-    .from(CardVersionDrizzle)
-    .orderBy(desc(CardVersionDrizzle.created))
-    .where(eq(CardVersionDrizzle.card, cardHash))
+    .from(CardVersion)
+    .orderBy(desc(CardVersion.created))
+    .where(eq(CardVersion.card, cardHash))
     .limit(1)
   if (result.length === 0) {
     return null
@@ -52,7 +52,7 @@ export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[
   const client = await getClient()
   const result = await client.select()
     .from(CardVersionHasInvoice)
-    .innerJoin(CardVersionDrizzle, eq(CardVersionHasInvoice.cardVersion, CardVersionDrizzle.id))
+    .innerJoin(CardVersion, eq(CardVersionHasInvoice.cardVersion, CardVersion.id))
     .where(eq(CardVersionHasInvoice.invoice, invoice.paymentHash))
   return result.map(({ CardVersion }) => CardVersion)
 }
@@ -79,7 +79,24 @@ export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW
 export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
   const client = await getClient()
   const result = await client.select()
-    .from(CardVersionDrizzle)
-    .where(eq(CardVersionDrizzle.lnurlW, lnurlw.lnbitsId))
+    .from(CardVersion)
+    .where(eq(CardVersion.lnurlW, lnurlw.lnbitsId))
+  return result
+}
+
+/** @throws */
+export const createCards = async (...cards: Card[]) => {
+  const client = await getClient()
+  const result = await client.insert(Card)
+    .values(cards)
+  return result
+}
+
+
+/** @throws */
+export const createCardVerions = async (...cardVersions: CardVersion[]) => {
+  const client = await getClient()
+  const result = await client.insert(CardVersion)
+    .values(cardVersions)
   return result
 }
