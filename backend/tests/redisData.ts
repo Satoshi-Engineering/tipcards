@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto'
+import type z from 'zod'
 
 import { Card } from '@backend/database/redis/data/Card'
 import hashSha256 from '@backend/services/hashSha256'
@@ -20,7 +21,9 @@ export const createCard = (): Card => {
   return card
 }
 
-export const createInvoice = (amount: number): Card['invoice'] => ({
+const Invoice = Card.shape.invoice.removeDefault().unwrap()
+type Invoice = z.infer<typeof Invoice>
+export const createInvoice = (amount: number): Invoice => ({
   amount,
   payment_hash: hashSha256(randomUUID()),
   payment_request: hashSha256(randomUUID()),
@@ -28,7 +31,9 @@ export const createInvoice = (amount: number): Card['invoice'] => ({
   paid: null,
 })
 
-export const createLnurlP = (): Card['lnurlp'] => ({
+const LnurlP = Card.shape.lnurlp.removeDefault().unwrap()
+type LnurlP = z.infer<typeof LnurlP>
+export const createLnurlP = (): LnurlP => ({
   shared: false,
   amount: null,
   payment_hash: null,
