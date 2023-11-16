@@ -1,6 +1,8 @@
 /* eslint-disable */
-import 'dotenv/config'
-import readline from 'readline'
+import * as dotenv from 'dotenv'
+import * as readline from 'readline'
+
+dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'

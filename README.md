@@ -32,6 +32,8 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 ## Setup for development
 
+- [Development Guidelines](docs/guidelines.md)
+
 ### Prerequisites
 - [nodejs 16.18.0 LTS](https://nodejs.org/en/)
 - npm
@@ -113,6 +115,9 @@ Ngrok is used to expose you local environment to the web. This is needed to test
 7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
 8. Run `npm run dev` in frontend/ and backend/ directories.
 
+### Script
+
+For additional developer tasks, scripts can be found in [scripts](scripts/README.md).
 
 ## Run from source
 
