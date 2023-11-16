@@ -5,14 +5,14 @@ import {
   insertLnurlPs, insertLnurlWs,
 } from '../mocks/queries'
 
-import { createCard as createCardData, createInvoice } from '../../../../redisData'
+import { createCard as createCardData, createLnurlP } from '../../../../redisData'
 
 import { createCard } from '@backend/database/drizzle/queriesRedis'
 
 describe('createCard', () => {
-  it('should create a card with invoice', async () => {
+  it('should create a card with lnurlp', async () => {
     const card = createCardData()
-    card.invoice = createInvoice(100)
+    card.lnurlp = createLnurlP()
 
     await createCard(card)
     expect(insertCards).toHaveBeenCalledWith(expect.objectContaining({
@@ -22,24 +22,21 @@ describe('createCard', () => {
     expect(insertCardVersions).toHaveBeenCalledWith(expect.objectContaining({
       card: card.cardHash,
       created: expect.any(Date),
-      lnurlP: null,
+      lnurlP: card.lnurlp?.id,
       lnurlW: null,
       textForWithdraw: card.text,
       noteForStatusPage: card.note,
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).toHaveBeenCalledWith(expect.objectContaining({
-      amount: 100,
-      paymentHash: card.invoice?.payment_hash,
-      paymentRequest: card.invoice?.payment_request,
+    expect(insertInvoices).toHaveBeenCalledWith()
+    expect(insertCardVersionInvoices).toHaveBeenCalledWith()
+    expect(insertLnurlPs).toHaveBeenCalledWith(expect.objectContaining({
+      lnbitsId: card.lnurlp?.id,
       created: expect.any(Date),
-      paid: null,
-      expiresAt: expect.any(Date),
-      extra: expect.any(String),
+      expiresAt: null,
+      finished: null,
     }))
-    expect(insertCardVersionInvoices).toHaveBeenCalledTimes(1)
-    expect(insertLnurlPs).toHaveBeenCalledWith()
     expect(insertLnurlWs).not.toHaveBeenCalled()
   })
 })

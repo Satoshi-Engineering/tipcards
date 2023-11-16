@@ -101,7 +101,7 @@ export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[
 }
 
 export const insertCards = jest.fn(async () => undefined)
-export const insertCardVerions = jest.fn(async () => undefined)
+export const insertCardVersions = jest.fn(async () => undefined)
 export const insertInvoices = jest.fn(async () => undefined)
 export const insertCardVersionInvoices = jest.fn(async () => undefined)
 export const insertLnurlPs = jest.fn(async () => undefined)
@@ -116,7 +116,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getInvoicesForCard,
     getCardsForInvoice,
     insertCards,
-    insertCardVerions,
+    insertCardVersions,
     insertInvoices,
     insertCardVersionInvoices,
     insertLnurlPs,

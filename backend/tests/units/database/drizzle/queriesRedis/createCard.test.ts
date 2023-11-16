@@ -1,6 +1,6 @@
 import '../../../mocks/process.env'
 import {
-  insertCards, insertCardVerions,
+  insertCards, insertCardVersions,
   insertInvoices, insertCardVersionInvoices,
   insertLnurlPs, insertLnurlWs,
 } from '../mocks/queries'
@@ -18,7 +18,7 @@ describe('createCard', () => {
       hash: card.cardHash,
       created: expect.any(Date),
     }))
-    expect(insertCardVerions).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertCardVersions).toHaveBeenCalledWith(expect.objectContaining({
       card: card.cardHash,
       created: expect.any(Date),
       lnurlP: null,
@@ -28,9 +28,9 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
-    expect(insertLnurlPs).not.toHaveBeenCalled()
+    expect(insertInvoices).toHaveBeenCalledWith()
+    expect(insertCardVersionInvoices).toHaveBeenCalledWith()
+    expect(insertLnurlPs).toHaveBeenCalledWith()
     expect(insertLnurlWs).not.toHaveBeenCalled()
   })
 })

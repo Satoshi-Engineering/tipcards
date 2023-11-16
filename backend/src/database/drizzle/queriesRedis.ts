@@ -1,12 +1,14 @@
-import { randomUUID } from 'crypto'
-
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { cardRedisFromCardDrizzle } from './transforms/cardRedisFromCardDrizzle'
+import { drizzleDataFromCardRedis } from './transforms/drizzleDataFromCardRedis'
 import {
   getLatestCardVersion,
-  insertCards, insertCardVerions,
-  insertInvoices, insertCardVersionInvoices,
+  insertCards,
+  insertCardVersions,
+  insertInvoices,
+  insertCardVersionInvoices,
+  insertLnurlPs,
 } from './queries'
 
 /** @throws */
@@ -19,49 +21,23 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
 }
 
 /** @throws */
-export const createCard = async (card: CardRedis): Promise<void> => {
-  await insertCards({
-    hash: card.cardHash,
-    created: new Date(),
-    set: null,
-  })
-  const cardVersion = {
-    id: randomUUID(),
-    card: card.cardHash,
-    created: new Date(),
-    lnurlP: null,
-    lnurlW: null,
-    textForWithdraw: card.text,
-    noteForStatusPage: card.note,
-    sharedFunding: !!card.lnurlp?.shared,
-    landingPageViewed: dateFromUnixTimestampOrNull(card.landingPageViewed),
-  }
-  await insertCardVerions(cardVersion)
-  if (card.invoice != null) {
-    await insertInvoices({
-      amount: card.invoice.amount,
-      paymentHash: card.invoice.payment_hash,
-      paymentRequest: card.invoice.payment_request,
-      created: new Date(card.invoice.created * 1000),
-      paid: dateFromUnixTimestampOrNull(card.invoice.paid),
-      expiresAt: new Date((card.invoice.created + 300) * 1000),
-      extra: '',
-    })
-    await insertCardVersionInvoices({
-      cardVersion: cardVersion.id,
-      invoice: card.invoice.payment_hash,
-    })
-  }
+export const createCard = async (cardRedis: CardRedis): Promise<void> => {
+  const drizzleData = drizzleDataFromCardRedis(cardRedis)
+  await insertLnurlPs(...dataObjectToArray(drizzleData.lnurlp))
+  await insertCards(drizzleData.card)
+  await insertCardVersions(drizzleData.cardVersion)
+  await insertInvoices(...dataObjectToArray(drizzleData.invoice))
+  await insertCardVersionInvoices(...dataObjectToArray(drizzleData.cardVersionInvoice))
 }
 
 /** @throws */
-export const updateCard = async (card: CardRedis): Promise<void> => {
+export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
   // todo : implement
 }
 
-const dateFromUnixTimestampOrNull = (timestamp: number | null) => {
-  if (timestamp == null) {
-    return null
+export const dataObjectToArray = <T>(dataObject: T | undefined | null): T[] => {
+  if (dataObject == null) {
+    return []
   }
-  return new Date(timestamp * 1000)
+  return [dataObject]
 }

@@ -85,33 +85,61 @@ export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> 
 }
 
 /** @throws */
-export const insertCards = async (...cards: Card[]) => {
+export const insertCards = async (...cards: Card[]): Promise<void> => {
+  if (cards.length === 0) {
+    return
+  }
   const client = await getClient()
-  const result = await client.insert(Card)
+  await client.insert(Card)
     .values(cards)
-  return result
 }
 
 /** @throws */
-export const insertCardVerions = async (...cardVersions: CardVersion[]) => {
+export const insertCardVersions = async (...cardVersions: CardVersion[]): Promise<void> => {
+  if (cardVersions.length === 0) {
+    return
+  }
   const client = await getClient()
-  const result = await client.insert(CardVersion)
+  await client.insert(CardVersion)
     .values(cardVersions)
-  return result
 }
 
 /** @throws */
-export const insertInvoices = async (...invoices: Invoice[]) => {
+export const insertInvoices = async (...invoices: Invoice[]): Promise<void> => {
+  if (invoices.length === 0) {
+    return
+  }
   const client = await getClient()
-  const result = await client.insert(Invoice)
+  await client.insert(Invoice)
     .values(invoices)
-  return result
 }
 
 /** @throws */
-export const insertCardVersionInvoices = async (...cardVersionInvoices: CardVersionHasInvoice[]) => {
+export const insertCardVersionInvoices = async (...cardVersionInvoices: CardVersionHasInvoice[]): Promise<void> => {
+  if (cardVersionInvoices.length === 0) {
+    return
+  }
   const client = await getClient()
-  const result = await client.insert(CardVersionHasInvoice)
+  await client.insert(CardVersionHasInvoice)
     .values(cardVersionInvoices)
-  return result
+}
+
+/** @throws */
+export const insertLnurlPs = async (...lnurlps: LnurlP[]): Promise<void> => {
+  if (lnurlps.length === 0) {
+    return
+  }
+  const client = await getClient()
+  await client.insert(LnurlP)
+    .values(lnurlps)
+}
+
+/** @throws */
+export const insertLnurlWs = async (...lnurlws: LnurlW[]): Promise<void> => {
+  if (lnurlws.length === 0) {
+    return
+  }
+  const client = await getClient()
+  await client.insert(LnurlW)
+    .values(lnurlws)
 }

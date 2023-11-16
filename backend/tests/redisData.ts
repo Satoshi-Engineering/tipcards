@@ -27,3 +27,12 @@ export const createInvoice = (amount: number): Card['invoice'] => ({
   created: Math.round(+ new Date() / 1000),
   paid: null,
 })
+
+export const createLnurlP = (): Card['lnurlp'] => ({
+  shared: false,
+  amount: null,
+  payment_hash: null,
+  id: hashSha256(randomUUID()),
+  created: Math.round(+ new Date() / 1000),
+  paid: null,
+})
