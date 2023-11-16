@@ -41,3 +41,11 @@ export const createLnurlP = (): LnurlP => ({
   created: Math.round(+ new Date() / 1000),
   paid: null,
 })
+
+const SetFunding = Card.shape.setFunding.removeDefault().unwrap()
+type SetFunding = z.infer<typeof SetFunding>
+export const createSetFunding = (amount: number): SetFunding => ({
+  amount,
+  created: Math.round(+ new Date() / 1000),
+  paid: null,
+})
