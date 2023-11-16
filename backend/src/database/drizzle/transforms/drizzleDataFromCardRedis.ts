@@ -16,7 +16,7 @@ export const drizzleDataFromCardRedis = (cardRedis: CardRedis): {
   cardVersionInvoice: CardVersionHasInvoice | null,
 } => {
   const card = getCardFromCardRedis(cardRedis)
-  const cardVersion = getCardVersionForCardFromCardRedis(cardRedis, card)
+  const cardVersion = getCardVersionForCardFromCardRedis(cardRedis)
   const lnurlp = getLnurlPFromCardRedis(cardRedis, cardVersion)
   const { invoice, cardVersionInvoice } = getInvoiceFromCardRedis(cardRedis, cardVersion)
   return {
@@ -34,7 +34,7 @@ const getCardFromCardRedis = (cardRedis: CardRedis): Card => ({
   set: null,
 })
 
-const getCardVersionForCardFromCardRedis = (cardRedis: CardRedis, card: Card): CardVersion => ({
+const getCardVersionForCardFromCardRedis = (cardRedis: CardRedis): CardVersion => ({
   id: randomUUID(),
   card: cardRedis.cardHash,
   created: new Date(),
