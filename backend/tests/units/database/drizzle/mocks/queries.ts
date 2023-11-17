@@ -93,6 +93,13 @@ export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invo
   return Object.values(invoicesByPaymentHash).filter((invoice) => paymentHashes.includes(invoice.paymentHash))
 }
 
+export const getInvoice = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
+  if (invoicesByPaymentHash[paymentHash] == null) {
+    return null
+  }
+  return invoicesByPaymentHash[paymentHash]
+}
+
 export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
   const cardVersionIds = cardVersionInvoices
     .filter((cardVersionInvoice) => cardVersionInvoice.invoice === invoice.paymentHash)
@@ -119,6 +126,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getLnurlWForCard,
     getCardsForLnurlW,
     getInvoicesForCard,
+    getInvoice,
     getCardsForInvoice,
 
     insertCards,

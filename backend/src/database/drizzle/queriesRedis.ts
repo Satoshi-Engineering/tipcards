@@ -43,12 +43,10 @@ export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
     await insertOrUpdateLnurlP(drizzleChanges.changes.lnurlp)
   }
   await updateCardVesion(drizzleChanges.changes.cardVersion)
-  if (drizzleChanges.changes.invoice != null) {
-    await insertOrUpdateInvoice(drizzleChanges.changes.invoice)
-  }
-  if (drizzleChanges.changes.cardVersionInvoice != null) {
-    await insertOrUpdateCardVersionInvoice(drizzleChanges.changes.cardVersionInvoice)
-  }
+  await Promise.all(drizzleChanges.changes.invoices.map(async ({ invoice, cardVersionInvoice }) => {
+    await insertOrUpdateInvoice(invoice)
+    await insertOrUpdateCardVersionInvoice(cardVersionInvoice)
+  }))
 }
 
 export const dataObjectToArray = <T>(dataObject: T | undefined | null): T[] => {

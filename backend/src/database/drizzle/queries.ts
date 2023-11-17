@@ -48,6 +48,18 @@ export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invo
 }
 
 /** @throws */
+export const getInvoice = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Invoice)
+    .where(eq(Invoice.paymentHash, paymentHash))
+  if (result.length === 0) {
+    return null
+  }
+  return result[0]
+}
+
+/** @throws */
 export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
   const client = await getClient()
   const result = await client.select()
