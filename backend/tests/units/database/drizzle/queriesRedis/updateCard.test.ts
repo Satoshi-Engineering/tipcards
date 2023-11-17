@@ -15,7 +15,7 @@ import { createCard as createRedisCard, createInvoice as createRedisInvoice } fr
 import { updateCard } from '@backend/database/drizzle/queriesRedis'
 
 describe('updateCard', () => {
-  it('should update text and note', async () => {
+  it('should update text and note and landingPageViewed', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
     const { invoice, cardVersionsHaveInvoice } = createInvoice(100, cardVersion)
@@ -30,6 +30,7 @@ describe('updateCard', () => {
     cardRedis.cardHash = card.hash
     cardRedis.text = 'some super text'
     cardRedis.note = 'some crazy note'
+    cardRedis.landingPageViewed = + new Date() / 1000
     const invoiceRedis = createRedisInvoice(100)
     invoiceRedis.payment_hash = invoice.paymentHash
     invoiceRedis.payment_request = invoice.paymentRequest
@@ -45,6 +46,7 @@ describe('updateCard', () => {
     expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
       textForWithdraw: 'some super text',
       noteForStatusPage: 'some crazy note',
+      landingPageViewed: expect.any(Date),
     }))
     expect(insertOrUpdateInvoice).toHaveBeenCalledTimes(1)
     expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledTimes(1)
