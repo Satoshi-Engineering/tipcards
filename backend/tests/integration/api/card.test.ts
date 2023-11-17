@@ -9,11 +9,13 @@ describe('card', () => {
     let caughtError: AxiosError
     try {
       await axios.get(`${process.env.TEST_API_ORIGIN}/api-drizzle/card/aHashThatDoesntExist`)
+      expect(false).toBe(true)
+      return
     } catch (error) {
-      caughtError = error
+      caughtError = error as AxiosError
     }
     expect(axios.isAxiosError(caughtError)).toBe(true)
-    expect(caughtError.response.status).toBe(404)
+    expect(caughtError?.response?.status).toBe(404)
   })
 
   it('should return a card that exists in the database', async () => {
@@ -29,6 +31,8 @@ describe('card', () => {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api-drizzle/card/${card.hash}`)
     } catch (error) {
       console.error(error)
+      expect(false).toBe(true)
+      return
     }
     expect(response.data.data).toEqual(expect.objectContaining({
       cardHash: card.hash,
