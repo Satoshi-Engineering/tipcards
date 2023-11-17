@@ -143,3 +143,27 @@ export const insertLnurlWs = async (...lnurlws: LnurlW[]): Promise<void> => {
   await client.insert(LnurlW)
     .values(lnurlws)
 }
+
+/** @throws */
+export const updateCardVesion = async (cardVersion: CardVersion): Promise<void> => {
+  const client = await getClient()
+  await client.update(CardVersion)
+    .set(cardVersion)
+    .where(eq(CardVersion.id, cardVersion.id))
+}
+
+/** @throws */
+export const insertOrUpdateInvoice = async (invoice: Invoice): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Invoice)
+    .values(invoice)
+    .onDuplicateKeyUpdate({ set: invoice })
+}
+
+/** @throws */
+export const insertOrUpdateCardVersionInvoice = async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
+  const client = await getClient()
+  await client.insert(CardVersionHasInvoice)
+    .values(cardVersionInvoice)
+    .onDuplicateKeyUpdate({ set: cardVersionInvoice })
+}

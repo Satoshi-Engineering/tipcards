@@ -2,6 +2,7 @@ import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { cardRedisFromCardDrizzle } from './transforms/cardRedisFromCardDrizzle'
 import { drizzleDataFromCardRedis } from './transforms/drizzleDataFromCardRedis'
+import { getDrizzleChangesForCardRedis } from './transforms/getDrizzleChangesForCardRedis'
 import {
   getLatestCardVersion,
   insertCards,
@@ -9,6 +10,9 @@ import {
   insertInvoices,
   insertCardVersionInvoices,
   insertLnurlPs,
+  updateCardVesion,
+  insertOrUpdateInvoice,
+  insertOrUpdateCardVersionInvoice,
 } from './queries'
 
 /** @throws */
@@ -32,7 +36,15 @@ export const createCard = async (cardRedis: CardRedis): Promise<void> => {
 
 /** @throws */
 export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
-  // todo : implement
+  const drizzleChanges = await getDrizzleChangesForCardRedis(cardRedis)
+
+  await updateCardVesion(drizzleChanges.changes.cardVersion)
+  if (drizzleChanges.changes.invoice != null) {
+    await insertOrUpdateInvoice(drizzleChanges.changes.invoice)
+  }
+  if (drizzleChanges.changes.cardVersionInvoice != null) {
+    await insertOrUpdateCardVersionInvoice(drizzleChanges.changes.cardVersionInvoice)
+  }
 }
 
 export const dataObjectToArray = <T>(dataObject: T | undefined | null): T[] => {

@@ -60,7 +60,7 @@ const getLnurlPFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion):
   }
 }
 
-const getInvoiceFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion): {
+export const getInvoiceFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion): {
   invoice: Invoice | null,
   cardVersionInvoice: CardVersionHasInvoice | null,
 } => {
