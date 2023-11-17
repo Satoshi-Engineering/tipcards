@@ -47,7 +47,7 @@ const getCardVersionForCardFromCardRedis = (cardRedis: CardRedis): CardVersion =
 })
 
 /** side-effect: set lnurlp in card */
-const getLnurlPFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion): LnurlP | null => {
+export const getLnurlPFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion): LnurlP | null => {
   if (cardRedis.lnurlp == null) {
     return null
   }
@@ -56,7 +56,7 @@ const getLnurlPFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion):
     lnbitsId: String(cardRedis.lnurlp.id),
     created: dateFromUnixTimestamp(cardRedis.lnurlp.created),
     expiresAt: null,
-    finished: null,
+    finished: dateFromUnixTimestampOrNull(cardRedis.lnurlp.paid),
   }
 }
 

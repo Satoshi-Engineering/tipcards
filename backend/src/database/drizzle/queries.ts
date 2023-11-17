@@ -167,3 +167,11 @@ export const insertOrUpdateCardVersionInvoice = async (cardVersionInvoice: CardV
     .values(cardVersionInvoice)
     .onDuplicateKeyUpdate({ set: cardVersionInvoice })
 }
+
+/** @throws */
+export const insertOrUpdateLnurlP = async (lnurlp: LnurlP): Promise<void> => {
+  const client = await getClient()
+  await client.insert(LnurlP)
+    .values(lnurlp)
+    .onDuplicateKeyUpdate({ set: lnurlp })
+}

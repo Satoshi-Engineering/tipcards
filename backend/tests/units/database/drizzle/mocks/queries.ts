@@ -110,6 +110,7 @@ export const insertLnurlWs = jest.fn(async () => undefined)
 export const updateCardVesion = jest.fn(async () => undefined)
 export const insertOrUpdateInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateCardVersionInvoice = jest.fn(async () => undefined)
+export const insertOrUpdateLnurlP = jest.fn(async () => undefined)
 
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
@@ -130,5 +131,6 @@ jest.mock('@backend/database/drizzle/queries', () => {
     updateCardVesion,
     insertOrUpdateInvoice,
     insertOrUpdateCardVersionInvoice,
+    insertOrUpdateLnurlP,
   }
 })

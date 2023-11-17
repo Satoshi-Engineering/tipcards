@@ -13,6 +13,7 @@ import {
   updateCardVesion,
   insertOrUpdateInvoice,
   insertOrUpdateCardVersionInvoice,
+  insertOrUpdateLnurlP,
 } from './queries'
 
 /** @throws */
@@ -38,6 +39,9 @@ export const createCard = async (cardRedis: CardRedis): Promise<void> => {
 export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
   const drizzleChanges = await getDrizzleChangesForCardRedis(cardRedis)
 
+  if (drizzleChanges.changes.lnurlp != null) {
+    await insertOrUpdateLnurlP(drizzleChanges.changes.lnurlp)
+  }
   await updateCardVesion(drizzleChanges.changes.cardVersion)
   if (drizzleChanges.changes.invoice != null) {
     await insertOrUpdateInvoice(drizzleChanges.changes.invoice)

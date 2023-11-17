@@ -2,18 +2,21 @@ import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { CardVersion } from '@backend/database/drizzle/schema'
 import { getLatestCardVersion } from '@backend/database/drizzle/queries'
 
-import { getInvoiceFromCardRedis } from './drizzleDataFromCardRedis'
+import { getInvoiceFromCardRedis, getLnurlPFromCardRedis } from './drizzleDataFromCardRedis'
 
 /** @throws */
 export const getDrizzleChangesForCardRedis = async (cardRedis: CardRedis) => {
-  const cardVersion = await getLatestCardVersion(cardRedis.cardHash)
-  if (cardVersion == null) {
+  const cardVersionCurrent = await getLatestCardVersion(cardRedis.cardHash)
+  if (cardVersionCurrent == null) {
     throw new Error(`Cannot update card ${cardRedis.cardHash} as it doesn't exist.`)
   }
+  const cardVersion = getNewCardVersion(cardVersionCurrent, cardRedis)
+  const lnurlp = getLnurlPFromCardRedis(cardRedis, cardVersion)
   return {
     changes: {
-      cardVersion: getNewCardVersion(cardVersion, cardRedis),
+      cardVersion,
       ...getInvoiceFromCardRedis(cardRedis, cardVersion),
+      lnurlp,
     },
   }
 }
