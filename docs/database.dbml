@@ -38,6 +38,10 @@ Table Invoice {
 Table CardVersionHasInvoice {
   cardVersion varchar(36) [ref: > CardVersion.id]
   invoice     varchar(64) [ref: > Invoice.paymentHash]
+
+  indexes {
+    (cardVersion, invoice) [pk, unique]
+  }
 }
 
 Table LnurlP {
