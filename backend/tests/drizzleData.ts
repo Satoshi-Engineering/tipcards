@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 
 import {
-  Set,
+  Set, SetSettings,
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
@@ -14,10 +14,26 @@ export const createSet = (): Set => ({
   changed: new Date(),
 })
 
+export const createSetSettings = (set: Set): SetSettings => ({
+  set: set.id,
+  name: hashSha256(randomUUID()),
+  numberOfCards: 8,
+  cardHeadline: 'SetSettings cardHeadline',
+  cardCopytext: 'SetSettings cardCopytext',
+  image: 'lightning',
+  landingPage: 'default',
+})
+
 export const createCard = (): Card => ({
   hash: hashSha256(randomUUID()),
   created: new Date(),
   set: null,
+})
+
+export const createCardForSet = (set: Set, cardIndex: number): Card => ({
+  hash: hashSha256(`${set.id}/${cardIndex}`),
+  created: new Date(),
+  set: set.id,
 })
 
 export const createCardVersion = (card: Card): CardVersion => {
@@ -45,7 +61,7 @@ export const createInvoice = (amount: number, ...cardVersions: CardVersion[]): {
     paymentRequest: hashSha256(randomUUID()),
     created: new Date(),
     paid: null,
-    expiresAt: new Date(),
+    expiresAt: new Date(+ new Date() + 5 * 60 * 1000),
     extra: '',
   }
   const cardVersionsHaveInvoice = cardVersions.map((cardVersion) => ({
@@ -60,7 +76,7 @@ export const createLnurlP = (cardVersion: CardVersion): LnurlP => {
   const lnurlp = {
     lnbitsId: hashSha256(randomUUID()),
     created: new Date(),
-    expiresAt: new Date(),
+    expiresAt: null,
     finished: null,
   }
   cardVersion.lnurlP = lnurlp.lnbitsId
@@ -72,7 +88,7 @@ export const createLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
   const lnurlw = {
     lnbitsId: hashSha256(randomUUID()),
     created: new Date(),
-    expiresAt: new Date(),
+    expiresAt: null,
     withdrawn: null,
   }
   cardVersions.forEach((cardVersion) => {

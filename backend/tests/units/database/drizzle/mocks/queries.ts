@@ -1,11 +1,12 @@
 import type {
-  Set,
+  Set, SetSettings,
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
 } from '@backend/database/drizzle/schema'
 
 const setsById: Record<string, Set> = {}
+const setSettingsBySetId: Record<string, SetSettings> = {}
 const cardsByHash: Record<string, Card> = {}
 const cardVersionsById: Record<string, CardVersion> = {}
 const cardVersionInvoices: CardVersionHasInvoice[] = []
@@ -15,6 +16,9 @@ const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
+}
+export const addSetSettings = (...setSettings: SetSettings[]) => {
+  addItemsToTable(setSettingsBySetId, setSettings.map((setSettings) => ({ key: setSettings.set, item: setSettings })))
 }
 export const addCards = (...cards: Card[]) => {
   addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.hash, item: card })))
@@ -36,6 +40,7 @@ export const addLnurlWs = (...lnurlws: LnurlW[]) => {
 }
 export const addData = ({
   sets,
+  setSettings,
   cards,
   cardVersions,
   invoices,
@@ -44,6 +49,7 @@ export const addData = ({
   lnurlws,
 }: {
   sets?: Set[],
+  setSettings?: SetSettings[],
   cards?: Card[],
   cardVersions?: CardVersion[],
   invoices?: Invoice[],
@@ -52,6 +58,7 @@ export const addData = ({
   lnurlws?: LnurlW[],
 }) => {
   addSets(...(sets || []))
+  addSetSettings(...(setSettings || []))
   addCards(...(cards || []))
   addCardVersions(...(cardVersions || []))
   addInvoices(...(invoices || []))
@@ -68,6 +75,10 @@ const addItemToTable = <I>(table: Record<string, I>, { key, item }: { key: strin
 }
 
 const getSetById = async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null
+
+const getSetSettingsForSet = async (set: Set): Promise<SetSettings | null> => setSettingsBySetId[set.id] || null
+
+const getAllCardsForSet = async (set: Set): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === set.id)
 
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
   const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
@@ -147,6 +158,8 @@ export const deleteCardVersionInvoice = jest.fn(async () => undefined)
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
     getSetById,
+    getSetSettingsForSet,
+    getAllCardsForSet,
     getLatestCardVersion,
     getLnurlPFundingCardVersion,
     getLnurlWWithdrawingCardVersion,

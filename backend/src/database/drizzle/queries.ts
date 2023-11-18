@@ -1,7 +1,7 @@
 import { and, eq, isNull, desc } from 'drizzle-orm'
 
 import {
-  Set,
+  Set, SetSettings,
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
@@ -18,6 +18,25 @@ export const getSetById = async (setId: Set['id']): Promise<Set | null> => {
     return null
   }
   return result[0]
+}
+
+/** @throws */
+export const getSetSettingsForSet = async (set: Set): Promise<SetSettings | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(SetSettings)
+    .where(eq(SetSettings.set, set.id))
+  if (result.length === 0) {
+    return null
+  }
+  return result[0]
+}
+
+export const getAllCardsForSet = async (set: Set): Promise<Card[]> => {
+  const client = await getClient()
+  return client.select()
+    .from(Card)
+    .where(eq(Card.set, set.id))
 }
 
 /** @throws */
