@@ -1,5 +1,5 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { CardVersion, CardVersionHasInvoice, Invoice } from '@backend/database/drizzle/schema'
+import { CardVersion, CardVersionHasInvoice, Invoice, LnurlW } from '@backend/database/drizzle/schema'
 import { getLatestCardVersion, getInvoice } from '@backend/database/drizzle/queries'
 
 import { getInvoiceFromCardRedis, getLnurlPFromCardRedis } from './drizzleDataFromCardRedis'
@@ -17,11 +17,13 @@ export const getDrizzleChangesForCardRedis = async (cardRedis: CardRedis) => {
   if (invoice != null && cardVersionInvoice != null) {
     invoices.push({ invoice, cardVersionInvoice })
   }
+  const lnurlw = getLnurlWFromCardRedis(cardRedis, cardVersion)
   return {
     changes: {
       cardVersion,
       invoices,
       lnurlp,
+      lnurlw,
     },
   }
 }
@@ -99,6 +101,21 @@ const getNewInvoicesForCardRedis = (
     })
   })
   return invoices
+}
+
+/** side-effect: set lnurlW in cardVersion */
+export const getLnurlWFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVersion): LnurlW | null => {
+  if (cardRedis.lnbitsWithdrawId == null) {
+    cardVersion.lnurlW = null
+    return null
+  }
+  cardVersion.lnurlW = cardRedis.lnbitsWithdrawId
+  return {
+    lnbitsId: cardRedis.lnbitsWithdrawId,
+    created: new Date(),
+    expiresAt: null,
+    withdrawn: null,
+  }
 }
 
 const dateFromUnixTimestampOrNull = (timestamp: number | null) => {

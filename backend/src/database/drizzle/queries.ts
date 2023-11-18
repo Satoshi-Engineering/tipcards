@@ -187,3 +187,11 @@ export const insertOrUpdateLnurlP = async (lnurlp: LnurlP): Promise<void> => {
     .values(lnurlp)
     .onDuplicateKeyUpdate({ set: lnurlp })
 }
+
+/** @throws */
+export const insertOrUpdateLnurlW = async (lnurlw: LnurlW): Promise<void> => {
+  const client = await getClient()
+  await client.insert(LnurlW)
+    .values(lnurlw)
+    .onDuplicateKeyUpdate({ set: lnurlw })
+}

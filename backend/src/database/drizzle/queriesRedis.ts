@@ -14,6 +14,7 @@ import {
   insertOrUpdateInvoice,
   insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP,
+  insertOrUpdateLnurlW,
 } from './queries'
 
 /** @throws */
@@ -41,6 +42,9 @@ export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
 
   if (drizzleChanges.changes.lnurlp != null) {
     await insertOrUpdateLnurlP(drizzleChanges.changes.lnurlp)
+  }
+  if (drizzleChanges.changes.lnurlw != null) {
+    await insertOrUpdateLnurlW(drizzleChanges.changes.lnurlw)
   }
   await updateCardVesion(drizzleChanges.changes.cardVersion)
   await Promise.all(drizzleChanges.changes.invoices.map(async ({ invoice, cardVersionInvoice }) => {
