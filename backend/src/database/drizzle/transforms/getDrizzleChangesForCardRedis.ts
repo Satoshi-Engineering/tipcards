@@ -1,6 +1,6 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { CardVersion, CardVersionHasInvoice, Invoice, LnurlW } from '@backend/database/drizzle/schema'
-import { getLatestCardVersion, getInvoice } from '@backend/database/drizzle/queries'
+import { getLatestCardVersion, getInvoiceByPaymentHash } from '@backend/database/drizzle/queries'
 
 import { getInvoiceFromCardRedis, getLnurlPFromCardRedis } from './drizzleDataFromCardRedis'
 
@@ -50,7 +50,7 @@ const getExistingInvoicesForCardRedis = async (cardRedis: CardRedis, cardVersion
   }
   const invoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[] = []
   await Promise.all(cardRedis.lnurlp.payment_hash.map(async (paymentHash) => {
-    const invoice = await getInvoice(paymentHash)
+    const invoice = await getInvoiceByPaymentHash(paymentHash)
     if (invoice == null) {
       return
     }

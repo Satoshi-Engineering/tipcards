@@ -68,43 +68,43 @@ const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion
   return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
 }
 
-export const getLnurlPForCard = async (cardVersion: CardVersion): Promise<LnurlP | null> => {
+const getLnurlPFundingCardVersion = async (cardVersion: CardVersion): Promise<LnurlP | null> => {
   if (cardVersion.lnurlP == null || lnurlPsByLnbitsId[cardVersion.lnurlP] == null) {
     return null
   }
   return lnurlPsByLnbitsId[cardVersion.lnurlP]
 }
 
-export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
-  if (cardVersion.lnurlW == null || lnurlWsByLnbitsId[cardVersion.lnurlW] == null) {
-    return null
-  }
-  return lnurlWsByLnbitsId[cardVersion.lnurlW]
-}
-
-export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
-  return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
-}
-
-export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invoice[]> => {
+const getAllInvoicesFundingCardVersion = async (cardVersion: CardVersion): Promise<Invoice[]> => {
   const paymentHashes = cardVersionInvoices
     .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
     .map((cardVersionInvoice) => cardVersionInvoice.invoice)
   return Object.values(invoicesByPaymentHash).filter((invoice) => paymentHashes.includes(invoice.paymentHash))
 }
 
-export const getInvoice = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
+const getInvoiceByPaymentHash = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
   if (invoicesByPaymentHash[paymentHash] == null) {
     return null
   }
   return invoicesByPaymentHash[paymentHash]
 }
 
-export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
+const getAllCardVersionsFundedByInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
   const cardVersionIds = cardVersionInvoices
     .filter((cardVersionInvoice) => cardVersionInvoice.invoice === invoice.paymentHash)
     .map((cardVersionInvoice) => cardVersionInvoice.cardVersion)
   return Object.values(cardVersionsById).filter((cardVersion) => cardVersionIds.includes(cardVersion.id))
+}
+
+const getLnurlWWithdrawingCardVersion = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
+  if (cardVersion.lnurlW == null || lnurlWsByLnbitsId[cardVersion.lnurlW] == null) {
+    return null
+  }
+  return lnurlWsByLnbitsId[cardVersion.lnurlW]
+}
+
+const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
+  return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
 }
 
 export const insertCards = jest.fn(async () => undefined)
@@ -113,7 +113,6 @@ export const insertInvoices = jest.fn(async () => undefined)
 export const insertCardVersionInvoices = jest.fn(async () => undefined)
 export const insertLnurlPs = jest.fn(async () => undefined)
 export const insertLnurlWs = jest.fn(async () => undefined)
-
 export const updateCardVesion = jest.fn(async () => undefined)
 export const insertOrUpdateInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateCardVersionInvoice = jest.fn(async () => undefined)
@@ -123,12 +122,12 @@ export const insertOrUpdateLnurlW = jest.fn(async () => undefined)
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
     getLatestCardVersion,
-    getLnurlPForCard,
-    getLnurlWForCard,
-    getCardsForLnurlW,
-    getInvoicesForCard,
-    getInvoice,
-    getCardsForInvoice,
+    getLnurlPFundingCardVersion,
+    getLnurlWWithdrawingCardVersion,
+    getAllCardsWithdrawnByLnurlW,
+    getAllInvoicesFundingCardVersion,
+    getInvoiceByPaymentHash,
+    getAllCardVersionsFundedByInvoice,
 
     insertCards,
     insertCardVersions,

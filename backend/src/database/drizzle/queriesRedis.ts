@@ -1,6 +1,6 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
-import { cardRedisFromCardDrizzle } from './transforms/cardRedisFromCardDrizzle'
+import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
 import { drizzleDataFromCardRedis } from './transforms/drizzleDataFromCardRedis'
 import { getDrizzleChangesForCardRedis } from './transforms/getDrizzleChangesForCardRedis'
 import {
@@ -23,7 +23,7 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
   if (cardVersion == null) {
     return null
   }
-  return cardRedisFromCardDrizzle(cardVersion)
+  return getRedisCardFromDrizzleCardVersion(cardVersion)
 }
 
 /** @throws */

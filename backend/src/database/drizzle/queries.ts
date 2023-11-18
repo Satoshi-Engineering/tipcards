@@ -23,7 +23,7 @@ export const getLatestCardVersion = async (cardHash: Card['hash']): Promise<Card
 }
 
 /** @throws */
-export const getLnurlPForCard = async (cardVersion: CardVersion): Promise<LnurlP | null> => {
+export const getLnurlPFundingCardVersion = async (cardVersion: CardVersion): Promise<LnurlP | null> => {
   if (cardVersion.lnurlP == null) {
     return null
   }
@@ -38,7 +38,7 @@ export const getLnurlPForCard = async (cardVersion: CardVersion): Promise<LnurlP
 }
 
 /** @throws */
-export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invoice[]> => {
+export const getAllInvoicesFundingCardVersion = async (cardVersion: CardVersion): Promise<Invoice[]> => {
   const client = await getClient()
   const result = await client.select()
     .from(CardVersionHasInvoice)
@@ -48,7 +48,7 @@ export const getInvoicesForCard = async (cardVersion: CardVersion): Promise<Invo
 }
 
 /** @throws */
-export const getInvoice = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
+export const getInvoiceByPaymentHash = async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
   const client = await getClient()
   const result = await client.select()
     .from(Invoice)
@@ -60,7 +60,7 @@ export const getInvoice = async (paymentHash: Invoice['paymentHash']): Promise<I
 }
 
 /** @throws */
-export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
+export const getAllCardVersionsFundedByInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
   const client = await getClient()
   const result = await client.select()
     .from(CardVersionHasInvoice)
@@ -70,7 +70,7 @@ export const getCardsForInvoice = async (invoice: Invoice): Promise<CardVersion[
 }
 
 /** @throws */
-export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
+export const getLnurlWWithdrawingCardVersion = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
   if (cardVersion.lnurlW == null) {
     return null
   }
@@ -88,7 +88,7 @@ export const getLnurlWForCard = async (cardVersion: CardVersion): Promise<LnurlW
 }
 
 /** @throws */
-export const getCardsForLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
+export const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
   const client = await getClient()
   const result = await client.select()
     .from(CardVersion)
