@@ -1,9 +1,6 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { CardVersion, CardVersionHasInvoice, Invoice } from '@backend/database/drizzle/schema'
-import type {
-  DataObjectsForInsertOrUpdate,
-  DataObjectsForDelete,
-} from '@backend/database/drizzle/batchQueries'
+import { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/drizzle/schema'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import {
   getLatestCardVersion,
   getInvoiceByPaymentHash,
@@ -19,8 +16,8 @@ import {
 
 /** @throws */
 export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRedis): Promise<{
-  insertOrUpdate: DataObjectsForInsertOrUpdate,
-  delete: DataObjectsForDelete,
+  insertOrUpdate: DataObjects,
+  delete: DataObjects,
 }> => {
   const cardVersionCurrent = await getLatestCardVersion(cardRedis.cardHash)
   if (cardVersionCurrent == null) {
@@ -28,28 +25,26 @@ export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRe
   }
   const cardVersion = getUpdatedCardVersionForRedisCard(cardVersionCurrent, cardRedis)
   const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
-  const invoices = await getDrizzleInvoicesFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const { invoices, cardVersionInvoices } = await getDrizzleInvoicesFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
-  if (invoice != null && cardVersionInvoice != null) {
-    invoices.push({ invoice, cardVersionInvoice })
-  }
   const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
 
-  const invoicesToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const dataObjectsToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   return {
-    insertOrUpdate: {
+    insertOrUpdate: insertOrUpdateToDataObjects({
       cardVersion,
       invoices,
+      cardVersionInvoices,
+      invoice,
+      cardVersionInvoice,
       lnurlP,
       lnurlW,
-    },
-    delete: {
-      invoices: invoicesToDelete,
-    },
+    }),
+    delete: dataObjectsToDelete,
   }
 }
 
-const getUpdatedCardVersionForRedisCard = (cardVersion: CardVersion, cardRedis: CardRedis) => ({
+const getUpdatedCardVersionForRedisCard = (cardVersion: CardVersion, cardRedis: CardRedis): CardVersion => ({
   ...cardVersion,
   textForWithdraw: cardRedis.text,
   noteForStatusPage: cardRedis.note,
@@ -57,55 +52,63 @@ const getUpdatedCardVersionForRedisCard = (cardVersion: CardVersion, cardRedis: 
   landingPageViewed: unixTimestampOrNullToDate(cardRedis.landingPageViewed),
 })
 
-const getDrizzleInvoicesFromRedisLnurlP = async (lnurlPRedis: CardRedis['lnurlp'], cardVersion: CardVersion) => {
+const getDrizzleInvoicesFromRedisLnurlP = async (lnurlPRedis: CardRedis['lnurlp'], cardVersion: CardVersion): Promise<{
+  invoices: Invoice[],
+  cardVersionInvoices: CardVersionHasInvoice[],
+}> => {
   if (lnurlPRedis?.amount == null || lnurlPRedis?.payment_hash == null) {
-    return []
+    return { invoices: [], cardVersionInvoices: [] }
   }
-  const existingInvoices = await getExistingDrizzleInvoicesForPaymentHashes(lnurlPRedis.payment_hash, cardVersion)
+  const { invoices } = await getExistingDrizzleInvoicesForPaymentHashes(lnurlPRedis.payment_hash, cardVersion)
   return getNewDrizzleInvoicesForRedisLnurlP(
     lnurlPRedis.amount,
     lnurlPRedis.payment_hash,
     cardVersion,
-    existingInvoices,
+    invoices,
   )
 }
 
-const getExistingDrizzleInvoicesForPaymentHashes = async (paymentHashes: Invoice['paymentHash'][], cardVersion: CardVersion) => {
-  const invoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[] = []
+const getExistingDrizzleInvoicesForPaymentHashes = async (paymentHashes: Invoice['paymentHash'][], cardVersion: CardVersion): Promise<{
+  invoices: Invoice[],
+  cardVersionInvoices: CardVersionHasInvoice[],
+}> => {
+  const invoices: Invoice[] = []
+  const cardVersionInvoices: CardVersionHasInvoice[] = []
   await Promise.all(paymentHashes.map(async (paymentHash) => {
     const invoice = await getInvoiceByPaymentHash(paymentHash)
     if (invoice == null) {
       return
     }
-    invoices.push({
-      invoice,
-      cardVersionInvoice: {
-        cardVersion: cardVersion.id,
-        invoice: invoice.paymentHash,
-      },
+    invoices.push(invoice)
+    cardVersionInvoices.push({
+      cardVersion: cardVersion.id,
+      invoice: invoice.paymentHash,
     })
   }))
-  return invoices
+  return { invoices, cardVersionInvoices }
 }
 
 const getNewDrizzleInvoicesForRedisLnurlP = (
   targetAmount: Invoice['amount'],
   targetPaymentHashes: Invoice['paymentHash'][],
   cardVersion: CardVersion,
-  existingInvoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
-): { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[] => {
+  existingInvoices: Invoice[],
+): {
+  invoices: Invoice[],
+  cardVersionInvoices: CardVersionHasInvoice[],
+} => {
   const missingPaymentHashes = existingInvoices.reduce(
-    (current, { invoice }) => current.filter((paymentHash) => paymentHash !== invoice.paymentHash),
+    (current, invoice) => current.filter((paymentHash) => paymentHash !== invoice.paymentHash),
     targetPaymentHashes,
   )
   if (missingPaymentHashes.length === 0) {
-    return []
+    return { invoices: [], cardVersionInvoices: [] }
   }
 
-  const amountMissing = targetAmount - existingInvoices.reduce((total, invoice) => total + invoice.invoice.amount, 0)
+  const amountMissing = targetAmount - existingInvoices.reduce((total, invoice) => total + invoice.amount, 0)
   const amountPerNewInvoice = Math.round(amountMissing / missingPaymentHashes.length)
-  return missingPaymentHashes.map((paymentHash) => ({
-    invoice: {
+  return {
+    invoices: missingPaymentHashes.map((paymentHash) => ({
       amount: amountPerNewInvoice,
       paymentHash,
       paymentRequest: '',
@@ -113,30 +116,71 @@ const getNewDrizzleInvoicesForRedisLnurlP = (
       paid: new Date(),
       expiresAt: new Date(),
       extra: `{ "lnurlp": "${cardVersion.lnurlP}" }`,
-    },
-    cardVersionInvoice: {
+    })),
+    cardVersionInvoices: missingPaymentHashes.map((paymentHash) => ({
       cardVersion: cardVersion.id,
       invoice: paymentHash,
-    },
-  }))
+    })),
+  }
 }
 
 const getDrizzleInvoicesToDeleteFromRedisLnurlP = async (
   lnurlPRedis: CardRedis['lnurlp'],
   cardVersion: CardVersion,
-): Promise<{
-  invoice: Invoice,
-  cardVersionInvoice: CardVersionHasInvoice,
-}[]> => {
+): Promise<DataObjects> => {
   if (lnurlPRedis == null) {
-    return []
+    return {}
   }
   const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
-  return invoices.map((invoice) => ({
-    invoice,
-    cardVersionInvoice: {
+  if (invoices.length === 0) {
+    return {}
+  }
+  return {
+    invoices,
+    cardVersionInvoices: invoices.map((invoice) => ({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion.id,
-    },
-  }))
+    })),
+  }
+}
+
+const insertOrUpdateToDataObjects = ({
+  cardVersion,
+  invoices,
+  cardVersionInvoices,
+  invoice,
+  cardVersionInvoice,
+  lnurlP,
+  lnurlW,
+}: {
+  cardVersion: CardVersion,
+  invoices: Invoice[],
+  cardVersionInvoices: CardVersionHasInvoice[],
+  invoice: Invoice | null,
+  cardVersionInvoice: CardVersionHasInvoice | null,
+  lnurlP: LnurlP | null,
+  lnurlW: LnurlW | null,
+}): DataObjects => {
+  const dataObjects: DataObjects = {
+    cardVersions: [cardVersion],
+  }
+  if (lnurlP != null) {
+    dataObjects.lnurlPs = [lnurlP]
+  }
+  if (lnurlW != null) {
+    dataObjects.lnurlWs = [lnurlW]
+  }
+  if (invoice != null) {
+    invoices = [...invoices, invoice]
+  }
+  if (invoices.length > 0) {
+    dataObjects.invoices = invoices
+  }
+  if (cardVersionInvoice != null) {
+    cardVersionInvoices = [...cardVersionInvoices, cardVersionInvoice]
+  }
+  if (cardVersionInvoices.length > 0) {
+    dataObjects.cardVersionInvoices = cardVersionInvoices
+  }
+  return dataObjects
 }

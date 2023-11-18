@@ -5,23 +5,23 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
 } from '@backend/database/drizzle/schema'
-import type { DataObjectsForInsert } from '@backend/database/drizzle/batchQueries'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
 
-export const getDrizzleDataObjectsFromRedisCard = (cardRedis: CardRedis): DataObjectsForInsert => {
+export const getDrizzleDataObjectsFromRedisCard = (cardRedis: CardRedis): DataObjects => {
   const card = getDrizzleCardFromRedisCard(cardRedis)
   const cardVersion = getDrizzleCardVersionFromRedisCard(cardRedis)
   const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
-  return {
+  return toDataObjects({
     card,
     cardVersion,
     lnurlP,
     invoice,
     cardVersionInvoice,
-  }
+  })
 }
 
 export const getDrizzleCardFromRedisCard = (cardRedis: CardRedis): Card => ({
@@ -93,4 +93,33 @@ export const getDrizzleInvoiceFromRedisInvoice = (invoiceRedis: CardRedis['invoi
       invoice: invoiceRedis.payment_hash,
     },
   }
+}
+
+const toDataObjects = ({
+  card,
+  cardVersion,
+  lnurlP,
+  invoice,
+  cardVersionInvoice,
+}: {
+  card: Card,
+  cardVersion: CardVersion,
+  lnurlP: LnurlP | null,
+  invoice: Invoice | null,
+  cardVersionInvoice: CardVersionHasInvoice | null,
+}): DataObjects => {
+  const dataObjects: DataObjects = {
+    cards: [card],
+    cardVersions: [cardVersion],
+  }
+  if (lnurlP != null) {
+    dataObjects.lnurlPs = [lnurlP]
+  }
+  if (invoice != null) {
+    dataObjects.invoices = [invoice]
+  }
+  if (cardVersionInvoice != null) {
+    dataObjects.cardVersionInvoices = [cardVersionInvoice]
+  }
+  return dataObjects
 }

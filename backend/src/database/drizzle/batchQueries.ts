@@ -14,77 +14,74 @@ import {
   deleteInvoice, deleteCardVersionInvoice,
 } from '@backend/database/drizzle/queries'
 
-export type DataObjectsForInsert = {
-  card: Card,
-  cardVersion: CardVersion,
-  lnurlP?: LnurlP | null,
-  lnurlW?: LnurlW | null,
-  invoice?: Invoice | null,
-  cardVersionInvoice?: CardVersionHasInvoice | null,
+export type DataObjects = {
+  cards?: Card[],
+  cardVersions?: CardVersion[],
+  invoices?: Invoice[],
+  cardVersionInvoices?: CardVersionHasInvoice[],
+  lnurlPs?: LnurlP[],
+  lnurlWs?: LnurlW[],
 }
 
 /** @throws */
-export const insertDataObjects = async (data: DataObjectsForInsert): Promise<void> => {
-  if (data.lnurlP != null) {
-    await insertLnurlPs(data.lnurlP)
+export const insertDataObjects = async (data: DataObjects): Promise<void> => {
+  if (data.lnurlPs != null) {
+    await insertLnurlPs(...data.lnurlPs)
   }
-  if (data.lnurlW != null) {
-    await insertLnurlWs(data.lnurlW)
+  if (data.lnurlWs != null) {
+    await insertLnurlWs(...data.lnurlWs)
   }
-  await insertCards(data.card)
-  await insertCardVersions(data.cardVersion)
-  if (data.invoice != null) {
-    await insertInvoices(data.invoice)
+  if (data.cards != null) {
+    await insertCards(...data.cards)
   }
-  if (data.cardVersionInvoice != null) {
-    await insertCardVersionInvoices(data.cardVersionInvoice)
+  if (data.cardVersions != null) {
+    await insertCardVersions(...data.cardVersions)
+  }
+  if (data.invoices != null) {
+    await insertInvoices(...data.invoices)
+  }
+  if (data.cardVersionInvoices != null) {
+    await insertCardVersionInvoices(...data.cardVersionInvoices)
   }
 }
 
-export type DataObjectsForInsertOrUpdate = {
-  cardVersion: CardVersion,
-  invoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
-  lnurlP?: LnurlP | null,
-  lnurlW?: LnurlW | null,
-}
-
-export const insertOrUpdateDataObjects = async (data: DataObjectsForInsertOrUpdate): Promise<void> => {
-  if (data.lnurlP != null) {
-    await insertOrUpdateLnurlP(data.lnurlP)
+export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void> => {
+  if (data.lnurlPs != null) {
+    await Promise.all(data.lnurlPs.map((lnurlP) => insertOrUpdateLnurlP(lnurlP)))
   }
-  if (data.lnurlW != null) {
-    await insertOrUpdateLnurlW(data.lnurlW)
+  if (data.lnurlWs != null) {
+    await Promise.all(data.lnurlWs.map((lnurlW) => insertOrUpdateLnurlW(lnurlW)))
   }
-  await updateCardVesion(data.cardVersion)
-  await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
-    await insertOrUpdateInvoice(invoice)
-    await insertOrUpdateCardVersionInvoice(cardVersionInvoice)
-  }))
+  if (data.cardVersions != null) {
+    await Promise.all(data.cardVersions.map((cardVersion) => updateCardVesion(cardVersion)))
+  }
+  if (data.invoices != null) {
+    await Promise.all(
+      data.invoices.map((invoice) => insertOrUpdateInvoice(invoice)),
+    )
+  }
+  if (data.cardVersionInvoices != null) {
+    await Promise.all(
+      data.cardVersionInvoices.map((cardVersionInvoice) => insertOrUpdateCardVersionInvoice(cardVersionInvoice)),
+    )
+  }
 }
 
-export type DataObjectsForDelete = {
-  card?: Card,
-  cardVersion?: CardVersion,
-  cardVersionInvoices?: CardVersionHasInvoice[],
-  invoices?: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
-}
-
-export const deleteDataObjects = async (data: DataObjectsForDelete): Promise<void> => {
+export const deleteDataObjects = async (data: DataObjects): Promise<void> => {
   if (data.cardVersionInvoices != null) {
     await Promise.all(
       data.cardVersionInvoices.map((cardVersionInvoice) => deleteCardVersionInvoice(cardVersionInvoice)),
     )
   }
   if (data.invoices != null) {
-    await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
-      await deleteCardVersionInvoice(cardVersionInvoice)
-      await deleteInvoice(invoice)
-    }))
+    await Promise.all(
+      data.invoices.map((invoice) => deleteInvoice(invoice)),
+    )
   }
-  if (data.cardVersion != null) {
-    await deleteCardVersion(data.cardVersion)
+  if (data.cardVersions != null) {
+    await Promise.all(data.cardVersions.map((cardVersion) => deleteCardVersion(cardVersion)))
   }
-  if (data.card != null) {
-    await deleteCard(data.card)
+  if (data.cards != null) {
+    await Promise.all(data.cards.map((card) => deleteCard(card)))
   }
 }
