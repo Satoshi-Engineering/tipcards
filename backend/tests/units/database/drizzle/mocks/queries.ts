@@ -1,10 +1,11 @@
-import type { Card } from '@backend/database/drizzle/schema/Card'
-import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
-import type { CardVersionHasInvoice } from '@backend/database/drizzle/schema/CardVersionHasInvoice'
-import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
-import type { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
-import type { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
+import type {
+  Set,
+  Card, CardVersion,
+  Invoice, CardVersionHasInvoice,
+  LnurlP, LnurlW,
+} from '@backend/database/drizzle/schema'
 
+const setsById: Record<string, Set> = {}
 const cardsByHash: Record<string, Card> = {}
 const cardVersionsById: Record<string, CardVersion> = {}
 const cardVersionInvoices: CardVersionHasInvoice[] = []
@@ -12,6 +13,9 @@ const invoicesByPaymentHash: Record<string, Invoice> = {}
 const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
 const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
 
+export const addSets = (...sets: Set[]) => {
+  addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
+}
 export const addCards = (...cards: Card[]) => {
   addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.hash, item: card })))
 }
@@ -31,6 +35,7 @@ export const addLnurlWs = (...lnurlws: LnurlW[]) => {
   addItemsToTable(lnurlWsByLnbitsId, lnurlws.map((lnurlw) => ({ key: lnurlw.lnbitsId, item: lnurlw })))
 }
 export const addData = ({
+  sets,
   cards,
   cardVersions,
   invoices,
@@ -38,6 +43,7 @@ export const addData = ({
   lnurlps,
   lnurlws,
 }: {
+  sets?: Set[],
   cards?: Card[],
   cardVersions?: CardVersion[],
   invoices?: Invoice[],
@@ -45,6 +51,7 @@ export const addData = ({
   lnurlps?: LnurlP[],
   lnurlws?: LnurlW[],
 }) => {
+  addSets(...(sets || []))
   addCards(...(cards || []))
   addCardVersions(...(cardVersions || []))
   addInvoices(...(invoices || []))
@@ -59,6 +66,8 @@ const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item
 const addItemToTable = <I>(table: Record<string, I>, { key, item }: { key: string, item: I }) => {
   table[key] = item
 }
+
+const getSetById = async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null
 
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
   const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
@@ -137,6 +146,7 @@ export const deleteCardVersionInvoice = jest.fn(async () => undefined)
 
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
+    getSetById,
     getLatestCardVersion,
     getLnurlPFundingCardVersion,
     getLnurlWWithdrawingCardVersion,

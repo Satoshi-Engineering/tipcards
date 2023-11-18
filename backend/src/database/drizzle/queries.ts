@@ -1,12 +1,24 @@
 import { and, eq, isNull, desc } from 'drizzle-orm'
 
-import { Card } from './schema/Card'
-import { CardVersion } from './schema/CardVersion'
-import { Invoice } from './schema/Invoice'
-import { CardVersionHasInvoice } from './schema/CardVersionHasInvoice'
-import { LnurlP } from './schema/LnurlP'
-import { LnurlW } from './schema/LnurlW'
+import {
+  Set,
+  Card, CardVersion,
+  Invoice, CardVersionHasInvoice,
+  LnurlP, LnurlW,
+} from '@backend/database/drizzle/schema'
 import { getClient } from './client'
+
+/** @throws */
+export const getSetById = async (setId: Set['id']): Promise<Set | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Set)
+    .where(eq(Set.id, setId))
+  if (result.length === 0) {
+    return null
+  }
+  return result[0]
+}
 
 /** @throws */
 export const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {

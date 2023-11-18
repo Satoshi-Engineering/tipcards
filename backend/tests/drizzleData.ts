@@ -1,12 +1,18 @@
 import { randomUUID } from 'crypto'
 
-import { Card } from '@backend/database/drizzle/schema/Card'
-import { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
-import { Invoice } from '@backend/database/drizzle/schema/Invoice'
-import { CardVersionHasInvoice } from '@backend/database/drizzle/schema/CardVersionHasInvoice'
-import { LnurlP } from '@backend/database/drizzle/schema/LnurlP'
-import { LnurlW } from '@backend/database/drizzle/schema/LnurlW'
+import {
+  Set,
+  Card, CardVersion,
+  Invoice, CardVersionHasInvoice,
+  LnurlP, LnurlW,
+} from '@backend/database/drizzle/schema'
 import hashSha256 from '@backend/services/hashSha256'
+
+export const createSet = (): Set => ({
+  id: randomUUID(),
+  created: new Date(),
+  changed: new Date(),
+})
 
 export const createCard = (): Card => ({
   hash: hashSha256(randomUUID()),
