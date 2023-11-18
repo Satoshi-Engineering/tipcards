@@ -38,8 +38,11 @@ describe('createCard', () => {
       expiresAt: expect.any(Date),
       extra: expect.any(String),
     }))
-    expect(insertCardVersionInvoices).toHaveBeenCalledTimes(1)
-    expect(insertLnurlPs).toHaveBeenCalledWith()
+    expect(insertCardVersionInvoices).toHaveBeenCalledWith(expect.objectContaining({
+      invoice: card.invoice?.payment_hash,
+      cardVersion: expect.any(String),
+    }))
+    expect(insertLnurlPs).not.toHaveBeenCalled()
     expect(insertLnurlWs).not.toHaveBeenCalled()
   })
 })

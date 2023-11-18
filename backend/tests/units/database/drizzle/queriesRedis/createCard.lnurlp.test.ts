@@ -29,8 +29,8 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).toHaveBeenCalledWith()
-    expect(insertCardVersionInvoices).toHaveBeenCalledWith()
+    expect(insertInvoices).not.toHaveBeenCalled()
+    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
     expect(insertLnurlPs).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: card.lnurlp?.id,
       created: expect.any(Date),
@@ -60,8 +60,8 @@ describe('createCard', () => {
       sharedFunding: true,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).toHaveBeenCalledWith()
-    expect(insertCardVersionInvoices).toHaveBeenCalledWith()
+    expect(insertInvoices).not.toHaveBeenCalled()
+    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
     expect(insertLnurlPs).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: card.lnurlp?.id,
       created: expect.any(Date),

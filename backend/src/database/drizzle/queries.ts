@@ -98,9 +98,6 @@ export const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<Card
 
 /** @throws */
 export const insertCards = async (...cards: Card[]): Promise<void> => {
-  if (cards.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(Card)
     .values(cards)
@@ -108,9 +105,6 @@ export const insertCards = async (...cards: Card[]): Promise<void> => {
 
 /** @throws */
 export const insertCardVersions = async (...cardVersions: CardVersion[]): Promise<void> => {
-  if (cardVersions.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(CardVersion)
     .values(cardVersions)
@@ -118,9 +112,6 @@ export const insertCardVersions = async (...cardVersions: CardVersion[]): Promis
 
 /** @throws */
 export const insertInvoices = async (...invoices: Invoice[]): Promise<void> => {
-  if (invoices.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(Invoice)
     .values(invoices)
@@ -128,9 +119,6 @@ export const insertInvoices = async (...invoices: Invoice[]): Promise<void> => {
 
 /** @throws */
 export const insertCardVersionInvoices = async (...cardVersionInvoices: CardVersionHasInvoice[]): Promise<void> => {
-  if (cardVersionInvoices.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(CardVersionHasInvoice)
     .values(cardVersionInvoices)
@@ -138,9 +126,6 @@ export const insertCardVersionInvoices = async (...cardVersionInvoices: CardVers
 
 /** @throws */
 export const insertLnurlPs = async (...lnurlps: LnurlP[]): Promise<void> => {
-  if (lnurlps.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(LnurlP)
     .values(lnurlps)
@@ -148,9 +133,6 @@ export const insertLnurlPs = async (...lnurlps: LnurlP[]): Promise<void> => {
 
 /** @throws */
 export const insertLnurlWs = async (...lnurlws: LnurlW[]): Promise<void> => {
-  if (lnurlws.length === 0) {
-    return
-  }
   const client = await getClient()
   await client.insert(LnurlW)
     .values(lnurlws)

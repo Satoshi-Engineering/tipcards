@@ -3,13 +3,9 @@ import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
 import { getDrizzleDataObjectsFromRedisCard } from './transforms/drizzleDataFromRedisData'
 import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
+import { insertDataObjects } from './batchQueries'
 import {
   getLatestCardVersion,
-  insertCards,
-  insertCardVersions,
-  insertInvoices,
-  insertCardVersionInvoices,
-  insertLnurlPs,
   updateCardVesion,
   insertOrUpdateInvoice,
   insertOrUpdateCardVersionInvoice,
@@ -29,12 +25,7 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
 /** @throws */
 export const createCard = async (cardRedis: CardRedis): Promise<void> => {
   const drizzleData = getDrizzleDataObjectsFromRedisCard(cardRedis)
-
-  await insertLnurlPs(...dataObjectToArray(drizzleData.lnurlp))
-  await insertCards(drizzleData.card)
-  await insertCardVersions(drizzleData.cardVersion)
-  await insertInvoices(...dataObjectToArray(drizzleData.invoice))
-  await insertCardVersionInvoices(...dataObjectToArray(drizzleData.cardVersionInvoice))
+  await insertDataObjects(drizzleData)
 }
 
 /** @throws */
@@ -52,11 +43,4 @@ export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
     await insertOrUpdateInvoice(invoice)
     await insertOrUpdateCardVersionInvoice(cardVersionInvoice)
   }))
-}
-
-export const dataObjectToArray = <T>(dataObject: T | undefined | null): T[] => {
-  if (dataObject == null) {
-    return []
-  }
-  return [dataObject]
 }

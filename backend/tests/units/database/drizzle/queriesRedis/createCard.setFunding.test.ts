@@ -29,9 +29,9 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).toHaveBeenCalledWith()
-    expect(insertCardVersionInvoices).toHaveBeenCalledWith()
-    expect(insertLnurlPs).toHaveBeenCalledWith()
+    expect(insertInvoices).not.toHaveBeenCalled()
+    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
+    expect(insertLnurlPs).not.toHaveBeenCalled()
     expect(insertLnurlWs).not.toHaveBeenCalled()
   })
 })
