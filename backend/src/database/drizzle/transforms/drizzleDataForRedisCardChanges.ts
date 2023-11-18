@@ -1,5 +1,6 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { CardVersion, CardVersionHasInvoice, Invoice } from '@backend/database/drizzle/schema'
+import type { DataObjectsForInsertOrUpdate } from '@backend/database/drizzle/batchQueries'
 import { getLatestCardVersion, getInvoiceByPaymentHash } from '@backend/database/drizzle/queries'
 
 import { unixTimestampOrNullToDate } from './dateHelpers'
@@ -10,25 +11,27 @@ import {
 } from './drizzleDataFromRedisData'
 
 /** @throws */
-export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRedis) => {
+export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRedis): Promise<{
+  insertOrUpdate: DataObjectsForInsertOrUpdate,
+}> => {
   const cardVersionCurrent = await getLatestCardVersion(cardRedis.cardHash)
   if (cardVersionCurrent == null) {
     throw new Error(`Cannot update card ${cardRedis.cardHash} as it doesn't exist.`)
   }
   const cardVersion = getUpdatedCardVersionForRedisCard(cardVersionCurrent, cardRedis)
-  const lnurlp = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   const invoices = await getDrizzleInvoicesFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
   if (invoice != null && cardVersionInvoice != null) {
     invoices.push({ invoice, cardVersionInvoice })
   }
-  const lnurlw = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
+  const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
   return {
-    changes: {
+    insertOrUpdate: {
       cardVersion,
       invoices,
-      lnurlp,
-      lnurlw,
+      lnurlP,
+      lnurlW,
     },
   }
 }
