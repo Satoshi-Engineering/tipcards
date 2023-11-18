@@ -1,8 +1,8 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
-import { drizzleDataFromCardRedis } from './transforms/drizzleDataFromCardRedis'
-import { getDrizzleChangesForCardRedis } from './transforms/getDrizzleChangesForCardRedis'
+import { getDrizzleDataObjectsFromRedisCard } from './transforms/drizzleDataFromRedisData'
+import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
 import {
   getLatestCardVersion,
   insertCards,
@@ -28,7 +28,8 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
 
 /** @throws */
 export const createCard = async (cardRedis: CardRedis): Promise<void> => {
-  const drizzleData = drizzleDataFromCardRedis(cardRedis)
+  const drizzleData = getDrizzleDataObjectsFromRedisCard(cardRedis)
+
   await insertLnurlPs(...dataObjectToArray(drizzleData.lnurlp))
   await insertCards(drizzleData.card)
   await insertCardVersions(drizzleData.cardVersion)
@@ -38,7 +39,7 @@ export const createCard = async (cardRedis: CardRedis): Promise<void> => {
 
 /** @throws */
 export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
-  const drizzleChanges = await getDrizzleChangesForCardRedis(cardRedis)
+  const drizzleChanges = await getDrizzleDataObjectsForRedisCardChanges(cardRedis)
 
   if (drizzleChanges.changes.lnurlp != null) {
     await insertOrUpdateLnurlP(drizzleChanges.changes.lnurlp)
