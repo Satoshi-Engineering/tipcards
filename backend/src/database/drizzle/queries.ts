@@ -192,6 +192,20 @@ export const insertOrUpdateLnurlW = async (lnurlw: LnurlW): Promise<void> => {
 }
 
 /** @throws */
+export const deleteCard = async (card: Card): Promise<void> => {
+  const client = await getClient()
+  await client.delete(Card)
+    .where(eq(Card.hash, card.hash))
+}
+
+/** @throws */
+export const deleteCardVersion = async (cardVersion: CardVersion): Promise<void> => {
+  const client = await getClient()
+  await client.delete(CardVersion)
+  .where(eq(CardVersion.id, cardVersion.id))
+}
+
+/** @throws */
 export const deleteInvoice = async (invoice: Invoice): Promise<void> => {
   const client = await getClient()
   await client.delete(Invoice)

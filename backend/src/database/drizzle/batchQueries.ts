@@ -10,6 +10,7 @@ import {
   updateCardVesion,
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
+  deleteCard, deleteCardVersion,
   deleteInvoice, deleteCardVersionInvoice,
 } from '@backend/database/drizzle/queries'
 
@@ -62,12 +63,28 @@ export const insertOrUpdateDataObjects = async (data: DataObjectsForInsertOrUpda
 }
 
 export type DataObjectsForDelete = {
-  invoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
+  card?: Card,
+  cardVersion?: CardVersion,
+  cardVersionInvoices?: CardVersionHasInvoice[],
+  invoices?: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
 }
 
 export const deleteDataObjects = async (data: DataObjectsForDelete): Promise<void> => {
-  await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
-    await deleteCardVersionInvoice(cardVersionInvoice)
-    await deleteInvoice(invoice)
-  }))
+  if (data.cardVersionInvoices != null) {
+    await Promise.all(
+      data.cardVersionInvoices.map((cardVersionInvoice) => deleteCardVersionInvoice(cardVersionInvoice)),
+    )
+  }
+  if (data.invoices != null) {
+    await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
+      await deleteCardVersionInvoice(cardVersionInvoice)
+      await deleteInvoice(invoice)
+    }))
+  }
+  if (data.cardVersion != null) {
+    await deleteCardVersion(data.cardVersion)
+  }
+  if (data.card != null) {
+    await deleteCard(data.card)
+  }
 }
