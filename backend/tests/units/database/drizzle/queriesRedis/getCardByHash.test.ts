@@ -6,7 +6,7 @@ import { createCard, createCardVersion } from '../../../../drizzleData'
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
 describe('getCardByHash', () => {
-  it('should return null for a card that doesn\'t exist', async () => {
+  it('should return null for a cardHash that doesn\'t exist', async () => {
     const card = await getCardByHash('some card hash that doesnt exist')
     expect(card).toBeNull()
   })

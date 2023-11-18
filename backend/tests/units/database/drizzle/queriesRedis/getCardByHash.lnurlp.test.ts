@@ -5,7 +5,7 @@ import { createCard, createCardVersion, createInvoice, createLnurlP } from '../.
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-describe('getCardByHash lnurlp funding', () => {
+describe('getCardByHash', () => {
   it('should return a card funded by lnurlp', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)

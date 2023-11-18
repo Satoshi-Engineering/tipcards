@@ -5,7 +5,7 @@ import { createCard, createCardVersion, createInvoice, createLnurlW } from '../.
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-describe('getCardByHash invoice funding', () => {
+describe('getCardByHash', () => {
   it('should return a card with an unpaid invoice', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
@@ -38,7 +38,7 @@ describe('getCardByHash invoice funding', () => {
     }))
   })
 
-  it('should add the lnbitsWithdrawId', async () => {
+  it('should add the lnbitsWithdrawId when a lnurlw exists', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
     const { invoice, cardVersionsHaveInvoice } = createInvoice(200, cardVersion)

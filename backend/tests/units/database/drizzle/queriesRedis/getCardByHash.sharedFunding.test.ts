@@ -5,7 +5,7 @@ import { createCard, createCardVersion, createInvoice, createLnurlP, createLnurl
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-describe('getCardByHash shared funding', () => {
+describe('getCardByHash', () => {
   it('should return a card funded by lnurlp shared funding', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)

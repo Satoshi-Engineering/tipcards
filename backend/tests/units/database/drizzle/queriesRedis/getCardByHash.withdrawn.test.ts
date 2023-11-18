@@ -5,8 +5,8 @@ import { createCard, createCardVersion, createInvoice, createLnurlW } from '../.
 
 import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
 
-describe('getCardByHash withdrawn card', () => {
-  it('should set the used flag', async () => {
+describe('getCardByHash', () => {
+  it('should set the used flag when the lnurlw is withdrawn', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
     const { invoice, cardVersionsHaveInvoice } = createInvoice(200, cardVersion)
