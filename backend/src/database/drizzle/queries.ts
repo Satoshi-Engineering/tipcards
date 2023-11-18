@@ -1,4 +1,4 @@
-import { eq, desc } from 'drizzle-orm'
+import { and, eq, isNull, desc } from 'drizzle-orm'
 
 import { Card } from './schema/Card'
 import { CardVersion } from './schema/CardVersion'
@@ -57,6 +57,19 @@ export const getInvoiceByPaymentHash = async (paymentHash: Invoice['paymentHash'
     return null
   }
   return result[0]
+}
+
+/** @throws */
+export const getUnpaidInvoicesForCardVersion = async (cardVersion: CardVersion) => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Invoice)
+    .innerJoin(CardVersionHasInvoice, eq(Invoice.paymentHash, CardVersionHasInvoice.invoice))
+    .where(and(
+      eq(CardVersionHasInvoice.cardVersion, cardVersion.id),
+      isNull(Invoice.paid),
+    ))
+return result.map(({ Invoice }) => Invoice)
 }
 
 /** @throws */
@@ -176,4 +189,21 @@ export const insertOrUpdateLnurlW = async (lnurlw: LnurlW): Promise<void> => {
   await client.insert(LnurlW)
     .values(lnurlw)
     .onDuplicateKeyUpdate({ set: lnurlw })
+}
+
+/** @throws */
+export const deleteInvoice = async (invoice: Invoice): Promise<void> => {
+  const client = await getClient()
+  await client.delete(Invoice)
+    .where(eq(Invoice.paymentHash, invoice.paymentHash))
+}
+
+/** @throws */
+export const deleteCardVersionInvoice = async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
+  const client = await getClient()
+  await client.delete(CardVersionHasInvoice)
+    .where(and(
+      eq(CardVersionHasInvoice.invoice, cardVersionInvoice.invoice),
+      eq(CardVersionHasInvoice.cardVersion, cardVersionInvoice.cardVersion),
+    ))
 }

@@ -10,6 +10,7 @@ import {
   updateCardVesion,
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
+  deleteInvoice, deleteCardVersionInvoice,
 } from '@backend/database/drizzle/queries'
 
 export type DataObjectsForInsert = {
@@ -57,5 +58,16 @@ export const insertOrUpdateDataObjects = async (data: DataObjectsForInsertOrUpda
   await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
     await insertOrUpdateInvoice(invoice)
     await insertOrUpdateCardVersionInvoice(cardVersionInvoice)
+  }))
+}
+
+export type DataObjectsForDelete = {
+  invoices: { invoice: Invoice, cardVersionInvoice: CardVersionHasInvoice }[],
+}
+
+export const deleteDataObjects = async (data: DataObjectsForDelete): Promise<void> => {
+  await Promise.all(data.invoices.map(async ({ invoice, cardVersionInvoice }) => {
+    await deleteCardVersionInvoice(cardVersionInvoice)
+    await deleteInvoice(invoice)
   }))
 }

@@ -5,8 +5,8 @@ import {
   addData,
   updateCardVesion,
   insertOrUpdateLnurlP,
-  insertOrUpdateInvoice,
-  insertOrUpdateCardVersionInvoice,
+  insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
+  deleteInvoice, deleteCardVersionInvoice,
 } from '../mocks/queries'
 
 import { updateCard } from '@backend/database/drizzle/queriesRedis'
@@ -67,6 +67,7 @@ describe('updateCard', () => {
     // add the first invoice to the mock database
     const { invoice, cardVersionsHaveInvoice } = createInvoice(100, cardVersion)
     invoice.paymentHash = payment_hash
+    invoice.paid = new Date()
     cardVersionsHaveInvoice.forEach((cardVersionHasInvoice) => cardVersionHasInvoice.invoice = payment_hash)
     addData({
       invoices: [invoice],
@@ -115,6 +116,8 @@ describe('updateCard', () => {
       cardVersion: cardVersion.id,
       invoice: payment_hash2,
     }))
+    expect(deleteInvoice).not.toHaveBeenCalled()
+    expect(deleteCardVersionInvoice).not.toHaveBeenCalled()
   })
 
   it('should finish a sharedFunding for a card', async () => {
@@ -153,5 +156,7 @@ describe('updateCard', () => {
       expiresAt: null,
       finished: expect.any(Date),
     }))
+    expect(deleteInvoice).not.toHaveBeenCalled()
+    expect(deleteCardVersionInvoice).not.toHaveBeenCalled()
   })
 })

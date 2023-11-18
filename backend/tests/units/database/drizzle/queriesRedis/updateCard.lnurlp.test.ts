@@ -5,14 +5,14 @@ import {
   addData,
   updateCardVesion,
   insertOrUpdateLnurlP,
-  insertOrUpdateInvoice,
-  insertOrUpdateCardVersionInvoice,
+  insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
+  deleteInvoice, deleteCardVersionInvoice,
 } from '../mocks/queries'
 
 import { updateCard } from '@backend/database/drizzle/queriesRedis'
 import hashSha256 from '@backend/services/hashSha256'
 
-import { createCard, createCardVersion, createLnurlP } from '../../../../drizzleData'
+import { createCard, createCardVersion, createLnurlP, createInvoice } from '../../../../drizzleData'
 import { createCard as createRedisCard, createLnurlP as createRedisLnurlP } from '../../../../redisData'
 
 describe('updateCard', () => {
@@ -81,6 +81,42 @@ describe('updateCard', () => {
     expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       cardVersion: cardVersion.id,
       invoice: payment_hash,
+    }))
+    expect(deleteInvoice).not.toHaveBeenCalled()
+    expect(deleteCardVersionInvoice).not.toHaveBeenCalled()
+  })
+
+  it('should replace an invoice', async () => {
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const { invoice, cardVersionsHaveInvoice } = createInvoice(100, cardVersion)
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      invoices: [invoice],
+      cardVersionInvoices: [...cardVersionsHaveInvoice],
+    })
+
+    const cardRedis = createRedisCard()
+    cardRedis.cardHash = card.hash
+    cardRedis.lnurlp = createRedisLnurlP()
+
+    await updateCard(cardRedis)
+    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+      lnurlP: cardRedis.lnurlp.id,
+    }))
+    expect(insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
+      lnbitsId: cardRedis.lnurlp.id,
+      created: expect.any(Date),
+      expiresAt: null,
+      finished: null,
+    }))
+    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      invoice: invoice.paymentHash,
+      cardVersion: cardVersion.id,
+    }))
+    expect(deleteInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      paymentHash: invoice.paymentHash,
     }))
   })
 })

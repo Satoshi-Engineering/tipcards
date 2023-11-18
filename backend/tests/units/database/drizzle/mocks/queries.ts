@@ -89,6 +89,16 @@ const getInvoiceByPaymentHash = async (paymentHash: Invoice['paymentHash']): Pro
   return invoicesByPaymentHash[paymentHash]
 }
 
+const getUnpaidInvoicesForCardVersion = async (cardVersion: CardVersion) => {
+  const paymentHashes = cardVersionInvoices
+    .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
+    .map((cardVersionInvoice) => cardVersionInvoice.invoice)
+  return Object.values(invoicesByPaymentHash).filter((invoice) => (
+    paymentHashes.includes(invoice.paymentHash)
+    && invoice.paid == null
+  ))
+}
+
 const getAllCardVersionsFundedByInvoice = async (invoice: Invoice): Promise<CardVersion[]> => {
   const cardVersionIds = cardVersionInvoices
     .filter((cardVersionInvoice) => cardVersionInvoice.invoice === invoice.paymentHash)
@@ -113,11 +123,17 @@ export const insertInvoices = jest.fn(async () => undefined)
 export const insertCardVersionInvoices = jest.fn(async () => undefined)
 export const insertLnurlPs = jest.fn(async () => undefined)
 export const insertLnurlWs = jest.fn(async () => undefined)
+
 export const updateCardVesion = jest.fn(async () => undefined)
 export const insertOrUpdateInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateCardVersionInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateLnurlP = jest.fn(async () => undefined)
 export const insertOrUpdateLnurlW = jest.fn(async () => undefined)
+
+export const deleteCard = jest.fn(async () => undefined)
+export const deleteCardVersion = jest.fn(async () => undefined)
+export const deleteInvoice = jest.fn(async () => undefined)
+export const deleteCardVersionInvoice = jest.fn(async () => undefined)
 
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
@@ -127,6 +143,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getAllCardsWithdrawnByLnurlW,
     getAllInvoicesFundingCardVersion,
     getInvoiceByPaymentHash,
+    getUnpaidInvoicesForCardVersion,
     getAllCardVersionsFundedByInvoice,
 
     insertCards,
@@ -141,5 +158,10 @@ jest.mock('@backend/database/drizzle/queries', () => {
     insertOrUpdateCardVersionInvoice,
     insertOrUpdateLnurlP,
     insertOrUpdateLnurlW,
+
+    deleteCard,
+    deleteCardVersion,
+    deleteInvoice,
+    deleteCardVersionInvoice,
   }
 })

@@ -1,7 +1,14 @@
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { CardVersion, CardVersionHasInvoice, Invoice } from '@backend/database/drizzle/schema'
-import type { DataObjectsForInsertOrUpdate } from '@backend/database/drizzle/batchQueries'
-import { getLatestCardVersion, getInvoiceByPaymentHash } from '@backend/database/drizzle/queries'
+import type {
+  DataObjectsForInsertOrUpdate,
+  DataObjectsForDelete,
+} from '@backend/database/drizzle/batchQueries'
+import {
+  getLatestCardVersion,
+  getInvoiceByPaymentHash,
+  getUnpaidInvoicesForCardVersion,
+} from '@backend/database/drizzle/queries'
 
 import { unixTimestampOrNullToDate } from './dateHelpers'
 import {
@@ -13,6 +20,7 @@ import {
 /** @throws */
 export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRedis): Promise<{
   insertOrUpdate: DataObjectsForInsertOrUpdate,
+  delete: DataObjectsForDelete,
 }> => {
   const cardVersionCurrent = await getLatestCardVersion(cardRedis.cardHash)
   if (cardVersionCurrent == null) {
@@ -26,12 +34,17 @@ export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRe
     invoices.push({ invoice, cardVersionInvoice })
   }
   const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
+
+  const invoicesToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
   return {
     insertOrUpdate: {
       cardVersion,
       invoices,
       lnurlP,
       lnurlW,
+    },
+    delete: {
+      invoices: invoicesToDelete,
     },
   }
 }
@@ -104,6 +117,26 @@ const getNewDrizzleInvoicesForRedisLnurlP = (
     cardVersionInvoice: {
       cardVersion: cardVersion.id,
       invoice: paymentHash,
+    },
+  }))
+}
+
+const getDrizzleInvoicesToDeleteFromRedisLnurlP = async (
+  lnurlPRedis: CardRedis['lnurlp'],
+  cardVersion: CardVersion,
+): Promise<{
+  invoice: Invoice,
+  cardVersionInvoice: CardVersionHasInvoice,
+}[]> => {
+  if (lnurlPRedis == null) {
+    return []
+  }
+  const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
+  return invoices.map((invoice) => ({
+    invoice,
+    cardVersionInvoice: {
+      invoice: invoice.paymentHash,
+      cardVersion: cardVersion.id,
     },
   }))
 }
