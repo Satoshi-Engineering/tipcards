@@ -114,7 +114,7 @@ export const getLnurlWFromCardRedis = (cardRedis: CardRedis, cardVersion: CardVe
     lnbitsId: cardRedis.lnbitsWithdrawId,
     created: new Date(),
     expiresAt: null,
-    withdrawn: null,
+    withdrawn: dateFromUnixTimestampOrNull(cardRedis.used),
   }
 }
 
