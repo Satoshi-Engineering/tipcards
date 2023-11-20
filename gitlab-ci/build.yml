@@ -20,7 +20,8 @@ build-backend:
   script:
     - npm run shared-build
     - npm run backend-build
-    - cp backend/ecosystem.config.js .
+    - cp backend/deploy/tsconfig.json .
+    - cp backend/deploy/ecosystem.config.js .
     - if [ -f backend/.env ]; then cp backend/.env .; fi
 
 build-frontend:
