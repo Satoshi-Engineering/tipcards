@@ -1,9 +1,0 @@
-/* ONLY FOR VSC IDE for resolving paths */
-{
-  "compilerOptions": {
-    "paths": {
-      "@backend/*": ["../src/*"],
-      "@shared/*": ["../../shared/src/*"]
-    }
-  }
-}

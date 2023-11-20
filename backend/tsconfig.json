@@ -1,28 +1,12 @@
 {
-  "ts-node": {
-    "files": true
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
     "./index.ts",
-    "./cli.ts",
     "./src/**/*.ts",
+    "./tests/**/*.ts",
   ],
   "compilerOptions": {
-    "paths": {
-      "@backend/*": ["./src/*"],
-      "@shared/*": ["../shared/src/*"],
-    },
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "module": "commonjs",
-    "rootDir": "./",
-    "moduleResolution": "node",
-    "types": ["node", "jest"],
-    "outDir": "../dist/backend",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "types": ["node", "jest"]
   },
   "references": [
     { "path" : "../shared/tsconfig.json" }
