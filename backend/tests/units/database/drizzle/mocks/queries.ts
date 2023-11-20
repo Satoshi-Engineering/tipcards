@@ -3,6 +3,7 @@ import type {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
+  User, UserCanUseSet,
 } from '@backend/database/drizzle/schema'
 
 const setsById: Record<string, Set> = {}
@@ -13,6 +14,8 @@ const cardVersionInvoices: CardVersionHasInvoice[] = []
 const invoicesByPaymentHash: Record<string, Invoice> = {}
 const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
 const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
+const usersById: Record<string, User> = {}
+const usersCanUseSets: UserCanUseSet[] = []
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
@@ -38,6 +41,12 @@ export const addLnurlPs = (...lnurlps: LnurlP[]) => {
 export const addLnurlWs = (...lnurlws: LnurlW[]) => {
   addItemsToTable(lnurlWsByLnbitsId, lnurlws.map((lnurlw) => ({ key: lnurlw.lnbitsId, item: lnurlw })))
 }
+export const addUsers = (...users: User[]) => {
+  addItemsToTable(usersById, users.map((user) => ({ key: user.id, item: user })))
+}
+export const addUsersCanUseSets = (...newUsersCanUseSets: UserCanUseSet[]) => {
+  usersCanUseSets.push(...newUsersCanUseSets)
+}
 export const addData = ({
   sets,
   setSettings,
@@ -47,6 +56,8 @@ export const addData = ({
   cardVersionInvoices,
   lnurlps,
   lnurlws,
+  users,
+  usersCanUseSets,
 }: {
   sets?: Set[],
   setSettings?: SetSettings[],
@@ -56,6 +67,8 @@ export const addData = ({
   cardVersionInvoices?: CardVersionHasInvoice[],
   lnurlps?: LnurlP[],
   lnurlws?: LnurlW[],
+  users?: User[],
+  usersCanUseSets?: UserCanUseSet[],
 }) => {
   addSets(...(sets || []))
   addSetSettings(...(setSettings || []))
@@ -65,6 +78,8 @@ export const addData = ({
   addCardVersionInvoices(...(cardVersionInvoices || []))
   addLnurlPs(...(lnurlps || []))
   addLnurlWs(...(lnurlws || []))
+  addUsers(...(users || []))
+  addUsersCanUseSets(...(usersCanUseSets || []))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
@@ -137,6 +152,9 @@ const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion
   return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
 }
 
+const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => usersCanUseSets
+  .filter((userCanUseSet) => userCanUseSet.set === set.id)
+
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
 export const insertInvoices = jest.fn(async () => undefined)
@@ -168,6 +186,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getInvoiceByPaymentHash,
     getUnpaidInvoicesForCardVersion,
     getAllCardVersionsFundedByInvoice,
+    getAllUsersThatCanUseSet,
 
     insertCards,
     insertCardVersions,

@@ -5,6 +5,7 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
+  UserCanUseSet,
 } from '@backend/database/drizzle/schema'
 import { getClient } from './client'
 
@@ -251,4 +252,11 @@ export const deleteCardVersionInvoice = async (cardVersionInvoice: CardVersionHa
       eq(CardVersionHasInvoice.invoice, cardVersionInvoice.invoice),
       eq(CardVersionHasInvoice.cardVersion, cardVersionInvoice.cardVersion),
     ))
+}
+
+export const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(UserCanUseSet)
+    .where(eq(UserCanUseSet.set, set.id))
 }

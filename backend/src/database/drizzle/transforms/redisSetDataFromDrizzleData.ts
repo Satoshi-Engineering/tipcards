@@ -6,6 +6,7 @@ import {
   getLatestCardVersion,
   getAllInvoicesFundingCardVersion,
   getAllCardVersionsFundedByInvoice,
+  getAllUsersThatCanUseSet,
 } from '@backend/database/drizzle/queries'
 import hashSha256 from '@backend/services/hashSha256'
 
@@ -15,6 +16,7 @@ import { dateOrNullToUnixTimestamp, dateToUnixTimestamp } from './dateHelpers'
 export const getRedisSetFromDrizzleSet = async (set: Set): Promise<SetRedis> => {
   const settings = await getRedisSetSettingsFromDrizzleSet(set)
   const invoice = await getRedisInvoiceFromDrizzleSet(set)
+  const userId = await getRedisSetUserFromDrizzleSet(set)
   const { text, note } = await getTextAndNoteForRedisSetFromRedisInvoice(invoice, set.id)
   return {
     id: set.id,
@@ -22,7 +24,7 @@ export const getRedisSetFromDrizzleSet = async (set: Set): Promise<SetRedis> => 
     created: dateToUnixTimestamp(set.created),
     date: dateToUnixTimestamp(set.changed),
   
-    userId: null,
+    userId,
   
     text,
     note,
@@ -97,6 +99,11 @@ const getRedisInvoiceForDrizzleInvoice = async (
 const getNumberOfCardsForSet = async (set: Set): Promise<number> => {
   const setSettings = await getSetSettingsForSet(set)
   return setSettings?.numberOfCards || 8
+}
+
+const getRedisSetUserFromDrizzleSet = async (set: Set): Promise<SetRedis['userId']> => {
+  const usersCanUseSets = await getAllUsersThatCanUseSet(set)
+  return usersCanUseSets.find((userCanUseSet) => userCanUseSet.canEdit)?.user || null
 }
 
 const getTextAndNoteForRedisSetFromRedisInvoice = async (invoice: SetRedis['invoice'], setId: string): Promise<{ text: string, note: string }> => {

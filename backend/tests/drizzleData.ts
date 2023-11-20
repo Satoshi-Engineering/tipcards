@@ -5,6 +5,7 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
+  User, UserCanUseSet,
 } from '@backend/database/drizzle/schema'
 import hashSha256 from '@backend/services/hashSha256'
 
@@ -96,3 +97,16 @@ export const createLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
   })
   return lnurlw
 }
+
+export const createUser = (): User => ({
+  id: randomUUID(),
+  lnurlAuthKey: hashSha256(randomUUID()),
+  created: new Date(),
+  permissions: '',
+})
+
+export const createUserCanEditSet = (user: User, set: Set): UserCanUseSet => ({
+  user: user.id,
+  set: set.id,
+  canEdit: true,
+})
