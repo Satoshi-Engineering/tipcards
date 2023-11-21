@@ -38,6 +38,8 @@ describe('updateCard', () => {
 
     await updateCard(cardRedis)
     expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+      id: cardVersion.id,
+      card: card.hash,
       lnurlW: cardRedis.lnbitsWithdrawId,
     }))
     expect(insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
@@ -73,6 +75,8 @@ describe('updateCard', () => {
 
     await updateCard(cardRedis)
     expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+      id: cardVersion.id,
+      card: card.hash,
       lnurlW: null,
     }))
   })

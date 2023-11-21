@@ -44,6 +44,8 @@ describe('updateCard', () => {
     expect(insertLnurlPs).not.toHaveBeenCalled()
     expect(insertLnurlWs).not.toHaveBeenCalled()
     expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+      id: cardVersion.id,
+      card: card.hash,
       textForWithdraw: 'some super text',
       noteForStatusPage: 'some crazy note',
       landingPageViewed: expect.any(Date),
