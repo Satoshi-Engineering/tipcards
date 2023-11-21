@@ -7,6 +7,7 @@ import {
 } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
 
@@ -122,4 +123,13 @@ const toDataObjects = ({
     dataObjects.cardVersionInvoices = [cardVersionInvoice]
   }
   return dataObjects
+}
+
+export const getDrizzleLnurlWFromRedisBulkWithdraw = (bulkWithdraw: BulkWithdrawRedis) => {
+  return {
+    created: unixTimestampToDate(bulkWithdraw.created),
+    withdrawn: unixTimestampOrNullToDate(bulkWithdraw.withdrawn),
+    lnbitsId: bulkWithdraw.lnbitsWithdrawId,
+    expiresAt: null,
+  }
 }

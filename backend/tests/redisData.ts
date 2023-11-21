@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 import type z from 'zod'
 
+import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 import { Card } from '@backend/database/redis/data/Card'
 import { Set } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
@@ -84,3 +85,17 @@ export const createSetInvoice = (fundedCards: FundedCards, amount: number): Set[
   paid: null,
   expired: false,
 })
+
+export const createBulkWithdraw = (amount: number, ...cardHashes: Card['cardHash'][]): BulkWithdraw => {
+  const lnbitsWithdrawId = hashSha256(randomUUID())
+  return {
+    id: lnbitsWithdrawId,
+    created: Math.round(+ new Date() / 1000),
+    amount,
+    cards: [...cardHashes],
+    lnbitsWithdrawId,
+    lnurl: hashSha256(randomUUID()),
+    lnbitsWithdrawDeleted: null,
+    withdrawn: null,
+  }
+}

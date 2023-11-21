@@ -3,7 +3,7 @@ import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
 import {
   getLnurlPFundingCardVersion,
   getAllInvoicesFundingCardVersion, getAllCardVersionsFundedByInvoice,
-  getLnurlWWithdrawingCardVersion, getAllCardsWithdrawnByLnurlW,
+  getLnurlWWithdrawingCardVersion, getAllCardVersionsWithdrawnByLnurlW,
 } from '@backend/database/drizzle/queries'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
 
@@ -64,10 +64,10 @@ export const getRedisInvoiceAndSetFundingForDrizzleCardVersion = async (cardVers
     throw new Error(`More than one invoice found for card ${cardVersion.card}`)
   }
 
-  const cards = await getAllCardVersionsFundedByInvoice(invoices[0])
+  const cardVersions = await getAllCardVersionsFundedByInvoice(invoices[0])
   return {
-    invoice: getRedisInvoiceForDrizzleInvoice(invoices[0], cards),
-    setFunding: getRedisSetFundingForDrizzleInvoice(invoices[0], cards),
+    invoice: getRedisInvoiceForDrizzleInvoice(invoices[0], cardVersions),
+    setFunding: getRedisSetFundingForDrizzleInvoice(invoices[0], cardVersions),
   }
 }
 
@@ -107,10 +107,10 @@ export const getRedisWithdrawInfoForDrizzleCardVersion = async (card: CardVersio
   if (lnurlw == null) {
     return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false, used: null }
   }
-  const cards = await getAllCardsWithdrawnByLnurlW(lnurlw)
+  const cardVersions = await getAllCardVersionsWithdrawnByLnurlW(lnurlw)
   return {
     lnbitsWithdrawId: lnurlw.lnbitsId,
-    isLockedByBulkWithdraw: cards.length > 1,
+    isLockedByBulkWithdraw: cardVersions.length > 1,
     used: dateOrNullToUnixTimestamp(lnurlw.withdrawn),
   }
 }

@@ -1,17 +1,25 @@
+import NotFoundError from '@backend/errors/NotFoundError'
+
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 
 import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
-import { getDrizzleDataObjectsFromRedisCard } from './transforms/drizzleDataFromRedisData'
+import { getDrizzleDataObjectsFromRedisCard, getDrizzleLnurlWFromRedisBulkWithdraw } from './transforms/drizzleDataFromRedisData'
 import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
 import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
 import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData'
 import { getDrizzleDataObjectsForRedisSet } from './transforms/drizzleSetDataForRedisSet'
+import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultipleCards } from './transforms/redisBulkWithdrawDataFromDrizzleData'
 import { insertDataObjects, insertOrUpdateDataObjects, deleteDataObjects } from './batchQueries'
 import {
   getLatestCardVersion,
   getSetById as getDrizzleSetById,
   getSetsByUserId as getDrizzleSetsByUserId,
+  getLnurlWById,
+  getAllLnurlWs,
+  insertOrUpdateLnurlW,
+  updateCardVersion,
 } from './queries'
 
 /** @throws */
@@ -69,4 +77,74 @@ export const updateSet = async (set: SetRedis): Promise<void> => {
   const drizzleData = await getDrizzleDataObjectsForRedisSet(set)
   await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
   await deleteDataObjects(drizzleData.delete)
+}
+
+export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+  const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
+  await insertOrUpdateLnurlW(lnurlW)
+  linkLatestCardVersionsToLnurlW(bulkWithdraw.cards, lnurlW.lnbitsId)
+}
+const linkLatestCardVersionsToLnurlW = async (cardHashes: CardRedis['cardHash'][], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
+  await Promise.all(
+    cardHashes.map(async (cardHash) => linkLatestCardVersionToLnurlW(cardHash, lnurlWlnbitsId)),
+  )
+}
+const linkLatestCardVersionToLnurlW = async (cardHash: CardRedis['cardHash'], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
+  const cardVersion = await getLatestCardVersion(cardHash)
+  if (cardVersion == null) {
+    throw new NotFoundError(`Card ${cardHash} not found.`)
+  }
+  await updateCardVersion({
+    ...cardVersion,
+    lnurlW: lnurlWlnbitsId,
+  })
+}
+
+/** @throws */
+export const getBulkWithdrawById = async (lnbitsLnurlWId: string): Promise<BulkWithdrawRedis> => {
+  const lnurlW = await getLnurlWById(lnbitsLnurlWId)
+  if (lnurlW == null) {
+    throw new NotFoundError('BulkWithdraw doesn\'t exist.')
+  }
+  const bulkWithdrawRedis = getRedisBulkWithdrawForDrizzleLnurlW(lnurlW)
+  return bulkWithdrawRedis
+}
+
+/** @throws */
+export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+  const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
+  await insertOrUpdateLnurlW(lnurlW)
+}
+
+/** @throws */
+export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+  await getBulkWithdrawById(bulkWithdraw.lnbitsWithdrawId)
+  await unlinkLatestCardVersionsFromLnurlW(bulkWithdraw.cards)
+}
+const unlinkLatestCardVersionsFromLnurlW = async (cardHashes: CardRedis['cardHash'][]) => {
+  await Promise.all(
+    cardHashes.map(unlinkLatestCardVersionFromLnurlW),
+  )
+}
+const unlinkLatestCardVersionFromLnurlW = async (cardHash: CardRedis['cardHash']) => {
+  const cardVersion = await getLatestCardVersion(cardHash)
+  if (cardVersion == null) {
+    throw new NotFoundError(`Card ${cardHash} not found.`)
+  }
+  await updateCardVersion({
+    ...cardVersion,
+    lnurlW: null,
+  })
+}
+
+/** @throws */
+export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => {
+  const allLnurlWs = await getAllLnurlWs()
+  const lnurlWsForMultipleCards = await filterLnurlWsThatAreUsedForMultipleCards(allLnurlWs)
+  const bulkWithdraws = await Promise.all(
+    lnurlWsForMultipleCards.map(
+      async ({ lnbitsId }) => await getBulkWithdrawById(lnbitsId),
+    ),
+  )
+  return bulkWithdraws
 }

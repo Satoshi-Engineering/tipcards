@@ -1,5 +1,7 @@
 import { and, eq, isNull, desc } from 'drizzle-orm'
 
+import NotFoundError from '@backend/errors/NotFoundError'
+
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -133,11 +135,31 @@ export const getLnurlWWithdrawingCardVersion = async (cardVersion: CardVersion):
 }
 
 /** @throws */
-export const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
+export const getAllCardVersionsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion[]> => {
   const client = await getClient()
   const result = await client.select()
     .from(CardVersion)
     .where(eq(CardVersion.lnurlW, lnurlw.lnbitsId))
+  return result
+}
+
+/** @throws */
+export const getLnurlWById = async (id: string): Promise<LnurlW> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(LnurlW)
+    .where(eq(LnurlW.lnbitsId, id))
+  if (result.length !== 1) {
+    throw new NotFoundError(`Found no lnurlW for id ${id}`)
+  }
+  return result[0]
+}
+
+/** @throws */
+export const getAllLnurlWs = async (): Promise<LnurlW[]> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(LnurlW)
   return result
 }
 
