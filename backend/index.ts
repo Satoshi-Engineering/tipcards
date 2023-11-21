@@ -7,6 +7,7 @@ import app from './src/app'
 import { initSocketIo } from './src/api/auth'
 import { EXPRESS_PORT } from './src/constants'
 import consoleOverride from './src/consoleOverride'
+import Database from '@backend/database/drizzle/Database'
 
 consoleOverride()
 
@@ -18,6 +19,9 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
     console.info('Closed out remaining connections')
     process.exit(0)
   })
+
+  // Closing DB Connections
+  Database.closeConnectionIfExists()
 
   // Closing all opened connection
   connections.forEach(curr => curr.end())
