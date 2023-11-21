@@ -254,9 +254,20 @@ export const deleteCardVersionInvoice = async (cardVersionInvoice: CardVersionHa
     ))
 }
 
+/** @throws */
 export const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => {
   const client = await getClient()
   return await client.select()
     .from(UserCanUseSet)
     .where(eq(UserCanUseSet.set, set.id))
+}
+
+/** @throws */
+export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Set)
+    .innerJoin(UserCanUseSet, eq(Set.id, UserCanUseSet.set))
+    .where(eq(UserCanUseSet.user, userId))
+  return result.map(({ Set }) => Set)
 }

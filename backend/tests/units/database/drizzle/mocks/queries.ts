@@ -155,6 +155,11 @@ const getAllCardsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<CardVersion
 const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => usersCanUseSets
   .filter((userCanUseSet) => userCanUseSet.set === set.id)
 
+const getSetsByUserId = async (userId: string): Promise<Set[]> => usersCanUseSets
+  .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
+  .map((userCanUseSet) => setsById[userCanUseSet.set])
+
+
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
 export const insertInvoices = jest.fn(async () => undefined)
@@ -187,6 +192,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getUnpaidInvoicesForCardVersion,
     getAllCardVersionsFundedByInvoice,
     getAllUsersThatCanUseSet,
+    getSetsByUserId,
 
     insertCards,
     insertCardVersions,

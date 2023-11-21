@@ -7,7 +7,11 @@ import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDa
 import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
 import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData'
 import { insertDataObjects, insertOrUpdateDataObjects, deleteDataObjects } from './batchQueries'
-import { getSetById as getDrizzleSetById, getLatestCardVersion } from './queries'
+import {
+  getLatestCardVersion,
+  getSetById as getDrizzleSetById,
+  getSetsByUserId as getDrizzleSetsByUserId,
+} from './queries'
 
 /** @throws */
 export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => {
@@ -44,4 +48,10 @@ export const getSetById = async (setId: SetRedis['id']): Promise<SetRedis | null
     return null
   }
   return getRedisSetFromDrizzleSet(set)
+}
+
+export const getSetsByUserId = async (userId: string): Promise<SetRedis[]> => {
+  const sets = await getDrizzleSetsByUserId(userId)
+  const setsRedis = await Promise.all(sets.map((set) => getRedisSetFromDrizzleSet(set)))
+  return setsRedis
 }
