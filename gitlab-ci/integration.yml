@@ -1,5 +1,5 @@
 test-integration-backend:
-  stage: integration
+  stage: backend-integration
   rules:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]
@@ -32,7 +32,7 @@ test-integration-backend:
     - kill $BACKEND_PID
 
 test-integration-frontend:
-  stage: integration
+  stage: frontend-integration
   rules:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]

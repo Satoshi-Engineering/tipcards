@@ -29,9 +29,10 @@ stages:
   - install
   - setup
   - test
+  - backend-integration
   - build
   - deploy
-  - integration
+  - frontend-integration
 
 # ------------- INCLUDES
 include:
