@@ -1,14 +1,25 @@
 import '../../../mocks/process.env'
 import {
+  addData,
   insertOrUpdateSet,
   insertOrUpdateSetSettings,
+  insertOrUpdateCard,
+  insertOrUpdateLatestCardVersion,
   insertOrUpdateUserCanUseSet,
+  insertOrUpdateInvoice,
+  insertOrUpdateCardVersionInvoice,
 } from '../mocks/queries'
 
-import { createUser } from '../../../../drizzleData'
+import {
+  createSet as createDrizzleSet,
+  createCardForSet,
+  createCardVersion,
+  createUser,
+} from '../../../../drizzleData'
 import {
   createSet as createSetData,
   createSetSettings,
+  createSetInvoice,
 } from '../../../../redisData'
 
 import { createSet } from '@backend/database/drizzle/queriesRedis'
@@ -40,6 +51,79 @@ describe('createSet', () => {
       user: user.id,
       set: set.id,
       canEdit: true,
+    }))
+  })
+
+  it('should create a set with invoice', async () => {
+    const set = createDrizzleSet()
+    const card1 = createCardForSet(set, 1)
+    const cardVersion1 = createCardVersion(card1)
+    const card2 = createCardForSet(set, 2)
+    const cardVersion2 = createCardVersion(card2)
+    addData({
+      sets: [set],
+      cards: [card1, card2],
+      cardVersions: [cardVersion1, cardVersion2],
+    })
+
+    const setRedis: Set = createSetData()
+    setRedis.id = set.id
+    setRedis.invoice = createSetInvoice([1, 2], 500)
+
+    await createSet(setRedis)
+    expect(insertOrUpdateSet).toHaveBeenCalledWith(expect.objectContaining({
+      id: set.id,
+      created: expect.any(Date),
+      changed: expect.any(Date),
+    }))
+    expect(insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
+      hash: card1.hash,
+      created: expect.any(Date),
+      set: set.id,
+    }))
+    expect(insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
+      hash: card2.hash,
+      created: expect.any(Date),
+      set: set.id,
+    }))
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+      id: expect.any(String),
+      card: card1.hash,
+      created: expect.any(Date),
+      lnurlP: null,
+      lnurlW: null,
+      textForWithdraw: setRedis.text,
+      noteForStatusPage: setRedis.note,
+      sharedFunding: false,
+      landingPageViewed: null,
+    }))
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+      id: expect.any(String),
+      card: card2.hash,
+      created: expect.any(Date),
+      lnurlP: null,
+      lnurlW: null,
+      textForWithdraw: setRedis.text,
+      noteForStatusPage: setRedis.note,
+      sharedFunding: false,
+      landingPageViewed: null,
+    }))
+    expect(insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      amount: setRedis.invoice?.amount,
+      paymentHash: setRedis.invoice?.payment_hash,
+      paymentRequest: setRedis.invoice?.payment_request,
+      created: expect.any(Date),
+      paid: null,
+      expiresAt: expect.any(Date),
+      extra: expect.any(String),
+    }))
+    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      cardVersion: expect.any(String),
+      invoice: setRedis.invoice?.payment_hash,
+    }))
+    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      cardVersion: expect.any(String),
+      invoice: setRedis.invoice?.payment_hash,
     }))
   })
 })

@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 import '../../../mocks/process.env'
 import {
   addData,
-  updateCardVesion,
+  insertOrUpdateLatestCardVersion,
   insertOrUpdateLnurlW,
 } from '../mocks/queries'
 
@@ -37,7 +37,7 @@ describe('updateCard', () => {
     cardRedis.lnbitsWithdrawId = hashSha256(randomUUID())
 
     await updateCard(cardRedis)
-    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlW: cardRedis.lnbitsWithdrawId,
@@ -74,7 +74,7 @@ describe('updateCard', () => {
     cardRedis.lnbitsWithdrawId = null
 
     await updateCard(cardRedis)
-    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlW: null,

@@ -11,7 +11,7 @@ import {
   insertLnurlPs, insertLnurlWs,
   insertSets, insertSetSettings,
   insertUsersCanUseSets,
-  updateCardVesion,
+  insertOrUpdateCard, insertOrUpdateLatestCardVersion,
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
   insertOrUpdateSet, insertOrUpdateSetSettings,
@@ -70,8 +70,11 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
   if (data.lnurlWs != null) {
     await Promise.all(data.lnurlWs.map((lnurlW) => insertOrUpdateLnurlW(lnurlW)))
   }
+  if (data.cards != null) {
+    await Promise.all(data.cards.map((card) => insertOrUpdateCard(card)))
+  }
   if (data.cardVersions != null) {
-    await Promise.all(data.cardVersions.map((cardVersion) => updateCardVesion(cardVersion)))
+    await Promise.all(data.cardVersions.map((cardVersion) => insertOrUpdateLatestCardVersion(cardVersion)))
   }
   if (data.invoices != null) {
     await Promise.all(

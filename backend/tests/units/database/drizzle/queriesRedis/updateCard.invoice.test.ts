@@ -4,7 +4,7 @@ import {
   insertCards, insertCardVersions,
   insertInvoices, insertCardVersionInvoices,
   insertLnurlPs, insertLnurlWs,
-  updateCardVesion,
+  insertOrUpdateLatestCardVersion,
   insertOrUpdateInvoice,
   insertOrUpdateCardVersionInvoice,
 } from '../mocks/queries'
@@ -41,7 +41,7 @@ describe('updateCard', () => {
     expect(insertCardVersionInvoices).not.toHaveBeenCalled()
     expect(insertLnurlPs).not.toHaveBeenCalled()
     expect(insertLnurlWs).not.toHaveBeenCalled()
-    expect(updateCardVesion).toHaveBeenCalledTimes(1)
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledTimes(1)
     expect(insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       paid: expect.any(Date),
     }))

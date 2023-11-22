@@ -72,3 +72,15 @@ export const createSetSettings = (): Set['settings'] => ({
   setName: hashSha256(randomUUID()),
   landingPage: hashSha256(randomUUID()),
 })
+
+const FundedCards = Set.shape.invoice.removeDefault().unwrap().shape.fundedCards
+type FundedCards = z.infer<typeof FundedCards>
+export const createSetInvoice = (fundedCards: FundedCards, amount: number): Set['invoice'] => ({
+  fundedCards,
+  amount,
+  payment_hash: hashSha256(randomUUID()),
+  payment_request: hashSha256(randomUUID()),
+  created: Math.round(+ new Date() / 1000),
+  paid: null,
+  expired: false,
+})

@@ -205,7 +205,28 @@ export const insertUsersCanUseSets = async (...usersCanUseSets: UserCanUseSet[])
 }
 
 /** @throws */
-export const updateCardVesion = async (cardVersion: CardVersion): Promise<void> => {
+export const insertOrUpdateCard = async (card: Card): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Card)
+    .values(card)
+    .onDuplicateKeyUpdate({ set: card })
+}
+
+/** @throws */
+export const insertOrUpdateLatestCardVersion = async (cardVersion: CardVersion): Promise<void> => {
+  const latestCardVersion = await getLatestCardVersion(cardVersion.card)
+  if (latestCardVersion != null) {
+    return updateCardVersion({
+      ...cardVersion,
+      id: latestCardVersion.id,
+    })
+  } else {
+    return insertCardVersions(cardVersion)
+  }
+}
+
+/** @throws */
+export const updateCardVersion = async (cardVersion: CardVersion): Promise<void> => {
   const client = await getClient()
   await client.update(CardVersion)
     .set(cardVersion)

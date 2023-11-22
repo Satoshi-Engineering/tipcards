@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 import '../../../mocks/process.env'
 import {
   addData,
-  updateCardVesion,
+  insertOrUpdateLatestCardVersion,
   insertOrUpdateLnurlP,
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   deleteInvoice, deleteCardVersionInvoice,
@@ -29,7 +29,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp = createRedisLnurlP()
 
     await updateCard(cardRedis)
-    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlP: cardRedis.lnurlp.id,
@@ -62,7 +62,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp.paid = Math.round(+ new Date() / 1000)
 
     await updateCard(cardRedis)
-    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlP: cardRedis.lnurlp.id,
@@ -106,7 +106,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp = createRedisLnurlP()
 
     await updateCard(cardRedis)
-    expect(updateCardVesion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlP: cardRedis.lnurlp.id,
