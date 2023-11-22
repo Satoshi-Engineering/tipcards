@@ -184,6 +184,27 @@ export const insertLnurlWs = async (...lnurlws: LnurlW[]): Promise<void> => {
 }
 
 /** @throws */
+export const insertSets = async (...sets: Set[]): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Set)
+    .values(sets)
+}
+
+/** @throws */
+export const insertSetSettings = async (...setSettings: SetSettings[]): Promise<void> => {
+  const client = await getClient()
+  await client.insert(SetSettings)
+    .values(setSettings)
+}
+
+/** @throws */
+export const insertUsersCanUseSets = async (...usersCanUseSets: UserCanUseSet[]): Promise<void> => {
+  const client = await getClient()
+  await client.insert(UserCanUseSet)
+    .values(usersCanUseSets)
+}
+
+/** @throws */
 export const updateCardVesion = async (cardVersion: CardVersion): Promise<void> => {
   const client = await getClient()
   await client.update(CardVersion)
@@ -221,6 +242,30 @@ export const insertOrUpdateLnurlW = async (lnurlw: LnurlW): Promise<void> => {
   await client.insert(LnurlW)
     .values(lnurlw)
     .onDuplicateKeyUpdate({ set: lnurlw })
+}
+
+/** @throws */
+export const insertOrUpdateSet = async (set: Set): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Set)
+    .values(set)
+    .onDuplicateKeyUpdate({ set: set })
+}
+
+/** @throws */
+export const insertOrUpdateSetSettings = async (setSettings: SetSettings): Promise<void> => {
+  const client = await getClient()
+  await client.insert(SetSettings)
+    .values(setSettings)
+    .onDuplicateKeyUpdate({ set: setSettings })
+}
+
+/** @throws */
+export const insertOrUpdateUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise<void> => {
+  const client = await getClient()
+  await client.insert(UserCanUseSet)
+    .values(userCanUseSet)
+    .onDuplicateKeyUpdate({ set: userCanUseSet })
 }
 
 /** @throws */

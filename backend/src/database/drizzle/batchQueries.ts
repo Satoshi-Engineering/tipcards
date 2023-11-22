@@ -2,14 +2,20 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
+  Set, SetSettings,
+  UserCanUseSet,
 } from '@backend/database/drizzle/schema'
 import {
   insertCards, insertCardVersions,
   insertInvoices, insertCardVersionInvoices,
   insertLnurlPs, insertLnurlWs,
+  insertSets, insertSetSettings,
+  insertUsersCanUseSets,
   updateCardVesion,
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
+  insertOrUpdateSet, insertOrUpdateSetSettings,
+  insertOrUpdateUserCanUseSet,
   deleteCard, deleteCardVersion,
   deleteInvoice, deleteCardVersionInvoice,
 } from '@backend/database/drizzle/queries'
@@ -21,6 +27,9 @@ export type DataObjects = {
   cardVersionInvoices?: CardVersionHasInvoice[],
   lnurlPs?: LnurlP[],
   lnurlWs?: LnurlW[],
+  sets?: Set[],
+  setSettings?: SetSettings[],
+  usersCanUseSets?: UserCanUseSet[],
 }
 
 /** @throws */
@@ -43,6 +52,15 @@ export const insertDataObjects = async (data: DataObjects): Promise<void> => {
   if (data.cardVersionInvoices != null) {
     await insertCardVersionInvoices(...data.cardVersionInvoices)
   }
+  if (data.sets != null) {
+    await insertSets(...data.sets)
+  }
+  if (data.setSettings != null) {
+    await insertSetSettings(...data.setSettings)
+  }
+  if (data.usersCanUseSets != null) {
+    await insertUsersCanUseSets(...data.usersCanUseSets)
+  }
 }
 
 export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void> => {
@@ -64,6 +82,15 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
     await Promise.all(
       data.cardVersionInvoices.map((cardVersionInvoice) => insertOrUpdateCardVersionInvoice(cardVersionInvoice)),
     )
+  }
+  if (data.sets != null) {
+    await Promise.all(data.sets.map((set) => insertOrUpdateSet(set)))
+  }
+  if (data.setSettings != null) {
+    await Promise.all(data.setSettings.map((setSettings) => insertOrUpdateSetSettings(setSettings)))
+  }
+  if (data.usersCanUseSets != null) {
+    await Promise.all(data.usersCanUseSets.map((userCanUseSet) => insertOrUpdateUserCanUseSet(userCanUseSet)))
   }
 }
 
