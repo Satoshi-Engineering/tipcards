@@ -3,7 +3,8 @@ build-backend:
   rules:
     - !reference [.shared_config, rules, web_and_push]
     - changes:
-      - backend/**/*
+      - backend/src/**/*
+      - backend/index.ts
       - shared/**/*
       - package-lock.json
   cache:
@@ -37,7 +38,7 @@ build-frontend:
     - !reference [.shared_config, cache, env_frontend]
   artifacts:
     name: "frontend-$CI_COMMIT_REF_SLUG"
-    paths: 
+    paths:
       - dist/frontend
   script:
     - npm run frontend-build

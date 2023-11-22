@@ -70,7 +70,8 @@ deploy-backend-develop:
     - if: $CI_COMMIT_BRANCH != 'develop'
       when: never
     - changes:
-      - backend/**/*
+      - backend/src/**/*
+      - backend/index.ts
       - shared/**/*
       - package-lock.json
   environment:
@@ -83,7 +84,8 @@ deploy-backend-main:
     - if: $CI_COMMIT_BRANCH != 'main'
       when: never
     - changes:
-      - backend/**/*
+      - backend/src/**/*
+      - backend/index.ts
       - shared/**/*
       - package-lock.json
   environment:
@@ -102,7 +104,7 @@ deploy-backend-main:
     - mkdir ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no" >> ~/.ssh/config
     - eval $(ssh-agent -s)
-    - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -  
+    - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
   script:
     - |  
       if [ "$CI_COMMIT_BRANCH" == "main" ]
