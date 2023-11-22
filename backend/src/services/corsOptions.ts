@@ -10,7 +10,7 @@ const whitelist = [
   TIPCARDS_ORIGIN,
   ...CORS_WHITELIST_EXTEND,
 ]
-;(async () => {
+export async function loadCoarsWhitelist() {
   try {
     const landingPages = await getAllLandingPages()
     landingPages.forEach((landingPage) => {
@@ -22,7 +22,8 @@ const whitelist = [
   } catch (error) {
     console.error('Unable to load landingPages for cors whitelisting', error)
   }
-})()
+}
+
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (typeof origin === 'string' && !whitelist.includes(origin)) {

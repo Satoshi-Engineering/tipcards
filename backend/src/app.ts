@@ -20,7 +20,6 @@ import { appRouter, onError } from './trpc'
 import { createContext } from './trpc/trpc'
 import corsOptions from './services/corsOptions'
 import xstAttack from './xstAttack'
-import './worker'
 
 import apiDrizzleCard from './api-drizzle/card'
 

@@ -3,6 +3,11 @@ import '../initEnv'
 
 import { createCard, createCardVersion } from '../../drizzleData'
 import { addData } from '../initDrizzle'
+import Database from '@backend/database/drizzle/Database'
+
+afterAll(() => {
+  Database.closeConnectionIfExists()
+})
 
 describe('card', () => {
   it('should return 404 if the card doesn\' exist', async () => {

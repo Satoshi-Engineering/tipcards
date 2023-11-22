@@ -7,19 +7,29 @@ test-integration-backend:
     - when: always
   cache:
     - !reference [.shared_config, cache, node_modules]
-    - !reference [.shared_config, cache, env_backend]
   variables:
     NODE_ENV: test
   script:
     - |
-      if [ -f "$BACKEND_ENV_FILE_TEST" ]; then
-        cp $BACKEND_ENV_FILE_TEST backend/.env.test
+      if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
+      then 
+        echo "Running on main branch"
+        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env
+      elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
+      then
+        echo "Running on develop/feature branch"
+        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env
       else
-        echo -e "\e[31mERROR:BACKEND_ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
+        echo -e "\e[31mERROR:ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
         exit 1
       fi
     - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
+    - nohup npm run backend-dev &
+    - export BACKEND_PID=$!
+    - sleep 10 # Waiting for backend to spin up
+    - echo "Running Backend with $BACKEND_PID"
     - npm run backend-test-integration
+    - kill $BACKEND_PID
 
 test-integration-frontend:
   stage: integration

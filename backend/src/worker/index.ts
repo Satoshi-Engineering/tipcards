@@ -10,4 +10,6 @@ const loop = async () => {
   }
 }
 
-cron.schedule('*/10 * * * * *', loop)
+export const initAllWorkers = () => {
+  cron.schedule('*/10 * * * * *', loop)
+}
