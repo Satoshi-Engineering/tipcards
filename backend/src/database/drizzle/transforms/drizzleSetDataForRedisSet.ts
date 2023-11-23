@@ -130,30 +130,51 @@ const getCardVersionInvoicesToDeleteForRedisSet = async (setRedis: SetRedis): Pr
   if (setRedis.invoice != null) {
     return null
   }
-  return getUnpaidDrizzleInvoiceFundingMultipleCardsOfRedisSet(setRedis)
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet(setRedis)
 }
 
-const getUnpaidDrizzleInvoiceFundingMultipleCardsOfRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
   const numberOfCards: number = await getNumberOfCardsForRedisSet(setRedis)
+  const cardHashes = [...new Array(numberOfCards).keys()].map((index) => hashSha256(`${setRedis.id}/${index}`))
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes(cardHashes)
+}
 
-  for (let index = 0; index < numberOfCards; index +=1) {
-    const cardVersion = await getLatestCardVersion(hashSha256(`${setRedis.id}/${index}`))
-    if (cardVersion == null) {
-      continue
-    }
-    const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
-    for (const invoice of invoices) {
-      const cardVersionInvoices = await getAllCardVersionInvoicesForInvoice(invoice)
-      if (cardVersionInvoices.length > 1) {
-        return cardVersionInvoices
-      }
+const getNumberOfCardsForRedisSet = async (setRedis: SetRedis): Promise<number> => {
+  const setSettings = await getSetSettingsBySetId(setRedis.id)
+  return setSettings?.numberOfCards || 8
+}
+
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes = async (cardHashes: Card['hash'][]): Promise<CardVersionHasInvoice[] | null> => {
+  for (const cardHash of cardHashes) {
+    const cardVersionInvoices = await getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash(cardHash)
+    if (cardVersionInvoices != null) {
+      return cardVersionInvoices
     }
   }
   return null
 }
-const getNumberOfCardsForRedisSet = async (setRedis: SetRedis): Promise<number> => {
-  const setSettings = await getSetSettingsBySetId(setRedis.id)
-  return setSettings?.numberOfCards || 8
+
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash = async (cardHash: Card['hash']): Promise<CardVersionHasInvoice[] | null> => {
+  const cardVersion = await getLatestCardVersion(cardHash)
+  if (cardVersion == null) {
+    return null
+  }
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion(cardVersion)
+}
+
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion = async (cardVersion: CardVersion): Promise<CardVersionHasInvoice[] | null> => {
+  const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
+  return getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions(invoices)
+}
+
+const getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions = async (invoices: Invoice[]): Promise<CardVersionHasInvoice[] | null> => {
+  for (const invoice of invoices) {
+    const cardVersionInvoices = await getAllCardVersionInvoicesForInvoice(invoice)
+    if (cardVersionInvoices.length > 1) {
+      return cardVersionInvoices
+    }
+  }
+  return null
 }
 
 const setObjectsToDataObjects = ({
