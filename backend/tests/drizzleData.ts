@@ -5,8 +5,9 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  User, UserCanUseSet,
+  User, UserCanUseSet, LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
+import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import hashSha256 from '@backend/services/hashSha256'
 
 export const createSet = (): Set => ({
@@ -105,8 +106,21 @@ export const createUser = (): User => ({
   permissions: '',
 })
 
+export const createUserCanUseLandingPage = (user: User, landingPage: LandingPage, canEdit = false): UserCanUseLandingPage => ({
+  user: user.id,
+  landingPage: landingPage.id,
+  canEdit,
+})
+
 export const createUserCanEditSet = (user: User, set: Set): UserCanUseSet => ({
   user: user.id,
   set: set.id,
   canEdit: true,
+})
+
+export const createLandingPageTypeExternal = (): LandingPage => ({
+  id: randomUUID(),
+  type: LandingPageType[1],
+  name: hashSha256(randomUUID()),
+  url: hashSha256(randomUUID()),
 })

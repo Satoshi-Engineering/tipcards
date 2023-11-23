@@ -7,7 +7,7 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  UserCanUseSet,
+  UserCanUseSet, LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
 import { getClient } from './client'
 
@@ -358,4 +358,25 @@ export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
     .innerJoin(UserCanUseSet, eq(Set.id, UserCanUseSet.set))
     .where(eq(UserCanUseSet.user, userId))
   return result.map(({ Set }) => Set)
+}
+
+/** @throws */
+export const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(LandingPage)
+    .where(eq(LandingPage.id, landingPageId))
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
+
+export const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(UserCanUseLandingPage)
+    .where(eq(LandingPage.id, landingPage.id))
 }

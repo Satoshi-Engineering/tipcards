@@ -3,6 +3,7 @@ import NotFoundError from '@backend/errors/NotFoundError'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
+import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
 import { getDrizzleDataObjectsFromRedisCard, getDrizzleLnurlWFromRedisBulkWithdraw } from './transforms/drizzleDataFromRedisData'
@@ -16,11 +17,14 @@ import {
   getLatestCardVersion,
   getSetById as getDrizzleSetById,
   getSetsByUserId as getDrizzleSetsByUserId,
+  getLandingPage as getDrizzleLandingPage,
+  getUserCanUseLandingPagesByLandingPageId as getDrizzleUserCanUseLandingPagesByLandingPageId,
   getLnurlWById,
   getAllLnurlWs,
   insertOrUpdateLnurlW,
   updateCardVersion,
 } from './queries'
+import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 
 /** @throws */
 export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => {
@@ -147,4 +151,31 @@ export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => {
     ),
   )
   return bulkWithdraws
+}
+
+/**
+ * @param landingPageId string
+ * @throws
+ */
+export const getLandingPage = async (landingPageId: string): Promise<LandingPageRedis | null> => {
+  const landingPage = await getDrizzleLandingPage(landingPageId)
+  if (landingPage === null) {
+    return null
+  }
+
+  if (landingPage.type !== LandingPageType[1]) {
+    throw new Error('Not Implemented')
+  }
+
+  // TODO: Due Redis, has no m:n relationship, automatically the first n:m user is taken
+  console.warn('TODO: Due Redis, has no m:n relationship, automatically the first n:m user is taken')
+  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
+
+  if (userCanUseLandingPages.length <= 0) throw Error('not Implemented')
+
+  return {
+    ...landingPage,
+    userId: userCanUseLandingPages[0].user,
+    type: 'external', // LandingPageType[1]
+  }
 }

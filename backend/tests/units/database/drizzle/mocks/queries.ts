@@ -4,6 +4,7 @@ import type {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   User, UserCanUseSet,
+  LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
 
 const setsById: Record<string, Set> = {}
@@ -16,6 +17,8 @@ const lnurlPsByLnbitsId: Record<string, LnurlP> = {}
 const lnurlWsByLnbitsId: Record<string, LnurlW> = {}
 const usersById: Record<string, User> = {}
 const usersCanUseSets: UserCanUseSet[] = []
+const landingPages: Record<string, LandingPage> = {}
+const userCanUseLandingPages: Record<string, UserCanUseLandingPage> = {}
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
@@ -47,6 +50,17 @@ export const addUsers = (...users: User[]) => {
 export const addUsersCanUseSets = (...newUsersCanUseSets: UserCanUseSet[]) => {
   usersCanUseSets.push(...newUsersCanUseSets)
 }
+export const addLandingPage = (...newLandingPages: LandingPage[]) => {
+  addItemsToTable(landingPages, newLandingPages.map((landingPage) => ({ key: landingPage.id, item: landingPage })))
+}
+
+export const addUserCanUseLandingPages = (...newUserCanUseLandingPages: UserCanUseLandingPage[]) => {
+  addItemsToTable(userCanUseLandingPages, newUserCanUseLandingPages.map((userCanUseLandingPage) => ({
+    key: `${userCanUseLandingPage.user}${userCanUseLandingPage.landingPage}`,
+    item: userCanUseLandingPage,
+  })))
+}
+
 export const addData = ({
   sets,
   setSettings,
@@ -58,6 +72,8 @@ export const addData = ({
   lnurlws,
   users,
   usersCanUseSets,
+  landingPages,
+  userCanUseLandingPages,
 }: {
   sets?: Set[],
   setSettings?: SetSettings[],
@@ -69,6 +85,8 @@ export const addData = ({
   lnurlws?: LnurlW[],
   users?: User[],
   usersCanUseSets?: UserCanUseSet[],
+  landingPages?: LandingPage[],
+  userCanUseLandingPages?: UserCanUseLandingPage[],
 }) => {
   addSets(...(sets || []))
   addSetSettings(...(setSettings || []))
@@ -80,6 +98,8 @@ export const addData = ({
   addLnurlWs(...(lnurlws || []))
   addUsers(...(users || []))
   addUsersCanUseSets(...(usersCanUseSets || []))
+  addLandingPage(...(landingPages || []))
+  addUserCanUseLandingPages(...(userCanUseLandingPages || []))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
@@ -163,6 +183,14 @@ const getSetsByUserId = async (userId: string): Promise<Set[]> => usersCanUseSet
   .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
   .map((userCanUseSet) => setsById[userCanUseSet.set])
 
+const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => landingPages[landingPageId] || null
+
+const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
+  return Object.keys(userCanUseLandingPages)
+    .filter(privateKey => privateKey.includes(landingPage.id))
+    .map(privateKey => userCanUseLandingPages[privateKey])
+}
+
 
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
@@ -205,6 +233,8 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getAllLnurlWs,
     getAllUsersThatCanUseSet,
     getSetsByUserId,
+    getLandingPage,
+    getUserCanUseLandingPagesByLandingPageId,
 
     insertCards,
     insertCardVersions,

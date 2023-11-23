@@ -354,23 +354,6 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
 }
 
 /**
- * @throws
- */
-export const getAllLandingPages = async (): Promise<LandingPage[]> => {
-  const client = await getClient()
-  const landingPages: LandingPage[] = []
-  for await (
-    const key of client.scanIterator({
-      MATCH: `${REDIS_BASE_PATH}:landingPagesById:*:data`,
-    })
-  ) {
-    const landingPageResult = await client.json.get(key)
-    landingPages.push(ZodLandingPage.parse(landingPageResult))
-  }
-  return landingPages
-}
-
-/**
  * @throws AlreadyExistsError
  * @throws unknown
  */
@@ -437,4 +420,21 @@ export const getAllBulkWithdraws = async (): Promise<BulkWithdraw[]> => {
     bulkWithdraws.push(ZodBulkWithdraw.parse(bulkWithdraw))
   }
   return bulkWithdraws
+}
+
+/**
+ * @throws
+ */
+export const getAllLandingPages = async (): Promise<LandingPage[]> => {
+  const client = await getClient()
+  const landingPages: LandingPage[] = []
+  for await (
+    const key of client.scanIterator({
+    MATCH: `${REDIS_BASE_PATH}:landingPagesById:*:data`,
+  })
+    ) {
+    const landingPageResult = await client.json.get(key)
+    landingPages.push(ZodLandingPage.parse(landingPageResult))
+  }
+  return landingPages
 }

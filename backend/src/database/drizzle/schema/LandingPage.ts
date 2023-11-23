@@ -1,6 +1,6 @@
 import { mysqlTable, varchar, mysqlEnum, text } from 'drizzle-orm/mysql-core'
 
-const LandingPageType: [string, ...string[]] = [
+export const LandingPageType: [string, ...string[]] = [
   'core', // Note: landing page is integrated into tip cards core, maybe there will be multiple version to choose from in the future
   'external', // Note: user will be redirected to another page when scanning a funded card
 ]
