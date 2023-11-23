@@ -7,6 +7,12 @@ import {
   Invoice, CardVersionHasInvoice,
 } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
+import {
+  getLatestCardVersion,
+  getAllCardVersionInvoicesForInvoice,
+  getUnpaidInvoicesForCardVersion,
+  getSetSettingsBySetId,
+} from '@backend/database/drizzle/queries'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
 
@@ -27,7 +33,7 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
   const invoice = getInvoiceForRedisSet(setRedis)
   const cardVersionInvoices = getCardVersionInvoicesForRedisSet(cards, invoice)
 
-  const cardsToDelete = await getCardsToDeleteForRedisSet(setRedis)
+  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(setRedis)
   return {
     insertOrUpdate: setObjectsToDataObjects({
       cards,
@@ -38,7 +44,7 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
       cardVersionInvoices,
     }),
     delete: setObjectsToDataObjects({
-      cards: cardsToDelete,
+      cardVersionInvoices: cardVersionInvoicesToDelete,
     }),
   }
 }
@@ -120,8 +126,34 @@ const getCardVersionInvoicesForRedisSet = (
   }))
 }
 
-const getCardsToDeleteForRedisSet = async (setRedis: SetRedis): Promise<null> => {
+const getCardVersionInvoicesToDeleteForRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
+  if (setRedis.invoice != null) {
+    return null
+  }
+  return getUnpaidDrizzleInvoiceFundingMultipleCardsOfRedisSet(setRedis)
+}
+
+const getUnpaidDrizzleInvoiceFundingMultipleCardsOfRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
+  const numberOfCards: number = await getNumberOfCardsForRedisSet(setRedis)
+
+  for (let index = 0; index < numberOfCards; index +=1) {
+    const cardVersion = await getLatestCardVersion(hashSha256(`${setRedis.id}/${index}`))
+    if (cardVersion == null) {
+      continue
+    }
+    const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
+    for (const invoice of invoices) {
+      const cardVersionInvoices = await getAllCardVersionInvoicesForInvoice(invoice)
+      if (cardVersionInvoices.length > 1) {
+        return cardVersionInvoices
+      }
+    }
+  }
   return null
+}
+const getNumberOfCardsForRedisSet = async (setRedis: SetRedis): Promise<number> => {
+  const setSettings = await getSetSettingsBySetId(setRedis.id)
+  return setSettings?.numberOfCards || 8
 }
 
 const setObjectsToDataObjects = ({

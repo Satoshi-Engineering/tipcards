@@ -8,12 +8,14 @@ import {
   insertOrUpdateSet,
   insertOrUpdateSetSettings,
   insertOrUpdateUserCanUseSet,
+  deleteCardVersionInvoice,
 } from '../mocks/queries'
 
 import {
   createSet as createDrizzleSet,
   createCardForSet,
   createCardVersion,
+  createInvoice as createDrizzleInvoice,
   createUser,
 } from '../../../../drizzleData'
 import {
@@ -32,13 +34,14 @@ describe('updateSet', () => {
     const cardVersion1 = createCardVersion(card1)
     const card2 = createCardForSet(set, 2)
     const cardVersion2 = createCardVersion(card2)
+    const user = createUser()
     addData({
       sets: [set],
       cards: [card1, card2],
       cardVersions: [cardVersion1, cardVersion2],
+      users: [user],
     })
 
-    const user = createUser()
     const setRedis: Set = createSetData()
     setRedis.id = set.id
     setRedis.settings = createSetSettings()
@@ -136,6 +139,39 @@ describe('updateSet', () => {
     expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       cardVersion: expect.any(String),
       invoice: setRedis.invoice?.payment_hash,
+    }))
+  })
+
+  it('should remove an invoice from an existing set', async () => {
+    const set = createDrizzleSet()
+    const card1 = createCardForSet(set, 1)
+    const cardVersion1 = createCardVersion(card1)
+    const card2 = createCardForSet(set, 2)
+    const cardVersion2 = createCardVersion(card2)
+    const { invoice, cardVersionsHaveInvoice } = createDrizzleInvoice(500, cardVersion1, cardVersion2)
+    const user = createUser()
+    addData({
+      sets: [set],
+      cards: [card1, card2],
+      cardVersions: [cardVersion1, cardVersion2],
+      invoices: [invoice],
+      cardVersionInvoices: cardVersionsHaveInvoice,
+      users: [user],
+    })
+
+    const setRedis: Set = createSetData()
+    setRedis.id = set.id
+    setRedis.userId = user.id
+    setRedis.invoice = null
+
+    await updateSet(setRedis)
+    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      invoice: invoice.paymentHash,
+      cardVersion: cardVersion1.id,
+    }))
+    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+      invoice: invoice.paymentHash,
+      cardVersion: cardVersion2.id,
     }))
   })
 })

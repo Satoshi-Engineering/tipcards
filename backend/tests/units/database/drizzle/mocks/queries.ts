@@ -113,6 +113,8 @@ const getSetById = async (setId: Set['id']): Promise<Set | null> => setsById[set
 
 const getSetSettingsForSet = async (set: Set): Promise<SetSettings | null> => setSettingsBySetId[set.id] || null
 
+const getSetSettingsBySetId = async (setId: Set['id']): Promise<SetSettings | null> => setSettingsBySetId[setId] || null
+
 const getAllCardsForSet = async (set: Set): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === set.id)
 
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
@@ -160,6 +162,9 @@ const getAllCardVersionsFundedByInvoice = async (invoice: Invoice): Promise<Card
     .map((cardVersionInvoice) => cardVersionInvoice.cardVersion)
   return Object.values(cardVersionsById).filter((cardVersion) => cardVersionIds.includes(cardVersion.id))
 }
+
+const getAllCardVersionInvoicesForInvoice = async (invoice: Invoice): Promise<CardVersionHasInvoice[]> => cardVersionInvoices
+  .filter((cardVersionInvoice) => cardVersionInvoice.invoice === invoice.paymentHash)
 
 const getLnurlWWithdrawingCardVersion = async (cardVersion: CardVersion): Promise<LnurlW | null> => {
   if (cardVersion.lnurlW == null || lnurlWsByLnbitsId[cardVersion.lnurlW] == null) {
@@ -221,6 +226,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
   return {
     getSetById,
     getSetSettingsForSet,
+    getSetSettingsBySetId,
     getAllCardsForSet,
     getLatestCardVersion,
     getLnurlPFundingCardVersion,
@@ -230,6 +236,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getInvoiceByPaymentHash,
     getUnpaidInvoicesForCardVersion,
     getAllCardVersionsFundedByInvoice,
+    getAllCardVersionInvoicesForInvoice,
     getLnurlWById,
     getAllLnurlWs,
     getAllUsersThatCanUseSet,

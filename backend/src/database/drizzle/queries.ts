@@ -24,11 +24,14 @@ export const getSetById = async (setId: Set['id']): Promise<Set | null> => {
 }
 
 /** @throws */
-export const getSetSettingsForSet = async (set: Set): Promise<SetSettings | null> => {
+export const getSetSettingsForSet = async (set: Set): Promise<SetSettings | null> => getSetSettingsBySetId(set.id)
+
+/** @throws */
+export const getSetSettingsBySetId = async (setId: Set['id']): Promise<SetSettings | null> => {
   const client = await getClient()
   const result = await client.select()
     .from(SetSettings)
-    .where(eq(SetSettings.set, set.id))
+    .where(eq(SetSettings.set, setId))
   if (result.length === 0) {
     return null
   }
@@ -114,6 +117,14 @@ export const getAllCardVersionsFundedByInvoice = async (invoice: Invoice): Promi
     .innerJoin(CardVersion, eq(CardVersionHasInvoice.cardVersion, CardVersion.id))
     .where(eq(CardVersionHasInvoice.invoice, invoice.paymentHash))
   return result.map(({ CardVersion }) => CardVersion)
+}
+
+/** @throws */
+export const getAllCardVersionInvoicesForInvoice = async (invoice: Invoice): Promise<CardVersionHasInvoice[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(CardVersionHasInvoice)
+    .where(eq(CardVersionHasInvoice.invoice, invoice.paymentHash))
 }
 
 /** @throws */
