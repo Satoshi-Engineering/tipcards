@@ -26,8 +26,8 @@ describe('getLandingPage', () => {
       userCanUseLandingPages: [userCanUseLandingPage],
     })
 
-    const landingPageRedis = await getLandingPage(landingPage.id)
-    expect(landingPageRedis).toEqual(expect.objectContaining({
+    const landingPageResult = await getLandingPage(landingPage.id)
+    expect(landingPageResult).toEqual(expect.objectContaining({
       id: landingPage.id,
       name: landingPage.name,
       url: landingPage.url,

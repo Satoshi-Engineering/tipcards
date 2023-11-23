@@ -376,7 +376,13 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
 
 export const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
   const client = await getClient()
-  return await client.select()
+  return client.select()
     .from(UserCanUseLandingPage)
     .where(eq(LandingPage.id, landingPage.id))
+}
+
+export const getAllLandingPages = async (): Promise<LandingPage[]> => {
+  const client = await getClient()
+  return client.select()
+    .from(LandingPage)
 }

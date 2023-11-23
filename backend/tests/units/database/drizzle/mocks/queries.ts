@@ -191,6 +191,7 @@ const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage
     .map(privateKey => userCanUseLandingPages[privateKey])
 }
 
+const getAllLandingPages = (): LandingPage[] => Object.values(landingPages)
 
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
@@ -235,6 +236,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getSetsByUserId,
     getLandingPage,
     getUserCanUseLandingPagesByLandingPageId,
+    getAllLandingPages,
 
     insertCards,
     insertCardVersions,
