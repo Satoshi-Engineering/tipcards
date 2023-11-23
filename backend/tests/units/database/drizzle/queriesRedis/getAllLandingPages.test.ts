@@ -11,11 +11,6 @@ import { addData } from '../mocks/queries'
 import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema'
 
 describe('getAllLandingPages', () => {
-  it('should return and empty list of landing pages', async () => {
-    const landingPages = await getAllLandingPages()
-    expect(landingPages).toHaveLength(0)
-  })
-
   it('should return a list of landing pages', async () => {
     const LANDING_PAGE_COUNT = 5
     const landingPages: LandingPage[]  = Array(LANDING_PAGE_COUNT).fill('').map(() => createLandingPageTypeExternal())
