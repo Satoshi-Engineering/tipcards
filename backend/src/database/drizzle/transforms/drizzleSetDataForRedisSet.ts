@@ -8,16 +8,20 @@ import {
 } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import {
+  getAllCardsForSetBySetId,
   getLatestCardVersion,
   getAllCardVersionInvoicesForInvoice,
   getUnpaidInvoicesForCardVersion,
+  getSetById,
   getSetSettingsBySetId,
+  getAllUsersThatCanUseSetBySetId,
 } from '@backend/database/drizzle/queries'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
 
+/** @throws */
 export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Promise<{
   insertOrUpdate: DataObjects,
   delete: DataObjects,
@@ -29,14 +33,14 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
   }
   const setSettings = getDrizzleSetSettingsForRedisSet(setRedis)
   const userCanUseSet = getUserCanUseSetForRedisSet(setRedis)
-  const cards = getCardsForRedisSet(setRedis)
+  const cardsAndVersions = getCardsForRedisSet(setRedis)
   const invoice = getInvoiceForRedisSet(setRedis)
-  const cardVersionInvoices = getCardVersionInvoicesForRedisSet(cards, invoice)
+  const cardVersionInvoices = getCardVersionInvoicesForRedisSet(cardsAndVersions, invoice)
 
   const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(setRedis)
   return {
     insertOrUpdate: setObjectsToDataObjects({
-      cards,
+      cardsAndVersions,
       set,
       setSettings,
       userCanUseSet,
@@ -45,6 +49,30 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
     }),
     delete: setObjectsToDataObjects({
       cardVersionInvoices: cardVersionInvoicesToDelete,
+    }),
+  }
+}
+
+/** @throws */
+export const getDrizzleDataObjectsForRedisSetDelete = async (setRedis: SetRedis): Promise<{
+  update: DataObjects,
+  delete: DataObjects,
+}> => {
+  const cards = await getCardsWithRemovedSetLinkForRedisSet(setRedis)
+
+  const set = await getSetById(setRedis.id)
+  const setSettings = await getSetSettingsBySetId(setRedis.id)
+  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(setRedis)
+  const usersCanUseSetsToDelete = await getAllUsersThatCanUseSetBySetId(setRedis.id)
+  return {
+    update: setObjectsToDataObjects({
+      cards,
+    }),
+    delete: setObjectsToDataObjects({
+      set,
+      setSettings,
+      cardVersionInvoices: cardVersionInvoicesToDelete,
+      usersCanUseSet: usersCanUseSetsToDelete,
     }),
   }
 }
@@ -177,18 +205,31 @@ const getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions = async (inv
   return null
 }
 
+/** @throws */
+const getCardsWithRemovedSetLinkForRedisSet = async (setRedis: SetRedis): Promise<Card[]> => {
+  const cards = await getAllCardsForSetBySetId(setRedis.id)
+  return cards.map((card) => ({
+    ...card,
+    set: null,
+  }))
+}
+
 const setObjectsToDataObjects = ({
   set,
   setSettings,
   userCanUseSet,
+  usersCanUseSet,
   cards,
+  cardsAndVersions,
   invoice,
   cardVersionInvoices,
 }: {
-  set?: Set,
+  set?: Set | null,
   setSettings?: SetSettings | null,
   userCanUseSet?: UserCanUseSet | null,
-  cards?: { cards: Card[], cardVersions: CardVersion[] } | null,
+  usersCanUseSet?: UserCanUseSet[] | null,
+  cards?: Card[] | null,
+  cardsAndVersions?: { cards: Card[], cardVersions: CardVersion[] } | null,
   invoice?: Invoice | null,
   cardVersionInvoices?: CardVersionHasInvoice[] | null,
 }): DataObjects => {
@@ -202,9 +243,15 @@ const setObjectsToDataObjects = ({
   if (userCanUseSet != null) {
     dataObjects.usersCanUseSets = [userCanUseSet]
   }
-  if (cards != null) {
-    dataObjects.cards = cards.cards
-    dataObjects.cardVersions = cards.cardVersions
+  if (usersCanUseSet != null && usersCanUseSet.length > 0) {
+    dataObjects.usersCanUseSets = usersCanUseSet
+  }
+  if (cards != null && cards.length > 0) {
+    dataObjects.cards = cards
+  }
+  if (cardsAndVersions != null) {
+    dataObjects.cards = cardsAndVersions.cards
+    dataObjects.cardVersions = cardsAndVersions.cardVersions
   }
   if (invoice != null) {
     dataObjects.invoices = [invoice]

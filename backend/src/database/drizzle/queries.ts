@@ -38,11 +38,15 @@ export const getSetSettingsBySetId = async (setId: Set['id']): Promise<SetSettin
   return result[0]
 }
 
-export const getAllCardsForSet = async (set: Set): Promise<Card[]> => {
+/** @throws */
+export const getAllCardsForSet = async (set: Set): Promise<Card[]> => getAllCardsForSetBySetId(set.id)
+
+/** @throws */
+export const getAllCardsForSetBySetId = async (setId: Set['id']): Promise<Card[]> => {
   const client = await getClient()
   return client.select()
     .from(Card)
-    .where(eq(Card.set, set.id))
+    .where(eq(Card.set, setId))
 }
 
 /** @throws */
@@ -259,14 +263,6 @@ export const insertOrUpdateLatestCardVersion = async (cardVersion: CardVersion):
 }
 
 /** @throws */
-export const updateCardVersion = async (cardVersion: CardVersion): Promise<void> => {
-  const client = await getClient()
-  await client.update(CardVersion)
-    .set(cardVersion)
-    .where(eq(CardVersion.id, cardVersion.id))
-}
-
-/** @throws */
 export const insertOrUpdateInvoice = async (invoice: Invoice): Promise<void> => {
   const client = await getClient()
   await client.insert(Invoice)
@@ -323,6 +319,22 @@ export const insertOrUpdateUserCanUseSet = async (userCanUseSet: UserCanUseSet):
 }
 
 /** @throws */
+export const updateCard = async (card: Card): Promise<void> => {
+  const client = await getClient()
+  await client.update(Card)
+    .set(card)
+    .where(eq(Card.hash, card.hash))
+}
+
+/** @throws */
+export const updateCardVersion = async (cardVersion: CardVersion): Promise<void> => {
+  const client = await getClient()
+  await client.update(CardVersion)
+    .set(cardVersion)
+    .where(eq(CardVersion.id, cardVersion.id))
+}
+
+/** @throws */
 export const deleteCard = async (card: Card): Promise<void> => {
   const client = await getClient()
   await client.delete(Card)
@@ -354,11 +366,14 @@ export const deleteCardVersionInvoice = async (cardVersionInvoice: CardVersionHa
 }
 
 /** @throws */
-export const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => {
+export const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => getAllUsersThatCanUseSetBySetId(set.id)
+
+/** @throws */
+export const getAllUsersThatCanUseSetBySetId = async (setId: Set['id']): Promise<UserCanUseSet[]> => {
   const client = await getClient()
   return await client.select()
     .from(UserCanUseSet)
-    .where(eq(UserCanUseSet.set, set.id))
+    .where(eq(UserCanUseSet.set, setId))
 }
 
 /** @throws */
@@ -396,4 +411,28 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
   const client = await getClient()
   return client.select()
     .from(LandingPage)
+}
+
+/** @throws */
+export const deleteSet = async (set: Set): Promise<void> => {
+  const client = await getClient()
+  await client.delete(Set)
+    .where(eq(Set.id, set.id))
+}
+
+/** @throws */
+export const deleteSetSettings = async (setSettings: SetSettings): Promise<void> => {
+  const client = await getClient()
+  await client.delete(SetSettings)
+    .where(eq(SetSettings.set, setSettings.set))
+}
+
+/** @throws */
+export const deleteUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise<void> => {
+  const client = await getClient()
+  await client.delete(UserCanUseSet)
+    .where(and(
+      eq(UserCanUseSet.user, userCanUseSet.user),
+      eq(UserCanUseSet.set, userCanUseSet.set),
+    ))
 }

@@ -117,6 +117,8 @@ const getSetSettingsBySetId = async (setId: Set['id']): Promise<SetSettings | nu
 
 const getAllCardsForSet = async (set: Set): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === set.id)
 
+const getAllCardsForSetBySetId = async (setId: Set['id']): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === setId)
+
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
   const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
   if (cards.length === 0) {
@@ -184,6 +186,9 @@ const getAllLnurlWs = async (): Promise<LnurlW[]> => Object.values(lnurlWsByLnbi
 const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => usersCanUseSets
   .filter((userCanUseSet) => userCanUseSet.set === set.id)
 
+const getAllUsersThatCanUseSetBySetId = async (setId: Set['id']): Promise<UserCanUseSet[]> => usersCanUseSets
+  .filter((userCanUseSet) => userCanUseSet.set === setId)
+
 const getSetsByUserId = async (userId: string): Promise<Set[]> => usersCanUseSets
   .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
   .map((userCanUseSet) => setsById[userCanUseSet.set])
@@ -233,6 +238,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getSetSettingsForSet,
     getSetSettingsBySetId,
     getAllCardsForSet,
+    getAllCardsForSetBySetId,
     getLatestCardVersion,
     getLnurlPFundingCardVersion,
     getLnurlWWithdrawingCardVersion,
@@ -245,6 +251,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getLnurlWById,
     getAllLnurlWs,
     getAllUsersThatCanUseSet,
+    getAllUsersThatCanUseSetBySetId,
     getSetsByUserId,
     getLandingPage,
     getUserCanUseLandingPagesByLandingPage,

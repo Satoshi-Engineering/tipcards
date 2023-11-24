@@ -13,9 +13,15 @@ import { getDrizzleDataObjectsFromRedisCard, getDrizzleLnurlWFromRedisBulkWithdr
 import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
 import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
 import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData'
-import { getDrizzleDataObjectsForRedisSet } from './transforms/drizzleSetDataForRedisSet'
+import {
+  getDrizzleDataObjectsForRedisSet,
+  getDrizzleDataObjectsForRedisSetDelete,
+} from './transforms/drizzleSetDataForRedisSet'
 import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultipleCards } from './transforms/redisBulkWithdrawDataFromDrizzleData'
-import { insertDataObjects, insertOrUpdateDataObjects, deleteDataObjects } from './batchQueries'
+import {
+  insertDataObjects, insertOrUpdateDataObjects,
+  updateDataObjects, deleteDataObjects,
+} from './batchQueries'
 import {
   getLatestCardVersion,
   getSetById as getDrizzleSetById,
@@ -87,7 +93,9 @@ export const updateSet = async (set: SetRedis): Promise<void> => {
 
 /** @throws */
 export const deleteSet = async (set: SetRedis): Promise<void> => {
-  // todo : implement
+  const drizzleData = await getDrizzleDataObjectsForRedisSetDelete(set)
+  await updateDataObjects(drizzleData.update)
+  await deleteDataObjects(drizzleData.delete)
 }
 
 export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {

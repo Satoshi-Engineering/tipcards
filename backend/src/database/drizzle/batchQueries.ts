@@ -16,8 +16,11 @@ import {
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
   insertOrUpdateSet, insertOrUpdateSetSettings,
   insertOrUpdateUserCanUseSet,
+  updateCard, updateCardVersion,
   deleteCard, deleteCardVersion,
   deleteInvoice, deleteCardVersionInvoice,
+  deleteSet, deleteSetSettings,
+  deleteUserCanUseSet,
 } from '@backend/database/drizzle/queries'
 
 export type DataObjects = {
@@ -97,6 +100,15 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
   }
 }
 
+export const updateDataObjects = async (data: DataObjects): Promise<void> => {
+  if (data.cards != null) {
+    await Promise.all(data.cards.map((card) => updateCard(card)))
+  }
+  if (data.cardVersions != null) {
+    await Promise.all(data.cardVersions.map((cardVersion) => updateCardVersion(cardVersion)))
+  }
+}
+
 export const deleteDataObjects = async (data: DataObjects): Promise<void> => {
   if (data.cardVersionInvoices != null) {
     await Promise.all(
@@ -113,5 +125,14 @@ export const deleteDataObjects = async (data: DataObjects): Promise<void> => {
   }
   if (data.cards != null) {
     await Promise.all(data.cards.map((card) => deleteCard(card)))
+  }
+  if (data.usersCanUseSets != null) {
+    await Promise.all(data.usersCanUseSets.map((userCanUseSet) => deleteUserCanUseSet(userCanUseSet)))
+  }
+  if (data.setSettings != null) {
+    await Promise.all(data.setSettings.map((setSettings) => deleteSetSettings(setSettings)))
+  }
+  if (data.sets != null) {
+    await Promise.all(data.sets.map((set) => deleteSet(set)))
   }
 }
