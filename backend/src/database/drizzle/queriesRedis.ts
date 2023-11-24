@@ -4,9 +4,11 @@ import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
-import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 
-import { getRedisCardFromDrizzleCardVersion } from './transforms/redisDataFromDrizzleData'
+import {
+  getRedisCardFromDrizzleCardVersion,
+  redisLandingPageFromDrizzleLandingPage,
+} from './transforms/redisDataFromDrizzleData'
 import { getDrizzleDataObjectsFromRedisCard, getDrizzleLnurlWFromRedisBulkWithdraw } from './transforms/drizzleDataFromRedisData'
 import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
 import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
@@ -19,7 +21,6 @@ import {
   getSetById as getDrizzleSetById,
   getSetsByUserId as getDrizzleSetsByUserId,
   getLandingPage as getDrizzleLandingPage,
-  getUserCanUseLandingPagesByLandingPageId as getDrizzleUserCanUseLandingPagesByLandingPageId,
   getAllLandingPages as getDrizzleAllLandingPages,
   getLnurlWById,
   getAllLnurlWs,
@@ -159,39 +160,19 @@ export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => {
  * @throws
  */
 export const getLandingPage = async (landingPageId: string): Promise<LandingPageRedis | null> => {
-  const landingPage = await getDrizzleLandingPage(landingPageId)
-  if (landingPage === null) {
-    return null
-  }
-
-  if (landingPage.type !== LandingPageType[1]) {
-    throw new Error('Not Implemented: In Redis only type ===\'external\' exists, in Drizzle is already more defined')
-  }
-
-  // due to redis having no m:n relationship, the first n:m user is taken
-  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
-
-  if (userCanUseLandingPages.length <= 0) throw Error('not Implemented')
-
-  return {
-    ...landingPage,
-    userId: userCanUseLandingPages[0].user,
-    type: 'external', // LandingPageType[1]
-  }
+  const landingPageDrizzle = await getDrizzleLandingPage(landingPageId)
+  return redisLandingPageFromDrizzleLandingPage(landingPageDrizzle)
 }
 
 /**
  * @throws
  */
 export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => {
-  const landingPages = await getDrizzleAllLandingPages()
+  const landingPagesDrizzle = await getDrizzleAllLandingPages()
 
-  const result: LandingPageRedis[] = []
-  for (let i = 0; i < landingPages.length; ++i) {
-    const landingPage = await getLandingPage(landingPages[i].id)
+  return Promise.all(landingPagesDrizzle.map(async (landingPageDrizzle) => {
+    const landingPage = await getLandingPage(landingPageDrizzle.id)
     if (landingPage === null) throw new Error('not implemented (Due: In redis not valid, but in Drizzle it would be)')
-    result.push(landingPage)
-  }
-
-  return result
+    return landingPage
+  }))
 }

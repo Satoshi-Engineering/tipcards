@@ -385,7 +385,7 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
   return result[0]
 }
 
-export const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
+export const getUserCanUseLandingPagesByLandingPage = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
   const client = await getClient()
   return client.select()
     .from(UserCanUseLandingPage)

@@ -106,6 +106,8 @@ export const createUser = (): User => ({
   permissions: '',
 })
 
+export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
+
 export const createUserCanUseLandingPage = (user: User, landingPage: LandingPage, canEdit = false): UserCanUseLandingPage => ({
   user: user.id,
   landingPage: landingPage.id,
@@ -124,3 +126,5 @@ export const createLandingPageTypeExternal = (): LandingPage => ({
   name: hashSha256(randomUUID()),
   url: hashSha256(randomUUID()),
 })
+
+export const createLandingPagesTypeExternal = (count: number): LandingPage[] => Array(count).fill('').map(() => createLandingPageTypeExternal())

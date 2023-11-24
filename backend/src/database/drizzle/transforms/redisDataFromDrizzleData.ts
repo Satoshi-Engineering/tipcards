@@ -2,12 +2,17 @@ import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
 import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
 import {
   getLnurlPFundingCardVersion,
-  getAllInvoicesFundingCardVersion, getAllCardVersionsFundedByInvoice,
-  getLnurlWWithdrawingCardVersion, getAllCardVersionsWithdrawnByLnurlW,
+  getAllInvoicesFundingCardVersion,
+  getAllCardVersionsFundedByInvoice,
+  getLnurlWWithdrawingCardVersion,
+  getAllCardVersionsWithdrawnByLnurlW,
+  getUserCanUseLandingPagesByLandingPage as getDrizzleUserCanUseLandingPagesByLandingPageId,
 } from '@backend/database/drizzle/queries'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
+import { LandingPage, LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
+import { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 /** @throws */
 export const getRedisCardFromDrizzleCardVersion = async (cardVersion: CardVersion): Promise<CardRedis> => {
@@ -112,5 +117,26 @@ export const getRedisWithdrawInfoForDrizzleCardVersion = async (card: CardVersio
     lnbitsWithdrawId: lnurlw.lnbitsId,
     isLockedByBulkWithdraw: cardVersions.length > 1,
     used: dateOrNullToUnixTimestamp(lnurlw.withdrawn),
+  }
+}
+
+export const redisLandingPageFromDrizzleLandingPage = async (landingPage: LandingPage | null): Promise<LandingPageRedis | null> => {
+  if (landingPage === null) {
+    return null
+  }
+
+  if (landingPage.type !== LandingPageType[1]) {
+    throw new Error('Not Implemented: In Redis only type ===\'external\' exists, in Drizzle is already more defined')
+  }
+
+  // due to redis having no m:n relationship, the first n:m user is taken
+  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
+
+  if (userCanUseLandingPages.length <= 0) throw Error('Not Implemented: in redis a landingPage has to have a userId')
+
+  return {
+    ...landingPage,
+    userId: userCanUseLandingPages[0].user,
+    type: 'external', // LandingPageType[1]
   }
 }

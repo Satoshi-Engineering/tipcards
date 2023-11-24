@@ -190,7 +190,7 @@ const getSetsByUserId = async (userId: string): Promise<Set[]> => usersCanUseSet
 
 const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => landingPages[landingPageId] || null
 
-const getUserCanUseLandingPagesByLandingPageId = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
+const getUserCanUseLandingPagesByLandingPage = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
   return Object.keys(userCanUseLandingPages)
     .filter(privateKey => privateKey.includes(landingPage.id))
     .map(privateKey => userCanUseLandingPages[privateKey])
@@ -242,7 +242,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getAllUsersThatCanUseSet,
     getSetsByUserId,
     getLandingPage,
-    getUserCanUseLandingPagesByLandingPageId,
+    getUserCanUseLandingPagesByLandingPage,
     getAllLandingPages,
 
     insertCards,
