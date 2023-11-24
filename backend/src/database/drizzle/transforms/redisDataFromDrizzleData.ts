@@ -125,18 +125,20 @@ export const redisLandingPageFromDrizzleLandingPage = async (landingPage: Landin
     return null
   }
 
-  if (landingPage.type !== LandingPageType[1]) {
-    throw new Error('Not Implemented: In Redis only type ===\'external\' exists, in Drizzle is already more defined')
+  if (landingPage.type !== LandingPageType.enum.external) {
+    throw new Error(`Invalid type for landingPage ${landingPage.id}, only "${LandingPageType.enum.external}" allowed for LandingPageRedis!`)
   }
 
   // due to redis having no m:n relationship, the first n:m user is taken
   const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
 
-  if (userCanUseLandingPages.length <= 0) throw Error('Not Implemented: in redis a landingPage has to have a userId')
+  if (userCanUseLandingPages.length <= 0) {
+    throw Error(`Missing userCanUseLandingPage for landingPage ${landingPage.id}, userId is required for LandingPageRedis!`)
+  }
 
   return {
     ...landingPage,
     userId: userCanUseLandingPages[0].user,
-    type: 'external', // LandingPageType[1]
+    type: LandingPageType.enum.external,
   }
 }

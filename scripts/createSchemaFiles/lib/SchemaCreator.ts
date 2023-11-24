@@ -68,6 +68,9 @@ export class SchemaCreator {
   }
 
   createEnumSection(table: DBMLTable) {
+    if (Math.random() > 0) {
+      throw new Error('todo : https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/786')
+    }
     const fields = this.getFields(table)
     const enums = getEnums(fields)
 

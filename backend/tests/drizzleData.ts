@@ -103,7 +103,7 @@ export const createUser = (): User => ({
   id: randomUUID(),
   lnurlAuthKey: hashSha256(randomUUID()),
   created: new Date(),
-  permissions: '',
+  permissions: JSON.stringify([]),
 })
 
 export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
@@ -122,7 +122,7 @@ export const createUserCanEditSet = (user: User, set: Set): UserCanUseSet => ({
 
 export const createLandingPageTypeExternal = (): LandingPage => ({
   id: randomUUID(),
-  type: LandingPageType[1],
+  type: LandingPageType.enum.external,
   name: hashSha256(randomUUID()),
   url: hashSha256(randomUUID()),
 })
