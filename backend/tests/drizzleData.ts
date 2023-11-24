@@ -134,6 +134,7 @@ export const createImageMeta = (imageType: Image['type']): Image => ({
   id: randomUUID(),
   type: imageType,
   name: hashSha256(randomUUID()),
+  data: '',
 })
 
 export const createUserCanUseImage = (user: User, image: Image, canEdit = false): UserCanUseImage => ({
