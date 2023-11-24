@@ -5,11 +5,17 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  User, UserCanUseSet, LandingPage, UserCanUseLandingPage, UserCanUseImage,
-  Image,
+  User, Profile,
+  UserCanUseSet,
+  LandingPage, UserCanUseLandingPage,
+  Image, UserCanUseImage,
 } from '@backend/database/drizzle/schema'
 import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import hashSha256 from '@backend/services/hashSha256'
+import { ImageType } from '@backend/database/drizzle/schema/Image'
+
+export const createRandomTextData = (prefix = '') => `${prefix}${randomUUID()}-random-text-data${randomUUID()}`
+export const createRandomEmailData = (prefix = '') => `${prefix}${randomUUID()}@${randomUUID()}.com`
 
 export const createSet = (): Set => ({
   id: randomUUID(),
@@ -109,6 +115,29 @@ export const createUser = (): User => ({
 
 export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
 
+export const createAllowedRefreshTokens = (user: User, addPrevious = false) => {
+  const current = hashSha256(randomUUID())
+  let textForHash = user.id + current
+  let previous: string | null = null
+  if (addPrevious) {
+    previous = hashSha256(randomUUID())
+    textForHash += previous
+  }
+  return {
+    hash: hashSha256(textForHash),
+    user: user.id,
+    current,
+    previous,
+  }
+}
+
+export const createProfileForUser = (user: User): Profile => ({
+  user: user.id,
+  accountName: createRandomTextData('Profile.accountName'),
+  displayName: createRandomTextData('Profile.displayName'),
+  email: createRandomEmailData('Profile.email'),
+})
+
 export const createUserCanUseLandingPage = (user: User, landingPage: LandingPage, canEdit = false): UserCanUseLandingPage => ({
   user: user.id,
   landingPage: landingPage.id,
@@ -130,7 +159,7 @@ export const createLandingPageTypeExternal = (): LandingPage => ({
 
 export const createLandingPagesTypeExternal = (count: number): LandingPage[] => Array(count).fill('').map(() => createLandingPageTypeExternal())
 
-export const createImage = (imageType: Image['type'], data: Image['data'] = ''): Image => ({
+export const createImage = (imageType: Image['type'] = ImageType.enum.svg, data: Image['data'] = ''): Image => ({
   id: randomUUID(),
   type: imageType,
   name: hashSha256(randomUUID()),

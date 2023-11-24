@@ -7,8 +7,11 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  UserCanUseSet, LandingPage, UserCanUseLandingPage,
   Image, UserCanUseImage,
+  User, Profile,
+  AllowedRefreshTokens,
+  UserCanUseSet,
+  LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
 import { getClient } from './client'
 
@@ -415,6 +418,17 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
 }
 
 /** @throws */
+export const getAllUserCanUseLandingPagesForUser = async (user: User): Promise<UserCanUseLandingPage[]> => getAllUserCanUseLandingPagesForUserId(user.id)
+
+/** @throws */
+export const getAllUserCanUseLandingPagesForUserId = async (userId: User['id']): Promise<UserCanUseLandingPage[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(UserCanUseLandingPage)
+    .where(eq(UserCanUseLandingPage.user, userId))
+}
+
+/** @throws */
 export const deleteSet = async (set: Set): Promise<void> => {
   const client = await getClient()
   await client.delete(Set)
@@ -456,4 +470,52 @@ export const getAllUsersThatCanUseImageByImageId = async (imageId: Image['id']):
   return await client.select()
     .from(UserCanUseImage)
     .where(eq(UserCanUseImage.image, imageId))
+}
+
+/** @throws */
+export const getAllUserCanUseImagesForUser = async (user: User): Promise<UserCanUseImage[]> => getAllUserCanUseImagesForUserId(user.id)
+
+/** @throws */
+export const getAllUserCanUseImagesForUserId = async (userId: User['id']): Promise<UserCanUseImage[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(UserCanUseImage)
+    .where(eq(UserCanUseImage.user, userId))
+}
+
+export const getUserById = async (userId: string): Promise<User | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(User)
+    .where(eq(User.id, userId))
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
+
+export const getProfileByUserId = async (userId: string): Promise<Profile | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Profile)
+    .where(eq(Profile.user, userId))
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
+
+/** @throws */
+export const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
+
+/** @throws */
+export const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): Promise<AllowedRefreshTokens[]> => {
+  const client = await getClient()
+  return client.select()
+    .from(AllowedRefreshTokens)
+    .where(eq(AllowedRefreshTokens.user, userId))
 }

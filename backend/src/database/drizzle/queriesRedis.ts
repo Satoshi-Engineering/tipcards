@@ -5,10 +5,12 @@ import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 import type { Image as ImageMetaRedis } from '@backend/database/redis/data/Image'
+import type { User as UserRedis } from '@backend/database/redis/data/User'
 
 import {
   getRedisCardFromDrizzleCardVersion,
   redisLandingPageFromDrizzleLandingPage,
+  redisUserFromDrizzleUser,
 } from './transforms/redisDataFromDrizzleData'
 import {
   getDrizzleDataObjectsFromRedisCard,
@@ -33,6 +35,7 @@ import {
   getSetsByUserId as getDrizzleSetsByUserId,
   getLandingPage as getDrizzleLandingPage,
   getAllLandingPages as getDrizzleAllLandingPages,
+  getUserById as getDrizzleUserById,
   getLnurlWById,
   getAllLnurlWs,
   insertOrUpdateLnurlW,
@@ -215,14 +218,17 @@ export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<Image
   }
 }
 
-/**
- * @param imageId string
- * @throws
- */
+/** @throws */
 export const getImageAsString = async (imageId: string): Promise<string | null> => {
   const imageDrizzle = await getImageById(imageId)
   if (imageDrizzle == null) {
     return null
   }
   return imageDrizzle.data
+}
+
+/** @throws */
+export const getUserById = async (userId: string): Promise<UserRedis | null> => {
+  const user = await getDrizzleUserById(userId)
+  return redisUserFromDrizzleUser(user)
 }

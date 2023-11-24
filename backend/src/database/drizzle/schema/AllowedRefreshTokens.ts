@@ -5,7 +5,7 @@ export const AllowedRefreshTokens = mysqlTable('AllowedRefreshTokens', {
   hash: varchar('hash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of user + current + previous
   user: varchar('user', { length: 36 }).notNull().references(() => User.id),
   current: text('current').notNull(), // Note: jwt refresh token
-  previous: text('previous').notNull(), // Note: jwt refresh token
+  previous: text('previous'), // Note: jwt refresh token
 }, (table) => {
   return {
     userIndex: primaryKey(table.user),

@@ -1,18 +1,30 @@
-import type { CardVersion } from '@backend/database/drizzle/schema/CardVersion'
-import type { Invoice } from '@backend/database/drizzle/schema/Invoice'
+import type {
+  User,
+  CardVersion,
+  Invoice,
+  LandingPage,
+  Profile,
+} from '@backend/database/drizzle/schema'
+import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import {
   getLnurlPFundingCardVersion,
   getAllInvoicesFundingCardVersion,
   getAllCardVersionsFundedByInvoice,
   getLnurlWWithdrawingCardVersion,
   getAllCardVersionsWithdrawnByLnurlW,
-  getUserCanUseLandingPagesByLandingPage as getDrizzleUserCanUseLandingPagesByLandingPageId,
+  getUserCanUseLandingPagesByLandingPage as getDrizzleUserCanUseLandingPagesByLandingPage,
+  getProfileByUserId as getDrizzleProfileByUserId,
+  getAllUserCanUseImagesForUserId,
+  getAllUserCanUseLandingPagesForUserId,
+  getAllAllowedRefreshTokensForUserId,
 } from '@backend/database/drizzle/queries'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
+import {
+  Profile as ProfileRedis,
+  User as UserRedis } from '@backend/database/redis/data/User'
+import { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
-import { LandingPage, LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
-import { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 /** @throws */
 export const getRedisCardFromDrizzleCardVersion = async (cardVersion: CardVersion): Promise<CardRedis> => {
@@ -130,7 +142,7 @@ export const redisLandingPageFromDrizzleLandingPage = async (landingPage: Landin
   }
 
   // due to redis having no m:n relationship, the first n:m user is taken
-  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
+  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPage(landingPage)
 
   if (userCanUseLandingPages.length <= 0) {
     throw Error(`Missing userCanUseLandingPage for landingPage ${landingPage.id}, userId is required for LandingPageRedis!`)
@@ -141,4 +153,69 @@ export const redisLandingPageFromDrizzleLandingPage = async (landingPage: Landin
     userId: userCanUseLandingPages[0].user,
     type: LandingPageType.enum.external,
   }
+}
+
+export const redisProfileFromDrizzleProfile = (profile: Profile): ProfileRedis => ({
+  accountName: profile.accountName,
+  displayName: profile.displayName,
+  email: profile.email,
+})
+
+export const redisUserFromDrizzleUser = async (user: User | null): Promise<UserRedis | null> => {
+  if (user === null) {
+    return null
+  }
+
+  const profile = await getDrizzleProfileByUserId(user.id)
+  if (profile === null) {
+    throw Error('Not Implemented - A redis user always has a profile. In drizzle it is possible that not.')
+  }
+
+  const availableCardsLogos = await getAvailableCardLogosForRedisUserByUserId(user.id)
+  const availableLandingPages = await getAvailableLandingPagesForRedisUserByUserId(user.id)
+  const allowedRefreshTokens = await getAllowedRefreshTokensForRedisUserByUserId(user.id)
+
+  return {
+    id: user.id,
+    lnurlAuthKey: user.lnurlAuthKey,
+    created: dateToUnixTimestamp(user.created),
+    availableCardsLogos,
+    availableLandingPages,
+    allowedRefreshTokens,
+    profile: redisProfileFromDrizzleProfile(profile),
+    permissions: [],
+  }
+}
+
+export const getAvailableCardLogosForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['availableCardsLogos']> => {
+  const userCanUseImages = await getAllUserCanUseImagesForUserId(userId)
+  const availableCardLogos = userCanUseImages
+    .filter((userCanUseImage) => userCanUseImage.canEdit)
+    .map((userCanUseImage) => userCanUseImage.image)
+  if (availableCardLogos.length === 0) {
+    return null
+  }
+  return availableCardLogos
+}
+
+export const getAvailableLandingPagesForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['availableLandingPages']> => {
+  const userCanUseLandingPages = await getAllUserCanUseLandingPagesForUserId(userId)
+  const availableLandingPages = userCanUseLandingPages
+    .filter((userCanUseLandingPage) => userCanUseLandingPage.canEdit)
+    .map((userCanUseLandingPage) => userCanUseLandingPage.landingPage)
+  if (availableLandingPages.length === 0) {
+    return null
+  }
+  return availableLandingPages
+}
+
+export const getAllowedRefreshTokensForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['allowedRefreshTokens']> => {
+  const allowedRefreshTokens = await getAllAllowedRefreshTokensForUserId(userId)
+  if (allowedRefreshTokens.length === 0) {
+    return null
+  }
+  return allowedRefreshTokens.reduce((total, allowedRefreshTokens) => [
+    ...total,
+    allowedRefreshTokens.previous != null ? [allowedRefreshTokens.previous, allowedRefreshTokens.current] : [allowedRefreshTokens.current],
+  ], [] as string[][])
 }

@@ -1,11 +1,13 @@
-import type {
+import {
   Set, SetSettings,
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  User, UserCanUseSet,
-  LandingPage, UserCanUseLandingPage,
+  User, Profile,
+  AllowedRefreshTokens, 
+  UserCanUseSet,
   Image, UserCanUseImage,
+  LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
 
 const setsById: Record<string, Set> = {}
@@ -22,6 +24,8 @@ const landingPages: Record<string, LandingPage> = {}
 const userCanUseLandingPages: Record<string, UserCanUseLandingPage> = {}
 const images: Record<string, Image> = {}
 const usersCanUseImages: UserCanUseImage[] = []
+const profilesByUserId: Record<string, Profile> = {}
+const allowedRefreshTokens: AllowedRefreshTokens[] = []
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
@@ -68,6 +72,15 @@ export const addImages = (...newImages: Image[]) => {
 export const addUsersCanUseImages = (...newUsersCanUseImages: UserCanUseImage[]) => {
   usersCanUseImages.push(...newUsersCanUseImages)
 }
+export const addProfiles = (...newProfiles: Profile[]) => {
+  addItemsToTable(profilesByUserId, newProfiles.map((profile) => ({
+    key: profile.user,
+    item: profile,
+  })))
+}
+export const addAllowedRefreshTokens = (...newAllowedRefreshTokens: AllowedRefreshTokens[]) => {
+  allowedRefreshTokens.push(...newAllowedRefreshTokens)
+}
 
 export const addData = ({
   sets,
@@ -84,6 +97,8 @@ export const addData = ({
   userCanUseLandingPages,
   images,
   usersCanUseImages,
+  profiles,
+  allowedRefreshTokens,
 }: {
   sets?: Set[],
   setSettings?: SetSettings[],
@@ -99,6 +114,8 @@ export const addData = ({
   userCanUseLandingPages?: UserCanUseLandingPage[],
   images?: Image[],
   usersCanUseImages?: UserCanUseImage[],
+  profiles?: Profile[],
+  allowedRefreshTokens?: AllowedRefreshTokens[],
 }) => {
   addSets(...(sets || []))
   addSetSettings(...(setSettings || []))
@@ -114,6 +131,8 @@ export const addData = ({
   addUserCanUseLandingPages(...(userCanUseLandingPages || []))
   addImages(...(images || []))
   addUsersCanUseImages(...(usersCanUseImages || []))
+  addProfiles(...(profiles || []))
+  addAllowedRefreshTokens(...(allowedRefreshTokens || []))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
@@ -217,10 +236,29 @@ const getUserCanUseLandingPagesByLandingPage = async (landingPage: LandingPage):
 
 const getAllLandingPages = (): LandingPage[] => Object.values(landingPages)
 
+const getAllUserCanUseLandingPagesForUser = async (user: User): Promise<UserCanUseLandingPage[]> => getAllUserCanUseLandingPagesForUserId(user.id)
+
+const getAllUserCanUseLandingPagesForUserId = async (userId: User['id']): Promise<UserCanUseLandingPage[]> => Object.values(userCanUseLandingPages)
+  .filter((userCanUseLandingPage) => userCanUseLandingPage.user === userId)
+
 const getImageById = async (imageId: string): Promise<Image | null> => images[imageId] || null
 
 const getAllUsersThatCanUseImage = async (image: Image): Promise<UserCanUseImage[]> => usersCanUseImages
   .filter((userCanUseImage) => userCanUseImage.image === image.id)
+
+const getAllUserCanUseImagesForUser = async (user: User): Promise<UserCanUseImage[]> => getAllUserCanUseImagesForUserId(user.id)
+
+const getAllUserCanUseImagesForUserId = async (userId: User['id']): Promise<UserCanUseImage[]> => usersCanUseImages
+  .filter((userCanUseImage) => userCanUseImage.user === userId)
+
+const getUserById = async (userId: string): Promise<User | null> => usersById[userId] || null
+
+const getProfileByUserId = async (userId: string): Promise<Profile | null> => profilesByUserId[userId] || null
+
+const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
+
+const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): Promise<AllowedRefreshTokens[]> => allowedRefreshTokens
+  .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId)
 
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
@@ -275,8 +313,16 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getLandingPage,
     getUserCanUseLandingPagesByLandingPage,
     getAllLandingPages,
+    getAllUserCanUseLandingPagesForUser,
+    getAllUserCanUseLandingPagesForUserId,
     getImageById,
     getAllUsersThatCanUseImage,
+    getAllUserCanUseImagesForUser,
+    getAllUserCanUseImagesForUserId,
+    getUserById,
+    getProfileByUserId,
+    getAllAllowedRefreshTokensForUser,
+    getAllAllowedRefreshTokensForUserId,
 
     insertCards,
     insertCardVersions,

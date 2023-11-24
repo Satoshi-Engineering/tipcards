@@ -138,7 +138,7 @@ Table AllowedRefreshTokens [note: "every device can have up to two valid refresh
   hash     varchar(64) [primary key, unique, note: "sha256 of user + current + previous"]
   user     varchar(36) [ref: > User.id]
   current  text        [note: "jwt refresh token"]
-  previous text        [note: "jwt refresh token"]
+  previous text        [null, default: null, note: "jwt refresh token"]
 
   indexes {
     user [name: "userIndex"]
