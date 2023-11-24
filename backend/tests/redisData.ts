@@ -4,6 +4,7 @@ import type z from 'zod'
 import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 import { Card } from '@backend/database/redis/data/Card'
 import { Set } from '@backend/database/redis/data/Set'
+import { User } from '@backend/database/redis/data/User'
 import hashSha256 from '@backend/services/hashSha256'
 
 export const createCard = (): Card => {
@@ -98,4 +99,12 @@ export const createBulkWithdraw = (amount: number, ...cardHashes: Card['cardHash
     lnbitsWithdrawDeleted: null,
     withdrawn: null,
   }
+}
+
+export const createUser = (): User => {
+  return User.parse({
+    id: randomUUID(),
+    lnurlAuthKey: hashSha256(randomUUID()),
+    created: Math.floor(+ new Date() / 1000),
+  })
 }

@@ -3,6 +3,7 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   Set, SetSettings,
+  User,
   UserCanUseSet,
 } from '@backend/database/drizzle/schema'
 import {
@@ -15,6 +16,7 @@ import {
   insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
   insertOrUpdateSet, insertOrUpdateSetSettings,
+  insertOrUpdateUser,
   insertOrUpdateUserCanUseSet,
   updateCard, updateCardVersion,
   deleteCard, deleteCardVersion,
@@ -32,6 +34,7 @@ export type DataObjects = {
   lnurlWs?: LnurlW[],
   sets?: Set[],
   setSettings?: SetSettings[],
+  users?: User[],
   usersCanUseSets?: UserCanUseSet[],
 }
 
@@ -97,6 +100,9 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
   }
   if (data.usersCanUseSets != null) {
     await Promise.all(data.usersCanUseSets.map((userCanUseSet) => insertOrUpdateUserCanUseSet(userCanUseSet)))
+  }
+  if (data.users != null) {
+    await Promise.all(data.users.map((user) => insertOrUpdateUser(user)))
   }
 }
 

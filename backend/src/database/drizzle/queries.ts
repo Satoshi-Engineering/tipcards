@@ -315,6 +315,14 @@ export const insertOrUpdateSetSettings = async (setSettings: SetSettings): Promi
 }
 
 /** @throws */
+export const insertOrUpdateUser = async (user: User): Promise<void> => {
+  const client = await getClient()
+  await client.insert(User)
+    .values(user)
+    .onDuplicateKeyUpdate({ set: user })
+}
+
+/** @throws */
 export const insertOrUpdateUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise<void> => {
   const client = await getClient()
   await client.insert(UserCanUseSet)

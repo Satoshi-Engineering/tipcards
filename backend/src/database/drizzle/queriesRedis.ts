@@ -26,6 +26,7 @@ import {
   getDrizzleDataObjectsForRedisSetDelete,
 } from './transforms/drizzleSetDataForRedisSet'
 import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultipleCards } from './transforms/redisBulkWithdrawDataFromDrizzleData'
+import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData'
 import {
   insertDataObjects, insertOrUpdateDataObjects,
   updateDataObjects, deleteDataObjects,
@@ -247,4 +248,10 @@ export const getAllUsers = async (): Promise<UserRedis[]> => {
   const users = await getAllDrizzleUsers()
   return (await Promise.all(users.map(async (user) => redisUserFromDrizzleUser(user))))
     .filter((user) => user != null)
+}
+
+/** @throws */
+export const createUser = async (user: UserRedis): Promise<void> => {
+  const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
+  await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
 }
