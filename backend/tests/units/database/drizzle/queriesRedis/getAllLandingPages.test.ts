@@ -1,21 +1,22 @@
 import '../../../mocks/process.env'
 import '../mocks/queries'
 
-import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis'
 import {
   createLandingPagesTypeExternal,
   createUserCanUseLandingPage,
   createUsers,
 } from '../../../../drizzleData'
 import { addData } from '../mocks/queries'
+
 import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema'
+import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis'
 
 describe('getAllLandingPages', () => {
   it('should return a list of landing pages', async () => {
     const LANDING_PAGE_COUNT = 5
     const landingPages: LandingPage[] = createLandingPagesTypeExternal(LANDING_PAGE_COUNT)
     const users: User[] = createUsers(LANDING_PAGE_COUNT)
-    const userCanUseLandingPages: UserCanUseLandingPage[]  = Array(LANDING_PAGE_COUNT).fill('').map((v, i) => createUserCanUseLandingPage(users[i], landingPages[i]))
+    const userCanUseLandingPages: UserCanUseLandingPage[]  = users.map((_, i) => createUserCanUseLandingPage(users[i], landingPages[i]))
 
     addData({
       landingPages: landingPages,
