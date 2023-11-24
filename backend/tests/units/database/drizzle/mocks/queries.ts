@@ -5,6 +5,7 @@ import type {
   LnurlP, LnurlW,
   User, UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
+  Image, UserCanUseImage,
 } from '@backend/database/drizzle/schema'
 
 const setsById: Record<string, Set> = {}
@@ -19,6 +20,8 @@ const usersById: Record<string, User> = {}
 const usersCanUseSets: UserCanUseSet[] = []
 const landingPages: Record<string, LandingPage> = {}
 const userCanUseLandingPages: Record<string, UserCanUseLandingPage> = {}
+const images: Record<string, Image> = {}
+const usersCanUseImages: UserCanUseImage[] = []
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
@@ -53,12 +56,17 @@ export const addUsersCanUseSets = (...newUsersCanUseSets: UserCanUseSet[]) => {
 export const addLandingPage = (...newLandingPages: LandingPage[]) => {
   addItemsToTable(landingPages, newLandingPages.map((landingPage) => ({ key: landingPage.id, item: landingPage })))
 }
-
 export const addUserCanUseLandingPages = (...newUserCanUseLandingPages: UserCanUseLandingPage[]) => {
   addItemsToTable(userCanUseLandingPages, newUserCanUseLandingPages.map((userCanUseLandingPage) => ({
     key: `${userCanUseLandingPage.user}${userCanUseLandingPage.landingPage}`,
     item: userCanUseLandingPage,
   })))
+}
+export const addImages = (...newImages: Image[]) => {
+  addItemsToTable(images, newImages.map((newImage) => ({ key: newImage.id, item: newImage })))
+}
+export const addUsersCanUseImages = (...newUsersCanUseImages: UserCanUseImage[]) => {
+  usersCanUseImages.push(...newUsersCanUseImages)
 }
 
 export const addData = ({
@@ -74,6 +82,8 @@ export const addData = ({
   usersCanUseSets,
   landingPages,
   userCanUseLandingPages,
+  images,
+  usersCanUseImages,
 }: {
   sets?: Set[],
   setSettings?: SetSettings[],
@@ -87,6 +97,8 @@ export const addData = ({
   usersCanUseSets?: UserCanUseSet[],
   landingPages?: LandingPage[],
   userCanUseLandingPages?: UserCanUseLandingPage[],
+  images?: Image[],
+  usersCanUseImages?: UserCanUseImage[],
 }) => {
   addSets(...(sets || []))
   addSetSettings(...(setSettings || []))
@@ -100,6 +112,8 @@ export const addData = ({
   addUsersCanUseSets(...(usersCanUseSets || []))
   addLandingPage(...(landingPages || []))
   addUserCanUseLandingPages(...(userCanUseLandingPages || []))
+  addImages(...(images || []))
+  addUsersCanUseImages(...(usersCanUseImages || []))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
@@ -203,6 +217,11 @@ const getUserCanUseLandingPagesByLandingPage = async (landingPage: LandingPage):
 
 const getAllLandingPages = (): LandingPage[] => Object.values(landingPages)
 
+const getImageById = async (imageId: string): Promise<Image | null> => images[imageId] || null
+
+const getAllUsersThatCanUseImage = async (image: Image): Promise<UserCanUseImage[]> => usersCanUseImages
+  .filter((userCanUseImage) => userCanUseImage.image === image.id)
+
 export const insertCards = jest.fn(async () => undefined)
 export const insertCardVersions = jest.fn(async () => undefined)
 export const insertInvoices = jest.fn(async () => undefined)
@@ -256,6 +275,8 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getLandingPage,
     getUserCanUseLandingPagesByLandingPage,
     getAllLandingPages,
+    getImageById,
+    getAllUsersThatCanUseImage,
 
     insertCards,
     insertCardVersions,

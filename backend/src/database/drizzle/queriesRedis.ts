@@ -4,6 +4,7 @@ import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
+import type { Image as ImageMetaRedis } from '@backend/database/redis/data/Image'
 
 import {
   getRedisCardFromDrizzleCardVersion,
@@ -32,6 +33,7 @@ import {
   getAllLnurlWs,
   insertOrUpdateLnurlW,
   updateCardVersion,
+  getImageById, getAllUsersThatCanUseImage,
 } from './queries'
 
 /** @throws */
@@ -190,4 +192,25 @@ export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => {
     }
     return landingPage
   }))
+}
+
+/**
+ * @throws
+ */
+export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<ImageMetaRedis | null> => {
+  const imageDrizzle = await getImageById(imageId)
+  if (imageDrizzle == null) {
+    return null
+  }
+  const imageUsers = await getAllUsersThatCanUseImage(imageDrizzle)
+  const usersThatCanEditImage = imageUsers.find((user) => user.canEdit)
+  if (usersThatCanEditImage == null) {
+    throw new Error('image without user found but is not allowed')
+  }
+  return {
+    id: imageDrizzle.id,
+    type: imageDrizzle.type,
+    name: imageDrizzle.name,
+    userId: usersThatCanEditImage.user,
+  }
 }

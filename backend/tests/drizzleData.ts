@@ -5,7 +5,8 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
-  User, UserCanUseSet, LandingPage, UserCanUseLandingPage,
+  User, UserCanUseSet, LandingPage, UserCanUseLandingPage, UserCanUseImage,
+  Image,
 } from '@backend/database/drizzle/schema'
 import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import hashSha256 from '@backend/services/hashSha256'
@@ -128,3 +129,15 @@ export const createLandingPageTypeExternal = (): LandingPage => ({
 })
 
 export const createLandingPagesTypeExternal = (count: number): LandingPage[] => Array(count).fill('').map(() => createLandingPageTypeExternal())
+
+export const createImageMeta = (imageType: Image['type']): Image => ({
+  id: randomUUID(),
+  type: imageType,
+  name: hashSha256(randomUUID()),
+})
+
+export const createUserCanUseImage = (user: User, image: Image, canEdit = false): UserCanUseImage => ({
+  user: user.id,
+  image: image.id,
+  canEdit,
+})

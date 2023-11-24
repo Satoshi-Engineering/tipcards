@@ -8,6 +8,7 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   UserCanUseSet, LandingPage, UserCanUseLandingPage,
+  Image, UserCanUseImage,
 } from '@backend/database/drizzle/schema'
 import { getClient } from './client'
 
@@ -435,4 +436,24 @@ export const deleteUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise
       eq(UserCanUseSet.user, userCanUseSet.user),
       eq(UserCanUseSet.set, userCanUseSet.set),
     ))
+}
+
+/** @throws */
+export const getImageById = async (id: Image['id']): Promise<Image> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(Image)
+    .where(eq(Image.id, id))
+  return result[0]
+}
+
+/** @throws */
+export const getAllUsersThatCanUseImage = async (image: Image): Promise<UserCanUseImage[]> => getAllUsersThatCanUseImageByImageId(image.id)
+
+/** @throws */
+export const getAllUsersThatCanUseImageByImageId = async (imageId: Image['id']): Promise<UserCanUseImage[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(UserCanUseImage)
+    .where(eq(UserCanUseImage.image, imageId))
 }
