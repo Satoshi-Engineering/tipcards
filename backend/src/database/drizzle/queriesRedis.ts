@@ -10,7 +10,11 @@ import {
   getRedisCardFromDrizzleCardVersion,
   redisLandingPageFromDrizzleLandingPage,
 } from './transforms/redisDataFromDrizzleData'
-import { getDrizzleDataObjectsFromRedisCard, getDrizzleLnurlWFromRedisBulkWithdraw } from './transforms/drizzleDataFromRedisData'
+import {
+  getDrizzleDataObjectsFromRedisCard,
+  getDrizzleLnurlWFromRedisBulkWithdraw,
+  getUserIdForRedisImageFromDrizzleImage,
+} from './transforms/drizzleDataFromRedisData'
 import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
 import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
 import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData'
@@ -33,7 +37,7 @@ import {
   getAllLnurlWs,
   insertOrUpdateLnurlW,
   updateCardVersion,
-  getImageById, getAllUsersThatCanUseImage,
+  getImageById,
 } from './queries'
 
 /** @throws */
@@ -202,15 +206,10 @@ export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<Image
   if (imageDrizzle == null) {
     return null
   }
-  const imageUsers = await getAllUsersThatCanUseImage(imageDrizzle)
-  const usersThatCanEditImage = imageUsers.find((user) => user.canEdit)
-  if (usersThatCanEditImage == null) {
-    throw new Error('image without user found but is not allowed')
-  }
   return {
     id: imageDrizzle.id,
     type: imageDrizzle.type,
     name: imageDrizzle.name,
-    userId: usersThatCanEditImage.user,
+    userId: await (getUserIdForRedisImageFromDrizzleImage(imageDrizzle)),
   }
 }

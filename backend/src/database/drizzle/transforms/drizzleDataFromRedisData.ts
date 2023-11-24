@@ -4,9 +4,12 @@ import {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
+  Image,
 } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
+import { getAllUsersThatCanUseImage } from '@backend/database/drizzle/queries'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import type { Image as ImageRedis } from '@backend/database/redis/data/Image'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
@@ -132,4 +135,14 @@ export const getDrizzleLnurlWFromRedisBulkWithdraw = (bulkWithdraw: BulkWithdraw
     lnbitsId: bulkWithdraw.lnbitsWithdrawId,
     expiresAt: null,
   }
+}
+
+/** @throws */
+export const getUserIdForRedisImageFromDrizzleImage = async (image: Image): Promise<ImageRedis['userId']> => {
+  const imageUsers = await getAllUsersThatCanUseImage(image)
+  const userThatCanEditImage = imageUsers.find((user) => user.canEdit)
+  if (userThatCanEditImage == null) {
+    throw new Error(`Image ${image.id} has no user that can use/edit it, which is not allowed for ImageRedis!`)
+  }
+  return userThatCanEditImage.user
 }
