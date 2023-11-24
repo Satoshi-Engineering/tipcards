@@ -36,6 +36,7 @@ import {
   getLandingPage as getDrizzleLandingPage,
   getAllLandingPages as getDrizzleAllLandingPages,
   getUserById as getDrizzleUserById,
+  getUserByLnurlAuthKey as getDrizzleUserByLnurlAuthKey,
   getLnurlWById,
   getAllLnurlWs,
   insertOrUpdateLnurlW,
@@ -230,5 +231,11 @@ export const getImageAsString = async (imageId: string): Promise<string | null> 
 /** @throws */
 export const getUserById = async (userId: string): Promise<UserRedis | null> => {
   const user = await getDrizzleUserById(userId)
+  return redisUserFromDrizzleUser(user)
+}
+
+/** @throws */
+export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<UserRedis | null> => {
+  const user = await getDrizzleUserByLnurlAuthKey(lnurlAuthKey)
   return redisUserFromDrizzleUser(user)
 }

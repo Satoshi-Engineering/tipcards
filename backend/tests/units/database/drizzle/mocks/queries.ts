@@ -212,7 +212,7 @@ const getAllCardVersionsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promise<Card
   return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
 }
 
-const getLnurlWById = async (id: string): Promise<LnurlW> => lnurlWsByLnbitsId[id] || null
+const getLnurlWById = async (id: LnurlW['lnbitsId']): Promise<LnurlW> => lnurlWsByLnbitsId[id] || null
 
 const getAllLnurlWs = async (): Promise<LnurlW[]> => Object.values(lnurlWsByLnbitsId)
 
@@ -222,11 +222,11 @@ const getAllUsersThatCanUseSet = async (set: Set): Promise<UserCanUseSet[]> => u
 const getAllUsersThatCanUseSetBySetId = async (setId: Set['id']): Promise<UserCanUseSet[]> => usersCanUseSets
   .filter((userCanUseSet) => userCanUseSet.set === setId)
 
-const getSetsByUserId = async (userId: string): Promise<Set[]> => usersCanUseSets
+const getSetsByUserId = async (userId: User['id']): Promise<Set[]> => usersCanUseSets
   .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
   .map((userCanUseSet) => setsById[userCanUseSet.set])
 
-const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => landingPages[landingPageId] || null
+const getLandingPage = async (landingPageId: LandingPage['id']): Promise<LandingPage | null> => landingPages[landingPageId] || null
 
 const getUserCanUseLandingPagesByLandingPage = async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
   return Object.keys(userCanUseLandingPages)
@@ -241,7 +241,7 @@ const getAllUserCanUseLandingPagesForUser = async (user: User): Promise<UserCanU
 const getAllUserCanUseLandingPagesForUserId = async (userId: User['id']): Promise<UserCanUseLandingPage[]> => Object.values(userCanUseLandingPages)
   .filter((userCanUseLandingPage) => userCanUseLandingPage.user === userId)
 
-const getImageById = async (imageId: string): Promise<Image | null> => images[imageId] || null
+const getImageById = async (imageId: Image['id']): Promise<Image | null> => images[imageId] || null
 
 const getAllUsersThatCanUseImage = async (image: Image): Promise<UserCanUseImage[]> => usersCanUseImages
   .filter((userCanUseImage) => userCanUseImage.image === image.id)
@@ -251,9 +251,12 @@ const getAllUserCanUseImagesForUser = async (user: User): Promise<UserCanUseImag
 const getAllUserCanUseImagesForUserId = async (userId: User['id']): Promise<UserCanUseImage[]> => usersCanUseImages
   .filter((userCanUseImage) => userCanUseImage.user === userId)
 
-const getUserById = async (userId: string): Promise<User | null> => usersById[userId] || null
+const getUserById = async (userId: User['id']): Promise<User | null> => usersById[userId] || null
 
-const getProfileByUserId = async (userId: string): Promise<Profile | null> => profilesByUserId[userId] || null
+const getUserByLnurlAuthKey = async (lnurlAuthKey: User['lnurlAuthKey']): Promise<User | null> => Object.values(usersById)
+  .find((user) => user.lnurlAuthKey === lnurlAuthKey) || null
+
+const getProfileByUserId = async (userId: User['id']): Promise<Profile | null> => profilesByUserId[userId] || null
 
 const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
 
@@ -320,6 +323,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getAllUserCanUseImagesForUser,
     getAllUserCanUseImagesForUserId,
     getUserById,
+    getUserByLnurlAuthKey,
     getProfileByUserId,
     getAllAllowedRefreshTokensForUser,
     getAllAllowedRefreshTokensForUserId,

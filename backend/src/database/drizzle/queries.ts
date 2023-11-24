@@ -163,7 +163,7 @@ export const getAllCardVersionsWithdrawnByLnurlW = async (lnurlw: LnurlW): Promi
 }
 
 /** @throws */
-export const getLnurlWById = async (id: string): Promise<LnurlW> => {
+export const getLnurlWById = async (id: LnurlW['lnbitsId']): Promise<LnurlW> => {
   const client = await getClient()
   const result = await client.select()
     .from(LnurlW)
@@ -381,7 +381,7 @@ export const getAllUsersThatCanUseSetBySetId = async (setId: Set['id']): Promise
 }
 
 /** @throws */
-export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
+export const getSetsByUserId = async (userId: User['id']): Promise<Set[]> => {
   const client = await getClient()
   const result = await client.select()
     .from(Set)
@@ -391,7 +391,7 @@ export const getSetsByUserId = async (userId: string): Promise<Set[]> => {
 }
 
 /** @throws */
-export const getLandingPage = async (landingPageId: string): Promise<LandingPage | null> => {
+export const getLandingPage = async (landingPageId: LandingPage['id']): Promise<LandingPage | null> => {
   const client = await getClient()
   const result = await client.select()
     .from(LandingPage)
@@ -483,7 +483,7 @@ export const getAllUserCanUseImagesForUserId = async (userId: User['id']): Promi
     .where(eq(UserCanUseImage.user, userId))
 }
 
-export const getUserById = async (userId: string): Promise<User | null> => {
+export const getUserById = async (userId: User['id']): Promise<User | null> => {
   const client = await getClient()
   const result = await client.select()
     .from(User)
@@ -496,7 +496,20 @@ export const getUserById = async (userId: string): Promise<User | null> => {
   return result[0]
 }
 
-export const getProfileByUserId = async (userId: string): Promise<Profile | null> => {
+export const getUserByLnurlAuthKey = async (lnurlAuthKey: User['lnurlAuthKey']): Promise<User | null> => {
+  const client = await getClient()
+  const result = await client.select()
+    .from(User)
+    .where(eq(User.lnurlAuthKey, lnurlAuthKey))
+
+  if (result.length === 0) {
+    return null
+  }
+
+  return result[0]
+}
+
+export const getProfileByUserId = async (userId: User['id']): Promise<Profile | null> => {
   const client = await getClient()
   const result = await client.select()
     .from(Profile)
