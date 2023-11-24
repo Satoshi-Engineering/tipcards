@@ -256,6 +256,8 @@ const getUserById = async (userId: User['id']): Promise<User | null> => usersByI
 const getUserByLnurlAuthKey = async (lnurlAuthKey: User['lnurlAuthKey']): Promise<User | null> => Object.values(usersById)
   .find((user) => user.lnurlAuthKey === lnurlAuthKey) || null
 
+const getAllUsers = async (): Promise<User[]> => Object.values(usersById)
+
 const getProfileByUserId = async (userId: User['id']): Promise<Profile | null> => profilesByUserId[userId] || null
 
 const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
@@ -324,6 +326,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     getAllUserCanUseImagesForUserId,
     getUserById,
     getUserByLnurlAuthKey,
+    getAllUsers,
     getProfileByUserId,
     getAllAllowedRefreshTokensForUser,
     getAllAllowedRefreshTokensForUserId,

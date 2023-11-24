@@ -11,6 +11,7 @@ import {
   getRedisCardFromDrizzleCardVersion,
   redisLandingPageFromDrizzleLandingPage,
   redisUserFromDrizzleUser,
+  redisUserFromDrizzleUserOrNull,
 } from './transforms/redisDataFromDrizzleData'
 import {
   getDrizzleDataObjectsFromRedisCard,
@@ -37,6 +38,7 @@ import {
   getAllLandingPages as getDrizzleAllLandingPages,
   getUserById as getDrizzleUserById,
   getUserByLnurlAuthKey as getDrizzleUserByLnurlAuthKey,
+  getAllUsers as getAllDrizzleUsers,
   getLnurlWById,
   getAllLnurlWs,
   insertOrUpdateLnurlW,
@@ -231,11 +233,18 @@ export const getImageAsString = async (imageId: string): Promise<string | null> 
 /** @throws */
 export const getUserById = async (userId: string): Promise<UserRedis | null> => {
   const user = await getDrizzleUserById(userId)
-  return redisUserFromDrizzleUser(user)
+  return redisUserFromDrizzleUserOrNull(user)
 }
 
 /** @throws */
 export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<UserRedis | null> => {
   const user = await getDrizzleUserByLnurlAuthKey(lnurlAuthKey)
-  return redisUserFromDrizzleUser(user)
+  return redisUserFromDrizzleUserOrNull(user)
+}
+
+/** @throws */
+export const getAllUsers = async (): Promise<UserRedis[]> => {
+  const users = await getAllDrizzleUsers()
+  return (await Promise.all(users.map(async (user) => redisUserFromDrizzleUser(user))))
+    .filter((user) => user != null)
 }

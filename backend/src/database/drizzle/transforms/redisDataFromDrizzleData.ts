@@ -161,11 +161,14 @@ export const redisProfileFromDrizzleProfile = (profile: Profile): ProfileRedis =
   email: profile.email,
 })
 
-export const redisUserFromDrizzleUser = async (user: User | null): Promise<UserRedis | null> => {
+export const redisUserFromDrizzleUserOrNull = async (user: User | null): Promise<UserRedis | null> => {
   if (user === null) {
     return null
   }
+  return redisUserFromDrizzleUser(user)
+}
 
+export const redisUserFromDrizzleUser = async (user: User): Promise<UserRedis> => {
   const profile = await getDrizzleProfileByUserId(user.id)
   if (profile === null) {
     throw Error('Not Implemented - A redis user always has a profile. In drizzle it is possible that not.')

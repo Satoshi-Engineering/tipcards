@@ -509,6 +509,12 @@ export const getUserByLnurlAuthKey = async (lnurlAuthKey: User['lnurlAuthKey']):
   return result[0]
 }
 
+export const getAllUsers = async (): Promise<User[]> => {
+  const client = await getClient()
+  return await client.select()
+    .from(User)
+}
+
 export const getProfileByUserId = async (userId: User['id']): Promise<Profile | null> => {
   const client = await getClient()
   const result = await client.select()
