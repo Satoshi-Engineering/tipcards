@@ -130,11 +130,11 @@ export const createLandingPageTypeExternal = (): LandingPage => ({
 
 export const createLandingPagesTypeExternal = (count: number): LandingPage[] => Array(count).fill('').map(() => createLandingPageTypeExternal())
 
-export const createImageMeta = (imageType: Image['type']): Image => ({
+export const createImage = (imageType: Image['type'], data: Image['data'] = ''): Image => ({
   id: randomUUID(),
   type: imageType,
   name: hashSha256(randomUUID()),
-  data: '',
+  data,
 })
 
 export const createUserCanUseImage = (user: User, image: Image, canEdit = false): UserCanUseImage => ({

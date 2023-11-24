@@ -199,6 +199,7 @@ export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => {
 }
 
 /**
+ * @param imageId string
  * @throws
  */
 export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<ImageMetaRedis | null> => {
@@ -212,4 +213,16 @@ export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<Image
     name: imageDrizzle.name,
     userId: await (getUserIdForRedisImageFromDrizzleImage(imageDrizzle)),
   }
+}
+
+/**
+ * @param imageId string
+ * @throws
+ */
+export const getImageAsString = async (imageId: string): Promise<string | null> => {
+  const imageDrizzle = await getImageById(imageId)
+  if (imageDrizzle == null) {
+    return null
+  }
+  return imageDrizzle.data
 }
