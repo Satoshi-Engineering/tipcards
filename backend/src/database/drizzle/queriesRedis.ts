@@ -168,8 +168,7 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
     throw new Error('Not Implemented: In Redis only type ===\'external\' exists, in Drizzle is already more defined')
   }
 
-  // TODO: Due Redis, has no m:n relationship, automatically the first n:m user is taken
-  console.warn('TODO: Due Redis, has no m:n relationship, automatically the first n:m user is taken')
+  // due to redis having no m:n relationship, the first n:m user is taken
   const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPageId(landingPage)
 
   if (userCanUseLandingPages.length <= 0) throw Error('not Implemented')
