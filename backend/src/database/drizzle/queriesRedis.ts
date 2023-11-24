@@ -171,8 +171,10 @@ export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => {
   const landingPagesDrizzle = await getDrizzleAllLandingPages()
 
   return Promise.all(landingPagesDrizzle.map(async (landingPageDrizzle) => {
-    const landingPage = await getLandingPage(landingPageDrizzle.id)
-    if (landingPage === null) throw new Error('not implemented (Due: In redis not valid, but in Drizzle it would be)')
+    const landingPage = await redisLandingPageFromDrizzleLandingPage(landingPageDrizzle)
+    if (landingPage === null) {
+      throw new Error('not implemented (Due: In redis not valid, but in Drizzle it would be)')
+    }
     return landingPage
   }))
 }
