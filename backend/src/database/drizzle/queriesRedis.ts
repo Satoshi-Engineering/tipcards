@@ -85,6 +85,11 @@ export const updateSet = async (set: SetRedis): Promise<void> => {
   await deleteDataObjects(drizzleData.delete)
 }
 
+/** @throws */
+export const deleteSet = async (set: SetRedis): Promise<void> => {
+  // todo : implement
+}
+
 export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
   const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
   await insertOrUpdateLnurlW(lnurlW)

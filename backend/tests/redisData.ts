@@ -52,7 +52,7 @@ export const createSetFunding = (amount: number): SetFunding => ({
   paid: null,
 })
 
-export const createSet = () => ({
+export const createSet = (): Set => ({
   id: randomUUID(),
   settings: null,
   created: Math.round(+ new Date() / 1000),

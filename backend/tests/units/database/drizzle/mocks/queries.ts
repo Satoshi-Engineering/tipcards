@@ -205,9 +205,11 @@ export const insertCardVersionInvoices = jest.fn(async () => undefined)
 export const insertLnurlPs = jest.fn(async () => undefined)
 export const insertLnurlWs = jest.fn(async () => undefined)
 
+export const updateCard = jest.fn(async () => undefined)
+export const updateCardVersion = jest.fn(async () => undefined)
+
 export const insertOrUpdateCard = jest.fn(async () => undefined)
 export const insertOrUpdateLatestCardVersion = jest.fn(async () => undefined)
-export const updateCardVersion = jest.fn(async () => undefined)
 export const insertOrUpdateInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateCardVersionInvoice = jest.fn(async () => undefined)
 export const insertOrUpdateLnurlP = jest.fn(async () => undefined)
@@ -221,6 +223,9 @@ export const deleteCardVersion = jest.fn(async () => undefined)
 export const deleteInvoice = jest.fn(async () => undefined)
 export const deleteCardVersionInvoice = jest.fn(async () => undefined)
 export const deleteLnurlW = jest.fn(async () => undefined)
+export const deleteSet = jest.fn(async () => undefined)
+export const deleteSetSettings = jest.fn(async () => undefined)
+export const deleteUserCanUseSet = jest.fn(async () => undefined)
 
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
@@ -252,9 +257,11 @@ jest.mock('@backend/database/drizzle/queries', () => {
     insertLnurlPs,
     insertLnurlWs,
 
+    updateCard,
+    updateCardVersion,
+
     insertOrUpdateCard,
     insertOrUpdateLatestCardVersion,
-    updateCardVersion,
     insertOrUpdateInvoice,
     insertOrUpdateCardVersionInvoice,
     insertOrUpdateLnurlP,
@@ -268,5 +275,8 @@ jest.mock('@backend/database/drizzle/queries', () => {
     deleteInvoice,
     deleteCardVersionInvoice,
     deleteLnurlW,
+    deleteSet,
+    deleteSetSettings,
+    deleteUserCanUseSet,
   }
 })
