@@ -5,7 +5,8 @@ import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 import type { Image as ImageMetaRedis } from '@backend/database/redis/data/Image'
-import type { User as UserRedis } from '@backend/database/redis/data/User'
+import { User as UserRedis } from '@backend/database/redis/data/User'
+import hashSha256 from '@backend/services/hashSha256'
 
 import {
   getRedisCardFromDrizzleCardVersion,
@@ -229,6 +230,22 @@ export const getImageAsString = async (imageId: string): Promise<string | null> 
     return null
   }
   return imageDrizzle.data
+}
+
+/** @throws */
+export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: UserRedis['lnurlAuthKey']): Promise<UserRedis> => {
+  let user = await getUserByLnurlAuthKey(lnurlAuthKey)
+  if (user != null) {
+    return user
+  }
+  const userId = hashSha256(lnurlAuthKey)
+  user = UserRedis.parse({
+    id: userId,
+    lnurlAuthKey,
+    created: Math.floor(+ new Date() / 1000),
+  })
+  await createUser(user)
+  return user
 }
 
 /** @throws */
