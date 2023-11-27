@@ -1,8 +1,9 @@
-import { User, Profile } from '@backend/database/drizzle/schema'
+import { User, Profile, AllowedRefreshTokens } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type { User as UserRedis } from '@backend/database/redis/data/User'
 
 import { unixTimestampToDate } from './dateHelpers'
+import hashSha256 from '@backend/services/hashSha256'
 
 export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): Promise<{
   insertOrUpdate: DataObjects,
@@ -20,10 +21,12 @@ export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): P
     displayName: userRedis.profile.displayName,
     email: userRedis.profile.email,
   }
+  const allowedRefreshTokens = drizzleAllowedRefreshTokensListFromRedisUser(userRedis)
   return {
     insertOrUpdate: toDataObjects({
       user,
       profile,
+      allowedRefreshTokens,
     }),
     delete: toDataObjects({}),
   }
@@ -32,9 +35,11 @@ export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): P
 const toDataObjects = ({
   user,
   profile,
+  allowedRefreshTokens,
 }: {
   user?: User | null,
   profile?: Profile | null,
+  allowedRefreshTokens?: AllowedRefreshTokens[],
 }): DataObjects => {
   const dataObjects: DataObjects = {}
   if (user != null) {
@@ -43,5 +48,22 @@ const toDataObjects = ({
   if (profile != null) {
     dataObjects.profiles = [profile]
   }
+  if (allowedRefreshTokens != null) {
+    dataObjects.allowedRefreshTokens = allowedRefreshTokens
+  }
   return dataObjects
 }
+
+const drizzleAllowedRefreshTokensListFromRedisUser = (userRedis: UserRedis): AllowedRefreshTokens[] => {
+  if (userRedis.allowedRefreshTokens == null) {
+    return []
+  }
+  return userRedis.allowedRefreshTokens.map((tokenPair) => drizzleAllowedRefreshTokensPair(userRedis.id, tokenPair[0], tokenPair[1]))
+}
+
+const drizzleAllowedRefreshTokensPair = (userId: User['id'], current: AllowedRefreshTokens['current'], previous?: AllowedRefreshTokens['previous']): AllowedRefreshTokens => ({
+  user: userId,
+  hash: hashSha256(`${userId}${current}${previous || ''}`),
+  current,
+  previous: previous || null,
+})

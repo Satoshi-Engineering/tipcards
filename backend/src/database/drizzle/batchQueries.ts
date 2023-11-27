@@ -6,6 +6,7 @@ import {
   User,
   UserCanUseSet,
   Profile,
+AllowedRefreshTokens,
 } from '@backend/database/drizzle/schema'
 import {
   insertCards, insertCardVersions,
@@ -25,6 +26,7 @@ import {
   deleteInvoice, deleteCardVersionInvoice,
   deleteSet, deleteSetSettings,
   deleteUserCanUseSet,
+  insertOrUpdateAllowedRefreshTokens,
 } from '@backend/database/drizzle/queries'
 
 export type DataObjects = {
@@ -39,6 +41,7 @@ export type DataObjects = {
   users?: User[],
   profiles?: Profile[],
   usersCanUseSets?: UserCanUseSet[],
+  allowedRefreshTokens?: AllowedRefreshTokens[],
 }
 
 /** @throws */
@@ -109,6 +112,9 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
   }
   if (data.profiles != null) {
     await Promise.all(data.profiles.map((profile) => insertOrUpdateProfile(profile)))
+  }
+  if (data.allowedRefreshTokens != null) {
+    await Promise.all(data.allowedRefreshTokens.map((allowedRefreshTokens) => insertOrUpdateAllowedRefreshTokens(allowedRefreshTokens)))
   }
 }
 

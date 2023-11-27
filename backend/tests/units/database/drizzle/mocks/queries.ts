@@ -286,6 +286,7 @@ export const insertOrUpdateSetSettings = jest.fn(async () => undefined)
 export const insertOrUpdateUserCanUseSet = jest.fn(async () => undefined)
 export const insertOrUpdateUser = jest.fn(async () => undefined)
 export const insertOrUpdateProfile = jest.fn(async () => undefined)
+export const insertOrUpdateAllowedRefreshTokens = jest.fn(async () => undefined)
 
 export const deleteCard = jest.fn(async () => undefined)
 export const deleteCardVersion = jest.fn(async () => undefined)
@@ -354,6 +355,7 @@ jest.mock('@backend/database/drizzle/queries', () => {
     insertOrUpdateUserCanUseSet,
     insertOrUpdateUser,
     insertOrUpdateProfile,
+    insertOrUpdateAllowedRefreshTokens,
 
     deleteCard,
     deleteCardVersion,
