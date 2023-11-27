@@ -323,14 +323,6 @@ export const insertOrUpdateUser = async (user: User): Promise<void> => {
 }
 
 /** @throws */
-export const insertOrUpdateProfile = async (profile: Profile): Promise<void> => {
-  const client = await getClient()
-  await client.insert(Profile)
-    .values(profile)
-    .onDuplicateKeyUpdate({ set: profile })
-}
-
-/** @throws */
 export const insertOrUpdateUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise<void> => {
   const client = await getClient()
   await client.insert(UserCanUseSet)
@@ -545,6 +537,14 @@ export const getProfileByUserId = async (userId: User['id']): Promise<Profile | 
 }
 
 /** @throws */
+export const insertOrUpdateProfile = async (profile: Profile): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Profile)
+    .values(profile)
+    .onDuplicateKeyUpdate({ set: profile })
+}
+
+/** @throws */
 export const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
 
 /** @throws */
@@ -555,3 +555,10 @@ export const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): P
     .where(eq(AllowedRefreshTokens.user, userId))
 }
 
+/** @throws */
+export const insertOrUpdateAllowedRefreshTokens = async (allowedRefreshTokens: AllowedRefreshTokens): Promise<void> => {
+  const client = await getClient()
+  await client.insert(AllowedRefreshTokens)
+    .values(allowedRefreshTokens)
+    .onDuplicateKeyUpdate({ set: allowedRefreshTokens })
+}

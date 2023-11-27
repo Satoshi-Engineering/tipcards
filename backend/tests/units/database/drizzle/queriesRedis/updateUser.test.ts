@@ -6,11 +6,13 @@ import { updateUser } from '@backend/database/drizzle/queriesRedis'
 
 import {
   createUser as createUserData,
+  createProfile as createProfileForUser,
 } from '../../../../redisData'
 
 describe('updateUser', () => {
   it('should insertOrUpdate a user and a profile', async () => {
     const user = createUserData()
+    user.profile = createProfileForUser(user.id)
 
     await updateUser(user)
     expect(insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
