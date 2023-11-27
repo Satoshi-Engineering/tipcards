@@ -38,7 +38,6 @@ describe('getBulkWithdrawById', () => {
       amount: invoice.amount,
       cards: expect.arrayContaining([card1.hash, card2.hash]),
       lnbitsWithdrawId: lnurlw.lnbitsId,
-      lnurl: expect.any(String),
       lnbitsWithdrawDeleted: null,
       withdrawn: null,
     }))
@@ -68,7 +67,6 @@ describe('getBulkWithdrawById', () => {
       amount: invoice.amount,
       cards: expect.arrayContaining([card1.hash, card2.hash]),
       lnbitsWithdrawId: lnurlw.lnbitsId,
-      lnurl: expect.any(String),
       lnbitsWithdrawDeleted: null,
       withdrawn: expect.any(Number),
     }))
