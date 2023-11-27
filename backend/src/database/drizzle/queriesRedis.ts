@@ -272,3 +272,9 @@ export const createUser = async (user: UserRedis): Promise<void> => {
   const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
   await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
 }
+
+/** @throws */
+export const updateUser = async (user: UserRedis): Promise<void> => {
+  const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
+  await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
+}

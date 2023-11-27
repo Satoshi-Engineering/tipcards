@@ -323,6 +323,14 @@ export const insertOrUpdateUser = async (user: User): Promise<void> => {
 }
 
 /** @throws */
+export const insertOrUpdateProfile = async (profile: Profile): Promise<void> => {
+  const client = await getClient()
+  await client.insert(Profile)
+    .values(profile)
+    .onDuplicateKeyUpdate({ set: profile })
+}
+
+/** @throws */
 export const insertOrUpdateUserCanUseSet = async (userCanUseSet: UserCanUseSet): Promise<void> => {
   const client = await getClient()
   await client.insert(UserCanUseSet)
@@ -546,3 +554,4 @@ export const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): P
     .from(AllowedRefreshTokens)
     .where(eq(AllowedRefreshTokens.user, userId))
 }
+

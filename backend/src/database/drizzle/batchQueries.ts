@@ -5,6 +5,7 @@ import {
   Set, SetSettings,
   User,
   UserCanUseSet,
+  Profile,
 } from '@backend/database/drizzle/schema'
 import {
   insertCards, insertCardVersions,
@@ -17,6 +18,7 @@ import {
   insertOrUpdateLnurlP, insertOrUpdateLnurlW,
   insertOrUpdateSet, insertOrUpdateSetSettings,
   insertOrUpdateUser,
+  insertOrUpdateProfile,
   insertOrUpdateUserCanUseSet,
   updateCard, updateCardVersion,
   deleteCard, deleteCardVersion,
@@ -35,6 +37,7 @@ export type DataObjects = {
   sets?: Set[],
   setSettings?: SetSettings[],
   users?: User[],
+  profiles?: Profile[],
   usersCanUseSets?: UserCanUseSet[],
 }
 
@@ -103,6 +106,9 @@ export const insertOrUpdateDataObjects = async (data: DataObjects): Promise<void
   }
   if (data.users != null) {
     await Promise.all(data.users.map((user) => insertOrUpdateUser(user)))
+  }
+  if (data.profiles != null) {
+    await Promise.all(data.profiles.map((profile) => insertOrUpdateProfile(profile)))
   }
 }
 
