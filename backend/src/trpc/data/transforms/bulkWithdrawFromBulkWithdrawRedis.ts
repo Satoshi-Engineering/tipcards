@@ -2,7 +2,7 @@ import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
-import { isBulkWithdrawWithdrawn } from '@backend/services/lnbitsHelpers'
+import { isBulkWithdrawWithdrawn, loadCurrentLnurlFromLnbitsByWithdrawId } from '@backend/services/lnbitsHelpers'
 
 /**
  * @throws WithdrawDeletedError
@@ -15,7 +15,7 @@ export const bulkWithdrawFromBulkWithdrawRedis = async (bulkWithdraw: BulkWithdr
   }
   return {
     id: bulkWithdraw.id,
-    lnurl: bulkWithdraw.lnurl,
+    lnurl: await loadCurrentLnurlFromLnbitsByWithdrawId(bulkWithdraw.lnbitsWithdrawId),
     created: new Date(bulkWithdraw.created * 1000),
     amount: bulkWithdraw.amount,
     cards: bulkWithdraw.cards,

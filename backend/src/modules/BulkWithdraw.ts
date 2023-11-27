@@ -113,12 +113,11 @@ export default class BulkWithdraw {
 
   private async createBulkWithdraw(amount: number) {
     const id = this.createBulkWithdrawIdForCollection()
-    const { lnbitsWithdrawId, lnbitsWithdrawLnurl } = await this.createLnbitsWithdrawLink({ id, amount })
+    const { lnbitsWithdrawId } = await this.createLnbitsWithdrawLink({ id, amount })
     await this.createBulkWithdrawRedis({
       id,
       amount,
       lnbitsWithdrawId,
-      lnbitsWithdrawLnurl,
     })
   }
 
@@ -140,12 +139,10 @@ export default class BulkWithdraw {
     id,
     amount,
     lnbitsWithdrawId,
-    lnbitsWithdrawLnurl,
   }: {
     id: string,
     amount: number,
     lnbitsWithdrawId: string,
-    lnbitsWithdrawLnurl: string,
   }) {
     this.bulkWithdrawRedis = {
       id,
@@ -153,7 +150,6 @@ export default class BulkWithdraw {
       amount,
       cards: this.cards.cardHashes,
       lnbitsWithdrawId,
-      lnurl: lnbitsWithdrawLnurl,
       lnbitsWithdrawDeleted: null,
       withdrawn: null,
     }

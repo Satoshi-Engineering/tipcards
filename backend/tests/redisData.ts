@@ -95,7 +95,6 @@ export const createBulkWithdraw = (amount: number, ...cardHashes: Card['cardHash
     amount,
     cards: [...cardHashes],
     lnbitsWithdrawId,
-    lnurl: hashSha256(randomUUID()),
     lnbitsWithdrawDeleted: null,
     withdrawn: null,
   }

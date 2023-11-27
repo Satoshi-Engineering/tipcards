@@ -18,7 +18,6 @@ export const getRedisBulkWithdrawForDrizzleLnurlW = async (lnurlW: LnurlW): Prom
     lnbitsWithdrawId: lnurlW.lnbitsId,
     amount,
     cards: cardVersions.map(({ card }) => card),
-    lnurl: 'PLEASE_REMOVE_ME', // TODO: remove lnurl from type BulkWithdrawRedis #784
     lnbitsWithdrawDeleted: null, // always hardcoded null as this won't be needed after migration to Drizzle
   }
 }
