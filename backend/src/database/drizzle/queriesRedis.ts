@@ -46,6 +46,7 @@ import {
   insertOrUpdateLnurlW,
   updateCardVersion,
   getImageById,
+  deleteAllAllowedRefreshTokensForUserId,
 } from './queries'
 
 /** @throws */
@@ -276,5 +277,6 @@ export const createUser = async (user: UserRedis): Promise<void> => {
 /** @throws */
 export const updateUser = async (user: UserRedis): Promise<void> => {
   const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
+  await deleteAllAllowedRefreshTokensForUserId(user.id)
   await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
 }

@@ -9,6 +9,7 @@ import {
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
+import { all } from 'axios'
 
 const setsById: Record<string, Set> = {}
 const setSettingsBySetId: Record<string, SetSettings> = {}
@@ -25,7 +26,7 @@ const userCanUseLandingPages: Record<string, UserCanUseLandingPage> = {}
 const images: Record<string, Image> = {}
 const usersCanUseImages: UserCanUseImage[] = []
 const profilesByUserId: Record<string, Profile> = {}
-const allowedRefreshTokens: AllowedRefreshTokens[] = []
+const allowedRefreshTokens: Record<string, AllowedRefreshTokens> = {}
 
 export const addSets = (...sets: Set[]) => {
   addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
@@ -79,7 +80,17 @@ export const addProfiles = (...newProfiles: Profile[]) => {
   })))
 }
 export const addAllowedRefreshTokens = (...newAllowedRefreshTokens: AllowedRefreshTokens[]) => {
-  allowedRefreshTokens.push(...newAllowedRefreshTokens)
+  addItemsToTable(allowedRefreshTokens, newAllowedRefreshTokens.map((newAllowedRefreshToken) => ({
+    key: newAllowedRefreshToken.hash,
+    item: newAllowedRefreshToken,
+  })))
+}
+export const removeAllowedRefreshTokensForUserId = (userId: User['id']) => {
+  Object.entries(allowedRefreshTokens).forEach(([hash, { user }]) => {
+    if (user === userId) {
+      delete allowedRefreshTokens[hash]
+    }
+  })
 }
 
 export const addData = ({
@@ -262,7 +273,7 @@ const getProfileByUserId = async (userId: User['id']): Promise<Profile | null> =
 
 const getAllAllowedRefreshTokensForUser = async (user: User): Promise<AllowedRefreshTokens[]> => getAllAllowedRefreshTokensForUserId(user.id)
 
-const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): Promise<AllowedRefreshTokens[]> => allowedRefreshTokens
+export const getAllAllowedRefreshTokensForUserId = async (userId: User['id']): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokens)
   .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId)
 
 export const insertCards = jest.fn(async () => undefined)
@@ -286,7 +297,7 @@ export const insertOrUpdateSetSettings = jest.fn(async () => undefined)
 export const insertOrUpdateUserCanUseSet = jest.fn(async () => undefined)
 export const insertOrUpdateUser = jest.fn(async () => undefined)
 export const insertOrUpdateProfile = jest.fn(async () => undefined)
-export const insertOrUpdateAllowedRefreshTokens = jest.fn(async () => undefined)
+export const insertOrUpdateAllowedRefreshTokens = jest.fn(async (allowedRefreshTokens: AllowedRefreshTokens) => addAllowedRefreshTokens(allowedRefreshTokens))
 
 export const deleteCard = jest.fn(async () => undefined)
 export const deleteCardVersion = jest.fn(async () => undefined)
@@ -296,6 +307,7 @@ export const deleteLnurlW = jest.fn(async () => undefined)
 export const deleteSet = jest.fn(async () => undefined)
 export const deleteSetSettings = jest.fn(async () => undefined)
 export const deleteUserCanUseSet = jest.fn(async () => undefined)
+export const deleteAllAllowedRefreshTokensForUserId = jest.fn(async (userId: User['id']) => removeAllowedRefreshTokensForUserId(userId))
 
 jest.mock('@backend/database/drizzle/queries', () => {
   return {
@@ -365,5 +377,6 @@ jest.mock('@backend/database/drizzle/queries', () => {
     deleteSet,
     deleteSetSettings,
     deleteUserCanUseSet,
+    deleteAllAllowedRefreshTokensForUserId,
   }
 })

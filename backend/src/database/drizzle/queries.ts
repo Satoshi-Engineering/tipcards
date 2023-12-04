@@ -562,3 +562,10 @@ export const insertOrUpdateAllowedRefreshTokens = async (allowedRefreshTokens: A
     .values(allowedRefreshTokens)
     .onDuplicateKeyUpdate({ set: allowedRefreshTokens })
 }
+
+/** @throws */
+export const deleteAllAllowedRefreshTokensForUserId = async (userId: User['id']): Promise<void> => {
+  const client = await getClient()
+  client.delete(AllowedRefreshTokens)
+    .where(eq(AllowedRefreshTokens.user, userId))
+}

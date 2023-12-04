@@ -116,15 +116,3 @@ export const createProfile = (userId: User['id']): Profile => {
     email: 'michael.knight@foundation.org',
   })
 }
-
-export const createAllowedRefreshTokens = (): Exclude<User['allowedRefreshTokens'], null> => {
-  return [
-    [
-      hashSha256(randomUUID()),
-      hashSha256(randomUUID()),
-    ],
-    [
-      hashSha256(randomUUID()),
-    ],
-  ]
-}
