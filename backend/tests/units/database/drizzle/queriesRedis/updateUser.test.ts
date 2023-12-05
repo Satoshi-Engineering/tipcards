@@ -127,7 +127,7 @@ const createRedisTokenPair = (hasPrevious = false) => [
 ]
 const pushNewCurrentRefreshTokenIntoRedisTokenPair = (tokenPair: string[] | null): string[] => [
   hashSha256(randomUUID()),
-  ...(tokenPair != null ? tokenPair[0] : []),
+  ...(tokenPair != null ? [tokenPair[0]] : []),
 ]
 const drizzleTokenPairFromRedisTokenPair = (tokenPair: string[], userId: string) => ({
   user: userId,
