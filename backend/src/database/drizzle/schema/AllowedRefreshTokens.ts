@@ -1,4 +1,4 @@
-import { mysqlTable, primaryKey, varchar, text } from 'drizzle-orm/mysql-core'
+import { mysqlTable, index, varchar, text } from 'drizzle-orm/mysql-core'
 import { User } from './User'
 
 export const AllowedRefreshTokens = mysqlTable('AllowedRefreshTokens', {
@@ -8,7 +8,7 @@ export const AllowedRefreshTokens = mysqlTable('AllowedRefreshTokens', {
   previous: text('previous'), // Note: jwt refresh token
 }, (table) => {
   return {
-    userIndex: primaryKey(table.user),
+    userIndex: index('userIndex').on(table.user),
   }
 })
 
