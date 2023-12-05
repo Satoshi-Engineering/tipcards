@@ -5,10 +5,7 @@ import type { User as UserRedis } from '@backend/database/redis/data/User'
 import { unixTimestampToDate } from './dateHelpers'
 import hashSha256 from '@backend/services/hashSha256'
 
-export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): Promise<{
-  insertOrUpdate: DataObjects,
-  delete: DataObjects,
-}> => {
+export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): Promise<DataObjects> => {
   const user: User = {
     id: userRedis.id,
     lnurlAuthKey: userRedis.lnurlAuthKey,
@@ -22,14 +19,12 @@ export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): P
     email: userRedis.profile.email,
   }
   const allowedRefreshTokens = drizzleAllowedRefreshTokensListFromRedisUser(userRedis)
-  return {
-    insertOrUpdate: toDataObjects({
-      user,
-      profile,
-      allowedRefreshTokens,
-    }),
-    delete: toDataObjects({}),
-  }
+
+  return toDataObjects({
+    user,
+    profile,
+    allowedRefreshTokens,
+  })
 }
 
 const toDataObjects = ({

@@ -8,13 +8,13 @@ import {
   getAllAllowedRefreshTokensForUserId,
 } from '../mocks/queries'
 
-import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
-import { updateUser } from '@backend/database/drizzle/queriesRedis'
-
 import {
   createUser as createUserData,
   createProfile as createProfileForUser,
 } from '../../../../redisData'
+
+import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
+import { updateUser } from '@backend/database/drizzle/queriesRedis'
 import hashSha256 from '@backend/services/hashSha256'
 
 describe('updateUser', () => {
@@ -76,6 +76,7 @@ describe('updateUser', () => {
     )
   })
 
+  // todo : description doesnt match the actual test
   it('should cycle allowed refresh tokens (add a new pair and remove the old pair so that the old "previous" token is no longer valid)', async () => {
     const user = createUserData()
 
@@ -89,6 +90,7 @@ describe('updateUser', () => {
       unrelatedTokenPair,
     ]
 
+    // todo : remove this, instead push the drizzle objects into the mock database directly. only to one action+tests (in this case: the updateUser in line 115) per unit test
     await updateUser(user)
 
     expect(await getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(
@@ -125,7 +127,14 @@ describe('updateUser', () => {
     )
   })
 
-  it('delete tokenPairs that are omitted (use case: log out all other devices)', async () => {
+  it('deletes tokenPairs that are omitted (use case: log out all other devices)', async () => {
+    // structure inside a unit test, take a look at updateSet.test.ts (also apply it to previous test)
+    // 1. init drizzle mock database with drizzle objects (user + allowed refresh token)
+
+    // 2. create redis user object (using data from 1.)
+
+    // 3. call updateUser + tests (expect...)
+
     const user = createUserData()
 
     const remainingTokenPair = [hashSha256(randomUUID()), hashSha256(randomUUID())]
@@ -138,6 +147,7 @@ describe('updateUser', () => {
       [hashSha256(randomUUID()), hashSha256(randomUUID())],
     ]
 
+    // todo : same as test before, init database directly, only call updateUser once
     await updateUser(user)
 
     expect(await getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(

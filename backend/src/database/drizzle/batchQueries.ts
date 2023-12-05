@@ -6,7 +6,7 @@ import {
   User,
   UserCanUseSet,
   Profile,
-AllowedRefreshTokens,
+  AllowedRefreshTokens,
 } from '@backend/database/drizzle/schema'
 import {
   insertCards, insertCardVersions,
