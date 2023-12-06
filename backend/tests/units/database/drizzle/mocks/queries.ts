@@ -9,7 +9,6 @@ import {
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
-import { all } from 'axios'
 
 const setsById: Record<string, Set> = {}
 const setSettingsBySetId: Record<string, SetSettings> = {}
