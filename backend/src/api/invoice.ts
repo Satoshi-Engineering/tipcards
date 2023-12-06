@@ -19,7 +19,9 @@ router.post('/create/:cardHash', async (req, res) => {
   let text = ''
   let note = ''
   try {
-    ({ amount, text, note } = req.body)
+    amount = req.body.amount
+    text = req.body.text || ''
+    note = req.body.note || ''
   } catch (error) {
     console.error(error)
   }
