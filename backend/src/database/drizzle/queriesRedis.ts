@@ -29,7 +29,7 @@ import {
 import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultipleCards } from './transforms/redisBulkWithdrawDataFromDrizzleData'
 import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData'
 import {
-  insertDataObjects, insertOrUpdateDataObjects,
+  insertOrUpdateDataObjects,
   updateDataObjects, deleteDataObjects,
 } from './batchQueries'
 import {
@@ -61,7 +61,7 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
 /** @throws */
 export const createCard = async (cardRedis: CardRedis): Promise<void> => {
   const drizzleData = getDrizzleDataObjectsFromRedisCard(cardRedis)
-  await insertDataObjects(drizzleData)
+  await insertOrUpdateDataObjects(drizzleData)
 }
 
 /** @throws */
