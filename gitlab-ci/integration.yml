@@ -28,7 +28,7 @@ test-integration-backend:
     - export BACKEND_PID=$!
     - sleep 10 # Waiting for backend to spin up
     - echo "Running Backend with $BACKEND_PID"
-    - npm run backend-test-integration
+    - npm run backend-test-integration -- --maxWorkers=2
     - kill $BACKEND_PID
 
 test-integration-frontend:
@@ -60,4 +60,4 @@ test-integration-frontend:
         exit 1
       fi
     - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
-    - npm run frontend-test-integration
+    - npm run frontend-test-integration -- --maxWorkers=2
