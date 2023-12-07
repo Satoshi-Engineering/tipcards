@@ -13,12 +13,12 @@ This script:
 
 1. Create migration files
 ```bash
-drizzle-kit generate:mysql --config=backend/drizzle.config.ts
+npx drizzle-kit generate:mysql --config=backend/drizzle.config.ts
 ```
 
 2. Run Migration
 ```bash
-npx ts-node scripts/run-mirgration/script.ts
+npx ts-node scripts/runMigration/script.ts
 ```
 
 If you need to drop current created migration files
