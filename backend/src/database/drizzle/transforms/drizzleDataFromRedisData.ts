@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 
-import {
+import type {
   Card, CardVersion,
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,

@@ -1,6 +1,6 @@
 import type { CorsOptions } from 'cors'
 
-import { getAllLandingPages } from '@backend/database/redis/queries'
+import { getAllLandingPages } from '@backend/database/queries'
 import {
   TIPCARDS_ORIGIN,
   CORS_WHITELIST_EXTEND,

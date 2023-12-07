@@ -12,7 +12,7 @@ import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } 
 import { ErrorCode } from '@shared/data/Errors'
 
 import type { User } from '@backend/database/redis/data/User'
-import { getUserById, updateUser } from '@backend/database/redis/queries'
+import { getUserById, updateUser } from '@backend/database/queries'
 import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'

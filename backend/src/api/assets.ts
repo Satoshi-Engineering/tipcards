@@ -3,7 +3,7 @@ import { type Request, type Response, type NextFunction, Router } from 'express'
 import { ErrorCode } from '@shared/data/Errors'
 
 import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image'
-import { getImageAsString, getImageMeta } from '@backend/database/redis/queries'
+import { getImageAsString, getImageMeta } from '@backend/database/queries'
 
 const router = Router()
 

@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/mysql2'
 import * as schema from './schema'
 import mysql from 'mysql2/promise'
-import { MySql2Database } from 'drizzle-orm/mysql2/driver'
+import type { MySql2Database } from 'drizzle-orm/mysql2/driver'
 
 const MYSQL_PORT = parseInt(process.env.MYSQL_PORT || '3306')
 

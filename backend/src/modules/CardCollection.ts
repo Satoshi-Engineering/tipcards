@@ -8,7 +8,7 @@ import NotFoundError from '@backend/errors/NotFoundError'
 import {
   getSetById,
   getCardByHash, updateCard,
-} from '@backend/database/redis/queries'
+} from '@backend/database/queries'
 import hashSha256 from '@backend/services/hashSha256'
 import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis'

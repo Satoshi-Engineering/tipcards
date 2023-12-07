@@ -1,7 +1,7 @@
 import { ErrorCode } from '@shared/data/Errors'
 
 import type { User } from '@backend/database/redis/data/User'
-import { getAllUsers } from '@backend/database/redis/queries'
+import { getAllUsers } from '@backend/database/queries'
 
 const alreadyReportedDuplicates = new Set()
 

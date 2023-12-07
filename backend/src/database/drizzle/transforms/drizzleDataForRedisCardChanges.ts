@@ -1,4 +1,4 @@
-import { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/drizzle/schema'
+import type { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type Queries from '@backend/database/drizzle/Queries'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'

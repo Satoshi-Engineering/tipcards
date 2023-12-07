@@ -6,7 +6,7 @@ import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/dat
 import { Card as ZodCard, type Card } from '@backend/database/redis/data/Card'
 import { Set as ZodSet, type Set } from '@backend/database/redis/data/Set'
 import { User as ZodUser, type User } from '@backend/database/redis/data/User'
-import { Type as ImageType, Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image'
+import { Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image'
 import { LandingPage as ZodLandingPage, type LandingPage } from '@backend/database/redis/data/LandingPage'
 import AlreadyExistsError from '@backend/errors/AlreadyExistsError'
 import NotFoundError from '@backend/errors/NotFoundError'
@@ -62,20 +62,6 @@ export const deleteCard = async (card: Card): Promise<void> => {
     throw new Error('Card doesn\'t exists.')
   }
   await client.del(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
-}
-
-export const getAllCardHashes = async (): Promise<string[]> => {
-  const client = await getClient()
-  const keys = await client.keys('*')
-  const hashes: string[] = []
-  keys.forEach((hash) => {
-    const matches = new RegExp(`^${REDIS_BASE_PATH}:cardsByHash:([A-z0-9]+):data$`).exec(hash)
-    if (matches == null) {
-      return
-    }
-    hashes.push(matches[1])
-  })
-  return hashes
 }
 
 /**
@@ -248,19 +234,6 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
 }
 
 /**
- * @param image ImageMeta
- * @throws
- */
-export const createImageMeta = async (image: ImageMeta): Promise<void> => {
-  const client = await getClient()
-  const exists = await client.exists(`${REDIS_BASE_PATH}:imagesById:${image.id}:meta`)
-  if (exists) {
-    throw new Error('Image already exists.')
-  }
-  await client.json.set(`${REDIS_BASE_PATH}:imagesById:${image.id}:meta`, '$', image)
-}
-
-/**
  * @param imageId string
  * @throws
  */
@@ -277,67 +250,10 @@ export const getImageMeta = async (imageId: string): Promise<ImageMeta | null> =
  * @param imageId string
  * @throws
  */
-export const getImage = async (imageId: string): Promise<Buffer | string | null> => {
-  const imageMeta = await getImageMeta(imageId)
-  if (imageMeta == null) {
-    return null
-  }
-  const client = await getClient()
-  let image: Buffer | string | null = null
-  if (imageMeta.type === ImageType.enum.svg) {
-    image = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
-  } else if (imageMeta.type === ImageType.enum.png) {
-    const data = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
-    if (data != null) {
-      image = Buffer.from(data, 'base64')
-    }
-  }
-  return image
-}
-
-/**
- * @param imageId string
- * @throws
- */
 export const getImageAsString = async (imageId: string): Promise<string | null> => {
   const client = await getClient()
   const image: string | null = await client.get(`${REDIS_BASE_PATH}:imagesById:${imageId}:data`) as string | null
   return image
-}
-
-/**
- * @param imageId string
- * @throws
- */
-export const storeImageString = async (imageMeta: ImageMeta, image: string): Promise<void> => {
-  const client = await getClient()
-  await client.set(`${REDIS_BASE_PATH}:imagesById:${imageMeta.id}:data`, image)
-}
-
-/**
- * @param landingPage LandingPage
- * @throws
- */
-export const createLandingPage = async (landingPage: LandingPage): Promise<void> => {
-  const client = await getClient()
-  const exists = await client.exists(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`)
-  if (exists) {
-    throw new Error('Landing page already exists.')
-  }
-  await client.json.set(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`, '$', landingPage)
-}
-
-/**
- * @param landingPage LandingPage
- * @throws
- */
-export const updateLandingPage = async (landingPage: LandingPage): Promise<void> => {
-  const client = await getClient()
-  const exists = await client.exists(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`)
-  if (!exists) {
-    throw new Error('Landing page doesn\'t exist.')
-  }
-  await client.json.set(`${REDIS_BASE_PATH}:landingPagesById:${landingPage.id}:data`, '$', landingPage)
 }
 
 /**

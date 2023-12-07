@@ -6,7 +6,7 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import type { User } from '@backend/database/redis/data/User'
 import type { Image as ImageMeta } from '@backend/database/redis/data/Image'
-import { getUserById, getImageMeta } from '@backend/database/redis/queries'
+import { getUserById, getImageMeta } from '@backend/database/queries'
 import { authGuardAccessToken } from '@backend/services/jwt'
 
 const router = Router()

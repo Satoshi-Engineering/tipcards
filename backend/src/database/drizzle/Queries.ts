@@ -1,6 +1,6 @@
-import { and, eq, isNull, desc, ExtractTablesWithRelations } from 'drizzle-orm'
-import { MySqlTransaction } from 'drizzle-orm/mysql-core'
-import { MySql2QueryResultHKT, MySql2PreparedQueryHKT } from 'drizzle-orm/mysql2'
+import { and, eq, isNull, desc, type ExtractTablesWithRelations } from 'drizzle-orm'
+import type { MySqlTransaction } from 'drizzle-orm/mysql-core'
+import type { MySql2QueryResultHKT, MySql2PreparedQueryHKT } from 'drizzle-orm/mysql2'
 
 import NotFoundError from '@backend/errors/NotFoundError'
 

@@ -6,7 +6,7 @@ import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
-import { createCard, getCardByHash, updateCard } from '@backend/database/redis/queries'
+import { createCard, getCardByHash, updateCard } from '@backend/database/queries'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,

@@ -1,19 +1,11 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError } from 'axios'
 import '../initEnv'
-
-import { createCard, createCardVersion } from '../../drizzleData'
-import { addData } from '../initDrizzle'
-import Database from '@backend/database/drizzle/Database'
-
-afterAll(() => {
-  Database.closeConnectionIfExists()
-})
 
 describe('card', () => {
   it('should return 404 if the card doesn\' exist', async () => {
     let caughtError: AxiosError
     try {
-      await axios.get(`${process.env.TEST_API_ORIGIN}/api-drizzle/card/aHashThatDoesntExist`)
+      await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/aHashThatDoesntExist`)
       expect(false).toBe(true)
       return
     } catch (error) {
@@ -23,6 +15,8 @@ describe('card', () => {
     expect(caughtError?.response?.status).toBe(404)
   })
 
+  // todo : instead of creating the card via direct database connection create it using the api routes. test create + status step by step
+  /*
   it('should return a card that exists in the database', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
@@ -52,4 +46,5 @@ describe('card', () => {
       used: null,
     }))
   })
+  */
 })

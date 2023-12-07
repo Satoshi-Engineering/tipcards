@@ -1,4 +1,4 @@
-import { User, Profile, AllowedRefreshTokens } from '@backend/database/drizzle/schema'
+import type { User, Profile, AllowedRefreshTokens } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type { User as UserRedis } from '@backend/database/redis/data/User'
 import hashSha256 from '@backend/services/hashSha256'

@@ -1,6 +1,6 @@
 import type { Set, Card, CardVersion, Invoice } from '@backend/database/drizzle/schema'
 import type Queries from '@backend/database/drizzle/Queries'
-import { Set as SetRedis } from '@backend/database/redis/data/Set'
+import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
 
 import { dateOrNullToUnixTimestamp, dateToUnixTimestamp } from './dateHelpers'

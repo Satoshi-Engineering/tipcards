@@ -8,10 +8,8 @@ import type {
 import type Queries from '@backend/database/drizzle/Queries'
 import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
-import {
-  Profile as ProfileRedis,
-  User as UserRedis } from '@backend/database/redis/data/User'
-import { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
+import type { Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User'
+import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
 
