@@ -1,13 +1,6 @@
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertCards, insertCardVersions,
-  insertInvoices, insertCardVersionInvoices,
-  insertLnurlPs, insertLnurlWs,
-  insertOrUpdateLatestCardVersion,
-  insertOrUpdateInvoice,
-  insertOrUpdateCardVersionInvoice,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData'
 import { createCard as createRedisCard, createInvoice as createRedisInvoice } from '../../../../redisData'
@@ -37,20 +30,20 @@ describe('updateCard', () => {
     cardRedis.invoice = invoiceRedis
 
     await updateCard(cardRedis)
-    expect(insertCards).not.toHaveBeenCalled()
-    expect(insertCardVersions).not.toHaveBeenCalled()
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
-    expect(insertLnurlPs).not.toHaveBeenCalled()
-    expect(insertLnurlWs).not.toHaveBeenCalled()
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertCards).not.toHaveBeenCalled()
+    expect(queries.insertCardVersions).not.toHaveBeenCalled()
+    expect(queries.insertInvoices).not.toHaveBeenCalled()
+    expect(queries.insertCardVersionInvoices).not.toHaveBeenCalled()
+    expect(queries.insertLnurlPs).not.toHaveBeenCalled()
+    expect(queries.insertLnurlWs).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       textForWithdraw: 'some super text',
       noteForStatusPage: 'some crazy note',
       landingPageViewed: expect.any(Date),
     }))
-    expect(insertOrUpdateInvoice).toHaveBeenCalledTimes(1)
-    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledTimes(1)
+    expect(queries.insertOrUpdateInvoice).toHaveBeenCalledTimes(1)
+    expect(queries.insertOrUpdateCardVersionInvoice).toHaveBeenCalledTimes(1)
   })
 })

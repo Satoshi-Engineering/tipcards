@@ -1,13 +1,8 @@
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertOrUpdateUser,
-  insertOrUpdateProfile,
-  insertOrUpdateAllowedRefreshTokens,
-  getAllAllowedRefreshTokensForUserId,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import {
   createUser as createDrizzleUser,
@@ -20,11 +15,11 @@ import {
   createProfile as createProfileForRedisUser,
 } from '../../../../redisData'
 
+import { AllowedRefreshTokens } from '@backend/database/drizzle/schema'
 import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
+import { redisUserFromDrizzleUser } from '@backend/database/drizzle/transforms/redisDataFromDrizzleData'
 import { updateUser } from '@backend/database/drizzle/queriesRedis'
 import hashSha256 from '@backend/services/hashSha256'
-import { redisUserFromDrizzleUser } from '@backend/database/drizzle/transforms/redisDataFromDrizzleData'
-import { AllowedRefreshTokens } from '@backend/database/drizzle/schema'
 
 describe('updateUser', () => {
   it('should insertOrUpdate a user and a profile', async () => {
@@ -32,13 +27,13 @@ describe('updateUser', () => {
     user.profile = createProfileForRedisUser(user.id)
 
     await updateUser(user)
-    expect(insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
       id: user.id,
       lnurlAuthKey: user.lnurlAuthKey,
       created: unixTimestampToDate(user.created),
       permissions: '[]',
     }))
-    expect(insertOrUpdateProfile).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateProfile).toHaveBeenCalledWith(expect.objectContaining({
       user: user.id,
       accountName: user.profile.accountName,
       displayName: user.profile.displayName,
@@ -54,13 +49,13 @@ describe('updateUser', () => {
     ]
 
     await updateUser(userRedis)
-    expect(insertOrUpdateAllowedRefreshTokens).toHaveBeenCalledWith(
+    expect(queries.insertOrUpdateAllowedRefreshTokens).toHaveBeenCalledWith(
       drizzleTokenPairFromRedisTokenPair(userRedis.allowedRefreshTokens[0], userRedis.id),
     )
-    expect(insertOrUpdateAllowedRefreshTokens).toHaveBeenCalledWith(
+    expect(queries.insertOrUpdateAllowedRefreshTokens).toHaveBeenCalledWith(
       drizzleTokenPairFromRedisTokenPair(userRedis.allowedRefreshTokens[1], userRedis.id),
     )
-    expect(await getAllAllowedRefreshTokensForUserId(userRedis.id)).toStrictEqual(
+    expect(await queries.getAllAllowedRefreshTokensForUserId(userRedis.id)).toStrictEqual(
       [
         drizzleTokenPairFromRedisTokenPair(userRedis.allowedRefreshTokens[0], userRedis.id),
         drizzleTokenPairFromRedisTokenPair(userRedis.allowedRefreshTokens[1], userRedis.id),
@@ -79,14 +74,14 @@ describe('updateUser', () => {
       allowedRefreshTokens: [testedTokenPair, untouchedTokenPair],
     })
 
-    const userRedis = await redisUserFromDrizzleUser(user)
+    const userRedis = await redisUserFromDrizzleUser(queries, user)
     if (userRedis.allowedRefreshTokens == null) {
       userRedis.allowedRefreshTokens = []
     }
     userRedis.allowedRefreshTokens[0] = pushNewCurrentRefreshTokenIntoRedisTokenPair(userRedis.allowedRefreshTokens[0])
 
     await updateUser(userRedis)
-    expect(await getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(
+    expect(await queries.getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(
       [
         drizzleTokenPairFromRedisTokenPair(userRedis.allowedRefreshTokens[0], user.id),
         untouchedTokenPair,
@@ -107,13 +102,13 @@ describe('updateUser', () => {
       allowedRefreshTokens: [tokenPairOfOtherDevice1, tokenPairOfCurrentDevice, tokenPairOfOtherDevice2, tokenPairOfOtherDevice3],
     })
 
-    const userRedis = await redisUserFromDrizzleUser(user)
+    const userRedis = await redisUserFromDrizzleUser(queries, user)
     userRedis.allowedRefreshTokens = [
       redisTokenPairFromDrizzleTokenPair(tokenPairOfCurrentDevice),
     ]
 
     await updateUser(userRedis)
-    expect(await getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(
+    expect(await queries.getAllAllowedRefreshTokensForUserId(user.id)).toStrictEqual(
       [
         tokenPairOfCurrentDevice,
       ],

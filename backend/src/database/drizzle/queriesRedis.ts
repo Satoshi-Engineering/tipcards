@@ -1,4 +1,5 @@
 import NotFoundError from '@backend/errors/NotFoundError'
+import type Queries from '@backend/database/drizzle/Queries'
 
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
@@ -32,187 +33,151 @@ import {
   insertOrUpdateDataObjects,
   updateDataObjects, deleteDataObjects,
 } from './batchQueries'
-import {
-  getLatestCardVersion,
-  getSetById as getDrizzleSetById,
-  getSetsByUserId as getDrizzleSetsByUserId,
-  getLandingPage as getDrizzleLandingPage,
-  getAllLandingPages as getDrizzleAllLandingPages,
-  getUserById as getDrizzleUserById,
-  getUserByLnurlAuthKey as getDrizzleUserByLnurlAuthKey,
-  getAllUsers as getAllDrizzleUsers,
-  getLnurlWById,
-  getAllLnurlWs,
-  insertOrUpdateLnurlW,
-  updateCardVersion,
-  getImageById,
-  deleteAllAllowedRefreshTokensForUserId,
-} from './queries'
+import { asTransaction } from './client'
 
-/** @throws */
-export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => {
-  const cardVersion = await getLatestCardVersion(cardHash)
+// @throws tags are omitted as every database query can throw an exception!
+
+export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => asTransaction(async (queries) => {
+  const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {
     return null
   }
-  return getRedisCardFromDrizzleCardVersion(cardVersion)
-}
+  return getRedisCardFromDrizzleCardVersion(queries, cardVersion)
+})
 
-/** @throws */
-export const createCard = async (cardRedis: CardRedis): Promise<void> => {
+export const createCard = async (cardRedis: CardRedis): Promise<void> => asTransaction(async (queries) => {
   const drizzleData = getDrizzleDataObjectsFromRedisCard(cardRedis)
-  await insertOrUpdateDataObjects(drizzleData)
-}
+  await insertOrUpdateDataObjects(queries, drizzleData)
+})
 
-/** @throws */
-export const updateCard = async (cardRedis: CardRedis): Promise<void> => {
-  const drizzleData = await getDrizzleDataObjectsForRedisCardChanges(cardRedis)
-  await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
-  await deleteDataObjects(drizzleData.delete)
-}
+export const updateCard = async (cardRedis: CardRedis): Promise<void> => asTransaction(async (queries) => {
+  const drizzleData = await getDrizzleDataObjectsForRedisCardChanges(queries, cardRedis)
+  await insertOrUpdateDataObjects(queries, drizzleData.insertOrUpdate)
+  await deleteDataObjects(queries, drizzleData.delete)
+})
 
-/** @throws */
-export const deleteCard = async (cardRedis: CardRedis): Promise<void> => {
-  const drizzleData = await getDrizzleDataObjectsForRedisCardDelete(cardRedis)
-  await deleteDataObjects(drizzleData)
-}
+export const deleteCard = async (cardRedis: CardRedis): Promise<void> => asTransaction(async (queries) => {
+  const drizzleData = await getDrizzleDataObjectsForRedisCardDelete(queries, cardRedis)
+  await deleteDataObjects(queries, drizzleData)
+})
 
-/** @throws */
-export const getSetById = async (setId: SetRedis['id']): Promise<SetRedis | null> => {
-  const set = await getDrizzleSetById(setId)
+export const getSetById = async (setId: SetRedis['id']): Promise<SetRedis | null> => asTransaction(async (queries) => {
+  const set = await queries.getSetById(setId)
   if (set == null) {
     return null
   }
-  return getRedisSetFromDrizzleSet(set)
-}
+  return getRedisSetFromDrizzleSet(queries, set)
+})
 
-/** @throws */
-export const getSetsByUserId = async (userId: string): Promise<SetRedis[]> => {
-  const sets = await getDrizzleSetsByUserId(userId)
-  const setsRedis = await Promise.all(sets.map((set) => getRedisSetFromDrizzleSet(set)))
+export const getSetsByUserId = async (userId: string): Promise<SetRedis[]> => asTransaction(async (queries) => {
+  const sets = await queries.getSetsByUserId(userId)
+  const setsRedis = await Promise.all(sets.map((set) => getRedisSetFromDrizzleSet(queries, set)))
   return setsRedis
-}
+})
 
-/** @throws */
-export const createSet = async (set: SetRedis): Promise<void> => {
-  const drizzleData = await getDrizzleDataObjectsForRedisSet(set)
-  await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
-}
+export const createSet = async (set: SetRedis): Promise<void> => asTransaction(async (queries) => {
+  const drizzleData = await getDrizzleDataObjectsForRedisSet(queries, set)
+  await insertOrUpdateDataObjects(queries, drizzleData.insertOrUpdate)
+})
 
-/** @throws */
-export const updateSet = async (set: SetRedis): Promise<void> => {
-  const drizzleData = await getDrizzleDataObjectsForRedisSet(set)
-  await insertOrUpdateDataObjects(drizzleData.insertOrUpdate)
-  await deleteDataObjects(drizzleData.delete)
-}
+export const updateSet = async (set: SetRedis): Promise<void> => asTransaction(async (queries) => {
+  const drizzleData = await getDrizzleDataObjectsForRedisSet(queries, set)
+  await insertOrUpdateDataObjects(queries, drizzleData.insertOrUpdate)
+  await deleteDataObjects(queries, drizzleData.delete)
+})
 
-/** @throws */
-export const deleteSet = async (set: SetRedis): Promise<void> => {
-  const drizzleData = await getDrizzleDataObjectsForRedisSetDelete(set)
-  await updateDataObjects(drizzleData.update)
-  await deleteDataObjects(drizzleData.delete)
-}
+export const deleteSet = async (set: SetRedis): Promise<void> => asTransaction(async (queries) => {
+  const drizzleData = await getDrizzleDataObjectsForRedisSetDelete(queries, set)
+  await updateDataObjects(queries, drizzleData.update)
+  await deleteDataObjects(queries, drizzleData.delete)
+})
 
-export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+
+export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => asTransaction(async (queries) => {
   const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
-  await insertOrUpdateLnurlW(lnurlW)
-  linkLatestCardVersionsToLnurlW(bulkWithdraw.cards, lnurlW.lnbitsId)
-}
-const linkLatestCardVersionsToLnurlW = async (cardHashes: CardRedis['cardHash'][], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
+  await queries.insertOrUpdateLnurlW(lnurlW)
+  linkLatestCardVersionsToLnurlW(queries, bulkWithdraw.cards, lnurlW.lnbitsId)
+})
+const linkLatestCardVersionsToLnurlW = async (queries: Queries, cardHashes: CardRedis['cardHash'][], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
   await Promise.all(
-    cardHashes.map(async (cardHash) => linkLatestCardVersionToLnurlW(cardHash, lnurlWlnbitsId)),
+    cardHashes.map(async (cardHash) => linkLatestCardVersionToLnurlW(queries, cardHash, lnurlWlnbitsId)),
   )
 }
-const linkLatestCardVersionToLnurlW = async (cardHash: CardRedis['cardHash'], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
-  const cardVersion = await getLatestCardVersion(cardHash)
+const linkLatestCardVersionToLnurlW = async (queries: Queries, cardHash: CardRedis['cardHash'], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
+  const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {
     throw new NotFoundError(`Card ${cardHash} not found.`)
   }
-  await updateCardVersion({
+  await queries.updateCardVersion({
     ...cardVersion,
     lnurlW: lnurlWlnbitsId,
   })
 }
 
-/** @throws */
-export const getBulkWithdrawById = async (lnbitsLnurlWId: string): Promise<BulkWithdrawRedis> => {
-  const lnurlW = await getLnurlWById(lnbitsLnurlWId)
+export const getBulkWithdrawById = async (lnbitsLnurlWId: string): Promise<BulkWithdrawRedis> => asTransaction(async (queries) => {
+  const lnurlW = await queries.getLnurlWById(lnbitsLnurlWId)
   if (lnurlW == null) {
     throw new NotFoundError('BulkWithdraw doesn\'t exist.')
   }
-  const bulkWithdrawRedis = getRedisBulkWithdrawForDrizzleLnurlW(lnurlW)
+  const bulkWithdrawRedis = getRedisBulkWithdrawForDrizzleLnurlW(queries, lnurlW)
   return bulkWithdrawRedis
-}
+})
 
-/** @throws */
-export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => asTransaction(async (queries) => {
   const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
-  await insertOrUpdateLnurlW(lnurlW)
-}
+  await queries.insertOrUpdateLnurlW(lnurlW)
+})
 
-/** @throws */
 export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
   await getBulkWithdrawById(bulkWithdraw.lnbitsWithdrawId)
   await unlinkLatestCardVersionsFromLnurlW(bulkWithdraw.cards)
 }
-const unlinkLatestCardVersionsFromLnurlW = async (cardHashes: CardRedis['cardHash'][]) => {
+const unlinkLatestCardVersionsFromLnurlW = async (cardHashes: CardRedis['cardHash'][]) => asTransaction(async (queries) => {
   await Promise.all(
-    cardHashes.map(unlinkLatestCardVersionFromLnurlW),
+    cardHashes.map((cardHash) => unlinkLatestCardVersionFromLnurlW(queries, cardHash)),
   )
-}
-const unlinkLatestCardVersionFromLnurlW = async (cardHash: CardRedis['cardHash']) => {
-  const cardVersion = await getLatestCardVersion(cardHash)
+})
+const unlinkLatestCardVersionFromLnurlW = async (queries: Queries, cardHash: CardRedis['cardHash']) => {
+  const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {
     throw new NotFoundError(`Card ${cardHash} not found.`)
   }
-  await updateCardVersion({
+  await queries.updateCardVersion({
     ...cardVersion,
     lnurlW: null,
   })
 }
 
-/** @throws */
-export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => {
-  const allLnurlWs = await getAllLnurlWs()
-  const lnurlWsForMultipleCards = await filterLnurlWsThatAreUsedForMultipleCards(allLnurlWs)
+export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => asTransaction(async (queries) => {
+  const allLnurlWs = await queries.getAllLnurlWs()
+  const lnurlWsForMultipleCards = await filterLnurlWsThatAreUsedForMultipleCards(queries, allLnurlWs)
   const bulkWithdraws = await Promise.all(
     lnurlWsForMultipleCards.map(
       async ({ lnbitsId }) => await getBulkWithdrawById(lnbitsId),
     ),
   )
   return bulkWithdraws
-}
+})
 
-/**
- * @param landingPageId string
- * @throws
- */
-export const getLandingPage = async (landingPageId: string): Promise<LandingPageRedis | null> => {
-  const landingPageDrizzle = await getDrizzleLandingPage(landingPageId)
-  return redisLandingPageFromDrizzleLandingPage(landingPageDrizzle)
-}
+export const getLandingPage = async (landingPageId: string): Promise<LandingPageRedis | null> => asTransaction(async (queries) => {
+  const landingPageDrizzle = await queries.getLandingPage(landingPageId)
+  return redisLandingPageFromDrizzleLandingPage(queries, landingPageDrizzle)
+})
 
-/**
- * @throws
- */
-export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => {
-  const landingPagesDrizzle = await getDrizzleAllLandingPages()
+export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => asTransaction(async (queries) => {
+  const landingPagesDrizzle = await queries.getAllLandingPages()
 
   return Promise.all(landingPagesDrizzle.map(async (landingPageDrizzle) => {
-    const landingPage = await redisLandingPageFromDrizzleLandingPage(landingPageDrizzle)
+    const landingPage = await redisLandingPageFromDrizzleLandingPage(queries, landingPageDrizzle)
     if (landingPage === null) {
       throw new Error('not implemented (Due: In redis not valid, but in Drizzle it would be)')
     }
     return landingPage
   }))
-}
+})
 
-/**
- * @param imageId string
- * @throws
- */
-export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<ImageMetaRedis | null> => {
-  const imageDrizzle = await getImageById(imageId)
+export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<ImageMetaRedis | null> => asTransaction(async (queries) => {
+  const imageDrizzle = await queries.getImageById(imageId)
   if (imageDrizzle == null) {
     return null
   }
@@ -220,20 +185,18 @@ export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<Image
     id: imageDrizzle.id,
     type: imageDrizzle.type,
     name: imageDrizzle.name,
-    userId: await (getUserIdForRedisImageFromDrizzleImage(imageDrizzle)),
+    userId: await (getUserIdForRedisImageFromDrizzleImage(queries, imageDrizzle)),
   }
-}
+})
 
-/** @throws */
-export const getImageAsString = async (imageId: string): Promise<string | null> => {
-  const imageDrizzle = await getImageById(imageId)
+export const getImageAsString = async (imageId: string): Promise<string | null> => asTransaction(async (queries) => {
+  const imageDrizzle = await queries.getImageById(imageId)
   if (imageDrizzle == null) {
     return null
   }
   return imageDrizzle.data
-}
+})
 
-/** @throws */
 export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: UserRedis['lnurlAuthKey']): Promise<UserRedis> => {
   let user = await getUserByLnurlAuthKey(lnurlAuthKey)
   if (user != null) {
@@ -249,34 +212,29 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: UserRedis['
   return user
 }
 
-/** @throws */
-export const getUserById = async (userId: string): Promise<UserRedis | null> => {
-  const user = await getDrizzleUserById(userId)
-  return redisUserFromDrizzleUserOrNull(user)
-}
+export const getUserById = async (userId: string): Promise<UserRedis | null> => asTransaction(async (queries) => {
+  const user = await queries.getUserById(userId)
+  return redisUserFromDrizzleUserOrNull(queries, user)
+})
 
-/** @throws */
-export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<UserRedis | null> => {
-  const user = await getDrizzleUserByLnurlAuthKey(lnurlAuthKey)
-  return redisUserFromDrizzleUserOrNull(user)
-}
+export const getUserByLnurlAuthKey = async (lnurlAuthKey: string): Promise<UserRedis | null> => asTransaction(async (queries) => {
+  const user = await queries.getUserByLnurlAuthKey(lnurlAuthKey)
+  return redisUserFromDrizzleUserOrNull(queries, user)
+})
 
-/** @throws */
-export const getAllUsers = async (): Promise<UserRedis[]> => {
-  const users = await getAllDrizzleUsers()
-  return (await Promise.all(users.map(async (user) => redisUserFromDrizzleUser(user))))
+export const getAllUsers = async (): Promise<UserRedis[]> => asTransaction(async (queries) => {
+  const users = await queries.getAllUsers()
+  return (await Promise.all(users.map(async (user) => redisUserFromDrizzleUser(queries, user))))
     .filter((user) => user != null)
-}
+})
 
-/** @throws */
-export const createUser = async (user: UserRedis): Promise<void> => {
+export const createUser = async (user: UserRedis): Promise<void> => asTransaction(async (queries) => {
   const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
-  await insertOrUpdateDataObjects(drizzleData)
-}
+  await insertOrUpdateDataObjects(queries, drizzleData)
+})
 
-/** @throws */
-export const updateUser = async (user: UserRedis): Promise<void> => {
+export const updateUser = async (user: UserRedis): Promise<void> => asTransaction(async (queries) => {
   const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
-  await deleteAllAllowedRefreshTokensForUserId(user.id)
-  await insertOrUpdateDataObjects(drizzleData)
-}
+  await queries.deleteAllAllowedRefreshTokensForUserId(user.id)
+  await insertOrUpdateDataObjects(queries, drizzleData)
+})

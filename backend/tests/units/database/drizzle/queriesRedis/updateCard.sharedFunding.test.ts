@@ -1,13 +1,8 @@
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertOrUpdateLatestCardVersion,
-  insertOrUpdateLnurlP,
-  insertOrUpdateInvoice, insertOrUpdateCardVersionInvoice,
-  deleteInvoice, deleteCardVersionInvoice,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { updateCard } from '@backend/database/drizzle/queriesRedis'
 import hashSha256 from '@backend/services/hashSha256'
@@ -30,13 +25,13 @@ describe('updateCard', () => {
     cardRedis.lnurlp.shared = true
 
     await updateCard(cardRedis)
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlP: cardRedis.lnurlp.id,
       sharedFunding: true,
     }))
-    expect(insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: cardRedis.lnurlp.id,
       created: expect.any(Date),
       expiresAt: null,
@@ -82,19 +77,19 @@ describe('updateCard', () => {
     cardRedis.lnurlp.payment_hash = [payment_hash, payment_hash2]
     await updateCard(cardRedis)
 
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlP: cardRedis.lnurlp.id,
       sharedFunding: true,
     }))
-    expect(insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: cardRedis.lnurlp.id,
       created: expect.any(Date),
       expiresAt: null,
       finished: null,
     }))
-    expect(insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 100,
       paymentHash: payment_hash,
       paymentRequest: expect.any(String),
@@ -103,11 +98,11 @@ describe('updateCard', () => {
       expiresAt: expect.any(Date),
       extra: expect.any(String),
     }))
-    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       cardVersion: cardVersion.id,
       invoice: payment_hash,
     }))
-    expect(insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 200,
       paymentHash: payment_hash2,
       paymentRequest: expect.any(String),
@@ -116,12 +111,12 @@ describe('updateCard', () => {
       expiresAt: expect.any(Date),
       extra: expect.any(String),
     }))
-    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       cardVersion: cardVersion.id,
       invoice: payment_hash2,
     }))
-    expect(deleteInvoice).not.toHaveBeenCalled()
-    expect(deleteCardVersionInvoice).not.toHaveBeenCalled()
+    expect(queries.deleteInvoice).not.toHaveBeenCalled()
+    expect(queries.deleteCardVersionInvoice).not.toHaveBeenCalled()
   })
 
   it('should finish a sharedFunding for a card', async () => {
@@ -154,13 +149,13 @@ describe('updateCard', () => {
     cardRedis.lnurlp.paid = Math.round(+ new Date() / 1000)
     await updateCard(cardRedis)
 
-    expect(insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: cardRedis.lnurlp.id,
       created: expect.any(Date),
       expiresAt: null,
       finished: expect.any(Date),
     }))
-    expect(deleteInvoice).not.toHaveBeenCalled()
-    expect(deleteCardVersionInvoice).not.toHaveBeenCalled()
+    expect(queries.deleteInvoice).not.toHaveBeenCalled()
+    expect(queries.deleteCardVersionInvoice).not.toHaveBeenCalled()
   })
 })

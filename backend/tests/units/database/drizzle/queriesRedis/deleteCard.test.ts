@@ -1,9 +1,6 @@
 import '../../../mocks/process.env'
-import {
-  addData,
-  deleteCard as deleteCardMock, deleteCardVersion,
-  deleteInvoice, deleteCardVersionInvoice,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData'
 import {
@@ -34,13 +31,13 @@ describe('deleteCard', () => {
     cardRedis.invoice = invoiceRedis
 
     await deleteCard(cardRedis)
-    expect(deleteCardMock).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card.hash,
     }))
-    expect(deleteCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
     }))
-    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion.id,
     }))
@@ -64,18 +61,18 @@ describe('deleteCard', () => {
     cardRedis.setFunding = createRedisSetFunding(100)
 
     await deleteCard(cardRedis)
-    expect(deleteCardMock).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card.hash,
     }))
-    expect(deleteCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
     }))
-    expect(deleteInvoice).not.toHaveBeenCalled()
-    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteInvoice).not.toHaveBeenCalled()
+    expect(queries.deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion.id,
     }))
-    expect(deleteCardVersionInvoice).not.toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersionInvoice).not.toHaveBeenCalledWith(expect.objectContaining({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion2.id,
     }))

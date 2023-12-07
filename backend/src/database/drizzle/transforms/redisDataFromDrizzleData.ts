@@ -5,19 +5,8 @@ import type {
   LandingPage,
   Profile,
 } from '@backend/database/drizzle/schema'
+import type Queries from '@backend/database/drizzle/Queries'
 import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
-import {
-  getLnurlPFundingCardVersion,
-  getAllInvoicesFundingCardVersion,
-  getAllCardVersionsFundedByInvoice,
-  getLnurlWWithdrawingCardVersion,
-  getAllCardVersionsWithdrawnByLnurlW,
-  getUserCanUseLandingPagesByLandingPage as getDrizzleUserCanUseLandingPagesByLandingPage,
-  getProfileByUserId as getDrizzleProfileByUserId,
-  getAllUserCanUseImagesForUserId,
-  getAllUserCanUseLandingPagesForUserId,
-  getAllAllowedRefreshTokensForUserId,
-} from '@backend/database/drizzle/queries'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
 import {
   Profile as ProfileRedis,
@@ -27,10 +16,10 @@ import { LandingPage as LandingPageRedis } from '@backend/database/redis/data/La
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
 
 /** @throws */
-export const getRedisCardFromDrizzleCardVersion = async (cardVersion: CardVersion): Promise<CardRedis> => {
-  const lnurlP = await getRedisLnurlPForDrizzleCardVersion(cardVersion)
-  const { invoice, setFunding } = await getRedisInvoiceAndSetFundingForDrizzleCardVersion(cardVersion, lnurlP)
-  const { lnbitsWithdrawId, isLockedByBulkWithdraw, used } = await getRedisWithdrawInfoForDrizzleCardVersion(cardVersion)
+export const getRedisCardFromDrizzleCardVersion = async (queries: Queries, cardVersion: CardVersion): Promise<CardRedis> => {
+  const lnurlP = await getRedisLnurlPForDrizzleCardVersion(queries, cardVersion)
+  const { invoice, setFunding } = await getRedisInvoiceAndSetFundingForDrizzleCardVersion(queries, cardVersion, lnurlP)
+  const { lnbitsWithdrawId, isLockedByBulkWithdraw, used } = await getRedisWithdrawInfoForDrizzleCardVersion(queries, cardVersion)
 
   return CardRedis.parse({
     cardHash: cardVersion.card,
@@ -47,13 +36,13 @@ export const getRedisCardFromDrizzleCardVersion = async (cardVersion: CardVersio
 }
 
 /** @throws */
-export const getRedisLnurlPForDrizzleCardVersion = async (cardVersion: CardVersion): Promise<CardRedis['lnurlp']> => {
-  const lnurlp = await getLnurlPFundingCardVersion(cardVersion)
+export const getRedisLnurlPForDrizzleCardVersion = async (queries: Queries, cardVersion: CardVersion): Promise<CardRedis['lnurlp']> => {
+  const lnurlp = await queries.getLnurlPFundingCardVersion(cardVersion)
   if (lnurlp == null) {
     return null
   }
 
-  const invoices = await getAllInvoicesFundingCardVersion(cardVersion)
+  const invoices = await queries.getAllInvoicesFundingCardVersion(cardVersion)
   return {
     shared: cardVersion.sharedFunding,
     amount: invoices.reduce((total, current) => total + current.amount, 0),
@@ -65,7 +54,7 @@ export const getRedisLnurlPForDrizzleCardVersion = async (cardVersion: CardVersi
 }
 
 /** @throws */
-export const getRedisInvoiceAndSetFundingForDrizzleCardVersion = async (cardVersion: CardVersion, lnurlp: CardRedis['lnurlp']): Promise<{
+export const getRedisInvoiceAndSetFundingForDrizzleCardVersion = async (queries: Queries, cardVersion: CardVersion, lnurlp: CardRedis['lnurlp']): Promise<{
   invoice: CardRedis['invoice'],
   setFunding: CardRedis['setFunding'],
 }> => {
@@ -73,7 +62,7 @@ export const getRedisInvoiceAndSetFundingForDrizzleCardVersion = async (cardVers
     return { invoice: null, setFunding: null }
   }
 
-  const invoices = await getAllInvoicesFundingCardVersion(cardVersion)
+  const invoices = await queries.getAllInvoicesFundingCardVersion(cardVersion)
   if (invoices.length === 0) {
     return { invoice: null, setFunding: null }
   }
@@ -81,7 +70,7 @@ export const getRedisInvoiceAndSetFundingForDrizzleCardVersion = async (cardVers
     throw new Error(`More than one invoice found for card ${cardVersion.card}`)
   }
 
-  const cardVersions = await getAllCardVersionsFundedByInvoice(invoices[0])
+  const cardVersions = await queries.getAllCardVersionsFundedByInvoice(invoices[0])
   return {
     invoice: getRedisInvoiceForDrizzleInvoice(invoices[0], cardVersions),
     setFunding: getRedisSetFundingForDrizzleInvoice(invoices[0], cardVersions),
@@ -115,16 +104,16 @@ export const getRedisSetFundingForDrizzleInvoice = (invoice: Invoice, cards: Car
 }
 
 /** @throws */
-export const getRedisWithdrawInfoForDrizzleCardVersion = async (card: CardVersion): Promise<{
+export const getRedisWithdrawInfoForDrizzleCardVersion = async (queries: Queries, card: CardVersion): Promise<{
   lnbitsWithdrawId: CardRedis['lnbitsWithdrawId'],
   isLockedByBulkWithdraw: CardRedis['isLockedByBulkWithdraw'],
   used: CardRedis['used'],
 }> => {
-  const lnurlw = await getLnurlWWithdrawingCardVersion(card)
+  const lnurlw = await queries.getLnurlWWithdrawingCardVersion(card)
   if (lnurlw == null) {
     return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false, used: null }
   }
-  const cardVersions = await getAllCardVersionsWithdrawnByLnurlW(lnurlw)
+  const cardVersions = await queries.getAllCardVersionsWithdrawnByLnurlW(lnurlw)
   return {
     lnbitsWithdrawId: lnurlw.lnbitsId,
     isLockedByBulkWithdraw: cardVersions.length > 1,
@@ -132,7 +121,7 @@ export const getRedisWithdrawInfoForDrizzleCardVersion = async (card: CardVersio
   }
 }
 
-export const redisLandingPageFromDrizzleLandingPage = async (landingPage: LandingPage | null): Promise<LandingPageRedis | null> => {
+export const redisLandingPageFromDrizzleLandingPage = async (queries: Queries, landingPage: LandingPage | null): Promise<LandingPageRedis | null> => {
   if (landingPage === null) {
     return null
   }
@@ -142,7 +131,7 @@ export const redisLandingPageFromDrizzleLandingPage = async (landingPage: Landin
   }
 
   // due to redis having no m:n relationship, the first n:m user is taken
-  const userCanUseLandingPages = await getDrizzleUserCanUseLandingPagesByLandingPage(landingPage)
+  const userCanUseLandingPages = await queries.getUserCanUseLandingPagesByLandingPage(landingPage)
 
   if (userCanUseLandingPages.length <= 0) {
     throw Error(`Missing userCanUseLandingPage for landingPage ${landingPage.id}, userId is required for LandingPageRedis!`)
@@ -161,22 +150,22 @@ export const redisProfileFromDrizzleProfile = (profile: Profile): ProfileRedis =
   email: profile.email,
 })
 
-export const redisUserFromDrizzleUserOrNull = async (user: User | null): Promise<UserRedis | null> => {
+export const redisUserFromDrizzleUserOrNull = async (queries: Queries, user: User | null): Promise<UserRedis | null> => {
   if (user === null) {
     return null
   }
-  return redisUserFromDrizzleUser(user)
+  return redisUserFromDrizzleUser(queries, user)
 }
 
-export const redisUserFromDrizzleUser = async (user: User): Promise<UserRedis> => {
-  const profile = await getDrizzleProfileByUserId(user.id)
+export const redisUserFromDrizzleUser = async (queries: Queries, user: User): Promise<UserRedis> => {
+  const profile = await queries.getProfileByUserId(user.id)
   if (profile === null) {
     throw Error('Not Implemented - A redis user always has a profile. In drizzle it is possible that not.')
   }
 
-  const availableCardsLogos = await getAvailableCardLogosForRedisUserByUserId(user.id)
-  const availableLandingPages = await getAvailableLandingPagesForRedisUserByUserId(user.id)
-  const allowedRefreshTokens = await getAllowedRefreshTokensForRedisUserByUserId(user.id)
+  const availableCardsLogos = await getAvailableCardLogosForRedisUserByUserId(queries, user.id)
+  const availableLandingPages = await getAvailableLandingPagesForRedisUserByUserId(queries, user.id)
+  const allowedRefreshTokens = await getAllowedRefreshTokensForRedisUserByUserId(queries, user.id)
 
   return {
     id: user.id,
@@ -190,8 +179,8 @@ export const redisUserFromDrizzleUser = async (user: User): Promise<UserRedis> =
   }
 }
 
-export const getAvailableCardLogosForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['availableCardsLogos']> => {
-  const userCanUseImages = await getAllUserCanUseImagesForUserId(userId)
+export const getAvailableCardLogosForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['availableCardsLogos']> => {
+  const userCanUseImages = await queries.getAllUserCanUseImagesForUserId(userId)
   const availableCardLogos = userCanUseImages
     .filter((userCanUseImage) => userCanUseImage.canEdit)
     .map((userCanUseImage) => userCanUseImage.image)
@@ -201,8 +190,8 @@ export const getAvailableCardLogosForRedisUserByUserId = async (userId: User['id
   return availableCardLogos
 }
 
-export const getAvailableLandingPagesForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['availableLandingPages']> => {
-  const userCanUseLandingPages = await getAllUserCanUseLandingPagesForUserId(userId)
+export const getAvailableLandingPagesForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['availableLandingPages']> => {
+  const userCanUseLandingPages = await queries.getAllUserCanUseLandingPagesForUserId(userId)
   const availableLandingPages = userCanUseLandingPages
     .filter((userCanUseLandingPage) => userCanUseLandingPage.canEdit)
     .map((userCanUseLandingPage) => userCanUseLandingPage.landingPage)
@@ -212,8 +201,8 @@ export const getAvailableLandingPagesForRedisUserByUserId = async (userId: User[
   return availableLandingPages
 }
 
-export const getAllowedRefreshTokensForRedisUserByUserId = async (userId: User['id']): Promise<UserRedis['allowedRefreshTokens']> => {
-  const allowedRefreshTokens = await getAllAllowedRefreshTokensForUserId(userId)
+export const getAllowedRefreshTokensForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['allowedRefreshTokens']> => {
+  const allowedRefreshTokens = await queries.getAllAllowedRefreshTokensForUserId(userId)
   if (allowedRefreshTokens.length === 0) {
     return null
   }

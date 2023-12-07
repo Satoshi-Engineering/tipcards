@@ -1,11 +1,8 @@
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertOrUpdateLatestCardVersion,
-  insertOrUpdateLnurlW,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { updateCard } from '@backend/database/drizzle/queriesRedis'
 import hashSha256 from '@backend/services/hashSha256'
@@ -37,12 +34,12 @@ describe('updateCard', () => {
     cardRedis.lnbitsWithdrawId = hashSha256(randomUUID())
 
     await updateCard(cardRedis)
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlW: cardRedis.lnbitsWithdrawId,
     }))
-    expect(insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: cardRedis.lnbitsWithdrawId,
       created: expect.any(Date),
       expiresAt: null,
@@ -74,7 +71,7 @@ describe('updateCard', () => {
     cardRedis.lnbitsWithdrawId = null
 
     await updateCard(cardRedis)
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion.id,
       card: card.hash,
       lnurlW: null,
@@ -106,7 +103,7 @@ describe('updateCard', () => {
     cardRedis.used = Math.round(+ new Date() / 1000)
 
     await updateCard(cardRedis)
-    expect(insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: cardRedis.lnbitsWithdrawId,
       created: expect.any(Date),
       expiresAt: null,

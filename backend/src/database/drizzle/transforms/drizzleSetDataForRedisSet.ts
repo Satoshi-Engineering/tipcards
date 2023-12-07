@@ -6,23 +6,15 @@ import {
   UserCanUseSet,
   Invoice, CardVersionHasInvoice,
 } from '@backend/database/drizzle/schema'
+import type Queries from '@backend/database/drizzle/Queries'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import {
-  getAllCardsForSetBySetId,
-  getLatestCardVersion,
-  getAllCardVersionInvoicesForInvoice,
-  getUnpaidInvoicesForCardVersion,
-  getSetById,
-  getSetSettingsBySetId,
-  getAllUsersThatCanUseSetBySetId,
-} from '@backend/database/drizzle/queries'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
 import hashSha256 from '@backend/services/hashSha256'
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
 
 /** @throws */
-export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Promise<{
+export const getDrizzleDataObjectsForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<{
   insertOrUpdate: DataObjects,
   delete: DataObjects,
 }> => {
@@ -37,7 +29,7 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
   const invoice = getInvoiceForRedisSet(setRedis)
   const cardVersionInvoices = getCardVersionInvoicesForRedisSet(cardsAndVersions, invoice)
 
-  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(setRedis)
+  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(queries, setRedis)
   return {
     insertOrUpdate: setObjectsToDataObjects({
       cardsAndVersions,
@@ -54,16 +46,16 @@ export const getDrizzleDataObjectsForRedisSet = async (setRedis: SetRedis): Prom
 }
 
 /** @throws */
-export const getDrizzleDataObjectsForRedisSetDelete = async (setRedis: SetRedis): Promise<{
+export const getDrizzleDataObjectsForRedisSetDelete = async (queries: Queries, setRedis: SetRedis): Promise<{
   update: DataObjects,
   delete: DataObjects,
 }> => {
-  const cards = await getCardsWithRemovedSetLinkForRedisSet(setRedis)
+  const cards = await getCardsWithRemovedSetLinkForRedisSet(queries, setRedis)
 
-  const set = await getSetById(setRedis.id)
-  const setSettings = await getSetSettingsBySetId(setRedis.id)
-  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(setRedis)
-  const usersCanUseSetsToDelete = await getAllUsersThatCanUseSetBySetId(setRedis.id)
+  const set = await queries.getSetById(setRedis.id)
+  const setSettings = await queries.getSetSettingsBySetId(setRedis.id)
+  const cardVersionInvoicesToDelete = await getCardVersionInvoicesToDeleteForRedisSet(queries, setRedis)
+  const usersCanUseSetsToDelete = await queries.getAllUsersThatCanUseSetBySetId(setRedis.id)
   return {
     update: setObjectsToDataObjects({
       cards,
@@ -154,27 +146,27 @@ const getCardVersionInvoicesForRedisSet = (
   }))
 }
 
-const getCardVersionInvoicesToDeleteForRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
+const getCardVersionInvoicesToDeleteForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
   if (setRedis.invoice != null) {
     return null
   }
-  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet(setRedis)
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet(queries, setRedis)
 }
 
-const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet = async (setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
-  const numberOfCards: number = await getNumberOfCardsForRedisSet(setRedis)
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<CardVersionHasInvoice[] | null> => {
+  const numberOfCards: number = await getNumberOfCardsForRedisSet(queries, setRedis)
   const cardHashes = [...new Array(numberOfCards).keys()].map((index) => hashSha256(`${setRedis.id}/${index}`))
-  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes(cardHashes)
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes(queries, cardHashes)
 }
 
-const getNumberOfCardsForRedisSet = async (setRedis: SetRedis): Promise<number> => {
-  const setSettings = await getSetSettingsBySetId(setRedis.id)
+const getNumberOfCardsForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<number> => {
+  const setSettings = await queries.getSetSettingsBySetId(setRedis.id)
   return setSettings?.numberOfCards || 8
 }
 
-const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes = async (cardHashes: Card['hash'][]): Promise<CardVersionHasInvoice[] | null> => {
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHashes = async (queries: Queries, cardHashes: Card['hash'][]): Promise<CardVersionHasInvoice[] | null> => {
   for (const cardHash of cardHashes) {
-    const cardVersionInvoices = await getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash(cardHash)
+    const cardVersionInvoices = await getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash(queries, cardHash)
     if (cardVersionInvoices != null) {
       return cardVersionInvoices
     }
@@ -182,22 +174,22 @@ const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVer
   return null
 }
 
-const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash = async (cardHash: Card['hash']): Promise<CardVersionHasInvoice[] | null> => {
-  const cardVersion = await getLatestCardVersion(cardHash)
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardHash = async (queries: Queries, cardHash: Card['hash']): Promise<CardVersionHasInvoice[] | null> => {
+  const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {
     return null
   }
-  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion(cardVersion)
+  return getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion(queries, cardVersion)
 }
 
-const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion = async (cardVersion: CardVersion): Promise<CardVersionHasInvoice[] | null> => {
-  const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
-  return getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions(invoices)
+const getCardVersionInvoicesThatBelongToAnUnpaidInvoiceWhichFundsMultipleCardVersionsForCardVersion = async (queries: Queries, cardVersion: CardVersion): Promise<CardVersionHasInvoice[] | null> => {
+  const invoices = await queries.getUnpaidInvoicesForCardVersion(cardVersion)
+  return getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions(queries, invoices)
 }
 
-const getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions = async (invoices: Invoice[]): Promise<CardVersionHasInvoice[] | null> => {
+const getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions = async (queries: Queries, invoices: Invoice[]): Promise<CardVersionHasInvoice[] | null> => {
   for (const invoice of invoices) {
-    const cardVersionInvoices = await getAllCardVersionInvoicesForInvoice(invoice)
+    const cardVersionInvoices = await queries.getAllCardVersionInvoicesForInvoice(invoice)
     if (cardVersionInvoices.length > 1) {
       return cardVersionInvoices
     }
@@ -206,8 +198,8 @@ const getCardVersionInvoicesForInvoiceThatFundsMultipleCardVersions = async (inv
 }
 
 /** @throws */
-const getCardsWithRemovedSetLinkForRedisSet = async (setRedis: SetRedis): Promise<Card[]> => {
-  const cards = await getAllCardsForSetBySetId(setRedis.id)
+const getCardsWithRemovedSetLinkForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<Card[]> => {
+  const cards = await queries.getAllCardsForSetBySetId(setRedis.id)
   return cards.map((card) => ({
     ...card,
     set: null,

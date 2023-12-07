@@ -1,5 +1,6 @@
 import '../../../mocks/process.env'
-import { addData } from '../mocks/queries'
+import '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { dateToUnixTimestamp } from '@backend/database/drizzle/transforms/dateHelpers'
 import { getUserByLnurlAuthKey } from '@backend/database/drizzle/queriesRedis'

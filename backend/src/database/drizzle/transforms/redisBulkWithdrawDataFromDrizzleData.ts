@@ -1,15 +1,14 @@
+import type { LnurlW } from '@backend/database/drizzle/schema'
+import type Queries from '@backend/database/drizzle/Queries'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
-import type { LnurlW } from '../schema'
 
-import { getAllCardVersionsWithdrawnByLnurlW } from '../queries'
 import { totalAmountForCards } from './drizzleCardHelpers'
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
 
-
 /** @throws */
-export const getRedisBulkWithdrawForDrizzleLnurlW = async (lnurlW: LnurlW): Promise<BulkWithdrawRedis> => {
-  const cardVersions = await getAllCardVersionsWithdrawnByLnurlW(lnurlW)
-  const amount = await totalAmountForCards(cardVersions)
+export const getRedisBulkWithdrawForDrizzleLnurlW = async (queries: Queries, lnurlW: LnurlW): Promise<BulkWithdrawRedis> => {
+  const cardVersions = await queries.getAllCardVersionsWithdrawnByLnurlW(lnurlW)
+  const amount = await totalAmountForCards(queries, cardVersions)
 
   return {
     id: lnurlW.lnbitsId,
@@ -23,9 +22,9 @@ export const getRedisBulkWithdrawForDrizzleLnurlW = async (lnurlW: LnurlW): Prom
 }
 
 /** @throws */
-export const filterLnurlWsThatAreUsedForMultipleCards = async (lnurlWs: LnurlW[]): Promise<LnurlW[]> => {
+export const filterLnurlWsThatAreUsedForMultipleCards = async (queries: Queries, lnurlWs: LnurlW[]): Promise<LnurlW[]> => {
   const lnurlWsThatAreUsedForMultipleCards: LnurlW[] = []
-  await Promise.all(lnurlWs.map((lnurlW) => addIfUsedForMultipleCards(lnurlWsThatAreUsedForMultipleCards, lnurlW)))
+  await Promise.all(lnurlWs.map((lnurlW) => addIfUsedForMultipleCards(queries, lnurlWsThatAreUsedForMultipleCards, lnurlW)))
   return lnurlWsThatAreUsedForMultipleCards
 }
 
@@ -33,11 +32,11 @@ export const filterLnurlWsThatAreUsedForMultipleCards = async (lnurlWs: LnurlW[]
  * side-effect: pushes into lnurlWsThatAreUsedForMultipleCards
  * @throws
  */
-const addIfUsedForMultipleCards = async (lnurlWsThatAreUsedForMultipleCards: LnurlW[], lnurlW: LnurlW): Promise<void> => {
-  if (await isUsedForMultipleCards(lnurlW)) {
+const addIfUsedForMultipleCards = async (queries: Queries, lnurlWsThatAreUsedForMultipleCards: LnurlW[], lnurlW: LnurlW): Promise<void> => {
+  if (await isUsedForMultipleCards(queries, lnurlW)) {
     lnurlWsThatAreUsedForMultipleCards.push(lnurlW)
   }
 }
 /** @throws */
-const isUsedForMultipleCards = async (lnurlW: LnurlW): Promise<boolean> => (await getAllCardVersionsWithdrawnByLnurlW(lnurlW)).length > 1
+const isUsedForMultipleCards = async (queries: Queries, lnurlW: LnurlW): Promise<boolean> => (await queries.getAllCardVersionsWithdrawnByLnurlW(lnurlW)).length > 1
 

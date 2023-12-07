@@ -1,9 +1,9 @@
 import { User, Profile, AllowedRefreshTokens } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
 import type { User as UserRedis } from '@backend/database/redis/data/User'
+import hashSha256 from '@backend/services/hashSha256'
 
 import { unixTimestampToDate } from './dateHelpers'
-import hashSha256 from '@backend/services/hashSha256'
 
 export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): Promise<DataObjects> => {
   const user: User = {

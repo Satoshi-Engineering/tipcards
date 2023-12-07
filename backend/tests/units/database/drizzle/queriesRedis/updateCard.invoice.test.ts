@@ -1,13 +1,6 @@
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertCards, insertCardVersions,
-  insertInvoices, insertCardVersionInvoices,
-  insertLnurlPs, insertLnurlWs,
-  insertOrUpdateLatestCardVersion,
-  insertOrUpdateInvoice,
-  insertOrUpdateCardVersionInvoice,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData'
 import { createCard as createRedisCard, createInvoice as createRedisInvoice } from '../../../../redisData'
@@ -35,16 +28,16 @@ describe('updateCard', () => {
     cardRedis.invoice = invoiceRedis
 
     await updateCard(cardRedis)
-    expect(insertCards).not.toHaveBeenCalled()
-    expect(insertCardVersions).not.toHaveBeenCalled()
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
-    expect(insertLnurlPs).not.toHaveBeenCalled()
-    expect(insertLnurlWs).not.toHaveBeenCalled()
-    expect(insertOrUpdateLatestCardVersion).toHaveBeenCalledTimes(1)
-    expect(insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertCards).not.toHaveBeenCalled()
+    expect(queries.insertCardVersions).not.toHaveBeenCalled()
+    expect(queries.insertInvoices).not.toHaveBeenCalled()
+    expect(queries.insertCardVersionInvoices).not.toHaveBeenCalled()
+    expect(queries.insertLnurlPs).not.toHaveBeenCalled()
+    expect(queries.insertLnurlWs).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledTimes(1)
+    expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       paid: expect.any(Date),
     }))
-    expect(insertOrUpdateCardVersionInvoice).toHaveBeenCalledTimes(1)
+    expect(queries.insertOrUpdateCardVersionInvoice).toHaveBeenCalledTimes(1)
   })
 })

@@ -1,9 +1,6 @@
 import '../../../mocks/process.env'
-import {
-  addData,
-  insertOrUpdateLnurlW,
-  updateCardVersion,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { 
   createCard, createCardVersion,
@@ -30,17 +27,17 @@ describe('createBulkWithdraw', () => {
 
     const bulkWithdraw = createBulkWithdrawData(invoice.amount, card1.hash, card2.hash)
     await createBulkWithdraw(bulkWithdraw)
-    expect(updateCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.updateCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion1.id,
       card: card1.hash,
       lnurlW: bulkWithdraw.lnbitsWithdrawId,
     }))
-    expect(updateCardVersion).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.updateCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       id: cardVersion2.id,
       card: card2.hash,
       lnurlW: bulkWithdraw.lnbitsWithdrawId,
     }))
-    expect(insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLnurlW).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: bulkWithdraw.lnbitsWithdrawId,
       created: expect.any(Date),
       expiresAt: null,

@@ -1,9 +1,5 @@
 import '../../../mocks/process.env'
-import {
-  insertCards, insertCardVersions,
-  insertInvoices, insertCardVersionInvoices,
-  insertLnurlPs, insertLnurlWs,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
 
 import { createCard as createCardData, createLnurlP } from '../../../../redisData'
 
@@ -15,11 +11,11 @@ describe('createCard', () => {
     card.lnurlp = createLnurlP()
 
     await createCard(card)
-    expect(insertCards).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card.cardHash,
       created: expect.any(Date),
     }))
-    expect(insertCardVersions).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       card: card.cardHash,
       created: expect.any(Date),
       lnurlP: card.lnurlp?.id,
@@ -29,15 +25,15 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
-    expect(insertLnurlPs).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateInvoice).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateCardVersionInvoice).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: card.lnurlp?.id,
       created: expect.any(Date),
       expiresAt: null,
       finished: null,
     }))
-    expect(insertLnurlWs).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlW).not.toHaveBeenCalled()
   })
 
   it('should create a card with shared funding', async () => {
@@ -46,11 +42,11 @@ describe('createCard', () => {
     card.lnurlp.shared = true
 
     await createCard(card)
-    expect(insertCards).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card.cardHash,
       created: expect.any(Date),
     }))
-    expect(insertCardVersions).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       card: card.cardHash,
       created: expect.any(Date),
       lnurlP: card.lnurlp?.id,
@@ -60,14 +56,14 @@ describe('createCard', () => {
       sharedFunding: true,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).not.toHaveBeenCalled()
-    expect(insertCardVersionInvoices).not.toHaveBeenCalled()
-    expect(insertLnurlPs).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateInvoice).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateCardVersionInvoice).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlP).toHaveBeenCalledWith(expect.objectContaining({
       lnbitsId: card.lnurlp?.id,
       created: expect.any(Date),
       expiresAt: null,
       finished: null,
     }))
-    expect(insertLnurlWs).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlW).not.toHaveBeenCalled()
   })
 })

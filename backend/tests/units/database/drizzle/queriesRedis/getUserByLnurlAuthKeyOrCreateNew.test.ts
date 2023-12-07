@@ -1,5 +1,6 @@
 import '../../../mocks/process.env'
-import { addData, insertOrUpdateUser } from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
 import { getUserByLnurlAuthKeyOrCreateNew } from '@backend/database/drizzle/queriesRedis'
@@ -51,7 +52,7 @@ describe('getUserByLnurlAuthKeyOrCreateNew', () => {
         email: '',
       },
     }))
-    expect(insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
       id: userResult.id,
       lnurlAuthKey: user.lnurlAuthKey,
       created: unixTimestampToDate(userResult.created),

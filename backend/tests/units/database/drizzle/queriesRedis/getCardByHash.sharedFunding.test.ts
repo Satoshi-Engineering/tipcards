@@ -1,5 +1,6 @@
 import '../../../mocks/process.env'
-import { addData } from '../mocks/queries'
+import '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { createCard, createCardVersion, createInvoice, createLnurlP, createLnurlW } from '../../../../drizzleData'
 

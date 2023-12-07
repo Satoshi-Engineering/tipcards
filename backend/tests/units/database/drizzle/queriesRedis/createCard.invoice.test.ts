@@ -1,9 +1,5 @@
 import '../../../mocks/process.env'
-import {
-  insertCards, insertCardVersions,
-  insertInvoices, insertCardVersionInvoices,
-  insertLnurlPs, insertLnurlWs,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
 
 import { createCard as createCardData, createInvoice } from '../../../../redisData'
 
@@ -15,11 +11,11 @@ describe('createCard', () => {
     card.invoice = createInvoice(100)
 
     await createCard(card)
-    expect(insertCards).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card.cardHash,
       created: expect.any(Date),
     }))
-    expect(insertCardVersions).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateLatestCardVersion).toHaveBeenCalledWith(expect.objectContaining({
       card: card.cardHash,
       created: expect.any(Date),
       lnurlP: null,
@@ -29,7 +25,7 @@ describe('createCard', () => {
       sharedFunding: false,
       landingPageViewed: null,
     }))
-    expect(insertInvoices).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 100,
       paymentHash: card.invoice?.payment_hash,
       paymentRequest: card.invoice?.payment_request,
@@ -38,11 +34,11 @@ describe('createCard', () => {
       expiresAt: expect.any(Date),
       extra: expect.any(String),
     }))
-    expect(insertCardVersionInvoices).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       invoice: card.invoice?.payment_hash,
       cardVersion: expect.any(String),
     }))
-    expect(insertLnurlPs).not.toHaveBeenCalled()
-    expect(insertLnurlWs).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlP).not.toHaveBeenCalled()
+    expect(queries.insertOrUpdateLnurlW).not.toHaveBeenCalled()
   })
 })

@@ -1,12 +1,6 @@
 import '../../../mocks/process.env'
-import {
-  addData,
-  deleteSet as deleteDrizzleSet,
-  deleteSetSettings,
-  updateCard,
-  deleteCardVersionInvoice,
-  deleteUserCanUseSet,
-} from '../mocks/queries'
+import { queries } from '../mocks/client'
+import { addData } from '../mocks/database'
 
 import {
   createSet as createDrizzleSet,
@@ -45,30 +39,30 @@ describe('deleteSet', () => {
     const setRedis = createRedisSet()
     setRedis.id = set.id
     await deleteSet(setRedis)
-    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion1.id,
     }))
-    expect(deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteCardVersionInvoice).toHaveBeenCalledWith(expect.objectContaining({
       invoice: invoice.paymentHash,
       cardVersion: cardVersion2.id,
     }))
-    expect(deleteUserCanUseSet).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteUserCanUseSet).toHaveBeenCalledWith(expect.objectContaining({
       user: user.id,
       set: set.id,
     }))
-    expect(updateCard).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.updateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card1.hash,
       set: null,
     }))
-    expect(updateCard).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.updateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card2.hash,
       set: null,
     }))
-    expect(deleteSetSettings).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteSetSettings).toHaveBeenCalledWith(expect.objectContaining({
       set: set.id,
     }))
-    expect(deleteDrizzleSet).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.deleteSet).toHaveBeenCalledWith(expect.objectContaining({
       id: set.id,
     }))
   })

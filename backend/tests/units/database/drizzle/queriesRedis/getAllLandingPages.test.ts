@@ -1,12 +1,12 @@
 import '../../../mocks/process.env'
-import '../mocks/queries'
+import '../mocks/client'
+import { addData } from '../mocks/database'
 
 import {
   createLandingPagesTypeExternal,
   createUserCanUseLandingPage,
   createUsers,
 } from '../../../../drizzleData'
-import { addData } from '../mocks/queries'
 
 import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema'
 import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis'

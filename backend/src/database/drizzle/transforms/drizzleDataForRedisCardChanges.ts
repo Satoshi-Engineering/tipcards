@@ -1,11 +1,7 @@
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/drizzle/schema'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import {
-  getLatestCardVersion,
-  getInvoiceByPaymentHash,
-  getUnpaidInvoicesForCardVersion,
-} from '@backend/database/drizzle/queries'
+import type Queries from '@backend/database/drizzle/Queries'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 
 import { unixTimestampOrNullToDate } from './dateHelpers'
 import {
@@ -15,21 +11,21 @@ import {
 } from './drizzleDataFromRedisData'
 
 /** @throws */
-export const getDrizzleDataObjectsForRedisCardChanges = async (cardRedis: CardRedis): Promise<{
+export const getDrizzleDataObjectsForRedisCardChanges = async (queries: Queries, cardRedis: CardRedis): Promise<{
   insertOrUpdate: DataObjects,
   delete: DataObjects,
 }> => {
-  const cardVersionCurrent = await getLatestCardVersion(cardRedis.cardHash)
+  const cardVersionCurrent = await queries.getLatestCardVersion(cardRedis.cardHash)
   if (cardVersionCurrent == null) {
     throw new Error(`Cannot update card ${cardRedis.cardHash} as it doesn't exist.`)
   }
   const cardVersion = getUpdatedCardVersionForRedisCard(cardVersionCurrent, cardRedis)
   const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
-  const { invoices, cardVersionInvoices } = await getDrizzleInvoicesFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const { invoices, cardVersionInvoices } = await getDrizzleInvoicesFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
   const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
 
-  const dataObjectsToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const dataObjectsToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   return {
     insertOrUpdate: insertOrUpdateToDataObjects({
       cardVersion,
@@ -52,14 +48,14 @@ const getUpdatedCardVersionForRedisCard = (cardVersion: CardVersion, cardRedis: 
   landingPageViewed: unixTimestampOrNullToDate(cardRedis.landingPageViewed),
 })
 
-const getDrizzleInvoicesFromRedisLnurlP = async (lnurlPRedis: CardRedis['lnurlp'], cardVersion: CardVersion): Promise<{
+const getDrizzleInvoicesFromRedisLnurlP = async (queries: Queries, lnurlPRedis: CardRedis['lnurlp'], cardVersion: CardVersion): Promise<{
   invoices: Invoice[],
   cardVersionInvoices: CardVersionHasInvoice[],
 }> => {
   if (lnurlPRedis?.amount == null || lnurlPRedis?.payment_hash == null) {
     return { invoices: [], cardVersionInvoices: [] }
   }
-  const { invoices } = await getExistingDrizzleInvoicesForPaymentHashes(lnurlPRedis.payment_hash, cardVersion)
+  const { invoices } = await getExistingDrizzleInvoicesForPaymentHashes(queries, lnurlPRedis.payment_hash, cardVersion)
   return getNewDrizzleInvoicesForRedisLnurlP(
     lnurlPRedis.amount,
     lnurlPRedis.payment_hash,
@@ -68,14 +64,14 @@ const getDrizzleInvoicesFromRedisLnurlP = async (lnurlPRedis: CardRedis['lnurlp'
   )
 }
 
-const getExistingDrizzleInvoicesForPaymentHashes = async (paymentHashes: Invoice['paymentHash'][], cardVersion: CardVersion): Promise<{
+const getExistingDrizzleInvoicesForPaymentHashes = async (queries: Queries, paymentHashes: Invoice['paymentHash'][], cardVersion: CardVersion): Promise<{
   invoices: Invoice[],
   cardVersionInvoices: CardVersionHasInvoice[],
 }> => {
   const invoices: Invoice[] = []
   const cardVersionInvoices: CardVersionHasInvoice[] = []
   await Promise.all(paymentHashes.map(async (paymentHash) => {
-    const invoice = await getInvoiceByPaymentHash(paymentHash)
+    const invoice = await queries.getInvoiceByPaymentHash(paymentHash)
     if (invoice == null) {
       return
     }
@@ -125,13 +121,14 @@ const getNewDrizzleInvoicesForRedisLnurlP = (
 }
 
 const getDrizzleInvoicesToDeleteFromRedisLnurlP = async (
+  queries: Queries, 
   lnurlPRedis: CardRedis['lnurlp'],
   cardVersion: CardVersion,
 ): Promise<DataObjects> => {
   if (lnurlPRedis == null) {
     return {}
   }
-  const invoices = await getUnpaidInvoicesForCardVersion(cardVersion)
+  const invoices = await queries.getUnpaidInvoicesForCardVersion(cardVersion)
   if (invoices.length === 0) {
     return {}
   }

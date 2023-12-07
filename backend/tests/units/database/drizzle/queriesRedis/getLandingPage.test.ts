@@ -1,5 +1,6 @@
 import '../../../mocks/process.env'
-import '../mocks/queries'
+import '../mocks/client'
+import { addData } from '../mocks/database'
 
 import { getLandingPage } from '@backend/database/drizzle/queriesRedis'
 import {
@@ -7,7 +8,6 @@ import {
   createUser,
   createUserCanUseLandingPage,
 } from '../../../../drizzleData'
-import { addData } from '../mocks/queries'
 
 describe('getLandingPage', () => {
   it('should return null if Landing Page does not exist', async () => {
