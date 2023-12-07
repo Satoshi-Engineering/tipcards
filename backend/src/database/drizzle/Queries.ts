@@ -19,8 +19,8 @@ import {
 export type Transaction = MySqlTransaction<
   MySql2QueryResultHKT,
   MySql2PreparedQueryHKT,
-  typeof import('/home/tom/projects/satoshi-engineering/lightning-tip-cards/backend/src/database/drizzle/schema/index'),
-  ExtractTablesWithRelations<typeof import('/home/tom/projects/satoshi-engineering/lightning-tip-cards/backend/src/database/drizzle/schema/index')>
+  typeof import('@backend/database/drizzle/schema/index'),
+  ExtractTablesWithRelations<typeof import('@backend/database/drizzle/schema/index')>
 >
 
 export default class Queries {
