@@ -36,13 +36,14 @@ describe('getLandingPage', () => {
     }))
   })
 
-  it('should throw error, because in redis a landing page has user, but not in drizzle', async () => {
+  it('should return null, because in redis a landing page has to have a userId (in drizzle the relation to a user is optional)', async () => {
     const landingPage = createLandingPageTypeExternal()
 
     addData({
       landingPages: [landingPage],
     })
 
-    await expect(async () => await getLandingPage(landingPage.id)).rejects.toThrow(Error)
+    const landingPageResult = await getLandingPage(landingPage.id)
+    expect(landingPageResult).toBeNull()
   })
 })

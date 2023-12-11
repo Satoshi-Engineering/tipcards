@@ -124,15 +124,15 @@ export const redisLandingPageFromDrizzleLandingPage = async (queries: Queries, l
     return null
   }
 
+  // core landingPages are not saved in redis
   if (landingPage.type !== LandingPageType.enum.external) {
-    throw new Error(`Invalid type for landingPage ${landingPage.id}, only "${LandingPageType.enum.external}" allowed for LandingPageRedis!`)
+    return null
   }
 
-  // due to redis having no m:n relationship, the first n:m user is taken
+  // core landingPages are not saved in redis
   const userCanUseLandingPages = await queries.getUserCanUseLandingPagesByLandingPage(landingPage)
-
   if (userCanUseLandingPages.length <= 0) {
-    throw Error(`Missing userCanUseLandingPage for landingPage ${landingPage.id}, userId is required for LandingPageRedis!`)
+    return null
   }
 
   return {

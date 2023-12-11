@@ -166,14 +166,15 @@ export const getLandingPage = async (landingPageId: string): Promise<LandingPage
 
 export const getAllLandingPages = async (): Promise<LandingPageRedis[]> => asTransaction(async (queries) => {
   const landingPagesDrizzle = await queries.getAllLandingPages()
+  const landingPages: LandingPageRedis[] = []
 
-  return Promise.all(landingPagesDrizzle.map(async (landingPageDrizzle) => {
+  await Promise.all(landingPagesDrizzle.map(async (landingPageDrizzle) => {
     const landingPage = await redisLandingPageFromDrizzleLandingPage(queries, landingPageDrizzle)
-    if (landingPage === null) {
-      throw new Error('not implemented (Due: In redis not valid, but in Drizzle it would be)')
+    if (landingPage != null) {
+      landingPages.push(landingPage)
     }
-    return landingPage
   }))
+  return landingPages
 })
 
 export const getImageMeta = async (imageId: ImageMetaRedis['id']): Promise<ImageMetaRedis | null> => asTransaction(async (queries) => {

@@ -3,7 +3,7 @@ import { User } from './User'
 import { LandingPage } from './LandingPage'
 
 export const UserCanUseLandingPage = mysqlTable('UserCanUseLandingPage', {
-  user: varchar('user', { length: 36 }).notNull().references(() => User.id),
+  user: varchar('user', { length: 64 }).notNull().references(() => User.id),
   landingPage: varchar('landingPage', { length: 36 }).notNull().references(() => LandingPage.id),
   canEdit: boolean('canEdit').notNull().default(false),
 }, (table) => {

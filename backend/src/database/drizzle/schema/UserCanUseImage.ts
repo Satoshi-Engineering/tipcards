@@ -3,7 +3,7 @@ import { User } from './User'
 import { Image } from './Image'
 
 export const UserCanUseImage = mysqlTable('UserCanUseImage', {
-  user: varchar('user', { length: 36 }).notNull().references(() => User.id),
+  user: varchar('user', { length: 64 }).notNull().references(() => User.id),
   image: varchar('image', { length: 36 }).notNull().references(() => Image.id),
   canEdit: boolean('canEdit').notNull().default(false),
 }, (table) => {

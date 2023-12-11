@@ -396,7 +396,7 @@ export default class Queries {
   getUserCanUseLandingPagesByLandingPage(landingPage: LandingPage): Promise<UserCanUseLandingPage[]> {
     return this.transaction.select()
       .from(UserCanUseLandingPage)
-      .where(eq(LandingPage.id, landingPage.id))
+      .where(eq(UserCanUseLandingPage.landingPage, landingPage.id))
   }
 
   /** @throws */
