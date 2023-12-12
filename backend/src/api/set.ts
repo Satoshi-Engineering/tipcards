@@ -231,7 +231,10 @@ router.post('/invoice/:setId', async (req, res) => {
   let note = ''
   let cardIndices: number[] = []
   try {
-    ({ amountPerCard, text, note, cardIndices } = req.body)
+    amountPerCard = req.body.amountPerCard
+    cardIndices = req.body.cardIndices
+    text = req.body.text || ''
+    note = req.body.note || ''
   } catch (error) {
     console.error(error)
   }

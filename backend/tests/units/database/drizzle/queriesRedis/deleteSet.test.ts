@@ -51,11 +51,11 @@ describe('deleteSet', () => {
       user: user.id,
       set: set.id,
     }))
-    expect(queries.updateCard).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card1.hash,
       set: null,
     }))
-    expect(queries.updateCard).toHaveBeenCalledWith(expect.objectContaining({
+    expect(queries.insertOrUpdateCard).toHaveBeenCalledWith(expect.objectContaining({
       hash: card2.hash,
       set: null,
     }))

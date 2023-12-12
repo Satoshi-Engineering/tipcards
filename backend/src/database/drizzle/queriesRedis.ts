@@ -31,7 +31,7 @@ import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultip
 import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData'
 import {
   insertOrUpdateDataObjects,
-  updateDataObjects, deleteDataObjects,
+  deleteDataObjects,
 } from './batchQueries'
 import { asTransaction } from './client'
 
@@ -88,7 +88,7 @@ export const updateSet = async (set: SetRedis): Promise<void> => asTransaction(a
 
 export const deleteSet = async (set: SetRedis): Promise<void> => asTransaction(async (queries) => {
   const drizzleData = await getDrizzleDataObjectsForRedisSetDelete(queries, set)
-  await updateDataObjects(queries, drizzleData.update)
+  await insertOrUpdateDataObjects(queries, drizzleData.update)
   await deleteDataObjects(queries, drizzleData.delete)
 })
 
