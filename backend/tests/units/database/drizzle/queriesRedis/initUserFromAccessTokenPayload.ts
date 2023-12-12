@@ -3,12 +3,11 @@ import { queries } from '../mocks/client'
 import { addData } from '../mocks/database'
 
 import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
-import { getUserByLnurlAuthKeyOrCreateNew } from '@backend/database/drizzle/queriesRedis'
+import { initUserFromAccessTokenPayload } from '@backend/database/drizzle/queriesRedis'
 
-import { createUser, createProfileForUser } from '../../../../drizzleData'
-import { createUser as createUserData } from '../../../../redisData'
+import { createUser, createProfileForUser, createAccessTokenPayloadForUser } from '../../../../drizzleData'
 
-describe('getUserByLnurlAuthKeyOrCreateNew', () => {
+describe('initUserFromAccessTokenPayload', () => {
   it('should return the user if he exists', async () => {
     const userData = createUser()
     const profileData = createProfileForUser(userData)
@@ -18,7 +17,7 @@ describe('getUserByLnurlAuthKeyOrCreateNew', () => {
       profiles: [profileData],
     })
 
-    const userResult = await getUserByLnurlAuthKeyOrCreateNew(userData.lnurlAuthKey)
+    const userResult = await initUserFromAccessTokenPayload(createAccessTokenPayloadForUser(userData))
     expect(userResult).toEqual(expect.objectContaining({
       id: userData.id,
       created: dateToUnixTimestamp(userData.created),
@@ -35,13 +34,14 @@ describe('getUserByLnurlAuthKeyOrCreateNew', () => {
     }))
   })
 
-  it('should insertOrUpdate a user if he doesnt exist yet', async () => {
-    const user = createUserData()
+  it('should insertOrUpdate a user if he doesnt exist yet (including permissions)', async () => {
+    const userData = createUser()
+    userData.permissions = ['statistics']
 
-    const userResult = await getUserByLnurlAuthKeyOrCreateNew(user.lnurlAuthKey)
+    const userResult = await initUserFromAccessTokenPayload(createAccessTokenPayloadForUser(userData))
     expect(userResult).toEqual(expect.objectContaining({
-      id: expect.any(String),
-      lnurlAuthKey: user.lnurlAuthKey,
+      id: userData.id,
+      lnurlAuthKey: userData.lnurlAuthKey,
       created: expect.any(Number),
       availableCardsLogos: null,
       availableLandingPages: null,
@@ -51,12 +51,13 @@ describe('getUserByLnurlAuthKeyOrCreateNew', () => {
         accountName: '',
         email: '',
       },
+      permissions: ['statistics'],
     }))
     expect(queries.insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
-      id: userResult.id,
-      lnurlAuthKey: user.lnurlAuthKey,
+      id: userData.id,
+      lnurlAuthKey: userData.lnurlAuthKey,
       created: unixTimestampToDate(userResult.created),
-      permissions: [],
+      permissions: ['statistics'],
     }))
   })
 })

@@ -17,7 +17,7 @@ describe('createUser', () => {
       id: user.id,
       lnurlAuthKey: user.lnurlAuthKey,
       created: unixTimestampToDate(user.created),
-      permissions: '[]',
+      permissions: [],
     }))
   })
 })

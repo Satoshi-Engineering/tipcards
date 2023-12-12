@@ -1,6 +1,7 @@
+import type { AccessTokenPayload } from '@shared/data/auth'
+
 import NotFoundError from '@backend/errors/NotFoundError'
 import type Queries from '@backend/database/drizzle/Queries'
-
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set'
@@ -208,6 +209,21 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: UserRedis['
     id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
+  })
+  await createUser(user)
+  return user
+}
+
+export const initUserFromAccessTokenPayload = async (accessTokenPayload: AccessTokenPayload): Promise<UserRedis> => {
+  let user = await getUserById(accessTokenPayload.id)
+  if (user != null) {
+    return user
+  }
+  user = UserRedis.parse({
+    id: accessTokenPayload.id,
+    lnurlAuthKey: accessTokenPayload.lnurlAuthKey,
+    created: Math.floor(+ new Date() / 1000),
+    permissions: accessTokenPayload.permissions,
   })
   await createUser(user)
   return user

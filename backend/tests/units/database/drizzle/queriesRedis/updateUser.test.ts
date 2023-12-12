@@ -31,7 +31,7 @@ describe('updateUser', () => {
       id: user.id,
       lnurlAuthKey: user.lnurlAuthKey,
       created: unixTimestampToDate(user.created),
-      permissions: '[]',
+      permissions: [],
     }))
     expect(queries.insertOrUpdateProfile).toHaveBeenCalledWith(expect.objectContaining({
       user: user.id,

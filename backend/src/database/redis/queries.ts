@@ -1,5 +1,6 @@
 import { getClient, INDEX_USER_BY_LNURL_AUTH_KEY, INDEX_SETS_BY_USER_ID } from './client'
 
+import type { AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
 import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
@@ -228,6 +229,22 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: string): Pr
     id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
+  })
+  await createUser(user)
+  return user
+}
+
+/** @throws */
+export const initUserFromAccessTokenPayload = async (accessTokenPayload: AccessTokenPayload): Promise<User> => {
+  let user = await getUserById(accessTokenPayload.id)
+  if (user != null) {
+    return user
+  }
+  user = ZodUser.parse({
+    id: accessTokenPayload.id,
+    lnurlAuthKey: accessTokenPayload.lnurlAuthKey,
+    created: Math.floor(+ new Date() / 1000),
+    permissions: accessTokenPayload.permissions,
   })
   await createUser(user)
   return user

@@ -10,7 +10,7 @@ export const getDrizzleDataObjectsForRedisUser = async (userRedis: UserRedis): P
     id: userRedis.id,
     lnurlAuthKey: userRedis.lnurlAuthKey,
     created: unixTimestampToDate(userRedis.created),
-    permissions: JSON.stringify(userRedis.permissions),
+    permissions: userRedis.permissions,
   }
   const profile: Profile = {
     user: userRedis.id,

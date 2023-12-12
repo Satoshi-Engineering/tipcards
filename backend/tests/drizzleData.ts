@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto'
 
+import { AccessTokenPayload } from '@shared/data/auth'
+
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -110,7 +112,7 @@ export const createUser = (): User => ({
   id: randomUUID(),
   lnurlAuthKey: hashSha256(randomUUID()),
   created: new Date(),
-  permissions: JSON.stringify([]),
+  permissions: [],
 })
 
 export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
@@ -170,4 +172,10 @@ export const createUserCanUseImage = (user: User, image: Image, canEdit = false)
   user: user.id,
   image: image.id,
   canEdit,
+})
+
+export const createAccessTokenPayloadForUser = (user: User): AccessTokenPayload => ({
+  id: user.id,
+  lnurlAuthKey: user.lnurlAuthKey,
+  permissions: AccessTokenPayload.shape.permissions.parse(user.permissions),
 })

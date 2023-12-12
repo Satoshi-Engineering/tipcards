@@ -12,7 +12,7 @@ import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } 
 import { ErrorCode } from '@shared/data/Errors'
 
 import type { User } from '@backend/database/redis/data/User'
-import { getUserById, updateUser } from '@backend/database/queries'
+import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/queries'
 import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
@@ -220,6 +220,11 @@ export const validateJwt = async (jwt: string, audience: string): Promise<Access
   return ZodAccessTokenPayload.parse(payload)
 }
 
+/**
+ * validate access token.
+ * if the token is valid, we make sure a user with the given foreign key exists in the application database.
+ * if needed, a new user is created.
+ */
 export const authGuardAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   const host = req.get('host')
   if (typeof host !== 'string') {
@@ -242,6 +247,7 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
 
   try {
     const accessToken = await validateJwt(req.headers.authorization, host)
+    await initUserFromAccessTokenPayload(accessToken)
     res.locals.accessTokenPayload = accessToken
     next()
   } catch (error) {

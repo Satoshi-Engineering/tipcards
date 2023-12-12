@@ -8,7 +8,7 @@ import type {
 import type Queries from '@backend/database/drizzle/Queries'
 import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
-import type { Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User'
+import { type Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
 
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
@@ -173,7 +173,7 @@ export const redisUserFromDrizzleUser = async (queries: Queries, user: User): Pr
     availableLandingPages,
     allowedRefreshTokens,
     profile: redisProfileFromDrizzleProfile(profile),
-    permissions: [],
+    permissions: UserRedis.shape.permissions.parse(user.permissions),
   }
 }
 

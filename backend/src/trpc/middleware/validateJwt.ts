@@ -2,7 +2,9 @@ import { TRPCError } from '@trpc/server'
 import { errors } from 'jose'
 import { ZodError } from 'zod'
 
-import { validateJwt as validateJwtService } from '../../services/jwt'
+import { initUserFromAccessTokenPayload } from '@backend/database/queries'
+import { validateJwt as validateJwtService } from '@backend/services/jwt'
+
 import { validateAuthContext } from './validateAuthContext'
 
 const mapErrorToTRpcError = (error: unknown) => {
@@ -18,11 +20,16 @@ const mapErrorToTRpcError = (error: unknown) => {
 }
 
 /**
+ * validate access token.
+ * if the token is valid, we make sure a user with the given foreign key exists in the application database.
+ * if needed, a new user is created.
+ * 
  * @throws TRPCError
  */
 export const validateJwt = validateAuthContext.unstable_pipe(async ({ ctx, next }) => {
   try {
     const accessToken = await validateJwtService(ctx.jwt, ctx.host)
+    await initUserFromAccessTokenPayload(accessToken)
     return next({
       ctx: {
         host: ctx.host,
