@@ -6,21 +6,25 @@
         'bg-btcorange': status === 'funded',
         'bg-lightningpurple': status === 'used',
         'bg-red-500': status === 'error',
-        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding',
+        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw,
       }"
     />
     <div class="flex-1">
       <div class="flex justify-between">
         <a :href="url">
           <div v-if="(status === 'used' && usedDate != null)">
-            <strong>{{ t('cards.status.labelUsed', 1) }}:</strong>
+            <strong v-if="isLockedByBulkWithdraw">{{ t('cards.status.labelBulkWithdrawn', 1) }}:</strong>
+            <strong v-else>{{ t('cards.status.labelUsed', 1) }}:</strong>
             {{
               $d(usedDate * 1000, {
                 year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
               })
             }}
           </div>
-          <div v-if="((status === 'funded' || status === 'used') && fundedDate != null)">
+          <div v-else-if="isLockedByBulkWithdraw">
+            <strong>{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</strong>
+          </div>
+          <div v-else-if="((status === 'funded' || status === 'used') && fundedDate != null)">
             <strong v-if="status !== 'used'">{{ t('cards.status.labelFunded', 1) }}:</strong>
             <span v-else>{{ t('cards.status.labelFunded', 1) }}:</span>
             {{
@@ -50,7 +54,7 @@
         </div>
       </div>
       <div
-        v-if="note != null"
+        v-if="!!note"
       >
         {{ t('cards.status.labelNote') }}: <strong class="font-medium">{{ note }}</strong>
       </div>
@@ -96,6 +100,10 @@ defineProps({
     default: null,
   },
   viewed: {
+    type: Boolean,
+    default: false,
+  },
+  isLockedByBulkWithdraw: {
     type: Boolean,
     default: false,
   },

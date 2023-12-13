@@ -1,0 +1,45 @@
+build-backend:
+  stage: build
+  rules:
+    - !reference [.shared_config, rules, web_and_push]
+    - changes:
+      - backend/src/**/*
+      - backend/index.ts
+      - shared/**/*
+      - package-lock.json
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+    - !reference [.shared_config, cache, env_backend]
+  artifacts:
+    name: "backend-$CI_COMMIT_REF_SLUG"
+    paths:
+      - dist
+      - node_modules
+      - ecosystem.config.js
+      - .env
+      - tsconfig.json
+  script:
+    - npm run shared-build
+    - npm run backend-build
+    - cp backend/deploy/tsconfig.json .
+    - cp backend/deploy/ecosystem.config.js .
+    - if [ -f backend/.env ]; then cp backend/.env .; fi
+
+build-frontend:
+  stage: build
+  rules:
+    - !reference [.shared_config, rules, web_and_push]
+    - changes:
+      - frontend/**/*
+      - shared/**/*
+      - package-lock.json
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+    - !reference [.shared_config, cache, env_frontend]
+  artifacts:
+    name: "frontend-$CI_COMMIT_REF_SLUG"
+    paths:
+      - dist/frontend
+  script:
+    - npm run frontend-build
+    - VITE_BUILD_LIBS=1 npm run frontend-build

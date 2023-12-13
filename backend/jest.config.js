@@ -3,7 +3,9 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testPathIgnorePatterns : [
-    '<rootDir>/build',
-    '<rootDir>/node_modules',
   ],
+  moduleNameMapper: {
+    '^@backend/(.*)$': '<rootDir>/src/$1',
+    '^@shared/(.*)$': '<rootDir>/../shared/src/$1',
+  },
 }

@@ -1,3 +1,7 @@
+import z from 'zod'
+
+import { ErrorCode } from '@shared/data/Errors'
+
 let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
@@ -34,6 +38,66 @@ if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.l
   LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
 }
 
+let TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
+let TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
+
+let CORS_WHITELIST_EXTEND: string[] = []
+if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {
+  try {
+    CORS_WHITELIST_EXTEND = z.string().array().parse(JSON.parse(process.env.CORS_WHITELIST_EXTEND))
+  } catch (error) {
+    console.error(ErrorCode.UnableToParseEnvVar, {
+      error,
+      constant: 'CORS_WHITELIST_EXTEND',
+      envValue: process.env.CORS_WHITELIST_EXTEND,
+    })
+  }
+}
+
+export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
+export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
+export const STATISTICS_PREPEND_FILE = process.env.STATISTICS_PREPEND_FILE || undefined
+export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || undefined
+
+/////
+// LNURL JWT AUTH
+let JWT_AUTH_ORIGIN = TIPCARDS_API_ORIGIN
+if (typeof process.env.JWT_AUTH_ORIGIN === 'string' && process.env.JWT_AUTH_ORIGIN.length > 0) {
+  JWT_AUTH_ORIGIN = process.env.JWT_AUTH_ORIGIN
+}
+
+const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
+
+let JWT_AUTH_ISSUER = new URL(JWT_AUTH_ORIGIN).host
+if (typeof process.env.JWT_AUTH_ISSUER === 'string' && process.env.JWT_AUTH_ISSUER.length > 0) {
+  JWT_AUTH_ISSUER = process.env.JWT_AUTH_ISSUER
+}
+
+let JWT_AUTH_AUDIENCE = [new URL(TIPCARDS_API_ORIGIN).host]
+if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AUDIENCE.length > 0) {
+  try {
+    JWT_AUTH_AUDIENCE = z
+      .string().array()
+      .parse(JSON.parse(process.env.JWT_AUTH_AUDIENCE))
+  } catch (error) {
+    console.error(ErrorCode.UnableToParseEnvVar, {
+      error,
+      constant: 'JWT_AUTH_AUDIENCE',
+      envValue: process.env.JWT_AUTH_AUDIENCE,
+    })
+  }
+}
+
+/////
+// NGROK
+if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
+  TIPCARDS_ORIGIN = process.env.NGROK_OVERRIDE
+  TIPCARDS_API_ORIGIN = process.env.NGROK_OVERRIDE
+  JWT_AUTH_ORIGIN = process.env.NGROK_OVERRIDE
+  JWT_AUTH_ISSUER = new URL(process.env.NGROK_OVERRIDE).host
+  JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
+}
+
 export {
   EXPRESS_PORT,
   LNURL_PORT,
@@ -42,13 +106,12 @@ export {
   NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
   REDIS_URL,
-  LNBITS_ORIGIN
+  LNBITS_ORIGIN,
+  TIPCARDS_ORIGIN,
+  TIPCARDS_API_ORIGIN,
+  CORS_WHITELIST_EXTEND,
+  JWT_AUTH_ORIGIN,
+  JWT_AUTH_KEY_DIRECTORY,
+  JWT_AUTH_ISSUER,
+  JWT_AUTH_AUDIENCE,
 }
-
-export const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
-export const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
-export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
-export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
-export const STATISTICS_TOKENS = process.env.STATISTICS_TOKENS?.split(';') || []
-export const STATISTICS_PREPEND_FILE = process.env.STATISTICS_PREPEND_FILE || undefined
-export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || undefined

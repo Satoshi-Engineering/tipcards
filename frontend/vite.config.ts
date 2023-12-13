@@ -12,7 +12,10 @@ export default defineConfig(({ mode }) => {
     input: {
       'index': resolve(__dirname, 'index.html'),
     },
+    outDir: '../dist/frontend/',
+    commonjsOptions: { include: [/shared/, /node_modules/] },
   }
+
   if (env.BUILD_MAINTENANCE) {
     build = {
       input: {
@@ -27,16 +30,20 @@ export default defineConfig(({ mode }) => {
         name: 'externalCardStatus',
         fileName: 'externalCardStatus',
       },
-      outDir: 'dist-libs',
+      outDir: '../dist/frontend/',
     }
   }
 
   return {
     plugins: [vue(), createHtmlPlugin({ inject: { data: { env } } })],
+    optimizeDeps: {
+      include: [ 'shared' ],
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
-        '@root': fileURLToPath(new URL('../src', import.meta.url)),
+        '@shared': fileURLToPath(new URL('../shared/src', import.meta.url)),
+        '@backend': fileURLToPath(new URL('../backend/src', import.meta.url)),
         'crypto': './src/shims/crypto.ts',
       },
     },

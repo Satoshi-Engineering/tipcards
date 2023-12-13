@@ -1,18 +1,26 @@
-import express from 'express'
+import { Router } from 'express'
 
-import { getCardByHash, updateCard } from '../services/database'
-import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import type { Card } from '../../../src/data/Card'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
+import type { Card as CardApi } from '@shared/data/api/Card'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 
-const router = express.Router()
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { getCardByHash, updateCard } from '@backend/database/queries'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
-router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
-  let card: Card | null = null
+const router = Router()
+
+router.get('/')
+
+router.get('/:cardHash', async (req, res) => {
+  let card: CardApi | null = null
 
   // load card from database
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -51,7 +59,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       return
     }
   }
-  if (card.lnbitsWithdrawId == null) {
+  if (card.lnbitsWithdrawId == null && !card.isLockedByBulkWithdraw) {
     res.json({
       status: 'success',
       data: card,
@@ -88,7 +96,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   ) {
     card.landingPageViewed = Math.round(+ new Date() / 1000)
     try {
-      await updateCard(card)
+      await updateCard(cardRedisFromCardApi(card))
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
     }

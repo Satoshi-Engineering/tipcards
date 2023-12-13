@@ -7,9 +7,10 @@ const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
-const PageAuthDevelopment = () => import('@/pages/PageAuthDevelopment.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/PageStatistics.vue')
+const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
+const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,7 +34,6 @@ const router = createRouter({
           meta: {
             title: () => i18n.global.t('landing.title'),
             backlink: true,
-            backlinkOnlyInternalReferrer: true,
           },
         },
         {
@@ -90,15 +90,36 @@ const router = createRouter({
           },
         },
         {
-          path: 'auth',
-          name: 'auth',
-          component: PageAuthDevelopment,
+          path: 'user-account',
+          name: 'user-account',
+          component: PageUserAccount,
+          meta: {
+            title: () => i18n.global.t('userAccount.title'),
+            backlink: true,
+          },
         },
         {
           path: 'statistics',
           name: 'statistics',
           component: PageStatistics,
           meta: { title: () => 'Statistics' },
+        },
+        {
+          path: 'bulk-withdraw/:setId?/:settings?',
+          name: 'bulk-withdraw',
+          component: PageBulkWithdraw,
+          meta: {
+            title: () => i18n.global.t('bulkWithdraw.title'),
+            backlink: (route: RouteLocationNormalizedLoaded) => 
+              router.resolve({
+                name: 'cards',
+                params: {
+                  lang: route.params.lang,
+                  setId: route.params.setId,
+                  settings: route.params.settings,
+                },
+              }),
+          },
         },
       ],
     },

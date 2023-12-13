@@ -1,19 +1,24 @@
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
-import { getCardByHash } from '../services/database'
-import { checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '../constants'
-import type { Card } from '../../../src/data/Card'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import type { Card } from '@shared/data/api/Card'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
-const router = express.Router()
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { getCardByHash } from '@backend/database/queries'
+import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN } from '@backend/constants'
 
-const cardUsed = async (req: express.Request, res: express.Response) => {
+const router = Router()
+
+const cardUsed = async (req: Request, res: Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

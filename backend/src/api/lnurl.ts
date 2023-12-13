@@ -1,19 +1,19 @@
 import axios from 'axios'
 import express from 'express'
 
-import { getCardByHash } from '../services/database'
+import type { Card } from '@shared/data/api/Card'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { getCardByHash } from '@backend/database/queries'
 import {
   checkIfCardIsPaidAndCreateWithdrawId,
   checkIfCardIsUsed,
   getLnurlpForNewCard,
   getLnurlpForCard,
-} from '../services/lnbitsHelpers'
-import { LNBITS_ORIGIN } from '../constants'
-
-import type { Card } from '../../../src/data/Card'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { decodeLnurl } from '../../../src/modules/lnurlHelpers'
-import { loadLnurlsFromLnbitsByWithdrawId } from '../../../src/modules/lnbitsHelpers'
+  loadCurrentLnurlFromLnbitsByWithdrawId,
+} from '@backend/services/lnbitsHelpers'
 
 const router = express.Router()
 
@@ -25,7 +25,10 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   // load card from database
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -75,8 +78,17 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
+    if (card.invoice != null) {
+      res.status(400).json({
+        status: 'ERROR',
+        reason: 'This card has an invoice. Pay or reset the invoice first in your browser.',
+        code: ErrorCode.CannotCreateLnurlPCardHasInvoice,
+      })
+      return
+    }
+
     if (card.setFunding != null) {
-      res.status(500).json({
+      res.status(400).json({
         status: 'ERROR',
         reason: 'This card is being funded via set funding.',
         code: ErrorCode.CardNeedsSetFunding,
@@ -129,8 +141,7 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
 
   let lnurl = null
   try {
-    const lnurls = await loadLnurlsFromLnbitsByWithdrawId(LNBITS_ORIGIN, card.lnbitsWithdrawId)
-    lnurl = lnurls[0]
+    lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
   } catch (error) {
     console.error(ErrorCode.UnableToGetLnurl, error)
     res.status(500).json({

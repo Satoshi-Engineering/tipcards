@@ -1,20 +1,20 @@
 import { type Request, type Response, type NextFunction, Router } from 'express'
 
-import { ErrorCode } from '../../../src/data/Errors'
-import { ImageType, type ImageMeta } from '../../../src/data/Image'
+import { ErrorCode } from '@shared/data/Errors'
 
-import { getImageAsString, getImageMeta } from '../services/database'
+import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image'
+import { getImageAsString, getImageMeta } from '@backend/database/queries'
 
 const router = Router()
 
-export const crossOriginResources = async (req: Request, res: Response, next: NextFunction) => {
+export const crossOriginResources = async (_: Request, res: Response, next: NextFunction) => {
   if (process.env.CROSS_ORIGIN_RESOURCES === '1') {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
   }
   next()
 }
 
-router.get('/cardLogos/:image', crossOriginResources, async (req: Request, res: Response) => {
+router.get('/cardLogos/:image', crossOriginResources, async (req, res) => {
   const imageName = req.params.image
   const imageId = imageName.split('.')[0]
 
@@ -43,10 +43,10 @@ router.get('/cardLogos/:image', crossOriginResources, async (req: Request, res: 
     return
   }
 
-  if (imageMeta.type === ImageType.Svg) {
+  if (imageMeta.type === ImageType.enum.svg) {
     res.setHeader('Content-Type','image/svg+xml')
     res.end(image)
-  } else if (imageMeta.type === ImageType.Png) {
+  } else if (imageMeta.type === ImageType.enum.png) {
     res.setHeader('Content-Type','image/png')
     res.end(Buffer.from(image, 'base64'))
   }

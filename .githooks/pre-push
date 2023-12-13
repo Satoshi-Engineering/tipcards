@@ -7,11 +7,3 @@ npm audit
 npm run lint
 npm run typecheck
 npm run test-units
-cd frontend && npm audit
-npm run lint
-npm run typecheck
-npm run test-units
-cd ../backend && npm audit
-npm run typecheck
-npm run test-units
-cd ..

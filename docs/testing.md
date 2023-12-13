@@ -7,6 +7,9 @@
   * Card copytext
   * Change logo
   * Set name
+* Save the set
+* Reload page and go to saved set
+* Edit and save set
 * Check print preview
 * Download PNGs (is the QR codes logo correctly rendered)
 * Set funding
@@ -34,5 +37,3 @@
   * -> Check status on cards page
 * Withdraw directly by scanning card QR code with wallet
   * -> Check status on cards page
-
-  

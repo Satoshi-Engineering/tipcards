@@ -1,23 +1,14 @@
 {
-  "ts-node": {
-    "files": true
-  },
+  "extends": "./tsconfig.base.json",
   "include": [
     "./index.ts",
-    "./cli.ts",
     "./src/**/*.ts",
-    "./src/**/*.json"
+    "./tests/**/*.ts",
   ],
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
-    "outDir": "./build",
-    "esModuleInterop": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types"
-    ]
-  }
+    "types": ["node", "jest"]
+  },
+  "references": [
+    { "path" : "../shared/tsconfig.json" }
+  ]
 }

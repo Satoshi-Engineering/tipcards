@@ -9,5 +9,7 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@backend/(.*)$': '<rootDir>/../backend/src/$1',
+    '^@shared/(.*)$': '<rootDir>/../shared/src/$1',
   },
 }

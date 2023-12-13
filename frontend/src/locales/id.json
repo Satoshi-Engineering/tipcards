@@ -1,0 +1,355 @@
+{
+  "general": {
+    "back": "kembali",
+    "cards": "{count} kartu | {count} kartu",
+    "userAccount": "akun",
+    "login": "Login"
+},
+  "nav": {
+    "index": "indeks",
+    "cards": "kartu",
+    "preview": "Pratinjau",
+    "about": "Tentang"
+  },
+  "footer": {
+    "support": "Punya pertanyaan, umpan balik, masalah atau menemukan bug? Hubungi kami di {email}."
+  },
+  "landing": {
+    "title": "Dapatkan Bitcoin kamu",
+    "titlePreview": "Pratinjau – Dapatkan Bitcoin kamu",
+    "introGreeting": "Hai!",
+    "introMessageReceiveBtc": {
+      "message": "Di sini kamu bisa mendapatkan {amountAndUnit}.",
+      "amountAndUnit": "{amount} Bitcoin",
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
+      "footnote": "melalui Lightning"
+    },
+    "introMessagePreview": {
+      "headline": "Pindai Lightning Tip Card untuk menerima Bitcoin.",
+      "message": "kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+    },
+    "introMessageAlreadyUsed": {
+      "headline": "QR Code ini tampaknya sudah ditukarkan.",
+      "message": "Tapi jangan khawatir: kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+    },
+    "introMessageJustReceived": {
+      "headline": "QR Code kamu baru saja ditukarkan. {emoji}",
+      "message": "kamu bisa mendapatkan lebih banyak Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+    },
+    "sectionBitcoin": {
+      "paragraphs": {
+        "0": "Bitcoin adalah <strong>mata uang digital</strong>.",
+        "1": "Dikelola oleh semua peserta jaringan Bitcoin, yang berarti tidak dikontrol oleh bank sentral, pemerintah, atau perusahaan manapun.",
+        "2": "Cara transfer bitcoin (termasuk transfer internasional) semudah memindai QR Code. Coba saja!"
+      }
+    },
+    "sectionWallet": {
+      "headline": "Instal Wallet",
+      "explanation": "Untuk menerima, menyimpan, dan membelanjakan Bitcoin, kamu memerlukan <strong>Lightning Wallet</strong>.<br>Untuk pemakaian sehari-hari dan dalam jumlah kecil, penggunaan aplikasi smartphone akan lebih nyaman.",
+      "recommendation": "Untuk pemula, kami menyarankan {walletOfSatoshi}.",
+      "button": "Unduh Wallet of Satoshi",
+      "other": "kamu juga bisa mencoba {wallet0}, {wallet1}, {wallet2} atau wallet lainnya*.",
+      "otherFootnote": "* yang kompatibel dengan Lightning dan LNURL"
+    },
+    "sectionReceive": {
+      "headline": "Dapatkan Bitcoin kamu",
+      "statusNormal": {
+        "explanation": "Segera setelah wallet kamu terinstal,",
+        "step1": "<strong>tekan</strong> QR Code di bawah ini atau",
+        "step2": "<strong>pindai</strong> QR Code di Tip Card kamu lagi<br>(dengan aplikasi wallet kamu)"
+      },
+      "statusReceived": {
+        "congrats": "Selamat!",
+        "message": "Bitcoin telah ditransfer ke wallet kamu."
+      }
+    },
+    "sectionUse": {
+      "headline": "Gunakan Bitcoin kamu",
+      "message": "kamu sekarang bisa membeli sesuatu di toko atau situs web yang menerima Bitcoin. Atau kamu bisa mentransfernya ke Lightning Wallet teman atau kolega. Atau cukup simpan saja.",
+      "messageFootnote": "* hodln = menyimpan, menabung",
+      "examplesIntro": "Berikut adalah beberapa tautan situs tempat kamu bisa menggunakan Bitcoin:",
+"examples": {
+  "saltNDaisy": "Beli granola yang sustainabel",
+  "satoshistore": "Beli baju Bitcoin yang keren",
+  "aprycotMedia": "Buku, media & lainnya tentang Bitcoin",
+  "copiaro": "Hardwarewallet & alat HODL",
+  "lightningnetworkstores": "Temukan apa yang dapat kamu lakukan secara online",
+  "coinpages": "Cari toko yang menerima Bitcoin"
+},
+"createYourOwnTipCardsHeadline": "Buat Kartu Tip Sendiri ⚡",
+"createYourOwnTipCardsText": "Kamu ingin memberi teman atau kenalan beberapa Sats (1 Sat = 0,00000001 Bitcoin) atau memberi tip Bitcoin kepada seseorang? Klik tombol berikut dan konfigurasikan Kartu Tip kamu sendiri.",
+"createYourOwnTipCardsButton": "Buat Kartu Tip aku Sendiri"
+},
+"sectionMore": {
+  "headline": "Lebih banyak tentang Bitcoin",
+  "text": "Ada banyak cara untuk mempelajari lebih lanjut tentang Bitcoin.",
+  "0": {
+    "text": "<strong>Memahamii Bitcoin</strong> adalah podcast berbahasa Jerman untuk pemula Bitcoin dan yang sudah advanced.",
+    "linkLabel": "Memahami Bitcoin",
+    "linkHref": "https://bitcoinverstehen.info/"
+  },
+  "1": {
+    "text": "<strong>Aprycot Media</strong> adalah penerbit Jerman yang mengkhususkan diri dalam literatur Bitcoin. Di sini kamu dapat menemukan segalanya mulai dari buku hingga postingan blog dan koleksi tautan yang luas untuk memahami Bitcoin lebih baik.",
+    "linkLabel": "Perpustakaan Aprycot Media",
+    "linkHref": "https://aprycot.media/thek/"
+  }
+},
+"bulkWithdrawExists": "Sats dari Kartu Tip ini sedang ditarik kembali. Jika kamu ingin menggunakan kartu ini, kamu harus membatalkan pengambilan kembali.",
+"bulkWithdrawPending": "Sats dari Kartu Tip ini sedang ditarik kembali. Jika ini memakan waktu lebih dari beberapa menit, silakan hubungi support.",
+"bulkWithdrawResetError": "Terjadi kesalahan saat membatalkan pengambilan kembali.",
+"errors": {
+  "errorInvalidLnurl": "Sepertinya LNURL tidak berasal dari Kartu Tip yang valid.",
+  "errorInvalidLandingPage": "Halaman khusus tidak dapat dimuat."
+}
+},
+"funding": {
+  "title": "Isi ulang Kartu Tip",
+  "headline": "Isi ulang Kartu Tip",
+  "headlineFunded": "Kartu Tip telah diisi ulang",
+  "headlineUsed": "Kartu Tip telah digunakan",
+  "headlineSetFunding": "Pendanaan Kartu Tip",
+  "text": "Kartu Tip ini belum diisi dengan Sats. Tentukan jumlah yang ingin kamu muat dan tulis pesan apa yang ingin dilihat penerima di dompet mereka.",
+  "textFunded": "Kartu telah diisi dengan {amountAndUnit} dan dapat diberikan.",
+  "textUsed": "Kartu telah diisi dengan {amountAndUnit} dan telah digunakan.",
+  "textSetFunding": "Kartu akan diisi bersama dengan seluruh set. Bayar invoice untuk set tersebut untuk melanjutkan.",
+  "amountAndUnit": "{amount} BTC",
+  "form": {
+    "textHint": "Ditampilkan di dompet penerima",
+    "notePlaceholder": "Catatan / diberikan kepada",
+    "noteHint": "Ditampilkan di area status halaman ikhtisar Kartu Tip",
+    "button": "Isi sekarang"
+  },
+  "invoiceText": "Isi {amount} Sats ke Kartu Tip kamu:",
+  "invoiceExpired": "Invoice untuk kartu ini telah kedaluwarsa. Atur ulang Kartu Tip untuk melanjutkan.",
+  "resetInvoice": "Atur ulang Kartu Tip",
+  "resetDisabledTooltip": "Kartu Tip ini telah diisi dengan Sats.",
+  "lnurlp": {
+    "text": "Untuk mengisi Kartu Tip, pindai kode QR dengan aplikasi dompet atau klik {buttonOpenInWallet} dan masukkan jumlah yang diinginkan di aplikasi."
+  },
+  "lnurlpExpired": "Fungsi pengisian Kartu Tip ini sayangnya telah kedaluwarsa. Atur ulang untuk melanjutkan.",
+
+  "lnurlpFundedExpired": "Fungsi pengisian Kartu Tip ini sayangnya telah kedaluwarsa. Selesaikan untuk melanjutkan.",
+  "shared": {
+    "text": "Kartu Tip ini dapat diisi bersama oleh beberapa orang. Pindai/bayar kode QR sebanyak yang kamu inginkan dan setelah itu {buttonFinish}.",
+    "textEmpty": "Saat ini tidak ada Sats di kartu. Setelah kartu diisi setidaknya sekali, pengisian dapat diselesaikan.",
+    "textPartiallyFunded": "Kartu telah diisi dengan {amountAndUnit}. Setelah kamu menyelesaikan pengisian, Bitcoin dapat dipakai.",
+    "buttonFinish": "Selesaikan Pengisian",
+    "finishDisabledTooltip": "Kartu harus diisi terlebih dahulu.",
+    "buttonMakeShared": "Isi Kartu Tip bersama-sama"
+  }
+},
+"setFunding": {
+  "title": "Isi Set",
+  "headline": "Isi Set",
+  "setName": "Nama Set: {setName}",
+  "amountAndUnit": "{amount} BTC",
+  "text": "Ada {numberOfCardsToFund} kartu dalam set ini yang dapat diisi sekaligus. Tentukan jumlah per kartu dan pesan yang ingin dilihat penerima di dompet mereka. Totalnya adalah {amountAndUnit}.",
+  "textFundingNotPossible": "Ada kartu yang telah digunakan dalam set ini. Buat set baru untuk mengisi semua kartu sekaligus.",
+  "invoiceText": "Bayar invoice sebesar {amountAndUnit} untuk mengisi {numberOfCardsToFund} kartu.",
+  "textFunded": "Semua {numberOfCardsToFund} kartu dalam set ini telah diisi dengan {amountAndUnitPerCard} masing-masing.",
+  "form": {
+    "amountLabel": "Jumlah per kartu",
+    "smallAmountWarning": "Peringatan: Jumlah kecil per kartu dapat menyebabkan masalah bagi penerima saat mengambil Sats mereka. Kami menyarankan minimum 210 sats per kartu.",
+    "totalAmountLabel": "Total",
+    "textHint": "Ditampilkan di dompet penerima",
+    "notePlaceholder": "Catatan / diberikan kepada",
+    "noteHint": "Ditampilkan di area status halaman ikhtisar Kartu Tip",
+    "landingPagesHeadline": "Landing Page",
+    "landingPagesHint": "Halaman ini ditampilkan saat memindai kartu yang telah diisi.",
+    "button": "Isi Set"
+  },
+  "resetInvoice": "Atur ulang Set Invoice",
+  "resetDisabledTooltip": "Set ini telah diisi",
+  "backToSet": "Kembali ke Set"
+},
+"index": {
+  "buttonLogin": "Masuk dengan LNURL-Auth",
+  "buttonCreate": "Buat Set Kartu Tip kamu",
+  "savedCardsSetsHeadline": "Set Kartu Tip Tersimpan",
+  "noSavedCardsSetsMessage": "kamu belum memiliki set yang tersimpan",
+  "unnamedSetNameFallback": "Set Tanpa Nama",
+  "youtube": {
+    "create": {
+      "label": "Buat",
+      "link": "https://www.youtube.com/watch?v=JMWGQs2Wc3U"
+    },
+    "use": {
+      "label": "Gunakan",
+      "link": "https://www.youtube.com/watch?v=3RMr8KOk7d8"
+    }
+  }
+},
+"cards": {
+  "title": "Set Kartu Tip",
+  "status": {
+    "headline": "Status",
+    "noCards": "Belum ada kartu yang diisi. Status kartu dalam set ini akan ditampilkan di sini setelah kartu pertama diisi.",
+    "labelUsed": "Digunakan",
+    "labelBulkWithdrawn": "Ditarik Kembali",
+    "labelFunded": "Diisi",
+    "labelPendingFunding": "Menunggu Pembayaran",
+    "labelPendingSharedFunding": "Diisi Bersama",
+    "labelPendingSetFunding": "Diisi dengan Set",
+    "labelIsLockedByBulkWithdraw": "Sedang Ditarik Kembali",
+    "labelNote": "Catatan",
+    "labelViewed": "Telah Dilihat",
+    "reload": "Muat Ulang"
+  },
+    "settings": {
+      "headline": "Konfigurasi",
+      "numberOfCards": "Jumlah",
+      "cardHeadline": "Judul Kartu",
+      "cardText": "Teks Kartu",
+      "cardQrCodeLogoLabel": "Logo pada kode QR",
+      "cardQrCodeLogo": {
+        "noLogo": "Tanpa Logo"
+      },
+      "defaults": {
+        "cardHeadline": "Hei :)",
+        "cardCopytext": "Tip untukmu. 🎉\nScan kode QR dan ketahui cara mendapatkan Bitcoin-mu.",
+        "invoiceText": "Selamat bersenang-senang dengan Bitcoin :)"
+      }
+    },
+    "actions": {
+      "headline": "Aksi",
+      "printHeadline": "Cetak",
+      "buttonPrint": "Cetak Tip Cards",
+      "buttonDownloadPngs": "Unduh PNG",
+      "setName": "Nama Set",
+      "saveHeadline": "Simpan",
+      "buttonSaveCardsSet": "Simpan Set",
+      "buttonSaveDisabledTooltip": "Kamu hanya dapat menyimpan set baru jika kamu telah login. Sebagai alternatif, kamu juga bisa menggunakan URL untuk mengakses set ini lagi nanti.",
+      "buttonDeleteCardsSet": "Hapus Set",
+      "saveSetConfirm": "Set Tip Cards saat ini akan disimpan secara lokal di browser ini (localStorage digunakan).\n\nKamu juga dapat menggunakan URL (lihat di bilah alamat browser) untuk mengakses kembali set Tip Cards ini nanti.\n\nApakah kamu ingin menyimpan?",
+      "deleteSetConfirm": "Apakah kamu yakin ingin menghapus setelan Tip Cards saat ini dari browser?",
+      "deleteSetOnServerConfirm": "Apakah kamu ingin menghapus set Tip Cards saat ini dari server?",
+      "setFunding": {
+        "headline": "Isi ulang semua",
+        "intro": "Kamu dapat mengisi ulang Tip Cards satu per satu dengan memindai kode QR kartu baru. Jika kamu ingin mengisi ulang semua kartu dalam satu set sekaligus, gunakan fitur 'Isi ulang Set'.",
+        "label": "Isi ulang semua kartu sekaligus",
+        "button": "Isi ulang Set",
+        "disabledReason": "Set ini sudah mengandung kartu yang telah digunakan. Buat set baru untuk mengisi ulang semua kartu sekaligus."
+      },
+      "bulkWithdraw": {
+        "headline": "Tarik kembali Sats yang tidak ditukarkan",
+        "intro": "Jika kamu ingin menarik kembali semua Satoshi yang tersisa dari set ini sekaligus, klik 'Tarik Sats'.",
+        "label": "Tarik semua Sats sekaligus",
+        "button": "Tarik Sats",
+        "disabledReason": "Tidak ada kartu yang telah diisi dalam set ini."
+      }
+    },
+    "cards": {
+      "headline": "Tip Cards",
+      "filterLabel": "Filter Kartu:",
+      "filter": {
+        "all": "Semua",
+        "unfunded": "Belum Diisi",
+        "funded": "Telah Diisi",
+        "used": "Telah Ditukarkan"
+      }
+    },
+    "errors": {
+      "unableToSaveSet": "Set tidak dapat disimpan di server.",
+      "unableToDeleteSet": "Set tidak dapat dihapus dari server."
+    }
+  },
+  "userAccount": {
+    "title": "Akunmu",
+    "form": {
+      "accountName": "Nama Akun",
+      "accountNameHint": "Label akun internal, jika kamu menggunakan beberapa akun/Node Lightning.",
+      "displayName": "Nama Tampilan",
+      "displayNameHint": "Untuk fitur yang akan datang. Digunakan hanya jika kamu ingin menampilkan namamu kepada pengguna Tip Cards lainnya.",
+      "emailAddress": "Alamat E-mail",
+      "emailAddressHint": "Untuk keadaan saat kamu kehilangan perangkat atau dompet Lightning yang digunakan untuk autentikasi.",
+      "save": "Simpan"
+    },
+    "logoutAllOtherDevicesHint": "Proses ini dapat memakan waktu hingga 5 menit agar perubahan ini berlaku pada perangkat lain.",
+    "errors": {
+      "unableToFetchProfile": "Data profil tidak dapat dimuat. Coba lagi atau periksa koneksi internetmu.",
+      "unableToSaveProfile": "Data profil tidak dapat disimpan. Coba lagi atau periksa koneksi internetmu.",
+      "unableToLogoutAllOtherDevices": "Terjadi kesalahan saat logout dari perangkat lain. Coba lagi atau periksa koneksi internetmu."
+    }
+  },
+  "lightningQrCode": {
+    "buttonOpenInWallet": "Buka di Dompet",
+    "copyToClipboard": {
+      "lnurl": {
+        "beforeCopy": "Kamu dapat {action} untuk memasukkannya ke dompetmu.",
+        "beforeCopyAction": "juga menyalin LNURL,",
+        "afterCopySuccess": "Berhasil disalin.",
+        "afterCopyNextStep": "Sekarang masukkan<br>ke aplikasi dompetmu :)"
+      },
+      "invoice": {
+        "beforeCopy": "Kamu dapat {action} untuk memasukkannya ke dompetmu.",
+        "beforeCopyAction": "juga menyalin invoice,",
+        "afterCopySuccess": "Berhasil disalin.",
+        "afterCopyNextStep": "Sekarang masukkan<br>ke aplikasi dompetmu :)"
+      }
+    }
+  },
+  "auth": {
+    "modalLogin": {
+      "headline": "Login dengan LNURL-Auth",
+      "text": "Kamu memerlukan aplikasi yang mendukung LNURL-Auth.",
+      "loginErrorText": "Ada yang salah. Silakan coba lagi atau hubungi dukungan.",
+      "cookieWarning": "Loginmu akan disimpan sebagai cookie di browser sampai kamu logout.",
+      "emailHint": "Untuk keadaan saat kamu kehilangan perangkat atau dompet Lightning yang digunakan untuk autentikasi, kamu dapat menyimpan alamat emailmu.",
+      "emailCta": "Masukkan alamat email di halaman akun",
+      "close": "Tutup"
+    },
+    "buttonLogout": "Logout",
+    "buttonLogoutAllOtherDevices": "Logout semua perangkat lain",
+    "errors": {
+      "refreshTokenExpired": "Loginmu telah kedaluwarsa. Ini terjadi secara otomatis jika kamu tidak aktif selama 28 hari.",
+      "refreshTokenDenied": "Kamu telah logout dari perangkat lain.",
+      "refreshTokenDefaultError": "Kamu telah logout."
+    }
+  },
+  "stores": {
+    "cardsSets": {
+      "errors": {
+        "unableToLoadSetsFromBackend": "Set dari server tidak dapat dimuat.",
+        "unableToMigrateSets": "Migrasi gagal. Kamu dapat menghapus set secara manual dan menyimpannya kembali saat login atau hubungi dukungan.",
+        "setBelongsToAnotherUser": "Set tak bernama tidak dapat disimpan di server karena sudah dimiliki oleh pengguna lain.",
+        "namedSetBelongsToAnotherUser": "\"{name}\" tidak dapat disimpan di server karena sudah dimiliki oleh pengguna lain."
+      }
+    }
+  },
+  "components": {
+    "modalResolveLocalStorage": {
+      "headline": "Transfer Set Tip Cards",
+      "text": "Set Tip Cards-mu saat ini disimpan secara lokal di browser. Transfer ke akunmu untuk mengaksesnya dari semua perangkatmu.",
+      "migrate": "Transfer Set",
+      "logout": "Logout",
+      "confirmMigrate": "Transfer sekarang?"
+    }
+  },
+  "localStorageDeprecation": {
+    "loginCta": "{loginCtaAction}, untuk menyimpan set-mu secara permanen.",
+    "loginCtaAction": "Login",
+    "setSavedLocally": "Set ini disimpan secara lokal di browser.",
+    "moreInfo": "Info Lebih Lanjut",
+    "modalHeadline": "Simpan set-mu secara permanen",
+    "modalText": "Set Tip Cards-mu saat ini disimpan secara lokal di browser. Ini berarti kamu hanya dapat melihatnya di perangkat ini. Login untuk menyimpan set-mu di akunmu dan akses dari semua perangkatmu.",
+    "modalDeprecationHint": "Set lokalmu akan tetap terlihat di halaman utama hingga 31 Januari 2024. Pastikan untuk mentransfernya ke akunmu sebelum waktu tersebut. Jangan khawatir: Akan ada cara untuk memulihkan set lama-mu setelah itu. Atau, kamu juga bisa menyimpan link set sebagai bookmark.",
+    "modalLogin": "Transfer Set",
+    "modalClose": "Nanti"
+  },
+"bulkWithdraw": {
+    "title": "Mengambil Kembali Sats",
+    "headline": "Mengambil Kembali Sats",
+    "setName": "Nama Set: {setName}",
+    "amountAndUnit": "{amount} BTC",
+    "withdrawExists": "Pengambilan kembali Sats yang tersisa sudah dimulai. kamu harus membatalkan dan memulai ulang untuk menampilkan kode QR baru.",
+    "withdrawPending": "Pengambilan kembali Sats yang tersisa sudah dimulai. Tunggu sampai ini tiba di dompet Lightning kamu. Jika ini memakan waktu lebih dari beberapa menit, silakan hubungi dukungan.",
+    "buttonReset": "Batalkan Pengambilan Kembali",
+    "buttonRestart": "Mulai Ulang Pengambilan Kembali",
+    "noFundedCards": "Tidak ada Tip Cards yang telah diisi dalam set ini.",
+    "description": "Pindai kode QR yang ditampilkan untuk mengambil kembali Sats dari Tip Cards yang dipilih.",
+    "buttonCreate": "Ambil Kembali Sekarang",
+    "genericErrorMessage": "Terjadi kesalahan.",
+    "reload": "Muat Ulang"
+  }
+}

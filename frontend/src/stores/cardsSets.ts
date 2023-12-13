@@ -2,11 +2,11 @@ import axios from 'axios'
 import { defineStore, storeToRefs } from 'pinia'
 import { computed, ref, nextTick, watch } from 'vue'
 
-import type { Settings, Set } from '@root/data/Set'
-import { ErrorCode } from '@root/data/Errors'
+import type { Settings, Set } from '@shared/data/api/Set'
+import { ErrorCode } from '@shared/data/Errors'
 
 import i18n from '@/modules/initI18n'
-import { useUserStore } from '@/stores/user'
+import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 const { t } = i18n.global
@@ -96,6 +96,10 @@ const toSet = (set: SetWithEncodedSettings): Set => {
     settings: decodeCardsSetSettings(set.settings),
     created,
     date: Math.floor(+ new Date(set.date) / 1000),
+    userId: null,
+    text: '',
+    note: '',
+    invoice: null,
   }
 }
 
@@ -212,8 +216,8 @@ const deleteSetFromServer = async (setId: string) => {
 /////
 // store
 export const useCardsSetsStore = defineStore('cardsSets', () => {
-  const userStore = useUserStore()
-  const { isLoggedIn } = storeToRefs(userStore)
+  const authStore = useAuthStore()
+  const { isLoggedIn } = storeToRefs(authStore)
 
   const subscribed = ref(false)
   const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []

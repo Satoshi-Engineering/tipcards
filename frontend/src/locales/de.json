@@ -1,7 +1,9 @@
 {
   "general": {
     "back": "Zurück",
-    "cards": "{count} Karte | {count} Karten"
+    "cards": "{count} Karte | {count} Karten",
+    "userAccount": "Account",
+    "login": "Login"
   },
   "nav": {
     "index": "Home",
@@ -88,11 +90,14 @@
         "linkHref": "https://bitcoinverstehen.info/"
       },
       "1": {
-        "text": "Die <strong>BTC23</strong> ist die größte Bitcoin-Konferenz im deutschsprachigen Raum und findet von 14. bis 17. September 2023 in Innsbruck (Österreich) statt. Mit dem Gutscheincode \"<b>tipcards</b>\" bekommst du 5% Rabatt auf dein Ticket.",
-        "linkLabel": "Hol dir hier dein Ticket für die BTC23",
-        "linkHref": "https://pretix.eu/btc/23/c/bPCDAshzq/"
+        "text": "<strong>Aprycot Media</strong> ist ein deutscher Verlag, der sich auf Bitcoin-Literatur spezialisiert hat. Hier findest du von Büchern über Blog-Posts bis hin zu einer umfangreichen Linksammlung alles was du brauchst um Bitcoin besser zu begreifen.",
+        "linkLabel": "Aprycot Mediathek",
+        "linkHref": "https://aprycot.media/thek/"
       }
     },
+    "bulkWithdrawExists": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Wenn du die Karte verwenden möchtest, musst du das Zurückholen abbrechen.",
+    "bulkWithdrawPending": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
+    "bulkWithdrawResetError": "Beim Abbruch des Zurückholens ist ein Fehler aufgetreten.",
     "errors": {
       "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card.",
       "errorInvalidLandingPage": "Benutzerdefinierte Seite konnte nicht geladen werden."
@@ -161,7 +166,7 @@
     "buttonLogin": "Einloggen mit LNURL-Auth",
     "buttonCreate": "Erstelle dein Tip Cards-Set",
     "savedCardsSetsHeadline": "Gespeicherte Tip Cards-Sets",
-    "noSavedCardsSetsMessage": "In diesem Browser sind derzeit keine Tip Cards-Sets gespeichert",
+    "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set",
     "youtube": {
       "create": {
@@ -180,10 +185,12 @@
       "headline": "Status",
       "noCards": "Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.",
       "labelUsed": "Eingelöst",
+      "labelBulkWithdrawn": "Zurückgeholt",
       "labelFunded": "Aufgeladen",
       "labelPendingFunding": "Warte auf Bezahlung",
       "labelPendingSharedFunding": "Wird gemeinsam aufgeladen",
       "labelPendingSetFunding": "Wird mit dem Set aufgeladen",
+      "labelIsLockedByBulkWithdraw": "Wird zurückgeholt",
       "labelNote": "Notiz",
       "labelViewed": "Wurde angesehen",
       "reload": "Aktualisieren"
@@ -211,6 +218,7 @@
       "setName": "Set-Name",
       "saveHeadline": "Speichern",
       "buttonSaveCardsSet": "Set speichern",
+      "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL verwenden, um später erneut auf dieses Set zuzugreifen.",
       "buttonDeleteCardsSet": "Set löschen",
       "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
       "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
@@ -221,6 +229,13 @@
         "label": "Alle Karten auf einmal aufladen",
         "button": "Set aufladen",
         "disabledReason": "In diesem Set befinden sich bereits verwendete Karten. Erstelle ein neues Set, um alle Karten auf einmal aufzuladen."
+      },
+      "bulkWithdraw": {
+        "headline": "Nicht eingelöste Sats zurückholen",
+        "intro": "Wenn du alle verbleibenden Satoshis dieses Sets auf einmal zurückholen möchtest, klicke auf \"Sats zurückholen\".",
+        "label": "Alle Sats auf einmal zurückholen",
+        "button": "Sats zurückholen",
+        "disabledReason": "In diesem Set befinden sich keine aufgeladenen Karten."
       }
     },
     "cards": {
@@ -236,6 +251,24 @@
     "errors": {
       "unableToSaveSet": "Das Set konnte nicht am Server gespeichert werden.",
       "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden."
+    }
+  },
+  "userAccount": {
+    "title": "Dein Account",
+    "form": {
+      "accountName": "Accountname",
+      "accountNameHint": "Interne Account Bezeichnung, falls du mehrere Accounts/Lightning Nodes benutzt.",
+      "displayName": "Anzeigename",
+      "displayNameHint": "Für zukünftige Features. Wird nur verwendet falls du anderen Tip Cards Nutzern deinen Namen anzeigen möchtest.",
+      "emailAddress": "E-Mail-Adresse",
+      "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
+      "save": "Speichern"
+    },
+    "logoutAllOtherDevicesHint": "Es kann bis zu 5 Minuten dauern, bis diese Änderung auf den anderen Geräten wirksam wird.",
+    "errors": {
+      "unableToFetchProfile": "Profildaten konnten nicht geladen werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
+      "unableToSaveProfile": "Profildaten konnten nicht gespeichert werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
+      "unableToLogoutAllOtherDevices": "Beim Logout deiner anderen Geräte ist ein Fehler aufgetreten. Versuche es erneut oder überprüfe deine Internetverbindung."
     }
   },
   "lightningQrCode": {
@@ -258,11 +291,20 @@
   "auth": {
     "modalLogin": {
       "headline": "Login mit LNURL-Auth",
-      "text": "Einloggen und tolle neue Features verwenden! Du benötigst eine App die LNURL-Auth unterstützt.",
+      "text": "Du benötigst eine App, die LNURL-Auth unterstützt.",
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
-      "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert."
+      "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert.",
+      "emailHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast, kannst du deine E-Mail-Adresse hinterlegen.",
+      "emailCta": "E-Mail-Adresse auf der Account-Seite eintragen",
+      "close": "Schließen"
     },
-    "buttonLogout": "Ausloggen"
+    "buttonLogout": "Ausloggen",
+    "buttonLogoutAllOtherDevices": "Alle anderen Geräte ausloggen",
+    "errors": {
+      "refreshTokenExpired": "Dein Login ist abgelaufen. Dies passiert automatisch wenn du 28 Tage lang nicht aktiv warst.",
+      "refreshTokenDenied": "Du hast dich auf einem anderen Gerät ausgeloggt.",
+      "refreshTokenDefaultError": "Du wurdest ausgeloggt."
+    }
   },
   "stores": {
     "cardsSets": {
@@ -276,11 +318,37 @@
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Sets im Browser (LocalStorage)",
-      "text": "Du hast Sets im Browser gespeichert. Um die LNURL-Auth Funktionalität zu nutzen müssen wir diese Sets auf dem Server speichern. Drücke dafür den Button \"Migrieren\". Alternativ kannst du dich auch wieder ausloggen und die Sets vorher löschen.",
-      "migrate": "Migrieren",
+      "headline": "Tip Cards-Sets übertragen",
+      "text": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Übertrage sie in deinen Account um von all deinen Geräten darauf zugreifen zu können.",
+      "migrate": "Sets übertragen",
       "logout": "Ausloggen",
-      "confirmMigrate": "Jetzt migrieren?"
+      "confirmMigrate": "Jetzt übertragen?"
     }
+  },
+  "localStorageDeprecation": {
+    "loginCta": "{loginCtaAction}, um deine Sets dauerhaft zu speichern.",
+    "loginCtaAction": "Log dich ein",
+    "setSavedLocally": "Dieses Set ist lokal im Browser gespeichert.",
+    "moreInfo": "Mehr Infos",
+    "modalHeadline": "Speichere deine Sets dauerhaft",
+    "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
+    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
+    "modalLogin": "Sets übertragen",
+    "modalClose": "Später"
+  },
+  "bulkWithdraw": {
+    "title": "Sats zurückholen",
+    "headline": "Sats zurückholen",
+    "setName": "Set-Name: {setName}",
+    "amountAndUnit": "{amount} BTC",
+    "withdrawExists": "Das Zurückholen der verbleibenden Sats wurde bereits gestartet. Du musst abbrechen und neu starten, um einen neuen QR-Code anzuzeigen.",
+    "withdrawPending": "Das Zurückholen der verbleibenden Sats wurde bereits gestartet. Warte bis diese in deiner Lightning Wallet angekommen sind. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
+    "buttonReset": "Zurückholen abbrechen",
+    "buttonRestart": "Zurückholen neu starten",
+    "noFundedCards": "In diesem Set befinden sich keine aufgeladenen Tip Cards.",
+    "description": "Scanne den angezeigten QR-Code, um die Sats der ausgewählten Tip Cards zurückzuholen.",
+    "buttonCreate": "Jetzt zurückholen",
+    "genericErrorMessage": "Es ist ein Fehler aufgetreten.",
+    "reload": "Reload"
   }
 }

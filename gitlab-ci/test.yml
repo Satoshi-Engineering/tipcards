@@ -1,0 +1,13 @@
+test:
+  stage: test
+  rules:
+    - !reference [.shared_config, rules, web_and_push]
+    - when: always
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  script:
+    - npm audit
+    - npm run lint
+    - npm run typecheck
+    - npm run backend-test-units -- --maxWorkers=2
+    - npm run frontend-test-units -- --maxWorkers=2

@@ -1,22 +1,25 @@
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
-import { createCard, getCardByHash, updateCard } from '../services/database'
+import type { Card } from '@shared/data/api/Card'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
+
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { createCard, getCardByHash, updateCard } from '@backend/database/queries'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
   checkIfCardIsPaidAndCreateWithdrawId,
-} from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '../constants'
-import type { Card } from '../../../src/data/Card'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+} from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
 /**
  * Create shared funding lnurlp link
  */
-router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/create/:cardHash', async (req, res) => {
   let text = ''
   let note = ''
   try {
@@ -28,7 +31,10 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   // check if card/invoice already exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -47,11 +53,15 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       note,
       invoice: null,
       lnurlp: null,
+      setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
       used: null,
+      withdrawPending: false,
     }
     try {
-      await createCard(card)
+      await createCard(cardRedisFromCardApi(card))
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -62,7 +72,7 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
       return
     }
   }
-  
+
   // check status of card
   if (card.invoice != null) {
     if (card.invoice.paid != null) {
@@ -104,11 +114,14 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
 /**
  * Handle lnurlp link payment. Either single or shared funding.
  */
-const cardPaid = async (req: express.Request, res: express.Response) => {
+const cardPaid = async (req: Request, res: Response) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -171,11 +184,14 @@ router.post('/paid/:cardHash', cardPaid)
 /**
  * Update text+note for shared cards
  */
-router.post('/update/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/update/:cardHash', async (req, res) => {
   // check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -189,6 +205,13 @@ router.post('/update/:cardHash', async (req: express.Request, res: express.Respo
     res.status(404).json({
       status: 'error',
       message: 'Card not found.',
+    })
+    return
+  }
+  if (card.isLockedByBulkWithdraw) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This Tip Card is locked by bulk withdraw.',
     })
     return
   }
@@ -237,11 +260,14 @@ router.post('/update/:cardHash', async (req: express.Request, res: express.Respo
 /**
  * Finish shared funding lnurlp link
  */
-router.post('/finish/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/finish/:cardHash', async (req, res) => {
   // check if card exists
   let card: Card | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

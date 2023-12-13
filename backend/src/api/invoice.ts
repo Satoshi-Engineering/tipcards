@@ -1,23 +1,27 @@
 import axios from 'axios'
-import express from 'express'
+import { Router, type Request, type Response } from 'express'
 
-import { getCardByHash, createCard, deleteCard } from '../services/database'
-import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '../services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '../constants'
+import type { Card as CardApi } from '@shared/data/api/Card'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
-import type { Card } from '../../../src/data/Card'
-import { ErrorCode, ErrorWithCode } from '../../../src/data/Errors'
-import { getLandingPageLinkForCardHash } from '../../../src/modules/lnurlHelpers'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
+import { getCardByHash, createCard, deleteCard } from '@backend/database/queries'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
+import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
-const router = express.Router()
+const router = Router()
 
-router.post('/create/:cardHash', async (req: express.Request, res: express.Response) => {
+router.post('/create/:cardHash', async (req, res) => {
   // amount in sats
   let amount: number | undefined = undefined
   let text = ''
   let note = ''
   try {
-    ({ amount, text, note } = req.body)
+    amount = req.body.amount
+    text = req.body.text || ''
+    note = req.body.note || ''
   } catch (error) {
     console.error(error)
   }
@@ -30,9 +34,12 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   }
 
   // check if card/invoice already exists
-  let card: Card | null = null
+  let card: CardApi | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -111,7 +118,10 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
         paid: null,
       },
       lnurlp: null,
+      setFunding: null,
       lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
       used: null,
     })
   } catch (error) {
@@ -129,11 +139,14 @@ router.post('/create/:cardHash', async (req: express.Request, res: express.Respo
   })
 })
 
-const invoicePaid = async (req: express.Request, res: express.Response) => {
+const invoicePaid = async (req: Request, res: Response) => {
   // 1. check if card exists
-  let card: Card | null = null
+  let card: CardApi | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -201,11 +214,14 @@ const invoicePaid = async (req: express.Request, res: express.Response) => {
 router.get('/paid/:cardHash', invoicePaid)
 router.post('/paid/:cardHash', invoicePaid)
 
-router.delete('/delete/:cardHash', async (req: express.Request, res: express.Response) => {
+router.delete('/delete/:cardHash', async (req, res) => {
   // 1. check if card exists
-  let card: Card | null = null
+  let card: CardApi | null = null
   try {
-    card = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(req.params.cardHash)
+    if (cardRedis != null) {
+      card = cardApiFromCardRedis(cardRedis)
+    }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({
@@ -223,7 +239,16 @@ router.delete('/delete/:cardHash', async (req: express.Request, res: express.Res
     return
   }
 
-  // 2. check if invoice is already paid and used
+  // 2. check if card is locked
+  if (card.isLockedByBulkWithdraw) {
+    res.status(400).json({
+      status: 'error',
+      message: 'This card is locked by bulk withdraw!',
+    })
+    return
+  }
+
+  // 3. check if invoice is already paid and used
   try {
     await checkIfCardIsPaidAndCreateWithdrawId(card)
   } catch (error: unknown) {
@@ -277,7 +302,7 @@ router.delete('/delete/:cardHash', async (req: express.Request, res: express.Res
 
   // 4. delete card in database
   try {
-    await deleteCard(card)
+    await deleteCard(cardRedisFromCardApi(card))
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
     res.status(500).json({

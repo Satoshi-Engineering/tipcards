@@ -24,11 +24,15 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 `#satohsiengineeringcrew` is `#happy2help`
 
+
 ## Host your own Tip Cars
 
 [Install guide](docs/setup.md)
 
+
 ## Setup for development
+
+- [Development Guidelines](docs/guidelines.md)
 
 ### Prerequisites
 - [nodejs 16.18.0 LTS](https://nodejs.org/en/)
@@ -50,10 +54,10 @@ git config core.hooksPath .githooks
 
 ### Backend
 
-* Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host.
+* Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host. The modules `rejson` and `redisearch` are required.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
   * See [Example](docs/examples/redis) 
-* Create your own wallet on https://legend.lnbits.com/.
+* Create your own wallet on https://legend.lnbits.com/ or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env` (see below).
 * Create a `backend/.env` file (or copy it from `backend/.env.example`) and set the following variables:
   - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
   - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
@@ -75,21 +79,10 @@ via lnbits and there are transaction costs.
 your lightning apps will refuse to work because there is no ssl connection)
   - We use BlueWallet Deskop app for testing (it can access localhost) 
 
+
+## Tools
+
 ### VSCode
-
-### Ngrok
-
-Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
-
-1. Copy backend/.env.example into backend/.env
-2. Go to https://ngrok.com and create an account
-3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
-4. Run `npm run proxy` in the backend directory. This starts an express server that proxies all requests to your other services that we will start later.
-5. Run `npm run ngrok` in the backend directory. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
-6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
-7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
-8. Run `npm run dev` in frontend/ and backend/ directories.
-
 
 #### Extensions
 
@@ -109,6 +102,23 @@ Do _not_ use the "TypeScript Vue Plugin (Volar)", but use "take over mode" of Vo
 * Disable "TypeScript and JavaScript Language Support" for Workspace only
 
 
+### Ngrok
+
+Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
+
+1. Copy backend/.env.example into backend/.env
+2. Go to https://ngrok.com and create an account
+3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
+4. Run `npm run proxy` in the backend directory. This starts an express server that proxies all requests to your other services that we will start later.
+5. Run `npm run ngrok` in the backend directory. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
+6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
+7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
+8. Run `npm run dev` in frontend/ and backend/ directories.
+
+### Script
+
+For additional developer tasks, scripts can be found in [scripts](scripts/README.md).
+
 ## Run from source
 
 Start the frontend server on http://localhost:5173
@@ -126,7 +136,8 @@ cd backend && npm run dev
 
 Deployment is done via Gitlab CI/CD, see .gitlab-ci.yml
 
-# Tip us
+
+## Tip us
 
 If you like this project, please adapt the landingpage to your local stores, that
-accept bitcoin or even extend it. Why not [send some tip love?](https://legend.lnbits.com/tipjar/523)
+accept bitcoin or even extend it. Why not [send some tip love?](https://satoshiengineering.com/tipjar/)

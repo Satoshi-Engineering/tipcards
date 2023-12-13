@@ -1,11 +1,11 @@
-import express from 'express'
+import { Router } from 'express'
 
-const router = express.Router()
+const router = Router()
 
-////////////////
-//////// DUMMY
-////
-router.get('/', async (req: express.Request, res: express.Response) => {
+/////
+// DUMMY
+//
+router.get('/', async (_, res) => {
   res.json({
     status: 'success',
     data: 'dummy',

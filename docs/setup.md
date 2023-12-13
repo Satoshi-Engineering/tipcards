@@ -1,3 +1,9 @@
+# System requirements
+- 8 gb disk space
+- 2 gb ram
+- not a big demand on the CPU
+- debian bullseye or later recommended
+
 # Install dependencies
 
 1. Git
@@ -23,7 +29,7 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 3. Nodejs + Pm2
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo npm install pm2 -g
 ```
@@ -46,7 +52,8 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # Install Tip Cards application
 
-1. Clone git project
+1. Clone git project  
+**Attention:** if you run everything directly as root, make sure to switch to another directory than `/root` (e.g. `/opt`), otherwise nginx cannot access your source files later on.
 ```bash
 git clone https://github.com/Satoshi-Engineering/tip-cards.git
 ```
@@ -87,6 +94,8 @@ vi .env
 npm ci
 npm run build
 pm2 start build/backend/index.js
+pm2 startup
+# Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
 cd ..
 ```
 
@@ -104,6 +113,9 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
 sudo mkdir -p /var/www/tip-cards
 sudo ln -s `pwd`/frontend/dist /var/www/tip-cards/www
+sudo chown -R www-data:www-data /var/www/tip-cards
+# make sure www-data can read your Tip Cards files
+# e.g. if you installed the Tip Cards project directly as root then it probably cannot access /root/tip-cards
 sudo ln -s /etc/nginx/sites-available/tip-cards /etc/nginx/sites-enabled/tip-cards
 sudo /etc/init.d/nginx reload
 ```

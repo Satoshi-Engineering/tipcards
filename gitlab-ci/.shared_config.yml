@@ -1,0 +1,39 @@
+.shared_config:
+  rules:
+    web_and_push:
+      if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
+      when: never
+    web_and_push_and_schedule:
+      if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web' && $CI_PIPELINE_SOURCE != 'schedule'
+      when: never
+    deployable_branches:
+      if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
+      when: never
+    nightly_integration:
+      - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
+        when: never
+  cache:
+    npm:
+      key: npm-cache
+      paths:
+        - .npm/
+      when: on_success
+      policy: pull-push
+    node_modules:
+      key:
+        files:
+          - package-lock.json
+        prefix: node_modules
+      paths:
+        - node_modules/
+      policy: pull
+    env_backend:
+      key: backend-env-$CI_COMMIT_REF_SLUG
+      paths:
+        - backend/.env
+      policy: pull
+    env_frontend:
+      key: frontend-env-$CI_COMMIT_REF_SLUG
+      paths:
+        - frontend/.env.production.local
+      policy: pull

@@ -7,6 +7,9 @@ import app from './src/app'
 import { initSocketIo } from './src/api/auth'
 import { EXPRESS_PORT } from './src/constants'
 import consoleOverride from './src/consoleOverride'
+import Database from '@backend/database/drizzle/Database'
+import { loadCoarsWhitelist } from '@backend/services/corsOptions'
+import { initAllWorkers } from '@backend/worker'
 
 consoleOverride()
 
@@ -19,6 +22,9 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
     process.exit(0)
   })
 
+  // Closing DB Connections
+  Database.closeConnectionIfExists()
+
   // Closing all opened connection
   connections.forEach(curr => curr.end())
   setTimeout(() => connections.forEach(curr => curr.destroy()), 5000)
@@ -30,24 +36,32 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
   }, 10000).unref()
 }
 
-const server = app.listen(EXPRESS_PORT, () => {
-  console.info(`${APP_NAME} running on ${EXPRESS_PORT}`)
-})
-initSocketIo(server)
+const startup = async () => {
+  await loadCoarsWhitelist()
+  initAllWorkers()
 
-let connections: Array<Socket> = []
+  const server = app.listen(EXPRESS_PORT, async () => {
+    console.info(`${APP_NAME} running on ${EXPRESS_PORT}`)
+  })
 
-server.on('connection', (connection: Socket) => {
-  connections.push(connection)
-  connection.on('close', () => connections = connections.filter(curr => curr !== connection))
-})
+  initSocketIo(server)
 
-process.on('SIGTERM', () => {
-  console.info(`SIGTERM signal received: Shutting down ${APP_NAME} ...`)
-  shutDown(server, connections)
-})
+  let connections: Array<Socket> = []
 
-process.on('SIGINT', () => {
-  console.info(`SIGINT signal received: Shutting down ${APP_NAME} ...`)
-  shutDown(server, connections)
-})
+  server.on('connection', (connection: Socket) => {
+    connections.push(connection)
+    connection.on('close', () => connections = connections.filter(curr => curr !== connection))
+  })
+
+  process.on('SIGTERM', () => {
+    console.info(`SIGTERM signal received: Shutting down ${APP_NAME} ...`)
+    shutDown(server, connections)
+  })
+
+  process.on('SIGINT', () => {
+    console.info(`SIGINT signal received: Shutting down ${APP_NAME} ...`)
+    shutDown(server, connections)
+  })
+}
+
+startup()

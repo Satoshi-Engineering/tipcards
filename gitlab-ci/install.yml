@@ -1,0 +1,17 @@
+install:
+  stage: .pre # always first, no matter if it is listed in stages
+  rules:
+    - changes:
+      - package-lock.json
+  cache:
+    - !reference [.shared_config, cache, npm]
+    - key:
+        files:
+          - package-lock.json
+        prefix: node_modules
+      paths:
+        - node_modules/
+      when: on_success
+      policy: pull-push
+  script:
+    - if ! [[ -d node_modules ]]; then npm ci --cache .npm --prefer-offline; fi

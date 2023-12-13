@@ -40,6 +40,11 @@ export const LOCALES = {
     dir: 'ltr',
     fiat: 'USD',
   },
+  id: {
+    name: 'Bahasa Indonesia',
+    dir: 'ltr',
+    fiat: 'USD',
+  },
 }
 
 export type LocaleCode = keyof typeof LOCALES

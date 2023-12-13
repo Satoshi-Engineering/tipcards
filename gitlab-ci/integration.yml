@@ -1,0 +1,63 @@
+test-integration-backend:
+  stage: backend-integration
+  rules:
+    - !reference [.shared_config, rules, web_and_push_and_schedule]
+    - !reference [.shared_config, rules, nightly_integration]
+    - !reference [.shared_config, rules, deployable_branches]
+    - when: always
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  variables:
+    NODE_ENV: test
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
+      then 
+        echo "Running on main branch"
+        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env
+      elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
+      then
+        echo "Running on develop/feature branch"
+        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env
+      else
+        echo -e "\e[31mERROR:ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
+        exit 1
+      fi
+    - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
+    - nohup npm run backend-dev &
+    - export BACKEND_PID=$!
+    - sleep 10 # Waiting for backend to spin up
+    - echo "Running Backend with $BACKEND_PID"
+    - npm run backend-test-integration -- --maxWorkers=2
+    - kill $BACKEND_PID
+
+test-integration-frontend:
+  stage: frontend-integration
+  rules:
+    - !reference [.shared_config, rules, web_and_push_and_schedule]
+    - !reference [.shared_config, rules, nightly_integration]
+    - !reference [.shared_config, rules, deployable_branches]
+    - when: always
+  services:
+    - name: selenium/standalone-chrome
+      alias: selenium-chrome
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  variables:
+    NODE_ENV: test
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "main" ]
+      then 
+        echo "Running on main branch"
+        echo "TEST_ORIGIN=$TEST_ORIGIN_MAIN" > frontend/.env.test.local
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
+      then
+        echo "Running on develop branch"
+        echo "TEST_ORIGIN=$TEST_ORIGIN_DEVELOP" > frontend/.env.test.local
+      else
+        echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
+        exit 1
+      fi
+    - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH with url $TEST_ORIGIN"
+    - npm run frontend-test-integration -- --maxWorkers=2
