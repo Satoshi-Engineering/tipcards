@@ -14,14 +14,10 @@ descendent_pids() {
 
 TIP_CARDS_DIR=$PWD
 
-cd $TIP_CARDS_DIR/backend
-npm run proxy 2>&1 >proxy.log &
-
+npm run backend-proxy 2>&1 >proxy.log &
 PROXY_PID=$!
 
-cd $TIP_CARDS_DIR/backend
-npm run ngrok 2>&1 >ngrok.log &
-
+npm run backend-ngrok 2>&1 >ngrok.log &
 NGROK_PID=$!
 
 echo -n "Wait ngrok address: "
@@ -44,14 +40,10 @@ else
   sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.development.local
 fi
 
-cd $TIP_CARDS_DIR/frontend
-npm run dev 2>&1 >frontend.log &
-
+npm run frontend-dev 2>&1 >frontend.log &
 FRONTEND_PID=$!
 
-cd $TIP_CARDS_DIR/backend
-npm run dev 2>&1 >backend.log &
-
+npm run backend-dev 2>&1 >backend.log &
 BACKEND_PID=$!
 
 echo "Proxy ($PROXY_PID), ngrok ($NGROK_PID), frontend ($FRONTEND_PID), backend ($BACKEND_PID) - in background"
