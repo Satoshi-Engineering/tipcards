@@ -1,10 +1,10 @@
 import { translateDrizzleObjectName } from './translateNames'
-import { DBMLSchema } from './types'
+import { DBMLEndpoint, DBMLSchema } from './types'
 
 export function getReferences(schema: DBMLSchema, tableName: string, fieldName: string) {
 
-  let oneToManyEndpoint = null
-  let oneToOneEndpoint = null
+  let oneToManyEndpoint: DBMLEndpoint[] = []
+  let oneToOneEndpoint: DBMLEndpoint[] = []
 
   schema.refs.forEach(ref => {
     const endpoints = ref.endpoints
@@ -20,8 +20,8 @@ export function getReferences(schema: DBMLSchema, tableName: string, fieldName: 
     }
   })
 
-  if (oneToManyEndpoint !== null) return `.references(() => ${translateDrizzleObjectName(oneToManyEndpoint[0].tableName)}.${oneToManyEndpoint[0].fieldNames[0]})`
-  if (oneToOneEndpoint !== null) return `.references(() => ${translateDrizzleObjectName(oneToOneEndpoint[0].tableName)}.${oneToOneEndpoint[0].fieldNames[0]}).unique()`
+  if (oneToManyEndpoint.length !== 0) return `.references(() => ${translateDrizzleObjectName(oneToManyEndpoint[0].tableName)}.${oneToManyEndpoint[0].fieldNames[0]})`
+  if (oneToOneEndpoint.length !== 0) return `.references(() => ${translateDrizzleObjectName(oneToOneEndpoint[0].tableName)}.${oneToOneEndpoint[0].fieldNames[0]}).unique()`
 
   return ''
 }

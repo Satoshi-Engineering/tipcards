@@ -1,4 +1,10 @@
-import { translateDrizzleObjectName, translateFileName, translateSQLTableName, translateTypeName } from './translateNames'
+import {
+  translateDrizzleObjectName,
+  translateEnumName,
+  translateFileName,
+  translateSQLTableName,
+  translateTypeName,
+} from './translateNames'
 import { DBMLField, DBMLSchema, DBMLTable } from './types'
 import { createConfigForType, getEnums, getEnumValueDefinitions, translateImportType, translateImportTypes, getDefault, parseEnums } from './translateTypes'
 import { uniqueArray } from './tools.array'
@@ -58,7 +64,10 @@ export class SchemaCreator {
     if (indexes.length > 0) usedTypes.unshift('primaryKey')
     usedTypes.unshift('mysqlTable')
 
-    fileData = `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
+    fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
+    if (usedTypes.includes('mysqlEnum')) {
+      fileData += 'import z from \'zod\'\n'
+    }
     imports.forEach(table => {
       fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
     })
@@ -68,20 +77,22 @@ export class SchemaCreator {
   }
 
   createEnumSection(table: DBMLTable) {
-    if (Math.random() > 0) {
-      throw new Error('todo : https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/786')
-    }
     const fields = this.getFields(table)
     const enums = getEnums(fields)
 
     let fileData = ''
 
     enums.forEach(enumType => {
-      fileData += `const ${enumType}: [string, ...string[]] = [\n`
+      const enumNameTranslated = translateEnumName(enumType)
+      fileData += `const ${enumNameTranslated} = [\n`
       getEnumValueDefinitions(enumType).forEach(enumValueDef => {
         fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
       })
-      fileData += ']\n'
+      fileData += '] as const\n'
+      fileData += '\n'
+      fileData += `export const ${enumType} = z.enum(${enumNameTranslated})\n`
+      fileData += '\n'
+      fileData += `export type ${enumType} = z.infer<typeof ${enumType}>\n`
       fileData += '\n'
     })
 

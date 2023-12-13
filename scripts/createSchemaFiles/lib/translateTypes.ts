@@ -1,6 +1,7 @@
-import {DBMLSchema} from './types'
+import { DBMLEnumValue, DBMLSchema } from './types'
+import { translateEnumName } from './translateNames'
 
-const enums = {}
+const enums: {[key: string]: DBMLEnumValue[]} = {}
 
 export function parseEnums(schema: DBMLSchema) {
   schema.enums.forEach(enumDefinition => {
@@ -40,10 +41,14 @@ export function getEnumValueDefinitions(enumName: string): { name:string, note:s
 }
 
 export function createConfigForType(type: string) {
-  if (type.startsWith('varchar')) return `, { length: ${type.match(/(?<=\().+?(?=\))/)[0]} }`
+  if (type.startsWith('varchar')) {
+    const match = type.match(/(?<=\().+?(?=\))/)
+    if (match == null || match.length == 0) throw Error('Searching for the number in "varchar(XX)", but didn\'t found it')
+    return `, { length: ${match[0]} }`
+  }
 
   if (type in enums) {
-    return `, ${type}`
+    return `, ${translateEnumName(type)}`
   }
 
   return ''

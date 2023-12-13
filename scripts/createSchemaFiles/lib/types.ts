@@ -33,13 +33,21 @@ export type DBMLTable = {
   headerColor: string
 }
 
+export type DBMLEnumValue = {
+  name: string
+  note: string
+}
+export type DBMLEndpoint = {
+  schemaName: string
+  tableName: string
+  fieldNames: string[]
+  relation: any
+}
+
 export type DBMLSchema = {
   tables: DBMLTable[]
   enums: {
-    values: {
-      name: string
-      note: string
-    }[]
+    values: DBMLEnumValue[]
     name: string
     note: string
   }[]
@@ -51,12 +59,7 @@ export type DBMLSchema = {
     name: string
   }[]
   refs: {
-    endpoints: {
-      schemaName: string
-      tableName: string
-      fieldNames: string[]
-      relation: any
-    }[]
+    endpoints: DBMLEndpoint[]
     name: string
     onDelete: any
     onUpdate: any
