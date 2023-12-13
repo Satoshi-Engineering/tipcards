@@ -6,7 +6,7 @@ import type {
   Profile,
 } from '@backend/database/drizzle/schema'
 import type Queries from '@backend/database/drizzle/Queries'
-import { LandingPageType } from '@backend/database/drizzle/schema/LandingPage'
+import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType'
 import { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { type Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User'
 import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
