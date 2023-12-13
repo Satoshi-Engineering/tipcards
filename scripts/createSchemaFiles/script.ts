@@ -34,8 +34,13 @@ function writeSchemaFiles(tableName = '') {
   })
 }
 
+const args = process.argv.slice(2)
+
+if (args.length <= 1) {
+  writeSchemaFiles(args[0])
+  process.exit(0)
+}
+
 deleteSchemaFiles(OUTPUT_DIR)
 writeSchemaFiles()
 writeIndexFile(OUTPUT_DIR)
-
-//writeSchemaFiles('SingleTableName')
