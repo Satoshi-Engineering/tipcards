@@ -17,5 +17,9 @@ export function translateFileName(table: string) {
 }
 
 export function translateEnumName(enumName: string) {
+  return `${upperCaseFirst(enumName)}`
+}
+
+export function translateEnumConstName(enumName: string) {
   return `${fromCamelCaseToUnderScore(enumName).toUpperCase()}S`
 }

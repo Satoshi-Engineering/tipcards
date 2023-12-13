@@ -1,15 +1,4 @@
 import { mysqlTable, varchar, datetime, json } from 'drizzle-orm/mysql-core'
-import z from 'zod'
-
-const PERMISSIONS = [
-  'statistics', // Note: allow read access to https://tipcards.io/statistics
-  'support', // Note: allow access to the support dashboard
-] as const
-
-export const Permissions = z.enum(PERMISSIONS)
-
-export type Permissions = z.infer<typeof Permissions>
-
 
 export const User = mysqlTable('User', {
   id: varchar('id', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of foreign id or uuid

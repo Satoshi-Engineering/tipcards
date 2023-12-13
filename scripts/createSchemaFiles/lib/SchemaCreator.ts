@@ -1,15 +1,23 @@
 import {
-  translateDrizzleObjectName,
+  translateDrizzleObjectName, translateEnumConstName,
   translateEnumName,
   translateFileName,
   translateSQLTableName,
   translateTypeName,
 } from './translateNames'
 import { DBMLField, DBMLSchema, DBMLTable } from './types'
-import { createConfigForType, getEnums, getEnumValueDefinitions, translateImportType, translateImportTypes, getDefault, parseEnums } from './translateTypes'
+import {
+  createConfigForType,
+  getEnums,
+  getEnumValueDefinitions,
+  translateImportType,
+  translateImportTypes,
+  getDefault,
+  parseEnums, getUnUsedEnum, usedEnums,
+} from './translateTypes'
 import { uniqueArray } from './tools.array'
 import { getReferences } from './references'
-import { createIndexEntry } from './indexes'
+import { createIndexEntry, getUsedTypesFromIndexes } from './indexes'
 
 
 export class SchemaCreator {
@@ -59,9 +67,9 @@ export class SchemaCreator {
 
     let fileData = ''
 
-    let usedTypes = translateImportTypes(fields)
+    let usedTypes = getUsedTypesFromIndexes(indexes)
+    usedTypes = usedTypes.concat(translateImportTypes(fields))
     usedTypes = uniqueArray(usedTypes)
-    if (indexes.length > 0) usedTypes.unshift('primaryKey')
     usedTypes.unshift('mysqlTable')
 
     fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
@@ -83,18 +91,27 @@ export class SchemaCreator {
     let fileData = ''
 
     enums.forEach(enumType => {
-      const enumNameTranslated = translateEnumName(enumType)
-      fileData += `const ${enumNameTranslated} = [\n`
-      getEnumValueDefinitions(enumType).forEach(enumValueDef => {
-        fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
-      })
-      fileData += '] as const\n'
-      fileData += '\n'
-      fileData += `export const ${enumType} = z.enum(${enumNameTranslated})\n`
-      fileData += '\n'
-      fileData += `export type ${enumType} = z.infer<typeof ${enumType}>\n`
+      fileData += this.createEnumEntry(enumType)
       fileData += '\n'
     })
+
+    usedEnums(enums)
+
+    return fileData
+  }
+
+  createEnumEntry(enumType: string) {
+    let fileData = ''
+
+    fileData += `const ${translateEnumConstName(enumType)} = [\n`
+    getEnumValueDefinitions(enumType).forEach(enumValueDef => {
+      fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
+    })
+    fileData += '] as const\n'
+    fileData += '\n'
+    fileData += `export const ${translateEnumName(enumType)} = z.enum(${translateEnumConstName(enumType)})\n`
+    fileData += '\n'
+    fileData += `export type ${translateEnumName(enumType)} = z.infer<typeof ${translateEnumName(enumType)}>\n`
 
     return fileData
   }
@@ -141,7 +158,7 @@ export class SchemaCreator {
     return `export type ${typeName} = typeof ${drizzleName}.$inferSelect\n`
   }
 
-  public create(table: DBMLTable) {
+  public createTableFileData(table: DBMLTable) {
 
     let fileData = ''
 
@@ -150,6 +167,20 @@ export class SchemaCreator {
     fileData += this.createFieldsSection(table)
     fileData += this.createIndexesSection(table)
     fileData += this.createExportTypeSection(table)
+
+    return fileData
+  }
+
+  public createNotUsedEnumFileData() {
+    let fileData = ''
+    fileData += 'import z from \'zod\'\n'
+
+    getUnUsedEnum().forEach(enumName => {
+      fileData += '\n'
+      fileData += `// ENUM: ${translateEnumName(enumName)}\n`
+      fileData += '\n'
+      fileData += this.createEnumEntry(enumName)
+    })
 
     return fileData
   }

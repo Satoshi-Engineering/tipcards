@@ -22,7 +22,14 @@ const schemaCreate = new SchemaCreator(workingSchema)
 
 function writeSchemaFile(table: DBMLTable) {
   const fileName = `${translateFileName(table.name)}.ts`
-  const fileData = schemaCreate.create(table)
+  const fileData = schemaCreate.createTableFileData(table)
+  fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
+}
+
+function writeEnumFile() {
+  const fileName = 'enums.ts'
+  console.log(`Creating: ${fileName}`)
+  const fileData = schemaCreate.createNotUsedEnumFileData()
   fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
 }
 
@@ -36,7 +43,7 @@ function writeSchemaFiles(tableName = '') {
 
 const args = process.argv.slice(2)
 
-if (args.length <= 1) {
+if (args.length >= 1) {
   writeSchemaFiles(args[0])
   process.exit(0)
 }
@@ -44,3 +51,4 @@ if (args.length <= 1) {
 deleteSchemaFiles(OUTPUT_DIR)
 writeSchemaFiles()
 writeIndexFile(OUTPUT_DIR)
+writeEnumFile()

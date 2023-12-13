@@ -1,12 +1,16 @@
 import { DBMLEnumValue, DBMLSchema } from './types'
-import { translateEnumName } from './translateNames'
+import { translateEnumConstName } from './translateNames'
+import { removeByValue } from './tools.array'
 
 const enums: {[key: string]: DBMLEnumValue[]} = {}
+let unUsedEnums: string[] = []
 
 export function parseEnums(schema: DBMLSchema) {
   schema.enums.forEach(enumDefinition => {
     enums[enumDefinition.name] = enumDefinition.values
   })
+
+  unUsedEnums = Object.keys(enums)
 }
 
 export function getDefault(dbdefault: {type:string, value:string}) {
@@ -21,6 +25,7 @@ export function translateImportType(type: string) {
   if (type === 'DateTime') return 'datetime'
   if (type === 'integer') return 'int'
   if (type === 'boolean') return 'boolean'
+  if (type === 'json') return 'json'
 
   if (type.startsWith('varchar')) return 'varchar'
   if (type in enums) return 'mysqlEnum'
@@ -36,6 +41,16 @@ export function getEnums(array: string[]): string[] {
   return array.filter(type => type in enums)
 }
 
+export function usedEnums(enums: string[]) {
+  enums.forEach(enumName => {
+    removeByValue(unUsedEnums, enumName)
+  })
+}
+
+export function getUnUsedEnum() {
+  return unUsedEnums
+}
+
 export function getEnumValueDefinitions(enumName: string): { name:string, note:string }[] {
   return enums[enumName]
 }
@@ -48,7 +63,7 @@ export function createConfigForType(type: string) {
   }
 
   if (type in enums) {
-    return `, ${translateEnumName(type)}`
+    return `, ${translateEnumConstName(type)}`
   }
 
   return ''

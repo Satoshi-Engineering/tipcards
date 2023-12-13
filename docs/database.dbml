@@ -92,7 +92,7 @@ Table LandingPage {
   url  text             [null, default: null, note: "used+required for type external"]
 }
 
-enum permissions {
+enum Permission {
   statistics [note: "allow read access to https://tipcards.io/statistics"]
   support    [note: "allow access to the support dashboard"]
 }
