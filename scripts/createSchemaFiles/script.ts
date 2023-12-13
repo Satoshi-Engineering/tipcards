@@ -2,15 +2,13 @@
 
 console.info('Schema Creator')
 
+import { DEFINITIONS_FILE, OUTPUT_DIR, ENUM_DIR_NAME } from './consts'
 import { Parser } from '@dbml/core'
 import * as fs from 'fs'
-import { DBMLTable } from './lib/types'
+import { DBMLEnum, DBMLTable } from './lib/types'
 import { translateFileName } from './lib/translateNames'
-import { deleteSchemaFiles, writeIndexFile } from './lib/dir'
+import { checkAndCreateDirectory, deleteFilesInDirectory, deleteFolderRecursive, writeIndexFile } from './lib/dir'
 import { SchemaCreator } from './lib/SchemaCreator'
-
-const DEFINITIONS_FILE = './docs/database.dbml'
-const OUTPUT_DIR = './backend/src/database/drizzle/schema'
 
 const dbml = fs.readFileSync(DEFINITIONS_FILE, 'utf-8')
 
@@ -26,17 +24,24 @@ function writeSchemaFile(table: DBMLTable) {
   fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
 }
 
-function writeEnumFile() {
-  const fileName = 'enums.ts'
-  console.log(`Creating: ${fileName}`)
-  const fileData = schemaCreate.createNotUsedEnumFileData()
-  fs.writeFileSync(`${OUTPUT_DIR}/${fileName}`, fileData)
+function writeEnumFile(enumData: DBMLEnum) {
+  const fileName = `${translateFileName(enumData.name)}.ts`
+  const fileData = schemaCreate.createEnumFileData(enumData)
+
+  fs.writeFileSync(`${OUTPUT_DIR}/${ENUM_DIR_NAME}/${fileName}`, fileData)
+}
+
+function writeEnumFiles() {
+  workingSchema.enums.forEach(enumData => {
+    console.log(`Creating Enum: ${enumData.name}`)
+    writeEnumFile(enumData)
+  })
 }
 
 function writeSchemaFiles(tableName = '') {
   workingSchema.tables.forEach(table => {
     if (tableName !== '' && table.name !== tableName) return
-    console.log(`Creating: ${table.name}`)
+    console.log(`Creating Table: ${table.name}`)
     writeSchemaFile(table)
   })
 }
@@ -48,7 +53,10 @@ if (args.length >= 1) {
   process.exit(0)
 }
 
-deleteSchemaFiles(OUTPUT_DIR)
+deleteFolderRecursive(`${OUTPUT_DIR}/${ENUM_DIR_NAME}`)
+deleteFilesInDirectory(OUTPUT_DIR)
+checkAndCreateDirectory(OUTPUT_DIR)
+checkAndCreateDirectory(`${OUTPUT_DIR}/${ENUM_DIR_NAME}`)
+writeEnumFiles()
 writeSchemaFiles()
 writeIndexFile(OUTPUT_DIR)
-writeEnumFile()

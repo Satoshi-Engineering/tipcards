@@ -2,7 +2,11 @@
 
 export type DBMLField = {
   name: string
-  type: any
+  type: {
+    type_name: string
+    args: any
+    schemaName: any
+  }
   unique: boolean
   pk: boolean
   not_null: boolean
@@ -33,10 +37,17 @@ export type DBMLTable = {
   headerColor: string
 }
 
+export type DBMLEnum = {
+  values: DBMLEnumValue[]
+  name: string
+  note: string
+}
+
 export type DBMLEnumValue = {
   name: string
   note: string
 }
+
 export type DBMLEndpoint = {
   schemaName: string
   tableName: string
@@ -46,11 +57,7 @@ export type DBMLEndpoint = {
 
 export type DBMLSchema = {
   tables: DBMLTable[]
-  enums: {
-    values: DBMLEnumValue[]
-    name: string
-    note: string
-  }[]
+  enums: DBMLEnum[]
   tableGroups: {
     tables: {
       tableName: string

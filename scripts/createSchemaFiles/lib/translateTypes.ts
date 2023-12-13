@@ -1,16 +1,12 @@
 import { DBMLEnumValue, DBMLSchema } from './types'
 import { translateEnumConstName } from './translateNames'
-import { removeByValue } from './tools.array'
 
 const enums: {[key: string]: DBMLEnumValue[]} = {}
-let unUsedEnums: string[] = []
 
 export function parseEnums(schema: DBMLSchema) {
   schema.enums.forEach(enumDefinition => {
     enums[enumDefinition.name] = enumDefinition.values
   })
-
-  unUsedEnums = Object.keys(enums)
 }
 
 export function getDefault(dbdefault: {type:string, value:string}) {
@@ -37,18 +33,8 @@ export function translateImportTypes(array: string[]): string[] {
   return array.map(type => translateImportType(type))
 }
 
-export function getEnums(array: string[]): string[] {
-  return array.filter(type => type in enums)
-}
-
-export function usedEnums(enums: string[]) {
-  enums.forEach(enumName => {
-    removeByValue(unUsedEnums, enumName)
-  })
-}
-
-export function getUnUsedEnum() {
-  return unUsedEnums
+export function isEnum(type: string) {
+  return type in enums
 }
 
 export function getEnumValueDefinitions(enumName: string): { name:string, note:string }[] {

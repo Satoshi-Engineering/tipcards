@@ -1,8 +1,6 @@
 import z from 'zod'
 
-// ENUM: Permission
-
-const PERMISSIONS = [
+export const PERMISSIONS = [
   'statistics', // Note: allow read access to https://tipcards.io/statistics
   'support', // Note: allow access to the support dashboard
 ] as const

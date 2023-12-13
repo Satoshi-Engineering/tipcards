@@ -1,14 +1,5 @@
 import { mysqlTable, varchar, mysqlEnum, text } from 'drizzle-orm/mysql-core'
-import z from 'zod'
-
-const IMAGE_TYPES = [
-  'svg',
-  'png',
-] as const
-
-export const ImageType = z.enum(IMAGE_TYPES)
-
-export type ImageType = z.infer<typeof ImageType>
+import { IMAGE_TYPES } from './enums/ImageType'
 
 export const Image = mysqlTable('Image', {
   id: varchar('id', { length: 36 }).primaryKey().unique().notNull(), // Note: uuid

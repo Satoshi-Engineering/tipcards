@@ -5,20 +5,19 @@ import {
   translateSQLTableName,
   translateTypeName,
 } from './translateNames'
-import { DBMLField, DBMLSchema, DBMLTable } from './types'
+import { DBMLEnum, DBMLField, DBMLSchema, DBMLTable } from './types'
 import {
   createConfigForType,
-  getEnums,
   getEnumValueDefinitions,
   translateImportType,
   translateImportTypes,
   getDefault,
-  parseEnums, getUnUsedEnum, usedEnums,
+  parseEnums, isEnum,
 } from './translateTypes'
 import { uniqueArray } from './tools.array'
 import { getReferences } from './references'
 import { createIndexEntry, getUsedTypesFromIndexes } from './indexes'
-
+import { ENUM_DIR_NAME } from '../consts'
 
 export class SchemaCreator {
   schema: DBMLSchema
@@ -43,7 +42,7 @@ export class SchemaCreator {
     return line
   }
 
-  getImports(tableName: string) {
+  getTableImports(tableName: string) {
     const imports: string[] = []
 
     this.schema.refs.forEach(ref => {
@@ -56,6 +55,19 @@ export class SchemaCreator {
     return imports
   }
 
+  getEnumImports(table: DBMLTable) {
+    const imports: string[] = []
+
+    table.fields.forEach(field => {
+      if (isEnum(field.type.type_name)) {
+        imports.push(field.type.type_name)
+      }
+    })
+
+    return imports
+  }
+
+
   getFields(table: DBMLTable) {
     return table.fields.map(field => field.type.type_name)
   }
@@ -63,7 +75,8 @@ export class SchemaCreator {
   createImportSection(table: DBMLTable) {
     const fields = this.getFields(table)
     const indexes = table.indexes
-    const imports = this.getImports(table.name)
+    const tableImports = this.getTableImports(table.name)
+    const enumImports = this.getEnumImports(table)
 
     let fileData = ''
 
@@ -73,29 +86,14 @@ export class SchemaCreator {
     usedTypes.unshift('mysqlTable')
 
     fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
-    if (usedTypes.includes('mysqlEnum')) {
-      fileData += 'import z from \'zod\'\n'
-    }
-    imports.forEach(table => {
+    tableImports.forEach(table => {
       fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
     })
-    fileData+= '\n'
-
-    return fileData
-  }
-
-  createEnumSection(table: DBMLTable) {
-    const fields = this.getFields(table)
-    const enums = getEnums(fields)
-
-    let fileData = ''
-
-    enums.forEach(enumType => {
-      fileData += this.createEnumEntry(enumType)
-      fileData += '\n'
+    enumImports.forEach(enumName => {
+      fileData += `import { ${translateEnumConstName(enumName)} } from './${ENUM_DIR_NAME}/${translateFileName(enumName)}'\n`
     })
 
-    usedEnums(enums)
+    fileData+= '\n'
 
     return fileData
   }
@@ -103,7 +101,7 @@ export class SchemaCreator {
   createEnumEntry(enumType: string) {
     let fileData = ''
 
-    fileData += `const ${translateEnumConstName(enumType)} = [\n`
+    fileData += `export const ${translateEnumConstName(enumType)} = [\n`
     getEnumValueDefinitions(enumType).forEach(enumValueDef => {
       fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
     })
@@ -163,7 +161,6 @@ export class SchemaCreator {
     let fileData = ''
 
     fileData += this.createImportSection(table)
-    fileData += this.createEnumSection(table)
     fileData += this.createFieldsSection(table)
     fileData += this.createIndexesSection(table)
     fileData += this.createExportTypeSection(table)
@@ -171,16 +168,12 @@ export class SchemaCreator {
     return fileData
   }
 
-  public createNotUsedEnumFileData() {
+  public createEnumFileData(enumData: DBMLEnum) {
     let fileData = ''
-    fileData += 'import z from \'zod\'\n'
 
-    getUnUsedEnum().forEach(enumName => {
-      fileData += '\n'
-      fileData += `// ENUM: ${translateEnumName(enumName)}\n`
-      fileData += '\n'
-      fileData += this.createEnumEntry(enumName)
-    })
+    fileData += 'import z from \'zod\'\n'
+    fileData += '\n'
+    fileData += this.createEnumEntry(enumData.name)
 
     return fileData
   }
