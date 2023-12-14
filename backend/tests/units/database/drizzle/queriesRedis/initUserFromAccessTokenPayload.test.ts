@@ -4,6 +4,7 @@ import { addData } from '../mocks/database'
 
 import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
 import { initUserFromAccessTokenPayload } from '@backend/database/drizzle/queriesRedis'
+import { Permission } from '@backend/database/drizzle/schema/enums/Permission'
 
 import { createUser, createProfileForUser, createAccessTokenPayloadForUser } from '../../../../drizzleData'
 
@@ -36,7 +37,7 @@ describe('initUserFromAccessTokenPayload', () => {
 
   it('should insertOrUpdate a user if he doesnt exist yet (including permissions)', async () => {
     const userData = createUser()
-    userData.permissions = ['statistics']
+    userData.permissions = [Permission.Enum.statistics]
 
     const userResult = await initUserFromAccessTokenPayload(createAccessTokenPayloadForUser(userData))
     expect(userResult).toEqual(expect.objectContaining({
@@ -51,13 +52,13 @@ describe('initUserFromAccessTokenPayload', () => {
         accountName: '',
         email: '',
       },
-      permissions: ['statistics'],
+      permissions: [Permission.Enum.statistics],
     }))
     expect(queries.insertOrUpdateUser).toHaveBeenCalledWith(expect.objectContaining({
       id: userData.id,
       lnurlAuthKey: userData.lnurlAuthKey,
       created: unixTimestampToDate(userResult.created),
-      permissions: ['statistics'],
+      permissions: [Permission.Enum.statistics],
     }))
   })
 })
