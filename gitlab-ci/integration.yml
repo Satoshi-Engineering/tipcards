@@ -4,7 +4,7 @@ test-integration-backend:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]
     - !reference [.shared_config, rules, deployable_branches]
-    - when: always
+    - when: always # even run when previous stages fail
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
@@ -37,7 +37,7 @@ test-integration-frontend:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]
     - !reference [.shared_config, rules, deployable_branches]
-    - when: always
+    - when: always # even run when previous stages fail
   services:
     - name: selenium/standalone-chrome
       alias: selenium-chrome
