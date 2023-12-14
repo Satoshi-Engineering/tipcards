@@ -1,13 +1,13 @@
 {
   "general": {
-    "back": "kembali",
+    "back": "Kembali",
     "cards": "{count} kartu | {count} kartu",
     "userAccount": "akun",
     "login": "Login"
 },
   "nav": {
-    "index": "indeks",
-    "cards": "kartu",
+    "index": "Indeks",
+    "cards": "Kartu",
     "preview": "Pratinjau",
     "about": "Tentang"
   },
@@ -23,11 +23,11 @@
       "amountAndUnit": "{amount} Bitcoin",
       "amountAndUnitBtc": "{amount} BTC",
       "footnoteFiat": "{btc} = {fiat}",
-      "footnote": "melalui Lightning"
+      "footnote": "Melalui Lightning"
     },
     "introMessagePreview": {
       "headline": "Pindai Lightning Tip Card untuk menerima Bitcoin.",
-      "message": "kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+      "message": "Kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "introMessageAlreadyUsed": {
       "headline": "QR Code ini tampaknya sudah ditukarkan.",
@@ -35,7 +35,7 @@
     },
     "introMessageJustReceived": {
       "headline": "QR Code kamu baru saja ditukarkan. {emoji}",
-      "message": "kamu bisa mendapatkan lebih banyak Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+      "message": "Kamu bisa mendapatkan lebih banyak Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "sectionBitcoin": {
       "paragraphs": {
@@ -49,7 +49,7 @@
       "explanation": "Untuk menerima, menyimpan, dan membelanjakan Bitcoin, kamu memerlukan <strong>Lightning Wallet</strong>.<br>Untuk pemakaian sehari-hari dan dalam jumlah kecil, penggunaan aplikasi smartphone akan lebih nyaman.",
       "recommendation": "Untuk pemula, kami menyarankan {walletOfSatoshi}.",
       "button": "Unduh Wallet of Satoshi",
-      "other": "kamu juga bisa mencoba {wallet0}, {wallet1}, {wallet2} atau wallet lainnya*.",
+      "other": "Kamu juga bisa mencoba {wallet0}, {wallet1}, {wallet2} atau wallet lainnya*.",
       "otherFootnote": "* yang kompatibel dengan Lightning dan LNURL"
     },
     "sectionReceive": {
@@ -66,7 +66,7 @@
     },
     "sectionUse": {
       "headline": "Gunakan Bitcoin kamu",
-      "message": "kamu sekarang bisa membeli sesuatu di toko atau situs web yang menerima Bitcoin. Atau kamu bisa mentransfernya ke Lightning Wallet teman atau kolega. Atau cukup simpan saja.",
+      "message": "Kamu sekarang bisa membeli sesuatu di toko atau situs web yang menerima Bitcoin. Atau kamu bisa mentransfernya ke Lightning Wallet teman atau kolega. Atau cukup simpan saja.",
       "messageFootnote": "* hodln = menyimpan, menabung",
       "examplesIntro": "Berikut adalah beberapa tautan situs tempat kamu bisa menggunakan Bitcoin:",
 "examples": {
@@ -85,14 +85,14 @@
   "headline": "Lebih banyak tentang Bitcoin",
   "text": "Ada banyak cara untuk mempelajari lebih lanjut tentang Bitcoin.",
   "0": {
-    "text": "<strong>Memahamii Bitcoin</strong> adalah podcast berbahasa Jerman untuk pemula Bitcoin dan yang sudah advanced.",
-    "linkLabel": "Memahami Bitcoin",
-    "linkHref": "https://bitcoinverstehen.info/"
+    "text": "<strong>Bitcoin Indonesia</strong> adalah sebuah inisiatif yang mendorong adopsi Bitcoin di Indonesia melalui edukasi dan komunitas.",
+    "linkLabel": "Situs Bitcoin Indonesia",
+    "linkHref": "https://bitcoinforindonesia.com/"
   },
   "1": {
-    "text": "<strong>Aprycot Media</strong> adalah penerbit Jerman yang mengkhususkan diri dalam literatur Bitcoin. Di sini kamu dapat menemukan segalanya mulai dari buku hingga postingan blog dan koleksi tautan yang luas untuk memahami Bitcoin lebih baik.",
-    "linkLabel": "Perpustakaan Aprycot Media",
-    "linkHref": "https://aprycot.media/thek/"
+    "text": "<strong>Kelas Bitcoin</strong> adalah komunitas edukasi untuk belajar Bitcoin. Bertujuan untuk memudahkan masyarakat mengenal, memahami dan menggunakan Bitcoin sebagai aset investasi jangka panjang.",
+    "linkLabel": "Situs Kelas Bitcoin",
+    "linkHref": "https://kelasbitcoin.com/"
   }
 },
 "bulkWithdrawExists": "Sats dari Kartu Tip ini sedang ditarik kembali. Jika kamu ingin menggunakan kartu ini, kamu harus membatalkan pengambilan kembali.",
@@ -167,7 +167,7 @@
   "buttonLogin": "Masuk dengan LNURL-Auth",
   "buttonCreate": "Buat Set Kartu Tip kamu",
   "savedCardsSetsHeadline": "Set Kartu Tip Tersimpan",
-  "noSavedCardsSetsMessage": "kamu belum memiliki set yang tersimpan",
+  "noSavedCardsSetsMessage": "Kamu belum memiliki set yang tersimpan",
   "unnamedSetNameFallback": "Set Tanpa Nama",
   "youtube": {
     "create": {
@@ -277,13 +277,13 @@
     "copyToClipboard": {
       "lnurl": {
         "beforeCopy": "Kamu dapat {action} untuk memasukkannya ke dompetmu.",
-        "beforeCopyAction": "juga menyalin LNURL,",
+        "beforeCopyAction": "Juga menyalin LNURL,",
         "afterCopySuccess": "Berhasil disalin.",
         "afterCopyNextStep": "Sekarang masukkan<br>ke aplikasi dompetmu :)"
       },
       "invoice": {
         "beforeCopy": "Kamu dapat {action} untuk memasukkannya ke dompetmu.",
-        "beforeCopyAction": "juga menyalin invoice,",
+        "beforeCopyAction": "Juga menyalin invoice,",
         "afterCopySuccess": "Berhasil disalin.",
         "afterCopyNextStep": "Sekarang masukkan<br>ke aplikasi dompetmu :)"
       }
