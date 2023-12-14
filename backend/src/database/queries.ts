@@ -2,7 +2,7 @@ import * as queriesDrizzle from '@backend/database/drizzle/queriesRedis'
 import * as queriesRedis from '@backend/database/redis/queries'
 
 let queries = queriesRedis
-if (process.env.USE_DRIZZLE) {
+if (process.env.USE_DRIZZLE === '1') {
   queries = queriesDrizzle
 }
 
