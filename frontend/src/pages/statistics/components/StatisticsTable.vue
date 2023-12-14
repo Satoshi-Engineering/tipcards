@@ -5,7 +5,11 @@
         Week
       </th>
       <th class="px-2 text-left">
-        <LinkDefault variant="none" @click="toggleBarChartMode">
+        <LinkDefault
+          class="!break-normal"
+          variant="none"
+          @click="toggleBarChartMode"
+        >
           {{ barChartMode === 'balance' ? 'Balance' : 'Transactions' }}
         </LinkDefault>
       </th>
