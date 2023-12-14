@@ -1,25 +1,29 @@
 # ------------- VARIABLES
 # Configure them in https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/-/settings/ci_cd
+#
 # ----- GLOBAL
 # - DEPLOY_USER
 # - DEPLOY_USER_SSH_KEY # can be found in sate access
+#
 # ----- BACKEND
 # - BACKEND_DEPLOY_SERVER_MAIN
 # - BACKEND_DEPLOY_SERVER_DEVELOP
 # - BACKEND_DEPLOY_PATH_MAIN
 # - BACKEND_DEPLOY_PATH_DEVELOP
-# - ENV_FILE_MAIN
-# - ENV_FILE_DEVELOP
-# - BACKEND_ENV_FILE_TEST # overwrites ENV_FILE_XY during integration tests
+# - BACKEND_ENV_FILE_MAIN
+# - BACKEND_ENV_FILE_DEVELOP
+# - BACKEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE_MAIN during integration tests
+# - BACKEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE_MAIN during integration tests
+#
 # ----- FRONTEND
 # - FRONTEND_DEPLOY_SERVER_MAIN
 # - FRONTEND_DEPLOY_SERVER_DEVELOP
 # - FRONTEND_DEPLOY_PATH_MAIN
 # - FRONTEND_DEPLOY_PATH_DEVELOP
-# - TEST_ORIGIN_MAIN
-# - TEST_ORIGIN_DEVELOP
 # - FRONTEND_ENV_FILE_MAIN
 # - FRONTEND_ENV_FILE_DEVELOP
+# - FRONTEND_TEST_ORIGIN_MAIN
+# - FRONTEND_TEST_ORIGIN_DEVELOP
 
 image: node:lts-alpine
 

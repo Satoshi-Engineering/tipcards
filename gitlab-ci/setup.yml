@@ -12,8 +12,8 @@ setup-backend-env:
     policy: pull-push
   script:
     # get the .env variables for the environment
-    - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$ENV_FILE_MAIN; fi
-    - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$ENV_FILE_DEVELOP; fi
+    - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$BACKEND_ENV_FILE_MAIN; fi
+    - if [ "$CI_COMMIT_BRANCH" == "develop" ]; then export ENV_FILE=$BACKEND_ENV_FILE_DEVELOP; fi
     - cd backend
     - |
       # Check if env file exists
