@@ -2,7 +2,7 @@
   <table class="w-full -mx-2">
     <tr class="sticky top-0 bg-white z-20">
       <th class="px-2 sticky left-0 bg-white z-10 text-left">
-        Week
+        {{ periodLabelColHeader }}
       </th>
       <th class="px-2 text-left">
         <LinkDefault
@@ -89,6 +89,10 @@ const props = defineProps({
   statistics: {
     type: Array as PropType<StatisticsPeriod[]>,
     default: () => [],
+  },
+  periodLabelColHeader: {
+    type: String,
+    default: '',
   },
 })
 

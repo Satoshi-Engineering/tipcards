@@ -21,6 +21,7 @@
           Weekly
         </HeadlineDefault>
         <StatisticsTable
+          period-label-col-header="Week"
           :statistics="statistics.weekly"
           :bar-chart-mode="barChartMode"
           @set-bar-chart-mode="barChartMode = $event"
@@ -30,6 +31,7 @@
           Daily
         </HeadlineDefault>
         <StatisticsTable
+          period-label-col-header="Day"
           :statistics="statistics.daily"
           :bar-chart-mode="barChartMode"
           @set-bar-chart-mode="barChartMode = $event"
