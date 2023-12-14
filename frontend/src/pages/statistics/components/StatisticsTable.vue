@@ -50,21 +50,21 @@
             transparent ${period.fundingAmountPercent / 2 + 50}% 100%
           )`"
         >
-          <span class="text-xs">{{ period.withdrawAmount }}</span>
-          <span class="text-xs">{{ period.fundingAmount }}</span>
+          <span class="text-xs">-{{ formatNumber(period.withdrawAmount, 0) }}</span>
+          <span class="text-xs">{{ formatNumber(period.fundingAmount, 0) }}</span>
         </div>
       </td>
       <td class="px-2 text-right">
         {{ period.fundingCount }}
       </td>
       <td class="px-2 text-right">
-        {{ period.fundingAmount }}
+        {{ formatNumber(period.fundingAmount, 0) }}
       </td>
       <td class="px-2 text-right">
         {{ period.withdrawCount }}
       </td>
       <td class="px-2 text-right">
-        {{ period.withdrawAmount }}
+        {{ formatNumber(period.withdrawAmount, 0) }}
       </td>
     </tr>
   </table>
@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 
+import formatNumber from '@/modules/formatNumber'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
 
