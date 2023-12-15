@@ -14,8 +14,6 @@ const cardBody = {
   note: `${cardHash} noteForStatusPage`,
 }
 let fundingInvoice = ''
-let lnbitsWithdrawId = ''
-let lnurlWithdrawWebhook = ''
 
 const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 
@@ -109,8 +107,6 @@ describe('card | fund & withdraw', () => {
 
     EXPECTED_OBJECT.data.invoice.paid = response.data.data.invoice.paid
     EXPECTED_OBJECT.data.lnbitsWithdrawId = response.data.data.lnbitsWithdrawId
-
-    lnbitsWithdrawId = response.data.data.lnbitsWithdrawId
   })
 
   it('should withdraw the funds of the lnurlw', async () => {
@@ -144,11 +140,8 @@ describe('card | fund & withdraw', () => {
   })
 
   it('should call lnurlw withdraw callback', async () => {
-    const data = await wallet.getLNURLWById(lnbitsWithdrawId)
-    lnurlWithdrawWebhook = data.webhook_url
-
     try {
-      await axios.get(lnurlWithdrawWebhook)
+      await axios.get(`${process.env.TEST_API_ORIGIN}/api/withdraw/used/${cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
