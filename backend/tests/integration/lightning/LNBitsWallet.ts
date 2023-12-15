@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { type LNURLw } from '@shared/data/LNURLw'
+import { type LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import { delay } from '../timingUtils'
 
 export default class LNBitsWallet {
@@ -74,14 +74,14 @@ export default class LNBitsWallet {
     return response.data
   }
 
-  public async withdrawAllFromLNURLW(LNURLw: LNURLw, memo = '') {
-    const amount = Math.floor(LNURLw.maxWithdrawable / 1000)
+  public async withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest: LNURLWithdrawRequest, memo = '') {
+    const amount = Math.floor(lnurlWithdrawRequest.maxWithdrawable / 1000)
     const invoiceData = await this.createInvoice(amount, memo)
 
     const invoice = invoiceData?.payment_request
 
-    const parameterGlue = LNURLw.callback.includes('?') ? '&' : '?'
-    const url = `${LNURLw.callback}${parameterGlue}k1=${LNURLw.k1}&pr=${invoice}`
+    const parameterGlue = lnurlWithdrawRequest.callback.includes('?') ? '&' : '?'
+    const url = `${lnurlWithdrawRequest.callback}${parameterGlue}k1=${lnurlWithdrawRequest.k1}&pr=${invoice}`
 
     let lnurlWithdrawResponse: AxiosResponse | null = null
 

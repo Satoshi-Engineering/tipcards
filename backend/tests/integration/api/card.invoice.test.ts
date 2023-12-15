@@ -2,7 +2,7 @@ import '../initEnv'
 import axios, { AxiosResponse } from 'axios'
 import { randomUUID } from 'crypto'
 
-import { LNURLw } from '@shared/data/LNURLw'
+import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
 import hashSha256 from '@backend/services/hashSha256'
 
@@ -124,9 +124,9 @@ describe('card | fund & withdraw', () => {
       return
     }
 
-    const lnurlw = LNURLw.parse(response.data)
+    const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
 
-    await wallet.withdrawAllFromLNURLW(lnurlw)
+    await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
   })
 
   failEarly.it('should return status of a withdraw pending card', async () => {
