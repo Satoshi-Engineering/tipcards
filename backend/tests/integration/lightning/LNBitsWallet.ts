@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
-
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+import { type LNURLw } from '@shared/data/LNURLw'
+import { delay } from '../timingUtils'
 
 export class LNBitsWallet {
   adminKey: string
@@ -74,32 +74,35 @@ export class LNBitsWallet {
     return response.data
   }
 
-  public async withdrawAllFromLNURLW(LNURLw: string, memo = '') {
-    const lnurlwURL = decodeLnurl(LNURLw)
-
-    let lnurlwInfoResponse: AxiosResponse
-    try {
-      lnurlwInfoResponse = await axios.get(lnurlwURL)
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-
-    const amount = Math.floor(lnurlwInfoResponse.data.maxWithdrawable / 1000)
+  public async withdrawAllFromLNURLW(LNURLw: LNURLw, memo = '') {
+    const amount = Math.floor(LNURLw.maxWithdrawable / 1000)
     const invoiceData = await this.createInvoice(amount, memo)
 
     const invoice = invoiceData?.payment_request
 
-    const parameterGlue = lnurlwInfoResponse.data.callback.includes('?') ? '&' : '?'
-    const url = `${lnurlwInfoResponse.data.callback}${parameterGlue}k1=${lnurlwInfoResponse.data.k1}&pr=${invoice}`
+    const parameterGlue = LNURLw.callback.includes('?') ? '&' : '?'
+    const url = `${LNURLw.callback}${parameterGlue}k1=${LNURLw.k1}&pr=${invoice}`
 
-    let lnurlWithdrawResponse: AxiosResponse
-    try {
-      lnurlWithdrawResponse = await axios.get(url)
-    } catch (error) {
-      console.error(error)
-      throw error
+    let lnurlWithdrawResponse: AxiosResponse | null = null
+
+    const maxRetries = 5
+    const retryWaitTimeInMS = 500
+
+    let retrys = maxRetries
+    while (retrys > 0) {
+      try {
+        lnurlWithdrawResponse = await axios.get(url)
+        break
+      } catch (error) {
+        console.error(error)
+        console.error(`Retrying in ${retryWaitTimeInMS}ms`)
+        await delay(retryWaitTimeInMS)
+
+        retrys--
+      }
     }
+
+    if (lnurlWithdrawResponse === null) throw new Error(`Tried LNURLw callback link for ${maxRetries}x times: ${url}`)
 
     return lnurlWithdrawResponse.data
   }

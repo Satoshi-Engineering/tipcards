@@ -3,8 +3,7 @@ import '../initEnv'
 import hashSha256 from '@backend/services/hashSha256'
 import { randomUUID } from 'crypto'
 import { LNBitsWallet } from '../lightning/LNBitsWallet'
-
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
+import { LNURLw } from '@shared/data/LNURLw'
 
 const TEST_AMOUNT_IN_SATS = 100
 
@@ -115,13 +114,16 @@ describe('card | fund & withdraw', () => {
   })
 
   it('should withdraw the funds of the lnurlw', async () => {
-    const data = await wallet.getLNURLWById(lnbitsWithdrawId)
+    let response: AxiosResponse
+    try {
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
+    } catch (error) {
+      console.error(error)
+      expect(false).toBe(true)
+      return
+    }
 
-    const lnurlw = data.lnurl
-    lnurlWithdrawWebhook = data.webhook_url
-
-    // Wait because LNBits needs to process the LNURLw Request
-    await delay(500)
+    const lnurlw = LNURLw.parse(response.data)
 
     await wallet.withdrawAllFromLNURLW(lnurlw)
   })
@@ -142,6 +144,9 @@ describe('card | fund & withdraw', () => {
   })
 
   it('should call lnurlw withdraw callback', async () => {
+    const data = await wallet.getLNURLWById(lnbitsWithdrawId)
+    lnurlWithdrawWebhook = data.webhook_url
+
     try {
       await axios.get(lnurlWithdrawWebhook)
     } catch (error) {
