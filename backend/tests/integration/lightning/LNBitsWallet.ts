@@ -1,10 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
-import * as bech32 from 'bech32'
 
-const LNURL_RULES = {
-  prefix: 'lnurl',
-  limit: 1023,
-}
+import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 export class LNBitsWallet {
   adminKey: string
@@ -21,7 +17,7 @@ export class LNBitsWallet {
         'X-Api-Key': this.adminKey,
       },
     }
- }
+  }
 
   public async getWalletDetails(): Promise<null | { id: string, name: string, balance: number }> {
     let response: AxiosResponse
@@ -34,21 +30,22 @@ export class LNBitsWallet {
 
     return response.data
   }
- public async createInvoice(amount: number, memo = ''): Promise<null | { payment_hash: string, payment_request: string, checking_id: string, lnurl_response: null | string }> {
-   let response: AxiosResponse
-   try {
-     response = await axios.post(`${this.lnbitsOrigin}/api/v1/payments`, {
-       out: false,
-       amount,
-       memo,
-     }, this.getAuthHeader())
-   } catch (error) {
-     console.error(error)
-     throw error
-   }
 
-   return response.data
- }
+  public async createInvoice(amount: number, memo = ''): Promise<null | { payment_hash: string, payment_request: string, checking_id: string, lnurl_response: null | string }> {
+    let response: AxiosResponse
+    try {
+      response = await axios.post(`${this.lnbitsOrigin}/api/v1/payments`, {
+        out: false,
+        amount,
+        memo,
+      }, this.getAuthHeader())
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return response.data
+  }
 
   public async payInvoice(invoice: string) {
     let response: AxiosResponse
@@ -77,18 +74,8 @@ export class LNBitsWallet {
     return response.data
   }
 
-  public async decodeLNURL(LNURL: string) {
-    LNURL = LNURL.toLowerCase()
-
-    // Decode the LNURL using bech32
-    const decoded = bech32.bech32.decode(LNURL, LNURL_RULES.limit)
-
-    // Extract the LNURLp parameters from the decoded data
-    return Buffer.from(bech32.bech32.fromWords(decoded.words)).toString('utf8')
-  }
-
   public async withdrawAllFromLNURLW(LNURLw: string, memo = '') {
-    const lnurlwURL = await this.decodeLNURL(LNURLw)
+    const lnurlwURL = decodeLnurl(LNURLw)
 
     let lnurlwInfoResponse: AxiosResponse
     try {
