@@ -23,6 +23,8 @@ while [ "x`grep 'Node Backend running' backend.log`" = 'x' ]; do sleep 1; echo -
 echo '\n'
 echo 'Startup finished, running integration tests'
 npm run backend-test-integration -- --maxWorkers=2
+INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID
 rm backend.log
+exit $INTEGRATION_TEST_EXIT_CODE
