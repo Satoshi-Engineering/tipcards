@@ -1,9 +1,13 @@
-import axios, { AxiosResponse } from 'axios'
 import '../initEnv'
-import hashSha256 from '@backend/services/hashSha256'
+import axios, { AxiosResponse } from 'axios'
 import { randomUUID } from 'crypto'
-import { LNBitsWallet } from '../lightning/LNBitsWallet'
+
 import { LNURLw } from '@shared/data/LNURLw'
+
+import hashSha256 from '@backend/services/hashSha256'
+
+import LNBitsWallet from '../lightning/LNBitsWallet'
+import FailEarly from '../../FailEarly'
 
 const TEST_AMOUNT_IN_SATS = 100
 
@@ -16,6 +20,7 @@ const cardBody = {
 let fundingInvoice = ''
 
 const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
+const failEarly = new FailEarly(it)
 
 const EXPECTED_OBJECT = {
   status: 'success',
@@ -42,14 +47,14 @@ const EXPECTED_OBJECT = {
 }
 
 describe('card | fund & withdraw', () => {
-  it('should check if lnbits wallet has enough balance for testing', async () => {
+  failEarly.it('should check if lnbits wallet has enough balance for testing', async () => {
     const data = await wallet.getWalletDetails()
 
     expect(data).not.toBeNull()
     expect(data?.balance).toBeGreaterThanOrEqual(TEST_AMOUNT_IN_SATS * 1000)
   })
 
-  it('should create a card with valid ln invoice', async () => {
+  failEarly.it('should create a card with valid ln invoice', async () => {
     let response: AxiosResponse
     try {
        response = await axios.post(`${process.env.TEST_API_ORIGIN}/api/invoice/create/${cardHash}`, cardBody)
@@ -65,7 +70,7 @@ describe('card | fund & withdraw', () => {
     fundingInvoice = response.data.data
   })
 
-  it('should return status of a empty (unfunded) card', async () => {
+  failEarly.it('should return status of a empty (unfunded) card', async () => {
     let response: AxiosResponse
     try {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
@@ -83,14 +88,14 @@ describe('card | fund & withdraw', () => {
     EXPECTED_OBJECT.data.invoice.payment_hash = response.data.data.invoice.payment_hash
   })
 
-  it('should pay funding invoice of card', async () => {
+  failEarly.it('should pay funding invoice of card', async () => {
     const data = await wallet.payInvoice(fundingInvoice)
 
     expect(data.payment_hash).toHaveLength(64)
     expect(data['checking_id']).toHaveLength(64)
   })
 
-  it('should return status of a funded card', async () => {
+  failEarly.it('should return status of a funded card', async () => {
     let response: AxiosResponse
     try {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
@@ -109,7 +114,7 @@ describe('card | fund & withdraw', () => {
     EXPECTED_OBJECT.data.lnbitsWithdrawId = response.data.data.lnbitsWithdrawId
   })
 
-  it('should withdraw the funds of the lnurlw', async () => {
+  failEarly.it('should withdraw the funds of the lnurlw', async () => {
     let response: AxiosResponse
     try {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
@@ -124,7 +129,7 @@ describe('card | fund & withdraw', () => {
     await wallet.withdrawAllFromLNURLW(lnurlw)
   })
 
-  it('should return status of a withdraw pending card', async () => {
+  failEarly.it('should return status of a withdraw pending card', async () => {
     let response: AxiosResponse
     try {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
@@ -139,7 +144,7 @@ describe('card | fund & withdraw', () => {
     expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
   })
 
-  it('should call lnurlw withdraw callback', async () => {
+  failEarly.it('should call lnurlw withdraw webhook', async () => {
     try {
       await axios.get(`${process.env.TEST_API_ORIGIN}/api/withdraw/used/${cardHash}`)
     } catch (error) {
@@ -149,7 +154,7 @@ describe('card | fund & withdraw', () => {
     }
   })
 
-  it('should return status of a withdrawn card', async () => {
+  failEarly.it('should return status of a withdrawn card', async () => {
     let response: AxiosResponse
     try {
       response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)

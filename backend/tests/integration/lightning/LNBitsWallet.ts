@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import { type LNURLw } from '@shared/data/LNURLw'
 import { delay } from '../timingUtils'
 
-export class LNBitsWallet {
+export default class LNBitsWallet {
   adminKey: string
   lnbitsOrigin: string
 
@@ -89,20 +89,23 @@ export class LNBitsWallet {
     const retryWaitTimeInMS = 500
 
     let retrys = maxRetries
+    let caughtError: unknown
     while (retrys > 0) {
       try {
         lnurlWithdrawResponse = await axios.get(url)
         break
       } catch (error) {
-        console.error(error)
-        console.error(`Retrying in ${retryWaitTimeInMS}ms`)
+        caughtError = error
         await delay(retryWaitTimeInMS)
 
         retrys--
       }
     }
 
-    if (lnurlWithdrawResponse === null) throw new Error(`Tried LNURLw callback link for ${maxRetries}x times: ${url}`)
+    if (lnurlWithdrawResponse === null) {
+      console.error('withdraw failed multiple times, only showing last error', caughtError)
+      throw new Error(`Tried LNURLw callback link for ${maxRetries}x times: ${url}`)
+    }
 
     return lnurlWithdrawResponse.data
   }
