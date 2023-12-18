@@ -10,6 +10,7 @@ import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRed
 import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
 import BulkWithdraw from '@backend/modules/BulkWithdraw'
+import { delay } from '@backend/services/timingUtils'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
 import hashSha256 from './hashSha256'
@@ -614,4 +615,28 @@ export const loadCurrentLnurlFromLnbitsByWithdrawId = async (withdrawId: string)
     axiosOptionsWithReadHeaders,
   )
   return response.data.lnurl.toLowerCase()
+}
+
+/**
+ * if we are too fast we need to try multiple times
+ * https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/825
+ * 
+ * @throws
+ * */
+export const getLnurlResponse = async (url: string) => {
+  const maxRetries = 5
+  const retryWaitTimeInMS = 200
+
+  let retrys = maxRetries
+  let caughtError: unknown
+  while (retrys > 0) {
+    try {
+      return await axios.get(url)
+    } catch (error) {
+      caughtError = error
+      await delay(retryWaitTimeInMS)
+      retrys--
+    }
+  }
+  throw caughtError
 }

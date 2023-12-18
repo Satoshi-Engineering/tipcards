@@ -1,4 +1,3 @@
-import axios from 'axios'
 import express from 'express'
 
 import type { Card } from '@shared/data/api/Card'
@@ -13,6 +12,7 @@ import {
   getLnurlpForNewCard,
   getLnurlpForCard,
   loadCurrentLnurlFromLnbitsByWithdrawId,
+  getLnurlResponse,
 } from '@backend/services/lnbitsHelpers'
 
 const router = express.Router()
@@ -162,10 +162,13 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   }
 
   try {
-    const response = await axios.get(decodeLnurl(lnurl))
+    const response = await getLnurlResponse(decodeLnurl(lnurl))
     res.json(response.data)
   } catch (error) {
-    console.error(ErrorCode.UnableToResolveLnbitsLnurl, error)
+    console.error(
+      `Unable to resolve lnurlw at lnbits for card ${card.cardHash}`,
+      error,
+    )
     res.status(500).json({
       status: 'ERROR',
       reason: 'Unable to resolve LNURL at lnbits.',

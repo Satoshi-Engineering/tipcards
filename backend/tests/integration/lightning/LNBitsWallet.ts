@@ -1,6 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
+
 import { type LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
-import { delay } from '../timingUtils'
+
+import { delay } from '@backend/services/timingUtils'
 
 export default class LNBitsWallet {
   adminKey: string
