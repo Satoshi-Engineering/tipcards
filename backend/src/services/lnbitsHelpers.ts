@@ -620,13 +620,10 @@ export const loadCurrentLnurlFromLnbitsByWithdrawId = async (withdrawId: string)
 /**
  * if we are too fast we need to try multiple times
  * https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/825
- * 
+ *
  * @throws
  * */
-export const getLnurlResponse = async (url: string) => {
-  const maxRetries = 5
-  const retryWaitTimeInMS = 200
-
+export const getLnurlResponse = async (url: string, maxRetries = 5, retryWaitTimeInMS = 200) => {
   let retrys = maxRetries
   let caughtError: unknown
   while (retrys > 0) {
