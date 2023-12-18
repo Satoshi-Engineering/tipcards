@@ -1,13 +1,19 @@
 import '../initEnv'
 import axios, { AxiosResponse } from 'axios'
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { Card } from '@shared/data/api/Card'
 
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 import { cardData } from '../../apiData'
 import Frontend from '../Frontend'
 
-const getExpectedCard = (cardHash: string, text: string, note: string, amount: number) => {
+export type ExpectedCard = {
+  status: string,
+  data: Card,
+}
+
+const getExpectedCard = (cardHash: string, text: string, note: string, amount: number): ExpectedCard => {
   return {
     status: 'success',
     data: {
@@ -33,30 +39,30 @@ const getExpectedCard = (cardHash: string, text: string, note: string, amount: n
   }
 }
 
-const setExpectedCardToEmptyCardPre = (expectedObject : any, fundingInvoice: string) => {
-  expectedObject.data.invoice.payment_request = fundingInvoice
+const setExpectedCardToEmptyCardPre = (expectedObject: ExpectedCard, fundingInvoice: string) => {
+  if (expectedObject.data.invoice != null) expectedObject.data.invoice.payment_request = fundingInvoice
 }
 
-const setExpectedCardToEmptyCardPost = (expectedObject : any, created: number, payment_hash: string) => {
-  expectedObject.data.invoice.created = created
-  expectedObject.data.invoice.payment_hash = payment_hash
+const setExpectedCardToEmptyCardPost = (expectedObject: ExpectedCard, created: number, payment_hash: string) => {
+  if (expectedObject.data.invoice != null) expectedObject.data.invoice.created = created
+  if (expectedObject.data.invoice != null) expectedObject.data.invoice.payment_hash = payment_hash
 }
 
-const setExpectedCardToFundedCardPre = (expectedObject : any) => {
-  expectedObject.data.invoice.paid = expect.any(Number)
+const setExpectedCardToFundedCardPre = (expectedObject: ExpectedCard) => {
+  if (expectedObject.data.invoice != null) expectedObject.data.invoice.paid = expect.any(Number)
   expectedObject.data.lnbitsWithdrawId = expect.any(String)
 }
 
-const setExpectedCardToFundedCardPost = (expectedObject : any, paid: number, lnbitsWithdrawId: string) => {
-  expectedObject.data.invoice.paid = paid
+const setExpectedCardToFundedCardPost = (expectedObject: ExpectedCard, paid: number, lnbitsWithdrawId: string) => {
+  if (expectedObject.data.invoice != null) expectedObject.data.invoice.paid = paid
   expectedObject.data.lnbitsWithdrawId = lnbitsWithdrawId
 }
 
-const setExpectedCardToWithdrawPendingCardPre = (expectedObject : any) => {
+const setExpectedCardToWithdrawPendingCardPre = (expectedObject: ExpectedCard) => {
   expectedObject.data.withdrawPending = true
 }
 
-const setExpectedCardToWithdrawnCardPre = (expectedObject : any) => {
+const setExpectedCardToWithdrawnCardPre = (expectedObject: ExpectedCard) => {
   expectedObject.data.used = expect.any(Number)
   expectedObject.data.withdrawPending = false
 }

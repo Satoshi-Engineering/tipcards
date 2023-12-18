@@ -16,4 +16,10 @@
   - Because of this, the folder `gitlab-ci` is the same as the yml file
 - package-lock.json
 
+### Import Order
+1. External libraries
+2. libraries from shared project
+3. libraries with absolut paths (e.g. @frontend, @backend)
+4. libraries relative imports
 
+Add empty lines between these blocks.
