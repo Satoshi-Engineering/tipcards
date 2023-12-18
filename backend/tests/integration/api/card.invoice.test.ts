@@ -1,50 +1,78 @@
 import '../initEnv'
 import axios, { AxiosResponse } from 'axios'
-import { randomUUID } from 'crypto'
-
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
-
-import hashSha256 from '@backend/services/hashSha256'
 
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
+import { cardData } from '../../apiData'
+import Frontend from '../Frontend'
+
+const getExpectedCard = (cardHash: string, text: string, note: string, amount: number) => {
+  return {
+    status: 'success',
+    data: {
+      cardHash: cardHash,
+      text: text,
+      note: note,
+      invoice: {
+        created: expect.any(Number),
+        expired: false,
+        amount: amount,
+        paid: null,
+        payment_request: '',
+        payment_hash: expect.any(String),
+      },
+      lnurlp: null,
+      setFunding: null,
+      lnbitsWithdrawId: null,
+      landingPageViewed: null,
+      isLockedByBulkWithdraw: false,
+      used: null,
+      withdrawPending: false,
+    },
+  }
+}
+
+const setExpectedCardToEmptyCardPre = (expectedObject : any, fundingInvoice: string) => {
+  expectedObject.data.invoice.payment_request = fundingInvoice
+}
+
+const setExpectedCardToEmptyCardPost = (expectedObject : any, created: number, payment_hash: string) => {
+  expectedObject.data.invoice.created = created
+  expectedObject.data.invoice.payment_hash = payment_hash
+}
+
+const setExpectedCardToFundedCardPre = (expectedObject : any) => {
+  expectedObject.data.invoice.paid = expect.any(Number)
+  expectedObject.data.lnbitsWithdrawId = expect.any(String)
+}
+
+const setExpectedCardToFundedCardPost = (expectedObject : any, paid: number, lnbitsWithdrawId: string) => {
+  expectedObject.data.invoice.paid = paid
+  expectedObject.data.lnbitsWithdrawId = lnbitsWithdrawId
+}
+
+const setExpectedCardToWithdrawPendingCardPre = (expectedObject : any) => {
+  expectedObject.data.withdrawPending = true
+}
+
+const setExpectedCardToWithdrawnCardPre = (expectedObject : any) => {
+  expectedObject.data.used = expect.any(Number)
+  expectedObject.data.withdrawPending = false
+}
 
 const TEST_AMOUNT_IN_SATS = 100
 
-const cardHash = hashSha256(randomUUID())
-const cardBody = {
-  amount: TEST_AMOUNT_IN_SATS,
-  text: `${cardHash} textForWithdraw`,
-  note: `${cardHash} noteForStatusPage`,
-}
+const testCard = cardData.generateCard(TEST_AMOUNT_IN_SATS)
+
 let fundingInvoice = ''
 
 const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 const failEarly = new FailEarly(it)
 
-const EXPECTED_OBJECT = {
-  status: 'success',
-  data: {
-    cardHash: cardHash,
-    text: cardBody.text,
-    note: cardBody.note,
-    invoice: {
-      created: expect.any(Number),
-      expired: false,
-      amount: cardBody.amount,
-      paid: null,
-      payment_request: '',
-      payment_hash: expect.any(String),
-    },
-    lnurlp: null,
-    setFunding: null,
-    lnbitsWithdrawId: null,
-    landingPageViewed: null,
-    isLockedByBulkWithdraw: false,
-    used: null,
-    withdrawPending: false,
-  },
-}
+const frontend = new Frontend()
+
+const EXPECTED_OBJECT = getExpectedCard(testCard.cardHash, testCard.text, testCard.note, testCard.amount)
 
 describe('card | fund & withdraw', () => {
   failEarly.it('should check if lnbits wallet has enough balance for testing', async () => {
@@ -57,7 +85,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should create a card with valid ln invoice', async () => {
     let response: AxiosResponse
     try {
-       response = await axios.post(`${process.env.TEST_API_ORIGIN}/api/invoice/create/${cardHash}`, cardBody)
+       response = await frontend.createCardViaAPI(testCard.cardHash, testCard.amount, testCard.text, testCard.note)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -73,19 +101,18 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a empty (unfunded) card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
       return
     }
 
-    EXPECTED_OBJECT.data.invoice.payment_request = fundingInvoice
+    setExpectedCardToEmptyCardPre(EXPECTED_OBJECT, fundingInvoice)
 
     expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
 
-    EXPECTED_OBJECT.data.invoice.created = response.data.data.invoice.created
-    EXPECTED_OBJECT.data.invoice.payment_hash = response.data.data.invoice.payment_hash
+    setExpectedCardToEmptyCardPost(EXPECTED_OBJECT, response.data.data.invoice.created, response.data.data.invoice.payment_hash)
   })
 
   failEarly.it('should pay funding invoice of card', async () => {
@@ -98,26 +125,24 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a funded card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
       return
     }
 
-    EXPECTED_OBJECT.data.invoice.paid = expect.any(Number)
-    EXPECTED_OBJECT.data.lnbitsWithdrawId = expect.any(String)
+    setExpectedCardToFundedCardPre(EXPECTED_OBJECT)
 
     expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
 
-    EXPECTED_OBJECT.data.invoice.paid = response.data.data.invoice.paid
-    EXPECTED_OBJECT.data.lnbitsWithdrawId = response.data.data.lnbitsWithdrawId
+    setExpectedCardToFundedCardPost(EXPECTED_OBJECT, response.data.data.invoice.paid, response.data.data.lnbitsWithdrawId)
   })
 
   failEarly.it('should withdraw the funds of the lnurlw', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -132,21 +157,21 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a withdraw pending card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
       return
     }
 
-    EXPECTED_OBJECT.data.withdrawPending = true
+    setExpectedCardToWithdrawPendingCardPre(EXPECTED_OBJECT)
 
     expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
   })
 
   failEarly.it('should call lnurlw withdraw webhook', async () => {
     try {
-      await axios.get(`${process.env.TEST_API_ORIGIN}/api/withdraw/used/${cardHash}`)
+      await axios.get(`${process.env.TEST_API_ORIGIN}/api/withdraw/used/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -157,15 +182,14 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a withdrawn card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}`)
+      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
       return
     }
 
-    EXPECTED_OBJECT.data.used = expect.any(Number)
-    EXPECTED_OBJECT.data.withdrawPending = false
+    setExpectedCardToWithdrawnCardPre(EXPECTED_OBJECT)
 
     expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
   })
