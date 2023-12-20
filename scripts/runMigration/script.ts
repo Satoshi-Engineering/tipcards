@@ -13,7 +13,7 @@ import * as dotenv from 'dotenv'
 dotenv.config({ path: './backend/.env' })
 
 const MYSQL_PORT = parseInt(process.env.MYSQL_PORT || '3306')
-const MIGRATIONS_FOLDER = `./dist/drizzle/${process.env.MYSQL_DB_NAME}-migrations`
+const MIGRATIONS_FOLDER = './backend/database/drizzle/migrations'
 
 console.info('Running DB Migration')
 console.info(`Host:      ${process.env.MYSQL_HOST}:${MYSQL_PORT}`)

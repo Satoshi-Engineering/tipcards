@@ -5,7 +5,7 @@ dotenv.config({ path: './backend/.env' }) // Needed for the drizzle-kit generate
 
 export default {
   schema: './backend/src/database/drizzle/schema/*',
-  out: `./dist/drizzle/${process.env.MYSQL_DB_NAME}-migrations`,
+  out: './backend/database/drizzle/migrations',
   driver: 'mysql2',
   dbCredentials: {
     host: process.env.MYSQL_HOST,
