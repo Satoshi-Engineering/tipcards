@@ -1,11 +1,12 @@
-/* eslint-disable */
+/* eslint-disable no-console */
 import * as dotenv from 'dotenv'
 import * as readline from 'readline'
 
 dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { getAllCardHashes, getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
+import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
+import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
 import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
 
 const clearUnusedCards = async () => {
@@ -33,7 +34,7 @@ const clearUnusedCards = async () => {
     }
   }
 
-  console.log(`\nChecking done.\n`)
+  console.log('\nChecking done.\n')
 }
 
 const migrateLnbitsInstance = async () => {
@@ -73,10 +74,10 @@ const migrateLnbitsInstance = async () => {
     }
 
     if (
-      card.lnurlp != null &&
-      card.lnurlp.shared &&
-      card.lnurlp.amount != null &&
-      card.lnurlp.amount > 0
+      card.lnurlp != null
+      && card.lnurlp.shared
+      && card.lnurlp.amount != null
+      && card.lnurlp.amount > 0
     ) {
       card.lnurlp.paid = Math.round(+ new Date() / 1000)
       await updateCard(card)
@@ -97,12 +98,45 @@ const migrateLnbitsInstance = async () => {
   console.log(`  ${unfundedCardsCount} unfunded cards have been deleted.`)
 }
 
+const parseAllCards = async () => {
+  const cardHashes: string[] = await getAllCardHashes()
+
+  console.log(`\nStarting zod check for ${cardHashes.length} cards.\n`)
+
+  let invalidCount = 0
+  for (const cardHash of cardHashes) {
+    try {
+      await getCardByHash(cardHash)
+    } catch (error) {
+      invalidCount += 1
+      console.log(`Card ${cardHash} not valid.`)
+    }
+  }
+
+  if (invalidCount > 0) {
+    console.log(`\n${invalidCount} invalid card(s) found!`)
+  }
+
+  console.log('\nChecking done.\n')
+}
+
+const parseSingleCard = async () => {
+  const cardHash = await prompt('CardHash: ')
+  try {
+    await getCardByHash(cardHash)
+  } catch (error) {
+    console.log(error)
+    return
+  }
+  console.log('Card is valid!')
+}
+
 const readlineInterface = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 })
-const prompt = (question: string) => {
-  const promise = new Promise((resolve) => {
+const prompt = (question: string): Promise<string> => {
+  const promise = new Promise<string>((resolve) => {
     readlineInterface.question(question, (answer) => {
       resolve(answer)
     })
@@ -110,19 +144,28 @@ const prompt = (question: string) => {
   return promise
 }
 const run = async () => {
-  console.log('What do you want to do?')
+  console.log('\nWhat do you want to do?')
+  console.log('0. Leave.')
   console.log('1. Check all cards with used flag if they are actually used (by calling lnbits).')
   console.log('2. Migrate to a new lnbits instance. This means deleting unfunded cards from the database and clearing the withdrawId from all unclaimed cards.')
+  console.log('3. Parse all cards in redis database with zod.')
+  console.log('4. Parse a single card in redis database with zod and print parsing error.')
   const answer = await prompt('Type a number: ')
 
-  if (answer === '1') {
+  if (answer === '0') {
+    process.exit()
+  } if (answer === '1') {
     await clearUnusedCards()
   } else if (answer === '2') {
     await migrateLnbitsInstance()
+  } else if (answer === '3') {
+    await parseAllCards()
+  } else if (answer === '4') {
+    await parseSingleCard()
   } else {
     console.log('Unknown command.')
   }
-  process.exit()
+  setTimeout(run, 0)
 }
 run()
-/* eslint-enable */
+/* eslint-enable no-console */
