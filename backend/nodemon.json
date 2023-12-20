@@ -1,6 +1,5 @@
 {
   "ignore": [
-    "test/**/*.ts",
-    "./*.json"
+    "**/tests/**"
   ]
 }
