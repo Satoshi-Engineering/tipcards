@@ -5,6 +5,7 @@ build-backend:
     - changes:
       - backend/src/**/*
       - backend/index.ts
+      - scripts/cli/**/*
       - shared/**/*
       - package-lock.json
   cache:
@@ -15,6 +16,7 @@ build-backend:
     paths:
       - dist
       - node_modules
+      - scripts/cli
       - ecosystem.config.js
       - .env
       - tsconfig.json
