@@ -2,6 +2,7 @@
 import * as dotenv from 'dotenv'
 import * as readline from 'readline'
 
+dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
 dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
