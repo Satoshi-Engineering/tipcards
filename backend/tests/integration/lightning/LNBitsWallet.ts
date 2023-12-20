@@ -3,6 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import { type LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
 import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
+import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -97,5 +98,25 @@ export default class LNBitsWallet {
     }
 
     return lnurlWithdrawResponse.data
+  }
+
+  public async loginWithLNURLAuth(lnurlAuth: string) {
+    const url = decodeLnurl(lnurlAuth)
+
+    let response: AxiosResponse
+
+    const headers = this.getAuthHeader() as any
+    headers.params = {
+      'callback': url,
+    }
+
+    try {
+      response = await axios.get(`${this.lnbitsOrigin}/api/v1/lnurlauth`, headers)
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+
+    return response.data
   }
 }
