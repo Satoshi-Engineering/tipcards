@@ -7,6 +7,8 @@
     "test-units": "npm run backend-test-units && npm run frontend-test-units",
     "shared-build": "tsc -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
+    "cli-build": "npm run shared-build && npm run backend-build && tsc -p ./scripts/cli/tsconfig.json",
+    "cli-run": "ts-node -P ./scripts/cli/tsconfig.json -r tsconfig-paths/register ./scripts/cli/cli.ts",
     "frontend-dev": "cd frontend && vite",
     "frontend-preview": "cd frontend && vite preview --port 5050",
     "frontend-build": "cd frontend && vite build",

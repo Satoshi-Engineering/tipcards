@@ -16,13 +16,13 @@ build-backend:
     paths:
       - dist
       - node_modules
-      - scripts/cli
       - ecosystem.config.js
       - .env
       - tsconfig.json
   script:
     - npm run shared-build
     - npm run backend-build
+    - npm run cli-build
     - cp backend/deploy/tsconfig.json .
     - cp backend/deploy/ecosystem.config.js .
     - if [ -f backend/.env ]; then cp backend/.env .; fi

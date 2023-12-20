@@ -1,8 +1,14 @@
 {
+  "ts-node": {
+    "files": true
+  },
+  "include": [
+    "./cli.ts",
+  ],
   "compilerOptions": {
     "paths": {
       "@backend/*": ["../../backend/src/*"],
-      "@shared/*": ["../../shared/src/*"]
+      "@shared/*": ["../../shared/src/*"],
     },
     "target": "ESNext",
     "lib": ["ESNext"],
@@ -10,9 +16,13 @@
     "rootDir": "./",
     "moduleResolution": "node",
     "types": ["node"],
+    "outDir": "../../dist/cli",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true
-  }
+  },
+  "references": [
+    { "path" : "../../backend/tsconfig.build.json" },
+  ]
 }

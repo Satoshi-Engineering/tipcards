@@ -12,3 +12,11 @@ This cli script let's you do two things:
 ```bash
 npx ts-node -P ./scripts/cli/tsconfig.json -r tsconfig-paths/register ./scripts/cli/cli.ts
 ```
+
+## Run on server
+
+**Info:** run from backend root (e.g. `/var/www/tipcards/backend`)
+
+```bash
+node -r tsconfig-paths/register dist/cli/cli.js
+```
