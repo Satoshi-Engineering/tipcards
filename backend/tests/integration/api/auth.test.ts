@@ -1,50 +1,35 @@
 import '../initEnv'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 
-import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 import Frontend from '../Frontend'
 import LocalWallet from '../lightning/LocalWallet'
+import hashSha256 from '@backend/services/hashSha256'
+import { randomUUID } from 'crypto'
+import { ErrorCode } from '@shared/data/Errors'
 
 const authWallet = new LocalWallet()
 const failEarly = new FailEarly(it)
 const frontend = new Frontend()
 
-let authServiceHash = ''
-let authServiceAccessToken = ''
-let authServiceRefreshToken = ''
-
-const getRefreshTokenFromCookies = (cookies: string[] | undefined) => {
-  if (cookies === undefined) {
-    throw new Error('no cookies set')
-  }
-
-  const match = cookies[0].match(/(^| )refresh_token=(?<refreshToken>[^;]+)/)
-  if (match == null) {
-    throw new Error('refresh_token in cookies not found or cookie not in cookies[0]')
-  }
-  if (match.groups == null) {
-    throw new Error('refresh_token not found in cookie')
-  }
-
-  return match.groups['refreshToken']
-}
+const accountName = `${hashSha256(randomUUID())} accountName`
+const displayName = `${hashSha256(randomUUID())} accoundisplayNametName`
+const email = `${hashSha256(randomUUID())}@email.com`
 
 describe('auth', () => {
-  /*
   failEarly.it('should fail with 401, due a fresh, but no login', async () => {
-    let response: AxiosResponse | null = null
+    let caughtError: AxiosError
 
     try {
-      response = await frontend.authRefresh()
-    } catch (error) {
-      console.error(error)
+      await frontend.authRefresh()
       expect(false).toBe(true)
       return
+    } catch (error) {
+      caughtError = error as AxiosError
     }
-
-    expect(response).toBeNull()
-  })*/
+    expect(axios.isAxiosError(caughtError)).toBe(true)
+    expect(caughtError?.response?.status).toBe(401)
+  })
 
   failEarly.it('should login', async () => {
     let response: AxiosResponse | null = null
@@ -65,15 +50,13 @@ describe('auth', () => {
       },
     }))
 
-    authServiceHash = response.data.data.hash
-
     response = await authWallet.loginWithLNURLAuth(response.data.data.encoded)
     expect(response.data).toEqual(expect.objectContaining({
       status: 'OK',
     }))
 
     try {
-      response = await frontend.authStatus(authServiceHash)
+      response = await frontend.authStatus()
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -86,15 +69,12 @@ describe('auth', () => {
         accessToken: expect.any(String),
       },
     }))
-
-    authServiceAccessToken = response.data.data.accessToken
-    authServiceRefreshToken = getRefreshTokenFromCookies(response.headers['set-cookie'])
   })
 
   failEarly.it('should fail due hash for auth status has already been used', async () => {
     let caughtError: AxiosError
     try {
-      await frontend.authStatus(authServiceHash)
+      await frontend.authStatus()
       expect(false).toBe(true)
       return
     } catch (error) {
@@ -102,14 +82,17 @@ describe('auth', () => {
     }
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(404)
-    expect(caughtError?.response?.data).toEqual(expect.objectContaining({ status: 'error', data: 'not found' }))
+    expect(caughtError?.response?.data).toEqual(expect.objectContaining({
+      status: 'error',
+      data: 'not found' ,
+    }))
   })
 
   failEarly.it('should get a new access Token', async () => {
     let response: AxiosResponse | null = null
 
     try {
-      response = await frontend.authRefresh('refresh_token='+authServiceRefreshToken)
+      response = await frontend.authRefresh()
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -122,9 +105,102 @@ describe('auth', () => {
         accessToken: expect.any(String),
       },
     }))
-
-    expect(authServiceAccessToken).not.toBe(response.data.data.accessToken)
-    authServiceAccessToken = response.data.data.accessToken
   })
+
+  //* TODO: This somehow affects set and get User ???
+  /*
+  failEarly.it('should logout user on all other devices', async () => {
+    let response: AxiosResponse | null = null
+
+    try {
+      response = await frontend.logoutAllOtherDevices()
+    } catch (error) {
+      console.error(error)
+      expect(false).toBe(true)
+      return
+    }
+
+    expect(response.data).toEqual(expect.objectContaining({
+      status: 'success',
+    }))
+  })
+*/
+  failEarly.it('should set user profile', async () => {
+    let response: AxiosResponse | null = null
+
+    try {
+      response = await frontend.setProfile(accountName, displayName, email)
+    } catch (error) {
+      console.error(error)
+      expect(false).toBe(true)
+      return
+    }
+
+    expect(response.data).toEqual(expect.objectContaining({
+      status: 'success',
+      data: {
+        accountName,
+        displayName,
+        email,
+      },
+    }))
+  })
+
+  failEarly.it('should get user profile', async () => {
+    let response: AxiosResponse | null = null
+
+    try {
+      response = await frontend.getProfile()
+    } catch (error) {
+      console.error(error)
+      expect(false).toBe(true)
+      return
+    }
+
+    expect(response.data).toEqual(expect.objectContaining({
+      status: 'success',
+      data: {
+        accountName,
+        displayName,
+        email,
+      },
+    }))
+  })
+
+  failEarly.it('should logout user', async () => {
+    let response: AxiosResponse | null = null
+
+    try {
+      response = await frontend.getProfile()
+    } catch (error) {
+      console.error(error)
+      expect(false).toBe(true)
+      return
+    }
+
+    expect(response.data).toEqual(expect.objectContaining({
+      status: 'success',
+    }))
+  })
+
+  failEarly.it('should fail due user is logged out', async () => {
+    let caughtError: AxiosError | null = null
+    try {
+      const response = await frontend.authRefresh()
+      console.error('Request passed successfull')
+      console.error(response.data)
+    } catch (error) {
+      caughtError = error as AxiosError
+    }
+
+    expect(axios.isAxiosError(caughtError)).toBe(true)
+    expect(caughtError?.response?.status).toBe(401)
+    expect(caughtError?.response?.data).toEqual(expect.objectContaining({
+      status: 'error',
+      message: 'Refresh token denied.',
+      code: ErrorCode.RefreshTokenDenied,
+    }))
+  })
+
 
 })

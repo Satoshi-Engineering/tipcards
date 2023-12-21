@@ -1,15 +1,11 @@
 import '../initEnv'
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError } from 'axios'
 
-import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
-//import { setData } from '../../apiData'
 import Frontend from '../Frontend'
-import { Set } from '@shared/data/api/Set'
 import crypto from 'crypto'
 import { ErrorCode } from '@shared/data/Errors'
 
-const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 const failEarly = new FailEarly(it)
 const frontend = new Frontend()
 
