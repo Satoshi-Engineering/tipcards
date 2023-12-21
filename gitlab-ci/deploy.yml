@@ -30,7 +30,7 @@
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     # RSYNC Dist
-    - rsync -atv --delete --progress ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
+    - rsync -at --delete --progress ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
     - | 
       ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
       
@@ -131,7 +131,7 @@ deploy-backend-main:
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     # 1) RSYNC Dist
-    - rsync -atv --delete --progress ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
+    - rsync -at --delete --progress ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
     # 2) Remove old dist-www-previous dir
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-www-previous"
     # 3) Save current dist to previous
