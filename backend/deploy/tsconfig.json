@@ -2,8 +2,8 @@
 {
   "compilerOptions": {
     "paths": {
-      "@backend/*": ["./dist/backend/src/*"],
-      "@shared/*": ["./dist/shared/src/*"],
+      "@backend/*": ["./backend/src/*"],
+      "@shared/*": ["./shared/src/*"],
     },
   },
 }
