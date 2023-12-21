@@ -30,7 +30,7 @@
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     # RSYNC Dist
-    - rsync -atv --delete --progress ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
+    - rsync -atv --delete --progress ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
     - | 
       ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
       
@@ -54,13 +54,17 @@
       # 4) Make new dist available
       mv $DEPLOY_PATH/dist-node-next $DEPLOY_PATH/dist-node
 
-      # 5) Start pm2
-      cd $DEPLOY_PATH/dist-node      
+      # 5) Run drizzle migrations
+      cd $DEPLOY_PATH/dist-node
+      node -r tsconfig-paths/register ./backend/drizzle.migrate.js
+
+      # 6) Start pm2
+      cd $DEPLOY_PATH/dist-node
       PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.js
 
-      # 6) save pm2
+      # 7) save pm2
       PM2_HOME=/var/www/.pm2/ pm2 save
-      
+
       EOT
 
 deploy-backend-develop:
