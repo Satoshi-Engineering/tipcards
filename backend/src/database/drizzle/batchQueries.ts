@@ -27,6 +27,9 @@ export type DataObjects = {
 
 /** @throws */
 export const insertDataObjects = async (queries: Queries, data: DataObjects): Promise<void> => {
+  if (data.sets != null) {
+    await queries.insertSets(...data.sets)
+  }
   if (data.lnurlPs != null) {
     await queries.insertLnurlPs(...data.lnurlPs)
   }
@@ -45,9 +48,6 @@ export const insertDataObjects = async (queries: Queries, data: DataObjects): Pr
   if (data.cardVersionInvoices != null) {
     await queries.insertCardVersionInvoices(...data.cardVersionInvoices)
   }
-  if (data.sets != null) {
-    await queries.insertSets(...data.sets)
-  }
   if (data.setSettings != null) {
     await queries.insertSetSettings(...data.setSettings)
   }
@@ -60,6 +60,9 @@ export const insertDataObjects = async (queries: Queries, data: DataObjects): Pr
 export const insertOrUpdateDataObjects = async (queries: Queries, data: DataObjects): Promise<void> => {
   await makeSureOnlyASingleVersionExistsPerCard(queries, data)
 
+  if (data.sets != null) {
+    await Promise.all(data.sets.map((set) => queries.insertOrUpdateSet(set)))
+  }
   if (data.lnurlPs != null) {
     await Promise.all(data.lnurlPs.map((lnurlP) => queries.insertOrUpdateLnurlP(lnurlP)))
   }
@@ -81,9 +84,6 @@ export const insertOrUpdateDataObjects = async (queries: Queries, data: DataObje
     await Promise.all(
       data.cardVersionInvoices.map((cardVersionInvoice) => queries.insertOrUpdateCardVersionInvoice(cardVersionInvoice)),
     )
-  }
-  if (data.sets != null) {
-    await Promise.all(data.sets.map((set) => queries.insertOrUpdateSet(set)))
   }
   if (data.setSettings != null) {
     await Promise.all(data.setSettings.map((setSettings) => queries.insertOrUpdateSetSettings(setSettings)))
