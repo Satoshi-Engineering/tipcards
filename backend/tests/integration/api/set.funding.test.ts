@@ -6,7 +6,7 @@ import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import '../initEnv'
 import Frontend from '../Frontend'
 import LNBitsWallet from '../lightning/LNBitsWallet'
-
+import FailEarly from '../../FailEarly'
 
 const FE = new Frontend()
 
@@ -16,19 +16,34 @@ describe('set funding | create and delete', () => {
   const CARD_INDICES = [0,1,2,3,4,5]
 
   it('should create and save a new set funding invoice', async () => {
-    const response = await FE.createSetFundingInvoice(SET_ID, AMOUNT_PER_CARD, CARD_INDICES)
-    expect(response.data.status).toBe('success')
+    let response
+    try {
+      response = await FE.createSetFundingInvoice(SET_ID, AMOUNT_PER_CARD, CARD_INDICES)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response?.data.status).toBe('success')
   })
 
   it('should load the set', async () => {
-    const response = await FE.loadSet(SET_ID)
-    expect(response.data.status).toBe('success')
-    expect(response.data.data.invoice.amount).toBe(AMOUNT_PER_CARD * CARD_INDICES.length)
+    let response
+    try {
+      response = await FE.loadSet(SET_ID)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response?.data.status).toBe('success')
+    expect(response?.data.data.invoice.amount).toBe(AMOUNT_PER_CARD * CARD_INDICES.length)
   })
 
   it('should delete the set funding invoice', async () => {
-    const response = await FE.deleteSetFundingInvoice(SET_ID)
-    expect(response.data.status).toBe('success')
+    let response
+    try {
+      response = await FE.deleteSetFundingInvoice(SET_ID)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response?.data.status).toBe('success')
   })
 
   it('should return 404 when trying to load the set again', async () => {
@@ -45,52 +60,93 @@ describe('set funding | create and delete', () => {
 })
 
 describe('set funding | create and pay', () => {
-  // const SET_ID = '15f7cb8a-bbec-4af6-8947-ac64f74c3092'
   const SET_ID = randomUUID()
   const AMOUNT_PER_CARD = 42
   const CARD_INDICES = [0,1,2]
   const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 
+  const failEarly = new FailEarly(it)
+
+  failEarly.it('should check if lnbits wallet has enough balance for testing', async () => {
+    const data = await wallet.getWalletDetails()
+
+    expect(data).not.toBeNull()
+    expect(data?.balance).toBeGreaterThanOrEqual(AMOUNT_PER_CARD * CARD_INDICES.length * 1000)
+  })
+
   let payment_request: string
 
-  it('should create and save a new set funding invoice', async () => {
-    const response = await FE.createSetFundingInvoice(SET_ID, AMOUNT_PER_CARD, CARD_INDICES)
-    expect(response.data.status).toBe('success')
-    expect(typeof response.data.data.invoice.payment_request).toBe('string')
-    expect(response.data.data.invoice.payment_request.startsWith('ln')).toBe(true)
-    payment_request = response.data.data.invoice.payment_request
+  failEarly.it('should create and save a new set funding invoice', async () => {
+    let response
+    try {
+      response = await FE.createSetFundingInvoice(SET_ID, AMOUNT_PER_CARD, CARD_INDICES)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response?.data.status).toBe('success')
+    expect(typeof response?.data.data.invoice.payment_request).toBe('string')
+    expect(response?.data.data.invoice.payment_request.startsWith('ln')).toBe(true)
+    payment_request = response?.data.data.invoice.payment_request
   })
 
-  it('should pay the set funding invoice', async () => {
-    const data = await wallet.payInvoice(payment_request)
-    expect(data.payment_hash).toHaveLength(64)
-    expect(data.checking_id).toHaveLength(64)
+  failEarly.it('should pay the set funding invoice', async () => {
+    let response
+    try {
+      response = await wallet.payInvoice(payment_request)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response.payment_hash).toHaveLength(64)
+    expect(response.checking_id).toHaveLength(64)
   })
 
-  it('should load the set', async () => {
-    const response = await FE.loadSet(SET_ID)
-    expect(response.data.status).toBe('success')
-    expect(typeof response.data.data.invoice.paid).toBe('number')
+  failEarly.it('should load the set', async () => {
+    let response
+    try {
+      response = await FE.loadSet(SET_ID)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
+    expect(response?.data.status).toBe('success')
+    expect(typeof response?.data.data.invoice.paid).toBe('number')
   })
 
-  it('should load one of the cards and confirm that it is funded', async () => {
+  failEarly.it('should load one of the cards and confirm that it is funded', async () => {
     const randomCardIndex = Math.floor(Math.random() * CARD_INDICES.length)
     const cardHash = FE.getCardHashBySetIdAndCardIndex(SET_ID, randomCardIndex)
-    const response = await FE.loadCard(cardHash)
+    let response
+    try {
+      response = await FE.loadCard(cardHash)
+    } catch (error) {
+      expect(false).toBe(true)
+    }
     expect(response?.data.data.setFunding.amount).toBe(AMOUNT_PER_CARD)
     expect(typeof response?.data.data.lnbitsWithdrawId).toBe('string')
   })
 
-  it('should withdraw all cards from the set', async () => {
+  failEarly.it('should successfully withdraw all cards from the set', async () => {
     await Promise.all(
       CARD_INDICES.map(async (cardIndex) => {
         const cardHash = FE.getCardHashBySetIdAndCardIndex(SET_ID, cardIndex)
-        const lnurlResponse = await FE.loadLnurlForCardHash(cardHash)
-        const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(lnurlResponse.data)
-        const withdrawResponse = await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
+
+        let lnurlResponse
+        try {
+          lnurlResponse = await FE.loadLnurlForCardHash(cardHash)
+        } catch (error) {
+          expect(false).toBe(true)
+        }
+        expect(lnurlResponse).not.toBeUndefined()
+
+        const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(lnurlResponse?.data)
+
+        let withdrawResponse
+        try {
+          withdrawResponse = await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
+        } catch (error) {
+          expect(false).toBe(true)
+        }
         expect(withdrawResponse.status).toBe('OK')
       }),
     )
   })
 })
-
