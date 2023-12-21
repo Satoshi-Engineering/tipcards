@@ -3,6 +3,10 @@ import * as dotenv from 'dotenv'
 
 dotenv.config({ path: './backend/.env' }) // Needed for the drizzle-kit generate:mysql command
 
+export const SCHEMA_PATH = './backend/src/database/drizzle/schema/*'
+
+export const MIGRATIONS_FOLDER = './backend/database/drizzle/migrations'
+
 export const DB_CREDENTIALS = {
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
@@ -12,8 +16,8 @@ export const DB_CREDENTIALS = {
 }
 
 export default {
-  schema: './backend/src/database/drizzle/schema/*',
-  out: './backend/database/drizzle/migrations',
+  schema: SCHEMA_PATH,
+  out: MIGRATIONS_FOLDER,
   driver: 'mysql2',
   dbCredentials: DB_CREDENTIALS,
 } as Config
