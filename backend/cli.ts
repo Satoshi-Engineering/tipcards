@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as dotenv from 'dotenv'
 import * as readline from 'readline'
 
@@ -10,6 +9,7 @@ import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/q
 import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
 import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
 
+/* eslint-disable no-console */
 const clearUnusedCards = async () => {
   let hashes: string[] = []
   try {

@@ -3,11 +3,11 @@
     "files": true
   },
   "include": [
+    "./cli.ts",
     "./index.ts",
     "./src/**/*.ts",
   ],
   "compilerOptions": {
-    "composite": true,
     "paths": {
       "@backend/*": ["./src/*"],
       "@shared/*": ["../shared/src/*"],

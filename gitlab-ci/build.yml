@@ -4,8 +4,8 @@ build-backend:
     - !reference [.shared_config, rules, web_and_push]
     - changes:
       - backend/src/**/*
+      - backend/cli.ts
       - backend/index.ts
-      - scripts/cli/**/*
       - shared/**/*
       - package-lock.json
   cache:
@@ -22,7 +22,6 @@ build-backend:
   script:
     - npm run shared-build
     - npm run backend-build
-    - npm run cli-build
     - cp backend/deploy/tsconfig.json .
     - cp backend/deploy/ecosystem.config.js .
     - if [ -f backend/.env ]; then cp backend/.env .; fi

@@ -1,16 +1,18 @@
 # CLI
 
-This cli script let's you do two things:
+This cli script let's you do multiple things:
 
 1. **WHAT:** Check all cards with used flag if they are actually used (by calling lnbits).
 2. **WHAT:** Migrate to a new lnbits instance. This means deleting unfunded cards from the database and clearing the withdrawId from all unclaimed cards.
+3. **WHAT:** Parse all cards in redis database with zod.
+4. **WHAT:** Parse a single card in redis database with zod and print parsing error.
 
 ## HowTo
 
 **Info:** run from project root
 
 ```bash
-npx ts-node -P ./scripts/cli/tsconfig.json -r tsconfig-paths/register ./scripts/cli/cli.ts
+npx ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/cli.ts
 ```
 
 ## Run on server
@@ -18,5 +20,5 @@ npx ts-node -P ./scripts/cli/tsconfig.json -r tsconfig-paths/register ./scripts/
 **Info:** run from backend root (e.g. `/var/www/tipcards/backend`)
 
 ```bash
-node -r tsconfig-paths/register dist/cli/cli.js
+node -r tsconfig-paths/register dist/backend/cli.js
 ```
