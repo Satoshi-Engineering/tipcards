@@ -37,28 +37,24 @@ export default class Frontend {
       note,
     })
   }
-  
+
   async deleteSetFundingInvoice(setId: string) {
     return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`)
   }
 
-  async authRefresh() {
-    let caughtError: AxiosError | null = null
+  async authStatus(hash: string) {
+    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/status/${hash}`)
+  }
 
-    try {
-      const response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/refresh`)
-      return response.data
-    } catch (error) {
-      caughtError = error as AxiosError
-      if (caughtError?.response?.status !== 401) {
-        throw error
-      }
-
-      return null
-    }
+  async authRefresh(cookie: string) {
+    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/refresh`, {
+      headers:{
+        Cookie: cookie
+      },
+    })
   }
 
   async authCreate() {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/create`)
+    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/create`)
   }
 }

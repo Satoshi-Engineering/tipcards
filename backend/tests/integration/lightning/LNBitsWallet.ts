@@ -105,13 +105,10 @@ export default class LNBitsWallet {
 
     let response: AxiosResponse
 
-    const headers = this.getAuthHeader() as any
-    headers.params = {
-      'callback': url,
-    }
-
     try {
-      response = await axios.get(`${this.lnbitsOrigin}/api/v1/lnurlauth`, headers)
+      response = await axios.post(`${this.lnbitsOrigin}/api/v1/lnurlauth`,{
+        callback: url,
+      }, this.getAuthHeader())
     } catch (error) {
       console.error(error)
       throw error
