@@ -4,6 +4,7 @@
   },
   "include": [
     "./cli.ts",
+    "./drizzle.migrate.ts",
     "./index.ts",
     "./src/**/*.ts",
   ],

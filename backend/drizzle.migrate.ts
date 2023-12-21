@@ -9,15 +9,12 @@ import { drizzle } from 'drizzle-orm/mysql2'
 import * as mysql from 'mysql2/promise'
 import * as dotenv from 'dotenv'
 
-dotenv.config({ path: './backend/.env' })
+dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
+dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
-import * as schema from './../../backend/src/database/drizzle/schema'
-import { MIGRATIONS_FOLDER, DB_CREDENTIALS } from './../../backend/drizzle.config'
+import * as schema from '@backend/database/drizzle/schema'
 
-console.info('Running DB Migration')
-console.info(`Host:      ${DB_CREDENTIALS.host}:${DB_CREDENTIALS.port}`)
-console.info(`User:      ${DB_CREDENTIALS.user}`)
-console.info(`Database:  ${DB_CREDENTIALS.database}`)
+import { MIGRATIONS_FOLDER, DB_CREDENTIALS } from './drizzle.config'
 
 const run = async () => {
    const connection = await mysql.createConnection({
@@ -25,9 +22,13 @@ const run = async () => {
      multipleStatements: true,
   })
 
-  const db = drizzle(connection, { mode: 'default', schema: schema })
+  const db = drizzle(connection, { mode: 'default', schema })
 
   // This will run migrations on the database, skipping the ones already applied
+  console.info('Running DB Migration')
+  console.info(`Host:      ${DB_CREDENTIALS.host}:${DB_CREDENTIALS.port}`)
+  console.info(`User:      ${DB_CREDENTIALS.user}`)
+  console.info(`Database:  ${DB_CREDENTIALS.database}`)
   await migrate(db, { migrationsFolder: MIGRATIONS_FOLDER })
 
   // Don't forget to close the connection, otherwise the script will hang

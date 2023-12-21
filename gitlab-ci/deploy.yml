@@ -70,9 +70,10 @@ deploy-backend-develop:
     - if: $CI_COMMIT_BRANCH != 'develop'
       when: never
     - changes:
+      - backend/database/**/*
       - backend/src/**/*
+      - backend/cli.ts
       - backend/index.ts
-      - scripts/cli/**/*
       - shared/**/*
       - package-lock.json
   environment:
@@ -85,9 +86,10 @@ deploy-backend-main:
     - if: $CI_COMMIT_BRANCH != 'main'
       when: never
     - changes:
+      - backend/database/**/*
       - backend/src/**/*
+      - backend/cli.ts
       - backend/index.ts
-      - scripts/cli/**/*
       - shared/**/*
       - package-lock.json
   environment:

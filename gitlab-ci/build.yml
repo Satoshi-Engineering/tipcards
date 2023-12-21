@@ -3,6 +3,7 @@ build-backend:
   rules:
     - !reference [.shared_config, rules, web_and_push]
     - changes:
+      - backend/database/**/*
       - backend/src/**/*
       - backend/cli.ts
       - backend/index.ts
@@ -22,6 +23,7 @@ build-backend:
   script:
     - npm run shared-build
     - npm run backend-build
+    - cp -r backend/database dist/backend
     - cp backend/deploy/tsconfig.json .
     - cp backend/deploy/ecosystem.config.js .
     - if [ -f backend/.env ]; then cp backend/.env .; fi

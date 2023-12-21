@@ -24,7 +24,9 @@
     "backend-test-integration": "cd backend && jest --config ./jest.config.js ./tests/integration",
     "backend-test-integration-changes": "cd backend && jest --config ./jest.config.js --onlyChanged --watch ./tests/integration",
     "backend-proxy": "cd backend && ts-node -r tsconfig-paths/register ./proxy.ts",
-    "backend-ngrok": "cd backend && ts-node -r tsconfig-paths/register ./ngrok.ts"
+    "backend-ngrok": "cd backend && ts-node -r tsconfig-paths/register ./ngrok.ts",
+    "drizzle-update-schema": "ts-node scripts/createSchemaFiles/script.ts",
+    "drizzle-migrate": "ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/drizzle.migrate.ts"
   },
   "dependencies": {
     "@node-redis/json": "^1.0.2",
