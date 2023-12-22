@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import hashSha256 from '@backend/services/hashSha256'
+import LocalWallet from './lightning/LocalWallet'
+import { type Set } from '@shared/data/api/Set'
 
 export default class Frontend {
   authServiceLoginHash = ''
@@ -23,14 +25,6 @@ export default class Frontend {
 
   getCardHashBySetIdAndCardIndex(setId: string, cardIndex: number) {
     return hashSha256(`${setId}/${cardIndex}`)
-  }
-
-  async loadSets() {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/`)
-  }
-
-  async loadSet(setId: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`)
   }
 
   async createSetFundingInvoice(setId: string, amountPerCard: number, cardIndices: number[], text = '', note = '') {
@@ -64,6 +58,40 @@ export default class Frontend {
     return match.groups['refreshToken']
   }
 
+  getRefreshHeader() {
+    if (this.refreshToken === '') return {}
+
+    return {
+      headers: {
+        'Cookie': `refresh_token=${this.refreshToken}`,
+      },
+    }
+  }
+
+  getAccessHeader() {
+    if (this.accessToken === '') return {}
+
+    return {
+      headers: {
+        'Authorization': this.accessToken,
+      },
+    }
+  }
+
+  async authAndLogin() {
+    const authWallet = new LocalWallet()
+
+    const response: AxiosResponse = await this.authCreate()
+    await authWallet.loginWithLNURLAuth(response.data.data.encoded)
+    await this.authStatus()
+  }
+
+  clearLoginAndAuth() {
+    this.authServiceLoginHash = ''
+    this.accessToken = ''
+    this.refreshToken = ''
+  }
+
   async authCreate() {
     const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/create`)
     this.authServiceLoginHash = response.data.data.hash
@@ -79,28 +107,28 @@ export default class Frontend {
   }
 
   async authRefresh() {
-    let cookies = ''
-    if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
-
-    const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/refresh`, {
-      headers: {
-        'Cookie': cookies,
-      },
-    })
-
+    const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/refresh`, this.getRefreshHeader())
     this.accessToken = response.data.data.accessToken
     return response
   }
 
-  async getProfile() {
+  async logout() {
     let cookies = ''
     if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
 
-    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/profile`, {
-        headers: {
-          'Cookie': cookies,
-        },
-      })
+    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logout`, {}, {
+      headers: {
+        'Cookie': cookies,
+      },
+    })
+  }
+
+  async logoutAllOtherDevices() {
+    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, this.getRefreshHeader())
+  }
+
+  async getProfile() {
+    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/profile`, this.getRefreshHeader())
   }
 
   async setProfile(accountName: string, displayName: string, email: string) {
@@ -118,25 +146,15 @@ export default class Frontend {
     })
   }
 
-  async logout() {
-    let cookies = ''
-    if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
-
-    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logout`, {}, {
-      headers: {
-        'Cookie': cookies,
-      },
-    })
+  async loadSets() {
+    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/`, this.getAccessHeader())
   }
 
-  async logoutAllOtherDevices() {
-    let cookies = ''
-    if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
+  async loadSet(setId: string) {
+    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`, this.getAccessHeader())
+  }
 
-    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, {
-      headers: {
-        'Cookie': cookies,
-      },
-    })
+  async saveSet(set: Set) {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/set/${set.id}`, set, this.getAccessHeader())
   }
 }
