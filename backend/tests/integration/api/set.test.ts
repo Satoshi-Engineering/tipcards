@@ -5,11 +5,11 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorCode } from '@shared/data/Errors'
 
 import FailEarly from '../../FailEarly'
-import Frontend from '../Frontend'
+import FrontendSimulator from '../FrontendSimulator'
 import { setData } from '../../apiData'
 
 const failEarly = new FailEarly(it)
-const frontend = new Frontend()
+const frontend = new FrontendSimulator()
 
 const randomNotExistingSetId = setData.generateSetId()
 const set1 = setData.generateSet()
@@ -29,14 +29,11 @@ describe('Set\'s', () => {
 
     try {
       await frontend.loadSets()
-      expect(false).toBe(true)
-      return
     } catch (error) {
       caughtError = error as AxiosError
     }
 
     expect(caughtError).not.toBeNull()
-
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(401)
   })
@@ -46,13 +43,9 @@ describe('Set\'s', () => {
 
     try {
       await frontend.loadSet(randomNotExistingSetId)
-      expect(false).toBe(true)
     } catch (error) {
       caughtError = error as AxiosError
     }
-
-    expect(caughtError).not.toBeNull()
-    if (caughtError === null) return
 
     expect(axios.isAxiosError(caughtError)).toBe(true)
 
@@ -62,20 +55,12 @@ describe('Set\'s', () => {
     expect(caughtError?.response?.status).toBe(404)
   })
 
-  failEarly.it('should auth and login', async () => {
-    await frontend.authAndLogin()
+  failEarly.it('should login', async () => {
+    await frontend.login()
   })
 
   failEarly.it('should save a new set', async () => {
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.saveSet(set1)
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    const response = await frontend.saveSet(set1)
 
     expect(response.data).toEqual(expect.objectContaining(    {
       status: 'success',
@@ -84,15 +69,7 @@ describe('Set\'s', () => {
   })
 
   failEarly.it('should load a set', async () => {
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.loadSet(set1.id)
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    const response = await frontend.loadSet(set1.id)
 
     expect(response.data).toEqual(expect.objectContaining(    {
       status: 'success',
@@ -108,13 +85,7 @@ describe('Set\'s', () => {
     set1.settings.cardCopytext += ' changed'
     set1.settings.setName += ' changed'
 
-    try {
-      response = await frontend.saveSet(set1)
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    response = await frontend.saveSet(set1)
 
     expect(response.data).toEqual(expect.objectContaining(    {
       status: 'success',

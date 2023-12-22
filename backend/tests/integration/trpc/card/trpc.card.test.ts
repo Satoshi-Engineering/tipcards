@@ -3,10 +3,10 @@ import '../../initEnv'
 import { cardRouter } from '@backend/trpc/router/card'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 import { cardData } from '../../../apiData'
-import Frontend from '../../Frontend'
+import FrontendSimulator from '../../FrontendSimulator'
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
-const frontend = new Frontend()
+const frontend = new FrontendSimulator()
 
 const callerCards = cardRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

@@ -1,9 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
-import hashSha256 from '@backend/services/hashSha256'
-import LocalWallet from './lightning/LocalWallet'
-import { type Set } from '@shared/data/api/Set'
 
-export default class Frontend {
+import { type Set } from '@shared/data/api/Set'
+import hashSha256 from '@backend/services/hashSha256'
+
+import LNURLAuth from './lightning/LNURLAuth'
+
+export default class FrontendSimulator {
   authServiceLoginHash = ''
   accessToken = ''
   refreshToken = ''
@@ -40,7 +42,79 @@ export default class Frontend {
     return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`)
   }
 
-  getRefreshTokenFromResponse(response: AxiosResponse) {
+  async login() {
+    const authWallet = new LNURLAuth()
+    const response: AxiosResponse = await this.authCreate()
+    await authWallet.loginWithLNURLAuth(response.data.data.encoded)
+    await this.authStatus()
+  }
+
+  clearLoginAndAuth() {
+    this.authServiceLoginHash = ''
+    this.accessToken = ''
+    this.refreshToken = ''
+  }
+
+  async authCreate() {
+    const response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/create`)
+    this.authServiceLoginHash = response.data.data.hash
+    return response
+  }
+
+  async authStatus() {
+    const response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/status/${this.authServiceLoginHash}`)
+
+    this.accessToken = response.data.data.accessToken
+    this.setRefreshTokenFromResponse(response)
+    return response
+  }
+
+  async authRefresh() {
+    const response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/refresh`, this.getRefreshHeader())
+    this.accessToken = response.data.data.accessToken
+    this.setRefreshTokenFromResponse(response)
+    return response
+  }
+
+  async logout() {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/auth/logout`, {}, this.getRefreshHeader())
+  }
+
+  async logoutAllOtherDevices() {
+    const response = await axios.post(`${process.env.TEST_API_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, this.getRefreshHeader())
+    this.setRefreshTokenFromResponse(response)
+    return response
+  }
+
+  async getProfile() {
+    const response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/auth/profile`, this.getRefreshHeader())
+    this.setRefreshTokenFromResponse(response)
+    return response
+  }
+
+  async setProfile(accountName: string, displayName: string, email: string) {
+    const response = await axios.post(`${process.env.TEST_API_ORIGIN}/api/auth/profile`, {
+      accountName,
+      displayName,
+      email,
+    },this.getRefreshHeader())
+    this.setRefreshTokenFromResponse(response)
+    return response
+  }
+
+  async loadSets() {
+    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/`, this.getAccessHeader())
+  }
+
+  async loadSet(setId: string) {
+    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`, this.getAccessHeader())
+  }
+
+  async saveSet(set: Set) {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/set/${set.id}`, set, this.getAccessHeader())
+  }
+
+  setRefreshTokenFromResponse(response: AxiosResponse) {
     const cookies = response.headers['set-cookie']
 
     if (cookies === undefined) {
@@ -55,7 +129,7 @@ export default class Frontend {
       throw new Error('refresh_token not found in cookie')
     }
 
-    return match.groups['refreshToken']
+    this.refreshToken = match.groups['refreshToken']
   }
 
   getRefreshHeader() {
@@ -76,85 +150,5 @@ export default class Frontend {
         'Authorization': this.accessToken,
       },
     }
-  }
-
-  async authAndLogin() {
-    const authWallet = new LocalWallet()
-
-    const response: AxiosResponse = await this.authCreate()
-    await authWallet.loginWithLNURLAuth(response.data.data.encoded)
-    await this.authStatus()
-  }
-
-  clearLoginAndAuth() {
-    this.authServiceLoginHash = ''
-    this.accessToken = ''
-    this.refreshToken = ''
-  }
-
-  async authCreate() {
-    const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/create`)
-    this.authServiceLoginHash = response.data.data.hash
-    return response
-  }
-
-  async authStatus() {
-    const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/status/${this.authServiceLoginHash}`)
-
-    this.accessToken = response.data.data.accessToken
-    this.refreshToken = this.getRefreshTokenFromResponse(response)
-    return response
-  }
-
-  async authRefresh() {
-    const response = await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/refresh`, this.getRefreshHeader())
-    this.accessToken = response.data.data.accessToken
-    return response
-  }
-
-  async logout() {
-    let cookies = ''
-    if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
-
-    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logout`, {}, {
-      headers: {
-        'Cookie': cookies,
-      },
-    })
-  }
-
-  async logoutAllOtherDevices() {
-    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, this.getRefreshHeader())
-  }
-
-  async getProfile() {
-    return await axios.get(`${process.env.JWT_AUTH_ORIGIN}/api/auth/profile`, this.getRefreshHeader())
-  }
-
-  async setProfile(accountName: string, displayName: string, email: string) {
-    let cookies = ''
-    if (this.refreshToken) cookies += `refresh_token=${this.refreshToken}`
-
-    return await axios.post(`${process.env.JWT_AUTH_ORIGIN}/api/auth/profile`, {
-      accountName,
-      displayName,
-      email,
-    },{
-      headers: {
-        'Cookie': cookies,
-      },
-    })
-  }
-
-  async loadSets() {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/`, this.getAccessHeader())
-  }
-
-  async loadSet(setId: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`, this.getAccessHeader())
-  }
-
-  async saveSet(set: Set) {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/set/${set.id}`, set, this.getAccessHeader())
   }
 }

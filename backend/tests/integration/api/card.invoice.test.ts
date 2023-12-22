@@ -6,7 +6,7 @@ import { Card } from '@shared/data/api/Card'
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 import { cardData } from '../../apiData'
-import Frontend from '../Frontend'
+import FrontendSimulator from '../FrontendSimulator'
 
 export type ExpectedCard = {
   status: string,
@@ -76,7 +76,7 @@ let fundingInvoice = ''
 const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 const failEarly = new FailEarly(it)
 
-const frontend = new Frontend()
+const frontend = new FrontendSimulator()
 
 const EXPECTED_OBJECT = getExpectedCard(testCard.cardHash, testCard.text, testCard.note, testCard.amount)
 

@@ -4,11 +4,11 @@ import { randomUUID } from 'crypto'
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
 import '../initEnv'
-import Frontend from '../Frontend'
+import FrontendSimulator from '../FrontendSimulator'
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 
-const FE = new Frontend()
+const FE = new FrontendSimulator()
 
 describe('set funding | create and delete', () => {
   const SET_ID = randomUUID()
