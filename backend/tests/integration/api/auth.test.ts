@@ -107,8 +107,6 @@ describe('auth', () => {
     }))
   })
 
-  //* TODO: This somehow affects set and get User ???
-  /*
   failEarly.it('should logout user on all other devices', async () => {
     let response: AxiosResponse | null = null
 
@@ -124,7 +122,7 @@ describe('auth', () => {
       status: 'success',
     }))
   })
-*/
+
   failEarly.it('should set user profile', async () => {
     let response: AxiosResponse | null = null
 
@@ -171,7 +169,7 @@ describe('auth', () => {
     let response: AxiosResponse | null = null
 
     try {
-      response = await frontend.getProfile()
+      response = await frontend.logout()
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -201,6 +199,5 @@ describe('auth', () => {
       code: ErrorCode.RefreshTokenDenied,
     }))
   })
-
 
 })
