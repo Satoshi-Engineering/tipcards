@@ -1,5 +1,5 @@
 import Frontend from './Frontend'
-import axios, { AxiosResponse } from 'axios/index'
+import axios, { AxiosResponse } from 'axios'
 import { Set } from '@shared/data/api/Set'
 
 export default class FrontendWithAuth extends Frontend {
