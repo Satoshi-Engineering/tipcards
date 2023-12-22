@@ -5,7 +5,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { ErrorCode } from '@shared/data/Errors'
 
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../FrontendSimulator'
+import FrontendSimulator from '../frontend/FrontendSimulator'
 import { setData } from '../../apiData'
 
 const failEarly = new FailEarly(it)
@@ -78,14 +78,12 @@ describe('Set\'s', () => {
   })
 
   failEarly.it('should update settings from the set', async () => {
-    let response: AxiosResponse | null = null
-
     set1.settings.numberOfCards = 20
     set1.settings.cardHeadline += ' changed'
     set1.settings.cardCopytext += ' changed'
     set1.settings.setName += ' changed'
 
-    response = await frontend.saveSet(set1)
+    const response = await frontend.saveSet(set1)
 
     expect(response.data).toEqual(expect.objectContaining(    {
       status: 'success',

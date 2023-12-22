@@ -3,7 +3,7 @@ import '../../initEnv'
 import { cardRouter } from '@backend/trpc/router/card'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 import { cardData } from '../../../apiData'
-import FrontendSimulator from '../../FrontendSimulator'
+import FrontendSimulator from '../../frontend/FrontendSimulator'
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
 const frontend = new FrontendSimulator()

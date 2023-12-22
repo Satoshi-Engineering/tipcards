@@ -2,7 +2,7 @@ import '../initEnv'
 import axios, { AxiosError } from 'axios'
 
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../FrontendSimulator'
+import FrontendSimulator from '../frontend/FrontendSimulator'
 import LNURLAuth from '../lightning/LNURLAuth'
 import hashSha256 from '@backend/services/hashSha256'
 import { randomUUID } from 'crypto'

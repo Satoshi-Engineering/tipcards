@@ -1,53 +1,11 @@
-import axios, { AxiosResponse } from 'axios'
+import Frontend from './Frontend'
+import axios, { AxiosResponse } from 'axios/index'
+import { Set } from '@shared/data/api/Set'
 
-import { type Set } from '@shared/data/api/Set'
-import hashSha256 from '@backend/services/hashSha256'
-
-import LNURLAuth from './lightning/LNURLAuth'
-
-export default class FrontendSimulator {
+export default class FrontendWithAuth extends Frontend {
   authServiceLoginHash = ''
   accessToken = ''
   refreshToken = ''
-
-  async createCardViaAPI(cardHash: string, amount: number, text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/invoice/create/${cardHash}`, {
-      amount,
-      text,
-      note,
-    })
-  }
-
-  async loadCard(cardHash: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}?origin=cards`)
-  }
-  async loadLnurlForCardHash(cardHash: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
-  }
-
-  getCardHashBySetIdAndCardIndex(setId: string, cardIndex: number) {
-    return hashSha256(`${setId}/${cardIndex}`)
-  }
-
-  async createSetFundingInvoice(setId: string, amountPerCard: number, cardIndices: number[], text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`, {
-      amountPerCard,
-      cardIndices,
-      text,
-      note,
-    })
-  }
-
-  async deleteSetFundingInvoice(setId: string) {
-    return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`)
-  }
-
-  async login() {
-    const authWallet = new LNURLAuth()
-    const response: AxiosResponse = await this.authCreate()
-    await authWallet.loginWithLNURLAuth(response.data.data.encoded)
-    await this.authStatus()
-  }
 
   clearLoginAndAuth() {
     this.authServiceLoginHash = ''

@@ -6,7 +6,7 @@ import { Card } from '@shared/data/api/Card'
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 import { cardData } from '../../apiData'
-import FrontendSimulator from '../FrontendSimulator'
+import FrontendSimulator from '../frontend/FrontendSimulator'
 
 export type ExpectedCard = {
   status: string,

@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto'
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
 import '../initEnv'
-import FrontendSimulator from '../FrontendSimulator'
+import FrontendSimulator from '../frontend/FrontendSimulator'
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'
 
