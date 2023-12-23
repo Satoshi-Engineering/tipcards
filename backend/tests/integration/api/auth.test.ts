@@ -1,16 +1,24 @@
 import '../initEnv'
+
 import axios, { AxiosError } from 'axios'
+import { randomUUID } from 'crypto'
+
+import hashSha256 from '@backend/services/hashSha256'
+import { ErrorCode } from '@shared/data/Errors'
 
 import FailEarly from '../../FailEarly'
 import FrontendSimulator from '../frontend/FrontendSimulator'
 import LNURLAuth from '../lightning/LNURLAuth'
-import hashSha256 from '@backend/services/hashSha256'
-import { randomUUID } from 'crypto'
-import { ErrorCode } from '@shared/data/Errors'
+import HDWallet from '../lightning/HDWallet'
+import { authData } from '../../apiData'
 
-const lnurlAuth = new LNURLAuth()
 const failEarly = new FailEarly(it)
-const frontend = new FrontendSimulator()
+
+const randomMnemonic = HDWallet.generateRandomMnemonic()
+const hdWallet = new HDWallet(randomMnemonic)
+const randomSigningKey = hdWallet.getNodeAtPath(0,0,0)
+const lnurlAuth = new LNURLAuth(randomSigningKey)
+const frontend = new FrontendSimulator(randomMnemonic)
 
 const accountName = `${hashSha256(randomUUID())} accountName`
 const displayName = `${hashSha256(randomUUID())} accoundisplayNametName`
@@ -73,13 +81,7 @@ describe('auth', () => {
 
   failEarly.it('should get a new access token', async () => {
     const response = await frontend.authRefresh()
-
-    expect(response.data).toEqual(expect.objectContaining(    {
-      status: 'success',
-      data: {
-        accessToken: expect.any(String),
-      },
-    }))
+    expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
   })
 
   failEarly.it('should set user profile', async () => {

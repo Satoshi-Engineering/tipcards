@@ -5,17 +5,14 @@ import * as secp256k1 from 'secp256k1'
 
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
-import HDWallet from './HDWallet'
+import { HDNode } from './HDWallet'
 
 export default class LNURLAuth {
-  private hdWallet
-  private signingKey
   private k1
+  private signingKey
 
-  constructor() {
-    const mnemonic = HDWallet.getRandomMnemonic()
-    this.hdWallet = new HDWallet(mnemonic)
-    this.signingKey = this.hdWallet.getNodeAtPath(0, 0, 0)
+  constructor(signingKey: HDNode) {
+    this.signingKey = signingKey
     this.k1 = ''
   }
 

@@ -42,3 +42,14 @@ export const setData = {
     }
   },
 }
+
+export const authData = {
+  getAuthRefreshTestObject: () => {
+    return {
+      status: 'success',
+      data: {
+        accessToken: expect.any(String),
+      },
+    }
+  },
+}

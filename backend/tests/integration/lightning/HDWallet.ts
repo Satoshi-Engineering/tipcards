@@ -58,7 +58,7 @@ export default class HDWallet {
 
   constructor(mnemonic = '') {
     if (mnemonic === '') {
-      this.mnemonic = HDWallet.getRandomMnemonic()
+      this.mnemonic = HDWallet.generateRandomMnemonic()
       console.warn('HDWallet: generating HD Wallet with crypto.randomBytes!')
     } else {
       this.mnemonic = mnemonic
@@ -72,10 +72,16 @@ export default class HDWallet {
     return new HDNode(derivedNode)
   }
 
-  static getRandomMnemonic() {
+  static generateRandomMnemonic() {
     const entropy = randomBytes(32)
     if (entropy.length !== 32) throw Error('Entropy has incorrect length')
     return bip39.entropyToMnemonic(entropy.toString('hex'))
+  }
+
+  static generateRandomNode() {
+    const randomMnemonic = HDWallet.generateRandomMnemonic()
+    const hdWallet = new HDWallet(randomMnemonic)
+    return hdWallet.getNodeAtPath(0, 0, 0)
   }
 
   static deriveBip32Node(mnemonic: string) {
