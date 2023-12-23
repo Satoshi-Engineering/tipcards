@@ -14,19 +14,19 @@ const randomMnemonic = HDWallet.generateRandomMnemonic()
 const multipleFrondendSimulatorsWithSameSigningDevice: FrontendSimulator[] = new Array(NUM_OF_FRONTENDS).fill(0).map(() => new FrontendSimulator(randomMnemonic))
 
 describe('logout all other devices', () => {
-  failEarly.it('should login all with all devices', async () => {
+  failEarly.it('should login all frontends', async () => {
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.login()
     }
   })
 
-  failEarly.it('should refresh all with all devices', async () => {
+  failEarly.it('should refresh all frontends', async () => {
     await Promise.all(multipleFrondendSimulatorsWithSameSigningDevice.map(async (frontend) => {
       await frontend.authRefresh()
     }))
   })
 
-  failEarly.it('should logout on all frontends, except the first one', async () => {
+  failEarly.it('should logout all frontends, except the first one', async () => {
     const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
 
     let response: AxiosResponse | null = null
@@ -44,7 +44,7 @@ describe('logout all other devices', () => {
     }))
   })
 
-  failEarly.it('should fail the refresh on all frontends, except the first one', async () => {
+  failEarly.it('should fail the refresh all frontends, except the first one', async () => {
     const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
     const loggedOutFrontends = multipleFrondendSimulatorsWithSameSigningDevice.slice(1)
 
