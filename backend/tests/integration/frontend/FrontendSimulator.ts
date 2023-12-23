@@ -17,7 +17,6 @@ export default class FrontendSimulator extends FrontendWithAuth {
       this.hdWallet = new HDWallet(mnemonic)
     }
 
-    this.hdWallet = new HDWallet(mnemonic)
     this.signingKey = this.hdWallet.getNodeAtPath(0, 0, 0)
   }
 
