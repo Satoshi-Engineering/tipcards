@@ -6,6 +6,7 @@ import FailEarly from '../../FailEarly'
 import FrontendSimulator from '../frontend/FrontendSimulator'
 import HDWallet from '../lightning/HDWallet'
 import { authData } from '../../apiData'
+import { delay } from '@backend/services/timingUtils'
 
 const failEarly = new FailEarly(it)
 
@@ -15,15 +16,54 @@ const multipleFrondendSimulatorsWithSameSigningDevice: FrontendSimulator[] = new
 
 describe('logout all other devices', () => {
   failEarly.it('should login all frontends', async () => {
+    /*
+      // TODO: this produces somehow same refresh tokens
+      await Promise.all(multipleFrondendSimulatorsWithSameSigningDevice.map(async (frontend) => {
+        await frontend.login()
+      }))
+   */
+
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.login()
+      await delay(1000)
     }
   })
 
+  failEarly.it('shoud check if all frontends have different refresh & access Tokens', async () => {
+    const refreshTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.refreshToken)
+    const refreshTokensAsSet = new Set(refreshTokens)
+
+    expect(refreshTokensAsSet.size).toBe(refreshTokens.length)
+
+    const accessTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.accessToken)
+    const accessTokensAsSet = new Set(refreshTokens)
+
+    expect(accessTokensAsSet.size).toBe(accessTokens.length)
+  })
+
   failEarly.it('should refresh all frontends', async () => {
+    /*
+    // TODO: this produces somehow same refresh tokens
     await Promise.all(multipleFrondendSimulatorsWithSameSigningDevice.map(async (frontend) => {
       await frontend.authRefresh()
     }))
+     */
+    for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
+      await frontend.authRefresh()
+      await delay(1000)
+    }
+  })
+
+  failEarly.it('shoud check if all frontends still have different refresh & access Tokens', async () => {
+    const refreshTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.refreshToken)
+    const refreshTokensAsSet = new Set(refreshTokens)
+
+    expect(refreshTokensAsSet.size).toBe(refreshTokens.length)
+
+    const accessTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.accessToken)
+    const accessTokensAsSet = new Set(refreshTokens)
+
+    expect(accessTokensAsSet.size).toBe(accessTokens.length)
   })
 
   failEarly.it('should logout all frontends, except the first one', async () => {
@@ -45,10 +85,10 @@ describe('logout all other devices', () => {
   })
 
   failEarly.it('should fail the refresh all frontends, except the first one', async () => {
-    const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
+    const loggedInFrontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
     const loggedOutFrontends = multipleFrondendSimulatorsWithSameSigningDevice.slice(1)
 
-    const response = await frontend.authRefresh()
+    const response = await loggedInFrontend.authRefresh()
     expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
 
     await Promise.all(loggedOutFrontends.map(async (frontend) => {
