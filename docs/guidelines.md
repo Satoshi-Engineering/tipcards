@@ -11,7 +11,6 @@
 - **Files:** camelcase, first letter: if class uppercase otherwise lowercase
 
 #### Exceptions
-
 - `.gitlab-ci.yml`: because this is defined by gitlab CI
   - Because of this, the folder `gitlab-ci` is the same as the yml file
 - package-lock.json
@@ -23,3 +22,6 @@
 4. libraries relative imports
 
 Add empty lines between these blocks.
+
+### Brackets
+- after an if condition, always follow with an opening bracket: https://eslint.org/docs/latest/rules/curly use option "all"
