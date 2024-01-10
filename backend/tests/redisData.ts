@@ -77,13 +77,13 @@ export const createSetSettings = (): Set['settings'] => ({
 
 const FundedCards = Set.shape.invoice.removeDefault().unwrap().shape.fundedCards
 type FundedCards = z.infer<typeof FundedCards>
-export const createSetInvoice = (fundedCards: FundedCards, amount: number): Set['invoice'] => ({
+export const createSetInvoice = (fundedCards: FundedCards, amount: number, paid: null | number = null): Set['invoice'] => ({
   fundedCards,
   amount,
   payment_hash: hashSha256(randomUUID()),
   payment_request: hashSha256(randomUUID()),
   created: Math.round(+ new Date() / 1000),
-  paid: null,
+  paid,
   expired: false,
 })
 

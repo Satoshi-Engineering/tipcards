@@ -125,7 +125,7 @@ const getInvoiceForRedisSet = (setRedis: SetRedis): Invoice | null => {
   return ({
     created: new Date(),
     amount: setRedis.invoice.amount,
-    paid: null,
+    paid: unixTimestampOrNullToDate(setRedis.invoice.paid),
     expiresAt: new Date(+ new Date() + 10 * 60 * 1000),
     paymentHash: setRedis.invoice.payment_hash,
     paymentRequest: setRedis.invoice.payment_request,
