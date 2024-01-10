@@ -6,6 +6,7 @@ import '../../initEnv'
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
+import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
@@ -38,6 +39,8 @@ const CARD_HASH_FUNDED_1 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 1)
 const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 
 beforeAll(async () => {
+  await initDatabase()
+
   const data = await wallet.getWalletDetails()
   if (data == null || data.balance <= AMOUNT_PER_CARD * 2 * 1000) {
     throw new Error('Not enough balance in lnbits wallet that is configured for integration tests.')
@@ -47,6 +50,10 @@ beforeAll(async () => {
     initCard(CARD_HASH_UNFUNDED),
     initFundedSet(SET_ID),
   ])
+})
+
+afterAll(async () => {
+  await closeDatabaseConnections()
 })
 
 describe('TRpc Router BulkWithdraw', () => {

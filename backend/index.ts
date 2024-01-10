@@ -7,7 +7,7 @@ import app from './src/app'
 import { initSocketIo } from './src/api/auth'
 import { EXPRESS_PORT } from './src/constants'
 import consoleOverride from './src/consoleOverride'
-import Database from '@backend/database/drizzle/Database'
+import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions'
 import { initAllWorkers } from '@backend/worker'
 
@@ -23,7 +23,7 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
   })
 
   // Closing DB Connections
-  Database.closeConnectionIfExists()
+  closeDatabaseConnections()
 
   // Closing all opened connection
   connections.forEach(curr => curr.end())
@@ -37,6 +37,7 @@ const shutDown = (server: http.Server, connections: Array<Socket>) => {
 }
 
 const startup = async () => {
+  await initDatabase()
   await loadCoarsWhitelist()
   initAllWorkers()
 
