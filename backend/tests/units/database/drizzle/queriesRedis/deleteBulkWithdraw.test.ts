@@ -37,6 +37,7 @@ describe('deleteBulkWithdraw', () => {
     })
 
     const bulkWithdraw = createBulkWithdrawData(invoice.amount, card1.hash, card2.hash)
+    bulkWithdraw.id = lnurlw.bulkWithdrawId as string
     bulkWithdraw.lnbitsWithdrawId = lnurlw.lnbitsId
     await deleteBulkWithdraw(bulkWithdraw)
     expect(queries.updateCardVersion).toHaveBeenCalledWith(expect.objectContaining({

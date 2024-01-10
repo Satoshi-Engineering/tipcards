@@ -51,7 +51,7 @@ describe('getAllBulkWithdraws', () => {
     expect(bulkWithdraws.length).toBe(2)
     expect(bulkWithdraws).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        id: lnurlw2.lnbitsId,
+        id: lnurlw2.bulkWithdrawId,
         created: expect.any(Number),
         amount: invoice2.amount,
         cards: expect.arrayContaining([card21.hash, card22.hash]),
@@ -60,7 +60,7 @@ describe('getAllBulkWithdraws', () => {
         withdrawn: null,
       }),
       expect.objectContaining({
-        id: lnurlw3.lnbitsId,
+        id: lnurlw3.bulkWithdrawId,
         created: expect.any(Number),
         amount: invoice31.amount + invoice32.amount,
         cards: expect.arrayContaining([card31.hash, card32.hash]),

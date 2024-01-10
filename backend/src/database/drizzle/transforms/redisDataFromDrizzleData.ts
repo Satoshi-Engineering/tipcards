@@ -111,10 +111,9 @@ export const getRedisWithdrawInfoForDrizzleCardVersion = async (queries: Queries
   if (lnurlw == null) {
     return { lnbitsWithdrawId: null, isLockedByBulkWithdraw: false, used: null }
   }
-  const cardVersions = await queries.getAllCardVersionsWithdrawnByLnurlW(lnurlw)
   return {
-    lnbitsWithdrawId: lnurlw.lnbitsId,
-    isLockedByBulkWithdraw: cardVersions.length > 1,
+    lnbitsWithdrawId: lnurlw.bulkWithdrawId == null ? lnurlw.lnbitsId : null,
+    isLockedByBulkWithdraw: lnurlw.bulkWithdrawId != null,
     used: dateOrNullToUnixTimestamp(lnurlw.withdrawn),
   }
 }

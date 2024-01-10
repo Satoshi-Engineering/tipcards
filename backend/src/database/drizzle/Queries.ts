@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, type ExtractTablesWithRelations } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations } from 'drizzle-orm'
 import type { MySqlTransaction } from 'drizzle-orm/mysql-core'
 import type { MySql2QueryResultHKT, MySql2PreparedQueryHKT } from 'drizzle-orm/mysql2'
 
@@ -181,9 +181,31 @@ export default class Queries {
   }
 
   /** @throws */
+  async getLnurlWByBulkWithdrawId(bulkWithdrawId: LnurlW['bulkWithdrawId']): Promise<LnurlW | null> {
+    if (bulkWithdrawId == null) {
+      throw new NotFoundError('Unable to load lnurlw if bulkWithdrawId is null')
+    }
+    const result = await this.transaction.select()
+      .from(LnurlW)
+      .where(eq(LnurlW.bulkWithdrawId, bulkWithdrawId))
+    if (result.length !== 1) {
+      throw new NotFoundError(`Found no lnurlW for bulkWithdrawId ${bulkWithdrawId}`)
+    }
+    return result[0]
+  }
+
+  /** @throws */
   async getAllLnurlWs(): Promise<LnurlW[]> {
     const result = await this.transaction.select()
       .from(LnurlW)
+    return result
+  }
+
+  /** @throws */
+  async getAllLnurlWsWithBulkWithdrawId(): Promise<LnurlW[]> {
+    const result = await this.transaction.select()
+      .from(LnurlW)
+      .where(isNotNull(LnurlW.bulkWithdrawId))
     return result
   }
 
@@ -284,6 +306,9 @@ export default class Queries {
 
   /** @throws */
   async insertOrUpdateLnurlW(lnurlw: LnurlW): Promise<void> {
+    if (lnurlw.bulkWithdrawId == null) {
+      throw new Error('where?')
+    }
     await this.transaction.insert(LnurlW)
       .values(lnurlw)
       .onDuplicateKeyUpdate({ set: lnurlw })

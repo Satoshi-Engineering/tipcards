@@ -42,6 +42,7 @@ describe('createBulkWithdraw', () => {
       created: expect.any(Date),
       expiresAt: null,
       withdrawn: null,
+      bulkWithdrawId: bulkWithdraw.id,
     }))
   })
 })

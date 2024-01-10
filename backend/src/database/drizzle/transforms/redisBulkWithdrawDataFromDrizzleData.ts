@@ -7,11 +7,14 @@ import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
 
 /** @throws */
 export const getRedisBulkWithdrawForDrizzleLnurlW = async (queries: Queries, lnurlW: LnurlW): Promise<BulkWithdrawRedis> => {
+  if (lnurlW.bulkWithdrawId == null) {
+    throw new Error(`Cannot create bulkWithdraw for lnurlW ${lnurlW.lnbitsId} as bulkWithdrawId is missing`)
+  }
   const cardVersions = await queries.getAllCardVersionsWithdrawnByLnurlW(lnurlW)
   const amount = await totalAmountForCards(queries, cardVersions)
 
   return {
-    id: lnurlW.lnbitsId,
+    id: lnurlW.bulkWithdrawId,
     created: dateToUnixTimestamp(lnurlW.created),
     withdrawn: dateOrNullToUnixTimestamp(lnurlW.withdrawn),
     lnbitsWithdrawId: lnurlW.lnbitsId,

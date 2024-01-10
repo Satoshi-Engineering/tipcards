@@ -28,7 +28,7 @@ import {
   getDrizzleDataObjectsForRedisSet,
   getDrizzleDataObjectsForRedisSetDelete,
 } from './transforms/drizzleSetDataForRedisSet'
-import { getRedisBulkWithdrawForDrizzleLnurlW, filterLnurlWsThatAreUsedForMultipleCards } from './transforms/redisBulkWithdrawDataFromDrizzleData'
+import { getRedisBulkWithdrawForDrizzleLnurlW } from './transforms/redisBulkWithdrawDataFromDrizzleData'
 import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData'
 import {
   insertOrUpdateDataObjects,
@@ -115,8 +115,8 @@ const linkLatestCardVersionToLnurlW = async (queries: Queries, cardHash: CardRed
   })
 }
 
-export const getBulkWithdrawById = async (lnbitsLnurlWId: string): Promise<BulkWithdrawRedis> => asTransaction(async (queries) => {
-  const lnurlW = await queries.getLnurlWById(lnbitsLnurlWId)
+export const getBulkWithdrawById = async (bulkWithdrawId: string): Promise<BulkWithdrawRedis> => asTransaction(async (queries) => {
+  const lnurlW = await queries.getLnurlWByBulkWithdrawId(bulkWithdrawId)
   if (lnurlW == null) {
     throw new NotFoundError('BulkWithdraw doesn\'t exist.')
   }
@@ -130,7 +130,7 @@ export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promi
 })
 
 export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
-  await getBulkWithdrawById(bulkWithdraw.lnbitsWithdrawId)
+  await getBulkWithdrawById(bulkWithdraw.id)
   await unlinkLatestCardVersionsFromLnurlW(bulkWithdraw.cards)
 }
 const unlinkLatestCardVersionsFromLnurlW = async (cardHashes: CardRedis['cardHash'][]) => asTransaction(async (queries) => {
@@ -150,11 +150,10 @@ const unlinkLatestCardVersionFromLnurlW = async (queries: Queries, cardHash: Car
 }
 
 export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => asTransaction(async (queries) => {
-  const allLnurlWs = await queries.getAllLnurlWs()
-  const lnurlWsForMultipleCards = await filterLnurlWsThatAreUsedForMultipleCards(queries, allLnurlWs)
+  const bulkWithdrawLnurlWs = await queries.getAllLnurlWsWithBulkWithdrawId()
   const bulkWithdraws = await Promise.all(
-    lnurlWsForMultipleCards.map(
-      async ({ lnbitsId }) => await getBulkWithdrawById(lnbitsId),
+    bulkWithdrawLnurlWs.map(
+      async ({ bulkWithdrawId }) => await getBulkWithdrawById(bulkWithdrawId as string),
     ),
   )
   return bulkWithdraws

@@ -35,6 +35,7 @@ describe('updateBulkWithdraw', () => {
       created: expect.any(Date),
       expiresAt: null,
       withdrawn: expect.any(Date),
+      bulkWithdrawId: bulkWithdraw.id,
     }))
   })
 

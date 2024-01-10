@@ -114,7 +114,13 @@ export default jest.fn().mockImplementation(() => ({
 
   getLnurlWById: async (id: LnurlW['lnbitsId']): Promise<LnurlW> => lnurlWsByLnbitsId[id] || null,
 
+  getLnurlWByBulkWithdrawId: async (bulkWithdrawId: LnurlW['bulkWithdrawId']): Promise<LnurlW | null> => {
+    return Object.values(lnurlWsByLnbitsId).find((lnurlW) => lnurlW.bulkWithdrawId === bulkWithdrawId) || null
+  },
+
   getAllLnurlWs: async (): Promise<LnurlW[]> => Object.values(lnurlWsByLnbitsId),
+
+  getAllLnurlWsWithBulkWithdrawId: async (): Promise<LnurlW[]> => Object.values(lnurlWsByLnbitsId).filter(({ bulkWithdrawId }) => bulkWithdrawId != null),
 
   getAllUsersThatCanUseSet: async (set: Set): Promise<UserCanUseSet[]> => usersCanUseSets
     .filter((userCanUseSet) => userCanUseSet.set === set.id),

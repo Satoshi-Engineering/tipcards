@@ -72,6 +72,7 @@ export const getAndLinkDrizzleLnurlWFromRedisCard = (cardRedis: CardRedis, cardV
     created: new Date(),
     expiresAt: null,
     withdrawn: unixTimestampOrNullToDate(cardRedis.used),
+    bulkWithdrawId: null,
   }
 }
 
@@ -128,12 +129,13 @@ const toDataObjects = ({
   return dataObjects
 }
 
-export const getDrizzleLnurlWFromRedisBulkWithdraw = (bulkWithdraw: BulkWithdrawRedis) => {
+export const getDrizzleLnurlWFromRedisBulkWithdraw = (bulkWithdraw: BulkWithdrawRedis): LnurlW => {
   return {
     created: unixTimestampToDate(bulkWithdraw.created),
     withdrawn: unixTimestampOrNullToDate(bulkWithdraw.withdrawn),
     lnbitsId: bulkWithdraw.lnbitsWithdrawId,
     expiresAt: null,
+    bulkWithdrawId: bulkWithdraw.id,
   }
 }
 

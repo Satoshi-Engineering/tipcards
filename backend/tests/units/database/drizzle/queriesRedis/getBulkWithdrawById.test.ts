@@ -32,9 +32,9 @@ describe('getBulkWithdrawById', () => {
       lnurlws: [lnurlw],
     })
 
-    const bulkWithdraw = await getBulkWithdrawById(lnurlw.lnbitsId)
+    const bulkWithdraw = await getBulkWithdrawById(lnurlw.bulkWithdrawId as string)
     expect(bulkWithdraw).toEqual(expect.objectContaining({
-      id: lnurlw.lnbitsId,
+      id: lnurlw.bulkWithdrawId,
       created: expect.any(Number),
       amount: invoice.amount,
       cards: expect.arrayContaining([card1.hash, card2.hash]),
@@ -61,9 +61,9 @@ describe('getBulkWithdrawById', () => {
       lnurlws: [lnurlw],
     })
 
-    const bulkWithdraw = await getBulkWithdrawById(lnurlw.lnbitsId)
+    const bulkWithdraw = await getBulkWithdrawById(lnurlw.bulkWithdrawId as string)
     expect(bulkWithdraw).toEqual(expect.objectContaining({
-      id: lnurlw.lnbitsId,
+      id: lnurlw.bulkWithdrawId,
       created: expect.any(Number),
       amount: invoice.amount,
       cards: expect.arrayContaining([card1.hash, card2.hash]),

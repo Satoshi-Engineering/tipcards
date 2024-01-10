@@ -1,0 +1,1 @@
+ALTER TABLE `LnurlW` ADD `bulkWithdrawId` varchar(64);

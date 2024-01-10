@@ -52,10 +52,11 @@ Table LnurlP {
 }
 
 Table LnurlW {
-  lnbitsId  varchar(36)   [primary key, unique, note: "id from lnbits lnurlw link"]
-  created   DateTime
-  expiresAt DateTime      [null, default: null]
-  withdrawn DateTime      [null, default: null]
+  lnbitsId       varchar(36) [primary key, unique, note: "id from lnbits lnurlw link"]
+  created        DateTime
+  expiresAt      DateTime    [null, default: null]
+  withdrawn      DateTime    [null, default: null]
+  bulkWithdrawId varchar(64) [null, default: null, note: "deprecated, but needs application rework, as the application backend currently creates a bulkWithdrawId and returns it to the frontend"]
 }
 
 Table SetSettings {

@@ -5,6 +5,7 @@ export const LnurlW = mysqlTable('LnurlW', {
   created: datetime('created').notNull(),
   expiresAt: datetime('expiresAt'),
   withdrawn: datetime('withdrawn'),
+  bulkWithdrawId: varchar('bulkWithdrawId', { length: 64 }), // Note: deprecated, but needs application rework, as the application backend currently creates a bulkWithdrawId and returns it to the frontend
 })
 
 export type LnurlW = typeof LnurlW.$inferSelect

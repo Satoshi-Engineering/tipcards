@@ -40,7 +40,7 @@ describe('getCardByHash', () => {
       }),
       lnurlp: null,
       setFunding: null,
-      lnbitsWithdrawId: lnurlw.lnbitsId,
+      lnbitsWithdrawId: null,
       landingPageViewed: expect.any(Number),
       isLockedByBulkWithdraw: true,
       used: null,
