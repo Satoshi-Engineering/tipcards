@@ -62,6 +62,9 @@ export const getAndLinkDrizzleLnurlPFromRedisLnurlP = (lnurlPRedis: CardRedis['l
 
 /** side-effect: set lnurlW in cardVersion */
 export const getAndLinkDrizzleLnurlWFromRedisCard = (cardRedis: CardRedis, cardVersion: CardVersion): LnurlW | null => {
+  if (cardRedis.isLockedByBulkWithdraw) {
+    return null
+  }
   if (cardRedis.lnbitsWithdrawId == null) {
     cardVersion.lnurlW = null
     return null

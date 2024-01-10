@@ -306,9 +306,6 @@ export default class Queries {
 
   /** @throws */
   async insertOrUpdateLnurlW(lnurlw: LnurlW): Promise<void> {
-    if (lnurlw.bulkWithdrawId == null) {
-      throw new Error('where?')
-    }
     await this.transaction.insert(LnurlW)
       .values(lnurlw)
       .onDuplicateKeyUpdate({ set: lnurlw })

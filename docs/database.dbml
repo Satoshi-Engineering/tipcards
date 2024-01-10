@@ -56,7 +56,7 @@ Table LnurlW {
   created        DateTime
   expiresAt      DateTime    [null, default: null]
   withdrawn      DateTime    [null, default: null]
-  bulkWithdrawId varchar(64) [null, default: null, note: "deprecated, but needs application rework, as the application backend currently creates a bulkWithdrawId and returns it to the frontend"]
+  bulkWithdrawId varchar(64) [unique, null, default: null, note: "deprecated, but needs application rework, as the application backend currently creates a bulkWithdrawId and returns it to the frontend"]
 }
 
 Table SetSettings {

@@ -9,7 +9,6 @@ import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
-import BulkWithdraw from '@backend/modules/BulkWithdraw'
 import { delay } from '@backend/services/timingUtils'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
@@ -307,20 +306,6 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
  */
 export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise<CardApi> => {
   if (card.used != null) {
-    return card
-  }
-
-  if (card.isLockedByBulkWithdraw) {
-    try {
-      const bulkWithdraw = await BulkWithdraw.fromCardHash(card.cardHash)
-      const bulkWithdrawTrpc = await bulkWithdraw.toTRpcResponse()
-      if (bulkWithdrawTrpc.withdrawn != null) {
-        await setCardToUsed(card, bulkWithdrawTrpc.withdrawn)
-      }
-      card.withdrawPending = bulkWithdrawTrpc.withdrawPending
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsBulkWithdrawStatus)
-    }
     return card
   }
 

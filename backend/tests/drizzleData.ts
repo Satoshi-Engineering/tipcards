@@ -101,7 +101,7 @@ export const createLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
     created: new Date(),
     expiresAt: null,
     withdrawn: null,
-    bulkWithdrawId: cardVersions.length > 1 ? randomUUID() : null,
+    bulkWithdrawId: cardVersions.length > 1 ? hashSha256(cardVersions.map(({ card }) => card).join('')) : null,
   }
   cardVersions.forEach((cardVersion) => {
     cardVersion.lnurlW = lnurlw.lnbitsId
