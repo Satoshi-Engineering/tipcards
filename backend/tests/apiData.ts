@@ -33,12 +33,12 @@ export const setData = {
         setName: `${setId} setName`,
         landingPage: 'default',
       },
-      'date': Date.now(),
-      'created': Date.now(),
-      'userId': null,
-      'text': '',
-      'note': '',
-      'invoice': null,
+      date: Math.floor(Date.now() / 1000),
+      created: Math.floor(Date.now() / 1000),
+      userId: null,
+      text: '',
+      note: '',
+      invoice: null,
     }
   },
 }

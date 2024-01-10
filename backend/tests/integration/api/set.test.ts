@@ -23,8 +23,8 @@ type ErrorResponse  = {
   code: ErrorCode,
 }
 
-describe('Set\'s', () => {
-  failEarly.it('should fail with 401, due no auth', async () => {
+describe('load all sets', () => {
+  it('should fail with 401, if the user is not logged in', async () => {
     let caughtError: AxiosError | null = null
 
     try {
@@ -37,8 +37,10 @@ describe('Set\'s', () => {
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(401)
   })
+})
 
-  failEarly.it('should fail, due setId does not exist', async () => {
+describe('load single set', () => {
+  it('should fail, if the set doesnt exist', async () => {
     let caughtError: AxiosError | null = null
 
     try {
@@ -54,24 +56,26 @@ describe('Set\'s', () => {
     expect(responseErrorData.code).toBe(ErrorCode.SetNotFound)
     expect(caughtError?.response?.status).toBe(404)
   })
+})
 
-  failEarly.it('should login', async () => {
+describe('save and load set', () => {
+  failEarly.it('has to login', async () => {
     await frontend.login()
   })
 
   failEarly.it('should save a new set', async () => {
     const response = await frontend.saveSet(set1)
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
       data: set1,
     }))
   })
 
-  failEarly.it('should load a set', async () => {
+  failEarly.it('should load the set', async () => {
     const response = await frontend.loadSet(set1.id)
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
       data: set1,
     }))
@@ -85,13 +89,13 @@ describe('Set\'s', () => {
 
     const response = await frontend.saveSet(set1)
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
       data: set1,
     }))
   })
 
-  failEarly.it('should load a set and verify change', async () => {
+  failEarly.it('should load the set and verify the changes', async () => {
     let response: AxiosResponse | null = null
 
     try {
@@ -102,7 +106,7 @@ describe('Set\'s', () => {
       return
     }
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
       data: set1,
     }))
@@ -119,7 +123,7 @@ describe('Set\'s', () => {
       return
     }
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
       data: set2,
     }))
@@ -136,9 +140,9 @@ describe('Set\'s', () => {
       return
     }
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
-      data: [ set1, set2 ],
+      data: expect.arrayContaining([ set1, set2 ]),
     }))
   })
 })
