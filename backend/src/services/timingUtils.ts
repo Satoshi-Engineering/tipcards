@@ -1,10 +1,12 @@
-export const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
+export const delay = (milliseconds: number) => new Promise(res => setTimeout(res, milliseconds))
 
-export const waitUntilWithStep = async (ms: number, retrys: number, shouldBreak: () => boolean) => {
-  while (retrys > 0) {
-    if (shouldBreak()) break
-    await delay(100)
-    retrys--
+export const retryFunctionWithDelayUntilSuccessWithMaxAttempts = async (isSuccess: () => boolean, maxRetrys: number, delayInMilliseconds = 100) => {
+  while (maxRetrys > 0) {
+    if (isSuccess()) {
+      break
+    }
+    await delay(delayInMilliseconds)
+    maxRetrys--
   }
 }
 
