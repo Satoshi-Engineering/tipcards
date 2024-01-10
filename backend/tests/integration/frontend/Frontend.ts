@@ -30,6 +30,10 @@ export default class Frontend {
     })
   }
 
+  async loadSet(setId: string) {
+    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`)
+  }
+
   async deleteSetFundingInvoice(setId: string) {
     return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`)
   }

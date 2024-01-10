@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
 import '../../initEnv'
@@ -12,7 +12,6 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
 import Frontend from '../../frontend/Frontend'
 import LNBitsWallet from '../../lightning/LNBitsWallet'
-import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
@@ -46,8 +45,7 @@ beforeAll(async () => {
 
   await Promise.all([
     initCard(CARD_HASH_UNFUNDED),
-    initFundedCard(CARD_HASH_FUNDED_0, wallet),
-    initFundedCard(CARD_HASH_FUNDED_1, wallet),
+    initFundedSet(SET_ID),
   ])
 })
 
@@ -93,17 +91,12 @@ async function initCard(cardHash: string) {
   return fundedCardResponse.data.data
 }
 
-async function initFundedCard(cardHash: string, wallet: LNBitsWallet) {
-  const invoice = await initCard(cardHash)
-  const fundingResponse = await wallet.payInvoice(invoice)
-  const cardResponse = await FE.loadCard(cardHash)
-  if (
-    fundingResponse.payment_hash.length !== 64
-    || fundingResponse.checking_id.length !== 64
-    || cardResponse.data.data.invoice.paid == null
-    || cardResponse.data.data.lnbitsWithdrawId == null
-  ) {
-    throw new Error(`Funding card ${cardHash} was not successful.`)
+async function initFundedSet(setId: string) {
+  const setInvoiceResponse = await FE.createSetFundingInvoice(setId, AMOUNT_PER_CARD, [0, 1])
+  await wallet.payInvoice(setInvoiceResponse.data.data.invoice.payment_request)
+  const setResponse = await FE.loadSet(SET_ID)
+  if (!setResponse.data.data.invoice.paid) {
+    throw new Error(`Funding set ${setId} was not successful.`)
   }
 }
 
@@ -116,8 +109,8 @@ const createBulkWithdraw = async () => {
 
 const checkIfLnurlwExistsInLnbits = async (bulkWithdraw: BulkWithdraw) => {
   const { data } = await axios.get(decodeLnurl(bulkWithdraw.lnurl))
-  expect(data.minWithdrawable).toBe(AMOUNT_PER_CARD * 1000)
-  expect(data.maxWithdrawable).toBe(AMOUNT_PER_CARD * 1000)
+  expect(data.minWithdrawable).toBe(AMOUNT_PER_CARD * 2 * 1000)
+  expect(data.maxWithdrawable).toBe(AMOUNT_PER_CARD * 2 * 1000)
 }
 
 const checkIfCardsAreLocked = async () => {
@@ -157,8 +150,7 @@ const checkIfCardsAreReleased = async () => {
 }
 
 const withdrawBulkWithdraw = async (bulkWithdraw: BulkWithdraw) => {
-  const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(bulkWithdraw.lnurl)
-  const withdrawResponse = await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
+  const withdrawResponse = await wallet.withdrawAllFromLnurlW(bulkWithdraw.lnurl)
   expect(withdrawResponse.status).toBe('OK')
 }
 
@@ -174,8 +166,15 @@ const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
-  const lnurlResponse = await axios.get(decodeLnurl(bulkWithdraw.lnurl))
-  expect(lnurlResponse.data).toEqual(
+  let caughtError: AxiosError | null = null
+  try {
+    await axios.get(decodeLnurl(bulkWithdraw.lnurl))
+  } catch (error) {
+    caughtError = error as AxiosError
+  }
+  expect(axios.isAxiosError(caughtError)).toBe(true)
+  expect(caughtError?.response?.status).toBe(404)
+  expect(caughtError?.response?.data).toEqual(
     expect.objectContaining({
       status: 'ERROR',
       reason: 'Withdraw is spent.',
@@ -188,11 +187,11 @@ const checkIfCardsAreWithdrawn = async () => {
   expect(cards).toEqual(expect.arrayContaining([
     expect.objectContaining({
       hash: CARD_HASH_FUNDED_0,
-      withdrawn: Number,
+      withdrawn: expect.any(Date),
     }),
     expect.objectContaining({
       hash: CARD_HASH_FUNDED_1,
-      withdrawn: Number,
+      withdrawn: expect.any(Date),
     }),
   ]))
 }

@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { type LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -75,6 +75,12 @@ export default class LNBitsWallet {
     }
 
     return response.data
+  }
+
+  public async withdrawAllFromLnurlW(lnurl: string) {
+    const response = await axios.get(decodeLnurl(lnurl))
+    const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
+    return await this.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
   }
 
   public async withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest: LNURLWithdrawRequest, memo = '') {
