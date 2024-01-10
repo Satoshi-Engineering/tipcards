@@ -14,6 +14,7 @@ import { ErrorCode } from '@shared/data/Errors'
 import type { User } from '@backend/database/redis/data/User'
 import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/queries'
 import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
+import { randomUUID } from 'crypto'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const filenamePublicResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME_PUBLIC)
@@ -53,7 +54,8 @@ export const getPublicKey = async () => {
 
 export const createRefreshToken = async ({ id, lnurlAuthKey }: User) => {
   const { privateKey } = await loadKeys()
-  return new SignJWT({ id, lnurlAuthKey })
+  const nonce = randomUUID()
+  return new SignJWT({ id, lnurlAuthKey, nonce })
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer(JWT_AUTH_ISSUER)
@@ -64,7 +66,8 @@ export const createRefreshToken = async ({ id, lnurlAuthKey }: User) => {
 
 export const createAccessToken = async ({ id, lnurlAuthKey, permissions }: User) => {
   const { privateKey } = await loadKeys()
-  const payload: AccessTokenPayload = { id, lnurlAuthKey, permissions }
+  const nonce = randomUUID()
+  const payload: AccessTokenPayload = { id, lnurlAuthKey, permissions, nonce }
   return new SignJWT(payload)
     .setProtectedHeader({ alg })
     .setIssuedAt()

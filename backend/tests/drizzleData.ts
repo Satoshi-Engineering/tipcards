@@ -178,4 +178,5 @@ export const createAccessTokenPayloadForUser = (user: User): AccessTokenPayload 
   id: user.id,
   lnurlAuthKey: user.lnurlAuthKey,
   permissions: AccessTokenPayload.shape.permissions.parse(user.permissions),
+  nonce: randomUUID(),
 })

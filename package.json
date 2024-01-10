@@ -16,6 +16,7 @@
     "frontend-test-integration": "jest --config ./frontend/jest.config.js ./frontend/tests/integration",
     "backend-cli": "cd backend && ts-node -r tsconfig-paths/register ./cli.ts",
     "backend-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./index.ts",
+    "backend-debug": "cd backend && ts-node -r tsconfig-paths/register ./index.ts",
     "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.build.json",
     "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-tmp-dev": "cd backend && nodemon -e ts,js --exec ts-node -r tsconfig-paths/register ./tmpDevelop.ts",

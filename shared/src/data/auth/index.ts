@@ -7,6 +7,7 @@ export const AccessTokenPayload = z.object({
   id: z.string(),
   lnurlAuthKey: z.string(),
   permissions: PermissionsEnum.array().default(() => []),
+  nonce: z.string().uuid().describe('this makes sure every token is unique'),
 })
 
 export type AccessTokenPayload = z.infer<typeof AccessTokenPayload>

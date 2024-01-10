@@ -16,16 +16,10 @@ const multipleFrondendSimulatorsWithSameSigningDevice: FrontendSimulator[] = new
 
 describe('logout all other devices', () => {
   failEarly.it('should login all frontends', async () => {
-    /*
-      // TODO: this produces somehow same refresh tokens
-      await Promise.all(multipleFrondendSimulatorsWithSameSigningDevice.map(async (frontend) => {
-        await frontend.login()
-      }))
-   */
-
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.login()
-      await delay(1000)
+      // NOTE: Redis specifiy problem: Add delay to prevent backend to write the same user object at the same time. Currently redis has no data lock on user object.
+      await delay(250)
     }
   })
 
@@ -42,15 +36,10 @@ describe('logout all other devices', () => {
   })
 
   failEarly.it('should refresh all frontends', async () => {
-    /*
-    // TODO: this produces somehow same refresh tokens
-    await Promise.all(multipleFrondendSimulatorsWithSameSigningDevice.map(async (frontend) => {
-      await frontend.authRefresh()
-    }))
-     */
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.authRefresh()
-      await delay(1000)
+      // NOTE: Redis specifiy problem: Add delay to prevent backend to write the same user object at the same time. Currently redis has no data lock on user object.
+      await delay(250)
     }
   })
 
