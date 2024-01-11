@@ -14,6 +14,27 @@ export default class Frontend {
     return await this.createCardViaAPI(cardHash, amount, text, note)
   }
 
+  async createSharedFunding(cardHash: string, text = '', note = '') {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/create/${cardHash}`, {
+      text,
+      note,
+    })
+  }
+
+  async updateSharedFunding(cardHash: string, text = '', note = '') {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/update/${cardHash}`, {
+      text,
+      note,
+    })
+  }
+
+  async finishSharedFunding(cardHash: string, text = '', note = '') {
+    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/finish/${cardHash}`, {
+      text,
+      note,
+    })
+  }
+
   async loadCard(cardHash: string) {
     return await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}?origin=cards`)
   }
