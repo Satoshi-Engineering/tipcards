@@ -1,13 +1,13 @@
 import { TRPCError } from '@trpc/server'
-import '../../initEnv'
+import '../initEnv'
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import NotFoundError from '@backend/errors/NotFoundError'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
-import FrontendSimulator from '../../frontend/FrontendSimulator'
-import { cardData, setData } from '../../../apiData'
+import FrontendSimulator from '../frontend/FrontendSimulator'
+import { cardData, setData } from '../../apiData'
 
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

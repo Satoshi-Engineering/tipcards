@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
-import '../../initEnv'
+import '../initEnv'
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
@@ -11,8 +11,8 @@ import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
-import Frontend from '../../frontend/Frontend'
-import LNBitsWallet from '../../lightning/LNBitsWallet'
+import Frontend from '../frontend/Frontend'
+import LNBitsWallet from '../lightning/LNBitsWallet'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
