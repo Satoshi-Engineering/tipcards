@@ -96,3 +96,7 @@ describe('lnurlp with funding', () => {
     }))
   })
 })
+
+afterAll(async () => {
+  await wallet.withdrawAllFromLnurlW(lnurlForCardWithFunding)
+})
