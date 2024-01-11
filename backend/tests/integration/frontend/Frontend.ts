@@ -17,8 +17,13 @@ export default class Frontend {
   async loadCard(cardHash: string) {
     return await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}?origin=cards`)
   }
+
   async loadLnurlForCardHash(cardHash: string) {
     return await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
+  }
+
+  async deleteCard(cardHash: string) {
+    return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/invoice/delete/${cardHash}`)
   }
 
   getCardHashBySetIdAndCardIndex(setId: string, cardIndex: number) {
