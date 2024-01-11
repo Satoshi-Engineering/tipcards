@@ -21,7 +21,7 @@ describe('logout all other devices', () => {
       // NOTE: Redis specifiy problem: Add delay to prevent backend to write the same user object at the same time. Currently redis has no data lock on user object.
       await delay(250)
     }
-  }, 15000)
+  })
 
   failEarly.it('shoud check if all frontends have different refresh & access Tokens', async () => {
     const refreshTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.refreshToken)
@@ -41,7 +41,7 @@ describe('logout all other devices', () => {
       // NOTE: Redis specifiy problem: Add delay to prevent backend to write the same user object at the same time. Currently redis has no data lock on user object.
       await delay(250)
     }
-  }, 15000)
+  })
 
   failEarly.it('shoud check if all frontends still have different refresh & access Tokens', async () => {
     const refreshTokens = multipleFrondendSimulatorsWithSameSigningDevice.map(f => f.refreshToken)
@@ -71,7 +71,7 @@ describe('logout all other devices', () => {
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
     }))
-  }, 15000)
+  })
 
   failEarly.it('should fail the refresh all frontends, except the first one', async () => {
     const loggedInFrontend = multipleFrondendSimulatorsWithSameSigningDevice[0]

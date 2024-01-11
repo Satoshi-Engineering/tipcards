@@ -50,7 +50,7 @@ beforeAll(async () => {
     initCard(CARD_HASH_UNFUNDED),
     initFundedSet(SET_ID),
   ])
-}, 15000)
+})
 
 afterAll(async () => {
   await closeDatabaseConnections()
@@ -74,7 +74,7 @@ describe('TRpc Router BulkWithdraw', () => {
     await deleteBulkWithdraw()
     await checkIfLnurlwIsRemoved(bulkWithdraw)
     await checkIfCardsAreReleased()
-  }, 15000)
+  })
 
   it('creates and withdraws a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
@@ -87,7 +87,7 @@ describe('TRpc Router BulkWithdraw', () => {
     await sendWebhook(bulkWithdraw)
     await checkIfLnurlwIsWithdrawn(bulkWithdraw)
     await checkIfCardsAreWithdrawn()
-  }, 15000)
+  })
 })
 
 async function initCard(cardHash: string) {

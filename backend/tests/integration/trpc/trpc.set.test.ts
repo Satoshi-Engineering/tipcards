@@ -46,7 +46,7 @@ beforeAll(async () => {
 
   await frontend.saveSet(setWithSetFunding)
   await frontend.createSetFundingInvoice(setWithSetFunding.id, 100, [0, 1, 2, 3])
-}, 15000)
+})
 
 afterAll(async () => {
   await closeDatabaseConnections()

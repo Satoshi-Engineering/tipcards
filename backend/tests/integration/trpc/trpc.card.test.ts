@@ -19,7 +19,7 @@ const callerCards = cardRouter.createCaller({
 beforeAll(async () => {
   await initDatabase()
   await frontend.createCardViaAPI(testCard.cardHash, testCard.amount, testCard.text, testCard.note)
-}, 15000)
+})
 
 afterAll(async () => {
   await closeDatabaseConnections()
