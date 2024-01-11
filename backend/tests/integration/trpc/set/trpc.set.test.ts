@@ -1,15 +1,13 @@
 import { TRPCError } from '@trpc/server'
 import '../../initEnv'
 
+import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import NotFoundError from '@backend/errors/NotFoundError'
-import { createAccessToken } from '@backend/services/jwt'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
-import { SET_EMPTY } from './EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP } from './FundedSetWithBulkWithdraw'
-import { USER, USER_SET_FUNDED, USER_CARD_FUNDED_INVOICE, USER_CARD_FUNDED_LNURLP } from './UserWithSet'
-import { initCard, initSet } from '../../initRedis'
+import FrontendSimulator from '../../frontend/FrontendSimulator'
+import { cardData, setData } from '../../../apiData'
 
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
@@ -19,55 +17,86 @@ const callerLoggedOut = setRouter.createCaller({
 
 let callerLoggedIn = callerLoggedOut
 
+const frontend = new FrontendSimulator()
+
+const setIdForSetWithFundingInvoice = setData.generateSetId()
+const emptySet = setData.generateSet()
+const setWithCards = setData.generateSet()
+const cardHash1 = cardData.generateCardHashForSet(setWithCards.id, 0)
+const cardHash2 = cardData.generateCardHashForSet(setWithCards.id, 1)
+const setWithSetFunding = setData.generateSet()
+
 beforeAll(async () => {
-  await Promise.all([
-    initSet(SET_EMPTY),
-    initCard(CARD_FUNDED_INVOICE),
-    initCard(CARD_FUNDED_LNURLP),
-    initSet(SET_FUNDED),
-    initCard(USER_CARD_FUNDED_INVOICE),
-    initCard(USER_CARD_FUNDED_LNURLP),
-    initSet(USER_SET_FUNDED),
-  ])
-  const jwt = await createAccessToken(USER)
+  await initDatabase()
+
+  await frontend.createSetFundingInvoice(setIdForSetWithFundingInvoice, 100, [0, 1])
+
+  await frontend.login()
   callerLoggedIn = setRouter.createCaller({
     host: new URL(TIPCARDS_API_ORIGIN).host,
-    jwt,
+    jwt: frontend.accessToken,
     accessToken: null,
   })
+
+  await frontend.saveSet(emptySet)
+
+  await frontend.saveSet(setWithCards)
+  await frontend.createCardInvoice(cardHash1, 100)
+  await frontend.createCardInvoice(cardHash2, 100)
+
+  await frontend.saveSet(setWithSetFunding)
+  await frontend.createSetFundingInvoice(setWithSetFunding.id, 100, [0, 1, 2, 3])
+}, 15000)
+
+afterAll(async () => {
+  await closeDatabaseConnections()
 })
 
 describe('TRpc Router Set', () => {
   it('throws 404 if set is not found', async () => {
     try {
-      await callerLoggedOut.getCards('somerandomstring')
+      await callerLoggedOut.getCards(setData.generateSetId())
     } catch (error) {
       expect((error as TRPCError).cause instanceof NotFoundError).toBe(true)
     }
   })
 
+  it('returns no cards for an empty set', async () => {
+    const cards = await callerLoggedOut.getCards(emptySet.id)
+    expect(cards.length).toBe(0)
+  })
+
   it('returns all cards for a set', async () => {
-    const cards = await callerLoggedOut.getCards(SET_FUNDED.id)
+    const cards = await callerLoggedOut.getCards(setWithCards.id)
     expect(cards.length).toBe(2)
     expect(cards).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        hash: CARD_FUNDED_INVOICE.cardHash,
+        hash: cardHash1,
       }),
       expect.objectContaining({
-        hash: CARD_FUNDED_LNURLP.cardHash,
+        hash: cardHash2,
       }),
     ]))
   })
 
-  it('returns no cards for an empty set', async () => {
-    const cards = await callerLoggedOut.getCards(SET_EMPTY.id)
-    expect(cards.length).toBe(0)
+  it('returns all cards for a set funding set', async () => {
+    const cards = await callerLoggedOut.getCards(setWithSetFunding.id)
+    expect(cards.length).toBe(4)
   })
 
-  it('returns all sets and cards for a logged in user', async () => {
+  it('returns all sets for a logged in user', async () => {
     const sets = await callerLoggedIn.getAll()
-    expect(sets.length).toBe(1)
-    const cards = await callerLoggedIn.getCards(sets[0].id)
-    expect(cards.length).toBe(2)
+    expect(sets.length).toBe(3)
+    expect(sets).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: emptySet.id,
+      }),
+      expect.objectContaining({
+        id: setWithCards.id,
+      }),
+      expect.objectContaining({
+        id: setWithSetFunding.id,
+      }),
+    ]))
   })
 })

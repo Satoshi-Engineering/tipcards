@@ -16,6 +16,9 @@ export const cardData = {
       note: `${cardHash} noteForStatusPage`,
     }
   },
+  generateCardHashForSet: (setId: string, cardIndex = 0) => {
+    return hashSha256(`${setId}/${cardIndex}`)
+  },
 }
 
 export const setData = {

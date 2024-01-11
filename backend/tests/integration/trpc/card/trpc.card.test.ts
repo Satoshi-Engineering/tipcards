@@ -1,7 +1,9 @@
 import '../../initEnv'
 
+import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { cardRouter } from '@backend/trpc/router/card'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+
 import { cardData } from '../../../apiData'
 import FrontendSimulator from '../../frontend/FrontendSimulator'
 
@@ -15,7 +17,12 @@ const callerCards = cardRouter.createCaller({
 })
 
 beforeAll(async () => {
+  await initDatabase()
   await frontend.createCardViaAPI(testCard.cardHash, testCard.amount, testCard.text, testCard.note)
+}, 15000)
+
+afterAll(async () => {
+  await closeDatabaseConnections()
 })
 
 describe('TRpc Router Card', () => {

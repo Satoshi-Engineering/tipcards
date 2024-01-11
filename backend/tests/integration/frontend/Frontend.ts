@@ -10,6 +10,10 @@ export default class Frontend {
     })
   }
 
+  async createCardInvoice(cardHash: string, amount: number, text = '', note = '') {
+    return await this.createCardViaAPI(cardHash, amount, text, note)
+  }
+
   async loadCard(cardHash: string) {
     return await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}?origin=cards`)
   }
