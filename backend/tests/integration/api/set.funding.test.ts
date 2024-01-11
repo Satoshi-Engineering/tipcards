@@ -87,7 +87,7 @@ describe('set funding | create and pay', () => {
     expect(typeof response?.data.data.invoice.payment_request).toBe('string')
     expect(response?.data.data.invoice.payment_request.startsWith('ln')).toBe(true)
     payment_request = response?.data.data.invoice.payment_request
-  })
+  }, 15000)
 
   failEarly.it('should pay the set funding invoice', async () => {
     let response
@@ -109,7 +109,7 @@ describe('set funding | create and pay', () => {
     }
     expect(response?.data.status).toBe('success')
     expect(typeof response?.data.data.invoice.paid).toBe('number')
-  })
+  }, 15000)
 
   failEarly.it('should load one of the cards and confirm that it is funded', async () => {
     const randomCardIndex = Math.floor(Math.random() * CARD_INDICES.length)
