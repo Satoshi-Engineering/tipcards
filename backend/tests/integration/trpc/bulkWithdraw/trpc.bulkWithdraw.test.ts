@@ -50,7 +50,7 @@ beforeAll(async () => {
     initCard(CARD_HASH_UNFUNDED),
     initFundedSet(SET_ID),
   ])
-})
+}, 15000)
 
 afterAll(async () => {
   await closeDatabaseConnections()
