@@ -43,8 +43,18 @@ export const getRedisLnurlPForDrizzleCardVersion = async (queries: Queries, card
   const invoices = await queries.getAllInvoicesFundingCardVersion(cardVersion)
   return {
     shared: cardVersion.sharedFunding,
-    amount: invoices.reduce((total, current) => total + current.amount, 0),
-    payment_hash: invoices.reduce((total, current) => [...total, current.paymentHash], [] as Invoice['paymentHash'][]),
+    amount: invoices.reduce((total: number | null, current) => {
+      if (total == null) {
+        return current.amount
+      }
+      return total + current.amount
+    }, null),
+    payment_hash: invoices.reduce((total: Invoice['paymentHash'][] | null, current) => {
+      if (total == null) {
+        return [current.paymentHash]
+      }
+      return [...total, current.paymentHash]
+    }, null),
     id: lnurlp.lnbitsId,
     created: dateToUnixTimestamp(lnurlp.created),
     paid: dateOrNullToUnixTimestamp(lnurlp.finished),
