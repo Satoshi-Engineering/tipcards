@@ -4,8 +4,10 @@ import axios, { AxiosError } from 'axios'
 
 import { cardData } from '../../apiData'
 import FrontendSimulator from '../frontend/FrontendSimulator'
+import LNBitsWallet from '../lightning/LNBitsWallet'
 
 const frontend = new FrontendSimulator()
+const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
 
 const cardHash = cardData.generateCardHash()
 describe('lnurlp without funding', () => {
@@ -58,5 +60,39 @@ describe('lnurlp without funding', () => {
     }
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(404)
+  })
+})
+
+const cardHashForCardWithFunding = cardData.generateCardHash()
+const lnurlForCardWithFunding = cardData.generateLnurl(cardHashForCardWithFunding)
+describe('lnurlp with funding', () => {
+  it('should fund a card', async () => {
+    await wallet.payToLnurlP(lnurlForCardWithFunding)
+  })
+
+  it('should be visible in the card status', async () => {
+    const { data } = await frontend.loadCard(cardHashForCardWithFunding)
+    expect(data).toEqual(expect.objectContaining({
+      status: 'success',
+      data: expect.objectContaining({
+        cardHash: cardHashForCardWithFunding,
+        invoice: null,
+        setFunding: null,
+        lnbitsWithdrawId: expect.any(String),
+        withdrawPending: false,
+        landingPageViewed: null,
+        isLockedByBulkWithdraw: false,
+        used: null,
+        lnurlp: expect.objectContaining({
+          shared: false,
+          amount: expect.any(Number),
+          payment_hash: expect.arrayContaining([expect.any(String)]),
+          id: expect.any(String),
+          created: expect.any(Number),
+          paid: expect.any(Number),
+          expired: false,
+        }),
+      }),
+    }))
   })
 })

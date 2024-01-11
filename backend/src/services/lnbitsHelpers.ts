@@ -148,8 +148,11 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
         break
       }
       const paymentsOlderThanLnurlp = response.data.some((payment) => {
-        // invoices are older than the lnurlp, we can stop looking
-        if (card.lnurlp?.created != null && card.lnurlp.created > payment.created) {
+        // invoices are more than 10 minutes older than the lnurlp, we can stop looking
+        if (
+          card.lnurlp?.created != null
+          && card.lnurlp.created > payment.time + 60000
+        ) {
           return true
         }
         // check if the payment belongs to the lnurlp link
@@ -189,7 +192,14 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
         axiosOptionsWithAdminHeaders,
       )
       if (response.data.paid === true) {
-        amount += Math.round(response.data.details.amount / 1000)
+        // I think this is a bug from lnbits, that it sometimes returns the (outgoing) self-payment instead of the invoice.
+        // A maybe better solution would be to take the amount from the previous request (list of payments) and only check if it's paid here.
+        let amountForPayment = response.data.details.amount
+        if (response.data.details.checking_id.indexOf('internal') >= 0) {
+          amountForPayment = Math.abs(response.data.details.amount)
+        }
+
+        amount += Math.round(amountForPayment / 1000)
         payment_hash.push(response.data.details.payment_hash)
       }
     } catch (error) {

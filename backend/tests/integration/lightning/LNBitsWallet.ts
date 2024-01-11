@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
+import { LNURLPayRequest } from '@shared/data/LNURLPayRequest'
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
@@ -81,6 +82,27 @@ export default class LNBitsWallet {
     const response = await axios.get(decodeLnurl(lnurl))
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
     return await this.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
+  }
+
+  public async payToLnurlP(lnurl: string, amountInMilliSats?: number) {
+    const payRequest = await this.getPayRequestFromLnurl(lnurl)
+    const invoice = await this.createInvoiceFromPayRequest(payRequest, amountInMilliSats)
+    return await this.payInvoice(invoice)
+  }
+
+  public async getPayRequestFromLnurl(lnurl: string) {
+    const { data } = await axios.get(decodeLnurl(lnurl))
+    return LNURLPayRequest.parse(data)
+  }
+
+  public async createInvoiceFromPayRequest(payRequest: LNURLPayRequest, amountInMilliSats?: number) {
+    if (amountInMilliSats == null) {
+      amountInMilliSats = payRequest.minSendable
+    }
+    const url = new URL(payRequest.callback)
+    url.searchParams.append('amount', String(amountInMilliSats))
+    const { data } = await axios.get(url.href)
+    return data.pr
   }
 
   public async withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest: LNURLWithdrawRequest, memo = '') {

@@ -1,5 +1,6 @@
-import hashSha256 from '@backend/services/hashSha256'
 import crypto, { randomUUID } from 'crypto'
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import hashSha256 from '@backend/services/hashSha256'
 
 const generateCardHash = () => { return hashSha256(randomUUID()) }
 const generateSetId = () => { return crypto.randomUUID() }
@@ -18,6 +19,12 @@ export const cardData = {
   },
   generateCardHashForSet: (setId: string, cardIndex = 0) => {
     return hashSha256(`${setId}/${cardIndex}`)
+  },
+  generateLnurl: (cardHash?: string) => {
+    if (cardHash == null) {
+      cardHash = cardData.generateCardHash()
+    }
+    return encodeLnurl(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
   },
 }
 
