@@ -37,7 +37,7 @@ export const onError: OnErrorFunction<AppRouter, Request> = (opts) => {
   }
 
   if (opts.error.code === 'INTERNAL_SERVER_ERROR') {
-    console.error(opts)
+    console.error(opts.error)
   }
 }
 

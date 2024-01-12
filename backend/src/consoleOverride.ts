@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import util from 'node:util'
 import { send } from './services/telegram'
 
 function appendTime(args: Array<unknown>) {
@@ -51,13 +52,10 @@ export default () => {
         if (typeof value === 'string') {
           return value
         }
-        if (value instanceof Error) {
-          return value.stack
-        }
         try {
-          return JSON.stringify(value)
+          return util.inspect(value)
         } catch (error) {
-          return 'Unable to stringify value, check error logs'
+          return 'consoleOverride: Unable to util.inspect value, check error logs'
         }
       })
       .join('\n')
