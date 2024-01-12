@@ -34,7 +34,7 @@ test-integration-frontend:
     - !reference [.shared_config, rules, deployable_branches]
     - when: always # even run when previous stages fail
   services:
-    - name: seleniarm/standalone-chromium:120
+    - name: seleniarm/standalone-chromium:120.0
       alias: selenium-chrome
   cache:
     - !reference [.shared_config, cache, node_modules]
