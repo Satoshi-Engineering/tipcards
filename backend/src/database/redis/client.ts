@@ -26,7 +26,14 @@ let client: RedisClientType<RedisDefaultModules, RedisFunctions, RedisScripts> |
 let connecting = false
 let callbacks: Resolve[] = []
 
-export const resetClient = () => {
+export const resetClient = async () => {
+  if (client != null && client.isOpen) {
+    try {
+      await client.quit()
+    } catch (error) {
+      console.error('Error while closing redis connection', error)
+    }
+  }
   client = null
   connecting = false
   callbacks.forEach(resolve => resolve())
