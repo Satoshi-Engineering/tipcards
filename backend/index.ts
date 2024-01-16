@@ -10,30 +10,43 @@ import consoleOverride from './src/consoleOverride'
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions'
 import { initAllWorkers } from '@backend/worker'
+import { delay } from '@backend/services/timingUtils'
 
 consoleOverride()
 
 const APP_NAME = 'Node Backend'
 
-const shutDown = (server: http.Server, connections: Array<Socket>) => {
-  // Closing Server
-  server.close(() => {
-    console.info('Closed out remaining connections')
-    process.exit(0)
-  })
-
-  // Closing DB Connections
-  closeDatabaseConnections()
-
-  // Closing all opened connection
-  connections.forEach(curr => curr.end())
-  setTimeout(() => connections.forEach(curr => curr.destroy()), 5000)
-
+const shutDown = async (server: http.Server, connections: Array<Socket>) => {
   // Timeout for forceclosing the connections
   setTimeout(() => {
     console.error('Could not close connections in time, forcefully shutting down')
     process.exit(1)
   }, 10000).unref()
+
+  // Http
+  console.info('Closing http server')
+  await new Promise((resolve) => {
+    server.close(() => resolve(true))
+  })
+  console.info(' - Closed')
+
+  // Socket
+  console.info('Closing all socket connections')
+  await Promise.all(connections.map((connection) => new Promise((resolve) => {
+    setTimeout(() => connection.destroy(), 5000)
+    connection.end(() => resolve(true))
+  })))
+  console.info(' - Closed')
+
+  // make sure all calls are really done
+  await delay(500)
+
+  // Closing DB Connections
+  console.info('Closing database connections')
+  await closeDatabaseConnections()
+  console.info(' - Closed')
+
+  process.exit(0)
 }
 
 const startup = async () => {
