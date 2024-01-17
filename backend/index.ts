@@ -16,7 +16,13 @@ consoleOverride()
 
 const APP_NAME = 'Node Backend'
 
-const shutDown = async (server: http.Server, connections: Array<Socket>) => {
+const EXIT_CODE_PREMATURE_DATABASE_CLOSE = 999
+
+let shutDownStarted = false
+
+const shutDown = async (server: http.Server, connections: Array<Socket>, exitCode = 0) => {
+  shutDownStarted = true
+
   // Timeout for forceclosing the connections
   setTimeout(() => {
     console.error('Could not close connections in time, forcefully shutting down')
@@ -46,11 +52,19 @@ const shutDown = async (server: http.Server, connections: Array<Socket>) => {
   await closeDatabaseConnections()
   console.info(' - Closed')
 
-  process.exit(0)
+  process.exit(exitCode)
 }
 
 const startup = async () => {
-  await initDatabase()
+  const onDatabaseConnectionEnded = () => {
+    if (shutDownStarted) {
+      return
+    }
+    console.error(`Database connection ended without application shutdown! Shutting down application with exit code ${EXIT_CODE_PREMATURE_DATABASE_CLOSE}!`)
+    shutDown(server, connections, EXIT_CODE_PREMATURE_DATABASE_CLOSE)
+  }
+
+  await initDatabase(onDatabaseConnectionEnded)
   await loadCoarsWhitelist()
   initAllWorkers()
 
