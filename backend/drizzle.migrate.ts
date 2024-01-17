@@ -18,6 +18,10 @@ import { USE_DRIZZLE } from '@backend/constants'
 import { MIGRATIONS_FOLDER, DB_CREDENTIALS } from './drizzle.config'
 
 const run = async () => {
+  if (Math.random() > 0) {
+    throw Error('just testing the pipeline!')
+  }
+
    const connection = await mysql.createConnection({
      ...DB_CREDENTIALS,
      multipleStatements: true,
