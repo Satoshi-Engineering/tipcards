@@ -33,7 +33,10 @@
     - rsync -at --delete --stats ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
     - | 
       ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
-      
+
+      # 0) Make sure the script (and pipeline) stops on error
+      set -e
+
       # 1) Stop pm2
       if [ -d $DEPLOY_PATH/dist-node ]; then
         cd $DEPLOY_PATH/dist-node
