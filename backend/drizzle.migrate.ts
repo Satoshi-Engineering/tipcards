@@ -13,9 +13,9 @@ dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
 dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
 import * as schema from '@backend/database/drizzle/schema'
-import { USE_DRIZZLE } from '@backend/constants'
+import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants'
 
-import { MIGRATIONS_FOLDER, DB_CREDENTIALS } from './drizzle.config'
+import { MIGRATIONS_FOLDER } from './drizzle.config'
 
 const run = async () => {
    const connection = await mysql.createConnection({

@@ -7,6 +7,7 @@ export const SCHEMA_PATH = './backend/src/database/drizzle/schema/*'
 
 export const MIGRATIONS_FOLDER = './backend/database/drizzle/migrations'
 
+// read process.env directly and not from constants, as this file is also used for drizzle-kit
 export const DB_CREDENTIALS = {
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,

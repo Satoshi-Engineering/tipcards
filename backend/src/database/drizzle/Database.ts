@@ -3,7 +3,7 @@ import * as schema from './schema'
 import mysql from 'mysql2/promise'
 import type { MySql2Database } from 'drizzle-orm/mysql2/driver'
 
-const MYSQL_PORT = parseInt(process.env.MYSQL_PORT || '3306')
+import { DB_CREDENTIALS } from '@backend/constants'
 
 export default class Database {
   static async getDatabase(): Promise<MySql2Database<typeof schema>> {
@@ -37,11 +37,7 @@ export default class Database {
 
   private async init() {
     this.connection = await mysql.createConnection({
-      host: process.env.MYSQL_HOST,
-      port: MYSQL_PORT,
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DB_NAME,
+      ...DB_CREDENTIALS,
       multipleStatements: true,
     })
 

@@ -2,6 +2,8 @@ import z from 'zod'
 
 import { ErrorCode } from '@shared/data/Errors'
 
+import { DB_CREDENTIALS  } from '../drizzle.config'
+
 let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
@@ -100,10 +102,7 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
 
 /////
 // DATABASE
-let USE_DRIZZLE = false
-if (process.env.USE_DRIZZLE === '1') {
-  USE_DRIZZLE = true
-}
+const USE_DRIZZLE = process.env.USE_DRIZZLE === '1'
 
 export {
   EXPRESS_PORT,
@@ -122,4 +121,5 @@ export {
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,
   USE_DRIZZLE,
+  DB_CREDENTIALS,
 }
