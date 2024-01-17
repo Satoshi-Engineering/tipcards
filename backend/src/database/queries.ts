@@ -1,8 +1,9 @@
 import * as queriesDrizzle from '@backend/database/drizzle/queriesRedis'
 import * as queriesRedis from '@backend/database/redis/queries'
+import { USE_DRIZZLE } from '@backend/constants'
 
 let queries = queriesRedis
-if (process.env.USE_DRIZZLE === '1') {
+if (USE_DRIZZLE) {
   queries = queriesDrizzle
 }
 

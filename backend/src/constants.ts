@@ -98,6 +98,13 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
   JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
 }
 
+/////
+// DATABASE
+let USE_DRIZZLE = false
+if (process.env.USE_DRIZZLE === '1') {
+  USE_DRIZZLE = true
+}
+
 export {
   EXPRESS_PORT,
   LNURL_PORT,
@@ -114,4 +121,5 @@ export {
   JWT_AUTH_KEY_DIRECTORY,
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,
+  USE_DRIZZLE,
 }

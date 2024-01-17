@@ -13,6 +13,7 @@ dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
 dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
 import * as schema from '@backend/database/drizzle/schema'
+import { USE_DRIZZLE } from '@backend/constants'
 
 import { MIGRATIONS_FOLDER, DB_CREDENTIALS } from './drizzle.config'
 
@@ -36,4 +37,6 @@ const run = async () => {
   console.info('✅ Done')
 }
 
-run()
+if (USE_DRIZZLE) {
+  run()
+}
