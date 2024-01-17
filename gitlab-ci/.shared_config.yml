@@ -12,6 +12,16 @@
     nightly_integration:
       - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
         when: never
+    backend_changes:
+      changes:
+        - backend/database/**/*
+        - backend/src/**/*
+        - backend/cli.ts
+        - backend/drizzle.config.ts
+        - backend/drizzle.migrate.ts
+        - backend/index.ts
+        - shared/**/*
+        - package-lock.json
   cache:
     npm:
       key: npm-cache

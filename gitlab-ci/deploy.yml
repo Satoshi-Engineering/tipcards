@@ -76,13 +76,7 @@ deploy-backend-develop:
     - !reference [.shared_config, rules, web_and_push]
     - if: $CI_COMMIT_BRANCH != 'develop'
       when: never
-    - changes:
-      - backend/database/**/*
-      - backend/src/**/*
-      - backend/cli.ts
-      - backend/index.ts
-      - shared/**/*
-      - package-lock.json
+    - !reference [.shared_config, rules, backend_changes]
   environment:
     name: develop
 
@@ -92,13 +86,7 @@ deploy-backend-main:
     - !reference [.shared_config, rules, web_and_push]
     - if: $CI_COMMIT_BRANCH != 'main'
       when: never
-    - changes:
-      - backend/database/**/*
-      - backend/src/**/*
-      - backend/cli.ts
-      - backend/index.ts
-      - shared/**/*
-      - package-lock.json
+    - !reference [.shared_config, rules, backend_changes]
   environment:
     name: main
 
