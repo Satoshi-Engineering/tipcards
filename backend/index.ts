@@ -16,7 +16,7 @@ consoleOverride()
 
 const APP_NAME = 'Node Backend'
 
-const EXIT_CODE_PREMATURE_DATABASE_CLOSE = 999
+const EXIT_CODE_PREMATURE_DATABASE_CLOSE = 129
 
 let shutDownStarted = false
 
@@ -91,5 +91,15 @@ const startup = async () => {
     shutDown(server, connections)
   })
 }
+
+process.on('uncaughtException', async (error, origin) => {
+  console.error('uncaughtException', error, origin)
+  process.exit(1)
+})
+
+process.on('unhandledRejection', async (reason, promise) => {
+  console.error('unhandledRejection', reason, promise)
+  process.exit(1)
+})
 
 startup()
