@@ -92,14 +92,4 @@ const startup = async () => {
   })
 }
 
-process.on('uncaughtException', async (error, origin) => {
-  console.error('uncaughtException', error, origin)
-  process.exit(1)
-})
-
-process.on('unhandledRejection', async (reason, promise) => {
-  console.error('unhandledRejection', reason, promise)
-  process.exit(1)
-})
-
 startup()
