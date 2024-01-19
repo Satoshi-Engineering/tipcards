@@ -1,10 +1,11 @@
 import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card } from '@backend/database/redis/data/Card'
 import type { Set } from '@backend/database/redis/data/Set'
+import { REDIS_BASE_PATH } from '@backend/constants'
 
-export const regexSet = /tipcards:develop:setsById:(?<id>[a-zA-Z0-9-]+):data/
-export const regexCard = /tipcards:develop:cardsByHash:(?<hash>[a-zA-Z0-9-]+):data/
-export const regexBulkWithdraw = /tipcards:develop:bulkWithdrawById:(?<id>[a-zA-Z0-9-]+):data/
+export const regexSet = new RegExp(`${REDIS_BASE_PATH}:setsById:(?<id>[a-zA-Z0-9-]+):data`)
+export const regexCard = new RegExp(`${REDIS_BASE_PATH}:cardsByHash:(?<hash>[a-zA-Z0-9-]+):data`)
+export const regexBulkWithdraw = new RegExp(`${REDIS_BASE_PATH}:bulkWithdrawById:(?<id>[a-zA-Z0-9-]+):data`)
 
 const setsById: Record<string, Set> = {}
 const cardsByHash: Record<string, Card> = {}
@@ -51,7 +52,7 @@ jest.mock('redis', () => ({
       if (MATCH.includes('bulkWithdrawById')) {
         return (async function* () {
           for (const bulkWithdrawId in bulkWithdrawsById) {
-            yield `tipcards:develop:bulkWithdrawById:${bulkWithdrawId}:data`
+            yield `${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdrawId}:data`
           }
         })()
       }
