@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
-    "target": "ESNext",
-    "lib": ["ESNext"],
-    "module": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "node16",
     "rootDir": "./",
     "moduleResolution": "Node",
     "types": [],

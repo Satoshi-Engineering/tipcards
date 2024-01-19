@@ -8,7 +8,7 @@
       "@shared/*": ["../shared/src/*"],
       "@backend/*": ["../backend/src/*"]
     },
-    "target": "ESNext",
+    "target": "ES2022",
     "types": [ "jest" ],
     "typeRoots": [
       "./src/types",
