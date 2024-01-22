@@ -4,6 +4,8 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import { DB_CREDENTIALS  } from '../drizzle.config'
 
+const FAILED_STARTUPS_COUNTER_DIRECTORY = process.env.FAILED_STARTUPS_COUNTER_DIRECTORY || ''
+
 let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
@@ -105,6 +107,7 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
 const USE_DRIZZLE = process.env.USE_DRIZZLE === '1'
 
 export {
+  FAILED_STARTUPS_COUNTER_DIRECTORY,
   EXPRESS_PORT,
   LNURL_PORT,
   PROXY_PORT,
