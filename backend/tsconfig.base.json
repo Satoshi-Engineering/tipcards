@@ -6,6 +6,8 @@
     "./cli.ts",
     "./drizzle.migrate.ts",
     "./index.ts",
+    "./shutdown.ts",
+    "./startup.ts",
     "./src/**/*.ts",
   ],
   "compilerOptions": {

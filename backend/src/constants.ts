@@ -4,6 +4,8 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import { DB_CREDENTIALS  } from '../drizzle.config'
 
+const APP_NAME = 'Lightning Tip Cards Backend'
+
 const FAILED_STARTUPS_COUNTER_DIRECTORY = process.env.FAILED_STARTUPS_COUNTER_DIRECTORY || ''
 
 let EXPRESS_PORT = 4000
@@ -107,6 +109,7 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
 const USE_DRIZZLE = process.env.USE_DRIZZLE === '1'
 
 export {
+  APP_NAME,
   FAILED_STARTUPS_COUNTER_DIRECTORY,
   EXPRESS_PORT,
   LNURL_PORT,
