@@ -18,7 +18,7 @@ npm run backend-dev 2>&1 > backend.log &
 BACKEND_PID=$!
 
 echo "Running backend with pid $BACKEND_PID, waiting for startup to finish"
-while [ "x`grep 'Node Backend running' backend.log`" = 'x' ]; do sleep 1; echo -n '.'; done
+while [ "x`grep 'app running and listening on port' backend.log`" = 'x' ]; do sleep 1; echo -n '.'; done
 
 echo '\n'
 echo 'Startup finished, running integration tests'
