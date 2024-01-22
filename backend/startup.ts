@@ -24,35 +24,11 @@ export const startup = async () => {
   try {
     await startupApplication()
   } catch (error) {
-    let attempts = 0
-    try {
-      if (fs.existsSync(filenameFailedStartupsCounter)) {
-        attempts = Number(JSON.parse(fs.readFileSync(filenameFailedStartupsCounter, 'utf8')))
-      }
-    } catch (error) {
-      console.error(`${APP_NAME} failed to read ${FAILED_STARTUPS_COUNTER_FILENAME} after failed startup`, error)
-    }
-    if (attempts % 10 === 0) {
-      console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
-    } else {
-      console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
-    }
-    try {
-      fs.writeFileSync(filenameFailedStartupsCounter, JSON.stringify(attempts + 1))
-    } catch (error) {
-      console.error(`${APP_NAME} failed to write ${FAILED_STARTUPS_COUNTER_FILENAME} after failed startup`, error)
-    }
+    logFailedStartup()
     process.exit(EXIT_CODE_FAILED_STARTUP)
   }
 
-  try {
-    if (fs.existsSync(filenameFailedStartupsCounter)) {
-      console.error(`${APP_NAME} recovery from startup errors successful`)
-      fs.rmSync(filenameFailedStartupsCounter)
-    }
-  } catch (error) {
-    console.error(`${APP_NAME} failed to check/remove ${FAILED_STARTUPS_COUNTER_FILENAME} after successful startup`, error)
-  }
+  logStartupIfItFailedBefore()
 }
 
 const startupApplication = async () => {
@@ -105,5 +81,48 @@ const startupApplication = async () => {
   if (process.send != null) {
     process.send('ready')
     console.info(' - ready signal sent to pm2')
+  }
+}
+
+const logFailedStartup = () => {
+  const attempts = getPreviousAttempts()
+  if (attempts % 10 === 0) {
+    console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
+  } else {
+    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
+  }
+  writeAttempts(attempts + 1)
+}
+
+const getPreviousAttempts = () => {
+  if (!fs.existsSync(filenameFailedStartupsCounter)) {
+    return 0
+  }
+  try {
+    return Number(JSON.parse(fs.readFileSync(filenameFailedStartupsCounter, 'utf8')))
+  } catch (error) {
+    console.error(`${APP_NAME} failed to read/parse ${filenameFailedStartupsCounter} after failed startup`, error)
+  }
+  return 0
+}
+
+const writeAttempts = (attempts: number) => {
+  try {
+    fs.writeFileSync(filenameFailedStartupsCounter, JSON.stringify(attempts + 1))
+  } catch (error) {
+    console.error(`${APP_NAME} failed to write ${filenameFailedStartupsCounter} after failed startup`, error)
+  }
+}
+
+const logStartupIfItFailedBefore = () => {
+  if (!fs.existsSync(filenameFailedStartupsCounter)) {
+    return
+  }
+  console.error(`${APP_NAME} recovery from startup errors successful`)
+
+  try {
+    fs.rmSync(filenameFailedStartupsCounter)
+  } catch (error) {
+    console.error(`${APP_NAME} failed to remove ${filenameFailedStartupsCounter} after startup recovery`, error)
   }
 }
