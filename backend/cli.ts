@@ -4,10 +4,25 @@ import * as readline from 'readline'
 dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
 dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
 
+import Database from '@backend/database/drizzle/Database'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
 import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
 import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
+
+// migration specific
+import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries'
+import {
+  getAllBulkWithdraws as getAllRedisBulkWithdraws,
+  getAllCards as getAllRedisCards,
+  getAllSets as getAllRedisSets,
+} from '@backend/database/redis/queriesRedisOnly'
+import {
+  createBulkWithdraw as createDrizzleBulkWithdraw,
+  createCard as createDrizzleCard,
+  createUser as createDrizzleUser,
+  createSet as createDrizzleSet,
+} from '@backend/database/drizzle/queriesRedis'
 
 /* eslint-disable no-console */
 const clearUnusedCards = async () => {
@@ -132,6 +147,86 @@ const parseSingleCard = async () => {
   console.log('Card is valid!')
 }
 
+const migrateRedisToDrizzle = async () => {
+  const answer = await prompt('Are you sure you know what you are doing (yes/no)? ')
+  if (answer !== 'yes') {
+    process.exit(1)
+  }
+
+  await Database.init(() => undefined)
+  await migrateUsers()
+  await migrateCards()
+  await migrateSets()
+  await migrateBulkWithdraws()
+  await Database.closeConnectionIfExists()
+
+  console.log('All done! 👍')
+}
+
+const migrateUsers = async () => {
+  const users = await getAllRedisUsers()
+
+  console.log(`\nStarting migration for ${users.length} users.\n`)
+
+  let migratedCount = 0
+  for (const user of users) {
+    await createDrizzleUser(user)
+    migratedCount += 1
+    console.log(`User ${user.id} migrated.`)
+  }
+
+  console.log(`\n${migratedCount} user(s) migrated!`)
+  console.log('\nMigration done.\n')
+}
+
+const migrateCards = async () => {
+  const cards = await getAllRedisCards()
+
+  console.log(`\nStarting migration for ${cards.length} cards.\n`)
+
+  let migratedCount = 0
+  for (const card of cards) {
+    await createDrizzleCard(card)
+    migratedCount += 1
+    console.log(`Card ${card.cardHash} migrated.`)
+  }
+
+  console.log(`\n${migratedCount} card(s) migrated!`)
+  console.log('\nMigration done.\n')
+}
+
+const migrateSets = async () => {
+  const sets = await getAllRedisSets()
+
+  console.log(`\nStarting migration for ${sets.length} sets.\n`)
+
+  let migratedCount = 0
+  for (const set of sets) {
+    await createDrizzleSet(set)
+    migratedCount += 1
+    console.log(`Set ${set.id} migrated.`)
+  }
+
+  console.log(`\n${migratedCount} set(s) migrated!`)
+  console.log('\nMigration done.\n')
+}
+
+const migrateBulkWithdraws = async () => {
+  const bulkWithdraws = await getAllRedisBulkWithdraws()
+
+  console.log(`\nStarting migration for ${bulkWithdraws.length} bulk withdraws.\n`)
+
+  let migratedCount = 0
+  for (const bulkWithdraw of bulkWithdraws) {
+    await createDrizzleBulkWithdraw(bulkWithdraw)
+    migratedCount += 1
+    console.log(`Bulk withdraw ${bulkWithdraw.id} migrated.`)
+  }
+
+  console.log(`\n${migratedCount} bulk withdraw(s) migrated!`)
+  console.log('\nMigration done.\n')
+}
+
 const readlineInterface = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -151,6 +246,7 @@ const run = async () => {
   console.log('2. Migrate to a new lnbits instance. This means deleting unfunded cards from the database and clearing the withdrawId from all unclaimed cards.')
   console.log('3. Parse all cards in redis database with zod.')
   console.log('4. Parse a single card in redis database with zod and print parsing error.')
+  console.log('5. Migrate data from redis to drizzle.')
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
@@ -163,6 +259,8 @@ const run = async () => {
     await parseAllCards()
   } else if (answer === '4') {
     await parseSingleCard()
+  } else if (answer === '5') {
+    await migrateRedisToDrizzle()
   } else {
     console.log('Unknown command.')
   }

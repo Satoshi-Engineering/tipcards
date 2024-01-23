@@ -50,6 +50,9 @@ export enum ErrorCode {
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
   ZodErrorParsingAccessTokenPayload = 'ZodErrorParsingAccessTokenPayload',
+  ZodErrorParsingCardByKey = 'ZodErrorParsingCardByKey',
+  ZodErrorParsingSetByKey = 'ZodErrorParsingSetByKey',
+  ZodErrorParsingBulkWithdrawByKey = 'ZodErrorParsingBulkWithdrawByKey',
 }
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
