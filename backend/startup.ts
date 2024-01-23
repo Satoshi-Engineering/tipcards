@@ -24,7 +24,7 @@ export const startup = async () => {
   try {
     await startupApplication()
   } catch (error) {
-    await logFailedStartup()
+    await logFailedStartup(error)
     process.exit(EXIT_CODE_FAILED_STARTUP)
   }
 
@@ -84,12 +84,12 @@ const startupApplication = async () => {
   }
 }
 
-const logFailedStartup = async () => {
+const logFailedStartup = async (error: unknown) => {
   const attempts = await getPreviousAttempts()
   if (attempts % 10 === 0) {
-    await console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
+    await console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`, error)
   } else {
-    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}. This is a warning so we do not spam the telegram bot.`)
+    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}. This is a warning so we do not spam the telegram bot.`, error)
   }
   await writeAttempts(attempts + 1)
 }
