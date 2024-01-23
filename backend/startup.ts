@@ -89,7 +89,10 @@ const logFailedStartup = async (error: unknown) => {
   if (attempts % 10 === 0) {
     await console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`, error)
   } else {
-    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}. This is a warning so we do not spam the telegram bot.`, error)
+    console.warn(
+      `${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}. This is a warning so we do not spam the telegram bot.`,
+      error,
+    )
   }
   await writeAttempts(attempts + 1)
 }
