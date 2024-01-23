@@ -4,6 +4,19 @@
 - `/scripts` folder: Helper script for local development tasks
 - Unit tests have to run on every machine after running npm install
 
+## Developing a new feature
+
+Ideally the development of a new feature should follow the following procedure:
+1. test-driven-development of the new feature
+  1. write a unit test that fails with as little code as needed (compilation errors count)
+  2. implement code until the unit test succeeds
+  3. go back to 1. until the feature is complete
+2. make sure the code is clean
+3. write an integration test
+4. make sure the integration test code is clean
+5. add the new feature to docs/testing.md
+6. add the new feature to the faqs
+
 ## Coding Guidelines
 
 ### Naming Conventions
