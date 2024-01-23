@@ -79,8 +79,8 @@ const getDrizzleSetSettingsForRedisSet = (setRedis: SetRedis): SetSettings | nul
     numberOfCards: setRedis.settings.numberOfCards,
     cardHeadline: setRedis.settings.cardHeadline,
     cardCopytext: setRedis.settings.cardCopytext,
-    image: setRedis.settings.cardsQrCodeLogo,
-    landingPage: setRedis.settings.landingPage || 'core',
+    image: setRedis.settings.cardsQrCodeLogo || null,
+    landingPage: setRedis.settings.landingPage || 'default',
   }
 }
 

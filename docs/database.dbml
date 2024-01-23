@@ -65,7 +65,7 @@ Table SetSettings {
   numberOfCards integer
   cardHeadline  text
   cardCopytext  text
-  image         varchar(36) [ref: > Image.id]
+  image         varchar(36) [ref: > Image.id, null]
   landingPage   varchar(36) [ref: > LandingPage.id]
 }
 

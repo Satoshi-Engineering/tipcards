@@ -1,0 +1,1 @@
+ALTER TABLE `SetSettings` MODIFY COLUMN `image` varchar(36);

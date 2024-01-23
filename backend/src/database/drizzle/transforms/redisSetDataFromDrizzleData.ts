@@ -34,7 +34,7 @@ export const getRedisSetSettingsFromDrizzleSet = async (queries: Queries, set: S
     numberOfCards: setSettings.numberOfCards,
     cardHeadline: setSettings.cardHeadline,
     cardCopytext: setSettings.cardCopytext,
-    cardsQrCodeLogo: setSettings.image,
+    cardsQrCodeLogo: setSettings.image || '',
     setName: setSettings.name,
     landingPage: setSettings.landingPage,
   }

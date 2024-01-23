@@ -9,7 +9,7 @@ export const SetSettings = mysqlTable('SetSettings', {
   numberOfCards: int('numberOfCards').notNull(),
   cardHeadline: text('cardHeadline').notNull(),
   cardCopytext: text('cardCopytext').notNull(),
-  image: varchar('image', { length: 36 }).notNull().references(() => Image.id),
+  image: varchar('image', { length: 36 }).references(() => Image.id),
   landingPage: varchar('landingPage', { length: 36 }).notNull().references(() => LandingPage.id),
 })
 

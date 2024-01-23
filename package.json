@@ -27,6 +27,7 @@
     "backend-proxy": "cd backend && ts-node -r tsconfig-paths/register ./proxy.ts",
     "backend-ngrok": "cd backend && ts-node -r tsconfig-paths/register ./ngrok.ts",
     "drizzle-update-schema": "ts-node scripts/createSchemaFiles/script.ts",
+    "drizzle-create-migration-files": "drizzle-kit generate:mysql --config=backend/drizzle.config.ts",
     "drizzle-migrate": "ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/drizzle.migrate.ts"
   },
   "dependencies": {

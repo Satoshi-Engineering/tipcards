@@ -39,4 +39,6 @@ const run = async () => {
 
 if (USE_DRIZZLE) {
   run()
+} else {
+  console.info('✅ No migration needed, you are using a different database')
 }
