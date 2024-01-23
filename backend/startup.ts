@@ -24,7 +24,7 @@ export const startup = async () => {
   try {
     await startupApplication()
   } catch (error) {
-    logFailedStartup()
+    await logFailedStartup()
     process.exit(EXIT_CODE_FAILED_STARTUP)
   }
 
@@ -34,11 +34,11 @@ export const startup = async () => {
 const startupApplication = async () => {
   console.info(`${APP_NAME} starting`)
 
-  const onDatabaseConnectionEnded = () => {
+  const onDatabaseConnectionEnded = async () => {
     if (shutdownCalled) {
       return
     }
-    console.error(`${APP_NAME} database connection ended without application shutdown! Shutting down application with exit code ${EXIT_CODE_PREMATURE_DATABASE_CLOSE}!`)
+    await console.error(`${APP_NAME} database connection ended without application shutdown! Shutting down application with exit code ${EXIT_CODE_PREMATURE_DATABASE_CLOSE}!`)
     shutdown(server, connections, EXIT_CODE_PREMATURE_DATABASE_CLOSE)
   }
   
@@ -84,33 +84,33 @@ const startupApplication = async () => {
   }
 }
 
-const logFailedStartup = () => {
-  const attempts = getPreviousAttempts()
+const logFailedStartup = async () => {
+  const attempts = await getPreviousAttempts()
   if (attempts % 10 === 0) {
-    console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
+    await console.error(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
   } else {
-    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}`)
+    console.warn(`${APP_NAME} startup failed (previous attempts: ${attempts}), exiting with exit code ${EXIT_CODE_FAILED_STARTUP}. This is a warning so we do not spam the telegram bot.`)
   }
-  writeAttempts(attempts + 1)
+  await writeAttempts(attempts + 1)
 }
 
-const getPreviousAttempts = () => {
+const getPreviousAttempts = async () => {
   if (!fs.existsSync(filenameFailedStartupsCounter)) {
     return 0
   }
   try {
     return Number(JSON.parse(fs.readFileSync(filenameFailedStartupsCounter, 'utf8')))
   } catch (error) {
-    console.error(`${APP_NAME} failed to read/parse ${filenameFailedStartupsCounter} after failed startup`, error)
+    await console.error(`${APP_NAME} failed to read/parse ${filenameFailedStartupsCounter} after failed startup`, error)
   }
   return 0
 }
 
-const writeAttempts = (attempts: number) => {
+const writeAttempts = async (attempts: number) => {
   try {
-    fs.writeFileSync(filenameFailedStartupsCounter, JSON.stringify(attempts + 1))
+    fs.writeFileSync(filenameFailedStartupsCounter, JSON.stringify(attempts))
   } catch (error) {
-    console.error(`${APP_NAME} failed to write ${filenameFailedStartupsCounter} after failed startup`, error)
+    await console.error(`${APP_NAME} failed to write ${filenameFailedStartupsCounter} after failed startup`, error)
   }
 }
 

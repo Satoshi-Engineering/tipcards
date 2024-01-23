@@ -43,6 +43,11 @@ export const send = async ({ header, message, group }: { header?: string, messag
       'Content-Type': 'application/json',
     },
   }
-  await axios.post(url, data, config)
+  try {
+    await axios.post(url, data, config)
+  } catch (error) {
+    // error makes no sense, would just trigger another send that will fail
+    console.warn('Unable to send message to telegram bot!', error)
+  }
   return 0
 }

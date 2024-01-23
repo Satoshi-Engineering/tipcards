@@ -41,7 +41,7 @@ export default () => {
     origWarn(...argsWithTime)
   }
 
-  console.error = (...args) => {
+  console.error = async (...args) => {
     const argsWithTime = appendTime(args)
 
     origError(...argsWithTime)
@@ -59,6 +59,6 @@ export default () => {
         }
       })
       .join('\n')
-    send({ message })
+    await send({ message })
   }
 }

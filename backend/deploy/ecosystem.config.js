@@ -10,6 +10,7 @@ module.exports = {
       },
       exp_backoff_restart_delay: 100,
       max_restarts: 35,
+      min_uptime: 60 * 60 * 1000,
       wait_ready: true,
     },
   ],
