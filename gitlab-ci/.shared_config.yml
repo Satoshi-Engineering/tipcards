@@ -16,10 +16,7 @@
       changes:
         - backend/database/**/*
         - backend/src/**/*
-        - backend/cli.ts
-        - backend/drizzle.config.ts
-        - backend/drizzle.migrate.ts
-        - backend/index.ts
+        - backend/*.ts
         - shared/**/*
         - package-lock.json
   cache:
