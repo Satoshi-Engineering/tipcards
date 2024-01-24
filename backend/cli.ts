@@ -231,14 +231,16 @@ const findUsersWithAvailableImagesAndLandingpages = async () => {
   console.log(`\nStarting check for ${users.length} users.\n`)
 
   users.forEach((user) => {
+    if (user.availableCardsLogos == null && user.availableLandingPages == null) {
+      return
+    }
+    console.log(`\n-- User ${user.id} has available card logos and/or landingPages.`)
     if (user.availableCardsLogos != null) {
-      console.log(`\nUser ${user.id} has available card logos.`)
       user.availableCardsLogos.forEach((cardLogo) => {
         console.log(`INSERT INTO UserCanUseImage (user, image, canEdit) VALUES ('${user.id}', '${cardLogo}', false);`)
       })
     }
     if (user.availableLandingPages != null) {
-      console.log(`\nUser ${user.id} has available landing pages.`)
       user.availableLandingPages.forEach((landingPage) => {
         console.log(`INSERT INTO UserCanUseLandingPage (user, landingPage, canEdit) VALUES ('${user.id}', '${landingPage}', false);`)
       })
