@@ -223,6 +223,29 @@ const migrateBulkWithdraws = async () => {
   console.log(`\n${migratedCount} bulk withdraw(s) migrated!`)
 }
 
+const findUsersWithAvailableImagesAndLandingpages = async () => {
+  const users = await getAllRedisUsers()
+
+  console.log(`\nStarting check for ${users.length} users.\n`)
+
+  users.forEach((user) => {
+    if (user.availableCardsLogos != null) {
+      console.log(`\nUser ${user.id} has available card logos.`)
+      user.availableCardsLogos.forEach((cardLogo) => {
+        console.log(`INSERT INTO UserCanUseImage (user, image, canEdit) VALUES ('${user.id}', '${cardLogo}', false);`)
+      })
+    }
+    if (user.availableLandingPages != null) {
+      console.log(`\nUser ${user.id} has available landing pages.`)
+      user.availableLandingPages.forEach((landingPage) => {
+        console.log(`INSERT INTO UserCanUseLandingPage (user, landingPage, canEdit) VALUES ('${user.id}', '${landingPage}', false);`)
+      })
+    }
+  })
+
+  console.log('\nChecking done.\n')
+}
+
 const readlineInterface = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -243,6 +266,7 @@ const run = async () => {
   console.log('3. Parse all cards in redis database with zod.')
   console.log('4. Parse a single card in redis database with zod and print parsing error.')
   console.log('5. Migrate data from redis to drizzle.')
+  console.log('6. Find and list users that have available Images and/or Landingpages.')
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
@@ -257,6 +281,8 @@ const run = async () => {
     await parseSingleCard()
   } else if (answer === '5') {
     await migrateRedisToDrizzle()
+  } else if (answer === '6') {
+    await findUsersWithAvailableImagesAndLandingpages()
   } else {
     console.log('Unknown command.')
   }
