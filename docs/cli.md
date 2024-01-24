@@ -20,5 +20,5 @@ npx ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/cli.
 **Info:** run from backend root (e.g. `/var/www/tipcards/backend`)
 
 ```bash
-node -r tsconfig-paths/register dist/backend/cli.js
+node -r tsconfig-paths/register backend/cli.js
 ```
