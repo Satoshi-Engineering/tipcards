@@ -321,13 +321,15 @@ import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
+const DEFAULT_AMOUNT = 2100
+
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
 const initializing = ref(true)
 const lnurlp = ref(false)
-const amount = ref(2100)
+const amount = ref(DEFAULT_AMOUNT)
 const text = ref(t('cards.settings.defaults.invoiceText'))
 const textIsDirty = ref(false)
 const note = ref<string>()
@@ -376,9 +378,8 @@ const loadLnurlData = async () => {
     amount.value = 0
   } else if (typeof card?.setFunding?.amount === 'number') {
     amount.value = card.setFunding.amount
-  } else {
-    amount.value = 2100
   }
+
   initializing.value = false
 
   setTimeout(loadLnurlData, 10 * 1000)
@@ -413,13 +414,12 @@ const createInvoice = async () => {
 
 const resetInvoice = async () => {
   try {
-    const response = await axios.delete(
-      `${BACKEND_API_ORIGIN}/api/invoice/delete/${route.params.cardHash}`)
+    const response = await axios.delete(`${BACKEND_API_ORIGIN}/api/invoice/delete/${route.params.cardHash}`)
     if (response.data.status === 'success') {
       invoice.value = undefined
       shared.value = false
       funded.value = false
-      amount.value = 2100
+      amount.value = DEFAULT_AMOUNT
       userErrorMessage.value = undefined
       creatingInvoice.value = false
       finishingShared.value = false
