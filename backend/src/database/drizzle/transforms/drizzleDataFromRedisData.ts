@@ -146,8 +146,5 @@ export const getDrizzleLnurlWFromRedisBulkWithdraw = (bulkWithdraw: BulkWithdraw
 export const getUserIdForRedisImageFromDrizzleImage = async (queries: Queries, image: Image): Promise<ImageRedis['userId']> => {
   const imageUsers = await queries.getAllUsersThatCanUseImage(image)
   const userThatCanEditImage = imageUsers.find((user) => user.canEdit)
-  if (userThatCanEditImage == null) {
-    throw new Error(`Image ${image.id} has no user that can use/edit it, which is not allowed for ImageRedis!`)
-  }
-  return userThatCanEditImage.user
+  return userThatCanEditImage?.user || null
 }

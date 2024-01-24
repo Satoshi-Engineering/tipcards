@@ -16,7 +16,7 @@ describe('getAllLandingPages', () => {
     const LANDING_PAGE_COUNT = 5
     const landingPages: LandingPage[] = createLandingPagesTypeExternal(LANDING_PAGE_COUNT)
     const users: User[] = createUsers(LANDING_PAGE_COUNT)
-    const userCanUseLandingPages: UserCanUseLandingPage[]  = users.map((_, i) => createUserCanUseLandingPage(users[i], landingPages[i]))
+    const userCanUseLandingPages: UserCanUseLandingPage[]  = users.map((_, i) => createUserCanUseLandingPage(users[i], landingPages[i], true))
 
     addData({
       landingPages: landingPages,

@@ -18,7 +18,7 @@ describe('getLandingPage', () => {
   it('should return a landingpage that belongs to a user', async () => {
     const user = createUser()
     const landingPage = createLandingPageTypeExternal()
-    const userCanUseLandingPage = createUserCanUseLandingPage(user, landingPage)
+    const userCanUseLandingPage = createUserCanUseLandingPage(user, landingPage, true)
 
     addData({
       landingPages: [landingPage],
@@ -36,7 +36,7 @@ describe('getLandingPage', () => {
     }))
   })
 
-  it('should return null, because in redis a landing page has to have a userId (in drizzle the relation to a user is optional)', async () => {
+  it('should return a landingpage that belongs to no user', async () => {
     const landingPage = createLandingPageTypeExternal()
 
     addData({
@@ -44,6 +44,12 @@ describe('getLandingPage', () => {
     })
 
     const landingPageResult = await getLandingPage(landingPage.id)
-    expect(landingPageResult).toBeNull()
+    expect(landingPageResult).toEqual(expect.objectContaining({
+      id: landingPage.id,
+      name: landingPage.name,
+      url: landingPage.url,
+      type: landingPage.type,
+      userId: null,
+    }))
   })
 })

@@ -139,14 +139,11 @@ export const redisLandingPageFromDrizzleLandingPage = async (queries: Queries, l
   }
 
   // core landingPages are not saved in redis
-  const userCanUseLandingPages = await queries.getUserCanUseLandingPagesByLandingPage(landingPage)
-  if (userCanUseLandingPages.length <= 0) {
-    return null
-  }
+  const userCanUseLandingPage = (await queries.getUserCanUseLandingPagesByLandingPage(landingPage)).find((userCanUseLandingPage) => userCanUseLandingPage.canEdit)
 
   return {
     ...landingPage,
-    userId: userCanUseLandingPages[0].user,
+    userId: userCanUseLandingPage?.user || null,
     type: LandingPageType.enum.external,
   }
 }
@@ -189,7 +186,6 @@ export const redisUserFromDrizzleUser = async (queries: Queries, user: User): Pr
 export const getAvailableCardLogosForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['availableCardsLogos']> => {
   const userCanUseImages = await queries.getAllUserCanUseImagesForUserId(userId)
   const availableCardLogos = userCanUseImages
-    .filter((userCanUseImage) => userCanUseImage.canEdit)
     .map((userCanUseImage) => userCanUseImage.image)
   if (availableCardLogos.length === 0) {
     return null
@@ -200,7 +196,6 @@ export const getAvailableCardLogosForRedisUserByUserId = async (queries: Queries
 export const getAvailableLandingPagesForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['availableLandingPages']> => {
   const userCanUseLandingPages = await queries.getAllUserCanUseLandingPagesForUserId(userId)
   const availableLandingPages = userCanUseLandingPages
-    .filter((userCanUseLandingPage) => userCanUseLandingPage.canEdit)
     .map((userCanUseLandingPage) => userCanUseLandingPage.landingPage)
   if (availableLandingPages.length === 0) {
     return null

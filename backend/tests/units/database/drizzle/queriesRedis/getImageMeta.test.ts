@@ -32,13 +32,19 @@ describe('getImageMeta', () => {
     }))
   })
 
-  it('should throw an error, because in redis an image must have a user', async () => {
+  it('should return an ImageMeta that has no userId', async () => {
     const image = createImage('svg')
 
     addData({
       images: [image],
     })
 
-    await expect(async () => await getImageMeta(image.id)).rejects.toThrow(Error)
+    const imageResult = await getImageMeta(image.id)
+    expect(imageResult).toEqual(expect.objectContaining({
+      id: image.id,
+      name: image.name,
+      type: image.type,
+      userId: null,
+    }))
   })
 })
