@@ -176,7 +176,6 @@ const migrateUsers = async () => {
   }
 
   console.log(`\n${migratedCount} user(s) migrated!`)
-  console.log('\nMigration done.\n')
 }
 
 const migrateCards = async () => {
@@ -192,7 +191,6 @@ const migrateCards = async () => {
   }
 
   console.log(`\n${migratedCount} card(s) migrated!`)
-  console.log('\nMigration done.\n')
 }
 
 const migrateSets = async () => {
@@ -208,7 +206,6 @@ const migrateSets = async () => {
   }
 
   console.log(`\n${migratedCount} set(s) migrated!`)
-  console.log('\nMigration done.\n')
 }
 
 const migrateBulkWithdraws = async () => {
@@ -224,7 +221,6 @@ const migrateBulkWithdraws = async () => {
   }
 
   console.log(`\n${migratedCount} bulk withdraw(s) migrated!`)
-  console.log('\nMigration done.\n')
 }
 
 const readlineInterface = readline.createInterface({

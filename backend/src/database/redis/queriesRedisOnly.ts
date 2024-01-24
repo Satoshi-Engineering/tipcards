@@ -86,7 +86,7 @@ export const getAllBulkWithdraws = async (): Promise<BulkWithdraw[]> => {
   const bulkWithdraws: BulkWithdraw[] = []
   for await (
     const key of client.scanIterator({
-      MATCH: `${REDIS_BASE_PATH}:bulkWithdrawsById:*:data`,
+      MATCH: `${REDIS_BASE_PATH}:bulkWithdrawById:*:data`,
     })
   ) {
     const bulkWithdrawResult = await client.json.get(key)
