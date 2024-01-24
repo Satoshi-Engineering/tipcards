@@ -51,7 +51,7 @@ const getRedisInvoiceFromDrizzleSet = async (queries: Queries, set: Set): Promis
     if (cardVersions.length < 2) {
       continue
     }
-    return getRedisInvoiceForDrizzleInvoice(queries, invoices[0], cardVersions, set)
+    return getRedisInvoiceForDrizzleInvoice(invoices[0], cardVersions, set)
   }
   return null
 }
@@ -65,18 +65,19 @@ const getAllDrizzleInvoicesFundingCard = async (queries: Queries, card: Card): P
 }
 
 const getRedisInvoiceForDrizzleInvoice = async (
-  queries: Queries,
   invoice: Invoice,
   cardVersions: CardVersion[],
   set: Set,
 ): Promise<SetRedis['invoice']> => {
   const fundedCards: number[] = []
   const cardsHasesFundedByInvoice = cardVersions.map((cardVersion) => cardVersion.card)
-  const numberOfCards = await getNumberOfCardsForSet(queries, set)
-  for (let y = 0; y < numberOfCards; y += 1) {
+  for (let y = 0; y < 1000; y += 1) {
     const cardHash = hashSha256(`${set.id}/${y}`)
     if (cardsHasesFundedByInvoice.includes(cardHash)) {
       fundedCards.push(y)
+    }
+    if (fundedCards.length === cardsHasesFundedByInvoice.length) {
+      break
     }
   }
   return {
@@ -88,11 +89,6 @@ const getRedisInvoiceForDrizzleInvoice = async (
     paid: dateOrNullToUnixTimestamp(invoice.paid),
     expired: new Date() > invoice.expiresAt,
   }
-}
-
-const getNumberOfCardsForSet = async (queries: Queries, set: Set): Promise<number> => {
-  const setSettings = await queries.getSetSettingsForSet(set)
-  return setSettings?.numberOfCards || 8
 }
 
 const getRedisSetUserFromDrizzleSet = async (queries: Queries, set: Set): Promise<SetRedis['userId']> => {
