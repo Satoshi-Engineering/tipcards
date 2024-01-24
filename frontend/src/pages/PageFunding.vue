@@ -372,6 +372,8 @@ const loadLnurlData = async () => {
   setFunding.value = card?.setFunding != null
   if (typeof card?.lnurlp?.amount === 'number') {
     amount.value = card.lnurlp.amount
+  } else if (card?.lnurlp?.shared) {
+    amount.value = 0
   } else if (typeof card?.setFunding?.amount === 'number') {
     amount.value = card.setFunding.amount
   } else {
