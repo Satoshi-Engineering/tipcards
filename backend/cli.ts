@@ -20,6 +20,7 @@ import {
 import {
   createBulkWithdraw as createDrizzleBulkWithdraw,
   createCard as createDrizzleCard,
+  updateCard as updateDrizzleCard,
   createUser as createDrizzleUser,
   createSet as createDrizzleSet,
 } from '@backend/database/drizzle/queriesRedis'
@@ -186,6 +187,7 @@ const migrateCards = async () => {
   let migratedCount = 0
   for (const card of cards) {
     await createDrizzleCard(card)
+    await updateDrizzleCard(card)
     migratedCount += 1
     console.log(`Card ${card.cardHash} migrated.`)
   }
