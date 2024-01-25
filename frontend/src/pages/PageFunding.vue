@@ -230,6 +230,7 @@
                 :amount-sats="amount"
                 :rate-btc-eur="rateBtcEur"
                 :min="210"
+                :max="2100000"
                 :disabled="creatingInvoice"
                 @update="amount = $event"
               />

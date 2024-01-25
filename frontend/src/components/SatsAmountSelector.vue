@@ -7,6 +7,7 @@
         type="number"
         inputmode="decimal"
         :min="inputMin"
+        :max="inputMax"
         :step="inputStep"
         @input="onInput"
       >
@@ -78,6 +79,19 @@ const inputMin = computed(() => {
   return props.min / rateBtcSats
 })
 
+const inputMax = computed(() => {
+  if (props.max == null) {
+    return undefined
+  }
+  if (selectedCurrency.value === 'sats') {
+    return props.max
+  }
+  if (selectedCurrency.value === 'EUR' && props.rateBtcEur != null && props.rateBtcEur > 0) {
+    return formatNumber(props.max / rateBtcSats * props.rateBtcEur, 2, 2, undefined, 'en')
+  }
+  return props.max / rateBtcSats
+})
+
 const props = defineProps({
   amountSats: {
     type: Number,
@@ -90,6 +104,10 @@ const props = defineProps({
   min: {
     type: Number,
     default: 0,
+  },
+  max: {
+    type: Number,
+    default: undefined,
   },
 })
 

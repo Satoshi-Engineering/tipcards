@@ -131,6 +131,7 @@
                 :amount-sats="amountPerCard"
                 :rate-btc-eur="rateBtcEur"
                 :min="21"
+                :max="2100000"
                 :disabled="creatingInvoice"
                 @update="amountPerCard = $event"
               />

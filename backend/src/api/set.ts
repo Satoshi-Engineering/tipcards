@@ -238,10 +238,18 @@ router.post('/invoice/:setId', async (req, res) => {
   } catch (error) {
     console.error(error)
   }
-  if (amountPerCard == null || amountPerCard < 21 || cardIndices.length < 1) {
+  if (amountPerCard == null || amountPerCard < 20 || amountPerCard > 2200000) {
     res.status(400).json({
       status: 'error',
-      message: 'Invalid input.',
+      message: 'Invalid amountPerCard, has to be between 21 and 2,100,000 sats.',
+      code: ErrorCode.InvalidInput,
+    })
+    return
+  }
+  if (cardIndices.length < 1) {
+    res.status(400).json({
+      status: 'error',
+      message: 'Invalid input, cardIndices missing.',
       code: ErrorCode.InvalidInput,
     })
     return

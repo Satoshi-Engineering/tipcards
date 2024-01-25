@@ -25,10 +25,10 @@ router.post('/create/:cardHash', async (req, res) => {
   } catch (error) {
     console.error(error)
   }
-  if (amount == null || amount < 100) {
+  if (amount == null || amount < 200 || amount > 2200000) {
     res.status(400).json({
       status: 'error',
-      message: 'Invalid input.',
+      message: 'Invalid amount, has to be between 210 and 2,100,000 sats.',
     })
     return
   }
