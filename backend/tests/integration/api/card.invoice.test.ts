@@ -67,7 +67,7 @@ const setExpectedCardToWithdrawnCardPre = (expectedObject: ExpectedCard) => {
   expectedObject.data.withdrawPending = false
 }
 
-const TEST_AMOUNT_IN_SATS = 100
+const TEST_AMOUNT_IN_SATS = 200
 
 const testCard = cardData.generateCard(TEST_AMOUNT_IN_SATS)
 
