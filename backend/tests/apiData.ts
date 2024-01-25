@@ -6,7 +6,7 @@ const generateCardHash = () => { return hashSha256(randomUUID()) }
 const generateSetId = () => { return crypto.randomUUID() }
 
 export const cardData = {
-  DEFAULT_AMOUNT_IN_SATS: 100,
+  DEFAULT_AMOUNT_IN_SATS: 200,
   generateCardHash,
   generateCard: (amount: number) => {
     const cardHash = generateCardHash()

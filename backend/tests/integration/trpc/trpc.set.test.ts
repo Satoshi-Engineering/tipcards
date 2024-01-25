@@ -41,8 +41,8 @@ beforeAll(async () => {
   await frontend.saveSet(emptySet)
 
   await frontend.saveSet(setWithCards)
-  await frontend.createCardInvoice(cardHash1, 100)
-  await frontend.createCardInvoice(cardHash2, 100)
+  await frontend.createCardInvoice(cardHash1, 200)
+  await frontend.createCardInvoice(cardHash2, 200)
 
   await frontend.saveSet(setWithSetFunding)
   await frontend.createSetFundingInvoice(setWithSetFunding.id, 100, [0, 1, 2, 3])

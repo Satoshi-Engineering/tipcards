@@ -28,7 +28,7 @@ const callerSet = setRouter.createCaller({
 
 const FE = new Frontend()
 
-const AMOUNT_PER_CARD = 142
+const AMOUNT_PER_CARD = 200
 
 const CARD_HASH_NOT_EXISTING = FE.getCardHashBySetIdAndCardIndex(randomUUID(), 0)
 const CARD_HASH_UNFUNDED = FE.getCardHashBySetIdAndCardIndex(randomUUID(), 0)
