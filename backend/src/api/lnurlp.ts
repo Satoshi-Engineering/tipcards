@@ -272,7 +272,7 @@ const cardUpdate = async (req: Request, res: Response, next: NextFunction) => {
   })
   next()
 }
-router.get(
+router.post(
   '/update/:cardHash',
   lockCardMiddleware(toErrorResponse),
   cardUpdate,
