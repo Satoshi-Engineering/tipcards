@@ -16,7 +16,10 @@ export const lockCard = (toError: ToErrorResponse) => async (req: Request, res: 
   const cardHash = req.params.cardHash
 
   if (!cardHash) {
-    res.json(toError('Card hash is required.', ErrorCode.CardHashRequired))
+    res.json(toError({
+      message: 'Card hash is required.',
+      code: ErrorCode.CardHashRequired,
+    }))
     return
   }
 
@@ -25,7 +28,10 @@ export const lockCard = (toError: ToErrorResponse) => async (req: Request, res: 
   do {
     if (lockAttempts > 30) {
       console.error(`Cannot lock card ${cardHash} after 9 seconds of trying. It is currently locked by another process.`)
-      res.json(toError('Unable to access card, please try again later.', ErrorCode.UnableToLockCard))
+      res.json(toError({
+        message: 'Unable to access card, please try again later.',
+        code: ErrorCode.UnableToLockCard,
+      }))
       return
     }
     lockAttempts++

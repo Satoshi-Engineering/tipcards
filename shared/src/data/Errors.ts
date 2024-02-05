@@ -61,7 +61,7 @@ export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
 
 export type ErrorCodeEnum = z.infer<typeof ErrorCodeEnum>
 
-export type ToErrorResponse = (message: string, code?: ErrorCode) => {
+export type ToErrorResponse = ({ message, code }: { message: string, code?: ErrorCode }) => {
   status: string
   reason?: string
   message?: string

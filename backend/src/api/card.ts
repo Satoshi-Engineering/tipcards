@@ -11,7 +11,7 @@ import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backen
 
 const router = Router()
 
-const toErrorResponse: ToErrorResponse = (message: string, code?: ErrorCode) => ({
+const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
   status: 'error',
   message,
   code,
@@ -28,12 +28,18 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json(toErrorResponse('Unknown database error.', ErrorCode.UnknownDatabaseError))
+    res.status(500).json(toErrorResponse({
+      message: 'Unknown database error.',
+      code: ErrorCode.UnknownDatabaseError,
+    }))
     next()
     return
   }
   if (card == null) {
-    res.status(404).json(toErrorResponse('Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.', ErrorCode.CardByHashNotFound))
+    res.status(404).json(toErrorResponse({
+      message: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
+      code: ErrorCode.CardByHashNotFound,
+    }))
     next()
     return
   }
@@ -50,7 +56,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json(toErrorResponse('Unable to check invoice status at lnbits.', code))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to check invoice status at lnbits.',
+        code,
+      }))
       next()
       return
     }
@@ -76,7 +85,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json(toErrorResponse('Unable to check withdraw status at lnbits.', code))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to check withdraw status at lnbits.',
+        code,
+      }))
       next()
       return
     }

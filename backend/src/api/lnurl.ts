@@ -18,7 +18,7 @@ import {
 
 const router = Router()
 
-const toErrorResponse: ToErrorResponse = (message: string, code?: ErrorCode) => ({
+const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
   status: 'ERROR',
   reason: message,
   code,
@@ -37,7 +37,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json(toErrorResponse('Unknown database error.', ErrorCode.UnknownDatabaseError))
+    res.status(500).json(toErrorResponse({
+      message: 'Unknown database error.',
+      code: ErrorCode.UnknownDatabaseError,
+    }))
     next()
     return
   }
@@ -49,7 +52,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
       res.json(data)
     } catch (error) {
       console.error(ErrorCode.UnableToCreateLnurlP, error)
-      res.status(500).json(toErrorResponse('Unable to create LNURL-P at lnbits.', ErrorCode.UnableToCreateLnurlP))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to create LNURL-P at lnbits.',
+        code: ErrorCode.UnableToCreateLnurlP,
+      }))
     }
     next()
     return
@@ -67,7 +73,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json(toErrorResponse('Unable to check invoice status at lnbits.', code))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to check invoice status at lnbits.',
+        code,
+      }))
       next()
       return
     }
@@ -76,13 +85,19 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
   // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
     if (card.invoice != null) {
-      res.status(400).json(toErrorResponse('This card has an invoice. Pay or reset the invoice first in your browser.', ErrorCode.CannotCreateLnurlPCardHasInvoice))
+      res.status(400).json(toErrorResponse({
+        message: 'This card has an invoice. Pay or reset the invoice first in your browser.',
+        code: ErrorCode.CannotCreateLnurlPCardHasInvoice,
+      }))
       next()
       return
     }
 
     if (card.setFunding != null) {
-      res.status(400).json(toErrorResponse('This card is being funded via set funding.', ErrorCode.CardNeedsSetFunding))
+      res.status(400).json(toErrorResponse({
+        message: 'This card is being funded via set funding.',
+        code: ErrorCode.CardNeedsSetFunding,
+      }))
       next()
       return
     }
@@ -92,7 +107,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
       res.json(data)
     } catch (error) {
       console.error(ErrorCode.UnableToCreateLnurlP, error)
-      res.status(500).json(toErrorResponse('Unable to create LNURL-P at lnbits.', ErrorCode.UnableToCreateLnurlP))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to create LNURL-P at lnbits.',
+        code: ErrorCode.UnableToCreateLnurlP,
+      }))
     }
     next()
     return
@@ -110,13 +128,19 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json(toErrorResponse('Unable to check withdraw status at lnbits.', code))
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to check withdraw status at lnbits.',
+        code,
+      }))
       next()
       return
     }
   }
   if (card.used != null) {
-    res.status(400).json(toErrorResponse('Card has already been used.', ErrorCode.WithdrawHasBeenSpent))
+    res.status(400).json(toErrorResponse({
+      message: 'Card has already been used.',
+      code: ErrorCode.WithdrawHasBeenSpent,
+    }))
     next()
     return
   }
@@ -126,13 +150,19 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
   } catch (error) {
     console.error(ErrorCode.UnableToGetLnurl, error)
-    res.status(500).json(toErrorResponse('Unable to get LNURL from lnbits.', ErrorCode.UnableToGetLnurl))
+    res.status(500).json(toErrorResponse({
+      message: 'Unable to get LNURL from lnbits.',
+      code: ErrorCode.UnableToGetLnurl,
+    }))
     next()
     return
   }
 
   if (lnurl == null) {
-    res.status(404).json(toErrorResponse('WithdrawId not found at lnbits.', ErrorCode.CardByHashNotFound))
+    res.status(404).json(toErrorResponse({
+      message: 'WithdrawId not found at lnbits.',
+      code: ErrorCode.CardByHashNotFound,
+    }))
     next()
     return
   }
@@ -145,7 +175,10 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
       `Unable to resolve lnurlw at lnbits for card ${card.cardHash}`,
       error,
     )
-    res.status(500).json(toErrorResponse('Unable to resolve LNURL at lnbits.', ErrorCode.UnableToResolveLnbitsLnurl))
+    res.status(500).json(toErrorResponse({
+      message: 'Unable to resolve LNURL at lnbits.',
+      code: ErrorCode.UnableToResolveLnbitsLnurl,
+    }))
   }
   next()
 }

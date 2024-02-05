@@ -1,12 +1,13 @@
-import { Router, type Request, type Response } from 'express'
+import { NextFunction, Router, type Request, type Response } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { createCard, getCardByHash, updateCard } from '@backend/database/queries'
+import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
@@ -15,6 +16,12 @@ import {
 import { TIPCARDS_ORIGIN } from '@backend/constants'
 
 const router = Router()
+
+const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
+  status: 'error',
+  message,
+  code,
+})
 
 /**
  * Create shared funding lnurlp link
@@ -37,11 +44,10 @@ router.post('/create/:cardHash', async (req, res) => {
     }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'An unexpected error occured. Please try again later or contact an admin.',
       code: ErrorCode.UnknownDatabaseError,
-    })
+    }))
     return
   }
 
@@ -64,11 +70,10 @@ router.post('/create/:cardHash', async (req, res) => {
       await createCard(cardRedisFromCardApi(card))
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json({
-        status: 'error',
+      res.status(500).json(toErrorResponse({
         message: 'An unexpected error occured. Please try again later or contact an admin.',
         code: ErrorCode.UnknownDatabaseError,
-      })
+      }))
       return
     }
   }
@@ -76,23 +81,20 @@ router.post('/create/:cardHash', async (req, res) => {
   // check status of card
   if (card.invoice != null) {
     if (card.invoice.paid != null) {
-      res.status(400).json({
-        status: 'error',
+      res.status(400).json(toErrorResponse({
         message: 'Card is already funded.',
-      })
+      }))
     } else {
-      res.status(400).json({
-        status: 'error',
+      res.status(400).json(toErrorResponse({
         message: 'Card already has an invoice.',
-      })
+      }))
     }
     return
   }
   if (card.lnurlp?.paid != null) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'Card is already funded.',
-    })
+    }))
     return
   }
 
@@ -104,17 +106,16 @@ router.post('/create/:cardHash', async (req, res) => {
     })
   } catch (error) {
     console.error(ErrorCode.UnableToCreateLnurlP, error)
-    res.status(500).json({
-      status: 'error',
-      reason: 'Unable to create LNURL-P at lnbits.',
-    })
+    res.status(500).json(toErrorResponse({
+      message: 'Unable to create LNURL-P at lnbits.',
+    }))
   }
 })
 
 /**
  * Handle lnurlp link payment. Either single or shared funding.
  */
-const cardPaid = async (req: Request, res: Response) => {
+const cardPaid = async (req: Request, res: Response, next: NextFunction) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
@@ -124,18 +125,18 @@ const cardPaid = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'An unexpected error occured. Please try again later or contact an admin.',
       code: ErrorCode.UnknownDatabaseError,
-    })
+    }))
+    next()
     return
   }
   if (card?.lnurlp == null) {
-    res.status(404).json({
-      status: 'error',
+    res.status(404).json(toErrorResponse({
       message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
-    })
+    }))
+    next()
     return
   }
 
@@ -145,6 +146,7 @@ const cardPaid = async (req: Request, res: Response) => {
       status: 'success',
       data: 'paid',
     })
+    next()
     return
   }
 
@@ -159,11 +161,11 @@ const cardPaid = async (req: Request, res: Response) => {
       errorToLog = error.error
     }
     console.error(code, errorToLog)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'Unable to check invoice status at lnbits.',
       code,
-    })
+    }))
+    next()
     return
   }
   if (card.invoice?.paid || card.lnurlp?.paid) {
@@ -171,20 +173,32 @@ const cardPaid = async (req: Request, res: Response) => {
       status: 'success',
       data: 'paid',
     })
+    next()
     return
   }
   res.json({
     status: 'success',
     data: 'not_paid',
   })
+  next()
 }
-router.get('/paid/:cardHash', cardPaid)
-router.post('/paid/:cardHash', cardPaid)
+router.get(
+  '/paid/:cardHash',
+  lockCard(toErrorResponse),
+  cardPaid,
+  releaseCard,
+)
+router.post(
+  '/paid/:cardHash',
+  lockCard(toErrorResponse),
+  cardPaid,
+  releaseCard,
+)
 
 /**
  * Update text+note for shared cards
  */
-router.post('/update/:cardHash', async (req, res) => {
+const cardUpdate = async (req: Request, res: Response, next: NextFunction) => {
   // check if card exists
   let card: Card | null = null
   try {
@@ -194,39 +208,39 @@ router.post('/update/:cardHash', async (req, res) => {
     }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'An unexpected error occured. Please try again later or contact an admin.',
       code: ErrorCode.UnknownDatabaseError,
-    })
+    }))
+    next()
     return
   }
   if (card == null) {
-    res.status(404).json({
-      status: 'error',
+    res.status(404).json(toErrorResponse({
       message: 'Card not found.',
-    })
+    }))
+    next()
     return
   }
   if (card.isLockedByBulkWithdraw) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'This Tip Card is locked by bulk withdraw.',
-    })
+    }))
+    next()
     return
   }
   if (card.lnurlp == null) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'This Tip Card has no lnurlp enabled.',
-    })
+    }))
+    next()
     return
   }
   if (card.lnurlp.paid) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'This Tip Card is already funded.',
-    })
+    }))
+    next()
     return
   }
 
@@ -245,22 +259,30 @@ router.post('/update/:cardHash', async (req, res) => {
     await updateCard(card)
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'Unable to update card.',
       code: ErrorCode.UnknownDatabaseError,
-    })
+    }))
+    next()
+    return
   }
   res.json({
     status: 'success',
     data: card,
   })
-})
+  next()
+}
+router.get(
+  '/update/:cardHash',
+  lockCard(toErrorResponse),
+  cardUpdate,
+  releaseCard,
+)
 
 /**
  * Finish shared funding lnurlp link
  */
-router.post('/finish/:cardHash', async (req, res) => {
+const cardFinish = async (req: Request, res: Response, next: NextFunction) => {
   // check if card exists
   let card: Card | null = null
   try {
@@ -270,25 +292,25 @@ router.post('/finish/:cardHash', async (req, res) => {
     }
   } catch (error) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'An unexpected error occured. Please try again later or contact an admin.',
       code: ErrorCode.UnknownDatabaseError,
-    })
+    }))
+    next()
     return
   }
   if (card == null) {
-    res.status(404).json({
-      status: 'error',
+    res.status(404).json(toErrorResponse({
       message: 'Card not found.',
-    })
+    }))
+    next()
     return
   }
   if (!card.lnurlp?.shared) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'This Tip Card has no shared funding enabled.',
-    })
+    }))
+    next()
     return
   }
 
@@ -314,19 +336,18 @@ router.post('/finish/:cardHash', async (req, res) => {
       errorToLog = error.error
     }
     console.error(code, errorToLog)
-    res.status(500).json({
-      status: 'error',
+    res.status(500).json(toErrorResponse({
       message: 'Unable to check invoice status at lnbits.',
       code,
-    })
+    }))
+    next()
     return
   }
   if (!card.lnurlp.paid) {
-    res.status(400).json({
-      status: 'error',
+    res.status(400).json(toErrorResponse({
       message: 'Card is not paid.',
-      data: card,
-    })
+    }))
+    next()
     return
   }
 
@@ -334,6 +355,13 @@ router.post('/finish/:cardHash', async (req, res) => {
     status: 'success',
     data: card,
   })
-})
+  next()
+}
+router.post(
+  '/finish/:cardHash',
+  lockCard(toErrorResponse),
+  cardFinish,
+  releaseCard,
+)
 
 export default router
