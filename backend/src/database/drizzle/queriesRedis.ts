@@ -38,6 +38,14 @@ import { asTransaction } from './client'
 
 // @throws tags are omitted as every database query can throw an exception!
 
+export const lockCardByHash = async (): Promise<string | null> => {
+  throw new Error('Not implemented for drizzle yet')
+}
+
+export const releaseCardByHash = async (): Promise<void> => {
+  throw new Error('Not implemented for drizzle yet')
+}
+
 export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => asTransaction(async (queries) => {
   const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {

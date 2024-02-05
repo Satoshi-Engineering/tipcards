@@ -1,11 +1,12 @@
-import express from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
+import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
 import {
   checkIfCardIsPaidAndCreateWithdrawId,
   checkIfCardIsUsed,
@@ -15,43 +16,42 @@ import {
   getLnurlResponse,
 } from '@backend/services/lnbitsHelpers'
 
-const router = express.Router()
+const router = Router()
 
-/**
- * LNURL response when cards are scanned directly
- */
-router.get('/:cardHash', async (req: express.Request, res: express.Response) => {
+const toErrorResponse: ToErrorResponse = (message: string, code?: ErrorCode) => ({
+  status: 'ERROR',
+  reason: message,
+  code,
+})
+
+const routeHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const cardHash = req.params.cardHash
+
   let card: Card | null = null
 
   // load card from database
   try {
-    const cardRedis = await getCardByHash(req.params.cardHash)
+    const cardRedis = await getCardByHash(cardHash)
     if (cardRedis != null) {
       card = cardApiFromCardRedis(cardRedis)
     }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'ERROR',
-      reason: 'Unknown database error.',
-      code: ErrorCode.UnknownDatabaseError,
-    })
+    res.status(500).json(toErrorResponse('Unknown database error.', ErrorCode.UnknownDatabaseError))
+    next()
     return
   }
 
   // create + return lnurlp for unfunded card
   if (card == null) {
     try {
-      const data = await getLnurlpForNewCard(req.params.cardHash)
+      const data = await getLnurlpForNewCard(cardHash)
       res.json(data)
     } catch (error) {
       console.error(ErrorCode.UnableToCreateLnurlP, error)
-      res.status(500).json({
-        status: 'ERROR',
-        reason: 'Unable to create LNURL-P at lnbits.',
-        code: ErrorCode.UnableToCreateLnurlP,
-      })
+      res.status(500).json(toErrorResponse('Unable to create LNURL-P at lnbits.', ErrorCode.UnableToCreateLnurlP))
     }
+    next()
     return
   }
 
@@ -67,11 +67,8 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json({
-        status: 'ERROR',
-        reason: 'Unable to check invoice status at lnbits.',
-        code,
-      })
+      res.status(500).json(toErrorResponse('Unable to check invoice status at lnbits.', code))
+      next()
       return
     }
   }
@@ -79,20 +76,14 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
   // create + return lnurlp for unfunded card
   if (card.lnbitsWithdrawId == null) {
     if (card.invoice != null) {
-      res.status(400).json({
-        status: 'ERROR',
-        reason: 'This card has an invoice. Pay or reset the invoice first in your browser.',
-        code: ErrorCode.CannotCreateLnurlPCardHasInvoice,
-      })
+      res.status(400).json(toErrorResponse('This card has an invoice. Pay or reset the invoice first in your browser.', ErrorCode.CannotCreateLnurlPCardHasInvoice))
+      next()
       return
     }
 
     if (card.setFunding != null) {
-      res.status(400).json({
-        status: 'ERROR',
-        reason: 'This card is being funded via set funding.',
-        code: ErrorCode.CardNeedsSetFunding,
-      })
+      res.status(400).json(toErrorResponse('This card is being funded via set funding.', ErrorCode.CardNeedsSetFunding))
+      next()
       return
     }
 
@@ -101,12 +92,9 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       res.json(data)
     } catch (error) {
       console.error(ErrorCode.UnableToCreateLnurlP, error)
-      res.status(500).json({
-        status: 'ERROR',
-        reason: 'Unable to create LNURL-P at lnbits.',
-        code: ErrorCode.UnableToCreateLnurlP,
-      })
+      res.status(500).json(toErrorResponse('Unable to create LNURL-P at lnbits.', ErrorCode.UnableToCreateLnurlP))
     }
+    next()
     return
   }
 
@@ -122,20 +110,14 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json({
-        status: 'ERROR',
-        reason: 'Unable to check withdraw status at lnbits.',
-        code,
-      })
+      res.status(500).json(toErrorResponse('Unable to check withdraw status at lnbits.', code))
+      next()
       return
     }
   }
   if (card.used != null) {
-    res.status(400).json({
-      status: 'ERROR',
-      reason: 'Card has already been used.',
-      code: ErrorCode.WithdrawHasBeenSpent,
-    })
+    res.status(400).json(toErrorResponse('Card has already been used.', ErrorCode.WithdrawHasBeenSpent))
+    next()
     return
   }
 
@@ -144,20 +126,14 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
     lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
   } catch (error) {
     console.error(ErrorCode.UnableToGetLnurl, error)
-    res.status(500).json({
-      status: 'ERROR',
-      reason: 'Unable to get LNURL from lnbits.',
-      code: ErrorCode.UnableToGetLnurl,
-    })
+    res.status(500).json(toErrorResponse('Unable to get LNURL from lnbits.', ErrorCode.UnableToGetLnurl))
+    next()
     return
   }
 
   if (lnurl == null) {
-    res.status(404).json({
-      status: 'ERROR',
-      reason: 'WithdrawId not found at lnbits.',
-      code: ErrorCode.CardByHashNotFound,
-    })
+    res.status(404).json(toErrorResponse('WithdrawId not found at lnbits.', ErrorCode.CardByHashNotFound))
+    next()
     return
   }
 
@@ -169,12 +145,19 @@ router.get('/:cardHash', async (req: express.Request, res: express.Response) => 
       `Unable to resolve lnurlw at lnbits for card ${card.cardHash}`,
       error,
     )
-    res.status(500).json({
-      status: 'ERROR',
-      reason: 'Unable to resolve LNURL at lnbits.',
-      code: ErrorCode.UnableToResolveLnbitsLnurl,
-    })
+    res.status(500).json(toErrorResponse('Unable to resolve LNURL at lnbits.', ErrorCode.UnableToResolveLnbitsLnurl))
   }
-})
+  next()
+}
+
+/**
+ * LNURL response when cards are scanned directly
+ */
+router.get(
+  '/:cardHash',
+  lockCard(toErrorResponse),
+  routeHandler,
+  releaseCard,
+)
 
 export default router

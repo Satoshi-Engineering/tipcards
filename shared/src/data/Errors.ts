@@ -53,11 +53,20 @@ export enum ErrorCode {
   ZodErrorParsingCardByKey = 'ZodErrorParsingCardByKey',
   ZodErrorParsingSetByKey = 'ZodErrorParsingSetByKey',
   ZodErrorParsingBulkWithdrawByKey = 'ZodErrorParsingBulkWithdrawByKey',
+  UnableToLockCard = 'UnableToLockCard',
+  CardHashRequired = 'CardHashRequired',
 }
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
 
 export type ErrorCodeEnum = z.infer<typeof ErrorCodeEnum>
+
+export type ToErrorResponse = (message: string, code?: ErrorCode) => {
+  status: string
+  reason?: string
+  message?: string
+  code?: ErrorCode
+}
 
 export class ErrorWithCode {
   error: unknown

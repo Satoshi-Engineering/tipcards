@@ -8,6 +8,8 @@ if (USE_DRIZZLE) {
 }
 
 const {
+  lockCardByHash,
+  releaseCardByHash,
   getCardByHash,
   createCard,
   updateCard,
@@ -36,6 +38,8 @@ const {
 } = queries
 
 export {
+  lockCardByHash,
+  releaseCardByHash,
   getCardByHash,
   createCard,
   updateCard,

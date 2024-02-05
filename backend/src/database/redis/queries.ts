@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import { getClient, INDEX_USER_BY_LNURL_AUTH_KEY, INDEX_SETS_BY_USER_ID } from './client'
 
 import type { AccessTokenPayload } from '@shared/data/auth'
@@ -13,6 +15,28 @@ import AlreadyExistsError from '@backend/errors/AlreadyExistsError'
 import NotFoundError from '@backend/errors/NotFoundError'
 import hashSha256 from '@backend/services/hashSha256'
 import { REDIS_BASE_PATH } from '@backend/constants'
+
+/** @throws */
+export const lockCardByHash = async (cardHash: string): Promise<string | null> => {
+  const lockValue = randomUUID()
+  const client = await getClient()
+  await client.setNX(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:lock`, lockValue)
+  const currentLockValue = await client.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:lock`)
+  if (currentLockValue !== lockValue) {
+    return null
+  }
+  return lockValue
+}
+
+/** @throws */
+export const releaseCardByHash = async (cardHash: string, lockValue: string): Promise<void> => {
+  const client = await getClient()
+  const currentLockValue = await client.get(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:lock`)
+  if (currentLockValue !== lockValue) {
+    throw new Error(`Cannot release card ${cardHash} with lock value ${lockValue}. It is currently locked with ${currentLockValue}.`)
+  }
+  await client.del(`${REDIS_BASE_PATH}:cardsByHash:${cardHash}:lock`)
+}
 
 /**
  * @throws ZodError
