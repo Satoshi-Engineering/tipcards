@@ -1,18 +1,23 @@
-import { Router } from 'express'
+import { Router, Request, Response, NextFunction } from 'express'
 
 import type { Card as CardApi } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { getCardByHash, updateCard } from '@backend/database/queries'
+import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
 const router = Router()
 
-router.get('/')
+const toErrorResponse: ToErrorResponse = (message: string, code?: ErrorCode) => ({
+  status: 'error',
+  message,
+  code,
+})
 
-router.get('/:cardHash', async (req, res) => {
+const routeHandler = async (req: Request, res: Response, next: NextFunction) => {
   let card: CardApi | null = null
 
   // load card from database
@@ -23,19 +28,13 @@ router.get('/:cardHash', async (req, res) => {
     }
   } catch (error: unknown) {
     console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(500).json({
-      status: 'error',
-      reason: 'Unknown database error.',
-      code: ErrorCode.UnknownDatabaseError,
-    })
+    res.status(500).json(toErrorResponse('Unknown database error.', ErrorCode.UnknownDatabaseError))
+    next()
     return
   }
   if (card == null) {
-    res.status(404).json({
-      status: 'error',
-      reason: 'Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.',
-      code: ErrorCode.CardByHashNotFound,
-    })
+    res.status(404).json(toErrorResponse('Card has not been funded yet. Scan the QR code with your QR code scanner and open the URL in your browser to fund it.', ErrorCode.CardByHashNotFound))
+    next()
     return
   }
 
@@ -51,11 +50,8 @@ router.get('/:cardHash', async (req, res) => {
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json({
-        status: 'error',
-        reason: 'Unable to check invoice status at lnbits.',
-        code,
-      })
+      res.status(500).json(toErrorResponse('Unable to check invoice status at lnbits.', code))
+      next()
       return
     }
   }
@@ -64,6 +60,7 @@ router.get('/:cardHash', async (req, res) => {
       status: 'success',
       data: card,
     })
+    next()
     return
   }
 
@@ -79,11 +76,8 @@ router.get('/:cardHash', async (req, res) => {
         errorToLog = error.error
       }
       console.error(code, errorToLog)
-      res.status(500).json({
-        status: 'error',
-        reason: 'Unable to check withdraw status at lnbits.',
-        code,
-      })
+      res.status(500).json(toErrorResponse('Unable to check withdraw status at lnbits.', code))
+      next()
       return
     }
   }
@@ -106,6 +100,16 @@ router.get('/:cardHash', async (req, res) => {
     status: 'success',
     data: card,
   })
-})
+  next()
+}
+
+router.get('/')
+
+router.get(
+  '/:cardHash',
+  lockCard(toErrorResponse),
+  routeHandler,
+  releaseCard,
+)
 
 export default router
