@@ -3,6 +3,7 @@ import { BulkWithdraw as BulkWithdrawTrpc } from '@shared/data/trpc/BulkWithdraw
 
 import CardCollection from '@backend/modules/CardCollection'
 import BulkWithdraw from '@backend/modules/BulkWithdraw'
+import { lockCards, releaseCards } from '@backend/services/databaseCardLock'
 
 import { router, publicProcedure } from '../trpc'
 
@@ -19,10 +20,15 @@ export const bulkWithdrawRouter = router({
     .input(Card.shape.hash.array())
     .output(BulkWithdrawTrpc)
     .mutation(async ({ input }) => {
-      const cards = await CardCollection.fromCardHashes(input)
-      const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
-      await bulkWithdraw.create()
-      return bulkWithdraw.toTRpcResponse()
+      const lockValues = await lockCards(input)
+      try {
+        const cards = await CardCollection.fromCardHashes(input)
+        const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
+        await bulkWithdraw.create()
+        return bulkWithdraw.toTRpcResponse()
+      } finally {
+        await releaseCards(lockValues)
+      }
     }),
 
   deleteById: publicProcedure

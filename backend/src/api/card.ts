@@ -6,7 +6,7 @@ import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { getCardByHash, updateCard } from '@backend/database/queries'
-import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
+import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
 const router = Router()
@@ -119,9 +119,9 @@ router.get('/')
 
 router.get(
   '/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   routeHandler,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 export default router

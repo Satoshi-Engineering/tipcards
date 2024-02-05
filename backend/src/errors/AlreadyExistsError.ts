@@ -1,1 +1,3 @@
-export default class AlreadyExistsError extends Error {}
+import UserError from './UserError'
+
+export default class AlreadyExistsError extends UserError {}

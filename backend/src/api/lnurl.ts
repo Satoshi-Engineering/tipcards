@@ -6,7 +6,7 @@ import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
-import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
+import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import {
   checkIfCardIsPaidAndCreateWithdrawId,
   checkIfCardIsUsed,
@@ -188,9 +188,9 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
  */
 router.get(
   '/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   routeHandler,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 export default router

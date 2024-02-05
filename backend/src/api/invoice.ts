@@ -8,7 +8,7 @@ import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { getCardByHash, createCard, deleteCard } from '@backend/database/queries'
-import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
+import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
@@ -215,15 +215,15 @@ const invoicePaid = async (req: Request, res: Response, next: NextFunction) => {
 }
 router.get(
   '/paid/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   invoicePaid,
-  releaseCard,
+  releaseCardMiddleware,
 )
 router.post(
   '/paid/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   invoicePaid,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 router.delete('/delete/:cardHash', async (req, res) => {

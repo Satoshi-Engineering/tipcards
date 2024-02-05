@@ -7,7 +7,7 @@ import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { createCard, getCardByHash, updateCard } from '@backend/database/queries'
-import { lockCard, releaseCard } from '@backend/services/cardLockMiddleware'
+import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
@@ -184,15 +184,15 @@ const cardPaid = async (req: Request, res: Response, next: NextFunction) => {
 }
 router.get(
   '/paid/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   cardPaid,
-  releaseCard,
+  releaseCardMiddleware,
 )
 router.post(
   '/paid/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   cardPaid,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 /**
@@ -274,9 +274,9 @@ const cardUpdate = async (req: Request, res: Response, next: NextFunction) => {
 }
 router.get(
   '/update/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   cardUpdate,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 /**
@@ -359,9 +359,9 @@ const cardFinish = async (req: Request, res: Response, next: NextFunction) => {
 }
 router.post(
   '/finish/:cardHash',
-  lockCard(toErrorResponse),
+  lockCardMiddleware(toErrorResponse),
   cardFinish,
-  releaseCard,
+  releaseCardMiddleware,
 )
 
 export default router
