@@ -45,7 +45,7 @@ const cardUsed = async (req: Request, res: Response) => {
   if (card.used != null) {
     res.json({
       status: 'success',
-      data: { cardUsed: card.used },
+      data: { cardUsed: card.used, cardHash: card.cardHash },
     })
     return
   }
@@ -70,7 +70,7 @@ const cardUsed = async (req: Request, res: Response) => {
   }
   res.json({
     status: 'success',
-    data: { cardUsed: card.used },
+    data: { cardUsed: card.used, cardHash: card.cardHash },
   })
 }
 
