@@ -32,7 +32,7 @@ const bulkWithdrawWithdrawn = async (req: Request, res: Response) => {
   if (bulkWithdraw.withdrawn != null) {
     res.json({
       status: 'success',
-      data: { withdrawn: bulkWithdraw.withdrawn },
+      data: { withdrawn: bulkWithdraw.withdrawn, bulkWithdrawId: bulkWithdraw.id },
     })
     return
   }
@@ -87,7 +87,7 @@ const bulkWithdrawWithdrawn = async (req: Request, res: Response) => {
   }
   res.json({
     status: 'success',
-    data: { withdrawn: bulkWithdraw.withdrawn },
+    data: { withdrawn: bulkWithdraw.withdrawn, bulkWithdrawId: bulkWithdraw.id },
   })
 }
 
