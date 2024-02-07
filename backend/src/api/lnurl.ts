@@ -144,7 +144,7 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     next()
     return
   }
-  if (card.withdrawPending != null) {
+  if (card.withdrawPending) {
     console.error(`Card ${card.cardHash} withdraw is pending and user tried again.`)
     res.status(400).json(toErrorResponse({
       message: 'Card has already been used, but the payment is still pending.',
