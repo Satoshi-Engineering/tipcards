@@ -144,6 +144,14 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     next()
     return
   }
+  if (card.withdrawPending != null) {
+    res.status(400).json(toErrorResponse({
+      message: 'Card has already been used, but the payment is still pending.',
+      code: ErrorCode.WithdrawIsPending,
+    }))
+    next()
+    return
+  }
 
   let lnurl = null
   try {

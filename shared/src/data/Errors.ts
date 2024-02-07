@@ -55,6 +55,7 @@ export enum ErrorCode {
   ZodErrorParsingBulkWithdrawByKey = 'ZodErrorParsingBulkWithdrawByKey',
   UnableToLockCard = 'UnableToLockCard',
   CardHashRequired = 'CardHashRequired',
+  WithdrawIsPending = 'WithdrawIsPending',
 }
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
