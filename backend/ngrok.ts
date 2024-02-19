@@ -1,7 +1,8 @@
-import 'dotenv/config'
 import ngrok from 'ngrok'
 
-import { PROXY_PORT, NGROK_AUTH_TOKEN } from './src/constants'
+import '@backend/initEnv' // Info: .env needs to read before imports
+
+import { PROXY_PORT, NGROK_AUTH_TOKEN } from '@backend/constants'
 
 (async () => {
   const url = await ngrok.connect({

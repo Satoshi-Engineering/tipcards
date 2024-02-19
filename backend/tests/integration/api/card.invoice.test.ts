@@ -1,5 +1,7 @@
-import '../initEnv'
 import axios, { AxiosResponse } from 'axios'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
+
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import { Card } from '@shared/data/api/Card'
 

@@ -1,4 +1,4 @@
-import '../initEnv'
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { cardRouter } from '@backend/trpc/router/card'

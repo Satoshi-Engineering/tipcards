@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import 'dotenv/config'
 import type { Server } from 'http'
 import type { Socket } from 'net'
 

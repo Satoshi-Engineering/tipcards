@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
-import 'dotenv/config'
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import consoleOverride from '@backend/consoleOverride'
-
-import { startup } from './startup'
+import { startup } from '@backend/startup'
 
 consoleOverride()
 startup()

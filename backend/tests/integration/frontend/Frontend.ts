@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import hashSha256 from '@backend/services/hashSha256'
 
 export default class Frontend {

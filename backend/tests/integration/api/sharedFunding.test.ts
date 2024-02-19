@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 
-import '../initEnv'
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { cardData } from '../../apiData'
 import FrontendSimulator from '../frontend/FrontendSimulator'

@@ -54,6 +54,8 @@ git config core.hooksPath .githooks
 
 ### Backend
 
+#### Setup
+
 * Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host. The modules `rejson` and `redisearch` are required.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
   * See [Example](docs/examples/redis) 
@@ -64,6 +66,10 @@ git config core.hooksPath .githooks
   - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
   - `LNBITS_ADMIN_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
 * You can look up additional optional variables in `.env.example`
+
+#### Custom Env File
+
+Per default the backend loads the `backend/.env` file. If you need different setups locally (e.g. one for development and one for running integration tests) you can load a different one by adding a commandline argument. For running the backend you can use `npm run backend-dev -- --env=test`. You can also add the parameter to all other commands (cli, integration test, etc.).
 
 ### Frontend
 

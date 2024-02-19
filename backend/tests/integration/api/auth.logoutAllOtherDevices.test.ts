@@ -1,12 +1,13 @@
-import '../initEnv'
-
 import axios, { AxiosResponse, AxiosError } from 'axios'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
+
+import { delay } from '@backend/services/timingUtils'
 
 import FailEarly from '../../FailEarly'
 import FrontendSimulator from '../frontend/FrontendSimulator'
 import HDWallet from '../lightning/HDWallet'
 import { authData } from '../../apiData'
-import { delay } from '@backend/services/timingUtils'
 
 const failEarly = new FailEarly(it)
 

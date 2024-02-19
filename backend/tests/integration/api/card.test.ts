@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios'
-import '../initEnv'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 describe('card', () => {
   it('should return 404 if the card doesn\' exist', async () => {

@@ -1,6 +1,8 @@
-import Frontend from './Frontend'
 import axios, { AxiosResponse } from 'axios'
+
 import { Set } from '@shared/data/api/Set'
+
+import Frontend from './Frontend'
 
 export default class FrontendWithAuth extends Frontend {
   authServiceLoginHash = ''

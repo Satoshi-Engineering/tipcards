@@ -1,7 +1,7 @@
-import '../initEnv'
-
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import hashSha256 from '@backend/services/hashSha256'
 import { ErrorCode } from '@shared/data/Errors'

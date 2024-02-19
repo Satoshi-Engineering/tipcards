@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server'
-import '../initEnv'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import NotFoundError from '@backend/errors/NotFoundError'

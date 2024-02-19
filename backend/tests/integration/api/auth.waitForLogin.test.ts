@@ -1,6 +1,6 @@
-import '../initEnv'
-
 import { AxiosResponse } from 'axios'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 

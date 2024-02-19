@@ -6,19 +6,19 @@
 
 import { migrate } from 'drizzle-orm/mysql2/migrator'
 import { drizzle } from 'drizzle-orm/mysql2'
-import * as mysql from 'mysql2/promise'
-import * as dotenv from 'dotenv'
+import { createConnection } from 'mysql2/promise'
 
-dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
-dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import * as schema from '@backend/database/drizzle/schema'
 import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants'
 
 import { MIGRATIONS_FOLDER } from './drizzle.config'
 
+console.log({ DB_CREDENTIALS })
+
 const run = async () => {
-   const connection = await mysql.createConnection({
+  const connection = await createConnection({
      ...DB_CREDENTIALS,
      multipleStatements: true,
   })

@@ -1,5 +1,6 @@
 import axios from 'axios'
-import '../initEnv'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 describe('dummy api', () => {
   it('returns success state', async () => {

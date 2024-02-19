@@ -1,6 +1,6 @@
-import '../initEnv'
-
 import axios, { AxiosError, AxiosResponse } from 'axios'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors'
 

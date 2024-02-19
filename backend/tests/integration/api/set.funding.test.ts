@@ -1,9 +1,10 @@
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
+import '@backend/initEnv' // Info: .env needs to read before imports
+
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
-import '../initEnv'
 import FrontendSimulator from '../frontend/FrontendSimulator'
 import LNBitsWallet from '../lightning/LNBitsWallet'
 import FailEarly from '../../FailEarly'

@@ -1,13 +1,14 @@
-import 'dotenv/config'
 import proxy from 'express-http-proxy'
 import express from 'express'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import {
   EXPRESS_PORT,
   LNURL_PORT,
   PROXY_PORT,
   WEB_PORT,
-} from './src/constants'
+} from '@backend/constants'
 
 const app = express()
 app.use('/api', proxy(`localhost:${EXPRESS_PORT}`, {

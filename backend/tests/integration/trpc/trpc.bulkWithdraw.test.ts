@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
-import '../initEnv'
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'

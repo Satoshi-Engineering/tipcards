@@ -1,7 +1,6 @@
 import type { Config } from 'drizzle-kit'
-import * as dotenv from 'dotenv'
 
-dotenv.config({ path: './backend/.env' }) // Needed for the drizzle-kit generate:mysql command
+import './src/initEnv' // Needed for the drizzle-kit generate:mysql command
 
 export const SCHEMA_PATH = './backend/src/database/drizzle/schema/*'
 

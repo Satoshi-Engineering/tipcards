@@ -1,8 +1,6 @@
-import * as dotenv from 'dotenv'
-import * as readline from 'readline'
+import { createInterface } from 'readline'
 
-dotenv.config({ path: './.env' }) // Info: .env needs to read before imports
-dotenv.config({ path: './backend/.env' }) // Info: .env needs to read before imports
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import Database from '@backend/database/drizzle/Database'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
@@ -250,7 +248,7 @@ const findUsersWithAvailableImagesAndLandingpages = async () => {
   console.log('\nChecking done.\n')
 }
 
-const readlineInterface = readline.createInterface({
+const readlineInterface = createInterface({
   input: process.stdin,
   output: process.stdout,
 })

@@ -1,6 +1,6 @@
-import '../initEnv'
-
 import axios, { AxiosError } from 'axios'
+
+import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { cardData } from '../../apiData'
 import FrontendSimulator from '../frontend/FrontendSimulator'

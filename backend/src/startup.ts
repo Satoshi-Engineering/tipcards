@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import 'dotenv/config'
 import fs from 'fs'
 import type { Socket } from 'net'
 import path from 'path'
@@ -10,8 +9,7 @@ import { loadCoarsWhitelist } from '@backend/services/corsOptions'
 import { initAllWorkers } from '@backend/worker'
 import app from '@backend/app'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants'
-
-import { shutdown } from './shutdown'
+import { shutdown } from '@backend/shutdown'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const EXIT_CODE_PREMATURE_DATABASE_CLOSE = 130
