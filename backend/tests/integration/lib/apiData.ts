@@ -1,6 +1,9 @@
 import crypto, { randomUUID } from 'crypto'
+
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 import hashSha256 from '@backend/services/hashSha256'
+
+import { API_ORIGIN } from '../lib/constants'
 
 const generateCardHash = () => { return hashSha256(randomUUID()) }
 const generateSetId = () => { return crypto.randomUUID() }
@@ -24,7 +27,7 @@ export const cardData = {
     if (cardHash == null) {
       cardHash = cardData.generateCardHash()
     }
-    return encodeLnurl(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
+    return encodeLnurl(`${API_ORIGIN}/api/lnurl/${cardHash}`)
   },
 }
 

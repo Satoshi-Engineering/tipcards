@@ -4,10 +4,10 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import LNURLAuth from '../lib/lightning/LNURLAuth'
+import HDWallet from '../lib/lightning/HDWallet'
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import LNURLAuth from '../lightning/LNURLAuth'
-import HDWallet from '../lightning/HDWallet'
 
 const failEarly = new FailEarly(it)
 

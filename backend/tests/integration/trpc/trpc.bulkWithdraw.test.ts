@@ -11,8 +11,9 @@ import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
-import Frontend from '../frontend/Frontend'
-import LNBitsWallet from '../lightning/LNBitsWallet'
+import Frontend from '../lib/frontend/Frontend'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet'
+import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
@@ -36,7 +37,7 @@ const SET_ID = randomUUID()
 const CARD_HASH_FUNDED_0 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 0)
 const CARD_HASH_FUNDED_1 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 1)
 
-const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
+const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 
 beforeAll(async () => {
   await initDatabase()
@@ -167,7 +168,7 @@ const checkIfBulkWithdrawIsPending = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
-  const webhookResponse = await axios.get(`${process.env.TEST_API_ORIGIN}/api/bulkWithdraw/withdrawn/${bulkWithdraw.id}`)
+  const webhookResponse = await axios.get(`${API_ORIGIN}/api/bulkWithdraw/withdrawn/${bulkWithdraw.id}`)
   expect(webhookResponse.data.status).toBe('success')
   expect(typeof webhookResponse.data.data.withdrawn).toBe('number')
 }

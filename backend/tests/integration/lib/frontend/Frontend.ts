@@ -2,9 +2,11 @@ import axios from 'axios'
 
 import hashSha256 from '@backend/services/hashSha256'
 
+import { API_ORIGIN } from '../constants'
+
 export default class Frontend {
   async createCardViaAPI(cardHash: string, amount: number, text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/invoice/create/${cardHash}`, {
+    return await axios.post(`${API_ORIGIN}/api/invoice/create/${cardHash}`, {
       amount,
       text,
       note,
@@ -16,36 +18,36 @@ export default class Frontend {
   }
 
   async createSharedFunding(cardHash: string, text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/create/${cardHash}`, {
+    return await axios.post(`${API_ORIGIN}/api/lnurlp/create/${cardHash}`, {
       text,
       note,
     })
   }
 
   async updateSharedFunding(cardHash: string, text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/update/${cardHash}`, {
+    return await axios.post(`${API_ORIGIN}/api/lnurlp/update/${cardHash}`, {
       text,
       note,
     })
   }
 
   async finishSharedFunding(cardHash: string, text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/lnurlp/finish/${cardHash}`, {
+    return await axios.post(`${API_ORIGIN}/api/lnurlp/finish/${cardHash}`, {
       text,
       note,
     })
   }
 
   async loadCard(cardHash: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${cardHash}?origin=cards`)
+    return await axios.get(`${API_ORIGIN}/api/card/${cardHash}?origin=cards`)
   }
 
   async loadLnurlForCardHash(cardHash: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${cardHash}`)
+    return await axios.get(`${API_ORIGIN}/api/lnurl/${cardHash}`)
   }
 
   async deleteCard(cardHash: string) {
-    return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/invoice/delete/${cardHash}`)
+    return await axios.delete(`${API_ORIGIN}/api/invoice/delete/${cardHash}`)
   }
 
   getCardHashBySetIdAndCardIndex(setId: string, cardIndex: number) {
@@ -53,7 +55,7 @@ export default class Frontend {
   }
 
   async createSetFundingInvoice(setId: string, amountPerCard: number, cardIndices: number[], text = '', note = '') {
-    return await axios.post(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`, {
+    return await axios.post(`${API_ORIGIN}/api/set/invoice/${setId}`, {
       amountPerCard,
       cardIndices,
       text,
@@ -62,10 +64,10 @@ export default class Frontend {
   }
 
   async loadSet(setId: string) {
-    return await axios.get(`${process.env.TEST_API_ORIGIN}/api/set/${setId}`)
+    return await axios.get(`${API_ORIGIN}/api/set/${setId}`)
   }
 
   async deleteSetFundingInvoice(setId: string) {
-    return await axios.delete(`${process.env.TEST_API_ORIGIN}/api/set/invoice/${setId}`)
+    return await axios.delete(`${API_ORIGIN}/api/set/invoice/${setId}`)
   }
 }

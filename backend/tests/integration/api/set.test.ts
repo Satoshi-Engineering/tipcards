@@ -4,9 +4,9 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors'
 
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import { setData } from '../lib/apiData'
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import { setData } from '../../apiData'
 
 const failEarly = new FailEarly(it)
 const frontend = new FrontendSimulator()

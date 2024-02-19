@@ -7,8 +7,8 @@ import NotFoundError from '@backend/errors/NotFoundError'
 import { setRouter } from '@backend/trpc/router/set'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import { cardData, setData } from '../../apiData'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import { cardData, setData } from '../lib/apiData'
 
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

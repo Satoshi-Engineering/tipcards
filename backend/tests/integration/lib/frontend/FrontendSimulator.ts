@@ -1,10 +1,12 @@
 import { AxiosResponse } from 'axios'
+import { io, Socket } from 'socket.io-client'
+
+import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
 import LNURLAuth from '../lightning/LNURLAuth'
 import FrontendWithAuth from './FrontendWithAuth'
 import HDWallet from '../lightning/HDWallet'
-import { io, Socket } from 'socket.io-client'
-import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
+import { API_ORIGIN } from '../constants'
 
 export default class FrontendSimulator extends FrontendWithAuth {
   private readonly hdWallet
@@ -37,7 +39,7 @@ export default class FrontendSimulator extends FrontendWithAuth {
     this.socketLoggedInEventRecieved = false
     this.lastSocketError = null
 
-    this.socket = io(process.env.TEST_API_ORIGIN as string)
+    this.socket = io(API_ORIGIN as string)
     if (this.socket === null) {
       throw Error('socket should be an instance')
     }

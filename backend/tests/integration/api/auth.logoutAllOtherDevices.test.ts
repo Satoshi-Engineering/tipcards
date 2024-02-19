@@ -4,10 +4,10 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { delay } from '@backend/services/timingUtils'
 
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import HDWallet from '../lib/lightning/HDWallet'
+import { authData } from '../lib/apiData'
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import HDWallet from '../lightning/HDWallet'
-import { authData } from '../../apiData'
 
 const failEarly = new FailEarly(it)
 

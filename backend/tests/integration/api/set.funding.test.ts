@@ -5,8 +5,9 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import LNBitsWallet from '../lightning/LNBitsWallet'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet'
+import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 import FailEarly from '../../FailEarly'
 
 const FE = new FrontendSimulator()
@@ -64,7 +65,7 @@ describe('set funding | create and pay', () => {
   const SET_ID = randomUUID()
   const AMOUNT_PER_CARD = 42
   const CARD_INDICES = [0,1,2]
-  const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
+  const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 
   const failEarly = new FailEarly(it)
 

@@ -5,10 +5,11 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import { Card } from '@shared/data/api/Card'
 
-import LNBitsWallet from '../lightning/LNBitsWallet'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet'
+import { cardData } from '../lib/apiData'
+import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 import FailEarly from '../../FailEarly'
-import { cardData } from '../../apiData'
-import FrontendSimulator from '../frontend/FrontendSimulator'
 
 export type ExpectedCard = {
   status: string,
@@ -75,7 +76,7 @@ const testCard = cardData.generateCard(TEST_AMOUNT_IN_SATS)
 
 let fundingInvoice = ''
 
-const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
+const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 const failEarly = new FailEarly(it)
 
 const frontend = new FrontendSimulator()
@@ -109,7 +110,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a empty (unfunded) card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
+      response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -133,7 +134,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a funded card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
+      response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -150,7 +151,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should withdraw the funds of the lnurlw', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/lnurl/${testCard.cardHash}`)
+      response = await axios.get(`${API_ORIGIN}/api/lnurl/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -165,7 +166,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a withdraw pending card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
+      response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -179,7 +180,7 @@ describe('card | fund & withdraw', () => {
 
   failEarly.it('should call lnurlw withdraw webhook', async () => {
     try {
-      await axios.get(`${process.env.TEST_API_ORIGIN}/api/withdraw/used/${testCard.cardHash}`)
+      await axios.get(`${API_ORIGIN}/api/withdraw/used/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)
@@ -190,7 +191,7 @@ describe('card | fund & withdraw', () => {
   failEarly.it('should return status of a withdrawn card', async () => {
     let response: AxiosResponse
     try {
-      response = await axios.get(`${process.env.TEST_API_ORIGIN}/api/card/${testCard.cardHash}`)
+      response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
     } catch (error) {
       console.error(error)
       expect(false).toBe(true)

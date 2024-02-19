@@ -2,12 +2,13 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { cardData } from '../../apiData'
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import LNBitsWallet from '../lightning/LNBitsWallet'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet'
+import { cardData } from '../lib/apiData'
+import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 
 const frontend = new FrontendSimulator()
-const wallet = new LNBitsWallet(process.env.LNBITS_ORIGIN || '', process.env.LNBITS_ADMIN_KEY || '')
+const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 
 const AMOUNT_PER_FUNDING = 210
 

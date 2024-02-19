@@ -6,11 +6,11 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 import hashSha256 from '@backend/services/hashSha256'
 import { ErrorCode } from '@shared/data/Errors'
 
+import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import LNURLAuth from '../lib/lightning/LNURLAuth'
+import HDWallet from '../lib/lightning/HDWallet'
+import { authData } from '../lib/apiData'
 import FailEarly from '../../FailEarly'
-import FrontendSimulator from '../frontend/FrontendSimulator'
-import LNURLAuth from '../lightning/LNURLAuth'
-import HDWallet from '../lightning/HDWallet'
-import { authData } from '../../apiData'
 
 const failEarly = new FailEarly(it)
 
