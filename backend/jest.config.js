@@ -8,4 +8,5 @@ module.exports = {
     '^@backend/(.*)$': '<rootDir>/src/$1',
     '^@shared/(.*)$': '<rootDir>/../shared/src/$1',
   },
+  globalSetup: '<rootDir>/tests/setup.js',
 }

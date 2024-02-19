@@ -69,7 +69,11 @@ git config core.hooksPath .githooks
 
 #### Custom Env File
 
-Per default the backend loads the `backend/.env` file. If you need different setups locally (e.g. one for development and one for running integration tests) you can load a different one by adding a commandline argument. For running the backend you can use `npm run backend-dev -- --env=test`. You can also add the parameter to all other commands (cli, integration test, etc.).
+Per default the backend loads the `backend/.env` file. If you need different setups locally (e.g. one for development and one for running integration tests) you can load a different one by adding a commandline argument. For running the backend you can use `npm run backend-dev -- --envFilePostfix=somePostFix` which would use the file `backend/.env.somePostFix`. You can also add the parameter to all other commands (cli, integration test, etc.).
+
+#### Integration Test Script
+
+You can run backend integration tests locally, including starting the local backend, in one command by running the helper script `./backend-integration-tests.sh`. This command uses the `backend/.env.integrationTest` env file (see Custom EnvFile).
 
 ### Frontend
 

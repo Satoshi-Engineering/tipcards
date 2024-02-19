@@ -14,11 +14,11 @@ test-integration-backend:
       if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
       then 
         echo "Running on main branch"
-        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env
+        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
       elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
       then
         echo "Running on develop/feature branch"
-        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env
+        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
       else
         echo -e "\e[31mERROR:ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
         exit 1

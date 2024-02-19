@@ -9,6 +9,7 @@
     "./shutdown.ts",
     "./startup.ts",
     "./src/**/*.ts",
+    "./src/types/global.d.ts",
   ],
   "compilerOptions": {
     "paths": {

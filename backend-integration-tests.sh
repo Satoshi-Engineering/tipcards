@@ -14,15 +14,15 @@ descendent_pids() {
 
 echo '' > backend.log
 
-npm run backend-dev 2>&1 > backend.log &
+npm run backend-dev -- --envFilePostfix=integrationTest 2>&1 > backend.log &
 BACKEND_PID=$!
 
 echo "Running backend with pid $BACKEND_PID, waiting for startup to finish"
 while [ "x`grep 'app running and listening on port' backend.log`" = 'x' ]; do sleep 1; echo -n '.'; done
 
-echo '\n'
+echo ''
 echo 'Startup finished, running integration tests'
-npm run backend-test-integration -- --maxWorkers=2 --testTimeout=10000
+npm run backend-test-integration -- --maxWorkers=2 --testTimeout=10000 --envFilePostfix=integrationTest
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID

@@ -8,6 +8,7 @@
     "./startup.ts",
     "./src/**/*.ts",
     "./tests/**/*.ts",
+    "./src/types/global.d.ts",
   ],
   "compilerOptions": {
     "types": ["node", "jest"]
