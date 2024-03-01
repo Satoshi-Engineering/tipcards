@@ -26,5 +26,10 @@ npm run backend-test-integration -- --maxWorkers=2 --testTimeout=50000 --envFile
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID
+if [ "$INTEGRATION_TEST_EXIT_CODE" -ne 0 ]; then
+  echo 'Integration Tests failed! Printing backend.log ------ START'
+  cat backend.log
+  echo 'Integration Tests failed! Printing backend.log ------ END'
+fi
 rm backend.log
 exit $INTEGRATION_TEST_EXIT_CODE
