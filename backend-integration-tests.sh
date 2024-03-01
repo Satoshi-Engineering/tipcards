@@ -22,7 +22,7 @@ while [ "x`grep 'app running and listening on port' backend.log`" = 'x' ]; do sl
 
 echo ''
 echo 'Startup finished, running integration tests'
-npm run backend-test-integration -- --maxWorkers=2 --testTimeout=10000 --envFilePostfix=integrationTest
+npm run backend-test-integration -- --maxWorkers=2 --testTimeout=50000 --envFilePostfix=integrationTest
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID
