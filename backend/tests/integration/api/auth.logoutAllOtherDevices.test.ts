@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
@@ -60,16 +60,7 @@ describe('logout all other devices', () => {
   failEarly.it('should logout all frontends, except the first one', async () => {
     const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
 
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.logoutAllOtherDevices()
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
-
+    const response = await frontend.logoutAllOtherDevices()
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
     }))
@@ -83,7 +74,7 @@ describe('logout all other devices', () => {
     expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
 
     await Promise.all(loggedOutFrontends.map(async (frontend) => {
-      let caughtError: AxiosError | null = null
+      let caughtError: AxiosError | undefined
 
       try {
         await frontend.authRefresh()

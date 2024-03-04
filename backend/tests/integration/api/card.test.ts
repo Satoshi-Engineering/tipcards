@@ -7,7 +7,7 @@ import '../lib/initAxios'
 
 describe('card', () => {
   it('should return 404 if the card doesn\' exist', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
     try {
       await axios.get(`${API_ORIGIN}/api/card/aHashThatDoesntExist`)
     } catch (error) {

@@ -27,7 +27,7 @@ const email = `${hashSha256(randomUUID())}@email.com`
 
 describe('auth', () => {
   failEarly.it('should not be able to refresh, if no login has happened', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
 
     try {
       await frontend.authRefresh()
@@ -65,13 +65,13 @@ describe('auth', () => {
   })
 
   failEarly.it('should fail the login, if it has already been called', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
+
     try {
       await frontend.authStatus()
     } catch (error) {
       caughtError = error as AxiosError
     }
-
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(404)
     expect(caughtError?.response?.data).toEqual(expect.objectContaining({
@@ -120,13 +120,13 @@ describe('auth', () => {
   })
 
   failEarly.it('should fail refreshing the access token, if the user is logged out', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
+
     try {
       await frontend.authRefresh()
     } catch (error) {
       caughtError = error as AxiosError
     }
-
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(401)
     expect(caughtError?.response?.data).toEqual(expect.objectContaining({

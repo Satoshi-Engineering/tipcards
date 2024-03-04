@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
@@ -26,7 +26,7 @@ type ErrorResponse  = {
 
 describe('load all sets', () => {
   it('should fail with 401, if the user is not logged in', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
 
     try {
       await frontend.loadSets()
@@ -42,7 +42,7 @@ describe('load all sets', () => {
 
 describe('load single set', () => {
   it('should fail, if the set doesnt exist', async () => {
-    let caughtError: AxiosError | null = null
+    let caughtError: AxiosError | undefined
 
     try {
       await frontend.loadSet(randomNotExistingSetId)
@@ -97,15 +97,7 @@ describe('save and load set', () => {
   })
 
   failEarly.it('should load the set and verify the changes', async () => {
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.loadSet(set1.id)
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    const response = await frontend.loadSet(set1.id)
 
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
@@ -114,15 +106,7 @@ describe('save and load set', () => {
   })
 
   failEarly.it('should save a second set', async () => {
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.saveSet(set2)
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    const response = await frontend.saveSet(set2)
 
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
@@ -131,15 +115,7 @@ describe('save and load set', () => {
   })
 
   failEarly.it('should load all sets', async () => {
-    let response: AxiosResponse | null = null
-
-    try {
-      response = await frontend.loadSets()
-    } catch (error) {
-      console.error(error)
-      expect(false).toBe(true)
-      return
-    }
+    const response = await frontend.loadSets()
 
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',

@@ -175,7 +175,7 @@ const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
-  let caughtError: AxiosError | null = null
+  let caughtError: AxiosError | undefined
   try {
     await axios.get(decodeLnurl(bulkWithdraw.lnurl))
   } catch (error) {

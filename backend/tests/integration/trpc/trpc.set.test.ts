@@ -56,11 +56,13 @@ afterAll(async () => {
 
 describe('TRpc Router Set', () => {
   it('throws 404 if set is not found', async () => {
+    let caughtError: TRPCError | undefined
     try {
       await callerLoggedOut.getCards(setData.generateSetId())
     } catch (error) {
-      expect((error as TRPCError).cause instanceof NotFoundError).toBe(true)
+      caughtError = error as TRPCError
     }
+    expect(caughtError?.cause instanceof NotFoundError).toBe(true)
   })
 
   it('returns no cards for an empty set', async () => {
