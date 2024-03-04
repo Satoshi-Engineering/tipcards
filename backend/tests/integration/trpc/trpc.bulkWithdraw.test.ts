@@ -14,6 +14,7 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 import Frontend from '../lib/frontend/Frontend'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet'
 import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import '../lib/initAxios'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

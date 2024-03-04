@@ -10,6 +10,7 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import LNURLAuth from '../lib/lightning/LNURLAuth'
 import HDWallet from '../lib/lightning/HDWallet'
 import { authData } from '../lib/apiData'
+import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
 
 const failEarly = new FailEarly(it)

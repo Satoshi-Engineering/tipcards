@@ -6,6 +6,7 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import { setData } from '../lib/apiData'
+import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
 
 const failEarly = new FailEarly(it)

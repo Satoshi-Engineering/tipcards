@@ -6,6 +6,7 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet'
 import { cardData } from '../lib/apiData'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import '../lib/initAxios'
 
 const frontend = new FrontendSimulator()
 const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)

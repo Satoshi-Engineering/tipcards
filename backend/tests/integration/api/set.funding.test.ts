@@ -8,6 +8,7 @@ import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
 
 const FE = new FrontendSimulator()

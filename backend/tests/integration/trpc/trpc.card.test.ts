@@ -6,6 +6,7 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import { cardData } from '../lib/apiData'
+import '../lib/initAxios'
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
 const frontend = new FrontendSimulator()
