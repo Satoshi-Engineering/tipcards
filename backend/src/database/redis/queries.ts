@@ -71,7 +71,7 @@ export const updateCard = async (card: Card): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
   if (!exists) {
-    throw new Error('Card doesn\'t exists.')
+    throw new Error(`Unable to update card ${card.cardHash}. It doesn't exist in redis.`) 
   }
   await client.json.set(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`, '$', card)
 }
@@ -84,7 +84,7 @@ export const deleteCard = async (card: Card): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
   if (!exists) {
-    throw new Error('Card doesn\'t exists.')
+    throw new Error(`Unable to delete card ${card.cardHash}. It doesn't exist in redis.`)
   }
   await client.del(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
 }
