@@ -168,11 +168,16 @@ export default class BulkWithdraw {
     if (this.bulkWithdrawRedis.lnbitsWithdrawId == null) {
       return
     }
-    await deleteWithdrawIfNotUsed(
-      this.bulkWithdrawRedis.lnbitsWithdrawId,
-      `Bulk withdrawing ${this.cards.length} cards.`,
-      `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${this.bulkWithdrawRedis.id}`,
-    )
+    try {
+      await deleteWithdrawIfNotUsed(
+        this.bulkWithdrawRedis.lnbitsWithdrawId,
+        `Bulk withdrawing ${this.cards.length} cards.`,
+        `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${this.bulkWithdrawRedis.id}`,
+      )
+    } catch (error) {
+      console.error(`Error removing lnbits withdraw from bulkWithdraw ${this.bulkWithdrawRedis.id}:`, error)
+      throw error
+    }
     this.bulkWithdrawRedis.lnbitsWithdrawDeleted = Math.round(+ new Date() / 1000)
     await updateBulkWithdraw(this.bulkWithdrawRedis)
   }
