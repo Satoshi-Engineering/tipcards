@@ -19,7 +19,7 @@ export const getPaidAmount = (card: Card): number => {
   } else if (card.lnurlp?.paid != null) {
     paidAmount += card.lnurlp.amount || 0
   } else if (card.setFunding?.paid != null) {
-    paidAmount = card.setFunding.paid
+    paidAmount = card.setFunding.amount
   }
   return paidAmount
 }
