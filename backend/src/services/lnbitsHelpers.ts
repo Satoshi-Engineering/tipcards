@@ -2,6 +2,7 @@ import axios from 'axios'
 import z from 'zod'
 
 import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card'
+import { getPaidAmount } from '@shared/data/api/cardHelpers'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
 
 import type { Set } from '@backend/database/redis/data/Set'
@@ -13,6 +14,7 @@ import { delay } from '@backend/services/timingUtils'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
 import hashSha256 from './hashSha256'
+import { LnbitsWithdrawLinkResponse } from './LnbitsWithdrawLinkResponse'
 
 const axiosOptionsWithReadHeaders = {
   headers: {
@@ -242,15 +244,8 @@ export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi): Promi
     await checkIfCardLnurlpIsPaid(card)
   }
 
-  let amount: number | undefined = undefined
-  if (card.invoice?.paid != null) {
-    amount = card.invoice.amount
-  } else if (card.lnurlp?.paid != null && card.lnurlp.amount != null) {
-    amount = card.lnurlp.amount
-  } else if (card.setFunding?.paid != null) {
-    amount = card.setFunding.amount
-  }
-  if (amount == null) {
+  const amount: number = getPaidAmount(card)
+  if (amount === 0) {
     return card
   }
   try {
@@ -318,34 +313,145 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
   if (card.used != null) {
     return card
   }
-
   if (card.lnbitsWithdrawId == null) {
     return card
   }
 
+  let responseData: LnbitsWithdrawLinkResponse
   try {
     const response = await axios.get(
       `${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`,
       axiosOptionsWithReadHeaders,
     )
-    if (typeof response.data.used !== 'number') {
-      throw new ErrorWithCode('Missing used count when checking withdraw status at lnbits.', ErrorCode.UnableToGetLnbitsWithdrawStatus)
-    }
-    if (response.data.used > 0) {
-      if (persist) {
-        await setCardToUsed(card, new Date())
-      } else {
-        card.withdrawPending = true
-      }
-    }
+    responseData = LnbitsWithdrawLinkResponse.parse(response.data)
   } catch (error) {
     if (error instanceof ErrorWithCode) {
       throw error
     }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
   }
+  if (responseData.used === 0) {
+    return card
+  }
+
+  if (persist) {
+    await setCardToUsed(card, new Date())
+    return card
+  }
+
+  card.withdrawPending = true
+  if (await lnurlwCreationHappenedInLastTwoMinutes(card.lnbitsWithdrawId)) {
+    return card
+  }
+
+  const { successfulPayments, pendingPayments } = await getPaymentInfoForCard(card)
+  if (successfulPayments > 0) {
+    // this should not happen, as the card should be set to used after the first payment via webhook call by lnbits
+    console.error(`Card ${card.cardHash} has a payment, but is not set to used. Will do so now.`)
+    await setCardToUsed(card, new Date())
+    return card
+  }
+  if (pendingPayments === 0) {
+    const paidAmount: number = getPaidAmount(card)
+    console.error(`Card ${card.cardHash} was funded with ${paidAmount} sats more than 2 minutes ago and there are no pending payments. Deleting + recreating lnurlw now.`)
+    card.lnbitsWithdrawId = null
+    card.withdrawPending = false
+    await updateCard(cardRedisFromCardApi(card))
+    await checkIfCardIsPaidAndCreateWithdrawId(card)
+  }
 
   return card
+}
+
+export const lnurlwCreationHappenedInLastTwoMinutes = async (lnbitsWithdrawId: string): Promise<boolean> => {
+  const lnurlwCreationTimestamp = await getLnurlwCreationTimestamp(lnbitsWithdrawId)
+  if (lnurlwCreationTimestamp == null) {
+    return false
+  }
+  return lnurlwCreationTimestamp > ((+ new Date() / 1000) - 2 * 60)
+}
+
+export const getLnurlwCreationTimestamp = async (lnbitsWithdrawId: string): Promise<number | null> => {
+  let responseData: LnbitsWithdrawLinkResponse
+  try {
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/withdraw/api/v1/links/${lnbitsWithdrawId}`,
+      axiosOptionsWithReadHeaders,
+    )
+    responseData = LnbitsWithdrawLinkResponse.parse(response.data)
+  } catch (error) {
+    return null
+  }
+  return responseData.open_time
+}
+
+/**
+ * Checks if the cards lnurlw has a payment, does not matter if its pending or fulfilled.
+ *
+ * @param card CardApi
+ * @throws ErrorWithCode
+ */
+export const getPaymentInfoForCard = async (card: CardApi): Promise<{
+  successfulPayments: number,
+  pendingPayments: number,
+}> => {
+  const paymentInfo = {
+    successfulPayments: 0,
+    pendingPayments: 0,
+  }
+  if (card.lnbitsWithdrawId == null) {
+    return paymentInfo
+  }
+
+  // 1. get lnurlw creation timestamp
+  const lnurlwCreationTimestamp = await getLnurlwCreationTimestamp(card.lnbitsWithdrawId)
+  if (lnurlwCreationTimestamp == null) {
+    return paymentInfo
+  }
+
+  // 2. query payment requests
+  let oldestPaymentTime = + new Date() / 1000
+  const limit = 500
+  let offset = 0
+  while (oldestPaymentTime > (lnurlwCreationTimestamp - 24 * 60 * 60)) {
+    try {
+      const response = await axios.get(
+        `${LNBITS_ORIGIN}/api/v1/payments?limit=${limit}&offset=${offset}&sortby=time&direction=desc`,
+        axiosOptionsWithAdminHeaders,
+      )
+      if (!Array.isArray(response.data)) {
+        console.error(ErrorCode.LnbitsPaymentRequestsMalformedResponse, card.cardHash, response.data)
+        break
+      }
+      if (response.data.length === 0) {
+        // if invoices are expired they get removed by lnbits/lnd garbage collection
+        // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/664#note_10306
+        break
+      }
+      response.data.forEach((payment) => {
+        if (payment.time < oldestPaymentTime) {
+          oldestPaymentTime = payment.time
+        }
+        if (payment.pending) {
+          paymentInfo.pendingPayments += 1
+        } else if (
+          payment.extra.tag === 'withdraw'
+          && payment.extra.wh_response.includes(card.cardHash)
+        ) {
+          paymentInfo.successfulPayments += 1
+        }
+      })
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnableToParseLnbitsPaymentsForCardPaymentInfo)
+    }
+    offset += limit
+  }
+
+  if (paymentInfo.successfulPayments > 1) {
+    console.error(`More than one payment found for card ${card.cardHash}.`)
+  }
+
+  return paymentInfo
 }
 
 /** @throw */

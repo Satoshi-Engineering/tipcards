@@ -14,6 +14,7 @@ import {
   getLnurlpForCard,
   loadCurrentLnurlFromLnbitsByWithdrawId,
   getLnurlResponse,
+  lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers'
 
 const router = Router()
@@ -144,8 +145,12 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     next()
     return
   }
+
+  // check if card withdraw is pending
   if (card.withdrawPending) {
-    console.error(`Card ${card.cardHash} withdraw is pending and user tried again.`)
+    if (!(await lnurlwCreationHappenedInLastTwoMinutes(card.lnbitsWithdrawId))) {
+      console.error(`Card ${card.cardHash} withdraw is pending for more than 2 minutes and user tried again.`)
+    }
     res.status(400).json(toErrorResponse({
       message: 'Card has already been used, but the payment is still pending.',
       code: ErrorCode.WithdrawIsPending,

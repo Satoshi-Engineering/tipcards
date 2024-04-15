@@ -46,6 +46,7 @@ export enum ErrorCode {
   PermissionsMissing = 'PermissionsMissing',
   UnableToParseEnvVar = 'UnableToParseEnvVar',
   UnableToGetLnbitsBulkWithdrawStatus = 'UnableToGetLnbitsBulkWithdrawStatus',
+  UnableToParseLnbitsPaymentsForCardPaymentInfo = 'UnableToParseLnbitsPaymentsForCardPaymentInfo',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
