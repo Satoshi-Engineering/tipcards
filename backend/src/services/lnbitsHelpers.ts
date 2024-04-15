@@ -435,7 +435,8 @@ export const getPaymentInfoForCard = async (card: CardApi): Promise<{
         if (payment.pending) {
           paymentInfo.pendingPayments += 1
         } else if (
-          payment.extra.tag === 'withdraw'
+          payment.extra?.tag === 'withdraw'
+          && typeof payment.extra?.wh_response === 'string'
           && payment.extra.wh_response.includes(card.cardHash)
         ) {
           paymentInfo.successfulPayments += 1
