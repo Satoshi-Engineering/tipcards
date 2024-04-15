@@ -15,9 +15,9 @@ export const getPaidTimestamp = (card: Card): number | null => {
 export const getPaidAmount = (card: Card): number => {
   let paidAmount = 0
   if (card.invoice?.paid != null) {
-    paidAmount += card.invoice.amount
+    paidAmount = card.invoice.amount
   } else if (card.lnurlp?.paid != null) {
-    paidAmount += card.lnurlp.amount || 0
+    paidAmount = card.lnurlp.amount || 0
   } else if (card.setFunding?.paid != null) {
     paidAmount = card.setFunding.amount
   }
