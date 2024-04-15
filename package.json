@@ -4,9 +4,10 @@
   "scripts": {
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
-    "test-units": "npm run backend-test-units && npm run frontend-test-units",
+    "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-test-units",
     "shared-build": "tsc -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
+    "shared-test-units": "jest --config ./shared/jest.config.js ./shared/tests/units",
     "frontend-dev": "cd frontend && vite",
     "frontend-preview": "cd frontend && vite preview --port 5050",
     "frontend-build": "cd frontend && vite build",

@@ -5,8 +5,11 @@
     "lib": ["ES2022"],
     "module": "node16",
     "rootDir": "./",
-    "moduleResolution": "Node",
-    "types": [],
+    "moduleResolution": "nodenext",
+    "types": ["node", "jest"],
+    "paths": {
+      "@shared/*": ["../shared/src/*"],
+    },
     "declaration": true,
     "outDir": "../dist/shared/",
     "esModuleInterop": true,
