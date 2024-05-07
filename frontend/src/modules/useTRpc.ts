@@ -13,6 +13,7 @@ const client = createTRPCProxyClient<AppRouter>({
   links: [
     httpBatchLink({
       url: `${BACKEND_API_ORIGIN}/trpc`,
+      maxURLLength: 2083,
       headers: async () => {
         let accessToken: string | null
         try {
