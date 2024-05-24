@@ -427,7 +427,7 @@
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'used'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-lightningpurple text-white text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>
