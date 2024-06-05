@@ -73,6 +73,7 @@ import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import useBacklink from '@/modules/useBackLink'
+import { useAuthStore } from '@/stores/auth'
 
 import BulkWithdrawQRCode from './components/BulkWithdrawQRCode.vue'
 import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
@@ -84,7 +85,8 @@ import DefaultLayout from '../layouts/DefaultLayout.vue'
 const route = useRoute()
 const router = useRouter()
 
-const { client } = useTRpc()
+const { getValidAccessToken } = useAuthStore()
+const trpc = useTRpc(getValidAccessToken)
 const { settings } = useSetSettingsFromUrl()
 
 const requestFailed = ref(false)
@@ -118,7 +120,7 @@ const initBulkWithdraw = async () => {
 /** @throws */
 const loadCards = async () => {
   cards.value = await Promise.all(cardHashes.value.map(
-    async (cardHash) => client.card.getByHash.query(cardHash),
+    async (cardHash) => trpc.card.getByHash.query(cardHash),
   ))
 }
 
@@ -164,7 +166,7 @@ const resetBulkWithdrawFromId = async () => {
   if (bulkWithdraw.value == null) {
     return
   }
-  await client.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
+  await trpc.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
   await loadCards()
   bulkWithdraw.value = undefined
 }
@@ -190,7 +192,7 @@ const resetBulkWithdrawFromCard = async () => {
   if (cardLockedByWithdraw.value == null) {
     return
   }
-  await client.bulkWithdraw.deleteByCardHash.mutate(cardLockedByWithdraw.value.hash)
+  await trpc.bulkWithdraw.deleteByCardHash.mutate(cardLockedByWithdraw.value.hash)
   await loadCards()
 }
 
@@ -225,7 +227,7 @@ const isBulkWithdrawPossible = computed(() =>
 
 /** @throws */
 const create = async () => {
-  bulkWithdraw.value = await client.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
+  bulkWithdraw.value = await trpc.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
   await loadCards()
   setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
 }
@@ -235,7 +237,7 @@ const pollBulkWithdrawAndCardsStatus = async () => {
     return
   }
   try {
-    bulkWithdraw.value = await client.bulkWithdraw.getById.query(bulkWithdraw.value.id)
+    bulkWithdraw.value = await trpc.bulkWithdraw.getById.query(bulkWithdraw.value.id)
     await loadCards()
   } catch (error: unknown) {
     console.error(error)

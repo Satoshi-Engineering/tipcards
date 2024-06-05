@@ -3,12 +3,9 @@ import superjson from 'superjson'
 
 import type { AppRouter } from '@backend/trpc'
 
-import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const { getValidAccessToken } = useAuthStore()
-
-const client = createTRPCProxyClient<AppRouter>({
+const createClient = (getValidAccessToken: () => Promise<string | null>) => createTRPCProxyClient<AppRouter>({
   transformer: superjson,
   links: [
     httpBatchLink({
@@ -29,4 +26,6 @@ const client = createTRPCProxyClient<AppRouter>({
   ],
 })
 
-export default () => ({ client })
+export default (getValidAccessToken?: () => Promise<string | null>) => {
+  return createClient(getValidAccessToken || (async () => null))
+}

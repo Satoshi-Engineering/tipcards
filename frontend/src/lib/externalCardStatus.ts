@@ -35,8 +35,8 @@ const setLandingPageViewed = (cardHash: string | null) => {
   if (cardHash == null) {
     return
   }
-  const { client } = useTRpc()
-  client.card.landingPageViewed.mutate(cardHash)
+  const trpc = useTRpc()
+  trpc.card.landingPageViewed.mutate(cardHash)
 }
 
 const loadCardHashFromGetParameter = () => new URL(location.href).searchParams.get('cardHash')

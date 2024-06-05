@@ -354,13 +354,15 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
+const authStore = useAuthStore()
 const { t, te } = useI18n()
-const { client } = useTRpc()
+const { getValidAccessToken } = authStore
+const trpc = useTRpc(getValidAccessToken)
 
 const { currentFiat } = useI18nHelpers()
 const { loading, showLoadingAnimation, showContent: showPage } = useDelayedLoadingAnimation()
 
-const { isLoggedIn } = storeToRefs(useAuthStore())
+const { isLoggedIn } = storeToRefs(authStore)
 const hideHeader = computed(() => !isLoggedIn.value)
 
 const spent = ref<boolean | undefined>()
@@ -490,7 +492,7 @@ const resetBulkWithdraw = async () => {
   userErrorMessage.value = undefined
   resettingBulkWithdraw.value = true
   try {
-    await client.bulkWithdraw.deleteByCardHash.mutate(cardHash.value)
+    await trpc.bulkWithdraw.deleteByCardHash.mutate(cardHash.value)
     await loadLnurlData()
   } catch (error) {
     console.error(error)
@@ -516,7 +518,7 @@ const handleQrCodeScan = () => {
 
 const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
 
-const setLandingPageViewed = (cardHash: string) => client.card.landingPageViewed.mutate(cardHash)
+const setLandingPageViewed = (cardHash: string) => trpc.card.landingPageViewed.mutate(cardHash)
 
 const rewriteUrlToCardHash = (cardHash: string) => router.replace({
     name: 'landing',

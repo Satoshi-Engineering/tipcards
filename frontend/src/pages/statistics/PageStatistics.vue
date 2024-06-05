@@ -57,10 +57,12 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 import DefaultLayout from '@/pages/layouts/DefaultLayout.vue'
 import StatisticsTable from './components/StatisticsTable.vue'
 
-const { isLoggedIn, accessTokenPayload } = storeToRefs(useAuthStore())
+const authStore = useAuthStore()
+const { isLoggedIn, accessTokenPayload } = storeToRefs(authStore)
+const { getValidAccessToken } = authStore
 const { showModalLogin } = storeToRefs(useModalLoginStore())
 
-const { client } = useTRpc()
+const trpc = useTRpc(getValidAccessToken)
 
 const hasPermissions = computed(() => {
   if (accessTokenPayload.value == null) {
@@ -78,7 +80,7 @@ const barChartMode = ref<'transactions' | 'balance'>('transactions')
 const loadStats = async () => {
   fetching.value = true
   try {
-    statistics.value = await client.statistics.getFull.query()
+    statistics.value = await trpc.statistics.getFull.query()
   } catch (error) {
     console.error(error)
     return
