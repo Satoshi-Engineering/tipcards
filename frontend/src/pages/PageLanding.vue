@@ -329,6 +329,8 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+
 import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
@@ -337,8 +339,8 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
-import { cardHashFromLnurl } from '@/modules//lnurlHelpers'
 import formatNumber from '@/modules/formatNumber'
+import { cardHashFromLnurl } from '@/modules//lnurlHelpers'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcFiat } from '@/modules/rateBtcFiat'
 import sanitizeI18n from '@/modules/sanitizeI18n'
@@ -348,10 +350,12 @@ import FormatBitcoin from '@/components/FormatBitcoin.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
 import { useAuthStore } from '@/stores/auth'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const { t, te } = useI18n()
+const { client } = useTRpc()
 
 const { currentFiat } = useI18nHelpers()
 const { loading, showLoadingAnimation, showContent: showPage } = useDelayedLoadingAnimation()
@@ -375,13 +379,24 @@ const amountInFiat = computed(() => {
 
 const route = useRoute()
 
-const lnurl = computed(() => typeof route.query.lightning === 'string' ? route.query.lightning : undefined)
-
-const cardHash = computed<string | null | undefined>(() => {
-  if (typeof lnurl.value !== 'string') {
-    return null
+const cardHash = computed<string | null>(() => {
+  if (typeof route.params.cardHash === 'string' && route.params.cardHash.length > 0) {
+    return route.params.cardHash
   }
-  return cardHashFromLnurl(lnurl.value)
+  if (typeof route.query.lightning === 'string' && route.query.lightning.length > 0) {
+    return cardHashFromLnurl(route.query.lightning)
+  }
+  return null
+})
+
+const lnurl = computed<string | null>(() => {
+  if (typeof route.params.cardHash === 'string' && route.params.cardHash.length > 0) {
+    return encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
+  }
+  if (typeof route.query.lightning === 'string' && route.query.lightning.length > 0) {
+    return route.query.lightning
+  }
+  return null
 })
 
 const loadLnurlData = async () => {
@@ -463,13 +478,10 @@ const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' 
   return null
 })
 
-onMounted(loadLnurlData)
-
 watch(() => route.params.lang, loadLnurlData)
 
 /////
 // BULK WITHDRAW
-const { client } = useTRpc()
 const resettingBulkWithdraw = ref(false)
 const resetBulkWithdraw = async () => {
   if (cardHash.value == null) {
@@ -486,4 +498,15 @@ const resetBulkWithdraw = async () => {
   }
   resettingBulkWithdraw.value = false
 }
+
+onMounted(() => {
+  loadLnurlData()
+  if (
+    typeof route.query.lightning === 'string'
+    && route.query.lightning.length > 0
+    && cardHash.value != null
+  ) {
+    client.card.landingPageViewed.mutate(cardHash.value)
+  }
+})
 </script>

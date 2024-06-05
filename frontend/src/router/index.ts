@@ -3,7 +3,6 @@ import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } fr
 import i18n, { LOCALES } from '@/modules/initI18n'
 
 const PageIndex = () => import('@/pages/PageIndex.vue')
-const PageLandingWithCardHash = () => import('@/pages/PageLandingWithCardHash.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
@@ -31,7 +30,7 @@ const router = createRouter({
         {
           path: 'landing/:cardHash',
           name: 'landing-with-card-hash',
-          component: PageLandingWithCardHash,
+          component: PageLanding,
           meta: {
             title: () => i18n.global.t('landing.title'),
             backlink: true,
