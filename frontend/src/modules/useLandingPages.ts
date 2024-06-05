@@ -92,7 +92,7 @@ export default () => {
 
   const buildInternalUrlWithCardHash = (cardHash: CardHash) => {
     const routeHref = router.resolve({
-      name: 'landing-with-card-hash',
+      name: 'landing',
       params: { lang: route.params.lang, cardHash },
     }).href
     return `${TIPCARDS_ORIGIN}${routeHref}`

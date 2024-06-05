@@ -499,14 +499,30 @@ const resetBulkWithdraw = async () => {
   resettingBulkWithdraw.value = false
 }
 
-onMounted(() => {
+/////
+// init
+onMounted(async () => {
   loadLnurlData()
-  if (
-    typeof route.query.lightning === 'string'
-    && route.query.lightning.length > 0
-    && cardHash.value != null
-  ) {
-    client.card.landingPageViewed.mutate(cardHash.value)
-  }
+  handleQrCodeScan()
 })
+
+const handleQrCodeScan = () => {
+  if (!isViewedFromQrCodeScan.value || cardHash.value == null) {
+    return
+  }
+  setLandingPageViewed(cardHash.value)
+  rewriteUrlToCardHash(cardHash.value)
+}
+
+const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
+
+const setLandingPageViewed = (cardHash: string) => client.card.landingPageViewed.mutate(cardHash)
+
+const rewriteUrlToCardHash = (cardHash: string) => router.replace({
+    name: 'landing',
+    params: {
+      lang: route.params.lang,
+      cardHash,
+    },
+  })
 </script>

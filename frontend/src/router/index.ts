@@ -28,16 +28,7 @@ const router = createRouter({
           component: PageIndex,
         },
         {
-          path: 'landing/:cardHash',
-          name: 'landing-with-card-hash',
-          component: PageLanding,
-          meta: {
-            title: () => i18n.global.t('landing.title'),
-            backlink: true,
-          },
-        },
-        {
-          path: 'landing',
+          path: 'landing/:cardHash?',
           name: 'landing',
           component: PageLanding,
           meta: {
