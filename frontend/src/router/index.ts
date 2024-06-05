@@ -4,6 +4,7 @@ import i18n, { LOCALES } from '@/modules/initI18n'
 
 const PageIndex = () => import('@/pages/PageIndex.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
+const PageCard = () => import('@/pages/PageCard.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
@@ -26,6 +27,24 @@ const router = createRouter({
           path: ':',
           name: 'home',
           component: PageIndex,
+        },
+        {
+          path: 'card/:cardHash',
+          name: 'card',
+          component: PageCard,
+          meta: {
+            title: () => i18n.global.t('landing.title'),
+            backlink: true,
+          },
+        },
+        {
+          path: 'card-preview',
+          name: 'card-preview',
+          component: PageCard,
+          meta: {
+            title: () => i18n.global.t('landing.title'),
+            backlink: true,
+          },
         },
         {
           path: 'landing',
