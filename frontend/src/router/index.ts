@@ -37,6 +37,11 @@ const router = createRouter({
           },
         },
         {
+          path: 'preview',
+          name: 'preview',
+          redirect: { name: 'landing' },
+        },
+        {
           path: 'cards/:setId?/:settings?',
           name: 'cards',
           component: PageCards,
