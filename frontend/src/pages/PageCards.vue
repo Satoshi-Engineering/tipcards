@@ -805,7 +805,7 @@ const reloadStatusForCards = debounce(async () => {
     card.urlLandingWithLnurl = getLandingPageUrlWithLnurl(card.cardHash, settings.landingPage || undefined)
     card.urlLandingWithCardHash = getLandingPageUrlWithCardHash(card.cardHash, settings.landingPage || undefined)
     card.qrCodeSvg = getQrCodeForUrl(card.urlLandingWithLnurl)
-    const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash, 'cards')
+    const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash)
     if (status === 'error') {
       card.status = 'error'
       userErrorMessage.value = message || 'Unknown error for LNURL.'

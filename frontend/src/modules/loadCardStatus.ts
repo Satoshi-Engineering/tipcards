@@ -27,16 +27,8 @@ export const CardStatus = z.object({
 
 export type CardStatus = z.infer<typeof CardStatus>
 
-/**
- * @param cardHash
- * @param origin
- * @throws
- */
-export const loadCard = async (cardHash: string, origin: string | undefined = undefined): Promise<Card> => {
-  let url = `${BACKEND_API_ORIGIN}/api/card/${cardHash}`
-  if (origin != null) {
-    url = `${url}?origin=${origin}`
-  }
+export const loadCard = async (cardHash: string): Promise<Card> => {
+  const url = `${BACKEND_API_ORIGIN}/api/card/${cardHash}`
   try {
     const response = await axios.get(
       url,
@@ -113,10 +105,10 @@ export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatusD
   return loadCardStatus(cardHashMatch[1])
 }
 
-export const loadCardStatus = async (cardHash: string, origin: string | undefined = undefined): Promise<CardStatusDeprecated> => {
+export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprecated> => {
   let card: Card | null
   try {
-    card = await loadCard(cardHash, origin)
+    card = await loadCard(cardHash)
   } catch (error) {
     return {
       status: 'error',

@@ -302,7 +302,7 @@ import axios from 'axios'
 import debounce from 'lodash.debounce'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
@@ -328,7 +328,6 @@ const DEFAULT_AMOUNT = 2100
 
 const { t } = useI18n()
 const route = useRoute()
-const router = useRouter()
 
 const initializing = ref(true)
 const lnurlp = ref(false)
@@ -355,7 +354,7 @@ const setFunding = ref(false)
 const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash), 'funding')
+  const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))
 
   cardStatus.value = status || undefined
   cardFundedDate.value = fundedDate || undefined

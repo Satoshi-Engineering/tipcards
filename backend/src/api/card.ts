@@ -4,8 +4,7 @@ import type { Card as CardApi } from '@shared/data/api/Card'
 import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
-import { getCardByHash, updateCard } from '@backend/database/queries'
+import { getCardByHash } from '@backend/database/queries'
 import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 
@@ -91,20 +90,6 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
       }))
       next()
       return
-    }
-  }
-
-  // if card is not used and origin is the landing page mark the card as viewed
-  if (
-    card.used == null
-    && card.landingPageViewed == null
-    && req.query.origin === 'landing'
-  ) {
-    card.landingPageViewed = Math.round(+ new Date() / 1000)
-    try {
-      await updateCard(cardRedisFromCardApi(card))
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
     }
   }
 

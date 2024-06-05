@@ -246,7 +246,7 @@ const loadSetData = async () => {
   try {
     await Promise.all([...new Array(settings.numberOfCards).keys()].map(async (index) => {
       const cardHash = await hashSha256(`${route.params.setId}/${index}`)
-      const { status } = await loadCardStatus(cardHash, 'cards')
+      const { status } = await loadCardStatus(cardHash)
       if (status !== 'unfunded') {
         cardIndicesNotUnfundedLocal.push(index)
       }

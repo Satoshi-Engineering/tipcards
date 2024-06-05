@@ -1,7 +1,7 @@
 import type z from 'zod'
 
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { getCardByHash } from '@backend/database/queries'
+import { getCardByHash, updateCard } from '@backend/database/queries'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis'
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
@@ -22,6 +22,14 @@ export default class Card {
    */
   public async toTRpcResponse() {
     return await cardFromCardRedis(this.cardRedis)
+  }
+
+  public async setLandingPageViewed() {
+    if (this.cardRedis.landingPageViewed != null) {
+      return
+    }
+    this.cardRedis.landingPageViewed = Math.round(+ new Date() / 1000)
+    await updateCard(this.cardRedis)
   }
 
   private readonly cardHash: CardHash

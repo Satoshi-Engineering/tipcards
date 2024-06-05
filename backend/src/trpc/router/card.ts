@@ -12,4 +12,11 @@ export const cardRouter = router({
       const card = await Card.fromCardHash(input)
       return await card.toTRpcResponse()
     }),
+
+  landingPageViewed: publicProcedure
+    .input(CardTrpc.shape.hash)
+    .mutation(async ({ input }) => {
+      const card = await Card.fromCardHash(input)
+      await card.setLandingPageViewed()
+    }),
 })
