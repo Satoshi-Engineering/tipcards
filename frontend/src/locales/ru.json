@@ -6,7 +6,7 @@
   "nav": {
     "index": "Home",
     "cards": "Create",
-    "preview": "Landing page",
+    "landing": "Landing page",
     "about": "About"
   },
   "footer":{

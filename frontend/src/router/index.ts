@@ -3,8 +3,8 @@ import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } fr
 import i18n, { LOCALES } from '@/modules/initI18n'
 
 const PageIndex = () => import('@/pages/PageIndex.vue')
+const PageLandingWithCardHash = () => import('@/pages/PageLandingWithCardHash.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
-const PageCard = () => import('@/pages/PageCard.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
@@ -29,18 +29,9 @@ const router = createRouter({
           component: PageIndex,
         },
         {
-          path: 'card/:cardHash',
-          name: 'card',
-          component: PageCard,
-          meta: {
-            title: () => i18n.global.t('landing.title'),
-            backlink: true,
-          },
-        },
-        {
-          path: 'card-preview',
-          name: 'card-preview',
-          component: PageCard,
+          path: 'landing/:cardHash',
+          name: 'landing-with-card-hash',
+          component: PageLandingWithCardHash,
           meta: {
             title: () => i18n.global.t('landing.title'),
             backlink: true,
@@ -52,15 +43,6 @@ const router = createRouter({
           component: PageLanding,
           meta: {
             title: () => i18n.global.t('landing.title'),
-            backlink: true,
-          },
-        },
-        {
-          path: 'preview',
-          name: 'preview',
-          component: PageLanding,
-          meta: {
-            title: () => i18n.global.t('landing.titlePreview'),
             backlink: true,
           },
         },

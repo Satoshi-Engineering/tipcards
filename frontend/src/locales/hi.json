@@ -6,7 +6,7 @@
     "nav": {
       "index": "Home",
       "cards": "Create",
-      "preview": "Landing page",
+      "landing": "Landing page",
       "about": "About"
     },
     "footer": {
@@ -14,7 +14,6 @@
     },
     "landing": {
       "title": "अपने बिटकॉइन प्राप्त करें", 
-      "titlePreview": "पूर्व दर्शन – अपने बिटकॉइन प्राप्त करें",
       "introGreeting": "नमस्ते",
       "introMessageReceiveBtc": {
         "message": "आपको प्राप्त होने वाले है {amountAndUnit}",

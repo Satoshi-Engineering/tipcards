@@ -45,7 +45,7 @@
           </CardsSummaryContainer>
           <ul class="w-full my-5">
             <li
-              v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlPreview, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
+              v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlLandingWithCardHash, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
               :key="cardHash"
               class="py-1 border-b border-grey"
             >
@@ -61,7 +61,7 @@
                     ? setFundingHref
                     : fundedDate == null
                       ? urlFunding
-                      : urlPreview
+                      : urlLandingWithCardHash
                 "
                 :viewed="viewed"
                 :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
@@ -326,7 +326,7 @@
         >
           <div
             v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
-            :key="card.url"
+            :key="card.urlLandingWithLnurl"
             class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
           >
             <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
@@ -337,7 +337,7 @@
             <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
             <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
             <div
-              v-if="card.url != ''"
+              v-if="card.urlLandingWithLnurl != ''"
               class="absolute w-full h-full"
               :class="{ 'opacity-50': card.status === 'used' }"
             >
@@ -347,7 +347,7 @@
                     ? setFundingHref
                     : card.fundedDate == null
                       ? card.urlFunding
-                      : card.urlPreview
+                      : card.urlLandingWithCardHash
                 "
               >
                 <div
@@ -708,8 +708,8 @@ const wasPrintedOrDownloaded = ref(false)
 
 type Card = {
   cardHash: string,
-  url: string,
-  urlPreview: string,
+  urlLandingWithLnurl: string,
+  urlLandingWithCardHash: string,
   urlFunding: string,
   lnurl: string,
   status: string | null,
@@ -758,16 +758,16 @@ const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
   const lnurlEncoded = encodeLnurl(lnurlDecoded)
-  const url = getLandingPageUrl(cardHash, 'landing', settings.landingPage || undefined)
-  const urlPreview = getLandingPageUrl(cardHash, 'preview', settings.landingPage || undefined)
+  const urlLandingWithLnurl = getLandingPageUrlWithLnurl(cardHash, settings.landingPage || undefined)
+  const urlLandingWithCardHash = getLandingPageUrlWithCardHash(cardHash, settings.landingPage || undefined)
   const urlFunding = router.resolve({
     name: 'funding',
     params: { lang: route.params.lang, cardHash },
   }).href
   return {
     cardHash,
-    url,
-    urlPreview,
+    urlLandingWithLnurl,
+    urlLandingWithCardHash,
     urlFunding,
     lnurl: lnurlEncoded,
     status: null,
@@ -778,7 +778,7 @@ const generateNewCardSkeleton = async (index: number) => {
     createdDate: null,
     viewed: false,
     shared: false,
-    qrCodeSvg: getQrCodeForUrl(url),
+    qrCodeSvg: getQrCodeForUrl(urlLandingWithLnurl),
     isLockedByBulkWithdraw: false,
   }
 }
@@ -802,9 +802,9 @@ const reloadStatusForCards = debounce(async () => {
   reloadingStatusForCards.value = true
   await Promise.all(cards.value.map(async (card) => {
     // the URLs need to change in case the language was switched
-    card.url = getLandingPageUrl(card.cardHash, 'landing', settings.landingPage || undefined)
-    card.urlPreview = getLandingPageUrl(card.cardHash, 'preview', settings.landingPage || undefined)
-    card.qrCodeSvg = getQrCodeForUrl(card.url)
+    card.urlLandingWithLnurl = getLandingPageUrlWithLnurl(card.cardHash, settings.landingPage || undefined)
+    card.urlLandingWithCardHash = getLandingPageUrlWithCardHash(card.cardHash, settings.landingPage || undefined)
+    card.qrCodeSvg = getQrCodeForUrl(card.urlLandingWithLnurl)
     const { status, amount, shared, message, fundedDate, createdDate, card: cardData } = await loadCardStatus(card.cardHash, 'cards')
     if (status === 'error') {
       card.status = 'error'
@@ -908,7 +908,11 @@ const cardsStatusList = computed(
 
 /////
 // Landing Page
-const { landingPages, getLandingPageUrl } = useLandingPages()
+const {
+  landingPages,
+  getLandingPageUrlWithLnurl,
+  getLandingPageUrlWithCardHash,
+} = useLandingPages()
 </script>
 
 <style>

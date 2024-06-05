@@ -8,7 +8,7 @@
   "nav": {
     "index": "Indeks",
     "cards": "Kartu",
-    "preview": "Pratinjau",
+    "landing": "Pratinjau",
     "about": "Tentang"
   },
   "footer": {
@@ -16,7 +16,6 @@
   },
   "landing": {
     "title": "Dapatkan Bitcoin kamu",
-    "titlePreview": "Pratinjau – Dapatkan Bitcoin kamu",
     "introGreeting": "Hai!",
     "introMessageReceiveBtc": {
       "message": "Di sini kamu bisa mendapatkan {amountAndUnit}.",

@@ -69,7 +69,7 @@ const selectLocale = async (code: LocaleCode) => {
 const navLinks = [
   { routeName: 'home', labelKey: 'nav.index' },
   { routeName: 'cards', labelKey: 'nav.cards' },
-  { routeName: 'preview', labelKey: 'nav.preview' },
+  { routeName: 'landing', labelKey: 'nav.landing' },
   { routeName: 'about', labelKey: 'nav.about' },
 ]
 </script>

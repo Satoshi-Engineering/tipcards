@@ -5,8 +5,8 @@ import type { Set } from '@shared/data/api/Set'
 
 export type Card = {
   cardHash: string,
-  url: string,
-  urlPreview: string,
+  urlLandingWithLnurl: string,
+  urlLandingWithCardHash: string,
   urlFunding: string,
   lnurl: string,
   status: string | null,

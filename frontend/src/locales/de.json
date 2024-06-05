@@ -8,7 +8,7 @@
   "nav": {
     "index": "Home",
     "cards": "Erstellen",
-    "preview": "Landing page",
+    "landing": "Landing page",
     "about": "Über"
   },
   "footer": {
@@ -16,7 +16,6 @@
   },
   "landing": {
     "title": "Hol dir deine Bitcoin",
-    "titlePreview": "Vorschau – Hol dir deine Bitcoin",
     "introGreeting": "Hi!",
     "introMessageReceiveBtc": {
       "message": "Hier kannst du dir {amountAndUnit} holen.",

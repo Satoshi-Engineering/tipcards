@@ -281,7 +281,7 @@
             :amount="invoiceAmount || amount || undefined"
             :note="note || undefined"
             :viewed="viewed"
-            :url="previewPageUrl"
+            :url="landingPageUrl"
           />
         </div>
       </div>
@@ -304,6 +304,8 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
+import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+
 import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -317,8 +319,8 @@ import CardStatus from '@/components/CardStatus.vue'
 import formatNumber from '@/modules/formatNumber'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import { rateBtcEur } from '@/modules/rateBtcFiat'
+import useLandingPages from '@/modules/useLandingPages'
 import { BACKEND_API_ORIGIN } from '@/constants'
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
@@ -519,11 +521,10 @@ const finishShared = async () => {
   }
 }
 
-const previewPageUrl = computed(() => {
-  return router.resolve({
-    name: 'preview',
-    params: { lang: route.params.lang },
-    query: { lightning: lnurl.value.toUpperCase() },
-  }).href
-})
+const { getLandingPageUrlWithCardHash } = useLandingPages()
+const landingPageUrl = computed(
+  () => typeof route.params.cardHash === 'string'
+    ? getLandingPageUrlWithCardHash(route.params.cardHash)
+    : '',
+)
 </script>

@@ -6,7 +6,7 @@
   "nav": {
     "index": "Home",
     "cards": "Create",
-    "preview": "Landing page",
+    "landing": "Landing page",
     "about": "About"
   },
   "footer": {
@@ -14,7 +14,6 @@
   },
   "landing": {
     "title": "Consigue tu Bitcoin",
-    "titlePreview": "Vista previa – Consigue tu Bitcoin",
     "introGreeting": "¡Hola!",
     "introMessageReceiveBtc": {
       "message": "Puedes obtener {amountAndUnit} aquí.",

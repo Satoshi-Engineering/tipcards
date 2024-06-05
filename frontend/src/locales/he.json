@@ -6,7 +6,7 @@
   "nav": {
     "index": "עמוד הבית",
     "cards": "עמוד יצירה",
-    "preview": "עמוד נחיתה",
+    "landing": "עמוד נחיתה",
     "about": "אודות"
   },
   "footer": {
@@ -14,7 +14,6 @@
   },
   "landing": {
     "title": "קבלת הביטקוין שלך",
-    "titlePreview": "תצוגה מקדימה - קבלת הביטקוין שלך",
     "introGreeting": "היי!",
     "introMessageReceiveBtc": {
       "message": "את/ה עומד/ת לקבל {amountAndUnit}",

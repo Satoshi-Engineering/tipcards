@@ -18,7 +18,7 @@
         :shared="shared"
         :amount="amount.funded || undefined"
         :note="noteForStatusPage"
-        :url="getLandingPageUrl(hash, 'preview', settings.landingPage || undefined)"
+        :url="getLandingPageUrlWithCardHash(hash, settings.landingPage || undefined)"
         :viewed="landingPageViewed != null"
         :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
       />
@@ -39,7 +39,7 @@ import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
 
 const route = useRoute()
 
-const { getLandingPageUrl } = useLandingPages()
+const { getLandingPageUrlWithCardHash } = useLandingPages()
 
 defineProps({
   cards: {

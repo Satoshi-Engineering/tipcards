@@ -9,7 +9,7 @@ import type { Card } from '@shared/data/trpc/Card'
 import { encodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { useAuthStore } from '@/stores/auth'
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { TIPCARDS_ORIGIN, BACKEND_API_ORIGIN } from '@/constants'
 
 type CardHash = z.infer<typeof Card.shape.hash>
 type LandingPageId = z.infer<typeof LandingPage.shape.id>
@@ -45,35 +45,57 @@ export default () => {
     }
   })
 
-  const getLandingPageUrl = (
+  const getLandingPageUrlWithLnurl = (
     cardHash: CardHash,
-    type: 'landing' | 'preview',
     landingPageId?: LandingPageId,
   ) => {
     const landingPage = getLandingPage(landingPageId)
-    const internalUrl = buildCardInternalUrl(cardHash, type)
-    if (!useExternalUrl(landingPage)) {
+    const internalUrl = buildInternalUrlWithLnurl(cardHash)
+    if (landingPage == null || !useExternalUrl(landingPage)) {
       return internalUrl
     }
 
     try {
-      return buildCardExternalUrl(cardHash, landingPage as LandingPage, type)
+      return buildExternalUrlWithLnurl(cardHash, landingPage)
     } catch (error) {
       console.error(error)
       return internalUrl
     }
   }
 
-  const buildCardInternalUrl = (cardHash: CardHash, type: 'landing' | 'preview') => {
+  const getLandingPageUrlWithCardHash = (
+    cardHash: CardHash,
+    landingPageId?: LandingPageId,
+  ) => {
+    const landingPage = getLandingPage(landingPageId)
+    const internalUrl = buildInternalUrlWithCardHash(cardHash)
+    if (landingPage == null || !useExternalUrl(landingPage)) {
+      return internalUrl
+    }
+
+    try {
+      return buildExternalUrlWithCardHash(cardHash, landingPage)
+    } catch (error) {
+      console.error(error)
+      return internalUrl
+    }
+  }
+
+  const buildInternalUrlWithLnurl = (cardHash: CardHash) => {
     const routeHref = router.resolve({
-      name: type,
+      name: 'landing',
       params: { lang: route.params.lang },
       query: { lightning: cardDynamicLnurl(cardHash) },
     }).href
-    if (type === 'preview') {
-      return routeHref
-    }
-    return `${location.protocol}//${location.host}${routeHref}`
+    return `${TIPCARDS_ORIGIN}${routeHref}`
+  }
+
+  const buildInternalUrlWithCardHash = (cardHash: CardHash) => {
+    const routeHref = router.resolve({
+      name: 'landing-with-card-hash',
+      params: { lang: route.params.lang, cardHash },
+    }).href
+    return `${TIPCARDS_ORIGIN}${routeHref}`
   }
   
   const getLandingPage = (landingPageId?: LandingPageId): LandingPage | undefined => {
@@ -83,22 +105,26 @@ export default () => {
     return landingPagesById.value[landingPageId]
   }
 
-  const useExternalUrl = (landingPage?: LandingPage) => landingPage?.type === Type.enum.external && landingPage?.url != null
+  const useExternalUrl = (landingPage: LandingPage) => landingPage.type === Type.enum.external && landingPage.url != null
 
-  const buildCardExternalUrl = (cardHash: CardHash, landingPage: LandingPage, type: 'landing' | 'preview') => {
+  const buildExternalUrlWithLnurl = (cardHash: CardHash, landingPage: LandingPage) => {
     const path = new URL(String(landingPage.url))
     path.searchParams.append('lightning', cardDynamicLnurl(cardHash))
-    if (type === 'preview') {
-      path.searchParams.append('type', 'preview')
-    }
     return path.href
   }
 
-  const cardDynamicLnurl = (cardHash: CardHash) => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
+  const buildExternalUrlWithCardHash = (cardHash: CardHash, landingPage: LandingPage) => {
+    const path = new URL(String(landingPage.url))
+    path.searchParams.append('cardHash', cardHash)
+    return path.href
+  }
+
+  const cardDynamicLnurl = (cardHash: CardHash) => encodeLnurl(`${TIPCARDS_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 
   return {
     landingPages,
     landingPagesById,
-    getLandingPageUrl,
+    getLandingPageUrlWithLnurl,
+    getLandingPageUrlWithCardHash,
   }
 }
