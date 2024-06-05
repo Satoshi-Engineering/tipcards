@@ -1,25 +1,48 @@
 import { cardHashFromLnurl } from '@/modules/lnurlHelpers'
 import { loadCard, getCardStatusForCard } from '@/modules/loadCardStatus'
+import useTRpc from '@/modules/useTRpc'
 import { TIPCARDS_ORIGIN } from '@/constants'
 
 const callables: CallableFunction[] = []
 
 export const subscribe = (callable: CallableFunction) => {
-  const lnurl = new URL(location.href).searchParams.get('lightning')
-  if (lnurl == null) {
-    throw new Error('Missing get parameter "lightning".')
-  }
-  const cardHash = cardHashFromLnurl(lnurl)
-  if (cardHash == null) {
-    throw new Error('Missing card hash in LNURL from get parameter "lightning".')
-  }
-
   callables.push(callable)
+  init()
+}
+
+const init = () => {
+  let cardHash: string | null
+  if (isViewedFromQrCodeScan()) {
+    cardHash = loadCardHashFromLnurl()
+    setLandingPageViewed(cardHash)
+  } else {
+    cardHash = loadCardHashFromGetParameter()
+  }
   loadCardStatusInternal(cardHash)
 }
 
-const loadCardStatusInternal = async (cardHash: string) => {
-  if (callables.length === 0) {
+const isViewedFromQrCodeScan = () => new URL(location.href).searchParams.has('lightning')
+
+const loadCardHashFromLnurl = () => {
+  const lnurl = new URL(location.href).searchParams.get('lightning')
+  if (lnurl == null) {
+    return null
+  }
+  return cardHashFromLnurl(lnurl)
+}
+
+const setLandingPageViewed = (cardHash: string | null) => {
+  if (cardHash == null) {
+    return
+  }
+  const { client } = useTRpc()
+  client.card.landingPageViewed.mutate(cardHash)
+}
+
+const loadCardHashFromGetParameter = () => new URL(location.href).searchParams.get('cardHash')
+
+const loadCardStatusInternal = async (cardHash: string | null) => {
+  if (cardHash == null) {
     return
   }
   try {
