@@ -45,10 +45,7 @@ const setLandingPageViewed = (cardHash: string | null) => {
 
 const loadCardHashFromGetParameter = () => new URL(location.href).searchParams.get('cardHash')
 
-const loadCardStatusInternal = async (cardHash: string | null) => {
-  if (cardHash == null) {
-    return
-  }
+const loadCardStatusInternal = async (cardHash: string) => {
   try {
     const card = await loadCard(cardHash)
     const status = getCardStatusForCard(card)
