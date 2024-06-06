@@ -27,16 +27,32 @@ afterAll(async () => {
 })
 
 describe('TRpc Router Card', () => {
-  it('should load a card from cardHash', async () => {
-    const card = await callerCards.getByHash(testCard.cardHash)
-    expect(card.hash).toBe(testCard.cardHash)
-    expect(card.invoice).not.toBeNull()
-  })
-
   it('should load a card that doesnt exist', async () => {
     const imaginedCardId = `${cardData.generateCardHash()} some random string that doesnt exist`
     const card = await callerCards.getByHash(imaginedCardId)
     expect(card.hash).toBe(imaginedCardId)
     expect(card.invoice).toBeNull()
+  })
+
+  it('should load a card from cardHash', async () => {
+    const card = await callerCards.getByHash(testCard.cardHash)
+    expect(card.hash).toBe(testCard.cardHash)
+    expect(card.invoice).not.toBeNull()
+    expect(card.landingPageViewed).toBeNull()
+  })
+
+  let landingPageViewed: Date | null
+  it('should set the card landing page as viewed', async () => {
+    await callerCards.landingPageViewed(testCard.cardHash)
+    const card = await callerCards.getByHash(testCard.cardHash)
+    expect(card.landingPageViewed).toBeTruthy()
+    landingPageViewed = card.landingPageViewed
+  })
+
+  it('should not update the landingPageViewed timestamp again', async () => {
+    await callerCards.landingPageViewed(testCard.cardHash)
+    const card = await callerCards.getByHash(testCard.cardHash)
+    expect(card.landingPageViewed).toBeTruthy()
+    expect(card.landingPageViewed).toEqual(landingPageViewed)
   })
 })
