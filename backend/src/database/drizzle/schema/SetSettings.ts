@@ -1,12 +1,12 @@
-import { mysqlTable, varchar, text, int } from 'drizzle-orm/mysql-core'
+import { pgTable, varchar, text, integer } from 'drizzle-orm/pg-core'
 import { Set } from './Set'
 import { Image } from './Image'
 import { LandingPage } from './LandingPage'
 
-export const SetSettings = mysqlTable('SetSettings', {
+export const SetSettings = pgTable('SetSettings', {
   set: varchar('set', { length: 36 }).primaryKey().unique().notNull().references(() => Set.id).unique(),
   name: text('name').notNull(),
-  numberOfCards: int('numberOfCards').notNull(),
+  numberOfCards: integer('numberOfCards').notNull(),
   cardHeadline: text('cardHeadline').notNull(),
   cardCopytext: text('cardCopytext').notNull(),
   image: varchar('image', { length: 36 }).references(() => Image.id),

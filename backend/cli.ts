@@ -152,7 +152,7 @@ const migrateRedisToDrizzle = async () => {
     process.exit(1)
   }
 
-  await Database.init(() => undefined)
+  await Database.init()
   await migrateUsers()
   await migrateCards()
   await migrateSets()

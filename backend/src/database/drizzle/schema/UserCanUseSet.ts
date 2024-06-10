@@ -1,8 +1,8 @@
-import { mysqlTable, primaryKey, varchar, boolean } from 'drizzle-orm/mysql-core'
+import { pgTable, primaryKey, varchar, boolean } from 'drizzle-orm/pg-core'
 import { User } from './User'
 import { Set } from './Set'
 
-export const UserCanUseSet = mysqlTable('UserCanUseSet', {
+export const UserCanUseSet = pgTable('UserCanUseSet', {
   user: varchar('user', { length: 64 }).notNull().references(() => User.id),
   set: varchar('set', { length: 36 }).notNull().references(() => Set.id),
   canEdit: boolean('canEdit').notNull().default(false),

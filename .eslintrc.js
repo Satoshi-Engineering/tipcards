@@ -21,7 +21,7 @@ module.exports = {
   plugins: ['jest'],
   rules: {
     semi: ['error', 'never'],
-    quotes: ['error', 'single'],
+    quotes: ['error', 'single', { 'avoidEscape': true }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-console': ['error', { allow: ['warn', 'error'] }],
     'operator-linebreak': ['error', 'before'],

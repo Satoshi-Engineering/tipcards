@@ -1,48 +1,53 @@
 {
-  "id": "fc8e3b98-448e-4cd0-88cc-3b8c8e84d66f",
-  "prevId": "ad23797e-dc19-460e-a586-87a16ba8fc27",
-  "version": "5",
-  "dialect": "mysql",
+  "id": "1d247ea5-a95b-4f32-ad2e-6812f31553b6",
+  "prevId": "a5bd1b43-5b37-4504-bb74-9d7eb84035e1",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "AllowedRefreshTokens": {
+    "public.AllowedRefreshTokens": {
       "name": "AllowedRefreshTokens",
+      "schema": "",
       "columns": {
         "hash": {
           "name": "hash",
           "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "user": {
           "name": "user",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "current": {
           "name": "current",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "previous": {
           "name": "previous",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         }
       },
       "indexes": {
         "userIndex": {
           "name": "userIndex",
           "columns": [
-            "user"
+            {
+              "expression": "user",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
@@ -60,46 +65,38 @@
           "onDelete": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "AllowedRefreshTokens_hash": {
-          "name": "AllowedRefreshTokens_hash",
-          "columns": [
-            "hash"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "AllowedRefreshTokens_hash_unique": {
           "name": "AllowedRefreshTokens_hash_unique",
           "columns": [
             "hash"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "Card": {
+    "public.Card": {
       "name": "Card",
+      "schema": "",
       "columns": {
         "hash": {
           "name": "hash",
           "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "set": {
           "name": "set",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         }
       },
       "indexes": {},
@@ -118,88 +115,74 @@
           "onDelete": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Card_hash": {
-          "name": "Card_hash",
-          "columns": [
-            "hash"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "Card_hash_unique": {
           "name": "Card_hash_unique",
           "columns": [
             "hash"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "CardVersion": {
+    "public.CardVersion": {
       "name": "CardVersion",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "card": {
           "name": "card",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "lnurlP": {
           "name": "lnurlP",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "lnurlW": {
           "name": "lnurlW",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "textForWithdraw": {
           "name": "textForWithdraw",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "noteForStatusPage": {
           "name": "noteForStatusPage",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "sharedFunding": {
           "name": "sharedFunding",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "landingPageViewed": {
           "name": "landingPageViewed",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         }
       },
       "indexes": {},
@@ -244,45 +227,39 @@
           "onDelete": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "CardVersion_id": {
-          "name": "CardVersion_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "CardVersion_id_unique": {
           "name": "CardVersion_id_unique",
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "CardVersion_lnurlP_unique": {
           "name": "CardVersion_lnurlP_unique",
           "columns": [
             "lnurlP"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "CardVersionHasInvoice": {
+    "public.CardVersionHasInvoice": {
       "name": "CardVersionHasInvoice",
+      "schema": "",
       "columns": {
         "cardVersion": {
           "name": "cardVersion",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "invoice": {
           "name": "invoice",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -325,312 +302,276 @@
       },
       "uniqueConstraints": {}
     },
-    "Image": {
+    "public.Image": {
       "name": "Image",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "type": {
           "name": "type",
-          "type": "enum('svg','png')",
+          "type": "imageType",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "data": {
           "name": "data",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Image_id": {
-          "name": "Image_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "Image_id_unique": {
           "name": "Image_id_unique",
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "Invoice": {
+    "public.Invoice": {
       "name": "Invoice",
+      "schema": "",
       "columns": {
         "amount": {
           "name": "amount",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "paymentHash": {
           "name": "paymentHash",
           "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "paymentRequest": {
           "name": "paymentRequest",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "paid": {
           "name": "paid",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "extra": {
           "name": "extra",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Invoice_paymentHash": {
-          "name": "Invoice_paymentHash",
-          "columns": [
-            "paymentHash"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "Invoice_paymentHash_unique": {
           "name": "Invoice_paymentHash_unique",
           "columns": [
             "paymentHash"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "LandingPage": {
+    "public.LandingPage": {
       "name": "LandingPage",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "type": {
           "name": "type",
-          "type": "enum('core','external')",
+          "type": "landingPageType",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "url": {
           "name": "url",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "LandingPage_id": {
-          "name": "LandingPage_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "LandingPage_id_unique": {
           "name": "LandingPage_id_unique",
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "LnurlP": {
+    "public.LnurlP": {
       "name": "LnurlP",
+      "schema": "",
       "columns": {
         "lnbitsId": {
           "name": "lnbitsId",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "finished": {
           "name": "finished",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "LnurlP_lnbitsId": {
-          "name": "LnurlP_lnbitsId",
-          "columns": [
-            "lnbitsId"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "LnurlP_lnbitsId_unique": {
           "name": "LnurlP_lnbitsId_unique",
           "columns": [
             "lnbitsId"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "LnurlW": {
+    "public.LnurlW": {
       "name": "LnurlW",
+      "schema": "",
       "columns": {
         "lnbitsId": {
           "name": "lnbitsId",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
         },
         "withdrawn": {
           "name": "withdrawn",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": false
+        },
+        "bulkWithdrawId": {
+          "name": "bulkWithdrawId",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "LnurlW_lnbitsId": {
-          "name": "LnurlW_lnbitsId",
-          "columns": [
-            "lnbitsId"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "LnurlW_lnbitsId_unique": {
           "name": "LnurlW_lnbitsId_unique",
           "columns": [
             "lnbitsId"
-          ]
+          ],
+          "nullsNotDistinct": false
+        },
+        "LnurlW_bulkWithdrawId_unique": {
+          "name": "LnurlW_bulkWithdrawId_unique",
+          "columns": [
+            "bulkWithdrawId"
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "Profile": {
+    "public.Profile": {
       "name": "Profile",
+      "schema": "",
       "columns": {
         "user": {
           "name": "user",
           "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "accountName": {
           "name": "accountName",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "displayName": {
           "name": "displayName",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -649,118 +590,98 @@
           "onDelete": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Profile_user": {
-          "name": "Profile_user",
-          "columns": [
-            "user"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "Profile_user_unique": {
           "name": "Profile_user_unique",
           "columns": [
             "user"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "Set": {
+    "public.Set": {
       "name": "Set",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "changed": {
           "name": "changed",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "Set_id": {
-          "name": "Set_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "Set_id_unique": {
           "name": "Set_id_unique",
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "SetSettings": {
+    "public.SetSettings": {
       "name": "SetSettings",
+      "schema": "",
       "columns": {
         "set": {
           "name": "set",
           "type": "varchar(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "numberOfCards": {
           "name": "numberOfCards",
-          "type": "int",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "cardHeadline": {
           "name": "cardHeadline",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "cardCopytext": {
           "name": "cardCopytext",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "image": {
           "name": "image",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": false
         },
         "landingPage": {
           "name": "landingPage",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -805,97 +726,80 @@
           "onDelete": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "SetSettings_set": {
-          "name": "SetSettings_set",
-          "columns": [
-            "set"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "SetSettings_set_unique": {
           "name": "SetSettings_set_unique",
           "columns": [
             "set"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "User": {
+    "public.User": {
       "name": "User",
+      "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(64)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "primaryKey": true,
+          "notNull": true
         },
         "lnurlAuthKey": {
           "name": "lnurlAuthKey",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "created": {
           "name": "created",
-          "type": "datetime",
+          "type": "date",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "permissions": {
           "name": "permissions",
           "type": "json",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "User_id": {
-          "name": "User_id",
-          "columns": [
-            "id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "User_id_unique": {
           "name": "User_id_unique",
           "columns": [
             "id"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
-    "UserCanUseImage": {
+    "public.UserCanUseImage": {
       "name": "UserCanUseImage",
+      "schema": "",
       "columns": {
         "user": {
           "name": "user",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "image": {
           "name": "image",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "canEdit": {
           "name": "canEdit",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": false
         }
       },
@@ -939,29 +843,27 @@
       },
       "uniqueConstraints": {}
     },
-    "UserCanUseLandingPage": {
+    "public.UserCanUseLandingPage": {
       "name": "UserCanUseLandingPage",
+      "schema": "",
       "columns": {
         "user": {
           "name": "user",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "landingPage": {
           "name": "landingPage",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "canEdit": {
           "name": "canEdit",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": false
         }
       },
@@ -1005,29 +907,27 @@
       },
       "uniqueConstraints": {}
     },
-    "UserCanUseSet": {
+    "public.UserCanUseSet": {
       "name": "UserCanUseSet",
+      "schema": "",
       "columns": {
         "user": {
           "name": "user",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "set": {
           "name": "set",
           "type": "varchar(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
+          "notNull": true
         },
         "canEdit": {
           "name": "canEdit",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
           "default": false
         }
       },
@@ -1070,6 +970,32 @@
         }
       },
       "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "public.imageType": {
+      "name": "imageType",
+      "schema": "public",
+      "values": [
+        "svg",
+        "png"
+      ]
+    },
+    "public.landingPageType": {
+      "name": "landingPageType",
+      "schema": "public",
+      "values": [
+        "core",
+        "external"
+      ]
+    },
+    "public.permission": {
+      "name": "permission",
+      "schema": "public",
+      "values": [
+        "statistics",
+        "support"
+      ]
     }
   },
   "schemas": {},

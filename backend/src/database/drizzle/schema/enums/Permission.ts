@@ -1,10 +1,11 @@
+import { pgEnum } from 'drizzle-orm/pg-core'
 import z from 'zod'
 
-export const PERMISSIONS = [
+export const permission = pgEnum('permission', [
   'statistics', // Note: allow read access to https://tipcards.io/statistics
   'support', // Note: allow access to the support dashboard
-] as const
+])
 
-export const Permission = z.enum(PERMISSIONS)
+export const Permission = z.enum(permission.enumValues)
 
 export type Permission = z.infer<typeof Permission>

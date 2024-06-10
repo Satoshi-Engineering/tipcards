@@ -21,8 +21,8 @@ File: [database.dbml](database.dbml)
 
 **Info:** run from project root
 
-1. Create migrations according to schema changes: `npx drizzle-kit generate:mysql --config=backend/drizzle.config.ts`
-2. Create custom migrations (e.g. for data changes): `npx drizzle-kit generate:mysql --config=backend/drizzle.config.ts --custom`
+1. Create migrations according to schema changes: `npx drizzle-kit generate --config=backend/drizzle.config.ts`
+2. Create custom migrations (e.g. for data changes): `npx drizzle-kit generate --config=backend/drizzle.config.ts --custom`
 3. Write sql update queries into the newly created sql file in `/backend/database/drizzle/migrations`
 
 ### Execute the migration files

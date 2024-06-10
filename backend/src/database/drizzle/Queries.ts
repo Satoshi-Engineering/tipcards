@@ -1,6 +1,6 @@
 import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations } from 'drizzle-orm'
-import type { MySqlTransaction } from 'drizzle-orm/mysql-core'
-import type { MySql2QueryResultHKT, MySql2PreparedQueryHKT } from 'drizzle-orm/mysql2'
+import type { PgTransaction } from 'drizzle-orm/pg-core'
+import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
 import NotFoundError from '@backend/errors/NotFoundError'
 
@@ -16,9 +16,9 @@ import {
   LandingPage, UserCanUseLandingPage,
 } from '@backend/database/drizzle/schema'
 
-export type Transaction = MySqlTransaction<
-  MySql2QueryResultHKT,
-  MySql2PreparedQueryHKT,
+
+export type Transaction = PgTransaction<
+  PostgresJsQueryResultHKT,
   typeof import('@backend/database/drizzle/schema/index'),
   ExtractTablesWithRelations<typeof import('@backend/database/drizzle/schema/index')>
 >
@@ -267,7 +267,10 @@ export default class Queries {
   async insertOrUpdateCard(card: Card): Promise<void> {
     await this.transaction.insert(Card)
       .values(card)
-      .onDuplicateKeyUpdate({ set: card })
+      .onConflictDoUpdate({
+        target: Card.hash,
+        set: card ,
+      })
   }
 
   /** @throws */
@@ -287,56 +290,80 @@ export default class Queries {
   async insertOrUpdateInvoice(invoice: Invoice): Promise<void> {
     await this.transaction.insert(Invoice)
       .values(invoice)
-      .onDuplicateKeyUpdate({ set: invoice })
+      .onConflictDoUpdate({
+        target: Invoice.paymentHash,
+        set: invoice,
+      })
   }
 
   /** @throws */
   async insertOrUpdateCardVersionInvoice(cardVersionInvoice: CardVersionHasInvoice): Promise<void> {
     await this.transaction.insert(CardVersionHasInvoice)
       .values(cardVersionInvoice)
-      .onDuplicateKeyUpdate({ set: cardVersionInvoice })
+      .onConflictDoUpdate({
+        target: [CardVersionHasInvoice.cardVersion, CardVersionHasInvoice.invoice],
+        set: cardVersionInvoice,
+      })
   }
 
   /** @throws */
   async insertOrUpdateLnurlP(lnurlp: LnurlP): Promise<void> {
     await this.transaction.insert(LnurlP)
       .values(lnurlp)
-      .onDuplicateKeyUpdate({ set: lnurlp })
+      .onConflictDoUpdate({
+        target: LnurlP.lnbitsId,
+        set: lnurlp,
+      })
   }
 
   /** @throws */
   async insertOrUpdateLnurlW(lnurlw: LnurlW): Promise<void> {
     await this.transaction.insert(LnurlW)
       .values(lnurlw)
-      .onDuplicateKeyUpdate({ set: lnurlw })
+      .onConflictDoUpdate({
+        target: LnurlW.lnbitsId,
+        set: lnurlw,
+      })
   }
 
   /** @throws */
   async insertOrUpdateSet(set: Set): Promise<void> {
     await this.transaction.insert(Set)
       .values(set)
-      .onDuplicateKeyUpdate({ set: set })
+      .onConflictDoUpdate({
+        target: Set.id,
+        set: set,
+      })
   }
 
   /** @throws */
   async insertOrUpdateSetSettings(setSettings: SetSettings): Promise<void> {
     await this.transaction.insert(SetSettings)
       .values(setSettings)
-      .onDuplicateKeyUpdate({ set: setSettings })
+      .onConflictDoUpdate({
+        target: SetSettings.set,
+        set: setSettings,
+      })
   }
 
   /** @throws */
   async insertOrUpdateUser(user: User): Promise<void> {
     await this.transaction.insert(User)
       .values(user)
-      .onDuplicateKeyUpdate({ set: user })
+      .onConflictDoUpdate({
+        target: User.id,
+        set: user,
+      })
   }
 
   /** @throws */
   async insertOrUpdateUserCanUseSet(userCanUseSet: UserCanUseSet): Promise<void> {
     await this.transaction.insert(UserCanUseSet)
       .values(userCanUseSet)
-      .onDuplicateKeyUpdate({ set: userCanUseSet })
+      .onConflictDoUpdate({
+        target: [UserCanUseSet.user, UserCanUseSet.set],
+        set: userCanUseSet,
+      })
   }
 
   /** @throws */
@@ -541,7 +568,10 @@ export default class Queries {
   async insertOrUpdateProfile(profile: Profile): Promise<void> {
     await this.transaction.insert(Profile)
       .values(profile)
-      .onDuplicateKeyUpdate({ set: profile })
+      .onConflictDoUpdate({
+        target: Profile.user,
+        set: profile,
+      })
   }
 
   /** @throws */
@@ -560,7 +590,10 @@ export default class Queries {
   async insertOrUpdateAllowedRefreshTokens(allowedRefreshTokens: AllowedRefreshTokens): Promise<void> {
     await this.transaction.insert(AllowedRefreshTokens)
       .values(allowedRefreshTokens)
-      .onDuplicateKeyUpdate({ set: allowedRefreshTokens })
+      .onConflictDoUpdate({
+        target: AllowedRefreshTokens.user,
+        set: allowedRefreshTokens,
+      })
   }
 
   /** @throws */

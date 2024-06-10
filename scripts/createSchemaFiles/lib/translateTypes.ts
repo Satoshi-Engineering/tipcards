@@ -1,5 +1,4 @@
 import { DBMLEnumValue, DBMLSchema } from './types'
-import { translateEnumConstName } from './translateNames'
 
 const enums: {[key: string]: DBMLEnumValue[]} = {}
 
@@ -18,13 +17,13 @@ export function getDefault(dbdefault: {type:string, value:string}) {
 
 export function translateImportType(type: string) {
   if (type === 'text') return 'text'
-  if (type === 'DateTime') return 'datetime'
-  if (type === 'integer') return 'int'
+  if (type === 'DateTime') return 'date'
+  if (type === 'integer') return 'integer'
   if (type === 'boolean') return 'boolean'
   if (type === 'json') return 'json'
 
   if (type.startsWith('varchar')) return 'varchar'
-  if (type in enums) return 'mysqlEnum'
+  if (type in enums) return 'enum'
 
   throw new Error(`Type ${type} not translated`)
 }
@@ -47,9 +46,8 @@ export function createConfigForType(type: string) {
     if (match == null || match.length == 0) throw Error('Searching for the number in "varchar(XX)", but didn\'t found it')
     return `, { length: ${match[0]} }`
   }
-
-  if (type in enums) {
-    return `, ${translateEnumConstName(type)}`
+  if (type === 'DateTime') {
+    return ", { mode: 'date' }"
   }
 
   return ''

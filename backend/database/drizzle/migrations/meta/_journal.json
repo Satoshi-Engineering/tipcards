@@ -1,40 +1,19 @@
 {
-  "version": "5",
-  "dialect": "mysql",
+  "version": "7",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1703072780388,
-      "tag": "0000_groovy_human_fly",
+      "version": "7",
+      "when": 1718089165302,
+      "tag": "0000_slippery_the_order",
       "breakpoints": true
     },
     {
       "idx": 1,
-      "version": "5",
-      "when": 1703072896429,
-      "tag": "0001_glamorous_kate_bishop",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1704892219976,
-      "tag": "0002_green_lady_ursula",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1704895663263,
-      "tag": "0003_safe_naoko",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1706007940825,
-      "tag": "0004_elite_mongu",
+      "version": "7",
+      "when": 1718089170599,
+      "tag": "0001_stormy_swordsman",
       "breakpoints": true
     }
   ]

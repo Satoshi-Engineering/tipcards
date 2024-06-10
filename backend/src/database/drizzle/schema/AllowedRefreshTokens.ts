@@ -1,7 +1,7 @@
-import { mysqlTable, index, varchar, text } from 'drizzle-orm/mysql-core'
+import { pgTable, index, varchar, text } from 'drizzle-orm/pg-core'
 import { User } from './User'
 
-export const AllowedRefreshTokens = mysqlTable('AllowedRefreshTokens', {
+export const AllowedRefreshTokens = pgTable('AllowedRefreshTokens', {
   hash: varchar('hash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of user + current + previous
   user: varchar('user', { length: 64 }).notNull().references(() => User.id),
   current: text('current').notNull(), // Note: jwt refresh token

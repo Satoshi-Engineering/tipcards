@@ -12,11 +12,8 @@ import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@back
 import { shutdown } from '@backend/shutdown'
 
 const EXIT_CODE_FAILED_STARTUP = 129
-const EXIT_CODE_PREMATURE_DATABASE_CLOSE = 130
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
 const filenameFailedStartupsCounter = path.resolve(FAILED_STARTUPS_COUNTER_DIRECTORY, FAILED_STARTUPS_COUNTER_FILENAME)
-
-let shutdownCalled = false
 
 export const startup = async () => {
   try {
@@ -31,16 +28,8 @@ export const startup = async () => {
 
 const startupApplication = async () => {
   console.info(`${APP_NAME} starting`)
-
-  const onDatabaseConnectionEnded = async () => {
-    if (shutdownCalled) {
-      return
-    }
-    await console.error(`${APP_NAME} database connection ended without application shutdown! Shutting down application with exit code ${EXIT_CODE_PREMATURE_DATABASE_CLOSE}!`)
-    shutdown(server, connections, EXIT_CODE_PREMATURE_DATABASE_CLOSE)
-  }
   
-  await initDatabase(onDatabaseConnectionEnded)
+  await initDatabase()
   console.info(' - Database connected')
 
   await loadCoarsWhitelist()
@@ -65,13 +54,11 @@ const startupApplication = async () => {
 
   process.on('SIGTERM', () => {
     console.info(`${APP_NAME} SIGTERM signal received. Shutting down ...`)
-    shutdownCalled = true
     shutdown(server, connections)
   })
 
   process.on('SIGINT', () => {
     console.info(`${APP_NAME} SIGINT signal received. Shutting down ...`)
-    shutdownCalled = true
     shutdown(server, connections)
   })
   console.info(' - shutdown signals callbacks initialized')

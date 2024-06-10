@@ -1,9 +1,9 @@
-import { mysqlTable, varchar, datetime } from 'drizzle-orm/mysql-core'
+import { pgTable, varchar, date } from 'drizzle-orm/pg-core'
 import { Set } from './Set'
 
-export const Card = mysqlTable('Card', {
+export const Card = pgTable('Card', {
   hash: varchar('hash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of setId + card index in hex
-  created: datetime('created').notNull(),
+  created: date('created', { mode: 'date' }).notNull(),
   set: varchar('set', { length: 36 }).references(() => Set.id),
 })
 

@@ -1,5 +1,6 @@
 import {
-  translateDrizzleObjectName, translateEnumConstName,
+  translateDrizzleObjectName,
+  translateEnumFunctionName,
   translateEnumName,
   translateFileName,
   translateSQLTableName,
@@ -32,7 +33,11 @@ export class SchemaCreator {
     const config = createConfigForType(field.type.type_name)
 
     let line = `${field.name}: `
-    line+=`${translateImportType(field.type.type_name)}('${field.name}'${config})`
+    if (isEnum(field.type.type_name)) {
+      line += `${translateEnumFunctionName(field.type.type_name)}('${field.name}')`
+    } else {
+      line += `${translateImportType(field.type.type_name)}('${field.name}'${config})`
+    }
     if (field.pk === true) line += '.primaryKey()'
     if (field.unique === true) line += '.unique()'
     if (field.not_null === undefined || field.not_null === true) line += '.notNull()'
@@ -82,15 +87,15 @@ export class SchemaCreator {
 
     let usedTypes = getUsedTypesFromIndexes(indexes)
     usedTypes = usedTypes.concat(translateImportTypes(fields))
-    usedTypes = uniqueArray(usedTypes)
-    usedTypes.unshift('mysqlTable')
+    usedTypes = uniqueArray(usedTypes).filter((type) => type != 'enum')
+    usedTypes.unshift('pgTable')
 
-    fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/mysql-core'\n`
+    fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/pg-core'\n`
     tableImports.forEach(table => {
       fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
     })
     enumImports.forEach(enumName => {
-      fileData += `import { ${translateEnumConstName(enumName)} } from './${ENUM_DIR_NAME}/${translateFileName(enumName)}'\n`
+      fileData += `import { ${translateEnumFunctionName(enumName)} } from './${ENUM_DIR_NAME}/${translateFileName(enumName)}'\n`
     })
 
     fileData+= '\n'
@@ -100,16 +105,18 @@ export class SchemaCreator {
 
   createEnumEntry(enumType: string) {
     let fileData = ''
+    const enumName = translateEnumName(enumType)
+    const enumFunction = translateEnumFunctionName(enumType)
 
-    fileData += `export const ${translateEnumConstName(enumType)} = [\n`
-    getEnumValueDefinitions(enumType).forEach(enumValueDef => {
+    fileData += `export const ${enumFunction} = pgEnum('${enumFunction}', [\n`
+    getEnumValueDefinitions(enumType).forEach((enumValueDef) => {
       fileData += `  '${enumValueDef.name}',${enumValueDef.note ? ` // Note: ${enumValueDef.note}`: ''}\n`
     })
-    fileData += '] as const\n'
+    fileData += '])\n'
     fileData += '\n'
-    fileData += `export const ${translateEnumName(enumType)} = z.enum(${translateEnumConstName(enumType)})\n`
+    fileData += `export const ${enumName} = z.enum(${enumFunction}.enumValues)\n`
     fileData += '\n'
-    fileData += `export type ${translateEnumName(enumType)} = z.infer<typeof ${translateEnumName(enumType)}>\n`
+    fileData += `export type ${enumName} = z.infer<typeof ${enumName}>\n`
 
     return fileData
   }
@@ -120,7 +127,7 @@ export class SchemaCreator {
 
     let fileData = ''
 
-    fileData += `export const ${drizzleName} = mysqlTable('${tableName}', {\n`
+    fileData += `export const ${drizzleName} = pgTable('${tableName}', {\n`
     table.fields.forEach(field => {
       fileData += `  ${this.createFieldEntry(table.name, field)},${field.note ? ` // Note: ${field.note}` : ''}\n`
     })
@@ -171,7 +178,8 @@ export class SchemaCreator {
   public createEnumFileData(enumData: DBMLEnum) {
     let fileData = ''
 
-    fileData += 'import z from \'zod\'\n'
+    fileData += "import { pgEnum } from 'drizzle-orm/pg-core'\n"
+    fileData += "import z from 'zod'\n"
     fileData += '\n'
     fileData += this.createEnumEntry(enumData.name)
 

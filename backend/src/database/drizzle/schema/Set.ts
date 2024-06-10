@@ -1,9 +1,9 @@
-import { mysqlTable, varchar, datetime } from 'drizzle-orm/mysql-core'
+import { pgTable, varchar, date } from 'drizzle-orm/pg-core'
 
-export const Set = mysqlTable('Set', {
+export const Set = pgTable('Set', {
   id: varchar('id', { length: 36 }).primaryKey().unique().notNull(), // Note: uuid
-  created: datetime('created').notNull(),
-  changed: datetime('changed').notNull(),
+  created: date('created', { mode: 'date' }).notNull(),
+  changed: date('changed', { mode: 'date' }).notNull(),
 })
 
 export type Set = typeof Set.$inferSelect

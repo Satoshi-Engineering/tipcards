@@ -1,26 +1,27 @@
-import { drizzle } from 'drizzle-orm/mysql2'
-import * as schema from './schema'
-import mysql from 'mysql2/promise'
-import type { MySql2Database } from 'drizzle-orm/mysql2/driver'
+import { drizzle } from 'drizzle-orm/postgres-js'
+import postgres from 'postgres'
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js/driver'
 
 import { DB_CREDENTIALS } from '@backend/constants'
 
+import * as schema from './schema'
+
 export default class Database {
-  static async init(onConnectionEnded: () => void) {
+  static async init() {
     if (Database.singleton != null) {
       throw new Error('Drizzle database already initialized!')
     }
 
     Database.singleton = new Database()
-    await Database.singleton.init(onConnectionEnded)
+    await Database.singleton.init()
   }
 
-  static async getDatabase(): Promise<MySql2Database<typeof schema>> {
+  static async getDatabase(): Promise<PostgresJsDatabase<typeof schema>> {
     if (Database.singleton == null) {
       throw new Error('Drizzle getDatabase called before init!')
     }
 
-    return Database.singleton.database as MySql2Database<typeof schema>
+    return Database.singleton.database as PostgresJsDatabase<typeof schema>
   }
 
   static async closeConnectionIfExists() {
@@ -31,22 +32,17 @@ export default class Database {
 
   private static singleton: Database
 
-  private database: MySql2Database<typeof schema> | null
-  private connection: mysql.Connection | null
+  private database: PostgresJsDatabase<typeof schema> | null
+  private connection: postgres.Sql | null
 
   private constructor() {
     this.database = null
     this.connection = null
   }
 
-  private async init(onConnectionEnded: () => void) {
-    this.connection = await mysql.createConnection({
-      ...DB_CREDENTIALS,
-      multipleStatements: true,
-    })
-    this.connection.on('end', () => onConnectionEnded())
-
-    this.database = drizzle(this.connection, { mode: 'default', schema })
+  private async init() {
+    this.connection = postgres(`postgres://${DB_CREDENTIALS.user}:${DB_CREDENTIALS.password}@${DB_CREDENTIALS.host}:${DB_CREDENTIALS.port}/${DB_CREDENTIALS.database}`)
+    this.database = drizzle(this.connection, { schema })
   }
 
   private async deInit() {

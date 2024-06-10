@@ -1,1 +1,0 @@
-ALTER TABLE `LnurlW` ADD CONSTRAINT `LnurlW_bulkWithdrawId_unique` UNIQUE(`bulkWithdrawId`);
