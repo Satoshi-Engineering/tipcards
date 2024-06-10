@@ -9,7 +9,7 @@ export const cardRouter = router({
     .input(CardTrpc.shape.hash)
     .output(CardTrpc)
     .query(async ({ input }) => {
-      const card = await Card.fromCardHash(input)
+      const card = await Card.fromCardHashOrDefault(input)
       return await card.toTRpcResponse()
     }),
 

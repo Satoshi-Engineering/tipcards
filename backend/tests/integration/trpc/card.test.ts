@@ -27,8 +27,8 @@ afterAll(async () => {
 })
 
 describe('TRpc Router Card', () => {
+  const imaginedCardId = `${cardData.generateCardHash()} some random string that doesnt exist`
   it('should load a card that doesnt exist', async () => {
-    const imaginedCardId = `${cardData.generateCardHash()} some random string that doesnt exist`
     const card = await callerCards.getByHash(imaginedCardId)
     expect(card.hash).toBe(imaginedCardId)
     expect(card.invoice).toBeNull()
@@ -39,6 +39,10 @@ describe('TRpc Router Card', () => {
     expect(card.hash).toBe(testCard.cardHash)
     expect(card.invoice).not.toBeNull()
     expect(card.landingPageViewed).toBeNull()
+  })
+
+  it('should return 404 if card doesnt exist', async () => {
+    await expect(() => callerCards.landingPageViewed(imaginedCardId)).rejects.toThrow(Error)
   })
 
   let landingPageViewed: Date | null
