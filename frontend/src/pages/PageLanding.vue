@@ -401,13 +401,13 @@ const lnurl = computed<string | null>(() => {
   return null
 })
 
-const loadLnurlData = async () => {
+const loadLnurlData = async (): Promise<boolean> => {
   if (cardHash.value == null) {
     loading.value = false
     if (lnurl.value != null && lnurl.value !== '') {
       userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
     }
-    return
+    return false
   }
   loading.value = true
 
@@ -418,7 +418,7 @@ const loadLnurlData = async () => {
   if (status === 'error' && message != null) {
     loading.value = false
     userErrorMessage.value = message
-    return
+    return false
   }
 
   if (
@@ -432,7 +432,7 @@ const loadLnurlData = async () => {
         cardHash: cardHash.value,
       },
     })
-    return
+    return false
   }
 
   withdrawPending.value = !!card.withdrawPending
@@ -451,6 +451,7 @@ const loadLnurlData = async () => {
 
   loading.value = false
   setTimeout(loadLnurlData, 10 * 1000)
+  return true
 }
 
 const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' | 'used' | 'recentlyUsed' | null>(() => {
@@ -504,8 +505,10 @@ const resetBulkWithdraw = async () => {
 /////
 // init
 onMounted(async () => {
-  loadLnurlData()
-  handleQrCodeScan()
+  const cardLoaded = await loadLnurlData()
+  if (cardLoaded) {
+    handleQrCodeScan()
+  }
 })
 
 const handleQrCodeScan = () => {
