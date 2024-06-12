@@ -82,7 +82,8 @@ vi backend/.env.integrationTest
 npm run backend-dev -- --envFilePostfix=integrationTest
 
 # run a specific test using the same env file
-node_modules/jest/bin/jest.js --config backend/jest.config.js --runInBand --testTimeout=50000 --envFilePostfix=integrationTest backend/tests/integration/api/auth.test.ts
+cd backend
+../node_modules/jest/bin/jest.js --config jest.config.js --runInBand --testTimeout=50000 --envFilePostfix=integrationTest tests/integration/api/auth.test.ts
 ```
 
 ### Frontend
