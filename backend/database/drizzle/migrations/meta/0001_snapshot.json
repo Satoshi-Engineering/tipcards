@@ -1,6 +1,6 @@
 {
-  "id": "1d247ea5-a95b-4f32-ad2e-6812f31553b6",
-  "prevId": "a5bd1b43-5b37-4504-bb74-9d7eb84035e1",
+  "id": "72941056-c697-47aa-8082-eefbba1ec1a2",
+  "prevId": "406b5f85-37e1-41d7-aa5d-49068af65db7",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -88,12 +88,18 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "set": {
           "name": "set",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "locked": {
+          "name": "locked",
           "type": "varchar(36)",
           "primaryKey": false,
           "notNull": false
@@ -123,6 +129,13 @@
             "hash"
           ],
           "nullsNotDistinct": false
+        },
+        "Card_locked_unique": {
+          "name": "Card_locked_unique",
+          "columns": [
+            "locked"
+          ],
+          "nullsNotDistinct": false
         }
       }
     },
@@ -144,7 +157,7 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -180,7 +193,7 @@
         },
         "landingPageViewed": {
           "name": "landingPageViewed",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -369,19 +382,19 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "paid": {
           "name": "paid",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -460,19 +473,19 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "finished": {
           "name": "finished",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -502,19 +515,19 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "expiresAt": {
           "name": "expiresAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "withdrawn": {
           "name": "withdrawn",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
@@ -613,13 +626,13 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "changed": {
           "name": "changed",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -755,7 +768,7 @@
         },
         "created": {
           "name": "created",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },

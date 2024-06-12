@@ -5,36 +5,15 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1718089165302,
-      "tag": "0000_slippery_the_order",
+      "when": 1718202280036,
+      "tag": "0000_spicy_revanche",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1718089170599,
-      "tag": "0001_stormy_swordsman",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1718193623182,
-      "tag": "0002_smart_tarot",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1718199289829,
-      "tag": "0003_public_jocasta",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1718199444329,
-      "tag": "0004_moaning_lake",
+      "when": 1718202284266,
+      "tag": "0001_skinny_terrax",
       "breakpoints": true
     }
   ]

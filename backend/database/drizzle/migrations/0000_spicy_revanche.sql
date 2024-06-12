@@ -26,21 +26,23 @@ CREATE TABLE IF NOT EXISTS "AllowedRefreshTokens" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "Card" (
 	"hash" varchar(64) PRIMARY KEY NOT NULL,
-	"created" date NOT NULL,
+	"created" timestamp with time zone NOT NULL,
 	"set" varchar(36),
-	CONSTRAINT "Card_hash_unique" UNIQUE("hash")
+	"locked" varchar(36),
+	CONSTRAINT "Card_hash_unique" UNIQUE("hash"),
+	CONSTRAINT "Card_locked_unique" UNIQUE("locked")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "CardVersion" (
 	"id" varchar(36) PRIMARY KEY NOT NULL,
 	"card" varchar(64) NOT NULL,
-	"created" date NOT NULL,
+	"created" timestamp with time zone NOT NULL,
 	"lnurlP" varchar(36),
 	"lnurlW" varchar(36),
 	"textForWithdraw" text NOT NULL,
 	"noteForStatusPage" text NOT NULL,
 	"sharedFunding" boolean NOT NULL,
-	"landingPageViewed" date,
+	"landingPageViewed" timestamp with time zone,
 	CONSTRAINT "CardVersion_id_unique" UNIQUE("id"),
 	CONSTRAINT "CardVersion_lnurlP_unique" UNIQUE("lnurlP")
 );
@@ -63,9 +65,9 @@ CREATE TABLE IF NOT EXISTS "Invoice" (
 	"amount" integer NOT NULL,
 	"paymentHash" varchar(64) PRIMARY KEY NOT NULL,
 	"paymentRequest" text NOT NULL,
-	"created" date NOT NULL,
-	"paid" date,
-	"expiresAt" date NOT NULL,
+	"created" timestamp with time zone NOT NULL,
+	"paid" timestamp with time zone,
+	"expiresAt" timestamp with time zone NOT NULL,
 	"extra" text NOT NULL,
 	CONSTRAINT "Invoice_paymentHash_unique" UNIQUE("paymentHash")
 );
@@ -80,17 +82,17 @@ CREATE TABLE IF NOT EXISTS "LandingPage" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "LnurlP" (
 	"lnbitsId" varchar(36) PRIMARY KEY NOT NULL,
-	"created" date NOT NULL,
-	"expiresAt" date,
-	"finished" date,
+	"created" timestamp with time zone NOT NULL,
+	"expiresAt" timestamp with time zone,
+	"finished" timestamp with time zone,
 	CONSTRAINT "LnurlP_lnbitsId_unique" UNIQUE("lnbitsId")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "LnurlW" (
 	"lnbitsId" varchar(36) PRIMARY KEY NOT NULL,
-	"created" date NOT NULL,
-	"expiresAt" date,
-	"withdrawn" date,
+	"created" timestamp with time zone NOT NULL,
+	"expiresAt" timestamp with time zone,
+	"withdrawn" timestamp with time zone,
 	"bulkWithdrawId" varchar(64),
 	CONSTRAINT "LnurlW_lnbitsId_unique" UNIQUE("lnbitsId"),
 	CONSTRAINT "LnurlW_bulkWithdrawId_unique" UNIQUE("bulkWithdrawId")
@@ -106,8 +108,8 @@ CREATE TABLE IF NOT EXISTS "Profile" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "Set" (
 	"id" varchar(36) PRIMARY KEY NOT NULL,
-	"created" date NOT NULL,
-	"changed" date NOT NULL,
+	"created" timestamp with time zone NOT NULL,
+	"changed" timestamp with time zone NOT NULL,
 	CONSTRAINT "Set_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
@@ -125,7 +127,7 @@ CREATE TABLE IF NOT EXISTS "SetSettings" (
 CREATE TABLE IF NOT EXISTS "User" (
 	"id" varchar(64) PRIMARY KEY NOT NULL,
 	"lnurlAuthKey" varchar(128) NOT NULL,
-	"created" date NOT NULL,
+	"created" timestamp with time zone NOT NULL,
 	"permissions" json NOT NULL,
 	CONSTRAINT "User_id_unique" UNIQUE("id")
 );
