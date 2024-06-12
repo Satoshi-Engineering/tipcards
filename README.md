@@ -75,6 +75,16 @@ Per default the backend loads the `backend/.env` file. If you need different set
 
 You can run backend integration tests locally, including starting the local backend, in one command by running the helper script `./backend-integration-tests.sh`. This command uses the `backend/.env.integrationTest` env file (see Custom EnvFile).
 
+Alternately if you want to run specific tests you could do:
+```bash
+# create custom env file for testing + startup backend using it
+vi backend/.env.integrationTest
+npm run backend-dev -- --envFilePostfix=integrationTest
+
+# run a specific test using the same env file
+node_modules/jest/bin/jest.js --config backend/jest.config.js --runInBand --testTimeout=50000 --envFilePostfix=integrationTest backend/tests/integration/api/auth.test.ts
+```
+
 ### Frontend
 
 * Create a `frontend/.env.development.local` file  (or copy it from `frontend/.env.development`)  and add the following variable:

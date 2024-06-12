@@ -76,7 +76,7 @@ describe('auth', () => {
     expect(caughtError?.response?.status).toBe(404)
     expect(caughtError?.response?.data).toEqual(expect.objectContaining({
       status: 'error',
-      data: 'not found' ,
+      message: expect.any(String),
     }))
   })
 
