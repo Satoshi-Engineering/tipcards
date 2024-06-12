@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser'
 import { Profile } from '@shared/data/auth/User'
 import { ErrorCode } from '@shared/data/Errors'
 
+import type { User } from '@backend/database/redis/data/User'
 import corsOptions from '@backend/services/corsOptions'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/queries'
 import {
@@ -55,12 +56,7 @@ lnurlServer.on('login', async (event: LoginEvent) => {
     return
   }
 
-  try {
-    socketsByHash[hash].emit('loggedIn')
-  } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    socketsByHash[hash].emit('error')
-  }
+  socketsByHash[hash].emit('loggedIn')
 })
 
 /////
@@ -78,12 +74,7 @@ export const initSocketIo = (server: http.Server) => {
       if (typeof loggedIn[hash] !== 'string') {
         return
       }
-      try {
-        socketsByHash[hash].emit('loggedIn')
-      } catch (error) {
-        console.error(ErrorCode.UnknownDatabaseError, error)
-        socketsByHash[hash].emit('error')
-      }
+      socketsByHash[hash].emit('loggedIn')
     })
     socket.on('disconnect', () => {
       if (hashesBySocketId[socket.id] == null) {
@@ -128,45 +119,62 @@ router.get('/status/:hash', async (req, res) => {
   if (loggedIn[hash] == null) {
     res.status(404).json({
       status: 'error',
-      data: 'not found',
+      message: 'Hash not found.',
     })
     return
   }
   if (typeof loggedIn[hash] !== 'string') {
     res.status(403).json({
       status: 'error',
-      data: 'not logged in',
+      message: 'No log in happened for given hash.',
     })
     return
   }
+
+  let user: User
   try {
-    const user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
-    const refreshToken = await createRefreshToken(user)
-    const accessToken = await createAccessToken(user)
-    if (user.allowedRefreshTokens == null) {
-      user.allowedRefreshTokens = []
-    }
-    user.allowedRefreshTokens.push([refreshToken])
-    await updateUser(user)
-    res
-      .cookie('refresh_token', refreshToken, {
-        expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      })
-      .json({
-        status: 'success',
-        data: { accessToken },
-      })
-    delete loggedIn[hash]
+    user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
   } catch (error) {
-    console.error(ErrorCode.UnknownDatabaseError, error)
-    res.status(403).json({
+    console.error(ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey, error)
+    res.status(500).json({
       status: 'error',
-      data: 'unknown database error',
+      message: 'Unable to get or create user.',
+      code: ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey,
     })
+    return
   }
+
+  const refreshToken = await createRefreshToken(user)
+  if (user.allowedRefreshTokens == null) {
+    user.allowedRefreshTokens = []
+  }
+  user.allowedRefreshTokens.push([refreshToken])
+
+  try {
+    await updateUser(user)
+  } catch (error) {
+    console.error(ErrorCode.UnableToUpdateUser, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'Unable to update user authentication.',
+      code: ErrorCode.UnableToUpdateUser,
+    })
+    return
+  }
+
+  const accessToken = await createAccessToken(user)
+  res
+    .cookie('refresh_token', refreshToken, {
+      expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+    .json({
+      status: 'success',
+      data: { accessToken },
+    })
+  delete loggedIn[hash]
 })
 
 router.get(

@@ -10,11 +10,11 @@ declare module 'lnurl' {
   }
   export class LnurlServer {
     on(event: string, callback: CallableFunction): void
-    generateNewUrl(route: string): {
+    generateNewUrl(route: string): Promise<{
       encoded: string
       secret: string
       url: string
-    }
+    }>
   }
   export function createServer(options: options): LnurlServer
 }

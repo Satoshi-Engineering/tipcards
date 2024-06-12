@@ -3,7 +3,7 @@
     <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
       {{ modalLoginUserMessage }}
     </ParagraphDefault>
-    <ParagraphDefault v-if="error" class="mb-4 text-red-500">
+    <ParagraphDefault v-if="loginFailed" class="mb-4 text-red-500">
       {{ $t('auth.modalLogin.loginErrorText') }}
     </ParagraphDefault>
     <ParagraphDefault v-else-if="!isLoggedIn" class="mb-3">
@@ -14,7 +14,7 @@
     <LightningQrCode
       v-else-if="lnurl != null"
       :value="lnurl"
-      :error="error ? $t('auth.modalLogin.loginErrorText') : undefined"
+      :error="loginFailed ? $t('auth.modalLogin.loginErrorText') : undefined"
       :success="isLoggedIn"
     />
     <ParagraphDefault v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
@@ -66,7 +66,7 @@ const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
 const hash = ref<string>()
-const error = ref(false)
+const loginFailed = ref(false)
 const missingEmail = ref(false)
 let socket: Socket
 
@@ -82,18 +82,23 @@ onBeforeMount(async () => {
   }
   connectSocket()
   fetchingLogin.value = false
-  error.value = false
+  loginFailed.value = false
 })
 const connectSocket = () => {
   socket = io(TIPCARDS_AUTH_ORIGIN)
   socket.on('error', () => {
-    error.value = true
+    loginFailed.value = true
   })
   socket.on('loggedIn', async () => {
     if (hash.value == null) {
       return
     }
-    await login(hash.value)
+    try {
+      await login(hash.value)
+    } catch (error) {
+      loginFailed.value = true
+      console.error(error)
+    }
     modalLoginUserMessage.value = null
     try {
       const { data } = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`)

@@ -47,6 +47,8 @@ export enum ErrorCode {
   UnableToParseEnvVar = 'UnableToParseEnvVar',
   UnableToGetLnbitsBulkWithdrawStatus = 'UnableToGetLnbitsBulkWithdrawStatus',
   UnableToParseLnbitsPaymentsForCardPaymentInfo = 'UnableToParseLnbitsPaymentsForCardPaymentInfo',
+  UnableToGetOrCreateUserByLnurlAuthKey = 'UnableToGetOrCreateUserByLnurlAuthKey',
+  UnableToUpdateUser = 'UnableToUpdateUser',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
