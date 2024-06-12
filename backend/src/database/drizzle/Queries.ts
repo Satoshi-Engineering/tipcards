@@ -442,6 +442,12 @@ export default class Queries {
   }
 
   /** @throws */
+  async deleteLnurlWByBulkWithdrawId(bulkWithdrawId: string): Promise<void> {
+    await this.transaction.delete(LnurlW)
+      .where(eq(LnurlW.bulkWithdrawId, bulkWithdrawId))
+  }
+
+  /** @throws */
   async getAllUsersThatCanUseSet(set: Set): Promise<UserCanUseSet[]> {
     return this.getAllUsersThatCanUseSetBySetId(set.id)
   }

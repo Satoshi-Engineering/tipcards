@@ -121,11 +121,10 @@ export const deleteSet = async (set: SetRedis): Promise<void> => asTransaction(a
   await deleteDataObjects(queries, drizzleData.delete)
 })
 
-
 export const createBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => asTransaction(async (queries) => {
   const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
   await queries.insertOrUpdateLnurlW(lnurlW)
-  linkLatestCardVersionsToLnurlW(queries, bulkWithdraw.cards, lnurlW.lnbitsId)
+  await linkLatestCardVersionsToLnurlW(queries, bulkWithdraw.cards, lnurlW.lnbitsId)
 })
 const linkLatestCardVersionsToLnurlW = async (queries: Queries, cardHashes: CardRedis['cardHash'][], lnurlWlnbitsId: BulkWithdrawRedis['lnbitsWithdrawId']) => {
   await Promise.all(
@@ -157,15 +156,16 @@ export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promi
   await queries.insertOrUpdateLnurlW(lnurlW)
 })
 
-export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => {
+export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => asTransaction(async (queries) => {
   await getBulkWithdrawById(bulkWithdraw.id)
-  await unlinkLatestCardVersionsFromLnurlW(bulkWithdraw.cards)
-}
-const unlinkLatestCardVersionsFromLnurlW = async (cardHashes: CardRedis['cardHash'][]) => asTransaction(async (queries) => {
+  await unlinkLatestCardVersionsFromLnurlW(queries, bulkWithdraw.cards)
+  await queries.deleteLnurlWByBulkWithdrawId(bulkWithdraw.id)
+})
+const unlinkLatestCardVersionsFromLnurlW = async (queries: Queries, cardHashes: CardRedis['cardHash'][]) => {
   await Promise.all(
     cardHashes.map((cardHash) => unlinkLatestCardVersionFromLnurlW(queries, cardHash)),
   )
-})
+}
 const unlinkLatestCardVersionFromLnurlW = async (queries: Queries, cardHash: CardRedis['cardHash']) => {
   const cardVersion = await queries.getLatestCardVersion(cardHash)
   if (cardVersion == null) {
