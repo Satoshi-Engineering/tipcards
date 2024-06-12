@@ -17,7 +17,7 @@ export function getDefault(dbdefault: {type:string, value:string}) {
 
 export function translateImportType(type: string) {
   if (type === 'text') return 'text'
-  if (type === 'DateTime') return 'date'
+  if (type === 'DateTime') return 'timestamp'
   if (type === 'integer') return 'integer'
   if (type === 'boolean') return 'boolean'
   if (type === 'json') return 'json'
@@ -47,7 +47,7 @@ export function createConfigForType(type: string) {
     return `, { length: ${match[0]} }`
   }
   if (type === 'DateTime') {
-    return ", { mode: 'date' }"
+    return ", { mode: 'date', withTimezone: true }"
   }
 
   return ''
