@@ -591,7 +591,7 @@ export default class Queries {
     await this.transaction.insert(AllowedRefreshTokens)
       .values(allowedRefreshTokens)
       .onConflictDoUpdate({
-        target: AllowedRefreshTokens.user,
+        target: AllowedRefreshTokens.hash,
         set: allowedRefreshTokens,
       })
   }
