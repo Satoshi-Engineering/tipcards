@@ -273,6 +273,13 @@ export default jest.fn().mockImplementation(() => ({
     }
   }),
 
+  deleteLnurlWByBulkWithdrawId: jest.fn(async (bulkWithdrawId: string): Promise<void> => {
+    const lnurlW = Object.values(lnurlWsByLnbitsId).find((lnurlW) => lnurlW.bulkWithdrawId === bulkWithdrawId)
+    if (lnurlW != null) {
+      delete lnurlWsByLnbitsId[lnurlW.lnbitsId]
+    }
+  }),
+
   deleteSet: jest.fn(async (set: Set): Promise<void> => {
     delete setsById[set.id]
   }),
