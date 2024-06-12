@@ -103,6 +103,7 @@ const getCardsForRedisSet = (setRedis: SetRedis): { cards: Card[], cardVersions:
     hash: hashSha256(`${setRedis.id}/${index}`),
     created: new Date(),
     set: setRedis.id,
+    locked: null,
   }))
   const cardVersions: CardVersion[] = cards.map((card) => ({
     id: randomUUID(),

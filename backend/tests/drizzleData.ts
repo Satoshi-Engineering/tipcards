@@ -39,12 +39,14 @@ export const createCard = (): Card => ({
   hash: hashSha256(randomUUID()),
   created: new Date(),
   set: null,
+  locked: null,
 })
 
 export const createCardForSet = (set: Set, cardIndex: number): Card => ({
   hash: hashSha256(`${set.id}/${cardIndex}`),
   created: new Date(),
   set: set.id,
+  locked: null,
 })
 
 export const createCardVersion = (card: Card): CardVersion => {

@@ -15,6 +15,13 @@
       "when": 1718089170599,
       "tag": "0001_stormy_swordsman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1718193623182,
+      "tag": "0002_smart_tarot",
+      "breakpoints": true
     }
   ]
 }

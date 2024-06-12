@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import type { AccessTokenPayload } from '@shared/data/auth'
 
 import NotFoundError from '@backend/errors/NotFoundError'
@@ -38,13 +40,31 @@ import { asTransaction } from './client'
 
 // @throws tags are omitted as every database query can throw an exception!
 
-export const lockCardByHash = async (): Promise<string | null> => {
-  throw new Error('Not implemented for drizzle yet')
+export const lockCardByHash = async (cardHash: string): Promise<string | null> => {
+  const locked = randomUUID()
+  try {
+    await asTransaction(async (queries) => queries.insertCards({
+      hash: cardHash,
+      created: new Date(),
+      set: null,
+      locked,
+    }))
+  } catch (error) {
+    try {
+      await asTransaction(async (queries) => queries.setCardLock(cardHash, locked))
+    } catch (error) {
+      return null
+    }
+  }
+  const card = await asTransaction(async (queries) => queries.getCardByHash(cardHash))
+  if (card?.locked != locked) {
+    return null
+  }
+  return locked
 }
 
-export const releaseCardByHash = async (): Promise<void> => {
-  throw new Error('Not implemented for drizzle yet')
-}
+export const releaseCardByHash = async (cardHash: string, lockValue: string): Promise<void> =>
+  asTransaction(async (queries) => queries.releaseCardLock(cardHash, lockValue))
 
 export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => asTransaction(async (queries) => {
   const cardVersion = await queries.getLatestCardVersion(cardHash)

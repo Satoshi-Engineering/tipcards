@@ -216,6 +216,37 @@ export default class Queries {
   }
 
   /** @throws */
+  async getCardByHash(hash: Card['hash']): Promise<Card | null> {
+    const result = await this.transaction.select()
+      .from(Card)
+      .where(eq(Card.hash, hash))
+    if (result.length === 0) {
+      return null
+    }
+    return result[0]
+  }
+
+  /** @throws */
+  async setCardLock(hash: Card['hash'], locked: string): Promise<void> {
+    await this.transaction.update(Card)
+      .set({ locked })
+      .where(and(
+        eq(Card.hash, hash),
+        isNull(Card.locked),
+      ))
+  }
+
+  /** @throws */
+  async releaseCardLock(hash: Card['hash'], locked: string): Promise<void> {
+    await this.transaction.update(Card)
+      .set({ locked: null })
+      .where(and(
+        eq(Card.hash, hash),
+        eq(Card.locked, locked),
+      ))
+  }
+
+  /** @throws */
   async insertCardVersions(...cardVersions: CardVersion[]): Promise<void> {
     await this.transaction.insert(CardVersion)
       .values(cardVersions)
@@ -369,7 +400,10 @@ export default class Queries {
   /** @throws */
   async updateCard(card: Card): Promise<void> {
     await this.transaction.update(Card)
-      .set(card)
+      .set({
+        created: card.created,
+        set: card.set,
+      })
       .where(eq(Card.hash, card.hash))
   }
 
