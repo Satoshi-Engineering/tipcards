@@ -6,7 +6,7 @@ export const initErrorLogging = () => {
   const telegramSender = initTelegramSender()
 
   consoleOverride({
-    onErrorMessage: async (message: string) => {
+    onError: async (message: string) => {
       await telegramSender?.sendMessage({ message })
     },
   })
