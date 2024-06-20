@@ -58,7 +58,7 @@ describe('TRpc Router Set', () => {
   it('throws 404 if set is not found', async () => {
     let caughtError: TRPCError | undefined
     try {
-      await callerLoggedOut.getCards(setData.generateSetId())
+      await callerLoggedOut.getCards({ id: setData.generateSetId() })
     } catch (error) {
       caughtError = error as TRPCError
     }
@@ -66,12 +66,12 @@ describe('TRpc Router Set', () => {
   })
 
   it('returns no cards for an empty set', async () => {
-    const cards = await callerLoggedOut.getCards(emptySet.id)
+    const cards = await callerLoggedOut.getCards({ id: emptySet.id })
     expect(cards.length).toBe(0)
   })
 
   it('returns all cards for a set', async () => {
-    const cards = await callerLoggedOut.getCards(setWithCards.id)
+    const cards = await callerLoggedOut.getCards({ id: setWithCards.id })
     expect(cards.length).toBe(2)
     expect(cards).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -84,7 +84,7 @@ describe('TRpc Router Set', () => {
   })
 
   it('returns all cards for a set funding set', async () => {
-    const cards = await callerLoggedOut.getCards(setWithSetFunding.id)
+    const cards = await callerLoggedOut.getCards({ id: setWithSetFunding.id })
     expect(cards.length).toBe(4)
   })
 

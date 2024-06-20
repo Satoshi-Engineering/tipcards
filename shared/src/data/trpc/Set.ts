@@ -15,3 +15,9 @@ export const Set = z.object({
   landingPage: LandingPage.shape.id.nullable().default(null),
 })
 export type Set = z.infer<typeof Set>
+
+export const SetId = z.object({
+  id: Set.shape.id,
+})
+
+export type SetId = z.infer<typeof SetId>
