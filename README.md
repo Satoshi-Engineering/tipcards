@@ -43,8 +43,6 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 ```bash
 npm install
-cd frontend && npm install && cd ..
-cd backend && npm install && cd ..
 ```
 
 If you are working at Satoshi Engineering, please configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
@@ -132,12 +130,12 @@ For additional developer tasks, scripts can be found in [scripts](scripts/README
 
 Start the frontend server on http://localhost:5173
 ```bash
-cd frontend && npm run dev
+npm run frontend-dev
 ```
 
 Start the backend server on http://localhost:4000
 ```bash
-cd backend && npm run dev
+npm run backend-dev
 ```
 
 
