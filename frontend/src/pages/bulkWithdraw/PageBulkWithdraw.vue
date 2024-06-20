@@ -120,7 +120,7 @@ const initBulkWithdraw = async () => {
 /** @throws */
 const loadCards = async () => {
   cards.value = await Promise.all(cardHashes.value.map(
-    async (cardHash) => trpc.card.getByHash.query(cardHash),
+    async (cardHash) => trpc.card.getByHash.query({ hash: cardHash }),
   ))
 }
 

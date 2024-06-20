@@ -521,7 +521,7 @@ const handleQrCodeScan = () => {
 
 const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
 
-const setLandingPageViewed = (cardHash: string) => trpc.card.landingPageViewed.mutate(cardHash)
+const setLandingPageViewed = (cardHash: string) => trpc.card.landingPageViewed.mutate({ hash: cardHash })
 
 const rewriteUrlToCardHash = (cardHash: string) => router.replace({
     name: 'landing',

@@ -27,3 +27,11 @@ export const releaseCards = async (lockValues: { cardHash: string, lockValue: st
     await releaseCardByHash(cardHash, lockValue)
   }))
 }
+
+export const safeReleaseCard = async (cardHash: string, lockValue: string) => {
+  try {
+    await releaseCardByHash(cardHash, lockValue)
+  } catch (error) {
+    console.error(`Error releasing card lock for card: ${cardHash}`, error)
+  }
+}

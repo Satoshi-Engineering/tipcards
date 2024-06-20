@@ -38,3 +38,9 @@ export const Card = z.object({
 })
 
 export type Card = z.infer<typeof Card>
+
+export const CardHash = z.object({
+  hash: Card.shape.hash,
+})
+
+export type CardHash = z.infer<typeof CardHash>

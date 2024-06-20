@@ -40,7 +40,7 @@ const setLandingPageViewed = (cardHash: string | null) => {
     return
   }
   const trpc = useTRpc()
-  trpc.card.landingPageViewed.mutate(cardHash)
+  trpc.card.landingPageViewed.mutate({ hash: cardHash })
 }
 
 const loadCardHashFromGetParameter = () => new URL(location.href).searchParams.get('cardHash')
