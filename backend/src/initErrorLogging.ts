@@ -1,8 +1,7 @@
 import TelegramSender from 'telegram-sender'
 import consoleOverride from 'console-override'
 
-export const initErrorLogging = () => {
-  
+const initErrorLogging = () => {
   const telegramSender = initTelegramSender()
 
   consoleOverride({
@@ -28,3 +27,5 @@ const initTelegramSender = () => {
     messageMaxLength: Number(process.env.TELEGRAM_CHAR_MAX),
   })
 }
+
+initErrorLogging()
