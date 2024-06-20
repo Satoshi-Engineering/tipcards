@@ -62,7 +62,7 @@ git clone https://github.com/Satoshi-Engineering/tip-cards.git
 ```bash
 cp -r tip-cards/docs/examples/redis/ .
 cp redis/.env.example redis/.env
-# change REDIS_PASSPHRASE and REDISCMD_PASSWORD
+# change REDIS_PASSPHRASE, REDISCMD_USER and REDISCMD_PASSWORD
 # attention: do not use special chars and not more than 24 chars as nodejs redis client cannot handle it
 # it won't be reachable from outside anyways
 vi redis/.env
@@ -81,30 +81,31 @@ cd ..
 
 4. Build and serve the backend
 ```bash
-cd tip-cards
+# switch to tipcards root
+cd /opt/tip-cards
 npm ci
-cd backend
-cp .env.example .env
+npm run backend-build
+cp -r backend/database dist/backend/.
+cp -r node_modules dist/.
+cp backend/deploy/tsconfig.json dist/.
+cp backend/deploy/ecosystem.config.js dist/.
+cp backend/.env.example dist/.env
 # change REDIS_PASSPHRASE to the passphrase you set earlier
 # change TIPCARDS_ORIGIN and TIPCARDS_API_ORIGIN to the domain name (including protocol) that your tip-cards instance will run at
 # e.g. https://my.tip-cards.custom
 # add the "Admin key" from the previous step to LNBITS_ADMIN_KEY
 # add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
-vi .env
-npm ci
-npm run build
-pm2 start build/backend/index.js
+vi dist/.env
+pm2 start backend/deploy/ecosystem.config.js
 pm2 startup
 # Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
-cd ..
 ```
 
 5. Build the frontend
 ```bash
-cd frontend
-npm ci
-npm run build
-cd ..
+# switch to tipcards root
+cd /opt/tip-cards
+npm run frontend-build
 ```
 
 6. Configure nginx
@@ -112,7 +113,7 @@ cd ..
 sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
 sudo mkdir -p /var/www/tip-cards
-sudo ln -s `pwd`/frontend/dist /var/www/tip-cards/www
+sudo ln -s `pwd`/dist/frontend /var/www/tip-cards/www
 sudo chown -R www-data:www-data /var/www/tip-cards
 # make sure www-data can read your Tip Cards files
 # e.g. if you installed the Tip Cards project directly as root then it probably cannot access /root/tip-cards
