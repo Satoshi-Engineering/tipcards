@@ -1,4 +1,4 @@
-import { Router, type Request, type Response } from 'express'
+import { Router, type Request, type Response, type NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
 import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
@@ -19,7 +19,7 @@ const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
 
 const router = Router()
 
-const cardUsed = async (req: Request, res: Response) => {
+const cardUsed = async (req: Request, res: Response, next: NextFunction) => {
   // 1. check if card exists
   let card: Card | null = null
   try {
@@ -34,6 +34,7 @@ const cardUsed = async (req: Request, res: Response) => {
       message: 'An unexpected error occured. Please try again later or contact an admin.',
       code: ErrorCode.UnknownDatabaseError,
     })
+    next()
     return
   }
   if (card == null) {
@@ -41,6 +42,7 @@ const cardUsed = async (req: Request, res: Response) => {
       status: 'error',
       message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
     })
+    next()
     return
   }
   if (card.lnbitsWithdrawId == null) {
@@ -48,6 +50,7 @@ const cardUsed = async (req: Request, res: Response) => {
       status: 'error',
       message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
     })
+    next()
     return
   }
   if (card.used != null) {
@@ -55,6 +58,7 @@ const cardUsed = async (req: Request, res: Response) => {
       status: 'success',
       data: { cardUsed: card.used, cardHash: card.cardHash },
     })
+    next()
     return
   }
 
@@ -74,12 +78,14 @@ const cardUsed = async (req: Request, res: Response) => {
       message: 'Unable to check withdraw status at lnbits.',
       code,
     })
+    next()
     return
   }
   res.json({
     status: 'success',
     data: { cardUsed: card.used, cardHash: card.cardHash },
   })
+  next()
 }
 
 router.get(
