@@ -72,10 +72,12 @@ cd ..
 ```
 
 3. Create a wallet in the lnbits instance you want to use (probably https://legend.lnbits.com)
-  * go to https://legend.lnbits.com
+  * go to https://lnbits.com
+    * there you can either create an account an launch your own lnbits (https://my.lnbits.com)
+    * or try out the lnbits demo server: https://demo.lnbits.com
   * enter a name for your wallet and click "add a new wallet"
   * make sure to save the link (e.g. in your bookmarks) as this is where your Tip Cards' sats will go
-  * click on "Api docs" to the right and note "Admin key" and "Invoice/read key"
+  * click on "Node URL, API keys and Api docs" to the right and note "Admin key" and "Invoice/read key"
   * go to "extensions" and enable "LNURLp" and "withdraw" extensions
   * HINT: create an invoice and put some sats into the wallet, as withdrawing funded Tip Cards can cost some sats for routing fees
 
@@ -93,6 +95,9 @@ cp backend/.env.example dist/.env
 # change REDIS_PASSPHRASE to the passphrase you set earlier
 # change TIPCARDS_ORIGIN and TIPCARDS_API_ORIGIN to the domain name (including protocol) that your tip-cards instance will run at
 # e.g. https://my.tip-cards.custom
+# udpate LNBITS_ORIGIN
+#   * either your custom instance: https://dynamicallyGenereatedWord.lnbits.com/
+#   * or lnbits demo server: https://demo.lnbits.com
 # add the "Admin key" from the previous step to LNBITS_ADMIN_KEY
 # add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
 vi dist/.env
