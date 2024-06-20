@@ -7,13 +7,14 @@ import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { createCard, getCardByHash, updateCard } from '@backend/database/queries'
-import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
   checkIfCardIsPaidAndCreateWithdrawId,
 } from '@backend/services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '@backend/constants'
+
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
 
 const router = Router()
 

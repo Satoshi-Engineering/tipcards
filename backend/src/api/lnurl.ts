@@ -6,7 +6,6 @@ import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
-import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import {
   checkIfCardIsPaidAndCreateWithdrawId,
   checkIfCardIsUsed,
@@ -16,6 +15,8 @@ import {
   getLnurlResponse,
   lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers'
+
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
 
 const router = Router()
 

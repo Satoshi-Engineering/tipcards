@@ -5,7 +5,8 @@ import CardCollection from '@backend/modules/CardCollection'
 import BulkWithdraw from '@backend/modules/BulkWithdraw'
 import { lockCards, releaseCards } from '@backend/services/databaseCardLock'
 
-import { router, publicProcedure } from '../trpc'
+import { router } from '../trpc'
+import publicProcedure from '../procedures/public'
 
 export const bulkWithdrawRouter = router({
   getById: publicProcedure

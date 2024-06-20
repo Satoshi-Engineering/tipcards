@@ -6,7 +6,7 @@ import { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
 import Statistics from '@backend/modules/Statistics'
 
 import { router } from '../trpc'
-import { loggedInProcedure } from '../loggedInProcedure'
+import loggedInProcedure from '../procedures/loggedIn'
 
 export const statisticsRouter = router({
   getFull: loggedInProcedure

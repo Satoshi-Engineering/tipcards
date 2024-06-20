@@ -5,8 +5,9 @@ import CardCollection from '@backend/modules/CardCollection'
 import { getSetsByUserId } from '@backend/database/queries'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis'
-import { router, publicProcedure } from '../trpc'
-import { loggedInProcedure } from '../loggedInProcedure'
+import { router } from '../trpc'
+import publicProcedure from '../procedures/public'
+import loggedInProcedure from '../procedures/loggedIn'
 
 export const setRouter = router({
   getAll: loggedInProcedure

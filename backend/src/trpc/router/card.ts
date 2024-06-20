@@ -1,22 +1,23 @@
-import { Card as CardTrpc } from '@shared/data/trpc/Card'
+import { Card } from '@shared/data/trpc/Card'
 
-import Card from '@backend/modules/Card'
+import CardModule from '@backend/modules/Card'
 
-import { router, publicProcedure } from '../trpc'
+import { router } from '../trpc'
+import publicProcedure from '../procedures/public'
 
 export const cardRouter = router({
   getByHash: publicProcedure
-    .input(CardTrpc.shape.hash)
-    .output(CardTrpc)
+    .input(Card.shape.hash)
+    .output(Card)
     .query(async ({ input }) => {
-      const card = await Card.fromCardHashOrDefault(input)
+      const card = await CardModule.fromCardHashOrDefault(input)
       return await card.toTRpcResponse()
     }),
 
   landingPageViewed: publicProcedure
-    .input(CardTrpc.shape.hash)
+    .input(Card.shape.hash)
     .mutation(async ({ input }) => {
-      const card = await Card.fromCardHash(input)
+      const card = await CardModule.fromCardHash(input)
       await card.setLandingPageViewed()
     }),
 })

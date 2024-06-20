@@ -14,14 +14,15 @@ import corsOptions from '@backend/services/corsOptions'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/queries'
 import {
   getPublicKey,
-  createAccessToken, createRefreshToken, cycleRefreshToken,
-  authGuardRefreshToken,
+  createAccessToken, createRefreshToken,
 } from '@backend/services/jwt'
 import {
   LNURL_PORT,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUTH_ORIGIN,
 } from '@backend/constants'
+
+import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt'
 
 /////
 // LNURL SERVICE

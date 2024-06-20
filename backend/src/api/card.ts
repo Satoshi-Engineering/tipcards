@@ -5,8 +5,9 @@ import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
-import { lockCardMiddleware, releaseCardMiddleware } from '@backend/services/databaseCardLock'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
+
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
 
 const router = Router()
 

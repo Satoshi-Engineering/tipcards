@@ -13,8 +13,9 @@ import {
 } from '@backend/database/queries'
 import hashSha256 from '@backend/services/hashSha256'
 import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers'
-import { authGuardAccessToken } from '@backend/services/jwt'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
+
+import { authGuardAccessToken } from './middleware/auth/jwt'
 
 const router = Router()
 
