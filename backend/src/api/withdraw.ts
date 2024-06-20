@@ -1,13 +1,21 @@
 import { Router, type Request, type Response } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
 import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
 import { TIPCARDS_ORIGIN } from '@backend/constants'
+
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
+
+const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
+  status: 'error',
+  message,
+  code,
+})
 
 const router = Router()
 
@@ -74,7 +82,17 @@ const cardUsed = async (req: Request, res: Response) => {
   })
 }
 
-router.get('/used/:cardHash', cardUsed)
-router.post('/used/:cardHash', cardUsed)
+router.get(
+  '/used/:cardHash',
+  lockCardMiddleware(toErrorResponse),
+  cardUsed,
+  releaseCardMiddleware,
+)
+router.post(
+  '/used/:cardHash',
+  lockCardMiddleware(toErrorResponse),
+  cardUsed,
+  releaseCardMiddleware,
+)
 
 export default router
