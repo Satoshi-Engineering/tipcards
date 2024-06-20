@@ -96,7 +96,8 @@ cp backend/.env.example dist/.env
 # add the "Admin key" from the previous step to LNBITS_ADMIN_KEY
 # add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
 vi dist/.env
-pm2 start backend/deploy/ecosystem.config.js
+cd backend
+pm2 start ecosystem.config.js
 pm2 startup
 # Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
 ```
