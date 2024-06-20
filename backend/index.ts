@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import consoleOverride from '@backend/consoleOverride'
+import { initErrorLogging } from '@backend/initErrorLogging'
 import { startup } from '@backend/startup'
 
-consoleOverride()
+initErrorLogging()
+
 startup()
