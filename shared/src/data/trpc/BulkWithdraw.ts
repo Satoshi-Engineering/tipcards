@@ -13,3 +13,9 @@ export const BulkWithdraw = z.object({
 })
 
 export type BulkWithdraw = z.infer<typeof BulkWithdraw>
+
+export const BulkWithdrawId = z.object({
+  id: BulkWithdraw.shape.id,
+})
+
+export type BulkWithdrawId = z.infer<typeof BulkWithdrawId>

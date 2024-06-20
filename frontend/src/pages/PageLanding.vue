@@ -493,7 +493,7 @@ const resetBulkWithdraw = async () => {
   userErrorMessage.value = undefined
   resettingBulkWithdraw.value = true
   try {
-    await trpc.bulkWithdraw.deleteByCardHash.mutate(cardHash.value)
+    await trpc.bulkWithdraw.deleteByCardHash.mutate({ hash: cardHash.value })
     await loadLnurlData()
   } catch (error) {
     console.error(error)

@@ -166,7 +166,7 @@ const resetBulkWithdrawFromId = async () => {
   if (bulkWithdraw.value == null) {
     return
   }
-  await trpc.bulkWithdraw.deleteById.mutate(bulkWithdraw.value.id)
+  await trpc.bulkWithdraw.deleteById.mutate({ id: bulkWithdraw.value.id })
   await loadCards()
   bulkWithdraw.value = undefined
 }
@@ -192,7 +192,7 @@ const resetBulkWithdrawFromCard = async () => {
   if (cardLockedByWithdraw.value == null) {
     return
   }
-  await trpc.bulkWithdraw.deleteByCardHash.mutate(cardLockedByWithdraw.value.hash)
+  await trpc.bulkWithdraw.deleteByCardHash.mutate({ hash: cardLockedByWithdraw.value.hash })
   await loadCards()
 }
 

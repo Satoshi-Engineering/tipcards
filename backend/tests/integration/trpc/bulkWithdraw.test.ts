@@ -137,7 +137,7 @@ const checkIfCardsAreLocked = async () => {
 }
 
 const deleteBulkWithdraw = async () => {
-  await callerBulkWithdraw.deleteByCardHash(CARD_HASH_FUNDED_0)
+  await callerBulkWithdraw.deleteByCardHash({ hash: CARD_HASH_FUNDED_0 })
 }
 
 const checkIfLnurlwIsRemoved = async (bulkWithdraw: BulkWithdraw) => {
