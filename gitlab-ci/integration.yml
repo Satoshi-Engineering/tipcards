@@ -1,10 +1,18 @@
+# these variables are only used for the integration test postgres service
+variables:
+  POSTGRES_DB: tipcards
+  POSTGRES_USER: tipcards
+  POSTGRES_PASSWORD: thisisonlyusedinthepipeline
+
 test-integration-backend:
+  services:
+    - name: postgres:16.3
+      alias: postgres
   stage: backend-integration
   rules:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]
-    - !reference [.shared_config, rules, deployable_branches]
-    - when: always # even run when previous stages fail
+    - when: on_success
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
@@ -17,15 +25,20 @@ test-integration-backend:
         cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
       elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
       then
-        echo "Running on develop/feature branch"
+        echo "Running on develop branch"
         cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
       else
-        echo -e "\e[31mERROR:ENV_FILE_TEST not set in Gitlab CI/CD variables\e[0m"
-        exit 1
+        echo "Running on feature branch"
+        cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
       fi
+    - echo "Running database migration to prepare database for integration tests"
+    - npm run drizzle-migrate -- --envFilePostfix=integrationTest
     - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
     - sh backend-integration-tests.sh
 
+# when: always
+# This job will run even if the previous stages fail.
+# This runs as it tests the live environment, which should be available even if the previous stages fail.
 test-integration-frontend:
   stage: frontend-integration
   rules:

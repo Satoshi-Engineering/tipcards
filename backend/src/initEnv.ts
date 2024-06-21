@@ -17,5 +17,11 @@ if (argument) {
   envFile = `.env.${global.__ENV_FILE_POSTFIX__}`
 }
 
-config({ path: path.resolve(process.cwd(), envFile) })
-config({ path: path.resolve(process.cwd(), 'backend', envFile) })
+config({
+  path: path.resolve(process.cwd(), envFile),
+  override: true, // we want to make sure that our configured values are always used
+})
+config({
+  path: path.resolve(process.cwd(), 'backend', envFile),
+  override: true, // we want to make sure that our configured values are always used
+})

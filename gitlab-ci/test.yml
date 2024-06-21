@@ -2,7 +2,7 @@ test:
   stage: test
   rules:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
-    - when: always
+    - when: on_success
   cache:
     - !reference [.shared_config, cache, node_modules]
   script:
