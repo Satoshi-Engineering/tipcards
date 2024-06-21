@@ -1,10 +1,10 @@
 import TelegramSender from 'telegram-sender'
-import consoleOverride from 'console-override'
+import consoleHooks from 'console-hooks'
 
 const initErrorLogging = () => {
   const telegramSender = initTelegramSender()
 
-  consoleOverride({
+  consoleHooks({
     onError: async (message: string) => {
       await telegramSender?.sendMessage({ message })
     },
