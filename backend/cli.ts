@@ -169,9 +169,9 @@ const migrateUsers = async () => {
 
   let migratedCount = 0
   for (const user of users) {
+    console.log(`Migrating user ${user.id}...`)
     await createDrizzleUser(user)
     migratedCount += 1
-    console.log(`User ${user.id} migrated.`)
   }
 
   console.log(`\n${migratedCount} user(s) migrated!`)
@@ -184,10 +184,10 @@ const migrateCards = async () => {
 
   let migratedCount = 0
   for (const card of cards) {
+    console.log(`Migrating card ${card.cardHash}...`)
     await createDrizzleCard(card)
     await updateDrizzleCard(card)
     migratedCount += 1
-    console.log(`Card ${card.cardHash} migrated.`)
   }
 
   console.log(`\n${migratedCount} card(s) migrated!`)
@@ -200,9 +200,9 @@ const migrateSets = async () => {
 
   let migratedCount = 0
   for (const set of sets) {
+    console.log(`Migrating set ${set.id}...`)
     await createDrizzleSet(set)
     migratedCount += 1
-    console.log(`Set ${set.id} migrated.`)
   }
 
   console.log(`\n${migratedCount} set(s) migrated!`)
@@ -215,9 +215,9 @@ const migrateBulkWithdraws = async () => {
 
   let migratedCount = 0
   for (const bulkWithdraw of bulkWithdraws) {
+    console.log(`Migrating bulk withdraw ${bulkWithdraw.id}...`)
     await createDrizzleBulkWithdraw(bulkWithdraw)
     migratedCount += 1
-    console.log(`Bulk withdraw ${bulkWithdraw.id} migrated.`)
   }
 
   console.log(`\n${migratedCount} bulk withdraw(s) migrated!`)
