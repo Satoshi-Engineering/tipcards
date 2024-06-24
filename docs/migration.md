@@ -12,10 +12,12 @@
 * fund a card (doesnt matter how) + withdraw it
 
 #### auth
+##### user A
 * log in with user A
 * set account name, display name and email
 * log out
 
+##### user B
 * log in with user B
 * set account name, display name and email
 * add coinfinity logo to available images

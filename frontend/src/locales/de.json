@@ -159,7 +159,8 @@
     },
     "resetInvoice": "Set-Invoice zurücksetzen",
     "resetDisabledTooltip": "Dieses Set wurde bereits aufgeladen",
-    "backToSet": "Zurück zum Set"
+    "backToSet": "Zurück zum Set",
+    "invoiceExpired": "Die Rechnung für diess Set ist bereits abgelaufen. Setze die Set-Invoice zurück um fortzufahren."
   },
   "index": {
     "buttonLogin": "Einloggen mit LNURL-Auth",
