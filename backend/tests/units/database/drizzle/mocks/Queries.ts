@@ -4,7 +4,7 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   User, Profile,
-  AllowedRefreshTokens, 
+  AllowedRefreshTokens,
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
@@ -174,7 +174,14 @@ export default jest.fn().mockImplementation(() => ({
   getAllAllowedRefreshTokensForUserId: async (userId: User['id']): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokensByHash)
     .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId),
 
-  insertCards: jest.fn(async (...cards: Card[]): Promise<void> => addCards(...cards)),
+  insertCards: jest.fn(async (...cards: Card[]): Promise<void> => {
+    cards.forEach((card) => {
+      if (cardsByHash[card.hash] != null) {
+        throw new Error(`Card with hash ${card.hash} already exists`)
+      }
+    })
+    addCards(...cards)
+  }),
 
   insertCardVersions: jest.fn(async (...cardVersions: CardVersion[]): Promise<void> => addCardVersions(...cardVersions)),
 
@@ -297,5 +304,17 @@ export default jest.fn().mockImplementation(() => ({
 
   deleteAllAllowedRefreshTokensForUserId: jest.fn(async (userId: User['id']): Promise<void> => {
     removeAllowedRefreshTokensForUserId(userId)
+  }),
+
+  getCardByHash: jest.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
+
+  setCardLock: jest.fn(async (hash: Card['hash'], locked: string): Promise<void> => {
+    if (cardsByHash[hash] == null) {
+      throw new Error(`Card with ${hash} does not exist`)
+    }
+    if (cardsByHash[hash].locked != null) {
+      throw new Error(`Card with hash ${hash} already locked`)
+    }
+    cardsByHash[hash].locked = locked
   }),
 }))
