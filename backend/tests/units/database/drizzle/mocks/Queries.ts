@@ -41,6 +41,14 @@ import {
   removeAllowedRefreshTokensForUserId,
 } from './database'
 
+const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
+  const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
+  if (cards.length === 0) {
+    return null
+  }
+  return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
+}
+
 export default jest.fn().mockImplementation(() => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
 
@@ -52,13 +60,7 @@ export default jest.fn().mockImplementation(() => ({
 
   getAllCardsForSetBySetId: async (setId: Set['id']): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === setId),
 
-  getLatestCardVersion: async (cardHash: Card['hash']): Promise<CardVersion | null> => {
-    const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)
-    if (cards.length === 0) {
-      return null
-    }
-    return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
-  },
+  getLatestCardVersion,
 
   getLnurlPFundingCardVersion: async (cardVersion: CardVersion): Promise<LnurlP | null> => {
     if (cardVersion.lnurlP == null || lnurlPsByLnbitsId[cardVersion.lnurlP] == null) {
@@ -116,6 +118,14 @@ export default jest.fn().mockImplementation(() => ({
 
   getLnurlWByBulkWithdrawId: async (bulkWithdrawId: LnurlW['bulkWithdrawId']): Promise<LnurlW | null> => {
     return Object.values(lnurlWsByLnbitsId).find((lnurlW) => lnurlW.bulkWithdrawId === bulkWithdrawId) || null
+  },
+
+  getLnurlWByCardHash: async (cardHash: Card['hash']): Promise<LnurlW | null> => {
+    const cardVersion = await getLatestCardVersion(cardHash)
+    if (cardVersion?.lnurlW == null) {
+      return null
+    }
+    return Object.values(lnurlWsByLnbitsId).find((lnurlW) => lnurlW.lnbitsId == cardVersion.lnurlW) || null
   },
 
   getAllLnurlWs: async (): Promise<LnurlW[]> => Object.values(lnurlWsByLnbitsId),

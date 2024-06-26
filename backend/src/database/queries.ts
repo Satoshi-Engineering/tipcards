@@ -31,9 +31,9 @@ const {
   getLandingPage,
   createBulkWithdraw,
   getBulkWithdrawById,
+  getBulkWithdrawByCardHash,
   updateBulkWithdraw,
   deleteBulkWithdraw,
-  getAllBulkWithdraws,
   getAllLandingPages,
 } = queries
 
@@ -61,8 +61,8 @@ export {
   getLandingPage,
   createBulkWithdraw,
   getBulkWithdrawById,
+  getBulkWithdrawByCardHash,
   updateBulkWithdraw,
   deleteBulkWithdraw,
-  getAllBulkWithdraws,
   getAllLandingPages,
 }

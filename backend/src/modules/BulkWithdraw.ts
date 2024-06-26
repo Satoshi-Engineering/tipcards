@@ -2,11 +2,10 @@ import type z from 'zod'
 
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import NotFoundError from '@backend/errors/NotFoundError'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
 import {
   createBulkWithdraw,
-  getAllBulkWithdraws, getBulkWithdrawById,
+  getBulkWithdrawById, getBulkWithdrawByCardHash,
   updateBulkWithdraw, deleteBulkWithdraw,
 } from '@backend/database/queries'
 import hashSha256 from '@backend/services/hashSha256'
@@ -38,7 +37,7 @@ export default class BulkWithdraw {
    * @throws unknown
    */
   static async fromCardHash(cardHash: CardHash) {
-    const bulkWithdrawRedis = await BulkWithdraw.getBulkWithdrawRedisFromCardHash(cardHash)
+    const bulkWithdrawRedis = await getBulkWithdrawByCardHash(cardHash)
     return await BulkWithdraw.fromBulkWithdrawRedis(bulkWithdrawRedis)
   }
 
@@ -75,19 +74,6 @@ export default class BulkWithdraw {
 
   async toTRpcResponse() {
     return await bulkWithdrawFromBulkWithdrawRedis(this.bulkWithdrawRedis)
-  }
-
-  /**
-   * @throws NotFoundError
-   * @throws unknown
-   */
-  private static async getBulkWithdrawRedisFromCardHash(cardHash: CardHash) {
-    const bulkWithdrawsRedis = await getAllBulkWithdraws()
-    const bulkWithdrawRedis = bulkWithdrawsRedis.find((bulkWithdraw) => bulkWithdraw.cards.includes(cardHash))
-    if (bulkWithdrawRedis == null) {
-      throw new NotFoundError(`No BulkWithdraw found for card ${cardHash}.`)
-    }
-    return bulkWithdrawRedis
   }
 
   public readonly cards: CardCollection

@@ -11,6 +11,7 @@ import { Set as ZodSet, type Set } from '@backend/database/redis/data/Set'
 import { User as ZodUser, type User } from '@backend/database/redis/data/User'
 import { Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image'
 import { LandingPage as ZodLandingPage, type LandingPage } from '@backend/database/redis/data/LandingPage'
+import { getAllBulkWithdraws } from '@backend/database/redis/queriesRedisOnly'
 import AlreadyExistsError from '@backend/errors/AlreadyExistsError'
 import NotFoundError from '@backend/errors/NotFoundError'
 import hashSha256 from '@backend/services/hashSha256'
@@ -340,6 +341,19 @@ export const getBulkWithdrawById = async (id: string): Promise<BulkWithdraw> => 
  * @throws NotFoundError
  * @throws unknown
  */
+export const getBulkWithdrawByCardHash = async (cardHash: string): Promise<BulkWithdraw> => {
+  const bulkWithdraws = await getAllBulkWithdraws()
+  const bulkWithdraw = bulkWithdraws.find((bulkWithdraw) => bulkWithdraw.cards.includes(cardHash))
+  if (bulkWithdraw == null) {
+    throw new NotFoundError(`No BulkWithdraw found for card ${cardHash}.`)
+  }
+  return bulkWithdraw
+}
+
+/**
+ * @throws NotFoundError
+ * @throws unknown
+ */
 export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
@@ -360,23 +374,6 @@ export const deleteBulkWithdraw = async (bulkWithdraw: BulkWithdraw): Promise<vo
     throw new NotFoundError('BulkWithdraw doesn\'t exist.')
   }
   await client.del(`${REDIS_BASE_PATH}:bulkWithdrawById:${bulkWithdraw.id}:data`)
-}
-
-/**
- * @throws unknown
- */
-export const getAllBulkWithdraws = async (): Promise<BulkWithdraw[]> => {
-  const client = await getClient()
-  const bulkWithdraws: BulkWithdraw[] = []
-  for await (
-    const key of client.scanIterator({
-      MATCH: `${REDIS_BASE_PATH}:bulkWithdrawById:*:data`,
-    })
-  ) {
-    const bulkWithdraw = await client.json.get(key)
-    bulkWithdraws.push(ZodBulkWithdraw.parse(bulkWithdraw))
-  }
-  return bulkWithdraws
 }
 
 /**

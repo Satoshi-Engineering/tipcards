@@ -151,6 +151,15 @@ export const getBulkWithdrawById = async (bulkWithdrawId: string): Promise<BulkW
   return bulkWithdrawRedis
 })
 
+export const getBulkWithdrawByCardHash = async (cardHash: string): Promise<BulkWithdrawRedis> => asTransaction(async (queries) => {
+  const lnurlW = await queries.getLnurlWByCardHash(cardHash)
+  if (lnurlW == null) {
+    throw new NotFoundError('BulkWithdraw doesn\'t exist.')
+  }
+  const bulkWithdrawRedis = getRedisBulkWithdrawForDrizzleLnurlW(queries, lnurlW)
+  return bulkWithdrawRedis
+})
+
 export const updateBulkWithdraw = async (bulkWithdraw: BulkWithdrawRedis): Promise<void> => asTransaction(async (queries) => {
   const lnurlW = getDrizzleLnurlWFromRedisBulkWithdraw(bulkWithdraw)
   await queries.insertOrUpdateLnurlW(lnurlW)
@@ -176,16 +185,6 @@ const unlinkLatestCardVersionFromLnurlW = async (queries: Queries, cardHash: Car
     lnurlW: null,
   })
 }
-
-export const getAllBulkWithdraws = async (): Promise<BulkWithdrawRedis[]> => asTransaction(async (queries) => {
-  const bulkWithdrawLnurlWs = await queries.getAllLnurlWsWithBulkWithdrawId()
-  const bulkWithdraws = await Promise.all(
-    bulkWithdrawLnurlWs.map(
-      async ({ bulkWithdrawId }) => await getBulkWithdrawById(bulkWithdrawId as string),
-    ),
-  )
-  return bulkWithdraws
-})
 
 export const getLandingPage = async (landingPageId: string): Promise<LandingPageRedis | null> => asTransaction(async (queries) => {
   const landingPageDrizzle = await queries.getLandingPage(landingPageId)

@@ -195,6 +195,21 @@ export default class Queries {
   }
 
   /** @throws */
+  async getLnurlWByCardHash(cardHash: Card['hash']): Promise<LnurlW | null> {
+    const latestCardVersion = await this.getLatestCardVersion(cardHash)
+    if (latestCardVersion?.lnurlW == null) {
+      return null
+    }
+    const result = await this.transaction.select()
+      .from(LnurlW)
+      .where(eq(LnurlW.lnbitsId, latestCardVersion.lnurlW))
+    if (result.length === 0) {
+      return null
+    }
+    return result[0]
+  }
+
+  /** @throws */
   async getAllLnurlWs(): Promise<LnurlW[]> {
     const result = await this.transaction.select()
       .from(LnurlW)
