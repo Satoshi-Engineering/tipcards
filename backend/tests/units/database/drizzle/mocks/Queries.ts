@@ -318,13 +318,26 @@ export default jest.fn().mockImplementation(() => ({
 
   getCardByHash: jest.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
 
-  setCardLock: jest.fn(async (hash: Card['hash'], locked: string): Promise<void> => {
+  setCardLock: jest.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
     if (cardsByHash[hash] == null) {
       throw new Error(`Card with ${hash} does not exist`)
     }
     if (cardsByHash[hash].locked != null) {
       throw new Error(`Card with hash ${hash} already locked`)
     }
-    cardsByHash[hash].locked = locked
+    cardsByHash[hash].locked = lockValue
+  }),
+
+  releaseCardLock: jest.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
+    if (cardsByHash[hash] == null) {
+      throw new Error(`Card with ${hash} does not exist`)
+    }
+    if (cardsByHash[hash].locked == null) {
+      throw new Error(`Card with hash ${hash} is not locked`)
+    }
+    if (cardsByHash[hash].locked !== lockValue) {
+      throw new Error(`Card with hash ${hash} was locked with different lockValue: Card lock: ${cardsByHash[hash].locked}, lockValue: ${lockValue}`)
+    }
+    cardsByHash[hash].locked = null
   }),
 }))

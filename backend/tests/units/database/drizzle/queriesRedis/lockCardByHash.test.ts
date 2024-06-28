@@ -2,7 +2,7 @@ import '../../../mocks/process.env'
 import '../mocks/client'
 import { lockCardByHash } from '@backend/database/drizzle/queriesRedis'
 import { createCard } from '../../../../drizzleData'
-import {addCards} from '../mocks/database'
+import { addCards } from '../mocks/database'
 
 describe('lockCardByHash', () => {
   it('should lock card by hash', async () => {
