@@ -108,6 +108,7 @@ your lightning apps will refuse to work because there is no ssl connection)
 * [Vue - Official](https://marketplace.visualstudio.com/items?itemName=vue.volar)
 * [PostCSS Language Support](https://marketplace.visualstudio.com/items?itemName=csstools.postcss)
 * [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+* [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
 ### Ngrok
 
@@ -116,11 +117,24 @@ Ngrok is used to expose you local environment to the web. This is needed to test
 1. Copy backend/.env.example into backend/.env
 2. Go to https://ngrok.com and create an account
 3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
-4. Run `npm run proxy` in the backend directory. This starts an express server that proxies all requests to your other services that we will start later.
-5. Run `npm run ngrok` in the backend directory. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
+
+#### Now you have two possibilities:
+
+Either use the `dev-tip-cards.sh` script:
+
+4. Run `./dev-tip-cards.sh` and after it finishes copy the displayed ngrok url to your browser.
+
+Or execute the following steps manually:
+
+4. Run `npm run backend-proxy`. This starts an express server that proxies all requests to your other services that we will start later.
+5. Run `npm run backend-ngrok`. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
 6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
 7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
-8. Run `npm run dev` in frontend/ and backend/ directories.
+8. Run `npm run backend-dev`
+9. Run `npm run frontend-dev`
+
+#### Please consider
+As LNURL-auth tokens are based on the domain of the website where they are used, you will not be able to login with the same user after stopping and restarting the ngrok proxy.
 
 ### Script
 
