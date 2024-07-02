@@ -37,7 +37,7 @@
       />
 
       <div v-else-if="bulkWithdrawPending">
-        {{ $t('bulkWithdraw.withdrawPending') }} 
+        {{ $t('bulkWithdraw.withdrawPending') }}
       </div>
 
       <BulkWithdrawExists

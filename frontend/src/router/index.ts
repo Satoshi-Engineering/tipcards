@@ -15,7 +15,7 @@ const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior: (to, from) => {
-    if (to.name === from.name) return {}
+    if (to.name === from.name) { return {} }
     return { top: 0 }
   },
   routes: [
@@ -65,7 +65,7 @@ const router = createRouter({
           component: PageSetFunding,
           meta: {
             title: () => i18n.global.t('setFunding.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) => 
+            backlink: (route: RouteLocationNormalizedLoaded) =>
               router.resolve({
                 name: 'cards',
                 params: {
@@ -106,7 +106,7 @@ const router = createRouter({
           component: PageBulkWithdraw,
           meta: {
             title: () => i18n.global.t('bulkWithdraw.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) => 
+            backlink: (route: RouteLocationNormalizedLoaded) =>
               router.resolve({
                 name: 'cards',
                 params: {

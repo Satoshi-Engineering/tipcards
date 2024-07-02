@@ -40,7 +40,7 @@ function writeEnumFiles() {
 
 function writeSchemaFiles(tableName = '') {
   workingSchema.tables.forEach(table => {
-    if (tableName !== '' && table.name !== tableName) return
+    if (tableName !== '' && table.name !== tableName) { return }
     console.log(`Creating Table: ${table.name}`)
     writeSchemaFile(table)
   })

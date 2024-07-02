@@ -21,7 +21,7 @@ export default async ({ width, height, svg }: {
     canvas.height = height
     ctx = canvas.getContext('2d')
   }
-  if (canvas == null || ctx == null) { 
+  if (canvas == null || ctx == null) {
     console.error('Browser does not support canvas')
     return
   }

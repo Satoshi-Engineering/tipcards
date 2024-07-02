@@ -438,7 +438,7 @@ export default class Queries {
   /** @throws */
   async deleteCardVersion(cardVersion: CardVersion): Promise<void> {
     await this.transaction.delete(CardVersion)
-    .where(eq(CardVersion.id, cardVersion.id))
+      .where(eq(CardVersion.id, cardVersion.id))
   }
 
   /** @throws */

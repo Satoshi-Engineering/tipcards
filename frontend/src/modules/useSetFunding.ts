@@ -47,7 +47,7 @@ export default () => {
       // there is already a (not paid) set-funding invoice, allow the user to view it
       return false
     }
-  
+
     // there are cards with data, by design no set-funding is allowed
     return cards.filter(({ status }) => status !== 'unfunded').length !== 0
   }

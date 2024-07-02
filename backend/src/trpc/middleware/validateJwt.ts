@@ -23,7 +23,7 @@ const mapErrorToTRpcError = (error: unknown) => {
  * validate access token.
  * if the token is valid, we make sure a user with the given foreign key exists in the application database.
  * if needed, a new user is created.
- * 
+ *
  * @throws TRPCError
  */
 export const validateJwt = validateAuthContext.unstable_pipe(async ({ ctx, next }) => {

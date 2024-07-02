@@ -39,7 +39,7 @@
             :disabled="resettingBulkWithdraw"
             @click="resetBulkWithdraw"
           >
-            {{ $t('bulkWithdraw.buttonReset') }} 
+            {{ $t('bulkWithdraw.buttonReset') }}
           </ButtonDefault>
         </div>
 
@@ -184,7 +184,7 @@
               {{ t('landing.sectionWallet.button') }}
             </ButtonDefault>
           </ParagraphDefault>
-          
+
           <ParagraphDefault>
             <I18nT keypath="landing.sectionWallet.other">
               <template #wallet0>
@@ -469,7 +469,7 @@ const showContent = computed<'isLockedByBulkWithdraw' | 'preview' | 'spendable' 
   if (cardHash.value == null) {
     return 'preview'
   }
-  
+
   if (withdrawPending.value) {
     return 'spendable'
   }
@@ -524,10 +524,10 @@ const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === '
 const setLandingPageViewed = (cardHash: string) => trpc.card.landingPageViewed.mutate({ hash: cardHash })
 
 const rewriteUrlToCardHash = (cardHash: string) => router.replace({
-    name: 'landing',
-    params: {
-      lang: route.params.lang,
-      cardHash,
-    },
-  })
+  name: 'landing',
+  params: {
+    lang: route.params.lang,
+    cardHash,
+  },
+})
 </script>

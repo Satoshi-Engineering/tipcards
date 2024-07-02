@@ -33,5 +33,5 @@ export const Card = z.object({
   isLockedByBulkWithdraw: z.boolean().default(false),
   used: z.number().nullable().default(null).describe('unix timestamp'),
 })
-  
+
 export type Card = z.infer<typeof Card>

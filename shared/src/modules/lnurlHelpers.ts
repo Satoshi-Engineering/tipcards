@@ -8,7 +8,7 @@ export const LNURL_RULES = {
 
 export const encodeLnurl = (unencoded: string) => {
   const words = bech32.toWords(Buffer.from(unencoded, 'utf8'))
-	return bech32.encode(LNURL_RULES.prefix, words, LNURL_RULES.limit)
+  return bech32.encode(LNURL_RULES.prefix, words, LNURL_RULES.limit)
 }
 
 export const decodeLnurl = (encoded: string) => {

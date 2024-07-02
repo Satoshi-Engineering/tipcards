@@ -44,21 +44,21 @@ const getExpectedCard = (cardHash: string, text: string, note: string, amount: n
 }
 
 const setExpectedCardToEmptyCardPre = (expectedObject: ExpectedCard, fundingInvoice: string) => {
-  if (expectedObject.data.invoice != null) expectedObject.data.invoice.payment_request = fundingInvoice
+  if (expectedObject.data.invoice != null) { expectedObject.data.invoice.payment_request = fundingInvoice }
 }
 
 const setExpectedCardToEmptyCardPost = (expectedObject: ExpectedCard, created: number, payment_hash: string) => {
-  if (expectedObject.data.invoice != null) expectedObject.data.invoice.created = created
-  if (expectedObject.data.invoice != null) expectedObject.data.invoice.payment_hash = payment_hash
+  if (expectedObject.data.invoice != null) { expectedObject.data.invoice.created = created }
+  if (expectedObject.data.invoice != null) { expectedObject.data.invoice.payment_hash = payment_hash }
 }
 
 const setExpectedCardToFundedCardPre = (expectedObject: ExpectedCard) => {
-  if (expectedObject.data.invoice != null) expectedObject.data.invoice.paid = expect.any(Number)
+  if (expectedObject.data.invoice != null) { expectedObject.data.invoice.paid = expect.any(Number) }
   expectedObject.data.lnbitsWithdrawId = expect.any(String)
 }
 
 const setExpectedCardToFundedCardPost = (expectedObject: ExpectedCard, paid: number, lnbitsWithdrawId: string) => {
-  if (expectedObject.data.invoice != null) expectedObject.data.invoice.paid = paid
+  if (expectedObject.data.invoice != null) { expectedObject.data.invoice.paid = paid }
   expectedObject.data.lnbitsWithdrawId = lnbitsWithdrawId
 }
 

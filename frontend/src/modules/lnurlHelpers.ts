@@ -7,7 +7,7 @@ export const encodeLnurl = (unencoded: string) => {
     prefix: 'lnurl',
     limit: 1023,
   }
-	return bech32.encode(rules.prefix, words, rules.limit)
+  return bech32.encode(rules.prefix, words, rules.limit)
 }
 
 export const decodeLnurl = (encoded: string) => {

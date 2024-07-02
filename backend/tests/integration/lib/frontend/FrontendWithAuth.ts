@@ -94,7 +94,7 @@ export default class FrontendWithAuth extends Frontend {
   }
 
   getRefreshHeader() {
-    if (this.refreshToken === '') return {}
+    if (this.refreshToken === '') { return {} }
 
     return {
       headers: {
@@ -104,7 +104,7 @@ export default class FrontendWithAuth extends Frontend {
   }
 
   getAccessHeader() {
-    if (this.accessToken === '') return {}
+    if (this.accessToken === '') { return {} }
 
     return {
       headers: {

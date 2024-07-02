@@ -5,7 +5,7 @@ export default (value: number, maximumFractionDigits: number, minimumFractionDig
     value = Math.ceil(value * Math.pow(10, maximumFractionDigits)) / Math.pow(10, maximumFractionDigits)
   }
   if (locale != null) {
-    return value.toLocaleString(locale, { maximumFractionDigits, minimumFractionDigits })    
+    return value.toLocaleString(locale, { maximumFractionDigits, minimumFractionDigits })
   }
   return i18n.global.n(value, { maximumFractionDigits, minimumFractionDigits })
 }
@@ -13,6 +13,6 @@ export default (value: number, maximumFractionDigits: number, minimumFractionDig
 const countDecimals = (value: number) => {
   if (Math.floor(value) === value) {
     return 0
-  } 
+  }
   return value.toString().split('.')[1].length
 }

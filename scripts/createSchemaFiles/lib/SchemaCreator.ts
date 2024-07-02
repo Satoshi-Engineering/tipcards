@@ -38,10 +38,10 @@ export class SchemaCreator {
     } else {
       line += `${translateImportType(field.type.type_name)}('${field.name}'${config})`
     }
-    if (field.pk === true) line += '.primaryKey()'
-    if (field.unique === true) line += '.unique()'
-    if (field.not_null === undefined || field.not_null === true) line += '.notNull()'
-    if (field.dbdefault !== undefined) line += getDefault(field.dbdefault)
+    if (field.pk === true) { line += '.primaryKey()' }
+    if (field.unique === true) { line += '.unique()' }
+    if (field.not_null === undefined || field.not_null === true) { line += '.notNull()' }
+    if (field.dbdefault !== undefined) { line += getDefault(field.dbdefault) }
     line += getReferences(this.schema, tableName, field.name)
 
     return line

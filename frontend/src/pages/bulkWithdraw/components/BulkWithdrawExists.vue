@@ -8,7 +8,7 @@
       :disabled="restarting"
       @click="$emit('restart')"
     >
-      {{ $t('bulkWithdraw.buttonRestart') }} 
+      {{ $t('bulkWithdraw.buttonRestart') }}
     </ButtonWithTooltip>
   </div>
 </template>

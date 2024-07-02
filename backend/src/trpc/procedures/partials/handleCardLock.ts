@@ -61,7 +61,7 @@ export const handleCardLockForBulkWithdrawByCardHash = publicProcedure
     }
   })
 
-  export const handleCardLockForSet = publicProcedure
+export const handleCardLockForSet = publicProcedure
   .input(SetId)
   .use(async ({ input, next }) => {
     const cards = await CardCollection.fromSetId(input.id)

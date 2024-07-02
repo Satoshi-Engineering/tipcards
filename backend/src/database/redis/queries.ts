@@ -72,7 +72,7 @@ export const updateCard = async (card: Card): Promise<void> => {
   const client = await getClient()
   const exists = await client.exists(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`)
   if (!exists) {
-    throw new Error(`Unable to update card ${card.cardHash}. It doesn't exist in redis.`) 
+    throw new Error(`Unable to update card ${card.cardHash}. It doesn't exist in redis.`)
   }
   await client.json.set(`${REDIS_BASE_PATH}:cardsByHash:${card.cardHash}:data`, '$', card)
 }
@@ -384,9 +384,9 @@ export const getAllLandingPages = async (): Promise<LandingPage[]> => {
   const landingPages: LandingPage[] = []
   for await (
     const key of client.scanIterator({
-    MATCH: `${REDIS_BASE_PATH}:landingPagesById:*:data`,
-  })
-    ) {
+      MATCH: `${REDIS_BASE_PATH}:landingPagesById:*:data`,
+    })
+  ) {
     const landingPageResult = await client.json.get(key)
     landingPages.push(ZodLandingPage.parse(landingPageResult))
   }

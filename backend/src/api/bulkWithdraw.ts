@@ -1,4 +1,4 @@
-import { Router, type Request, type Response} from 'express'
+import { Router, type Request, type Response } from 'express'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
 

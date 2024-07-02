@@ -97,7 +97,7 @@ export default () => {
     }).href
     return `${TIPCARDS_ORIGIN}${routeHref}`
   }
-  
+
   const getLandingPage = (landingPageId?: LandingPageId): LandingPage | undefined => {
     if (landingPagesById.value == null || landingPageId == null) {
       return undefined

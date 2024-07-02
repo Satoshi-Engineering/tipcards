@@ -25,7 +25,7 @@
         :disabled="resetting"
         @click="$emit('reset')"
       >
-        {{ $t('bulkWithdraw.buttonReset') }} 
+        {{ $t('bulkWithdraw.buttonReset') }}
       </ButtonWithTooltip>
     </div>
   </div>

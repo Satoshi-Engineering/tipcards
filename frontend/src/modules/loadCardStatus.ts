@@ -140,7 +140,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprec
     createdDate = card.setFunding.created
     fundedDate = card.setFunding.paid != null ? card.setFunding.paid : undefined
   }
-  
+
   if (card.used != null) {
     return {
       status: 'used',
@@ -159,7 +159,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprec
       createdDate,
       fundedDate,
       card,
-    }  
+    }
   }
   if (card.invoice != null && card.invoice.paid == null) {
     return {

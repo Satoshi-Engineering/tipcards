@@ -121,7 +121,7 @@ const getNewDrizzleInvoicesForRedisLnurlP = (
 }
 
 const getDrizzleInvoicesToDeleteFromRedisLnurlP = async (
-  queries: Queries, 
+  queries: Queries,
   lnurlPRedis: CardRedis['lnurlp'],
   cardVersion: CardVersion,
 ): Promise<DataObjects> => {

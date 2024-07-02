@@ -76,7 +76,7 @@ export default () => {
     }
   }
 
-  const shouldWeGoBackInHistory = computed(() => 
+  const shouldWeGoBackInHistory = computed(() =>
     canWeGoBackInHistory.value
     && (
       !routeDefinesBackTarget.value

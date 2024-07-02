@@ -105,7 +105,7 @@
               :tooltip="funded ? t('setFunding.resetDisabledTooltip') : undefined"
               @click="resetInvoice"
             >
-              {{ t('setFunding.resetInvoice') }} 
+              {{ t('setFunding.resetInvoice') }}
             </ButtonWithTooltip>
           </div>
         </div>
@@ -302,7 +302,7 @@ const createInvoice = async () => {
     console.error(error)
   }
   creatingInvoice.value = false
-  
+
   if (invoice.value == null) {
     userErrorMessage.value = 'Unable to create funding invoice. Please try again later.'
   }

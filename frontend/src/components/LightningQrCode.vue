@@ -90,11 +90,11 @@ const props = defineProps({
 const { t } = useI18n()
 
 const qrCodeSvg = computed<string>(() => props.value != null ? new QRCode({
-    content: props.value,
-    container: 'svg-viewbox',
-    join: true,
-    padding: 0,
-  }).svg() : '')
+  content: props.value,
+  container: 'svg-viewbox',
+  join: true,
+  padding: 0,
+}).svg() : '')
 
 const type = computed(() => props.value.toLowerCase().startsWith('lnurl') ? 'lnurl' : 'invoice')
 

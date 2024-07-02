@@ -20,7 +20,7 @@ const initApiAuthInterceptors = () => {
     if (config.url == null || config.url.indexOf(BACKEND_API_ORIGIN) < 0) {
       return config
     }
-  
+
     let accessToken: string | null
     try {
       accessToken = await getValidAccessToken()
@@ -30,7 +30,7 @@ const initApiAuthInterceptors = () => {
     if (accessToken == null) {
       return config
     }
-  
+
     return {
       ...config,
       headers: {
@@ -39,7 +39,7 @@ const initApiAuthInterceptors = () => {
       },
     } as InternalAxiosRequestConfig<unknown>
   })
-  
+
   // retry request on 401
   axios.interceptors.response.use(undefined, async (error) => {
     if (

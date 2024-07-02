@@ -8,7 +8,7 @@
       fill="none"
       stroke="#22AE73"
       stroke-width="6"
-    > 
+    >
       <circle
         v-if="pending"
         class="pending"
@@ -40,8 +40,8 @@
         stroke-width="10"
         points="43.5,77.8 63.7,97.9 112.2,49.4"
         style="stroke-dasharray:100px, 100px; stroke-dashoffset: 200px;"
-      />   
-    </g> 
+      />
+    </g>
   </svg>
 </template>
 
@@ -68,7 +68,7 @@ defineProps({
 
 @keyframes checkmark-circle {
     0% {
-        stroke-dashoffset: 466px 
+        stroke-dashoffset: 466px
     }
 
     100% {
@@ -102,7 +102,7 @@ defineProps({
     }
 }
 
-@keyframes colored-circle { 
+@keyframes colored-circle {
     0% {
         opacity:0
     }

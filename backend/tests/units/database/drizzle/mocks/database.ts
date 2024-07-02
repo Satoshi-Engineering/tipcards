@@ -4,7 +4,7 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   User, Profile,
-  AllowedRefreshTokens, 
+  AllowedRefreshTokens,
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,

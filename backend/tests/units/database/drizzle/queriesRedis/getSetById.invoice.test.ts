@@ -34,9 +34,9 @@ describe('getSetById', () => {
       settings: null,
       created: expect.any(Number),
       date: expect.any(Number),
-    
+
       userId: null,
-    
+
       text: cardVersion1.textForWithdraw,
       note: expect.any(String),
       invoice: expect.objectContaining({

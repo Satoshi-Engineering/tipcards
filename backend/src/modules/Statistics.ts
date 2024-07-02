@@ -48,9 +48,9 @@ export default class Statistics {
 
     const paymentsFromLnbits = await Statistics.loadPaymentsFromLnbits()
     const payments = [
-        ...paymentsToPrepend,
-        ...paymentsFromLnbits,
-      ]
+      ...paymentsToPrepend,
+      ...paymentsFromLnbits,
+    ]
       .filter(
         ({ payment_hash }) => !paymentHashesToExclude.includes(payment_hash),
       )

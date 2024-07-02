@@ -28,7 +28,7 @@ export const startup = async () => {
 
 const startupApplication = async () => {
   console.info(`${APP_NAME} starting`)
-  
+
   await initDatabase()
   console.info(' - Database connected')
 

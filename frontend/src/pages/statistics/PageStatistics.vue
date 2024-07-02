@@ -26,7 +26,7 @@
           :bar-chart-mode="barChartMode"
           @set-bar-chart-mode="barChartMode = $event"
         />
-        
+
         <HeadlineDefault level="h2">
           Daily
         </HeadlineDefault>
@@ -86,7 +86,7 @@ const loadStats = async () => {
     return
   } finally {
     fetching.value = false
-  } 
+  }
 }
 
 watchEffect(() => {

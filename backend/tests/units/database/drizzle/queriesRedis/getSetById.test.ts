@@ -24,9 +24,9 @@ describe('getSetById', () => {
       settings: null,
       created: expect.any(Number),
       date: expect.any(Number),
-    
+
       userId: null,
-    
+
       text: expect.any(String),
       note: expect.any(String),
       invoice: null,
@@ -52,9 +52,9 @@ describe('getSetById', () => {
       }),
       created: expect.any(Number),
       date: expect.any(Number),
-    
+
       userId: null,
-    
+
       text: expect.any(String),
       note: expect.any(String),
       invoice: null,
@@ -84,9 +84,9 @@ describe('getSetById', () => {
       }),
       created: expect.any(Number),
       date: expect.any(Number),
-    
+
       userId: user.id,
-    
+
       text: expect.any(String),
       note: expect.any(String),
       invoice: null,

@@ -335,7 +335,7 @@
             <div class="hidden group-last:block [inset-inline-start:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
 
             <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />      
+            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />
             <div
               v-if="card.urlLandingWithLnurl != ''"
               class="absolute w-full h-full"
@@ -621,12 +621,12 @@ const deleteCardsSet = async () => {
 
 const currentSetUrl = ref<string>(document.location.href)
 const currentSetUrlQrCode = computed(() => new QRCode({
-    content: currentSetUrl.value,
-    padding: 0,
-    join: true,
-    xmlDeclaration: false,
-    container: 'svg-viewbox',
-  }).svg(),
+  content: currentSetUrl.value,
+  padding: 0,
+  join: true,
+  xmlDeclaration: false,
+  container: 'svg-viewbox',
+}).svg(),
 )
 
 watchEffect(() => {
@@ -745,14 +745,14 @@ onBeforeMount(() => {
   }
 })
 
-const getQrCodeForUrl = (url: string) => 
+const getQrCodeForUrl = (url: string) =>
   new QRCode({
-        content: url,
-        padding: 0,
-        join: true,
-        xmlDeclaration: false,
-        container: 'none',
-      }).svg()
+    content: url,
+    padding: 0,
+    join: true,
+    xmlDeclaration: false,
+    container: 'none',
+  }).svg()
 
 const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)

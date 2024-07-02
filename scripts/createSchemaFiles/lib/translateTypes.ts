@@ -9,21 +9,21 @@ export function parseEnums(schema: DBMLSchema) {
 }
 
 export function getDefault(dbdefault: {type:string, value:string}) {
-  if (dbdefault.type === 'boolean' && dbdefault.value === 'null') return ''
-  if (dbdefault.type === 'boolean') return `.default(${dbdefault.value})`
+  if (dbdefault.type === 'boolean' && dbdefault.value === 'null') { return '' }
+  if (dbdefault.type === 'boolean') { return `.default(${dbdefault.value})` }
 
   throw new Error(`Default value for type:${dbdefault.type} Not Implemented!`)
 }
 
 export function translateImportType(type: string) {
-  if (type === 'text') return 'text'
-  if (type === 'DateTime') return 'timestamp'
-  if (type === 'integer') return 'integer'
-  if (type === 'boolean') return 'boolean'
-  if (type === 'json') return 'json'
+  if (type === 'text') { return 'text' }
+  if (type === 'DateTime') { return 'timestamp' }
+  if (type === 'integer') { return 'integer' }
+  if (type === 'boolean') { return 'boolean' }
+  if (type === 'json') { return 'json' }
 
-  if (type.startsWith('varchar')) return 'varchar'
-  if (type in enums) return 'enum'
+  if (type.startsWith('varchar')) { return 'varchar' }
+  if (type in enums) { return 'enum' }
 
   throw new Error(`Type ${type} not translated`)
 }
@@ -43,7 +43,7 @@ export function getEnumValueDefinitions(enumName: string): { name:string, note:s
 export function createConfigForType(type: string) {
   if (type.startsWith('varchar')) {
     const match = type.match(/(?<=\().+?(?=\))/)
-    if (match == null || match.length == 0) throw Error('Searching for the number in "varchar(XX)", but didn\'t found it')
+    if (match == null || match.length == 0) { throw Error('Searching for the number in "varchar(XX)", but didn\'t found it') }
     return `, { length: ${match[0]} }`
   }
   if (type === 'DateTime') {

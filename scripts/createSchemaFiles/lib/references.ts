@@ -20,8 +20,8 @@ export function getReferences(schema: DBMLSchema, tableName: string, fieldName: 
     }
   })
 
-  if (oneToManyEndpoint.length !== 0) return `.references(() => ${translateDrizzleObjectName(oneToManyEndpoint[0].tableName)}.${oneToManyEndpoint[0].fieldNames[0]})`
-  if (oneToOneEndpoint.length !== 0) return `.references(() => ${translateDrizzleObjectName(oneToOneEndpoint[0].tableName)}.${oneToOneEndpoint[0].fieldNames[0]}).unique()`
+  if (oneToManyEndpoint.length !== 0) { return `.references(() => ${translateDrizzleObjectName(oneToManyEndpoint[0].tableName)}.${oneToManyEndpoint[0].fieldNames[0]})` }
+  if (oneToOneEndpoint.length !== 0) { return `.references(() => ${translateDrizzleObjectName(oneToOneEndpoint[0].tableName)}.${oneToOneEndpoint[0].fieldNames[0]}).unique()` }
 
   return ''
 }

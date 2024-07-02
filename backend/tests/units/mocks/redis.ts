@@ -12,13 +12,13 @@ const cardsByHash: Record<string, Card> = {}
 const bulkWithdrawsById: Record<string, BulkWithdraw> = {}
 
 export const addSets = (...sets: Set[]) => {
-  addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set})))
+  addItemsToTable(setsById, sets.map((set) => ({ key: set.id, item: set })))
 }
 export const addCards = (...cards: Card[]) => {
-  addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.cardHash, item: card})))
+  addItemsToTable(cardsByHash, cards.map((card) => ({ key: card.cardHash, item: card })))
 }
 export const addBulkWithdraws = (...bulkWithdraws: BulkWithdraw[]) => {
-  addItemsToTable(bulkWithdrawsById, bulkWithdraws.map((bulkWithdraw) => ({ key: bulkWithdraw.id, item: bulkWithdraw})))
+  addItemsToTable(bulkWithdrawsById, bulkWithdraws.map((bulkWithdraw) => ({ key: bulkWithdraw.id, item: bulkWithdraw })))
 }
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {

@@ -77,7 +77,7 @@
               :tooltip="funded ? t('funding.resetDisabledTooltip') : undefined"
               @click="resetInvoice"
             >
-              {{ t('funding.resetInvoice') }} 
+              {{ t('funding.resetInvoice') }}
             </ButtonWithTooltip>
           </div>
         </div>
@@ -109,7 +109,7 @@
             </I18nT>
           </ParagraphDefault>
           <ParagraphDefault v-else-if="amount === 0">
-            {{ t('funding.shared.textEmpty') }} 
+            {{ t('funding.shared.textEmpty') }}
           </ParagraphDefault>
           <ParagraphDefault v-else>
             <I18nT keypath="funding.shared.textPartiallyFunded">
@@ -152,7 +152,7 @@
               :tooltip="amount > 0 ? t('funding.resetDisabledTooltip') : undefined"
               @click="resetInvoice"
             >
-              {{ t('funding.resetInvoice') }} 
+              {{ t('funding.resetInvoice') }}
             </ButtonWithTooltip>
             <ButtonWithTooltip
               type="submit"
@@ -160,7 +160,7 @@
               :tooltip="amount === 0 ? t('funding.shared.finishDisabledTooltip') : undefined"
               @click="finishShared"
             >
-              {{ t('funding.shared.buttonFinish') }} 
+              {{ t('funding.shared.buttonFinish') }}
             </ButtonWithTooltip>
           </div>
         </div>
@@ -219,7 +219,7 @@
               :tooltip="funded ? t('funding.resetDisabledTooltip') : undefined"
               @click="resetInvoice"
             >
-              {{ t('funding.resetInvoice') }} 
+              {{ t('funding.resetInvoice') }}
             </ButtonWithTooltip>
           </div>
         </div>
@@ -291,7 +291,7 @@
         :disabled="creatingInvoice"
         @click.prevent="makeShared"
       >
-        {{ t('funding.shared.buttonMakeShared') }} 
+        {{ t('funding.shared.buttonMakeShared') }}
       </LinkDefault>
     </div>
   </DefaultLayout>
@@ -408,7 +408,7 @@ const createInvoice = async () => {
     console.error(error)
   }
   creatingInvoice.value = false
-  
+
   if (invoice.value == null) {
     userErrorMessage.value = 'Unable to create funding invoice. Please try again later.'
   }

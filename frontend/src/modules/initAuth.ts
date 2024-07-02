@@ -7,7 +7,7 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 const initAuth = async () => {
   const authStore = useAuthStore()
   const { getValidAccessToken } = authStore
-  
+
   const modalLoginStore = useModalLoginStore()
   const { showModalLogin, modalLoginUserMessage } = storeToRefs(modalLoginStore)
 

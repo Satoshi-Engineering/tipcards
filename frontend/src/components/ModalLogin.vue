@@ -9,7 +9,7 @@
     <ParagraphDefault v-else-if="!isLoggedIn" class="mb-3">
       {{ $t('auth.modalLogin.text') }}
     </ParagraphDefault>
-    
+
     <AnimatedLoadingWheel v-if="fetchingLogin" />
     <LightningQrCode
       v-else-if="lnurl != null"
