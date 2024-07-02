@@ -41,5 +41,11 @@ module.exports = {
       ignoreWhenEmpty: true,
       ignores: ['LinkDefault', ...INLINE_ELEMENTS],
     }],
+    curly: ['error', 'all'],
+    'brace-style': ['error', '1tbs', { allowSingleLine: true }],
+    'block-spacing': ['error', 'always'],
+    'object-curly-spacing': ['error', 'always'],
+    'no-trailing-spaces': ['error'],
+    'indent': ['error', 2, { SwitchCase: 1 }],
   },
 }
