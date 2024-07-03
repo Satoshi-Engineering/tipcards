@@ -5,6 +5,7 @@ import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 
 import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
+import LNURLw from './LNURLw'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -109,10 +110,8 @@ export default class LNBitsWallet {
     const amount = Math.floor(lnurlWithdrawRequest.maxWithdrawable / 1000)
     const invoiceData = await this.createInvoice(amount, memo)
 
-    const invoice = invoiceData?.payment_request
-
-    const parameterGlue = lnurlWithdrawRequest.callback.includes('?') ? '&' : '?'
-    const url = `${lnurlWithdrawRequest.callback}${parameterGlue}k1=${lnurlWithdrawRequest.k1}&pr=${invoice}`
+    const invoice = invoiceData?.payment_request || ''
+    const url = LNURLw.createCallbackUrl(lnurlWithdrawRequest, invoice)
 
     let lnurlWithdrawResponse: AxiosResponse | null = null
 
