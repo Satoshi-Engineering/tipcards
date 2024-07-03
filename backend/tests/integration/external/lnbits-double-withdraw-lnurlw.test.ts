@@ -39,7 +39,7 @@ describe('LnBits - double spend attack - urlw extension ', () => {
     const data = await attackingWallet.getWalletDetails()
 
     expect(data).not.toBeNull()
-    expect(data?.balance).toBeGreaterThanOrEqual(TEST_AMOUNT_IN_SATS * 1000)
+    expect(data?.balance).toBeGreaterThanOrEqual((TEST_AMOUNT_IN_SATS * 1.1) * 1000)
   })
 
   failEarly.it('should create a funded card', async () => {
