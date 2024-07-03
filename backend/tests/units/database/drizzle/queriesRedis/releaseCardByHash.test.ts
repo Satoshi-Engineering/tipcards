@@ -1,3 +1,4 @@
+import assert from 'assert'
 import '../../../mocks/process.env'
 import '../mocks/client'
 import { lockCardByHash, releaseCardByHash } from '@backend/database/drizzle/queriesRedis'
@@ -10,11 +11,9 @@ describe('releaseCardByHash', () => {
     addCards(card)
 
     const lockValue = await lockCardByHash(card.hash)
-    if (lockValue === null) {
-      expect(lockValue).not.toBeNull()
-      return
-    }
-    await releaseCardByHash(card.hash, lockValue)
+    assert(lockValue != null)
+
+    await expect(releaseCardByHash(card.hash, lockValue)).resolves.toBeUndefined()
   })
 
   it('should not release card, because the card does not exist', async () => {
@@ -33,10 +32,8 @@ describe('releaseCardByHash', () => {
     addCards(card)
 
     const lockValue = await lockCardByHash(card.hash)
-    if (lockValue === null) {
-      expect(lockValue).not.toBeNull()
-      return
-    }
+    assert(lockValue != null)
+
     await expect(releaseCardByHash(card.hash, `${lockValue}DIFFERENTLOCKVALUE`)).rejects.toThrow()
   })
 
@@ -45,10 +42,8 @@ describe('releaseCardByHash', () => {
     addCards(card)
 
     const lockValue = await lockCardByHash(card.hash)
-    if (lockValue === null) {
-      expect(lockValue).not.toBeNull()
-      return
-    }
+    assert(lockValue != null)
+
     await releaseCardByHash(card.hash, lockValue)
     await expect(releaseCardByHash(card.hash, lockValue)).rejects.toThrow()
   })
