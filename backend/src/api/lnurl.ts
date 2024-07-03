@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
 import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash } from '@backend/database/queries'
@@ -193,7 +193,7 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
   }
 
   try {
-    const response = await getLnurlResponse(decodeLnurl(lnurl))
+    const response = await getLnurlResponse(LNURL.decode(lnurl))
     res.json(response.data)
   } catch (error) {
     console.error(

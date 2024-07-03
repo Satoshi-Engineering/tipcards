@@ -6,7 +6,7 @@ import type z from 'zod'
 
 import { Type, type LandingPage } from '@shared/data/api/LandingPage'
 import type { Card } from '@shared/data/trpc/Card'
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { useAuthStore } from '@/stores/auth'
 import { TIPCARDS_ORIGIN, BACKEND_API_ORIGIN } from '@/constants'
@@ -119,7 +119,7 @@ export default () => {
     return path.href
   }
 
-  const cardDynamicLnurl = (cardHash: CardHash) => encodeLnurl(`${TIPCARDS_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
+  const cardDynamicLnurl = (cardHash: CardHash) => LNURL.encode(`${TIPCARDS_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 
   return {
     landingPages,

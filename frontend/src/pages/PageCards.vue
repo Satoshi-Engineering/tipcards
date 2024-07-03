@@ -496,7 +496,7 @@ import isEqual from 'lodash.isequal'
 
 import type { Set } from '@shared/data/api/Set'
 import type { Image as ImageMeta } from '@shared/data/api/Image'
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
 import SetFunding from '@/components/cardActions/SetFunding.vue'
@@ -757,7 +757,7 @@ const getQrCodeForUrl = (url: string) =>
 const generateNewCardSkeleton = async (index: number) => {
   const cardHash = await hashSha256(`${setId.value}/${index}`)
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`
-  const lnurlEncoded = encodeLnurl(lnurlDecoded)
+  const lnurlEncoded = LNURL.encode(lnurlDecoded)
   const urlLandingWithLnurl = getLandingPageUrlWithLnurl(cardHash, settings.landingPage || undefined)
   const urlLandingWithCardHash = getLandingPageUrlWithCardHash(cardHash, settings.landingPage || undefined)
   const urlFunding = router.resolve({

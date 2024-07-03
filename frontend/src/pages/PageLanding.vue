@@ -329,7 +329,7 @@ import { onMounted, ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
@@ -393,7 +393,7 @@ const cardHash = computed<string | null>(() => {
 
 const lnurl = computed<string | null>(() => {
   if (typeof route.params.cardHash === 'string' && route.params.cardHash.length > 0) {
-    return encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
+    return LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
   }
   if (typeof route.query.lightning === 'string' && route.query.lightning.length > 0) {
     return route.query.lightning

@@ -1,7 +1,7 @@
 import type z from 'zod'
 
 import { Card } from '@shared/data/trpc/Card'
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import type { Card as CardRedis } from '@backend/database/redis/data/Card'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
@@ -22,7 +22,7 @@ export const cardFromCardRedis = async (card: CardRedis) => Card.parse({
   textForWithdraw: card.text,
   noteForStatusPage: card.note,
 
-  lnurl: encodeLnurl(`${TIPCARDS_API_ORIGIN}/api/lnurl/${card.cardHash}`),
+  lnurl: LNURL.encode(`${TIPCARDS_API_ORIGIN}/api/lnurl/${card.cardHash}`),
   invoice: await mapInvoice(card),
   lnurlp: await mapLnurlp(card),
   amount: mapAmount(card),

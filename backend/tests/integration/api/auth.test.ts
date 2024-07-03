@@ -7,8 +7,8 @@ import hashSha256 from '@backend/services/hashSha256'
 import { ErrorCode } from '@shared/data/Errors'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import LNURLAuth from '../lib/lightning/LNURLAuth'
-import HDWallet from '../lib/lightning/HDWallet'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
+import HDWallet from '../lib/HDWallet/HDWallet'
 import { authData } from '../lib/apiData'
 import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
@@ -18,7 +18,10 @@ const failEarly = new FailEarly(it)
 const randomMnemonic = HDWallet.generateRandomMnemonic()
 const hdWallet = new HDWallet(randomMnemonic)
 const randomSigningKey = hdWallet.getNodeAtPath(0,0,0)
-const lnurlAuth = new LNURLAuth(randomSigningKey)
+const lnurlAuth = new LNURLAuth({
+  publicKeyAsHex: randomSigningKey.getPublicKeyAsHex(),
+  privateKeyAsHex: randomSigningKey.getPrivateKeyAsHex(),
+})
 const frontend = new FrontendSimulator(randomMnemonic)
 
 const accountName = `${hashSha256(randomUUID())} accountName`
@@ -39,9 +42,9 @@ describe('auth', () => {
   })
 
   failEarly.it('should login', async () => {
-    let response = await frontend.authCreate()
+    const createResponse = await frontend.authCreate()
 
-    expect(response.data).toEqual(expect.objectContaining({
+    expect(createResponse.data).toEqual(expect.objectContaining({
       status: 'success',
       data: {
         encoded: expect.any(String),
@@ -49,14 +52,14 @@ describe('auth', () => {
       },
     }))
 
-    response = await lnurlAuth.loginWithLNURLAuth(response.data.data.encoded)
-    expect(response.data).toEqual(expect.objectContaining({
+    const loginResponse = await lnurlAuth.loginWithLNURLAuth(createResponse.data.data.encoded)
+    expect(loginResponse.data).toEqual(expect.objectContaining({
       status: 'OK',
     }))
 
-    response = await frontend.authStatus()
+    const authStatusResponse = await frontend.authStatus()
 
-    expect(response.data).toEqual(expect.objectContaining(    {
+    expect(authStatusResponse.data).toEqual(expect.objectContaining(    {
       status: 'success',
       data: {
         accessToken: expect.any(String),

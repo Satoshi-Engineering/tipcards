@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet'

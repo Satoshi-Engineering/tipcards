@@ -3,9 +3,9 @@ import { io, Socket } from 'socket.io-client'
 
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
-import LNURLAuth from '../lightning/LNURLAuth'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import FrontendWithAuth from './FrontendWithAuth'
-import HDWallet from '../lightning/HDWallet'
+import HDWallet from '../HDWallet/HDWallet'
 import { API_ORIGIN } from '../constants'
 
 export default class FrontendSimulator extends FrontendWithAuth {
@@ -29,7 +29,10 @@ export default class FrontendSimulator extends FrontendWithAuth {
   }
 
   async login() {
-    const lnurlAuth = new LNURLAuth(this.signingKey)
+    const lnurlAuth = new LNURLAuth({
+      publicKeyAsHex: this.signingKey.getPublicKeyAsHex(),
+      privateKeyAsHex: this.signingKey.getPrivateKeyAsHex(),
+    })
     const response: AxiosResponse = await this.authCreate()
     await lnurlAuth.loginWithLNURLAuth(response.data.data.encoded)
     await this.authStatus()

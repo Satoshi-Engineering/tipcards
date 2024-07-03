@@ -6,9 +6,9 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import { cardData } from '../lib/apiData'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 import '../lib/initAxios'
-import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 import axios from 'axios'
-import LNURLw from '../lib/lightning/LNURLw'
+import LNURLw from '@shared/modules/LNURL/LNURLw'
 
 const TEST_AMOUNT_IN_SATS = 213
 const TEST_ATTEMPT_COUNT = 21

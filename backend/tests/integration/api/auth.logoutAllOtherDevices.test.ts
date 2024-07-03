@@ -5,7 +5,7 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 import { delay } from '@backend/services/timingUtils'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import HDWallet from '../lib/lightning/HDWallet'
+import HDWallet from '../lib/HDWallet/HDWallet'
 import { authData } from '../lib/apiData'
 import '../lib/initAxios'
 import FailEarly from '../../FailEarly'

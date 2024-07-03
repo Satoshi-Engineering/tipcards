@@ -1,56 +1,16 @@
-import crypto, { randomBytes } from 'crypto'
+import { randomBytes } from 'crypto'
+
 import * as bip39 from 'bip39'
 import * as bip32 from 'bip32'
 import * as base58 from 'bs58'
 import { BIP32Interface } from 'bip32/types/bip32'
 import * as ecc from 'tiny-secp256k1'
 
+import HDNode from './HDNode'
+
 const DEFAUT_HD_PATH = 'm/84\'/0\''
 
 const bip32api = bip32.BIP32Factory(ecc)
-
-export class HDNode {
-  private node
-
-  constructor(node: bip32.BIP32Interface) {
-    this.node = node
-  }
-
-  getPrivateKeyAsBytes(): Buffer {
-    if (this.node.privateKey == null) {
-      throw new Error('getPrivateKeyAsBytes() where privateKey == null --> Not Implemented')
-    }
-    return this.node.privateKey
-  }
-
-  getPrivateKeyAsHex() {
-    return this.getPrivateKeyAsBytes().toString('hex')
-  }
-
-  getPrivateKeyAsWIF() {
-    return this.node.toWIF()
-  }
-
-  getPublicKeyAsBytes() {
-    return this.node.publicKey
-  }
-
-  getPublicKeyAsHex() {
-    return this.node.publicKey.toString('hex')
-  }
-
-  sign(messageAsHex: string, outputFormat: 'hex' | 'base64') {
-    const messageAsBuffer = Buffer.from(messageAsHex, 'hex')
-    return this.node.sign(messageAsBuffer).toString(outputFormat)
-  }
-
-  verify(message: string, signature: string) {
-    const messageBuffer = Buffer.from(message)
-    const hash = crypto.createHash('sha256').update(messageBuffer).digest()
-    const signatureBuffer = Buffer.from(signature, 'base64')
-    return this.node.verify(hash, signatureBuffer)
-  }
-}
 
 export default class HDWallet {
   private bip32Node

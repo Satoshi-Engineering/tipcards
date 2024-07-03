@@ -3,15 +3,18 @@
 import axios from 'axios'
 import * as secp256k1 from 'secp256k1'
 
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { HDNode } from './HDWallet'
+export type SigningKey = {
+  privateKeyAsHex: string,
+  publicKeyAsHex: string,
+}
 
 export default class LNURLAuth {
   private k1
-  private signingKey
+  private signingKey: SigningKey
 
-  constructor(signingKey: HDNode) {
+  constructor(signingKey: SigningKey) {
     this.signingKey = signingKey
     this.k1 = ''
   }
@@ -19,14 +22,14 @@ export default class LNURLAuth {
   public async loginWithLNURLAuth(lnurlAuth: string) {
     const url = this.getValidLoginUrlFromLNURLAuth(lnurlAuth)
 
-    const signedK1 = LNURLAuth.sign(this.k1, this.signingKey.getPrivateKeyAsHex())
+    const signedK1 = LNURLAuth.sign(this.k1, this.signingKey.privateKeyAsHex)
     url.searchParams.append('sig', signedK1)
-    url.searchParams.append('key', this.signingKey.getPublicKeyAsHex())
+    url.searchParams.append('key', this.signingKey.publicKeyAsHex)
     return await axios.get(url.toString())
   }
 
   getValidLoginUrlFromLNURLAuth(lnurlAuth: string) {
-    const urlString = decodeLnurl(lnurlAuth)
+    const urlString = LNURL.decode(lnurlAuth)
     const url = new URL(urlString)
 
     if (url.searchParams.get('tag')?.toLowerCase() !== 'login') {

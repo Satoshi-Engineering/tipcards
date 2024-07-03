@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { LNURLPayRequest } from '@shared/data/LNURLPayRequest'
-import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
-import LNURLw from './LNURLw'
+import LNURLw from '@shared/modules/LNURL/LNURLw'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -80,7 +80,7 @@ export default class LNBitsWallet {
   }
 
   public async withdrawAllFromLnurlW(lnurl: string) {
-    const response = await axios.get(decodeLnurl(lnurl))
+    const response = await axios.get(LNURL.decode(lnurl))
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
     return await this.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
   }
@@ -92,7 +92,7 @@ export default class LNBitsWallet {
   }
 
   public async getPayRequestFromLnurl(lnurl: string) {
-    const { data } = await axios.get(decodeLnurl(lnurl))
+    const { data } = await axios.get(LNURL.decode(lnurl))
     return LNURLPayRequest.parse(data)
   }
 
@@ -128,7 +128,7 @@ export default class LNBitsWallet {
   }
 
   public async loginWithLNURLAuth(lnurlAuth: string) {
-    const url = decodeLnurl(lnurlAuth)
+    const url = LNURL.decode(lnurlAuth)
 
     let response: AxiosResponse
 

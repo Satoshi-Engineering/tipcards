@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { LNURLWithdrawRequest } from '@shared/data/LNURLWithdrawRequest'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 import { Card } from '@shared/data/api/Card'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'

@@ -5,17 +5,20 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import LNURLAuth from '../lib/lightning/LNURLAuth'
-import HDWallet from '../lib/lightning/HDWallet'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
+import HDWallet from '../lib/HDWallet/HDWallet'
 
 const failEarly = new FailEarly(it)
 
 
 const frontend = new FrontendSimulator()
 const randomSigningKey = HDWallet.generateRandomNode()
-const lnurlAuth = new LNURLAuth(randomSigningKey)
+const lnurlAuth = new LNURLAuth({
+  publicKeyAsHex: randomSigningKey.getPublicKeyAsHex(),
+  privateKeyAsHex: randomSigningKey.getPrivateKeyAsHex(),
+})
 
 afterAll(() => {
   frontend.deinitSocketConnection()

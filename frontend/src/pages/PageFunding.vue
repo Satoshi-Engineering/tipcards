@@ -304,7 +304,7 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
-import { encodeLnurl } from '@shared/modules/lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 
 import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -351,7 +351,7 @@ const usedDate = ref<number | undefined>()
 const viewed = ref(false)
 const setFunding = ref(false)
 
-const lnurl = computed(() => encodeLnurl(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
+const lnurl = computed(() => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
   const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))

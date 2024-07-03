@@ -3,7 +3,7 @@ import z from 'zod'
 
 import type { Card } from '@shared/data/api/Card'
 
-import { encodeLnurl, decodeLnurl } from '@/modules//lnurlHelpers'
+import LNURL from '@shared/modules/LNURL/LNURL'
 import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
 
 export const CardStatusEnum = z.enum([
@@ -78,7 +78,7 @@ export type CardStatusDeprecated = {
 export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatusDeprecated> => {
   let lnurlDecoded: URL
   try {
-    lnurlDecoded = new URL(decodeLnurl(lnurl))
+    lnurlDecoded = new URL(LNURL.decode(lnurl))
   } catch (error) {
     console.error(error)
     return {
@@ -200,7 +200,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprec
 
 export const getCardStatusForCard = (card: Card): CardStatus => {
   const lnurlDecoded = `${BACKEND_API_ORIGIN}/api/lnurl/${card.cardHash}`
-  const lnurl = encodeLnurl(lnurlDecoded)
+  const lnurl = LNURL.encode(lnurlDecoded)
 
   let status: CardStatusEnum = CardStatusEnum.enum.unfunded
   let amount: number | null = null

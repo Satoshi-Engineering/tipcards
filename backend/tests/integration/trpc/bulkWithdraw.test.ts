@@ -4,9 +4,8 @@ import { randomUUID } from 'crypto'
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
-import { decodeLnurl } from '@shared/modules/lnurlHelpers'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors'
-
+import LNURL from '@shared/modules/LNURL/LNURL'
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
 import { setRouter } from '@backend/trpc/router/set'
@@ -119,7 +118,7 @@ const createBulkWithdraw = async () => {
 }
 
 const checkIfLnurlwExistsInLnbits = async (bulkWithdraw: BulkWithdraw) => {
-  const { data } = await axios.get(decodeLnurl(bulkWithdraw.lnurl))
+  const { data } = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
   expect(data.minWithdrawable).toBe(AMOUNT_PER_CARD * 2 * 1000)
   expect(data.maxWithdrawable).toBe(AMOUNT_PER_CARD * 2 * 1000)
 }
@@ -157,7 +156,7 @@ const deleteBulkWithdraw = async () => {
 }
 
 const checkIfLnurlwIsRemoved = async (bulkWithdraw: BulkWithdraw) => {
-  await expect(() => axios.get(decodeLnurl(bulkWithdraw.lnurl))).rejects.toThrow(Error)
+  await expect(() => axios.get(LNURL.decode(bulkWithdraw.lnurl))).rejects.toThrow(Error)
 }
 
 const checkIfCardsAreReleased = async () => {
@@ -193,7 +192,7 @@ const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
 const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
   let caughtError: AxiosError | undefined
   try {
-    await axios.get(decodeLnurl(bulkWithdraw.lnurl))
+    await axios.get(LNURL.decode(bulkWithdraw.lnurl))
   } catch (error) {
     caughtError = error as AxiosError
   }
