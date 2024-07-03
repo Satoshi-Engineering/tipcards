@@ -1,8 +1,10 @@
+import assert from 'assert'
 import { createInterface } from 'readline'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import Database from '@backend/database/drizzle/Database'
+import { asTransaction } from '@backend/database/drizzle/client'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
 import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
@@ -169,7 +171,7 @@ const migrateUsers = async () => {
 
   let migratedCount = 0
   for (const user of users) {
-    console.log(`Migrating user ${user.id}...`)
+    console.log(`Migrating user ${user.id} ...`)
     await createDrizzleUser(user)
     migratedCount += 1
   }
@@ -184,7 +186,7 @@ const migrateCards = async () => {
 
   let migratedCount = 0
   for (const card of cards) {
-    console.log(`Migrating card ${card.cardHash}...`)
+    console.log(`Migrating card ${card.cardHash} ...`)
     await createDrizzleCard(card)
     await updateDrizzleCard(card)
     migratedCount += 1
@@ -200,7 +202,7 @@ const migrateSets = async () => {
 
   let migratedCount = 0
   for (const set of sets) {
-    console.log(`Migrating set ${set.id}...`)
+    console.log(`Migrating set ${set.id} ...`)
     await createDrizzleSet(set)
     migratedCount += 1
   }
@@ -215,7 +217,7 @@ const migrateBulkWithdraws = async () => {
 
   let migratedCount = 0
   for (const bulkWithdraw of bulkWithdraws) {
-    console.log(`Migrating bulk withdraw ${bulkWithdraw.id}...`)
+    console.log(`Migrating bulk withdraw ${bulkWithdraw.id} ...`)
     await createDrizzleBulkWithdraw(bulkWithdraw)
     migratedCount += 1
   }
@@ -248,6 +250,62 @@ const findUsersWithAvailableImagesAndLandingpages = async () => {
   console.log('\nChecking done.\n')
 }
 
+const fixRedisToDrizzleMigrationSetFundingBug = async () => {
+  await Database.init()
+  const cards = await getAllRedisCards()
+
+  console.log(`\nStarting migration for ${cards.length} cards.`)
+
+  let skippedCount = 0
+  let migratedCorrectlyCount = 0
+  let migratedCount = 0
+  let doubleSpentCards = 0
+  let doubleSpentAmount = 0
+  for (const card of cards) {
+    if (
+      card.lnbitsWithdrawId == null
+      || card.used == null
+      || card.isLockedByBulkWithdraw
+      || card.setFunding == null
+    ) {
+      skippedCount += 1
+      console.log(`Skipping not-used or bulk-withdrawn card ${card.cardHash} ...`)
+      continue
+    }
+
+    console.log(`Migrating card ${card.cardHash} ...`)
+    await asTransaction(async (queries) => {
+      const cardVersion = await queries.getLatestCardVersion(card.cardHash)
+      assert(cardVersion != null, `No card version for card ${card.cardHash} found!`)
+
+      if (cardVersion.lnurlW === card.lnbitsWithdrawId) {
+        migratedCorrectlyCount += 1
+        console.log(`Card ${card.cardHash} already migrated correctly.`)
+        return
+      }
+
+      if (cardVersion.lnurlW != null) {
+        const lnurlw = await queries.getLnurlWById(cardVersion.lnurlW)
+        if (lnurlw.withdrawn != null) {
+          doubleSpentCards += 1
+          doubleSpentAmount += card.setFunding?.amount || 0
+        }
+      }
+
+      cardVersion.lnurlW = card.lnbitsWithdrawId
+      await queries.updateCardVersion(cardVersion)
+      migratedCount += 1
+    })
+  }
+
+  console.log(`\n${skippedCount} card(s) skipped.`)
+  console.log(`\n${migratedCorrectlyCount} card(s) migrated correctly.`)
+  console.log(`\n${migratedCount} card(s) migrations fixed!`)
+  console.log(`\nCards used again: ${doubleSpentCards}`)
+  console.log(`\nSats lost due to bug: ${doubleSpentAmount}`)
+  await Database.closeConnectionIfExists()
+}
+
 const readlineInterface = createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -269,6 +327,7 @@ const run = async () => {
   console.log('4. Parse a single card in redis database with zod and print parsing error.')
   console.log('5. Migrate data from redis to drizzle.')
   console.log('6. Find and list users that have available Images and/or Landingpages.')
+  console.log('7. Fix redis->drizzle migration bug (used cards that were set funded lost the lnurlW)')
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
@@ -285,6 +344,8 @@ const run = async () => {
     await migrateRedisToDrizzle()
   } else if (answer === '6') {
     await findUsersWithAvailableImagesAndLandingpages()
+  } else if (answer === '7') {
+    await fixRedisToDrizzleMigrationSetFundingBug()
   } else {
     console.log('Unknown command.')
   }
