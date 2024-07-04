@@ -40,4 +40,5 @@ Add empty lines between these blocks.
 - after an if condition, always follow with an opening bracket: https://eslint.org/docs/latest/rules/curly use option "all"
 
 ### Using environments variables
-Do not import from process.env in application code. Instead always import them from constants.ts. Ideally the environment variables should already be validated and type checked in constants.ts
+- Do not import from process.env in application code. Instead always import them from constants.ts.
+- Ideally the environment variables should already be validated and type checked in constants.ts
