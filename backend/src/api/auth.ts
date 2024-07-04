@@ -20,6 +20,7 @@ import {
   LNURL_PORT,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUTH_ORIGIN,
+  LNURL_AUTH_DEBUG,
 } from '@backend/constants'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt'
@@ -66,7 +67,7 @@ const socketsByHash: Record<string, Socket> = {}
 const hashesBySocketId: Record<string, string> = {}
 export const initSocketIo = (server: http.Server) => {
   const io = new Server(server, {
-    cors: (process.env.LNURL_AUTH_DEBUG === '1') ? { origin: '*' } : corsOptions,
+    cors: LNURL_AUTH_DEBUG ? { origin: '*' } : corsOptions,
   })
   io.on('connection', (socket) => {
     socket.on('waitForLogin', async ({ hash }) => {

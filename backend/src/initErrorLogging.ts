@@ -1,6 +1,13 @@
 import TelegramSender from 'telegram-sender'
 import consoleHooks from 'console-hooks'
 
+import {
+  TELEGRAM_BOT_ID,
+  TELEGRAM_GROUP_ID_ERROR,
+  TELEGRAM_PREFIX,
+  TELEGRAM_CHAR_MAX,
+} from '@backend/constants'
+
 const initErrorLogging = () => {
   const telegramSender = initTelegramSender()
 
@@ -13,18 +20,18 @@ const initErrorLogging = () => {
 
 const initTelegramSender = () => {
   if (
-    typeof process.env.TELEGRAM_BOT_ID !== 'string'
-    || typeof process.env.TELEGRAM_GROUP_ID_ERROR !== 'string'
+    typeof TELEGRAM_BOT_ID !== 'string'
+    || typeof TELEGRAM_GROUP_ID_ERROR !== 'string'
   ) {
     console.warn('TELEGRAM_BOT_ID and TELEGRAM_GROUP_ID_ERROR are not set in .env\nWill not send error messages to Telegram.')
     return null
   }
 
   return new TelegramSender({
-    token: process.env.TELEGRAM_BOT_ID,
-    defaultChatId: process.env.TELEGRAM_GROUP_ID_ERROR,
-    messagePrefix: process.env.TELEGRAM_PREFIX,
-    messageMaxLength: Number(process.env.TELEGRAM_CHAR_MAX),
+    token: TELEGRAM_BOT_ID,
+    defaultChatId: TELEGRAM_GROUP_ID_ERROR,
+    messagePrefix: TELEGRAM_PREFIX,
+    messageMaxLength: TELEGRAM_CHAR_MAX,
   })
 }
 

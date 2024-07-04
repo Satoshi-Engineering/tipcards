@@ -39,6 +39,8 @@ if (typeof process.env.REDIS_URL === 'string' && process.env.REDIS_URL.length > 
   REDIS_URL = process.env.REDIS_URL
 }
 
+const REDIS_PASSPHRASE = process.env.REDIS_PASSPHRASE || ''
+
 let LNBITS_ORIGIN = 'https://legend.lnbits.com'
 if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.length > 0) {
   LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
@@ -59,6 +61,7 @@ if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WH
     })
   }
 }
+const CROSS_ORIGIN_RESOURCES = process.env.CROSS_ORIGIN_RESOURCES === '1'
 
 export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
@@ -94,6 +97,8 @@ if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AU
   }
 }
 
+const LNURL_AUTH_DEBUG = process.env.LNURL_AUTH_DEBUG === '1'
+
 /////
 // NGROK
 if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
@@ -108,6 +113,13 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
 // DATABASE
 const USE_DRIZZLE = process.env.USE_DRIZZLE === '1'
 
+////
+// ERROR NOTIFICATION
+const TELEGRAM_BOT_ID = process.env.TELEGRAM_BOT_ID
+const TELEGRAM_GROUP_ID_ERROR = process.env.TELEGRAM_GROUP_ID_ERROR
+const TELEGRAM_PREFIX =  process.env.TELEGRAM_PREFIX
+const TELEGRAM_CHAR_MAX = Number(process.env.TELEGRAM_CHAR_MAX) || 500
+
 export {
   APP_NAME,
   FAILED_STARTUPS_COUNTER_DIRECTORY,
@@ -118,14 +130,21 @@ export {
   NGROK_AUTH_TOKEN,
   REDIS_BASE_PATH,
   REDIS_URL,
+  REDIS_PASSPHRASE,
   LNBITS_ORIGIN,
   TIPCARDS_ORIGIN,
   TIPCARDS_API_ORIGIN,
   CORS_WHITELIST_EXTEND,
+  CROSS_ORIGIN_RESOURCES,
   JWT_AUTH_ORIGIN,
   JWT_AUTH_KEY_DIRECTORY,
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,
+  LNURL_AUTH_DEBUG,
   USE_DRIZZLE,
   DB_CREDENTIALS,
+  TELEGRAM_BOT_ID,
+  TELEGRAM_GROUP_ID_ERROR,
+  TELEGRAM_PREFIX,
+  TELEGRAM_CHAR_MAX,
 }

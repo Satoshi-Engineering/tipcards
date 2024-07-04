@@ -1,7 +1,11 @@
 import { createClient, SchemaFieldTypes } from 'redis'
 import type { RedisClientType, RediSearchSchema, RedisDefaultModules, RedisFunctions, RedisScripts } from 'redis'
 
-import { REDIS_BASE_PATH, REDIS_URL } from '@backend/constants'
+import {
+  REDIS_BASE_PATH,
+  REDIS_URL,
+  REDIS_PASSPHRASE,
+} from '@backend/constants'
 
 export const REDIS_CONNECT_TIMEOUT = 3 * 1000
 export const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`
@@ -53,7 +57,7 @@ export const getClient = async () => {
   }
   connecting = true
 
-  const newClient = createClient({ url: `redis://:${process.env.REDIS_PASSPHRASE}@${REDIS_URL}` })
+  const newClient = createClient({ url: `redis://:${REDIS_PASSPHRASE}@${REDIS_URL}` })
   newClient.on('end', resetClient)
   newClient.on('error', async (error) => {
     // redis is automatically trying to re-connect. let him try for some time

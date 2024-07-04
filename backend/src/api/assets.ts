@@ -4,11 +4,12 @@ import { ErrorCode } from '@shared/data/Errors'
 
 import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image'
 import { getImageAsString, getImageMeta } from '@backend/database/queries'
+import { CROSS_ORIGIN_RESOURCES } from '@backend/constants'
 
 const router = Router()
 
 export const crossOriginResources = async (_: Request, res: Response, next: NextFunction) => {
-  if (process.env.CROSS_ORIGIN_RESOURCES === '1') {
+  if (CROSS_ORIGIN_RESOURCES) {
     res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
   }
   next()
