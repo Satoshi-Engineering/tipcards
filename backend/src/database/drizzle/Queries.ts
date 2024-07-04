@@ -383,6 +383,13 @@ export default class Queries {
   }
 
   /** @throws */
+  async updateSet(set: Set): Promise<void> {
+    await this.transaction.update(Set)
+      .set(set)
+      .where(eq(Set.id, set.id))
+  }
+
+  /** @throws */
   async insertOrUpdateSetSettings(setSettings: SetSettings): Promise<void> {
     await this.transaction.insert(SetSettings)
       .values(setSettings)

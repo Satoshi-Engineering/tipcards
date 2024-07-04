@@ -59,7 +59,7 @@ export const fixRedisToDrizzleMigrationSetFundingBug = async () => {
 
   console.log(`\n${skippedCount} card(s) skipped.`)
   console.log(`\n${migratedCorrectlyCount} card(s) migrated correctly.`)
-  console.log(`\n${migratedCount} card(s) migrations fixed!`)
+  console.log(`\n${migratedCount} card migration(s) fixed!`)
   console.log(`\nCards used again: ${doubleSpentCards}`)
   console.log(`\nSats lost due to bug: ${doubleSpentAmount}`)
 }

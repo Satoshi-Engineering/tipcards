@@ -51,5 +51,5 @@ export const fixCardCreatedAfterMigration = async () => {
   }
 
   console.log(`\n${skippedCount} card(s) skipped.`)
-  console.log(`\n${migratedCount} card(s) migrations fixed!`)
+  console.log(`\n${migratedCount} card migration(s) fixed!`)
 }

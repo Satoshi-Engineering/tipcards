@@ -12,6 +12,7 @@ import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries
 import { migrateRedisToDrizzle } from '@backend/database/migrations/migrateRedisToDrizzle'
 import { fixRedisToDrizzleMigrationSetFundingBug } from '@backend/database/migrations/fixRedisToDrizzleMigrationSetFundingBug'
 import { fixCardCreatedAfterMigration } from '@backend/database/migrations/fixCardCreatedAfterMigration'
+import { fixSetCreatedAfterMigration } from '@backend/database/migrations/fixSetCreatedAfterMigration'
 
 /* eslint-disable no-console */
 const clearUnusedCards = async () => {
@@ -179,6 +180,7 @@ const loop = async () => {
   console.log('6. Find and list users that have available Images and/or Landingpages.')
   console.log('7. Fix redis->drizzle migration bug (used cards that were set funded lost the lnurlW)')
   console.log('8. Fix created dates for all cards after redis->drizzle migration.')
+  console.log('9. Fix created dates for all set after redis->drizzle migration.')
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
@@ -201,6 +203,8 @@ const loop = async () => {
     await fixRedisToDrizzleMigrationSetFundingBug()
   } else if (answer === '8') {
     await fixCardCreatedAfterMigration()
+  } else if (answer === '9') {
+    await fixSetCreatedAfterMigration()
   } else {
     console.log('Unknown command.')
   }
