@@ -1,5 +1,6 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 
+import Database from '@backend/database/drizzle/Database'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
 import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
@@ -159,7 +160,14 @@ const findUsersWithAvailableImagesAndLandingpages = async () => {
   console.log('\nChecking done.\n')
 }
 
+
 const run = async () => {
+  console.log('Connecting to sql database ...')
+  await Database.init()
+  loop()
+}
+
+const loop = async () => {
   console.log('\nWhat do you want to do?')
   console.log('0. Leave.')
   console.log('1. Check all cards with used flag if they are actually used (by calling lnbits).')
@@ -172,6 +180,8 @@ const run = async () => {
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
+    console.log('Closing database connection ...')
+    await Database.closeConnectionIfExists()
     process.exit()
   } if (answer === '1') {
     await clearUnusedCards()
@@ -192,5 +202,6 @@ const run = async () => {
   }
   setTimeout(run, 0)
 }
+
 run()
 /* eslint-enable no-console */

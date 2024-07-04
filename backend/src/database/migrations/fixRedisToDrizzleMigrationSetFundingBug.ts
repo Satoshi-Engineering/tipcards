@@ -2,7 +2,6 @@ import assert from 'assert'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import Database from '@backend/database/drizzle/Database'
 import { asTransaction } from '@backend/database/drizzle/client'
 
 // migration specific
@@ -12,7 +11,6 @@ import {
 
 /* eslint-disable no-console */
 export const fixRedisToDrizzleMigrationSetFundingBug = async () => {
-  await Database.init()
   const cards = await getAllRedisCards()
 
   console.log(`\nStarting migration for ${cards.length} cards.`)
@@ -64,5 +62,4 @@ export const fixRedisToDrizzleMigrationSetFundingBug = async () => {
   console.log(`\n${migratedCount} card(s) migrations fixed!`)
   console.log(`\nCards used again: ${doubleSpentCards}`)
   console.log(`\nSats lost due to bug: ${doubleSpentAmount}`)
-  await Database.closeConnectionIfExists()
 }

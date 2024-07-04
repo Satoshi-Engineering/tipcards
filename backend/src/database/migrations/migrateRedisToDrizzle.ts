@@ -1,6 +1,5 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import Database from '@backend/database/drizzle/Database'
 import { prompt } from '@backend/services/cliHelpers'
 
 // migration specific
@@ -25,12 +24,10 @@ export const migrateRedisToDrizzle = async () => {
     process.exit(1)
   }
 
-  await Database.init()
   await migrateUsers()
   await migrateCards()
   await migrateSets()
   await migrateBulkWithdraws()
-  await Database.closeConnectionIfExists()
 
   console.log('All done! 👍')
 }
