@@ -36,6 +36,7 @@
         >
           <LinkDefault
             :bold="currentLocale === code"
+            :hreflang="code"
             @click="() => selectLocale(code as LocaleCode)"
           >{{ name }}</LinkDefault>
           <span class="group-last:hidden"> | </span>
