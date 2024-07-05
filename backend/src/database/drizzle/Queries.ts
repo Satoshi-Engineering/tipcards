@@ -343,6 +343,13 @@ export default class Queries {
   }
 
   /** @throws */
+  async updateInvoice(invoice: Invoice): Promise<void> {
+    await this.transaction.update(Invoice)
+      .set(invoice)
+      .where(eq(Invoice.paymentHash, invoice.paymentHash))
+  }
+
+  /** @throws */
   async insertOrUpdateCardVersionInvoice(cardVersionInvoice: CardVersionHasInvoice): Promise<void> {
     await this.transaction.insert(CardVersionHasInvoice)
       .values(cardVersionInvoice)

@@ -13,6 +13,7 @@ import { migrateRedisToDrizzle } from '@backend/database/migrations/migrateRedis
 import { fixRedisToDrizzleMigrationSetFundingBug } from '@backend/database/migrations/fixRedisToDrizzleMigrationSetFundingBug'
 import { fixCardCreatedAfterMigration } from '@backend/database/migrations/fixCardCreatedAfterMigration'
 import { fixSetCreatedAfterMigration } from '@backend/database/migrations/fixSetCreatedAfterMigration'
+import { fixInvoiceCreatedAfterMigration } from '@backend/database/migrations/fixInvoiceCreatedAfterMigration'
 
 /* eslint-disable no-console */
 const clearUnusedCards = async () => {
@@ -181,6 +182,7 @@ const loop = async () => {
   console.log('7. Fix redis->drizzle migration bug (used cards that were set funded lost the lnurlW)')
   console.log('8. Fix created dates for all cards after redis->drizzle migration.')
   console.log('9. Fix created dates for all set after redis->drizzle migration.')
+  console.log('10. Fix created dates for all invoices after redis->drizzle migration.')
   const answer = await prompt('Type a number: ')
 
   if (answer === '0') {
@@ -205,6 +207,8 @@ const loop = async () => {
     await fixCardCreatedAfterMigration()
   } else if (answer === '9') {
     await fixSetCreatedAfterMigration()
+  } else if (answer === '10') {
+    await fixInvoiceCreatedAfterMigration()
   } else {
     console.log('Unknown command.')
   }
