@@ -49,6 +49,7 @@ export enum ErrorCode {
   UnableToParseLnbitsPaymentsForCardPaymentInfo = 'UnableToParseLnbitsPaymentsForCardPaymentInfo',
   UnableToGetOrCreateUserByLnurlAuthKey = 'UnableToGetOrCreateUserByLnurlAuthKey',
   UnableToUpdateUser = 'UnableToUpdateUser',
+  CardIsLockedByBulkWithdraw = 'CardIsLockedByBulkWithdraw',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
@@ -65,12 +66,17 @@ export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
 
 export type ErrorCodeEnum = z.infer<typeof ErrorCodeEnum>
 
-export type ToErrorResponse = ({ message, code }: { message: string, code?: ErrorCode }) => {
-  status: string
-  reason?: string
-  message?: string
-  code?: ErrorCode
-}
+export const ErrorResponse = z.object({
+  status: z.string(),
+  reason: z.string().optional(),
+  message: z.string().optional(),
+  code: ErrorCodeEnum.optional(),
+})
+
+export type ErrorResponse = z.infer<typeof ErrorResponse>
+
+export type ToErrorResponse = ({ message, code }: { message: string, code?: ErrorCode })
+  => ErrorResponse
 
 export class ErrorWithCode {
   error: unknown

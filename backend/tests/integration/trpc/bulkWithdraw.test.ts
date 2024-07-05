@@ -5,6 +5,7 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 import { decodeLnurl } from '@shared/modules/lnurlHelpers'
+import { ErrorCode, type ErrorResponse } from '@shared/data/Errors'
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
@@ -72,6 +73,7 @@ describe('TRpc Router BulkWithdraw', () => {
 
     await checkIfLnurlwExistsInLnbits(bulkWithdraw)
     await checkIfCardsAreLocked()
+    await checkIfLnurlRouteHandlesBulkWithdrawLock()
 
     await deleteBulkWithdraw()
     await checkIfLnurlwIsRemoved(bulkWithdraw)
@@ -134,6 +136,20 @@ const checkIfCardsAreLocked = async () => {
       isLockedByBulkWithdraw: true,
     }),
   ]))
+}
+
+const checkIfLnurlRouteHandlesBulkWithdrawLock = async () => {
+  let caughtError: AxiosError | undefined
+  try {
+    await axios.get(`${API_ORIGIN}/api/lnurl/${CARD_HASH_FUNDED_0}`)
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      caughtError = error
+    }
+  }
+  expect(caughtError).toBeDefined()
+  const reponseData = caughtError?.response?.data as ErrorResponse
+  expect(reponseData.code).toBe(ErrorCode.CardIsLockedByBulkWithdraw)
 }
 
 const deleteBulkWithdraw = async () => {

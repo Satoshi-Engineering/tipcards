@@ -63,6 +63,16 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
     return
   }
 
+  // check if card is locked by bulkWithdraw
+  if (card.isLockedByBulkWithdraw) {
+    res.status(400).json(toErrorResponse({
+      message: 'A recall of this Tip Card is currently in progress. You have to cancel it first to use the card.',
+      code: ErrorCode.CardIsLockedByBulkWithdraw,
+    }))
+    next()
+    return
+  }
+
   // check if invoice is already paid and get withdrawId
   if (card.lnbitsWithdrawId == null) {
     try {
