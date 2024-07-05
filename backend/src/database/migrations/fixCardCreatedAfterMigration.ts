@@ -17,6 +17,7 @@ export const fixCardCreatedAfterMigration = async () => {
 
   let skippedCount = 0
   let migratedCount = 0
+  let cardsNotFoundCount = 0
   for (const cardRedis of cardsRedis) {
     let created: Date | null = null
     if (cardRedis.invoice != null) {
@@ -37,12 +38,20 @@ export const fixCardCreatedAfterMigration = async () => {
     console.log(`Migrating card ${cardRedis.cardHash} ...`)
     await asTransaction(async (queries) => {
       const cardDrizzle = await queries.getCardByHash(cardRedis.cardHash)
-      assert(cardDrizzle != null, `No card for hash ${cardRedis.cardHash} found!`)
+      if (cardDrizzle == null) {
+        console.log(`Card ${cardRedis.cardHash} not found in drizzle ...`)
+        cardsNotFoundCount += 1
+        return
+      }
       cardDrizzle.created = createdDate
       await queries.updateCard(cardDrizzle)
 
       const cardVersion = await queries.getLatestCardVersion(cardRedis.cardHash)
-      assert(cardVersion != null, `No card version for hash ${cardRedis.cardHash} found!`)
+      if (cardVersion == null) {
+        console.log(`No cardVersion for ${cardRedis.cardHash} found in drizzle ...`)
+        cardsNotFoundCount += 1
+        return
+      }
       cardVersion.created = createdDate
       await queries.updateCardVersion(cardVersion)
 
@@ -52,4 +61,5 @@ export const fixCardCreatedAfterMigration = async () => {
 
   console.log(`\n${skippedCount} card(s) skipped.`)
   console.log(`\n${migratedCount} card migration(s) fixed!`)
+  console.log(`\n${cardsNotFoundCount} card(s) not found!`)
 }

@@ -216,7 +216,7 @@ const loop = async () => {
   } else {
     console.log('Unknown command.')
   }
-  setTimeout(run, 0)
+  setTimeout(loop, 0)
 }
 
 run()
