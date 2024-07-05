@@ -380,6 +380,13 @@ export default class Queries {
   }
 
   /** @throws */
+  async updateLnurlW(lnurlw: LnurlW): Promise<void> {
+    await this.transaction.update(LnurlW)
+      .set(lnurlw)
+      .where(eq(LnurlW.lnbitsId, lnurlw.lnbitsId))
+  }
+
+  /** @throws */
   async insertOrUpdateSet(set: Set): Promise<void> {
     await this.transaction.insert(Set)
       .values(set)
