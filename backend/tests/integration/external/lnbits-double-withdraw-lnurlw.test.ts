@@ -1,4 +1,9 @@
+import axios from 'axios'
+
 import '@backend/initEnv' // Info: .env needs to read before imports
+
+import LNURLw from '@shared/modules/LNURL/LNURLw'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 
 import FailEarly from '../../FailEarly'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet'
@@ -6,9 +11,6 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator'
 import { cardData } from '../lib/apiData'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
 import '../lib/initAxios'
-import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
-import axios from 'axios'
-import LNURLw from '@shared/modules/LNURL/LNURLw'
 
 const TEST_AMOUNT_IN_SATS = 213
 const TEST_ATTEMPT_COUNT = 21

@@ -1,5 +1,4 @@
 import { randomBytes } from 'crypto'
-
 import * as bip39 from 'bip39'
 import * as bip32 from 'bip32'
 import * as base58 from 'bs58'
@@ -13,25 +12,6 @@ const DEFAUT_HD_PATH = 'm/84\'/0\''
 const bip32api = bip32.BIP32Factory(ecc)
 
 export default class HDWallet {
-  private bip32Node
-  private mnemonic
-
-  constructor(mnemonic = '') {
-    if (mnemonic === '') {
-      this.mnemonic = HDWallet.generateRandomMnemonic()
-      console.warn('HDWallet: generating HD Wallet with crypto.randomBytes!')
-    } else {
-      this.mnemonic = mnemonic
-    }
-
-    this.bip32Node = HDWallet.deriveBip32Node(this.mnemonic)
-  }
-
-  getNodeAtPath(account: number, change: number, index: number) {
-    const { derivedNode } = HDWallet.deriveNodeAtPath(this.bip32Node, `${DEFAUT_HD_PATH}/${account}'/${change}/${index}`)
-    return new HDNode(derivedNode)
-  }
-
   static generateRandomMnemonic() {
     const entropy = randomBytes(32)
     if (entropy.length !== 32) { throw Error('Entropy has incorrect length') }
@@ -91,5 +71,24 @@ export default class HDWallet {
     let data = base58.decode(xyzpub).slice(4)
     data = Buffer.concat([Buffer.from(bytes,'hex'), data])
     return base58.encode(data)
+  }
+
+  private bip32Node
+  private mnemonic
+
+  constructor(mnemonic = '') {
+    if (mnemonic === '') {
+      this.mnemonic = HDWallet.generateRandomMnemonic()
+      console.warn('HDWallet: generating HD Wallet with crypto.randomBytes!')
+    } else {
+      this.mnemonic = mnemonic
+    }
+
+    this.bip32Node = HDWallet.deriveBip32Node(this.mnemonic)
+  }
+
+  getNodeAtPath(account: number, change: number, index: number) {
+    const { derivedNode } = HDWallet.deriveNodeAtPath(this.bip32Node, `${DEFAUT_HD_PATH}/${account}'/${change}/${index}`)
+    return new HDNode(derivedNode)
   }
 }

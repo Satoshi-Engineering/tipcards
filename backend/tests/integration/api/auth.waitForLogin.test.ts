@@ -2,16 +2,15 @@ import { AxiosResponse } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import '../lib/initAxios'
 import FailEarly from '../../FailEarly'
 import HDWallet from '../lib/HDWallet/HDWallet'
 
 const failEarly = new FailEarly(it)
-
 
 const frontend = new FrontendSimulator()
 const randomSigningKey = HDWallet.generateRandomNode()

@@ -2,8 +2,8 @@ import axios from 'axios'
 import z from 'zod'
 
 import type { Card } from '@shared/data/api/Card'
-
 import LNURL from '@shared/modules/LNURL/LNURL'
+
 import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
 
 export const CardStatusEnum = z.enum([

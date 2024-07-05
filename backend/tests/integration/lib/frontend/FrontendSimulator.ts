@@ -1,9 +1,9 @@
 import { AxiosResponse } from 'axios'
 import { io, Socket } from 'socket.io-client'
 
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
 
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import FrontendWithAuth from './FrontendWithAuth'
 import HDWallet from '../HDWallet/HDWallet'
 import { API_ORIGIN } from '../constants'

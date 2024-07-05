@@ -3,11 +3,11 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import hashSha256 from '@backend/services/hashSha256'
 import { ErrorCode } from '@shared/data/Errors'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
+import hashSha256 from '@backend/services/hashSha256'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 import HDWallet from '../lib/HDWallet/HDWallet'
 import { authData } from '../lib/apiData'
 import '../lib/initAxios'

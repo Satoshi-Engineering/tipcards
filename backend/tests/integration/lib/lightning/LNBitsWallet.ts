@@ -3,9 +3,8 @@ import axios, { AxiosResponse } from 'axios'
 import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest'
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 import LNURL from '@shared/modules/LNURL/LNURL'
-
-import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
 import LNURLw from '@shared/modules/LNURL/LNURLw'
+import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -14,14 +13,6 @@ export default class LNBitsWallet {
   constructor(lnbitsOrigin: string, adminKey: string) {
     this.adminKey = adminKey
     this.lnbitsOrigin = lnbitsOrigin
-  }
-
-  private getAuthHeader() {
-    return {
-      headers: {
-        'X-Api-Key': this.adminKey,
-      },
-    }
   }
 
   public async getWalletDetails(): Promise<null | { id: string, name: string, balance: number }> {
@@ -142,5 +133,13 @@ export default class LNBitsWallet {
     }
 
     return response.data
+  }
+
+  private getAuthHeader() {
+    return {
+      headers: {
+        'X-Api-Key': this.adminKey,
+      },
+    }
   }
 }

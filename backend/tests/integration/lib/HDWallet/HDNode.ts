@@ -2,6 +2,18 @@ import crypto from 'crypto'
 import * as bip32 from 'bip32'
 
 export default class HDNode {
+  sign(messageAsHex: string, outputFormat: 'hex' | 'base64') {
+    const messageAsBuffer = Buffer.from(messageAsHex, 'hex')
+    return this.node.sign(messageAsBuffer).toString(outputFormat)
+  }
+
+  verify(message: string, signature: string) {
+    const messageBuffer = Buffer.from(message)
+    const hash = crypto.createHash('sha256').update(messageBuffer).digest()
+    const signatureBuffer = Buffer.from(signature, 'base64')
+    return this.node.verify(hash, signatureBuffer)
+  }
+
   private node
 
   constructor(node: bip32.BIP32Interface) {
@@ -29,17 +41,5 @@ export default class HDNode {
 
   getPublicKeyAsHex() {
     return this.node.publicKey.toString('hex')
-  }
-
-  sign(messageAsHex: string, outputFormat: 'hex' | 'base64') {
-    const messageAsBuffer = Buffer.from(messageAsHex, 'hex')
-    return this.node.sign(messageAsBuffer).toString(outputFormat)
-  }
-
-  verify(message: string, signature: string) {
-    const messageBuffer = Buffer.from(message)
-    const hash = crypto.createHash('sha256').update(messageBuffer).digest()
-    const signatureBuffer = Buffer.from(signature, 'base64')
-    return this.node.verify(hash, signatureBuffer)
   }
 }
