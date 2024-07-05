@@ -9,6 +9,7 @@ import {
 
 /* eslint-disable no-console */
 export const fixSetCreatedAfterMigration = async () => {
+  const startMigration = Math.floor(+ new Date() / 1000)
   const setsRedis = await getAllRedisSets()
 
   console.log(`\nStarting migration for ${setsRedis.length} sets.`)
@@ -17,7 +18,6 @@ export const fixSetCreatedAfterMigration = async () => {
   let skippedCount = 0
   let migratedCount = 0
   let notFoundCount = 0
-  const startMigration = Math.floor(+ new Date() / 1000)
   for (const setRedis of setsRedis) {
     if (setRedis.created < startMigration) {
       alreadyMigratedCorrectlyCount += 1
