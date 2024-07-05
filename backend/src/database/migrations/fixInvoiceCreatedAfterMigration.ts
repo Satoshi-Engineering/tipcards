@@ -59,6 +59,7 @@ const migrateInvoicesFromLnurlp = async () => {
         if (!paymentHashes.includes(invoice.paymentHash)) {
           invoicesAfterMigrationCount += 1
           console.log(`Card ${cardRedis.cardHash} invoice has a paymentHash that was created after migration: ${invoice.paymentHash}, skipping ...`)
+          return
         }
         invoice.created = created
         invoice.expiresAt = expiresAt
