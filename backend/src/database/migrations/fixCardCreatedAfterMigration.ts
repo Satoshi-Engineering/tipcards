@@ -22,9 +22,9 @@ export const fixCardCreatedAfterMigration = async () => {
     if (cardRedis.invoice != null) {
       created = new Date(cardRedis.invoice.created * 1000)
     } else if (cardRedis.lnurlp != null) {
-      created = new Date(cardRedis.lnurlp.created)
+      created = new Date(cardRedis.lnurlp.created * 1000)
     } else if (cardRedis.setFunding != null) {
-      created = new Date(cardRedis.setFunding.created)
+      created = new Date(cardRedis.setFunding.created * 1000)
     }
 
     if (created == null) {

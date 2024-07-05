@@ -39,6 +39,7 @@ const migrateInvoicesFromLnurlp = async () => {
     const paid = cardRedis.lnurlp.paid != null
       ? new Date(cardRedis.lnurlp.paid * 1000)
       : null
+    const paymentHashes: string[] = cardRedis.lnurlp.payment_hash || []
 
     console.log(`Migrating card invoices for cardHash ${cardRedis.cardHash} ...`)
     await asTransaction(async (queries) => {
@@ -47,6 +48,8 @@ const migrateInvoicesFromLnurlp = async () => {
 
       const invoices = await queries.getAllInvoicesFundingCardVersion(latestCardVersion)
       await Promise.all(invoices.map(async (invoice) => {
+        assert(invoice.extra.includes('lnurlp'), `Card ${cardRedis.cardHash} has an invoice that is not from lnurlp!`)
+        assert(paymentHashes.includes(invoice.paymentHash), `Card ${cardRedis.cardHash} invoice has a paymentHash that is not from this lnurlp!`)
         invoice.created = created
         invoice.expiresAt = expiresAt
         invoice.paid = paid
