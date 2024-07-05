@@ -1,5 +1,3 @@
-import assert from 'assert'
-
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { asTransaction } from '@backend/database/drizzle/client'
@@ -18,8 +16,10 @@ export const fixSetCreatedAfterMigration = async () => {
   let alreadyMigratedCorrectlyCount = 0
   let skippedCount = 0
   let migratedCount = 0
+  let notFoundCount = 0
+  const startMigration = Math.floor(+ new Date() / 1000)
   for (const setRedis of setsRedis) {
-    if (setRedis.created != null) {
+    if (setRedis.created < startMigration) {
       alreadyMigratedCorrectlyCount += 1
       console.log(`Creation date already set for set ${setRedis.id}`)
       continue
@@ -35,7 +35,11 @@ export const fixSetCreatedAfterMigration = async () => {
     console.log(`Migrating set ${setRedis.id} ...`)
     await asTransaction(async (queries) => {
       const setDrizzle = await queries.getSetById(setRedis.id)
-      assert(setDrizzle != null, `No set for id ${setRedis.id} found!`)
+      if (setDrizzle == null) {
+        notFoundCount += 1
+        console.log(`Set ${setRedis.id} not found in drizzle ...`)
+        return
+      }
       setDrizzle.created = createdDate
       await queries.updateSet(setDrizzle)
 
@@ -46,4 +50,5 @@ export const fixSetCreatedAfterMigration = async () => {
   console.log(`\n${alreadyMigratedCorrectlyCount} set(s) already migrated.`)
   console.log(`\n${skippedCount} set(s) skipped.`)
   console.log(`\n${migratedCount} set migration(s) fixed!`)
+  console.log(`\n${notFoundCount} set(s) not found in drizzle.`)
 }

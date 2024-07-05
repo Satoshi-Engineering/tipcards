@@ -1,5 +1,3 @@
-import assert from 'assert'
-
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { asTransaction } from '@backend/database/drizzle/client'
