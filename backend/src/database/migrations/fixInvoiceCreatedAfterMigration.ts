@@ -24,6 +24,8 @@ const migrateInvoicesFromLnurlp = async () => {
   let skippedCardsCount = 0
   let migratedCardsCount = 0
   let migratedInvoicesCount = 0
+  let notFoundCount = 0
+  let invoicesAfterMigrationCount = 0
   for (const cardRedis of cardsRedis) {
     if (cardRedis.lnurlp == null) {
       skippedCardsCount += 1
@@ -44,12 +46,20 @@ const migrateInvoicesFromLnurlp = async () => {
     console.log(`Migrating card invoices for cardHash ${cardRedis.cardHash} ...`)
     await asTransaction(async (queries) => {
       const latestCardVersion = await queries.getLatestCardVersion(cardRedis.cardHash)
+      if (paid == null && latestCardVersion == null) {
+        notFoundCount += 1
+        console.log(`No cardVersion for unfunded card ${cardRedis.cardHash} found, skipping ...`)
+        return
+      }
       assert(latestCardVersion != null, `No cardVersion for hash ${cardRedis.cardHash} found!`)
 
       const invoices = await queries.getAllInvoicesFundingCardVersion(latestCardVersion)
       await Promise.all(invoices.map(async (invoice) => {
         assert(invoice.extra.includes('lnurlp'), `Card ${cardRedis.cardHash} has an invoice that is not from lnurlp!`)
-        assert(paymentHashes.includes(invoice.paymentHash), `Card ${cardRedis.cardHash} invoice has a paymentHash that is not from this lnurlp!`)
+        if (!paymentHashes.includes(invoice.paymentHash)) {
+          invoicesAfterMigrationCount += 1
+          console.log(`Card ${cardRedis.cardHash} invoice has a paymentHash that was created after migration: ${invoice.paymentHash}, skipping ...`)
+        }
         invoice.created = created
         invoice.expiresAt = expiresAt
         invoice.paid = paid
@@ -64,6 +74,8 @@ const migrateInvoicesFromLnurlp = async () => {
   console.log(`\n${skippedCardsCount} card(s) skipped.`)
   console.log(`\n${migratedCardsCount} card migration(s) fixed!`)
   console.log(`\n${migratedInvoicesCount} invoice migration(s) fixed!`)
+  console.log(`\n${notFoundCount} card(s) not found in drizzle.`)
+  console.log(`\n${invoicesAfterMigrationCount} lnurlp invoice(s) created after migration.`)
 }
 
 const migrateInvoicesFromSetFunding = async () => {
@@ -100,6 +112,6 @@ const migrateInvoicesFromSetFunding = async () => {
     })
   }
 
-  console.log(`\n${skippedCount} card(s) skipped.`)
-  console.log(`\n${migratedCount} card migration(s) fixed!`)
+  console.log(`\n${skippedCount} set(s) skipped.`)
+  console.log(`\n${migratedCount} set migration(s) fixed!`)
 }
