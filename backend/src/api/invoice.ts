@@ -3,7 +3,7 @@ import { Router, Request, Response, NextFunction } from 'express'
 
 import type { Card as CardApi } from '@shared/data/api/Card'
 import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
-import { getLandingPageLinkForCardHash } from '@shared/modules/lnurlHelpers'
+import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
