@@ -29,14 +29,14 @@ export const fixLnurlWsCreatedAfterMigration = async () => {
     if (cardRedis.invoice?.paid != null) {
       paid = new Date(cardRedis.invoice.paid * 1000)
     } else if (cardRedis.lnurlp?.paid != null) {
-      paid = new Date(cardRedis.lnurlp.paid)
+      paid = new Date(cardRedis.lnurlp.paid * 1000)
     } else if (cardRedis.setFunding?.paid != null) {
-      paid = new Date(cardRedis.setFunding.paid)
+      paid = new Date(cardRedis.setFunding.paid * 1000)
     }
     assert(paid != null, `No funding for card ${cardRedis.cardHash} found!`)
     const created: Date = paid
 
-    console.log(`Migrating card invoices for cardHash ${cardRedis.cardHash} ...`)
+    console.log(`Migrating card lnurlWs for cardHash ${cardRedis.cardHash} ...`)
     await asTransaction(async (queries) => {
       const lnurlw = await queries.getLnurlWById(lnurlwId)
       assert(lnurlw != null, `No funding for card ${cardRedis.cardHash} found!`)
@@ -48,5 +48,5 @@ export const fixLnurlWsCreatedAfterMigration = async () => {
   }
 
   console.log(`\n${skippedCardsCount} card(s) skipped.`)
-  console.log(`\n${migratedCardsCount} card migration(s) fixed!`)
+  console.log(`\n${migratedCardsCount} card lnurlW migration(s) fixed!`)
 }
