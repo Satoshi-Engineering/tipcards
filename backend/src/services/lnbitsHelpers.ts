@@ -718,24 +718,3 @@ export const loadCurrentLnurlFromLnbitsByWithdrawId = async (withdrawId: string)
   )
   return response.data.lnurl.toLowerCase()
 }
-
-/**
- * if we are too fast we need to try multiple times
- * https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/825
- *
- * @throws
- * */
-export const getLnurlResponse = async (url: string, maxRetries = 5, retryWaitTimeInMS = 200) => {
-  let retrys = maxRetries
-  let caughtError: unknown
-  while (retrys > 0) {
-    try {
-      return await axios.get(url)
-    } catch (error) {
-      caughtError = error
-      await delay(retryWaitTimeInMS)
-      retrys--
-    }
-  }
-  throw caughtError
-}

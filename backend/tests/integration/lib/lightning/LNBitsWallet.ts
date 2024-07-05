@@ -4,7 +4,7 @@ import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest'
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
 import LNURL from '@shared/modules/LNURL/LNURL'
 import LNURLw from '@shared/modules/LNURL/LNURLw'
-import { getLnurlResponse } from '@backend/services/lnbitsHelpers'
+import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -109,7 +109,7 @@ export default class LNBitsWallet {
     const maxRetries = 15
 
     try {
-      lnurlWithdrawResponse = await getLnurlResponse(url, maxRetries)
+      lnurlWithdrawResponse = await retryGetRequestWithDelayUntilSuccessWithMaxAttempts(url, maxRetries)
     } catch (error) {
       console.error('withdraw failed multiple times, only showing last error', error)
       throw new Error(`Tried LNURLw callback link for ${maxRetries}x times: ${url}`)

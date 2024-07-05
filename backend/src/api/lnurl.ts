@@ -12,9 +12,9 @@ import {
   getLnurlpForNewCard,
   getLnurlpForCard,
   loadCurrentLnurlFromLnbitsByWithdrawId,
-  getLnurlResponse,
   lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers'
+import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils'
 
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
 
@@ -193,7 +193,7 @@ const routeHandler = async (req: Request, res: Response, next: NextFunction) => 
   }
 
   try {
-    const response = await getLnurlResponse(LNURL.decode(lnurl))
+    const response = await retryGetRequestWithDelayUntilSuccessWithMaxAttempts(LNURL.decode(lnurl))
     res.json(response.data)
   } catch (error) {
     console.error(
