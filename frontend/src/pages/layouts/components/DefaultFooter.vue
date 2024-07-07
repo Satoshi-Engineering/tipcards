@@ -17,7 +17,7 @@
           :key="index"
         >
           <LinkDefault
-            :to="{ name: routeName, params: { lang: route.params.lang } }"
+            :to="{ name: routeName, params: { lang: $route.params.lang } }"
             :bold="false"
             active-class="font-bold"
           >
@@ -35,10 +35,10 @@
           class="group"
         >
           <LinkDefault
+            :to="{ ...$route, params: { ...$route.params, lang: code } }"
             :bold="currentLocale === code"
             :hreflang="code"
             rel="alternate"
-            @click="() => selectLocale(code as LocaleCode)"
           >{{ name }}</LinkDefault>
           <span class="group-last:hidden"> | </span>
         </span>
@@ -48,25 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter, useRoute } from 'vue-router'
-
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import { LOCALES, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
+import { LOCALES, useI18nHelpers } from '@/modules/initI18n'
 import I18nT from '@/modules/I18nT'
 import { SUPPORT_EMAIL } from '@/constants'
 
-const router = useRouter()
-const route = useRoute()
 const { currentLocale } = useI18nHelpers()
-const selectLocale = async (code: LocaleCode) => {
-  router.push({
-    ...route,
-    params: {
-      ...route.params,
-      lang: code,
-    },
-  })
-}
 
 const navLinks = [
   { routeName: 'home', labelKey: 'nav.index' },
