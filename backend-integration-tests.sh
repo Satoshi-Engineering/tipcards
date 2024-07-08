@@ -26,7 +26,8 @@ echo 'Startup finished, running integration tests'
 # lnbits currently has a bug that allows double/multiple withdraws. therefore we added a max-queries into traefik
 # to make sure the integration tests don't run into troubles there only run one integration test after the other
 # (using maxWorkers=1 as runInBand is not available in vitest)
-npm run backend-test-integration -- --maxWorkers=1 --testTimeout=50000 --envFilePostfix=integrationTest
+export __ENV_FILE_POSTFIX__='integrationTest'
+npm run backend-test-integration -- --maxWorkers=1 --testTimeout=50000
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID
