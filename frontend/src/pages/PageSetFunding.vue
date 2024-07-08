@@ -193,7 +193,6 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@shared/data/api/Set'
 
-import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'

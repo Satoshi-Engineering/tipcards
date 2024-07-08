@@ -61,7 +61,6 @@ import QRCode from 'qrcode-svg'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import I18nT from '@/modules/I18nT'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/ButtonDefault.vue'

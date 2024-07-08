@@ -331,7 +331,6 @@ import { useRoute } from 'vue-router'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import I18nT from '@/modules/I18nT'
 import { useI18nHelpers } from '@/modules/initI18n'
 import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'

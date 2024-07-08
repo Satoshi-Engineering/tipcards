@@ -306,7 +306,6 @@ import { useRoute } from 'vue-router'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import I18nT from '@/modules/I18nT'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

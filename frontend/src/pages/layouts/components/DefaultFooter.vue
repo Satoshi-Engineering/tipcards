@@ -50,7 +50,6 @@
 <script setup lang="ts">
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { LOCALES, useI18nHelpers } from '@/modules/initI18n'
-import I18nT from '@/modules/I18nT'
 import { SUPPORT_EMAIL } from '@/constants'
 
 const { currentLocale } = useI18nHelpers()

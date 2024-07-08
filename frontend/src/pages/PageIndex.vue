@@ -158,7 +158,6 @@ import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecat
 import { useAuthStore } from '@/stores/auth'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import I18nT from '@/modules/I18nT'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 

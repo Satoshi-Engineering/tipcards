@@ -9,11 +9,11 @@
       </HeadlineDefault>
 
       <ParagraphDefault class="my-3">
-        <Translation keypath="bulkWithdraw.setName">
+        <I18nT keypath="bulkWithdraw.setName">
           <template #setName>
             <strong>{{ settings.setName || $t('index.unnamedSetNameFallback') }}</strong>
           </template>
-        </Translation>
+        </I18nT>
       </ParagraphDefault>
 
       <CardsSummaryContainer class="mb-4">
@@ -68,7 +68,6 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import CardsSummary from '@/components/CardsSummary.vue'
 import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
-import Translation from '@/modules/I18nT'
 import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
