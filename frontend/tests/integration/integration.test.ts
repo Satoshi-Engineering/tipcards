@@ -35,7 +35,7 @@ describe(`webclient test on ${config.TEST_ORIGIN}`, () => {
     chromeOptions.addArguments('--disable-extensions')
     chromeOptions.addArguments('--disable-popup-blocking')
     chromeOptions.addArguments('enable-automation')
-    chromeOptions.headless()
+    chromeOptions.addArguments('--headless')
 
     const builder = new Builder()
       .forBrowser(Browser.CHROME)
