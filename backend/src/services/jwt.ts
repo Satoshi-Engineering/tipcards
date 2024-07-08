@@ -84,7 +84,7 @@ export const validateJwt = async (jwt: string, audience: string): Promise<Access
     audience,
   })
   if (payload.exp == null || payload.exp * 1000 < + new Date()) {
-    throw new errors.JWTExpired('Authorization expired.')
+    throw new errors.JWTExpired('Authorization expired.', payload)
   }
   return ZodAccessTokenPayload.parse(payload)
 }

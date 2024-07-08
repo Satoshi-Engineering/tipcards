@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, type Request, type Response, type NextFunction } from 'express'
 
 import type { Card as CardApi } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'

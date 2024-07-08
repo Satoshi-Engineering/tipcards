@@ -16,8 +16,9 @@ import lnurl from './api/lnurl'
 import lnurlp from './api/lnurlp'
 import set from './api/set'
 import withdraw from './api/withdraw'
-import { appRouter, onError } from './trpc'
+import { appRouter } from './trpc'
 import { createContext } from './trpc/trpc'
+import { mapApplicationErrorToTrpcError } from './trpc/errorHandling'
 import corsOptions from './services/corsOptions'
 import xstAttack from './xstAttack'
 
@@ -43,7 +44,9 @@ app.use(
   createExpressMiddleware({
     router: appRouter,
     createContext,
-    onError,
+    onError: (opts) => {
+      mapApplicationErrorToTrpcError(opts.error)
+    },
   }),
 )
 

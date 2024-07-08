@@ -1,7 +1,7 @@
-import { Router, Request, Response, NextFunction } from 'express'
+import { Router, type Request, type Response, type NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'

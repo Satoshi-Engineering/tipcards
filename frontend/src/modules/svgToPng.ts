@@ -1,9 +1,10 @@
 import {
   Canvg,
   presets,
+  type IParserOptions,
 } from 'canvg'
 
-const preset = presets.offscreen()
+const preset = presets.offscreen() as IParserOptions
 
 export default async ({ width, height, svg }: {
   width: number,
