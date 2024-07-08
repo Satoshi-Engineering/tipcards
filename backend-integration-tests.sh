@@ -27,7 +27,7 @@ echo 'Startup finished, running integration tests'
 # to make sure the integration tests don't run into troubles there only run one integration test after the other
 # (using maxWorkers=1 as runInBand is not available in vitest)
 export __ENV_FILE_POSTFIX__='integrationTest'
-npm run backend-test-integration -- --maxWorkers=1 --testTimeout=50000
+npm run backend-test-integration -- --minWorkers=1 --maxWorkers=1 --testTimeout=50000
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID
