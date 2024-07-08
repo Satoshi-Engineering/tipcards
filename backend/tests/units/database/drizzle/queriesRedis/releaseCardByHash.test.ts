@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest'
+
 import assert from 'assert'
 import '../../../mocks/process.env'
 import '../mocks/client'

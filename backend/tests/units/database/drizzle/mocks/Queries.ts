@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -49,7 +51,7 @@ const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion
   return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
 }
 
-export default jest.fn().mockImplementation(() => ({
+export default vi.fn().mockImplementation(() => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
 
   getSetSettingsForSet: async (set: Set): Promise<SetSettings | null> => setSettingsBySetId[set.id] || null,
@@ -184,7 +186,7 @@ export default jest.fn().mockImplementation(() => ({
   getAllAllowedRefreshTokensForUserId: async (userId: User['id']): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokensByHash)
     .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId),
 
-  insertCards: jest.fn(async (...cards: Card[]): Promise<void> => {
+  insertCards: vi.fn(async (...cards: Card[]): Promise<void> => {
     cards.forEach((card) => {
       if (cardsByHash[card.hash] != null) {
         throw new Error(`Card with hash ${card.hash} already exists`)
@@ -193,132 +195,132 @@ export default jest.fn().mockImplementation(() => ({
     addCards(...cards)
   }),
 
-  insertCardVersions: jest.fn(async (...cardVersions: CardVersion[]): Promise<void> => addCardVersions(...cardVersions)),
+  insertCardVersions: vi.fn(async (...cardVersions: CardVersion[]): Promise<void> => addCardVersions(...cardVersions)),
 
-  insertInvoices: jest.fn(async (...invoices: Invoice[]): Promise<void> => addInvoices(...invoices)),
+  insertInvoices: vi.fn(async (...invoices: Invoice[]): Promise<void> => addInvoices(...invoices)),
 
-  insertCardVersionInvoices: jest.fn(async (...cardVersionInvoices: CardVersionHasInvoice[]): Promise<void> => addCardVersionInvoices(...cardVersionInvoices)),
+  insertCardVersionInvoices: vi.fn(async (...cardVersionInvoices: CardVersionHasInvoice[]): Promise<void> => addCardVersionInvoices(...cardVersionInvoices)),
 
-  insertLnurlPs: jest.fn(async (...lnurlps: LnurlP[]): Promise<void> => addLnurlPs(...lnurlps)),
+  insertLnurlPs: vi.fn(async (...lnurlps: LnurlP[]): Promise<void> => addLnurlPs(...lnurlps)),
 
-  insertLnurlWs: jest.fn(async (...lnurlws: LnurlW[]): Promise<void> => addLnurlWs(...lnurlws)),
+  insertLnurlWs: vi.fn(async (...lnurlws: LnurlW[]): Promise<void> => addLnurlWs(...lnurlws)),
 
-  insertSets: jest.fn(async (...sets: Set[]): Promise<void> => addSets(...sets)),
+  insertSets: vi.fn(async (...sets: Set[]): Promise<void> => addSets(...sets)),
 
-  insertSetSettings: jest.fn(async (...setSettings: SetSettings[]): Promise<void> => addSetSettings(...setSettings)),
+  insertSetSettings: vi.fn(async (...setSettings: SetSettings[]): Promise<void> => addSetSettings(...setSettings)),
 
-  insertUsersCanUseSets: jest.fn(async (...usersCanUseSets: UserCanUseSet[]): Promise<void> => addUsersCanUseSets(...usersCanUseSets)),
+  insertUsersCanUseSets: vi.fn(async (...usersCanUseSets: UserCanUseSet[]): Promise<void> => addUsersCanUseSets(...usersCanUseSets)),
 
-  insertOrUpdateCard: jest.fn(async (card: Card): Promise<void> => {
+  insertOrUpdateCard: vi.fn(async (card: Card): Promise<void> => {
     cardsByHash[card.hash] = card
   }),
 
-  insertOrUpdateLatestCardVersion: jest.fn(async (cardVersion: CardVersion): Promise<void> => {
+  insertOrUpdateLatestCardVersion: vi.fn(async (cardVersion: CardVersion): Promise<void> => {
     cardVersionsById[cardVersion.id] = cardVersion
   }),
 
-  insertOrUpdateInvoice: jest.fn(async (invoice: Invoice): Promise<void> => {
+  insertOrUpdateInvoice: vi.fn(async (invoice: Invoice): Promise<void> => {
     invoicesByPaymentHash[invoice.paymentHash] = invoice
   }),
 
-  insertOrUpdateCardVersionInvoice: jest.fn(async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
+  insertOrUpdateCardVersionInvoice: vi.fn(async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
     if (cardVersionInvoices.find((current) => current.cardVersion === cardVersionInvoice.cardVersion && current.invoice === cardVersionInvoice.invoice)) {
       return
     }
     cardVersionInvoices.push(cardVersionInvoice)
   }),
 
-  insertOrUpdateLnurlP: jest.fn(async (lnurlp: LnurlP): Promise<void> => {
+  insertOrUpdateLnurlP: vi.fn(async (lnurlp: LnurlP): Promise<void> => {
     lnurlPsByLnbitsId[lnurlp.lnbitsId] = lnurlp
   }),
 
-  insertOrUpdateLnurlW: jest.fn(async (lnurlw: LnurlW): Promise<void> => {
+  insertOrUpdateLnurlW: vi.fn(async (lnurlw: LnurlW): Promise<void> => {
     lnurlWsByLnbitsId[lnurlw.lnbitsId] = lnurlw
   }),
 
-  insertOrUpdateSet: jest.fn(async (set: Set): Promise<void> => {
+  insertOrUpdateSet: vi.fn(async (set: Set): Promise<void> => {
     setsById[set.id] = set
   }),
 
-  insertOrUpdateSetSettings: jest.fn(async (setSettings: SetSettings): Promise<void> => {
+  insertOrUpdateSetSettings: vi.fn(async (setSettings: SetSettings): Promise<void> => {
     setSettingsBySetId[setSettings.set] = setSettings
   }),
 
-  insertOrUpdateUser: jest.fn(async (user: User): Promise<void> => {
+  insertOrUpdateUser: vi.fn(async (user: User): Promise<void> => {
     usersById[user.id] = user
   }),
 
-  insertOrUpdateUserCanUseSet: jest.fn(async (userCanUseSet: UserCanUseSet): Promise<void> => {
+  insertOrUpdateUserCanUseSet: vi.fn(async (userCanUseSet: UserCanUseSet): Promise<void> => {
     if (usersCanUseSets.find((current) => current.user === userCanUseSet.user && current.set === userCanUseSet.set)) {
       return
     }
     usersCanUseSets.push(userCanUseSet)
   }),
 
-  insertOrUpdateProfile: jest.fn(async (profile: Profile): Promise<void> => {
+  insertOrUpdateProfile: vi.fn(async (profile: Profile): Promise<void> => {
     profilesByUserId[profile.user] = profile
   }),
 
-  insertOrUpdateAllowedRefreshTokens: jest.fn(async (allowedRefreshTokens: AllowedRefreshTokens): Promise<void> => {
+  insertOrUpdateAllowedRefreshTokens: vi.fn(async (allowedRefreshTokens: AllowedRefreshTokens): Promise<void> => {
     allowedRefreshTokensByHash[allowedRefreshTokens.hash] = allowedRefreshTokens
   }),
 
-  updateCard: jest.fn(async (card: Card): Promise<void> => {
+  updateCard: vi.fn(async (card: Card): Promise<void> => {
     cardsByHash[card.hash] = card
   }),
 
-  updateCardVersion: jest.fn(async (cardVersion: CardVersion): Promise<void> => {
+  updateCardVersion: vi.fn(async (cardVersion: CardVersion): Promise<void> => {
     cardVersionsById[cardVersion.id] = cardVersion
   }),
 
-  deleteCard: jest.fn(async (card: Card): Promise<void> => {
+  deleteCard: vi.fn(async (card: Card): Promise<void> => {
     delete cardsByHash[card.hash]
   }),
 
-  deleteCardVersion: jest.fn(async (cardVersion: CardVersion): Promise<void> => {
+  deleteCardVersion: vi.fn(async (cardVersion: CardVersion): Promise<void> => {
     delete cardVersionsById[cardVersion.id]
   }),
 
-  deleteInvoice: jest.fn(async (invoice: Invoice): Promise<void> => {
+  deleteInvoice: vi.fn(async (invoice: Invoice): Promise<void> => {
     delete invoicesByPaymentHash[invoice.paymentHash]
   }),
 
-  deleteCardVersionInvoice: jest.fn(async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
+  deleteCardVersionInvoice: vi.fn(async (cardVersionInvoice: CardVersionHasInvoice): Promise<void> => {
     const index = cardVersionInvoices.findIndex((current) => current.cardVersion === cardVersionInvoice.cardVersion && current.invoice === cardVersionInvoice.invoice)
     if (index >= 0) {
       cardVersionInvoices.splice(index, 1)
     }
   }),
 
-  deleteLnurlWByBulkWithdrawId: jest.fn(async (bulkWithdrawId: string): Promise<void> => {
+  deleteLnurlWByBulkWithdrawId: vi.fn(async (bulkWithdrawId: string): Promise<void> => {
     const lnurlW = Object.values(lnurlWsByLnbitsId).find((lnurlW) => lnurlW.bulkWithdrawId === bulkWithdrawId)
     if (lnurlW != null) {
       delete lnurlWsByLnbitsId[lnurlW.lnbitsId]
     }
   }),
 
-  deleteSet: jest.fn(async (set: Set): Promise<void> => {
+  deleteSet: vi.fn(async (set: Set): Promise<void> => {
     delete setsById[set.id]
   }),
 
-  deleteSetSettings: jest.fn(async (setSettings: SetSettings): Promise<void> => {
+  deleteSetSettings: vi.fn(async (setSettings: SetSettings): Promise<void> => {
     delete setSettingsBySetId[setSettings.set]
   }),
 
-  deleteUserCanUseSet: jest.fn(async (userCanUseSet: UserCanUseSet): Promise<void> => {
+  deleteUserCanUseSet: vi.fn(async (userCanUseSet: UserCanUseSet): Promise<void> => {
     const index = usersCanUseSets.findIndex((current) => current.user === userCanUseSet.user && current.set === userCanUseSet.set)
     if (index >= 0) {
       usersCanUseSets.splice(index, 1)
     }
   }),
 
-  deleteAllAllowedRefreshTokensForUserId: jest.fn(async (userId: User['id']): Promise<void> => {
+  deleteAllAllowedRefreshTokensForUserId: vi.fn(async (userId: User['id']): Promise<void> => {
     removeAllowedRefreshTokensForUserId(userId)
   }),
 
-  getCardByHash: jest.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
+  getCardByHash: vi.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
 
-  setCardLock: jest.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
+  setCardLock: vi.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
     if (cardsByHash[hash] == null) {
       throw new Error(`Card with ${hash} does not exist`)
     }
@@ -328,7 +330,7 @@ export default jest.fn().mockImplementation(() => ({
     cardsByHash[hash].locked = lockValue
   }),
 
-  releaseCardLock: jest.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
+  releaseCardLock: vi.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
     if (cardsByHash[hash] == null) {
       throw new Error(`Card with ${hash} does not exist`)
     }

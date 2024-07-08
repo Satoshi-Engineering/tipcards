@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest'
+
 import '../../../mocks/process.env'
 import { queries } from '../mocks/client'
 import { addData } from '../mocks/database'

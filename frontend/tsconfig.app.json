@@ -21,7 +21,6 @@
       "@backend/*": ["../backend/src/*"],
     },
     "target": "ES2022",
-    "types": [ "jest" ],
     "typeRoots": [
       "./src/types",
       "../node_modules/@types",

@@ -1,10 +1,11 @@
+import type { TestAPI } from 'vitest'
 export default class FailEarly {
   // testName: string | undefined
   failed = false
-  jestIt: jest.It
+  vitestIt: TestAPI
 
-  constructor(jestIt: jest.It) {
-    this.jestIt = jestIt
+  constructor(vitestIt: TestAPI) {
+    this.vitestIt = vitestIt
   }
 
   test(name: string, test: () => Promise<void>, timeout?: number) {
@@ -22,7 +23,7 @@ export default class FailEarly {
       }
     }
 
-    this.jestIt(name, failEarlyFn, timeout)
+    this.vitestIt(name, failEarlyFn, timeout)
   }
 
   it(name: string, test: () => Promise<void>, timeout?: number) {

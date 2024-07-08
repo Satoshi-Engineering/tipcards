@@ -1,3 +1,5 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database'

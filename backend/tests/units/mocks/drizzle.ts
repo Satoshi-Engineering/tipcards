@@ -1,6 +1,8 @@
-jest.mock('mysql2/promise', () => ({ createConnection: () => null }))
+import { vi } from 'vitest'
 
-jest.mock('drizzle-orm/mysql2', () => ({
+vi.mock('mysql2/promise', () => ({ createConnection: () => null }))
+
+vi.mock('drizzle-orm/mysql2', () => ({
   drizzle: () => ({ select }),
 }))
 

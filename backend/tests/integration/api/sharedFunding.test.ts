@@ -1,3 +1,4 @@
+import { describe, it, expect, afterAll } from 'vitest'
 import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports

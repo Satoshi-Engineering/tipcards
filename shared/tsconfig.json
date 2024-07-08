@@ -1,4 +1,8 @@
 {
+  "include": [
+    "./src/**/*.ts",
+    "./tests/**/*.ts",
+  ],
   "compilerOptions": {
     "composite": true,
     "target": "ES2022",
@@ -6,7 +10,7 @@
     "module": "node16",
     "rootDir": "./",
     "moduleResolution": "nodenext",
-    "types": ["node", "jest"],
+    "types": ["node"],
     "paths": {
       "@shared/*": ["../shared/src/*"],
     },

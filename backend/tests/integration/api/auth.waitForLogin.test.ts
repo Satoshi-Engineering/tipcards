@@ -1,3 +1,4 @@
+import { describe, it, expect, afterAll } from 'vitest'
 import { AxiosResponse } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports

@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'

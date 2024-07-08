@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 

@@ -18,7 +18,6 @@ module.exports = {
     '**/*.bundle.js',
     'dist/*',
   ],
-  plugins: ['jest'],
   rules: {
     semi: ['error', 'never'],
     quotes: ['error', 'single', { 'avoidEscape': true }],

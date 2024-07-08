@@ -1,3 +1,5 @@
+import { vi } from 'vitest'
+
 import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
 import type { Card } from '@backend/database/redis/data/Card'
 import type { Set } from '@backend/database/redis/data/Set'
@@ -28,12 +30,12 @@ const addItemToTable = <I>(table: Record<string, I>, { key, item }: { key: strin
   table[key] = item
 }
 
-jest.mock('redis', () => ({
+vi.mock('redis', () => ({
   createClient: () => ({
     on: () => undefined,
     quit: async () => undefined,
     connect: async () => undefined,
-    exists: jest.fn().mockImplementation(async (path: string) => {
+    exists: vi.fn().mockImplementation(async (path: string) => {
       if (path.match(regexSet)) {
         const setId = path.match(regexSet)?.groups?.id || ''
         return setsById[setId] != null
@@ -73,7 +75,7 @@ jest.mock('redis', () => ({
     },
     json: {
       set: async () => undefined,
-      get: jest.fn().mockImplementation(async (path: string) => {
+      get: vi.fn().mockImplementation(async (path: string) => {
         if (path.match(regexSet)) {
           const setId = path.match(regexSet)?.groups?.id || ''
           return setsById[setId] || null

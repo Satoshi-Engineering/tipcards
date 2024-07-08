@@ -1,3 +1,4 @@
+import { expect } from 'vitest'
 import crypto, { randomUUID } from 'crypto'
 
 import LNURL from '@shared/modules/LNURL/LNURL'

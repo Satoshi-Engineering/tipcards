@@ -11,7 +11,7 @@
     "./src/types/global.d.ts", "tests/integration/lib/HDWallet/HDWallet.ts",
   ],
   "compilerOptions": {
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "references": [
     { "path" : "../shared/tsconfig.json" }

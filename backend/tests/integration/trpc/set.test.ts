@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { TRPCError } from '@trpc/server'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
