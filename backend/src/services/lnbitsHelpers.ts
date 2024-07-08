@@ -10,7 +10,6 @@ import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/
 import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
 import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
-import { delay } from '@backend/services/timingUtils'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
 
 import hashSha256 from './hashSha256'
