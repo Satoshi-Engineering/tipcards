@@ -2,7 +2,7 @@
 # This job will run even if the previous stages fail.
 # This runs as it tests the live environment, which should be available even if the previous stages fail.
 live-check:
-  image: cypress/included:cypress-13.13.0-node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
+  image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   stage: live-check
   rules:
     - !reference [.shared_config, rules, web_and_push_and_schedule]
