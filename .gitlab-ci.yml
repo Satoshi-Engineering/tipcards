@@ -12,8 +12,9 @@
 # - BACKEND_DEPLOY_PATH_DEVELOP
 # - BACKEND_ENV_FILE_MAIN
 # - BACKEND_ENV_FILE_DEVELOP
-# - BACKEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE_MAIN during integration tests
-# - BACKEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE_MAIN during integration tests
+# - BACKEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE during integration tests
+# - BACKEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE during integration tests
+# - BACKEND_ENV_FILE_TEST_FEATURE # overwrites ENV_FILE during integration tests
 #
 # ----- FRONTEND
 # - FRONTEND_DEPLOY_SERVER_MAIN
@@ -22,8 +23,11 @@
 # - FRONTEND_DEPLOY_PATH_DEVELOP
 # - FRONTEND_ENV_FILE_MAIN
 # - FRONTEND_ENV_FILE_DEVELOP
-# - FRONTEND_TEST_ORIGIN_MAIN
-# - FRONTEND_TEST_ORIGIN_DEVELOP
+# - FRONTEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE during integration tests
+# - FRONTEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE during integration tests
+# - FRONTEND_ENV_FILE_TEST_FEATURE # overwrites ENV_FILE during integration tests
+# - FRONTEND_ENV_FILE_LIVE_CHECK_MAIN
+# - FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP
 
 image: node:lts-alpine
 
@@ -33,10 +37,10 @@ stages:
   - install
   - setup
   - test
-  - backend-integration
+  - integration
   - build
   - deploy
-  - frontend-integration
+  - live-check
 
 # ------------- INCLUDES
 include:
@@ -47,3 +51,4 @@ include:
   - 'gitlab-ci/build.yml'
   - 'gitlab-ci/deploy.yml'
   - 'gitlab-ci/integration.yml'
+  - 'gitlab-ci/live-check.yml'

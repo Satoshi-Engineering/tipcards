@@ -1,0 +1,31 @@
+# when: always
+# This job will run even if the previous stages fail.
+# This runs as it tests the live environment, which should be available even if the previous stages fail.
+live-check:
+  image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
+  stage: live-check
+  rules:
+    - !reference [.shared_config, rules, web_and_push_and_schedule]
+    - !reference [.shared_config, rules, nightly_integration]
+    - !reference [.shared_config, rules, deployable_branches]
+    - when: always # even run when previous stages fail
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  variables:
+    NODE_ENV: test
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "main" ]
+      then 
+        echo "Running on main branch"
+        cp $FRONTEND_ENV_FILE_LIVE_CHECK_MAIN frontend/.env.test.local
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
+      then
+        echo "Running on develop branch"
+        cp $FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP frontend/.env.test.local
+      else
+        echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
+        exit 1
+      fi
+    - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH"
+    - npm run frontend-test-integration
