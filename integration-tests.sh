@@ -14,7 +14,7 @@ descendent_pids() {
 
 echo '' > backend.log
 
-npm run backend-dev -- --envIntegrationTest 2>&1 > backend.log &
+npm run backend-debug -- --envIntegrationTest 2>&1 > backend.log &
 BACKEND_PID=$!
 
 echo "Running backend with pid $BACKEND_PID, waiting for startup to finish"
