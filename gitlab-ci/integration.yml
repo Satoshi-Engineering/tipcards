@@ -5,7 +5,7 @@ variables:
   POSTGRES_PASSWORD: thisisonlyusedinthepipeline
 
 test-integration:
-  image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
+  image: cypress/included:cypress-13.13.0-node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   services:
     - name: postgres:16.3
       alias: postgres
