@@ -31,4 +31,7 @@ coverage
 *.sw?
 /docs/examples/redis/.env
 
+# backend
 files/
+lnurl.auth.pem
+lnurl.auth.pem.pub
