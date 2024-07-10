@@ -32,7 +32,7 @@ test-integration-backend:
         cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
       fi
     - echo "Running database migration to prepare database for integration tests"
-    - npm run drizzle-migrate -- --envFilePostfix=integrationTest
+    - npm run drizzle-migrate -- --envIntegrationTest
     - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
     - sh backend-integration-tests.sh
 

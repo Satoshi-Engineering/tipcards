@@ -65,23 +65,22 @@ git config core.hooksPath .githooks
   - `LNBITS_ADMIN_KEY` paste from your lnbits wallet: get this from https://legend.lnbits.com/wallet and clicking on "API info"
 * You can look up additional optional variables in `.env.example`
 
-#### Custom Env File
+#### Integration Test Env File
 
-Per default the backend loads the `backend/.env` file. If you need different setups locally (e.g. one for development and one for running integration tests) you can load a different one by adding a commandline argument. For running the backend you can use `npm run backend-dev -- --envFilePostfix=somePostFix` which would use the file `backend/.env.somePostFix`. You can also add the parameter to all other commands (cli, integration test, etc.).
+Per default the backend loads the `backend/.env` file. If you need to start the backend for integration tests you have to use a different env file. Run the backend using `npm run backend-dev -- --envIntegrationTest` which will use the file `backend/.env.integrationTest`. You can also add the parameter to all other commands (cli, drizzle-migration, etc.).
 
 #### Integration Test Script
 
-You can run backend integration tests locally, including starting the local backend, in one command by running the helper script `./backend-integration-tests.sh`. This command uses the `backend/.env.integrationTest` env file (see Custom EnvFile).
+You can run backend integration tests locally, including starting the local backend, in one command by running the helper script `./backend-integration-tests.sh`. This command uses the `backend/.env.integrationTest` env file (see Integration Test Env File).
 
 Alternately if you want to run specific tests you could do:
 ```bash
 # create custom env file for testing + startup backend using it
 vi backend/.env.integrationTest
-npm run backend-dev -- --envFilePostfix=integrationTest
+npm run backend-dev -- --envIntegrationTest
 
-# run a specific test using the same env file
-cd backend
-../node_modules/jest/bin/jest.js --config jest.config.js --runInBand --testTimeout=50000 --envFilePostfix=integrationTest tests/integration/api/auth.test.ts
+# run a specific test using .env.integrationTest
+npx vitest run --config ./backend/vitest.config.ts ./backend/tests/integration/your/custom/test.ts
 ```
 
 ### Frontend

@@ -14,7 +14,7 @@ descendent_pids() {
 
 echo '' > backend.log
 
-npm run backend-dev -- --envFilePostfix=integrationTest 2>&1 > backend.log &
+npm run backend-dev -- --envIntegrationTest 2>&1 > backend.log &
 BACKEND_PID=$!
 
 echo "Running backend with pid $BACKEND_PID, waiting for startup to finish"
@@ -24,9 +24,8 @@ echo ''
 echo 'Startup finished, running integration tests'
 
 # lnbits currently has a bug that allows double/multiple withdraws. therefore we added a max-queries into traefik
-# to make sure the integration tests don't run into troubles there only run one integration test after the other
+# to make sure the integration tests don't run into troubles there only runs one integration test after the other
 # (using maxWorkers=1 as runInBand is not available in vitest)
-export __ENV_FILE_POSTFIX__='integrationTest'
 npm run backend-test-integration -- --minWorkers=1 --maxWorkers=1 --testTimeout=50000
 INTEGRATION_TEST_EXIT_CODE=$?
 
