@@ -1,43 +1,53 @@
-import { resolve } from 'path'
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type BuildOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createHtmlPlugin } from 'vite-plugin-html'
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
-  let build: Record<string, string | object> = {
-    input: {
-      'index': resolve(__dirname, 'index.html'),
+  let build: BuildOptions = {
+    rollupOptions: {
+      input: {
+        'index': fileURLToPath(new URL('./index.html', import.meta.url)),
+      },
     },
-    outDir: '../dist/frontend/',
+    emptyOutDir: true,
+    outDir: fileURLToPath(new URL('../dist/frontend/', import.meta.url)),
     commonjsOptions: { include: [/shared/, /node_modules/] },
   }
 
   if (env.BUILD_MAINTENANCE) {
     build = {
-      input: {
-        'maintenance': resolve(__dirname, 'index.maintenance.html'),
+      rollupOptions: {
+        input: {
+          'maintenance': fileURLToPath(new URL('./index.maintenance.html', import.meta.url)),
+        },
       },
+      emptyOutDir: true,
+      outDir: fileURLToPath(new URL('../dist/frontend-maintenance/', import.meta.url)),
     }
   }
   if (env.VITE_BUILD_LIBS) {
     build = {
       lib: {
-        entry: resolve(__dirname, 'src/lib/externalCardStatus.ts'),
+        entry: fileURLToPath(new URL('./src/lib/externalCardStatus.ts', import.meta.url)),
         name: 'externalCardStatus',
         fileName: 'externalCardStatus',
       },
-      outDir: '../dist/frontend/',
+      emptyOutDir: true,
+      outDir: fileURLToPath(new URL('../dist/frontend/', import.meta.url)),
     }
   }
 
   return {
+    root: fileURLToPath(new URL('./', import.meta.url)),
     plugins: [vue(), createHtmlPlugin({ inject: { data: { env } } })],
     optimizeDeps: {
-      include: [ 'shared' ],
+      include: [ '../shared/' ],
     },
     resolve: {
       alias: {
@@ -53,5 +63,15 @@ export default defineConfig(({ mode }) => {
       __INTLIFY_PROD_DEVTOOLS__: false,
     },
     build,
+    css: {
+      postcss: {
+        plugins: [
+          tailwindcss({
+            config: fileURLToPath(new URL('./tailwind.config.ts', import.meta.url)),
+          }),
+          autoprefixer(),
+        ],
+      },
+    },
   }
 })

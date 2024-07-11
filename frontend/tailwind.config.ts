@@ -1,11 +1,12 @@
-const plugin = require('tailwindcss/plugin')
-const colors = require('tailwindcss/colors')
-const defaultTheme = require('tailwindcss/defaultTheme')
+import { fileURLToPath } from 'node:url'
+import plugin from 'tailwindcss/plugin'
+import colors from 'tailwindcss/colors'
+import defaultTheme from 'tailwindcss/defaultTheme'
 
-module.exports = {
+export default {
   content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}',
+    fileURLToPath(new URL('./index.html', import.meta.url)),
+    fileURLToPath(new URL('./src/**/*.{vue,js,ts,jsx,tsx}', import.meta.url)),
   ],
   theme: {
     extend: {
