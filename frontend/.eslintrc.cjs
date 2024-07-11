@@ -2,7 +2,7 @@
 
 module.exports = {
   extends: [
-    '../.eslintrc.js',
+    '../.eslintrc.cjs',
   ],
   env: {
     'vue/setup-compiler-macros': true,

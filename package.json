@@ -1,6 +1,7 @@
 {
   "name": "lightning-tip-cards",
   "version": "3.0.0",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore --max-warnings 0",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
