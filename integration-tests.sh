@@ -39,9 +39,7 @@ if [ "$INTEGRATION_TEST_EXIT_CODE" -ne 0 ]; then
 fi
 
 echo 'Backend integration tests finished, running frontend integration tests'
-npx cypress install
-npm run frontend-build
-npm run frontend-test-integration
+npm run frontend-test-integration-with-build
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID

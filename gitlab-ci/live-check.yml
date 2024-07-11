@@ -27,5 +27,7 @@ live-check:
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
       fi
+    - echo "Installing cypress"
+    - npx cypress install
     - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH"
     - npm run frontend-test-integration
