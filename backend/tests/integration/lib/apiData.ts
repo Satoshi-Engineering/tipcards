@@ -1,10 +1,10 @@
 import { expect } from 'vitest'
 import crypto, { randomUUID } from 'crypto'
 
-import LNURL from '@shared/modules/LNURL/LNURL'
-import hashSha256 from '@backend/services/hashSha256'
+import LNURL from '@shared/modules/LNURL/LNURL.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 
-import { API_ORIGIN } from '../lib/constants'
+import { API_ORIGIN } from '../lib/constants.js'
 
 const generateCardHash = () => { return hashSha256(randomUUID()) }
 const generateSetId = () => { return crypto.randomUUID() }

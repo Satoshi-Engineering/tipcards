@@ -1,5 +1,5 @@
-import Database from './Database'
-import Queries from './Queries'
+import Database from './Database.js'
+import Queries from './Queries.js'
 
 export const getClient = async () => {
   return await Database.getDatabase()

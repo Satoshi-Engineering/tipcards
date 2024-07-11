@@ -6,7 +6,7 @@ import {
   TELEGRAM_GROUP_ID_ERROR,
   TELEGRAM_PREFIX,
   TELEGRAM_CHAR_MAX,
-} from '@backend/constants'
+} from '@backend/constants.js'
 
 const initErrorLogging = () => {
   const telegramSender = initTelegramSender()

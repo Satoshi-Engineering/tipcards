@@ -1,5 +1,5 @@
 import { pgTable, varchar, text } from 'drizzle-orm/pg-core'
-import { imageType } from './enums/ImageType'
+import { imageType } from './enums/ImageType.js'
 
 export const Image = pgTable('Image', {
   id: varchar('id', { length: 36 }).primaryKey().unique().notNull(), // Note: uuid

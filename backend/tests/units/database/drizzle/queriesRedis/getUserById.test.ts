@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { dateToUnixTimestamp } from '@backend/database/drizzle/transforms/dateHelpers'
-import { getUserById } from '@backend/database/drizzle/queriesRedis'
+import { dateToUnixTimestamp } from '@backend/database/drizzle/transforms/dateHelpers.js'
+import { getUserById } from '@backend/database/drizzle/queriesRedis.js'
 
 import {
   createProfileForUser,
@@ -13,7 +13,7 @@ import {
   createAllowedRefreshTokens,
   createImage, createUserCanUseImage,
   createLandingPageTypeExternal, createUserCanUseLandingPage,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
 describe('getUserById', () => {
   it('should return null if a user does not exist', async () => {

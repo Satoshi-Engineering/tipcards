@@ -1,11 +1,11 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { asTransaction } from '@backend/database/drizzle/client'
+import { asTransaction } from '@backend/database/drizzle/client.js'
 
 // migration specific
 import {
   getAllCards as getAllRedisCards,
-} from '@backend/database/redis/queriesRedisOnly'
+} from '@backend/database/redis/queriesRedisOnly.js'
 
 /* eslint-disable no-console */
 export const fixCardCreatedAfterMigration = async () => {

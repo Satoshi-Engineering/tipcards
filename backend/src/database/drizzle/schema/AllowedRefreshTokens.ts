@@ -1,5 +1,5 @@
 import { pgTable, index, varchar, text } from 'drizzle-orm/pg-core'
-import { User } from './User'
+import { User } from './User.js'
 
 export const AllowedRefreshTokens = pgTable('AllowedRefreshTokens', {
   hash: varchar('hash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of user + current + previous

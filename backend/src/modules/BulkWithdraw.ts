@@ -1,19 +1,19 @@
 import type z from 'zod'
 
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
 import {
   createBulkWithdraw,
   getBulkWithdrawById, getBulkWithdrawByCardHash,
   updateBulkWithdraw, deleteBulkWithdraw,
-} from '@backend/database/queries'
-import hashSha256 from '@backend/services/hashSha256'
-import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers'
-import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+} from '@backend/database/queries.js'
+import hashSha256 from '@backend/services/hashSha256.js'
+import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers.js'
+import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis.js'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
-import CardCollection from './CardCollection'
+import CardCollection from './CardCollection.js'
 
 type BulkWithdrawId = z.infer<typeof BulkWithdrawRedis.shape.id>
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>

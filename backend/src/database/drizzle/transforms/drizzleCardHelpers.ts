@@ -1,5 +1,5 @@
 import type { CardVersion } from '@backend/database/drizzle/schema'
-import type Queries from '@backend/database/drizzle/Queries'
+import type Queries from '@backend/database/drizzle/Queries.js'
 
 export const totalAmountForCards = async (queries: Queries, cards: CardVersion[]) => {
   const cardTotals = await Promise.all(

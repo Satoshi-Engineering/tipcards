@@ -1,4 +1,4 @@
-import { lockCardByHash, releaseCardByHash } from '@backend/database/queries'
+import { lockCardByHash, releaseCardByHash } from '@backend/database/queries.js'
 
 /** @throws */
 export const lockCard = async (cardHash: string): Promise<string> => {

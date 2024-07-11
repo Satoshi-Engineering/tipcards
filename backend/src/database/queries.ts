@@ -1,6 +1,6 @@
-import * as queriesDrizzle from '@backend/database/drizzle/queriesRedis'
-import * as queriesRedis from '@backend/database/redis/queries'
-import { USE_DRIZZLE } from '@backend/constants'
+import * as queriesDrizzle from '@backend/database/drizzle/queriesRedis.js'
+import * as queriesRedis from '@backend/database/redis/queries.js'
+import { USE_DRIZZLE } from '@backend/constants.js'
 
 let queries = queriesRedis
 if (USE_DRIZZLE) {

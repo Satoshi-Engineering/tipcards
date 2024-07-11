@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { getPaidTimestamp, getPaidAmount } from '@shared/data/api/cardHelpers'
+import { getPaidTimestamp, getPaidAmount } from '@shared/data/api/cardHelpers.js'
 
 const card = {
   cardHash: 'someHash',

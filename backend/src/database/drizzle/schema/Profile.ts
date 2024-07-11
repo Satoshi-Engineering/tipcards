@@ -1,5 +1,5 @@
 import { pgTable, varchar, text } from 'drizzle-orm/pg-core'
-import { User } from './User'
+import { User } from './User.js'
 
 export const Profile = pgTable('Profile', {
   user: varchar('user', { length: 64 }).primaryKey().unique().notNull().references(() => User.id).unique(),

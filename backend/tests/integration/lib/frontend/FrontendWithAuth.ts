@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { Set } from '@shared/data/api/Set'
+import { Set } from '@shared/data/api/Set.js'
 
-import Frontend from './Frontend'
-import { API_ORIGIN } from '../constants'
+import Frontend from './Frontend.js'
+import { API_ORIGIN } from '../constants.js'
 
 export default class FrontendWithAuth extends Frontend {
   authServiceLoginHash = ''

@@ -4,17 +4,17 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
-import { ErrorCode, type ErrorResponse } from '@shared/data/Errors'
-import LNURL from '@shared/modules/LNURL/LNURL'
+import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
+import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
+import LNURL from '@shared/modules/LNURL/LNURL.js'
 import { initDatabase, closeDatabaseConnections } from '@backend/database'
-import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw'
-import { setRouter } from '@backend/trpc/router/set'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw.js'
+import { setRouter } from '@backend/trpc/router/set.js'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
-import Frontend from '../lib/frontend/Frontend'
-import LNBitsWallet from '../lib/lightning/LNBitsWallet'
-import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import Frontend from '../lib/frontend/Frontend.js'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
+import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({

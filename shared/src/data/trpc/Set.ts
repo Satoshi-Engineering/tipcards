@@ -1,7 +1,7 @@
 import z from 'zod'
 
-import { LandingPage } from './LandingPage'
-import { Image } from './Image'
+import { LandingPage } from './LandingPage.js'
+import { Image } from './Image.js'
 
 export const Set = z.object({
   id: z.string(),

@@ -2,20 +2,20 @@ import axios from 'axios'
 import { Router, type Request, type Response } from 'express'
 
 import type { AccessTokenPayload } from '@shared/data/auth'
-import { Set as SetApi, type Settings } from '@shared/data/api/Set'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors'
+import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
-import type { Set as SetRedis } from '@backend/database/redis/data/Set'
+import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
 import {
   getSetById, getSetsByUserId,
   createSet, deleteSet, updateSet,
   createCard, deleteCard, getCardByHash,
-} from '@backend/database/queries'
-import hashSha256 from '@backend/services/hashSha256'
-import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
+} from '@backend/database/queries.js'
+import hashSha256 from '@backend/services/hashSha256.js'
+import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers.js'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
-import { authGuardAccessToken } from './middleware/auth/jwt'
+import { authGuardAccessToken } from './middleware/auth/jwt.js'
 
 const router = Router()
 

@@ -1,15 +1,15 @@
-import { BulkWithdrawId } from '@shared/data/trpc/BulkWithdraw'
-import { CardHash } from '@shared/data/trpc/Card'
-import { SetId } from '@shared/data/trpc/Set'
+import { BulkWithdrawId } from '@shared/data/trpc/BulkWithdraw.js'
+import { CardHash } from '@shared/data/trpc/Card.js'
+import { SetId } from '@shared/data/trpc/Set.js'
 
 import {
   lockCard, safeReleaseCard,
   lockCards, safeReleaseCards,
-} from '@backend/services/databaseCardLock'
-import BulkWithdrawModule from '@backend/modules/BulkWithdraw'
-import CardCollection from '@backend/modules/CardCollection'
+} from '@backend/services/databaseCardLock.js'
+import BulkWithdrawModule from '@backend/modules/BulkWithdraw.js'
+import CardCollection from '@backend/modules/CardCollection.js'
 
-import { publicProcedure } from '../../trpc'
+import { publicProcedure } from '../../trpc.js'
 
 export const handleCardLockForSingleCard = publicProcedure
   .input(CardHash)

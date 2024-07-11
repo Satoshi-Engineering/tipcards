@@ -3,13 +3,13 @@ import fs from 'fs'
 import type { Socket } from 'net'
 import path from 'path'
 
-import { initSocketIo } from '@backend/api/auth'
+import { initSocketIo } from '@backend/api/auth.js'
 import { initDatabase } from '@backend/database'
-import { loadCoarsWhitelist } from '@backend/services/corsOptions'
+import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import { initAllWorkers } from '@backend/worker'
-import app from '@backend/app'
-import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants'
-import { shutdown } from '@backend/shutdown'
+import app from '@backend/app.js'
+import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
+import { shutdown } from '@backend/shutdown.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'

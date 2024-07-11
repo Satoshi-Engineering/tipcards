@@ -1,17 +1,17 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
-import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData'
+import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData.js'
 import {
   createCard as createRedisCard,
   createInvoice as createRedisInvoice,
   createSetFunding as createRedisSetFunding,
-} from '../../../../redisData'
+} from '../../../../redisData.js'
 
-import { deleteCard } from '@backend/database/drizzle/queriesRedis'
+import { deleteCard } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('deleteCard', () => {
   it('should delete a card with invoice', async () => {

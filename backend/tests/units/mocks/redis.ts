@@ -1,9 +1,9 @@
 import { vi } from 'vitest'
 
-import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
-import type { Card } from '@backend/database/redis/data/Card'
-import type { Set } from '@backend/database/redis/data/Set'
-import { REDIS_BASE_PATH } from '@backend/constants'
+import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'
+import type { Card } from '@backend/database/redis/data/Card.js'
+import type { Set } from '@backend/database/redis/data/Set.js'
+import { REDIS_BASE_PATH } from '@backend/constants.js'
 
 export const regexSet = new RegExp(`${REDIS_BASE_PATH}:setsById:(?<id>[a-zA-Z0-9-]+):data`)
 export const regexCard = new RegExp(`${REDIS_BASE_PATH}:cardsByHash:(?<hash>[a-zA-Z0-9-]+):data`)

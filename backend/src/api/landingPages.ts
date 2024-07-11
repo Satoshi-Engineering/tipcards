@@ -1,14 +1,14 @@
 import { Router } from 'express'
 
-import { LandingPage as LandingPageApi } from '@shared/data/api/LandingPage'
+import { LandingPage as LandingPageApi } from '@shared/data/api/LandingPage.js'
 import type { AccessTokenPayload } from '@shared/data/auth'
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { LandingPage } from '@backend/database/redis/data/LandingPage'
-import type { User } from '@backend/database/redis/data/User'
-import { getUserById, getLandingPage } from '@backend/database/queries'
+import type { LandingPage } from '@backend/database/redis/data/LandingPage.js'
+import type { User } from '@backend/database/redis/data/User.js'
+import { getUserById, getLandingPage } from '@backend/database/queries.js'
 
-import { authGuardAccessToken } from './middleware/auth/jwt'
+import { authGuardAccessToken } from './middleware/auth/jwt.js'
 
 const router = Router()
 

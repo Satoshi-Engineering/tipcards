@@ -8,7 +8,7 @@ import {
   LNURL_PORT,
   PROXY_PORT,
   WEB_PORT,
-} from '@backend/constants'
+} from '@backend/constants.js'
 
 const app = express()
 app.use('/api', proxy(`localhost:${EXPRESS_PORT}`, {

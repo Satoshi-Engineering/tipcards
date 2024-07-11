@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest'
-import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
-import LNURL from '@shared/modules/LNURL/LNURL'
-import LNURLw from '@shared/modules/LNURL/LNURLw'
-import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils'
+import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest.js'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
+import LNURL from '@shared/modules/LNURL/LNURL.js'
+import LNURLw from '@shared/modules/LNURL/LNURLw.js'
+import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils.js'
 
 export default class LNBitsWallet {
   adminKey: string

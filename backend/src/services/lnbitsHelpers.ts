@@ -1,19 +1,19 @@
 import axios from 'axios'
 import z from 'zod'
 
-import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card'
-import { getPaidAmount } from '@shared/data/api/cardHelpers'
-import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
+import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card.js'
+import { getPaidAmount } from '@shared/data/api/cardHelpers.js'
+import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
-import type { Set } from '@backend/database/redis/data/Set'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
-import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries'
-import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError'
-import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants'
+import type { Set } from '@backend/database/redis/data/Set.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi.js'
+import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries.js'
+import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
+import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
-import hashSha256 from './hashSha256'
-import { LnbitsWithdrawLinkResponse } from './LnbitsWithdrawLinkResponse'
+import hashSha256 from './hashSha256.js'
+import { LnbitsWithdrawLinkResponse } from './LnbitsWithdrawLinkResponse.js'
 
 const axiosOptionsWithReadHeaders = {
   headers: {

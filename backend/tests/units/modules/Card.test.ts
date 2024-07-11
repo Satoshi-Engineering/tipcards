@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach } from 'vitest'
 
 import '../mocks/process.env'
 import '../mocks/axios'
-import { addCards } from '../mocks/redis'
+import { addCards } from '../mocks/redis.js'
 
-import { CARD_FUNDED_INVOICE } from '../data/FundedSetWithBulkWithdraw'
+import { CARD_FUNDED_INVOICE } from '../data/FundedSetWithBulkWithdraw.js'
 
-import NotFoundError from '@backend/errors/NotFoundError'
-import Card from '@backend/modules/Card'
+import NotFoundError from '@backend/errors/NotFoundError.js'
+import Card from '@backend/modules/Card.js'
 
 beforeEach(() => {
   addCards(CARD_FUNDED_INVOICE)

@@ -1,14 +1,14 @@
-import { Card } from '@shared/data/trpc/Card'
-import { Set, SetId } from '@shared/data/trpc/Set'
+import { Card } from '@shared/data/trpc/Card.js'
+import { Set, SetId } from '@shared/data/trpc/Set.js'
 
-import CardCollection from '@backend/modules/CardCollection'
-import { getSetsByUserId } from '@backend/database/queries'
+import CardCollection from '@backend/modules/CardCollection.js'
+import { getSetsByUserId } from '@backend/database/queries.js'
 
-import { setFromSetRedis } from '../data/transforms/setFromSetRedis'
-import { router } from '../trpc'
-import publicProcedure from '../procedures/public'
-import loggedInProcedure from '../procedures/loggedIn'
-import { handleCardLockForSet } from '../procedures/partials/handleCardLock'
+import { setFromSetRedis } from '../data/transforms/setFromSetRedis.js'
+import { router } from '../trpc.js'
+import publicProcedure from '../procedures/public.js'
+import loggedInProcedure from '../procedures/loggedIn.js'
+import { handleCardLockForSet } from '../procedures/partials/handleCardLock.js'
 
 export const setRouter = router({
   getAll: loggedInProcedure

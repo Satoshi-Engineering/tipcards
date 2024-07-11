@@ -1,17 +1,17 @@
 import axios from 'axios'
 import { Router, type Request, type Response, type NextFunction } from 'express'
 
-import type { Card as CardApi } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors'
-import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers'
+import type { Card as CardApi } from '@shared/data/api/Card.js'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
+import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi'
-import { getCardByHash, createCard, deleteCard } from '@backend/database/queries'
-import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
+import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi.js'
+import { getCardByHash, createCard, deleteCard } from '@backend/database/queries.js'
+import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
+import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
-import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
 const router = Router()
 

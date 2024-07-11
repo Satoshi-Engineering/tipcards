@@ -1,4 +1,4 @@
-import { validatePermissions } from '../middleware/validatePermissions'
-import publicProcedure from './public'
+import { validatePermissions } from '../middleware/validatePermissions.js'
+import publicProcedure from './public.js'
 
 export default publicProcedure.use(validatePermissions)

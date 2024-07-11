@@ -3,7 +3,7 @@ import type { Server } from 'http'
 import type { Socket } from 'net'
 
 import { closeDatabaseConnections as closeDatabase } from '@backend/database'
-import { APP_NAME } from '@backend/constants'
+import { APP_NAME } from '@backend/constants.js'
 
 export const shutdown = async (server: Server, connections: Socket[], exitCode = 0) => {
   forceExitInTenSeconds()

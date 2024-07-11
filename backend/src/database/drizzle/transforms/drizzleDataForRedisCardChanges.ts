@@ -1,14 +1,14 @@
 import type { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/drizzle/schema'
-import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
 
-import { unixTimestampOrNullToDate } from './dateHelpers'
+import { unixTimestampOrNullToDate } from './dateHelpers.js'
 import {
   getDrizzleInvoiceFromRedisInvoice,
   getAndLinkDrizzleLnurlPFromRedisLnurlP,
   getAndLinkDrizzleLnurlWFromRedisCard,
-} from './drizzleDataFromRedisData'
+} from './drizzleDataFromRedisData.js'
 
 /** @throws */
 export const getDrizzleDataObjectsForRedisCardChanges = async (queries: Queries, cardRedis: CardRedis): Promise<{

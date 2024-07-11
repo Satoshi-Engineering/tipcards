@@ -1,15 +1,15 @@
 import { Router, type Request, type Response, type NextFunction } from 'express'
 
-import type { Card } from '@shared/data/api/Card'
-import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors'
-import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers'
+import type { Card } from '@shared/data/api/Card.js'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
+import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { getCardByHash } from '@backend/database/queries'
-import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers'
-import { TIPCARDS_ORIGIN } from '@backend/constants'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
+import { getCardByHash } from '@backend/database/queries.js'
+import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
+import { TIPCARDS_ORIGIN } from '@backend/constants.js'
 
-import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock'
+import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
 const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
   status: 'error',

@@ -2,16 +2,16 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
 import {
   createLandingPagesTypeExternal,
   createUserCanUseLandingPage,
   createUsers,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
 import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema'
-import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis'
+import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getAllLandingPages', () => {
   it('should return a list of landing pages', async () => {

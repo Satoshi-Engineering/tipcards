@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { middleware, type Context } from '../trpc'
+import { middleware, type Context } from '../trpc.js'
 
 /**
  * @throws TRPCError

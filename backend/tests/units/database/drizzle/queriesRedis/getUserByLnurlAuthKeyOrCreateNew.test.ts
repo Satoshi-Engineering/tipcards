@@ -1,14 +1,14 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
-import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
-import { getUserByLnurlAuthKeyOrCreateNew } from '@backend/database/drizzle/queriesRedis'
+import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers.js'
+import { getUserByLnurlAuthKeyOrCreateNew } from '@backend/database/drizzle/queriesRedis.js'
 
-import { createUser, createProfileForUser } from '../../../../drizzleData'
-import { createUser as createUserData } from '../../../../redisData'
+import { createUser, createProfileForUser } from '../../../../drizzleData.js'
+import { createUser as createUserData } from '../../../../redisData.js'
 
 describe('getUserByLnurlAuthKeyOrCreateNew', () => {
   it('should return the user if he exists', async () => {

@@ -3,7 +3,7 @@ import type { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import type { Request } from 'express'
 import superjson from 'superjson'
 
-import type { PermissionsEnum } from '@shared/data/auth/User'
+import type { PermissionsEnum } from '@shared/data/auth/User.js'
 import type { AccessTokenPayload } from '@shared/data/auth'
 
 const getHostFromRequest = (req: Request): string | null => {

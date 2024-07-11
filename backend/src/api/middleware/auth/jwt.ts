@@ -2,11 +2,11 @@ import type { Request, Response, NextFunction } from 'express'
 import { jwtVerify, errors } from 'jose'
 import { ZodError } from 'zod'
 
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/queries'
-import { createRefreshToken, loadKeys, validateJwt } from '@backend/services/jwt'
-import { JWT_AUTH_ISSUER } from '@backend/constants'
+import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/queries.js'
+import { createRefreshToken, loadKeys, validateJwt } from '@backend/services/jwt.js'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 
 export const authGuardRefreshToken = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,3 +1,3 @@
-import { publicProcedure } from '../trpc'
+import { publicProcedure } from '../trpc.js'
 
 export default publicProcedure

@@ -1,6 +1,6 @@
-import Database from '@backend/database/drizzle/Database'
-import { getClient, resetClient } from '@backend/database/redis/client'
-import { USE_DRIZZLE } from '@backend/constants'
+import Database from '@backend/database/drizzle/Database.js'
+import { getClient, resetClient } from '@backend/database/redis/client.js'
+import { USE_DRIZZLE } from '@backend/constants.js'
 
 let initDatabase: () => Promise<unknown> = async () => await getClient()
 if (USE_DRIZZLE) {

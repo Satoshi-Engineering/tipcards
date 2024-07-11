@@ -6,12 +6,12 @@ import type {
   UserCanUseSet,
   Invoice, CardVersionHasInvoice,
 } from '@backend/database/drizzle/schema'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import type { Set as SetRedis } from '@backend/database/redis/data/Set'
-import hashSha256 from '@backend/services/hashSha256'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
+import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 
-import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
+import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers.js'
 
 /** @throws */
 export const getDrizzleDataObjectsForRedisSet = async (queries: Queries, setRedis: SetRedis): Promise<{

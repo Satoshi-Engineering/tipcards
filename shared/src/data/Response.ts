@@ -1,6 +1,6 @@
 import z from 'zod'
 
-import { ErrorCodeEnum } from './Errors'
+import { ErrorCodeEnum } from './Errors.js'
 
 export const SuccessResponse = z.object({
   status: z.literal('success'),

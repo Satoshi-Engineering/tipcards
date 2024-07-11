@@ -1,7 +1,7 @@
 import z from 'zod'
 
-import { PermissionsEnum } from './User'
-import { AccessTokenResponse } from '../Response'
+import { PermissionsEnum } from './User.js'
+import { AccessTokenResponse } from '../Response.js'
 
 export const AccessTokenPayload = z.object({
   id: z.string(),

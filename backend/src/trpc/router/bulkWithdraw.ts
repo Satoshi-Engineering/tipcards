@@ -1,16 +1,16 @@
-import { CardHash } from '@shared/data/trpc/Card'
-import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
+import { CardHash } from '@shared/data/trpc/Card.js'
+import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
-import CardCollection from '@backend/modules/CardCollection'
-import BulkWithdrawModule from '@backend/modules/BulkWithdraw'
+import CardCollection from '@backend/modules/CardCollection.js'
+import BulkWithdrawModule from '@backend/modules/BulkWithdraw.js'
 
-import { router } from '../trpc'
-import publicProcedure from '../procedures/public'
+import { router } from '../trpc.js'
+import publicProcedure from '../procedures/public.js'
 import {
   handleCardLockForMultipleCards,
   handleCardLockForBulkWithdraw,
   handleCardLockForBulkWithdrawByCardHash,
-} from '../procedures/partials/handleCardLock'
+} from '../procedures/partials/handleCardLock.js'
 
 export const bulkWithdrawRouter = router({
   getById: publicProcedure

@@ -9,8 +9,8 @@ import path from 'path'
 
 import { AccessTokenPayload as ZodAccessTokenPayload, type AccessTokenPayload } from '@shared/data/auth'
 
-import type { User } from '@backend/database/redis/data/User'
-import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants'
+import type { User } from '@backend/database/redis/data/User.js'
+import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
 
 const FILENAME_PUBLIC = 'lnurl.auth.pem.pub'
 const filenamePublicResolved = path.resolve(JWT_AUTH_KEY_DIRECTORY, FILENAME_PUBLIC)

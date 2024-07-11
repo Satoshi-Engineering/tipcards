@@ -1,14 +1,14 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
-import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
-import { initUserFromAccessTokenPayload } from '@backend/database/drizzle/queriesRedis'
-import { Permission } from '@backend/database/drizzle/schema/enums/Permission'
+import { dateToUnixTimestamp, unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers.js'
+import { initUserFromAccessTokenPayload } from '@backend/database/drizzle/queriesRedis.js'
+import { Permission } from '@backend/database/drizzle/schema/enums/Permission.js'
 
-import { createUser, createProfileForUser, createAccessTokenPayloadForUser } from '../../../../drizzleData'
+import { createUser, createProfileForUser, createAccessTokenPayloadForUser } from '../../../../drizzleData.js'
 
 describe('initUserFromAccessTokenPayload', () => {
   it('should return the user if he exists', async () => {

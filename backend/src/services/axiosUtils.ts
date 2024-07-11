@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { delay } from './timingUtils'
+import { delay } from './timingUtils.js'
 
 /**
  * if we are too fast we need to try multiple times

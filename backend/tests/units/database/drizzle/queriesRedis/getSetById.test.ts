@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { createSet, createSetSettings, createUser, createUserCanEditSet } from '../../../../drizzleData'
+import { createSet, createSetSettings, createUser, createUserCanEditSet } from '../../../../drizzleData.js'
 
-import { getSetById } from '@backend/database/drizzle/queriesRedis'
+import { getSetById } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getSetById', () => {
   it('should return null for an id that doesn\'t exist', async () => {

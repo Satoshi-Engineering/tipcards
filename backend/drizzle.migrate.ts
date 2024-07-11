@@ -11,9 +11,9 @@ import postgres from 'postgres'
 import '@backend/initEnv' // Info: .env needs to read before imports
 
 import * as schema from '@backend/database/drizzle/schema'
-import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants'
+import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants.js'
 
-import { MIGRATIONS_FOLDER } from './drizzle.config'
+import { MIGRATIONS_FOLDER } from './drizzle.config.js'
 
 const run = async () => {
   // This will run migrations on the database, skipping the ones already applied

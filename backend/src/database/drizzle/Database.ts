@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js/driver'
 
-import { DB_CREDENTIALS } from '@backend/constants'
+import { DB_CREDENTIALS } from '@backend/constants.js'
 
 import * as schema from './schema'
 

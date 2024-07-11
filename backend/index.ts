@@ -1,6 +1,6 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 import '@backend/initErrorLogging'
 
-import { startup } from '@backend/startup'
+import { startup } from '@backend/startup.js'
 
 startup()

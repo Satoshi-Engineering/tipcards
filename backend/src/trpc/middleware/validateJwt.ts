@@ -2,10 +2,10 @@ import { TRPCError } from '@trpc/server'
 import { errors } from 'jose'
 import { ZodError } from 'zod'
 
-import { initUserFromAccessTokenPayload } from '@backend/database/queries'
-import { validateJwt as validateJwtService } from '@backend/services/jwt'
+import { initUserFromAccessTokenPayload } from '@backend/database/queries.js'
+import { validateJwt as validateJwtService } from '@backend/services/jwt.js'
 
-import { validateAuthContext } from './validateAuthContext'
+import { validateAuthContext } from './validateAuthContext.js'
 
 const mapErrorToTRpcError = (error: unknown) => {
   let message = 'Invalid authorization token.'

@@ -1,6 +1,6 @@
 import { pgTable, primaryKey, varchar } from 'drizzle-orm/pg-core'
-import { CardVersion } from './CardVersion'
-import { Invoice } from './Invoice'
+import { CardVersion } from './CardVersion.js'
+import { Invoice } from './Invoice.js'
 
 export const CardVersionHasInvoice = pgTable('CardVersionHasInvoice', {
   cardVersion: varchar('cardVersion', { length: 36 }).notNull().references(() => CardVersion.id),

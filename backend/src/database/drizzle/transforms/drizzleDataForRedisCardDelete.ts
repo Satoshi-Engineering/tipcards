@@ -1,8 +1,8 @@
-import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
 
-import { getDrizzleCardFromRedisCard } from './drizzleDataFromRedisData'
+import { getDrizzleCardFromRedisCard } from './drizzleDataFromRedisData.js'
 
 /** @throws */
 export const getDrizzleDataObjectsForRedisCardDelete = async (queries: Queries, cardRedis: CardRedis): Promise<DataObjects> => {

@@ -1,10 +1,10 @@
 import { type Request, type Response, type NextFunction, Router } from 'express'
 
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image'
-import { getImageAsString, getImageMeta } from '@backend/database/queries'
-import { CROSS_ORIGIN_RESOURCES } from '@backend/constants'
+import { Type as ImageType, type Image as ImageMeta } from '@backend/database/redis/data/Image.js'
+import { getImageAsString, getImageMeta } from '@backend/database/queries.js'
+import { CROSS_ORIGIN_RESOURCES } from '@backend/constants.js'
 
 const router = Router()
 

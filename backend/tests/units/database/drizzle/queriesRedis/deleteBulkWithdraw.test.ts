@@ -1,18 +1,18 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
 import {
   createCard, createCardVersion,
   createInvoice, createLnurlW,
-} from '../../../../drizzleData'
-import { createBulkWithdraw as createBulkWithdrawData } from '../../../../redisData'
+} from '../../../../drizzleData.js'
+import { createBulkWithdraw as createBulkWithdrawData } from '../../../../redisData.js'
 
-import NotFoundError from '@backend/errors/NotFoundError'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 
-import { deleteBulkWithdraw } from '@backend/database/drizzle/queriesRedis'
+import { deleteBulkWithdraw } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('deleteBulkWithdraw', () => {
   it('should throw an error if the bulkWithdraw doesnt exist', async () => {

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { Card } from './Card'
+import { Card } from './Card.js'
 
 export const BulkWithdraw = z.object({
   id: z.string(),

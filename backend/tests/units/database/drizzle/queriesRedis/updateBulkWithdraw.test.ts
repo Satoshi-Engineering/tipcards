@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
 import {
   createCard, createCardVersion,
   createInvoice, createLnurlW,
-} from '../../../../drizzleData'
-import { createBulkWithdraw as createBulkWithdrawData } from '../../../../redisData'
+} from '../../../../drizzleData.js'
+import { createBulkWithdraw as createBulkWithdrawData } from '../../../../redisData.js'
 
-import { updateBulkWithdraw } from '@backend/database/drizzle/queriesRedis'
+import { updateBulkWithdraw } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('updateBulkWithdraw', () => {
   it('should mark the used lnurlw as withdrawn', async () => {

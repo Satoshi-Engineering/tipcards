@@ -41,7 +41,7 @@ import {
   addUsersCanUseSets,
 
   removeAllowedRefreshTokensForUserId,
-} from './database'
+} from './database.js'
 
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
   const cards = Object.values(cardVersionsById).filter((cardVersion) => cardVersion.card === cardHash)

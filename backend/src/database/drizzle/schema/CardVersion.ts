@@ -1,7 +1,7 @@
 import { pgTable, varchar, timestamp, text, boolean } from 'drizzle-orm/pg-core'
-import { Card } from './Card'
-import { LnurlP } from './LnurlP'
-import { LnurlW } from './LnurlW'
+import { Card } from './Card.js'
+import { LnurlP } from './LnurlP.js'
+import { LnurlW } from './LnurlW.js'
 
 export const CardVersion = pgTable('CardVersion', {
   id: varchar('id', { length: 36 }).primaryKey().unique().notNull(), // Note: uuid

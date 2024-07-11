@@ -3,7 +3,7 @@
 import axios from 'axios'
 import * as secp256k1 from 'secp256k1'
 
-import LNURL from '@shared/modules/LNURL/LNURL'
+import LNURL from '@shared/modules/LNURL/LNURL.js'
 
 export type SigningKey = {
   privateKeyAsHex: string,

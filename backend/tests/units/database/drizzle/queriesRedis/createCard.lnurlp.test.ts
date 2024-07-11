@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
+import { queries } from '../mocks/client.js'
 
-import { createCard as createCardData, createLnurlP } from '../../../../redisData'
+import { createCard as createCardData, createLnurlP } from '../../../../redisData.js'
 
-import { createCard } from '@backend/database/drizzle/queriesRedis'
+import { createCard } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('createCard', () => {
   it('should create a card with lnurlp', async () => {

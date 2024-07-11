@@ -3,14 +3,14 @@ import axios from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import LNURLw from '@shared/modules/LNURL/LNURLw'
-import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
+import LNURLw from '@shared/modules/LNURL/LNURLw.js'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 
-import FailEarly from '../../FailEarly'
-import LNBitsWallet from '../lib/lightning/LNBitsWallet'
-import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import { cardData } from '../lib/apiData'
-import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import FailEarly from '../../FailEarly.js'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
+import { cardData } from '../lib/apiData.js'
+import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios'
 
 const TEST_AMOUNT_IN_SATS = 213

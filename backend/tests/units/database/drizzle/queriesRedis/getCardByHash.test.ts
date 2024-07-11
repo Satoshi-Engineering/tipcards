@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { createCard, createCardVersion } from '../../../../drizzleData'
+import { createCard, createCardVersion } from '../../../../drizzleData.js'
 
-import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
+import { getCardByHash } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getCardByHash', () => {
   it('should return null for a cardHash that doesn\'t exist', async () => {

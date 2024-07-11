@@ -2,14 +2,14 @@ import { describe, it, expect } from 'vitest'
 
 import '../mocks/process.env'
 import '../mocks/axios'
-import { addBulkWithdraws, addCards, addSets } from '../mocks/redis'
+import { addBulkWithdraws, addCards, addSets } from '../mocks/redis.js'
 
-import CardNotFundedError from '@backend/errors/CardNotFundedError'
-import CardCollection from '@backend/modules/CardCollection'
+import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
+import CardCollection from '@backend/modules/CardCollection.js'
 
-import { SET_EMPTY } from '../data/EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw'
-import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards'
+import { SET_EMPTY } from '../data/EmptySet.js'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw.js'
+import { SET_UNFUNDED, CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards.js'
 
 describe('CardCollection', () => {
   it('should load no cards when loading an empty set', async () => {

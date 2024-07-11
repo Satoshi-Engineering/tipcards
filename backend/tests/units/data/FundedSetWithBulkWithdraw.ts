@@ -1,8 +1,8 @@
-import { Card } from '@backend/database/redis/data/Card'
-import { Set } from '@backend/database/redis/data/Set'
-import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
+import { Card } from '@backend/database/redis/data/Card.js'
+import { Set } from '@backend/database/redis/data/Set.js'
+import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'
 
-import hashSha256 from '@backend/services/hashSha256'
+import hashSha256 from '@backend/services/hashSha256.js'
 
 export const SET_FUNDED = Set.parse({
   id: 'unitTestFundedSet',

@@ -2,25 +2,25 @@ import { describe, it, expect } from 'vitest'
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
 import {
   createUser as createDrizzleUser,
   createProfileForUser as createDrizzleProfileForUser,
   createAllowedRefreshTokens as createDrizzleAllowedRefreshTokens,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
 import {
   createUser as createRedisUser,
   createProfile as createProfileForRedisUser,
-} from '../../../../redisData'
+} from '../../../../redisData.js'
 
 import { AllowedRefreshTokens } from '@backend/database/drizzle/schema'
-import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers'
-import { redisUserFromDrizzleUser } from '@backend/database/drizzle/transforms/redisDataFromDrizzleData'
-import { updateUser } from '@backend/database/drizzle/queriesRedis'
-import hashSha256 from '@backend/services/hashSha256'
+import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers.js'
+import { redisUserFromDrizzleUser } from '@backend/database/drizzle/transforms/redisDataFromDrizzleData.js'
+import { updateUser } from '@backend/database/drizzle/queriesRedis.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 
 describe('updateUser', () => {
   it('should insertOrUpdate a user and a profile', async () => {

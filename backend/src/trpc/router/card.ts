@@ -1,10 +1,10 @@
-import { Card, CardHash } from '@shared/data/trpc/Card'
+import { Card, CardHash } from '@shared/data/trpc/Card.js'
 
-import CardModule from '@backend/modules/Card'
+import CardModule from '@backend/modules/Card.js'
 
-import { router } from '../trpc'
-import publicProcedure from '../procedures/public'
-import { handleCardLockForSingleCard } from '../procedures/partials/handleCardLock'
+import { router } from '../trpc.js'
+import publicProcedure from '../procedures/public.js'
+import { handleCardLockForSingleCard } from '../procedures/partials/handleCardLock.js'
 
 export const cardRouter = router({
   getByHash: publicProcedure

@@ -1,20 +1,20 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import Database from '@backend/database/drizzle/Database'
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries'
-import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly'
-import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers'
-import { prompt } from '@backend/services/cliHelpers'
+import Database from '@backend/database/drizzle/Database.js'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
+import { getCardByHash, updateCard, deleteCard } from '@backend/database/redis/queries.js'
+import { getAllCardHashes } from '@backend/database/redis/queriesRedisOnly.js'
+import { getCardIsUsedFromLnbits } from '@backend/services/lnbitsHelpers.js'
+import { prompt } from '@backend/services/cliHelpers.js'
 
 // migration specific
-import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries'
-import { migrateRedisToDrizzle } from '@backend/database/migrations/migrateRedisToDrizzle'
-import { fixRedisToDrizzleMigrationSetFundingBug } from '@backend/database/migrations/fixRedisToDrizzleMigrationSetFundingBug'
-import { fixCardCreatedAfterMigration } from '@backend/database/migrations/fixCardCreatedAfterMigration'
-import { fixSetCreatedAfterMigration } from '@backend/database/migrations/fixSetCreatedAfterMigration'
-import { fixInvoiceCreatedAfterMigration } from '@backend/database/migrations/fixInvoiceCreatedAfterMigration'
-import { fixLnurlWsCreatedAfterMigration } from '@backend/database/migrations/fixLnurlWsCreatedAfterMigration'
+import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries.js'
+import { migrateRedisToDrizzle } from '@backend/database/migrations/migrateRedisToDrizzle.js'
+import { fixRedisToDrizzleMigrationSetFundingBug } from '@backend/database/migrations/fixRedisToDrizzleMigrationSetFundingBug.js'
+import { fixCardCreatedAfterMigration } from '@backend/database/migrations/fixCardCreatedAfterMigration.js'
+import { fixSetCreatedAfterMigration } from '@backend/database/migrations/fixSetCreatedAfterMigration.js'
+import { fixInvoiceCreatedAfterMigration } from '@backend/database/migrations/fixInvoiceCreatedAfterMigration.js'
+import { fixLnurlWsCreatedAfterMigration } from '@backend/database/migrations/fixLnurlWsCreatedAfterMigration.js'
 
 /* eslint-disable no-console */
 const clearUnusedCards = async () => {

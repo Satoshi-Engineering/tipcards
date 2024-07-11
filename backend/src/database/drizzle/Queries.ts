@@ -2,7 +2,7 @@ import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations } fro
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
-import NotFoundError from '@backend/errors/NotFoundError'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 
 import {
   Set, SetSettings,

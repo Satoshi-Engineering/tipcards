@@ -1,23 +1,23 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
 import {
   createSet as createDrizzleSet,
   createCardForSet,
   createCardVersion,
   createUser,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 import {
   createSet as createSetData,
   createSetSettings,
   createSetInvoice,
-} from '../../../../redisData'
+} from '../../../../redisData.js'
 
-import { createSet } from '@backend/database/drizzle/queriesRedis'
-import { Set } from '@backend/database/redis/data/Set'
+import { createSet } from '@backend/database/drizzle/queriesRedis.js'
+import { Set } from '@backend/database/redis/data/Set.js'
 
 describe('createSet', () => {
   it('should create a set with settings and userId', async () => {

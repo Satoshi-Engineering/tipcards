@@ -1,9 +1,9 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { getCardByHash, updateCard } from '@backend/database/queries'
-import NotFoundError from '@backend/errors/NotFoundError'
-import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import { getCardByHash, updateCard } from '@backend/database/queries.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
+import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 

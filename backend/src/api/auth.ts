@@ -6,24 +6,24 @@ import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
-import { Profile } from '@shared/data/auth/User'
-import { ErrorCode } from '@shared/data/Errors'
+import { Profile } from '@shared/data/auth/User.js'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { User } from '@backend/database/redis/data/User'
-import corsOptions from '@backend/services/corsOptions'
-import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/queries'
+import type { User } from '@backend/database/redis/data/User.js'
+import corsOptions from '@backend/services/corsOptions.js'
+import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/queries.js'
 import {
   getPublicKey,
   createAccessToken, createRefreshToken,
-} from '@backend/services/jwt'
+} from '@backend/services/jwt.js'
 import {
   LNURL_PORT,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   JWT_AUTH_ORIGIN,
   LNURL_AUTH_DEBUG,
-} from '@backend/constants'
+} from '@backend/constants.js'
 
-import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt'
+import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
 /////
 // LNURL SERVICE

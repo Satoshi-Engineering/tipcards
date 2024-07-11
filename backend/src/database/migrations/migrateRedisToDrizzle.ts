@@ -1,21 +1,21 @@
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { prompt } from '@backend/services/cliHelpers'
+import { prompt } from '@backend/services/cliHelpers.js'
 
 // migration specific
-import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries'
+import { getAllUsers as getAllRedisUsers } from '@backend/database/redis/queries.js'
 import {
   getAllBulkWithdraws as getAllRedisBulkWithdraws,
   getAllCards as getAllRedisCards,
   getAllSets as getAllRedisSets,
-} from '@backend/database/redis/queriesRedisOnly'
+} from '@backend/database/redis/queriesRedisOnly.js'
 import {
   createBulkWithdraw as createDrizzleBulkWithdraw,
   createCard as createDrizzleCard,
   updateCard as updateDrizzleCard,
   createUser as createDrizzleUser,
   createSet as createDrizzleSet,
-} from '@backend/database/drizzle/queriesRedis'
+} from '@backend/database/drizzle/queriesRedis.js'
 
 /* eslint-disable no-console */
 export const migrateRedisToDrizzle = async () => {

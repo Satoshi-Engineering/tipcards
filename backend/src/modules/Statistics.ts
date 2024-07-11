@@ -2,11 +2,11 @@ import axios from 'axios'
 import { DateTime } from 'luxon'
 import z from 'zod'
 
-import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
-import { ErrorWithCode, ErrorCode } from '@shared/data/Errors'
+import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod.js'
+import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
-import loadJsonIfExists from '@backend/services/loadJsonIfExists'
-import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE, STATISTICS_PREPEND_FILE } from '@backend/constants'
+import loadJsonIfExists from '@backend/services/loadJsonIfExists.js'
+import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE, STATISTICS_PREPEND_FILE } from '@backend/constants.js'
 
 const Payment = z.object({
   pending: z.boolean(),

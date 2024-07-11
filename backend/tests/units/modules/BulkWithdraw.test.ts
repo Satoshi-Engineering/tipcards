@@ -2,16 +2,16 @@ import { describe, it, expect } from 'vitest'
 
 import '../mocks/process.env'
 import '../mocks/axios'
-import { addBulkWithdraws, addCards, addSets } from '../mocks/redis'
+import { addBulkWithdraws, addCards, addSets } from '../mocks/redis.js'
 
-import CardNotFundedError from '@backend/errors/CardNotFundedError'
-import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
-import BulkWithdraw from '@backend/modules/BulkWithdraw'
-import CardCollection from '@backend/modules/CardCollection'
+import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
+import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'
+import BulkWithdraw from '@backend/modules/BulkWithdraw.js'
+import CardCollection from '@backend/modules/CardCollection.js'
 
-import { SET_EMPTY } from '../data/EmptySet'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw'
-import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards'
+import { SET_EMPTY } from '../data/EmptySet.js'
+import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw.js'
+import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards.js'
 
 describe('BulkWithdraw', () => {
   it('should throw an error if not initialized', async () => {

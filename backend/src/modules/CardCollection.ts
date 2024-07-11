@@ -1,18 +1,18 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import type { Set as SetRedis } from '@backend/database/redis/data/Set'
-import CardNotFundedError from '@backend/errors/CardNotFundedError'
-import CardWithdrawnError from '@backend/errors/CardWithdrawnError'
-import NotFoundError from '@backend/errors/NotFoundError'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
+import CardWithdrawnError from '@backend/errors/CardWithdrawnError.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 import {
   getSetById,
   getCardByHash, updateCard,
-} from '@backend/database/queries'
-import hashSha256 from '@backend/services/hashSha256'
-import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers'
-import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+} from '@backend/database/queries.js'
+import hashSha256 from '@backend/services/hashSha256.js'
+import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers.js'
+import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 type SetId = z.infer<typeof SetRedis.shape.id>

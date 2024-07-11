@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 
-import { validateJwt } from './validateJwt'
+import { validateJwt } from './validateJwt.js'
 
 /**
  * @throws TRPCError

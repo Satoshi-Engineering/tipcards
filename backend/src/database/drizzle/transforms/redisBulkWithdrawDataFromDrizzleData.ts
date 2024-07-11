@@ -1,9 +1,9 @@
 import type { LnurlW } from '@backend/database/drizzle/schema'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
 
-import { totalAmountForCards } from './drizzleCardHelpers'
-import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
+import { totalAmountForCards } from './drizzleCardHelpers.js'
+import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers.js'
 
 /** @throws */
 export const getRedisBulkWithdrawForDrizzleLnurlW = async (queries: Queries, lnurlW: LnurlW): Promise<BulkWithdrawRedis> => {

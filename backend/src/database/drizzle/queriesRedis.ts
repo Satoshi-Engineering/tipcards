@@ -2,41 +2,41 @@ import { randomUUID } from 'crypto'
 
 import type { AccessTokenPayload } from '@shared/data/auth'
 
-import NotFoundError from '@backend/errors/NotFoundError'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import type { Set as SetRedis } from '@backend/database/redis/data/Set'
-import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
-import type { Image as ImageMetaRedis } from '@backend/database/redis/data/Image'
-import { User as UserRedis } from '@backend/database/redis/data/User'
-import hashSha256 from '@backend/services/hashSha256'
+import NotFoundError from '@backend/errors/NotFoundError.js'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage.js'
+import type { Image as ImageMetaRedis } from '@backend/database/redis/data/Image.js'
+import { User as UserRedis } from '@backend/database/redis/data/User.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 
 import {
   getRedisCardFromDrizzleCardVersion,
   redisLandingPageFromDrizzleLandingPage,
   redisUserFromDrizzleUser,
   redisUserFromDrizzleUserOrNull,
-} from './transforms/redisDataFromDrizzleData'
+} from './transforms/redisDataFromDrizzleData.js'
 import {
   getDrizzleDataObjectsFromRedisCard,
   getDrizzleLnurlWFromRedisBulkWithdraw,
   getUserIdForRedisImageFromDrizzleImage,
-} from './transforms/drizzleDataFromRedisData'
-import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges'
-import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete'
-import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData'
+} from './transforms/drizzleDataFromRedisData.js'
+import { getDrizzleDataObjectsForRedisCardChanges } from './transforms/drizzleDataForRedisCardChanges.js'
+import { getDrizzleDataObjectsForRedisCardDelete } from './transforms/drizzleDataForRedisCardDelete.js'
+import { getRedisSetFromDrizzleSet } from './transforms/redisSetDataFromDrizzleData.js'
 import {
   getDrizzleDataObjectsForRedisSet,
   getDrizzleDataObjectsForRedisSetDelete,
-} from './transforms/drizzleSetDataForRedisSet'
-import { getRedisBulkWithdrawForDrizzleLnurlW } from './transforms/redisBulkWithdrawDataFromDrizzleData'
-import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData'
+} from './transforms/drizzleSetDataForRedisSet.js'
+import { getRedisBulkWithdrawForDrizzleLnurlW } from './transforms/redisBulkWithdrawDataFromDrizzleData.js'
+import { getDrizzleDataObjectsForRedisUser } from './transforms/drizzleDataFromRedisUserData.js'
 import {
   insertOrUpdateDataObjects,
   deleteDataObjects,
-} from './batchQueries'
-import { asTransaction } from './client'
+} from './batchQueries.js'
+import { asTransaction } from './client.js'
 
 // @throws tags are omitted as every database query can throw an exception!
 

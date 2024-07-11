@@ -1,12 +1,12 @@
-import { getClient } from './client'
+import { getClient } from './client.js'
 
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
-import { Card } from '@backend/database/redis/data/Card'
-import { User } from '@backend/database/redis/data/User'
-import { Set } from '@backend/database/redis/data/Set'
-import { REDIS_BASE_PATH } from '@backend/constants'
+import { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'
+import { Card } from '@backend/database/redis/data/Card.js'
+import { User } from '@backend/database/redis/data/User.js'
+import { Set } from '@backend/database/redis/data/Set.js'
+import { REDIS_BASE_PATH } from '@backend/constants.js'
 
 /** @throws */
 export const getAllCardHashes = async (): Promise<string[]> => {

@@ -3,9 +3,9 @@ import { describe, it, expect } from 'vitest'
 import assert from 'assert'
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { lockCardByHash, releaseCardByHash } from '@backend/database/drizzle/queriesRedis'
-import { createCard } from '../../../../drizzleData'
-import { addCards } from '../mocks/database'
+import { lockCardByHash, releaseCardByHash } from '@backend/database/drizzle/queriesRedis.js'
+import { createCard } from '../../../../drizzleData.js'
+import { addCards } from '../mocks/database.js'
 
 describe('releaseCardByHash', () => {
   it('should release card by hash, which was locked', async () => {

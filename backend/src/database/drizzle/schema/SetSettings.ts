@@ -1,7 +1,7 @@
 import { pgTable, varchar, text, integer } from 'drizzle-orm/pg-core'
-import { Set } from './Set'
-import { Image } from './Image'
-import { LandingPage } from './LandingPage'
+import { Set } from './Set.js'
+import { Image } from './Image.js'
+import { LandingPage } from './LandingPage.js'
 
 export const SetSettings = pgTable('SetSettings', {
   set: varchar('set', { length: 36 }).primaryKey().unique().notNull().references(() => Set.id).unique(),

@@ -5,13 +5,13 @@ import type {
   LandingPage,
   Profile,
 } from '@backend/database/drizzle/schema'
-import type Queries from '@backend/database/drizzle/Queries'
-import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType'
-import { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { type Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User'
-import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType.js'
+import { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import { type Profile as ProfileRedis, User as UserRedis } from '@backend/database/redis/data/User.js'
+import type { LandingPage as LandingPageRedis } from '@backend/database/redis/data/LandingPage.js'
 
-import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers'
+import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from './dateHelpers.js'
 
 /** @throws */
 export const getRedisCardFromDrizzleCardVersion = async (queries: Queries, cardVersion: CardVersion): Promise<CardRedis> => {

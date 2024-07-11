@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import Queries from './Queries'
+import Queries from './Queries.js'
 
 export const queries = new Queries()
 

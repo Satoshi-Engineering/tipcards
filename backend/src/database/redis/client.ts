@@ -5,7 +5,7 @@ import {
   REDIS_BASE_PATH,
   REDIS_URL,
   REDIS_PASSPHRASE,
-} from '@backend/constants'
+} from '@backend/constants.js'
 
 export const REDIS_CONNECT_TIMEOUT = 3 * 1000
 export const INDEX_USER_BY_LNURL_AUTH_KEY = `idx:${REDIS_BASE_PATH}:userByLnurlAuthKey`

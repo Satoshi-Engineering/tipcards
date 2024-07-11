@@ -2,14 +2,14 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { getLandingPage } from '@backend/database/drizzle/queriesRedis'
+import { getLandingPage } from '@backend/database/drizzle/queriesRedis.js'
 import {
   createLandingPageTypeExternal,
   createUser,
   createUserCanUseLandingPage,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
 describe('getLandingPage', () => {
   it('should return null if Landing Page does not exist', async () => {

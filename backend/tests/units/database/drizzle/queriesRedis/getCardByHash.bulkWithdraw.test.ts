@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { createCard, createCardVersion, createInvoice, createLnurlW } from '../../../../drizzleData'
+import { createCard, createCardVersion, createInvoice, createLnurlW } from '../../../../drizzleData.js'
 
-import { getCardByHash } from '@backend/database/drizzle/queriesRedis'
+import { getCardByHash } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getCardByHash', () => {
   it('should set isLockedByBulkWithdraw when a lnurlw exists for multiple cards', async () => {

@@ -1,8 +1,8 @@
-import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
+import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
-import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError'
-import { isBulkWithdrawWithdrawn, loadCurrentLnurlFromLnbitsByWithdrawId } from '@backend/services/lnbitsHelpers'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
+import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'
+import { isBulkWithdrawWithdrawn, loadCurrentLnurlFromLnbitsByWithdrawId } from '@backend/services/lnbitsHelpers.js'
 
 /**
  * @throws WithdrawDeletedError

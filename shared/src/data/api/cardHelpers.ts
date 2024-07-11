@@ -1,4 +1,4 @@
-import { Card } from './Card'
+import { Card } from './Card.js'
 
 export const getPaidTimestamp = (card: Card): number | null => {
   let paidTimestamp: number | null = null

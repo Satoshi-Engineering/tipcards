@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
 import {
   createSet as createDrizzleSet,
@@ -11,10 +11,10 @@ import {
   createCardVersion,
   createInvoice as createDrizzleInvoice,
   createUser, createUserCanEditSet,
-} from '../../../../drizzleData'
-import { createSet as createRedisSet } from '../../../../redisData'
+} from '../../../../drizzleData.js'
+import { createSet as createRedisSet } from '../../../../redisData.js'
 
-import { deleteSet } from '@backend/database/drizzle/queriesRedis'
+import { deleteSet } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('deleteSet', () => {
   it('should delete a set, including invoice and userCanUseSet', async () => {

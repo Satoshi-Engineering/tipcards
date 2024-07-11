@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import hashSha256 from '@backend/services/hashSha256'
+import hashSha256 from '@backend/services/hashSha256.js'
 
-import { API_ORIGIN } from '../constants'
+import { API_ORIGIN } from '../constants.js'
 
 export default class Frontend {
   async createCardViaAPI(cardHash: string, amount: number, text = '', note = '') {

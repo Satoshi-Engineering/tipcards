@@ -5,7 +5,7 @@ import * as base58 from 'bs58'
 import { BIP32Interface } from 'bip32/types/bip32'
 import * as ecc from 'tiny-secp256k1'
 
-import HDNode from './HDNode'
+import HDNode from './HDNode.js'
 
 const DEFAUT_HD_PATH = 'm/84\'/0\''
 

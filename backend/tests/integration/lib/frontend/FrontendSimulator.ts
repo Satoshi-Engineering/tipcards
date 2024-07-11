@@ -1,12 +1,12 @@
 import { AxiosResponse } from 'axios'
 import { io, Socket } from 'socket.io-client'
 
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
-import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
+import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils.js'
 
-import FrontendWithAuth from './FrontendWithAuth'
-import HDWallet from '../HDWallet/HDWallet'
-import { API_ORIGIN } from '../constants'
+import FrontendWithAuth from './FrontendWithAuth.js'
+import HDWallet from '../HDWallet/HDWallet.js'
+import { API_ORIGIN } from '../constants.js'
 
 export default class FrontendSimulator extends FrontendWithAuth {
   private readonly hdWallet

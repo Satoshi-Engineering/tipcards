@@ -2,15 +2,15 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
 import {
   createSet,
   createCardForSet, createCardVersion,
   createInvoice,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
-import { getSetById } from '@backend/database/drizzle/queriesRedis'
+import { getSetById } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getSetById', () => {
   it('should return a set with invoice', async () => {

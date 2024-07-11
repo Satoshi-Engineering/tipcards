@@ -1,6 +1,6 @@
 import cron from 'node-cron'
 
-import checkDuplicateLnurlAuthKeys from './checkDuplicateLnurlAuthKeys'
+import checkDuplicateLnurlAuthKeys from './checkDuplicateLnurlAuthKeys.js'
 
 const loop = async () => {
   try {

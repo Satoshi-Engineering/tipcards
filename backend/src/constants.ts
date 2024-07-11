@@ -1,8 +1,8 @@
 import z from 'zod'
 
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import { DB_CREDENTIALS  } from '../drizzle.config'
+import { DB_CREDENTIALS  } from '../drizzle.config.js'
 
 const APP_NAME = 'Lightning Tip Cards Backend'
 

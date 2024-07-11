@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { PermissionsEnum } from '@shared/data/auth/User'
+import { PermissionsEnum } from '@shared/data/auth/User.js'
 
 export const Profile = z.object({
   accountName: z.string().default('').describe('for support and for the user if he has more than one accounts'),

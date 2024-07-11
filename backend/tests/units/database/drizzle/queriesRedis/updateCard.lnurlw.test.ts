@@ -2,14 +2,14 @@ import { describe, it, expect } from 'vitest'
 import { randomUUID } from 'crypto'
 
 import '../../../mocks/process.env'
-import { queries } from '../mocks/client'
-import { addData } from '../mocks/database'
+import { queries } from '../mocks/client.js'
+import { addData } from '../mocks/database.js'
 
-import { updateCard } from '@backend/database/drizzle/queriesRedis'
-import hashSha256 from '@backend/services/hashSha256'
+import { updateCard } from '@backend/database/drizzle/queriesRedis.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 
-import { createCard, createCardVersion, createInvoice, createLnurlW } from '../../../../drizzleData'
-import { createCard as createRedisCard, createInvoice as createRedisInvoice } from '../../../../redisData'
+import { createCard, createCardVersion, createInvoice, createLnurlW } from '../../../../drizzleData.js'
+import { createCard as createRedisCard, createInvoice as createRedisInvoice } from '../../../../redisData.js'
 
 
 describe('updateCard', () => {

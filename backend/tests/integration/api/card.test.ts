@@ -3,7 +3,7 @@ import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { API_ORIGIN } from '../lib/constants'
+import { API_ORIGIN } from '../lib/constants.js'
 import '../lib/initAxios'
 
 describe('card', () => {

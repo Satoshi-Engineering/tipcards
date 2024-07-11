@@ -1,12 +1,12 @@
 import type z from 'zod'
 
-import { Card } from '@shared/data/trpc/Card'
-import LNURL from '@shared/modules/LNURL/LNURL'
+import { Card } from '@shared/data/trpc/Card.js'
+import LNURL from '@shared/modules/LNURL/LNURL.js'
 
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis'
-import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '@backend/services/lnbitsHelpers'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
+import { checkIfCardIsUsed, checkIfCardInvoiceIsPaid, checkIfCardLnurlpIsPaid } from '@backend/services/lnbitsHelpers.js'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 type Amount = z.infer<typeof Card.shape.amount>
 

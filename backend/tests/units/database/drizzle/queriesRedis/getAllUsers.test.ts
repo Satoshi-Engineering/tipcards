@@ -2,15 +2,15 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { dateToUnixTimestamp } from '@backend/database/drizzle/transforms/dateHelpers'
-import { getAllUsers } from '@backend/database/drizzle/queriesRedis'
+import { dateToUnixTimestamp } from '@backend/database/drizzle/transforms/dateHelpers.js'
+import { getAllUsers } from '@backend/database/drizzle/queriesRedis.js'
 
 import {
   createUser, createProfileForUser,
   createLandingPageTypeExternal, createUserCanUseLandingPage,
-} from '../../../../drizzleData'
+} from '../../../../drizzleData.js'
 
 describe('getAllUsers', () => {
   it('should return all users', async () => {

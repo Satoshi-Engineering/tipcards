@@ -1,21 +1,21 @@
 import { randomUUID } from 'crypto'
 
-import { getClient, INDEX_USER_BY_LNURL_AUTH_KEY, INDEX_SETS_BY_USER_ID } from './client'
+import { getClient, INDEX_USER_BY_LNURL_AUTH_KEY, INDEX_SETS_BY_USER_ID } from './client.js'
 
 import type { AccessTokenPayload } from '@shared/data/auth'
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw'
-import { Card as ZodCard, type Card } from '@backend/database/redis/data/Card'
-import { Set as ZodSet, type Set } from '@backend/database/redis/data/Set'
-import { User as ZodUser, type User } from '@backend/database/redis/data/User'
-import { Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image'
-import { LandingPage as ZodLandingPage, type LandingPage } from '@backend/database/redis/data/LandingPage'
-import { getAllBulkWithdraws } from '@backend/database/redis/queriesRedisOnly'
-import AlreadyExistsError from '@backend/errors/AlreadyExistsError'
-import NotFoundError from '@backend/errors/NotFoundError'
-import hashSha256 from '@backend/services/hashSha256'
-import { REDIS_BASE_PATH } from '@backend/constants'
+import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'
+import { Card as ZodCard, type Card } from '@backend/database/redis/data/Card.js'
+import { Set as ZodSet, type Set } from '@backend/database/redis/data/Set.js'
+import { User as ZodUser, type User } from '@backend/database/redis/data/User.js'
+import { Image as ZodImage, type Image as ImageMeta } from '@backend/database/redis/data/Image.js'
+import { LandingPage as ZodLandingPage, type LandingPage } from '@backend/database/redis/data/LandingPage.js'
+import { getAllBulkWithdraws } from '@backend/database/redis/queriesRedisOnly.js'
+import AlreadyExistsError from '@backend/errors/AlreadyExistsError.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
+import hashSha256 from '@backend/services/hashSha256.js'
+import { REDIS_BASE_PATH } from '@backend/constants.js'
 
 /** @throws */
 export const lockCardByHash = async (cardHash: string): Promise<string | null> => {

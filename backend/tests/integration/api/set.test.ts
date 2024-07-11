@@ -3,12 +3,12 @@ import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { ErrorCode } from '@shared/data/Errors'
+import { ErrorCode } from '@shared/data/Errors.js'
 
-import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import { setData } from '../lib/apiData'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
+import { setData } from '../lib/apiData.js'
 import '../lib/initAxios'
-import FailEarly from '../../FailEarly'
+import FailEarly from '../../FailEarly.js'
 
 const failEarly = new FailEarly(it)
 const frontend = new FrontendSimulator()

@@ -12,9 +12,9 @@ import {
   LandingPage, UserCanUseLandingPage,
   Image, UserCanUseImage,
 } from '@backend/database/drizzle/schema'
-import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType'
-import hashSha256 from '@backend/services/hashSha256'
-import { ImageType } from '@backend/database/drizzle/schema/enums/ImageType'
+import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType.js'
+import hashSha256 from '@backend/services/hashSha256.js'
+import { ImageType } from '@backend/database/drizzle/schema/enums/ImageType.js'
 
 export const createRandomTextData = (prefix = '') => `${prefix}${randomUUID()}-random-text-data${randomUUID()}`
 export const createRandomEmailData = (prefix = '') => `${prefix}${randomUUID()}@${randomUUID()}.com`

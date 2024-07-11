@@ -4,13 +4,13 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest'
+import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 
-import FrontendSimulator from '../lib/frontend/FrontendSimulator'
-import LNBitsWallet from '../lib/lightning/LNBitsWallet'
-import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
+import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
+import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios'
-import FailEarly from '../../FailEarly'
+import FailEarly from '../../FailEarly.js'
 
 const FE = new FrontendSimulator()
 

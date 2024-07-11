@@ -6,13 +6,13 @@ import type {
   LnurlP, LnurlW,
   Image,
 } from '@backend/database/drizzle/schema'
-import type { DataObjects } from '@backend/database/drizzle/batchQueries'
-import type Queries from '@backend/database/drizzle/Queries'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card'
-import type { Image as ImageRedis } from '@backend/database/redis/data/Image'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw'
+import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
+import type Queries from '@backend/database/drizzle/Queries.js'
+import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import type { Image as ImageRedis } from '@backend/database/redis/data/Image.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
 
-import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers'
+import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers.js'
 
 export const getDrizzleDataObjectsFromRedisCard = (cardRedis: CardRedis): DataObjects => {
   const card = getDrizzleCardFromRedisCard(cardRedis)

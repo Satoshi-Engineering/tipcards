@@ -3,13 +3,13 @@ import { AxiosResponse } from 'axios'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
-import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
+import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils.js'
 
-import FrontendSimulator from '../lib/frontend/FrontendSimulator'
+import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import '../lib/initAxios'
-import FailEarly from '../../FailEarly'
-import HDWallet from '../lib/HDWallet/HDWallet'
+import FailEarly from '../../FailEarly.js'
+import HDWallet from '../lib/HDWallet/HDWallet.js'
 
 const failEarly = new FailEarly(it)
 

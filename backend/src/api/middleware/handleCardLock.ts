@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from 'express'
 
-import { ErrorCode, type ToErrorResponse } from '@shared/data/Errors'
+import { ErrorCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
-import { lockCard, releaseCards } from '@backend/services/databaseCardLock'
+import { lockCard, releaseCards } from '@backend/services/databaseCardLock.js'
 
 /**
  * USAGE OF THIS MIDDLEWARE

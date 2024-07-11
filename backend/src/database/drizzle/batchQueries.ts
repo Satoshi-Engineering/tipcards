@@ -8,7 +8,7 @@ import type {
   Profile,
   AllowedRefreshTokens,
 } from '@backend/database/drizzle/schema'
-import type Queries from '@backend/database/drizzle/Queries'
+import type Queries from '@backend/database/drizzle/Queries.js'
 
 export type DataObjects = {
   cards?: Card[],

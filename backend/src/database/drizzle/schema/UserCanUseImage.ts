@@ -1,6 +1,6 @@
 import { pgTable, primaryKey, varchar, boolean } from 'drizzle-orm/pg-core'
-import { User } from './User'
-import { Image } from './Image'
+import { User } from './User.js'
+import { Image } from './Image.js'
 
 export const UserCanUseImage = pgTable('UserCanUseImage', {
   user: varchar('user', { length: 64 }).notNull().references(() => User.id),

@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 
 import '../../../mocks/process.env'
 import '../mocks/client'
-import { addData } from '../mocks/database'
+import { addData } from '../mocks/database.js'
 
-import { createUser, createImage, createUserCanUseImage } from '../../../../drizzleData'
+import { createUser, createImage, createUserCanUseImage } from '../../../../drizzleData.js'
 
-import { getImageMeta } from '@backend/database/drizzle/queriesRedis'
+import { getImageMeta } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getImageMeta', () => {
   it('should return null if the image does not exist', async () => {
