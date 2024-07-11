@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => {
       outDir: fileURLToPath(new URL('../dist/frontend-maintenance/', import.meta.url)),
     }
   }
+
   if (env.VITE_BUILD_LIBS) {
     build = {
       lib: {
@@ -38,7 +39,8 @@ export default defineConfig(({ mode }) => {
         name: 'externalCardStatus',
         fileName: 'externalCardStatus',
       },
-      emptyOutDir: true,
+      // Do not clear, as the library runs in the pipeline right after the "normal" build, and we build one package from the merged files
+      emptyOutDir: false,
       outDir: fileURLToPath(new URL('../dist/frontend/', import.meta.url)),
     }
   }
