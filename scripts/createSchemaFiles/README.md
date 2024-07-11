@@ -11,7 +11,7 @@ This script:
 **Info:** run from project root
 
 ```bash
-npx ts-node scripts/createSchemaFiles/script.ts
+npx tsx scripts/createSchemaFiles/script.ts
 ```
 
 ### DevNotes: DBML json Structure

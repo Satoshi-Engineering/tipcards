@@ -2,7 +2,7 @@
 
 // Purpose: Run migration vs database in /backend/.env
 // Howto
-// npx ts-node scripts/run-mirgration/script.ts
+// npx tsx scripts/run-mirgration/script.ts
 
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { drizzle } from 'drizzle-orm/postgres-js'

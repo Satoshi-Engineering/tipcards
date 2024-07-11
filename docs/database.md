@@ -36,7 +36,7 @@ File: [database.dbml](database.dbml)
 **Info:** for manual execution run from project root
 
 ```bash
-npx ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/drizzle.migrate.ts
+npx tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts
 ```
 
 

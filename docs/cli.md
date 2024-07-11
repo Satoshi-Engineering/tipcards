@@ -12,7 +12,7 @@ This cli script let's you do multiple things:
 **Info:** run from project root
 
 ```bash
-npx ts-node -P ./backend/tsconfig.json -r tsconfig-paths/register ./backend/cli.ts
+npx tsx --tsconfig ./backend/tsconfig.json ./backend/cli.ts
 ```
 
 ## Run on server
