@@ -59,7 +59,7 @@
 
       # 5) Run drizzle migrations
       cd $DEPLOY_PATH/dist-node
-      node -r tsconfig-paths/register ./backend/drizzle.migrate.js
+      node ./backend/drizzle.migrate.js
 
       # 6) Start pm2
       cd $DEPLOY_PATH/dist-node
