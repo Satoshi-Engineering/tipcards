@@ -17,9 +17,7 @@
         when: never
     backend_changes:
       changes:
-        - backend/database/**/*
-        - backend/src/**/*
-        - backend/*.ts
+        - backend/**/*
         - shared/**/*
         - package-lock.json
     frontend_changes:
