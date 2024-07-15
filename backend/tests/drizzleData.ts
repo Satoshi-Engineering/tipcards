@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 
-import { AccessTokenPayload } from '@shared/data/auth'
+import { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 import {
   Set, SetSettings,
@@ -11,7 +11,7 @@ import {
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
   Image, UserCanUseImage,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 import { ImageType } from '@backend/database/drizzle/schema/enums/ImageType.js'

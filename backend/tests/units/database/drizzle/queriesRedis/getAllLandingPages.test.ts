@@ -10,7 +10,7 @@ import {
   createUsers,
 } from '../../../../drizzleData.js'
 
-import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema'
+import { LandingPage, User, UserCanUseLandingPage } from '@backend/database/drizzle/schema/index.js'
 import { getAllLandingPages } from '@backend/database/drizzle/queriesRedis.js'
 
 describe('getAllLandingPages', () => {

@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { initDatabase, closeDatabaseConnections } from '@backend/database'
+import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import { setRouter } from '@backend/trpc/router/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'

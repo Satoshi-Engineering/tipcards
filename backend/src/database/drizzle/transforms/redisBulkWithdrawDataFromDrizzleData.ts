@@ -1,4 +1,4 @@
-import type { LnurlW } from '@backend/database/drizzle/schema'
+import type { LnurlW } from '@backend/database/drizzle/schema/index.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
 

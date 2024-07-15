@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import { initDatabase, closeDatabaseConnections } from '@backend/database'
+import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
 import { cardRouter } from '@backend/trpc/router/card.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 

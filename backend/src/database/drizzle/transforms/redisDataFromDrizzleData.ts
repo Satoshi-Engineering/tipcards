@@ -4,7 +4,7 @@ import type {
   Invoice,
   LandingPage,
   Profile,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 import { LandingPageType } from '@backend/database/drizzle/schema/enums/LandingPageType.js'
 import { Card as CardRedis } from '@backend/database/redis/data/Card.js'

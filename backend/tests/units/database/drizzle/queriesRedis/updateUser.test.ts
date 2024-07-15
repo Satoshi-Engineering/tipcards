@@ -16,7 +16,7 @@ import {
   createProfile as createProfileForRedisUser,
 } from '../../../../redisData.js'
 
-import { AllowedRefreshTokens } from '@backend/database/drizzle/schema'
+import { AllowedRefreshTokens } from '@backend/database/drizzle/schema/index.js'
 import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers.js'
 import { redisUserFromDrizzleUser } from '@backend/database/drizzle/transforms/redisDataFromDrizzleData.js'
 import { updateUser } from '@backend/database/drizzle/queriesRedis.js'

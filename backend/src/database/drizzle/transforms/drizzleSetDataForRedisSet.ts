@@ -5,7 +5,7 @@ import type {
   Set, SetSettings,
   UserCanUseSet,
   Invoice, CardVersionHasInvoice,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'

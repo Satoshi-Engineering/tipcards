@@ -10,7 +10,7 @@ import postgres from 'postgres'
 
 import '@backend/initEnv' // Info: .env needs to read before imports
 
-import * as schema from '@backend/database/drizzle/schema'
+import * as schema from '@backend/database/drizzle/schema/index.js'
 import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants.js'
 
 import { MIGRATIONS_FOLDER } from './drizzle.config.js'

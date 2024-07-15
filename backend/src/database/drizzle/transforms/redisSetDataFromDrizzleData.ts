@@ -1,4 +1,4 @@
-import type { Set, Card, CardVersion, Invoice } from '@backend/database/drizzle/schema'
+import type { Set, Card, CardVersion, Invoice } from '@backend/database/drizzle/schema/index.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
 import hashSha256 from '@backend/services/hashSha256.js'

@@ -1,4 +1,4 @@
-import { router, createContext } from './trpc'
+import { router, createContext } from './trpc.js'
 import { bulkWithdrawRouter } from './router/bulkWithdraw.js'
 import { cardRouter } from './router/card.js'
 import { setRouter } from './router/set.js'

@@ -5,7 +5,7 @@ import type {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   Image,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 import type { DataObjects } from '@backend/database/drizzle/batchQueries.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Router, type Request, type Response } from 'express'
 
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 

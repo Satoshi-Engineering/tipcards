@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { Image as ImageApi } from '@shared/data/api/Image.js'
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
 import type { User } from '@backend/database/redis/data/User.js'

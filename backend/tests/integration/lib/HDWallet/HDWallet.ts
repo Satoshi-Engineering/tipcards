@@ -2,7 +2,6 @@ import { randomBytes } from 'crypto'
 import * as bip39 from 'bip39'
 import * as bip32 from 'bip32'
 import * as base58 from 'bs58'
-import { BIP32Interface } from 'bip32/types/bip32'
 import * as ecc from 'tiny-secp256k1'
 
 import HDNode from './HDNode.js'
@@ -31,7 +30,7 @@ export default class HDWallet {
     return bip32api.fromSeed(bip39Seed)
   }
 
-  static deriveNodeAtPath(node: BIP32Interface, hdPath: string) {
+  static deriveNodeAtPath(node: bip32.BIP32Interface, hdPath: string) {
     const derivedNode = node.derivePath(hdPath)
 
     return {

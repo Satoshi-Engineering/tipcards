@@ -7,7 +7,7 @@ import '@backend/initEnv' // Info: .env needs to read before imports
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
-import { initDatabase, closeDatabaseConnections } from '@backend/database'
+import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw.js'
 import { setRouter } from '@backend/trpc/router/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'

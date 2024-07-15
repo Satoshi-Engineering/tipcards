@@ -7,7 +7,7 @@ import type {
   UserCanUseSet,
   Profile,
   AllowedRefreshTokens,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 import type Queries from '@backend/database/drizzle/Queries.js'
 
 export type DataObjects = {

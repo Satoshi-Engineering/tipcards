@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import { LandingPage as LandingPageApi } from '@shared/data/api/LandingPage.js'
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
 import type { LandingPage } from '@backend/database/redis/data/LandingPage.js'

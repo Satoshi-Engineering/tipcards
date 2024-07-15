@@ -4,7 +4,7 @@ import type { Request } from 'express'
 import superjson from 'superjson'
 
 import type { PermissionsEnum } from '@shared/data/auth/User.js'
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')

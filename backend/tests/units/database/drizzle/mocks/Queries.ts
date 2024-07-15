@@ -10,7 +10,7 @@ import {
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 
 import {
   setsById,

@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import type Queries from '@backend/database/drizzle/Queries.js'

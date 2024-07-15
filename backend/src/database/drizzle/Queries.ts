@@ -14,13 +14,13 @@ import {
   AllowedRefreshTokens,
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 
 
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
-  typeof import('@backend/database/drizzle/schema/index'),
-  ExtractTablesWithRelations<typeof import('@backend/database/drizzle/schema/index')>
+  typeof import('@backend/database/drizzle/schema/index.js'),
+  ExtractTablesWithRelations<typeof import('@backend/database/drizzle/schema/index.js')>
 >
 
 export default class Queries {

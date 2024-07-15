@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 
 import { getClient, INDEX_USER_BY_LNURL_AUTH_KEY, INDEX_SETS_BY_USER_ID } from './client.js'
 
-import type { AccessTokenPayload } from '@shared/data/auth'
+import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
 import { BulkWithdraw as ZodBulkWithdraw, type BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'

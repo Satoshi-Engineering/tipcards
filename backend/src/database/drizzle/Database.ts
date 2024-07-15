@@ -4,7 +4,7 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js/driver'
 
 import { DB_CREDENTIALS } from '@backend/constants.js'
 
-import * as schema from './schema'
+import * as schema from './schema/index.js'
 
 export default class Database {
   static async init() {

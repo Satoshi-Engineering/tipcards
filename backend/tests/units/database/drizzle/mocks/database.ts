@@ -8,7 +8,7 @@ import {
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
-} from '@backend/database/drizzle/schema'
+} from '@backend/database/drizzle/schema/index.js'
 
 export const setsById: Record<string, Set> = {}
 export const setSettingsBySetId: Record<string, SetSettings> = {}
