@@ -1,6 +1,7 @@
 build-backend:
   stage: build
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - !reference [.shared_config, rules, backend_changes]
   cache:
@@ -22,11 +23,9 @@ build-backend:
 build-frontend:
   stage: build
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
-    - changes:
-      - frontend/**/*
-      - shared/**/*
-      - package-lock.json
+    - !reference [.shared_config, rules, frontend_changes]
   cache:
     - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_frontend]

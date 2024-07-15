@@ -1,6 +1,11 @@
-.deploy_backend:
+deploy-backend:
   image: alpine
   stage: deploy
+  rules:
+    - !reference [.shared_config, rules, no_tags]
+    - !reference [.shared_config, rules, deployable_branches]
+    - !reference [.shared_config, rules, web_and_push]
+    - !reference [.shared_config, rules, backend_changes]
   dependencies:
     - build-backend
   variables:
@@ -70,29 +75,14 @@
 
       EOT
 
-deploy-backend-develop:
-  extends: .deploy_backend
-  rules:
-    - !reference [.shared_config, rules, web_and_push]
-    - if: $CI_COMMIT_BRANCH != 'develop'
-      when: never
-    - !reference [.shared_config, rules, backend_changes]
-  environment:
-    name: develop
-
-deploy-backend-main:
-  extends: .deploy_backend
-  rules:
-    - !reference [.shared_config, rules, web_and_push]
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
-    - !reference [.shared_config, rules, backend_changes]
-  environment:
-    name: main
-
-.deploy_frontend:
+deploy-frontend:
   image: alpine
   stage: deploy
+  rules:
+    - !reference [.shared_config, rules, no_tags]
+    - !reference [.shared_config, rules, deployable_branches]
+    - !reference [.shared_config, rules, web_and_push]
+    - !reference [.shared_config, rules, frontend_changes]
   dependencies:
     - build-frontend
   variables:
@@ -129,29 +119,3 @@ deploy-backend-main:
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "if [ -d $DEPLOY_PATH/dist-www ]; then mv $DEPLOY_PATH/dist-www $DEPLOY_PATH/dist-www-previous; fi"
     # 4) Make new dist available
     - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist-www-next $DEPLOY_PATH/dist-www"
-
-deploy-frontend-develop:
-  extends: .deploy_frontend
-  rules:
-    - !reference [.shared_config, rules, web_and_push]
-    - if: $CI_COMMIT_BRANCH != 'develop'
-      when: never
-    - changes:
-      - frontend/**/*
-      - shared/**/*
-      - package-lock.json
-  environment:
-    name: develop
-
-deploy-frontend-main:
-  extends: .deploy_frontend
-  rules:
-    - !reference [.shared_config, rules, web_and_push]
-    - if: $CI_COMMIT_BRANCH != 'main'
-      when: never
-    - changes:
-      - frontend/**/*
-      - shared/**/*
-      - package-lock.json
-  environment:
-    name: main

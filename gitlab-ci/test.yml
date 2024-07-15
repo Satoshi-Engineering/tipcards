@@ -1,6 +1,7 @@
 test:
   stage: test
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - when: on_success
   cache:

@@ -1,14 +1,17 @@
 .shared_config:
   rules:
-    web_and_push:
-      if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
-      when: never
-    web_and_push_and_schedule:
-      if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web' && $CI_PIPELINE_SOURCE != 'schedule'
-      when: never
+    no_tags:
+      - if: $CI_COMMIT_TAG
+        when: never
     deployable_branches:
-      if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
-      when: never
+      - if: $CI_COMMIT_BRANCH != 'main' && $CI_COMMIT_BRANCH != 'develop'
+        when: never
+    web_and_push:
+      - if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web'
+        when: never
+    web_and_push_and_schedule:
+      - if: $CI_PIPELINE_SOURCE != 'push' && $CI_PIPELINE_SOURCE != 'web' && $CI_PIPELINE_SOURCE != 'schedule'
+        when: never
     nightly_integration:
       - if: $CI_PIPELINE_SOURCE == 'schedule' && $SCHEDULE_JOB != 'NIGHTLY_INTEGRATION'
         when: never
@@ -17,6 +20,11 @@
         - backend/database/**/*
         - backend/src/**/*
         - backend/*.ts
+        - shared/**/*
+        - package-lock.json
+    frontend_changes:
+      changes:
+        - frontend/**/*
         - shared/**/*
         - package-lock.json
   cache:

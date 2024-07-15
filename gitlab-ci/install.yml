@@ -1,6 +1,7 @@
 install:
   stage: .pre # always first, no matter if it is listed in stages
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - changes:
       - package-lock.json
   cache:

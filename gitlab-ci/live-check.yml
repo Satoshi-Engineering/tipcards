@@ -5,9 +5,10 @@ live-check:
   image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   stage: live-check
   rules:
+    - !reference [.shared_config, rules, no_tags]
+    - !reference [.shared_config, rules, deployable_branches]
     - !reference [.shared_config, rules, web_and_push_and_schedule]
     - !reference [.shared_config, rules, nightly_integration]
-    - !reference [.shared_config, rules, deployable_branches]
     - when: always # even run when previous stages fail
   cache:
     - !reference [.shared_config, cache, node_modules]

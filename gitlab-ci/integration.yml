@@ -11,6 +11,7 @@ test-integration:
       alias: postgres
   stage: integration
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - when: on_success
   cache:
