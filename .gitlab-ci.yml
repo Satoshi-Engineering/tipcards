@@ -48,7 +48,7 @@ include:
   - 'gitlab-ci/install.yml'
   - 'gitlab-ci/setup.yml'
   - 'gitlab-ci/test.yml'
+  - 'gitlab-ci/integration.yml'
   - 'gitlab-ci/build.yml'
   - 'gitlab-ci/deploy.yml'
-  - 'gitlab-ci/integration.yml'
   - 'gitlab-ci/live-check.yml'

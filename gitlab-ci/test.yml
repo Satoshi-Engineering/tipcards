@@ -9,5 +9,4 @@ test:
     - npm audit
     - npm run lint
     - npm run typecheck
-    - npm run backend-test-units -- --maxWorkers=2 --minWorkers=1
-    - npm run frontend-test-units -- --maxWorkers=2 --minWorkers=1
+    - npm run test-units
