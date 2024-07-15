@@ -1,9 +1,0 @@
-/* ONLY FOR RUNTIME */
-{
-  "compilerOptions": {
-    "paths": {
-      "@backend/*": ["./backend/src/*"],
-      "@shared/*": ["./shared/src/*"],
-    },
-  },
-}
