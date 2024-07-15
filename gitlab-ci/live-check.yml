@@ -1,6 +1,5 @@
-# when: always
 # This job will run even if the previous stages fail.
-# This runs as it tests the live environment, which should be available even if the previous stages fail.
+# It tests the live environment, which should always be available.
 live-check:
   image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   stage: live-check
@@ -19,11 +18,11 @@ live-check:
       if [ "$CI_COMMIT_BRANCH" == "main" ]
       then 
         echo "Running on main branch"
-        cp $FRONTEND_ENV_FILE_LIVE_CHECK_MAIN frontend/.env.test.local
+        cp $FRONTEND_ENV_FILE_LIVE_CHECK_MAIN e2e/.env.test.local
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]
       then
         echo "Running on develop branch"
-        cp $FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP frontend/.env.test.local
+        cp $FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP e2e/.env.test.local
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
@@ -31,4 +30,4 @@ live-check:
     - echo "Installing cypress"
     - npx cypress install
     - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH"
-    - npm run frontend-test-integration
+    - npm run e2e-tests
