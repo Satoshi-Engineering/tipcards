@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
 import { cardRouter } from '@backend/trpc/router/card.js'
@@ -8,7 +8,7 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData } from '../lib/apiData.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
 const frontend = new FrontendSimulator()

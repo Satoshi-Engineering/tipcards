@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
-import '../../../mocks/process.env'
-import '../mocks/client'
+import '../../../mocks/process.env.js'
+import '../mocks/client.js'
 import { lockCardByHash } from '@backend/database/drizzle/queriesRedis.js'
 import { createCard } from '../../../../drizzleData.js'
 import { addCards } from '../mocks/database.js'

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
-import '../../../mocks/process.env'
-import '../mocks/client'
+import '../../../mocks/process.env.js'
+import '../mocks/client.js'
 import { addData } from '../mocks/database.js'
 
 import { createCard, createCardVersion, createInvoice } from '../../../../drizzleData.js'

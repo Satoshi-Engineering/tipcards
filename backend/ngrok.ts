@@ -1,6 +1,6 @@
 import ngrok from 'ngrok'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { PROXY_PORT, NGROK_AUTH_TOKEN } from '@backend/constants.js'
 

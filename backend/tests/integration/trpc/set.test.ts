@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { TRPCError } from '@trpc/server'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
@@ -10,7 +10,7 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData, setData } from '../lib/apiData.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

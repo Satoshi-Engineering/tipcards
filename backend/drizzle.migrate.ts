@@ -8,7 +8,7 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import * as schema from '@backend/database/drizzle/schema/index.js'
 import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants.js'

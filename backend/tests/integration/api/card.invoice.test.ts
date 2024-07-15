@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import axios from 'axios'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 import { Card } from '@shared/data/api/Card.js'
@@ -10,7 +10,7 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
 import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 
 export type ExpectedCard = {

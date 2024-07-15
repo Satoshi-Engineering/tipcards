@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import '../mocks/process.env'
-import '../mocks/axios'
+import '../mocks/process.env.js'
+import '../mocks/axios.js'
 import { addCards } from '../mocks/redis.js'
 
 import { CARD_FUNDED_INVOICE } from '../data/FundedSetWithBulkWithdraw.js'

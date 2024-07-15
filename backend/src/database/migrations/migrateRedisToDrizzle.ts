@@ -1,4 +1,4 @@
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { prompt } from '@backend/services/cliHelpers.js'
 

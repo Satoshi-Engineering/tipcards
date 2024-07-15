@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import axios from 'axios'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import LNURLw from '@shared/modules/LNURL/LNURLw.js'
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
@@ -11,7 +11,7 @@ import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData } from '../lib/apiData.js'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 const TEST_AMOUNT_IN_SATS = 213
 const TEST_ATTEMPT_COUNT = 21

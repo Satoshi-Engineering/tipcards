@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
@@ -11,7 +11,7 @@ import hashSha256 from '@backend/services/hashSha256.js'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import HDWallet from '../lib/HDWallet/HDWallet.js'
 import { authData } from '../lib/apiData.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 
 const failEarly = new FailEarly(it)

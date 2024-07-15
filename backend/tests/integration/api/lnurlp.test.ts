@@ -1,13 +1,13 @@
 import { describe, it, expect, afterAll } from 'vitest'
 import axios, { AxiosError } from 'axios'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 const frontend = new FrontendSimulator()
 const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import axios, { AxiosError } from 'axios'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { API_ORIGIN } from '../lib/constants.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 describe('card', () => {
   it('should return 404 if the card doesn\' exist', async () => {

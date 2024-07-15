@@ -1,7 +1,7 @@
 import proxy from 'express-http-proxy'
 import express from 'express'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import {
   EXPRESS_PORT,

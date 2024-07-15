@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { randomUUID } from 'crypto'
 
-import '../../../mocks/process.env'
+import '../../../mocks/process.env.js'
 import { queries } from '../mocks/client.js'
 import { addData } from '../mocks/database.js'
 

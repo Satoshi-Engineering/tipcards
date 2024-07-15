@@ -1,13 +1,13 @@
 import { describe, it, expect, afterAll } from 'vitest'
 import { AxiosResponse } from 'axios'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 import HDWallet from '../lib/HDWallet/HDWallet.js'
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import '../../../mocks/process.env'
+import '../../../mocks/process.env.js'
 import { queries } from '../mocks/client.js'
 
 import { unixTimestampToDate } from '@backend/database/drizzle/transforms/dateHelpers.js'

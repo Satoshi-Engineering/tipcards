@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 
-import '../mocks/process.env'
-import '../mocks/axios'
+import '../mocks/process.env.js'
+import '../mocks/axios.js'
 import { addBulkWithdraws, addCards, addSets } from '../mocks/redis.js'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'

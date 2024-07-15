@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import axios, { AxiosError } from 'axios'
 import { randomUUID } from 'crypto'
 
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
@@ -15,7 +15,7 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 import Frontend from '../lib/frontend/Frontend.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
-import '../lib/initAxios'
+import '../lib/initAxios.js'
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,

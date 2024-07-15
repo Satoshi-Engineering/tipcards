@@ -1,4 +1,4 @@
-import '@backend/initEnv' // Info: .env needs to read before imports
+import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import Database from '@backend/database/drizzle/Database.js'
 import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
