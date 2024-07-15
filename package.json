@@ -2,7 +2,7 @@
   "name": "lightning-tip-cards",
   "version": "3.0.0",
   "scripts": {
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore --max-warnings 0",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
     "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-test-units",
     "shared-build": "tsc -p ./shared/tsconfig.json",
@@ -12,7 +12,6 @@
     "frontend-preview": "vite preview --port 5050 --config ./frontend/vite.config.ts",
     "frontend-build": "vite build --config ./frontend/vite.config.ts",
     "frontend-typecheck": "cd frontend && vue-tsc --build --force",
-    "frontend-lint": "eslint -c ./frontend/.eslintrc.js ./frontend --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
     "frontend-test-units": "vitest run --config ./frontend/vitest.config.ts ./frontend/tests/units",
     "frontend-test-integration": "cypress run --e2e -C ./frontend/cypress.config.ts",
     "frontend-test-integration-with-build": "npm run frontend-build && start-server-and-test frontend-preview http://localhost:5050 'npm run frontend-test-integration'",
