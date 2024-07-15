@@ -90,7 +90,7 @@ npm run backend-build
 cp -r backend/database dist/backend/.
 cp -r node_modules dist/.
 cp backend/deploy/tsconfig.json dist/.
-cp backend/deploy/ecosystem.config.js dist/.
+cp backend/deploy/ecosystem.config.cjs dist/.
 cp backend/.env.example dist/.env
 # change REDIS_PASSPHRASE to the passphrase you set earlier
 # change TIPCARDS_ORIGIN and TIPCARDS_API_ORIGIN to the domain name (including protocol) that your tip-cards instance will run at
@@ -102,7 +102,7 @@ cp backend/.env.example dist/.env
 # add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
 vi dist/.env
 cd backend
-pm2 start ecosystem.config.js
+pm2 start ecosystem.config.cjs
 pm2 startup
 # Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
 ```

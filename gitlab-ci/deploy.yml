@@ -40,7 +40,7 @@
       # 1) Stop pm2
       if [ -d $DEPLOY_PATH/dist-node ]; then
         cd $DEPLOY_PATH/dist-node
-        PM2_HOME=/var/www/.pm2/ pm2 delete ecosystem.config.js
+        PM2_HOME=/var/www/.pm2/ pm2 delete ecosystem.config.cjs
         cd $DEPLOY_PATH
       else
         echo "No $DEPLOY_PATH/dist-node dir found, skipping pm2 delete"
@@ -63,7 +63,7 @@
 
       # 6) Start pm2
       cd $DEPLOY_PATH/dist-node
-      PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.js
+      PM2_HOME=/var/www/.pm2/ pm2 start ecosystem.config.cjs
 
       # 7) save pm2
       PM2_HOME=/var/www/.pm2/ pm2 save

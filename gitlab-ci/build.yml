@@ -17,7 +17,7 @@ build-backend:
     - cp -r node_modules dist/.
     - cp backend/deploy/tsconfig.json dist/.
     - cp backend/deploy/package.json dist/.
-    - cp backend/deploy/ecosystem.config.js dist/.
+    - cp backend/deploy/ecosystem.config.cjs dist/.
     - if [ -f backend/.env ]; then cp backend/.env dist/.; fi
 
 build-frontend:
