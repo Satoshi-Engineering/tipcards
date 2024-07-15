@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // PM2 Run Configuration
   apps: [
     {
