@@ -1,28 +1,28 @@
 <template>
   <h1
     v-if="level === 'h1'"
-    :class="[$attrs.class, classes]"
+    :class="classes"
     v-bind="$attrs"
   >
     <slot />
   </h1>
   <h2
     v-if="level === 'h2'"
-    :class="[$attrs.class, classes]"
+    :class="classes"
     v-bind="$attrs"
   >
     <slot />
   </h2>
   <h3
     v-if="level === 'h3'"
-    :class="[$attrs.class, classes]"
+    :class="classes"
     v-bind="$attrs"
   >
     <slot />
   </h3>
   <h4
     v-if="level === 'h4'"
-    :class="[$attrs.class, classes]"
+    :class="classes"
     v-bind="$attrs"
   >
     <slot />
@@ -50,5 +50,5 @@ const classesByLevel: Record<string, string> = {
   h4: 'text-base my-3 first:mt-0 last:mb-0 font-bold',
 }
 
-const classes = computed(() =>  classesByLevel[props.styling || props.level])
+const classes = computed(() => `text-black ${classesByLevel[props.styling || props.level]}`)
 </script>

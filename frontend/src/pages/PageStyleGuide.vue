@@ -25,6 +25,9 @@
           <LinkDefault @click="onDummyClick">Lorem Ipsum</LinkDefault> passages, and more recently
           with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </ParagraphDefault>
+        <ParagraphDefault class="text-yellow font-bold">
+          Some yellow text.
+        </ParagraphDefault>
       </div>
     </div>
   </DefaultLayout>
