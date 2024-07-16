@@ -8,8 +8,13 @@
     "../shared/src/**/*",
     "../backend/src/**/*",
     "../backend/drizzle.config.ts",
+    "tests/components/**/*.ts",
+    "tests/units/**/*.ts",
   ],
-  "exclude": ["src/**/__tests__/*"],
+  "exclude": [
+    "tests/components/**/*.ts",
+    "tests/units/**/*.ts",
+  ],
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",

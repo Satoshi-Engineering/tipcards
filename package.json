@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore --max-warnings 0",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
-    "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-test-units",
+    "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-test-units && npm run frontend-test-components",
     "shared-build": "tsc -p ./shared/tsconfig.json && tsc-alias -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
     "shared-test-units": "vitest run --config ./shared/vitest.config.ts ./shared/tests/units",
@@ -14,6 +14,7 @@
     "frontend-build": "vite build --config ./frontend/vite.config.ts",
     "frontend-typecheck": "cd frontend && vue-tsc --build --force",
     "frontend-test-units": "vitest run --config ./frontend/vitest.config.ts ./frontend/tests/units",
+    "frontend-test-components": "vitest run --config ./frontend/vitest.config.ts ./frontend/tests/components",
     "frontend-test-integration": "cypress run --e2e -C ./frontend/cypress.config.ts",
     "frontend-test-integration-with-build": "npm run frontend-build && start-server-and-test frontend-preview http://localhost:5050 'npm run frontend-test-integration'",
     "backend-cli": "tsx --tsconfig ./backend/tsconfig.json ./backend/cli.ts",
