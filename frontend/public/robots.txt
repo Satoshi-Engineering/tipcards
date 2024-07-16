@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 
 Disallow: /statistics
+Disallow: /style-guide
 
 Disallow: /api
 Disallow: /preview/?lightning=
