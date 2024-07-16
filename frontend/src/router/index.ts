@@ -10,6 +10,7 @@ const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
+const PageStyleGuide = () => import('@/pages/PageStyleGuide.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 
 const router = createRouter({
@@ -118,6 +119,11 @@ const router = createRouter({
           },
         },
       ],
+    },
+    {
+      path: '/style-guide',
+      name: 'style-guide',
+      component: PageStyleGuide,
     },
   ],
 })
