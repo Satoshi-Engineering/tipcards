@@ -46,7 +46,7 @@ const props = defineProps({
 const classesByLevel: Record<string, string> = {
   h1: 'text-3xl my-6 first:mt-0 last:mb-0 font-semibold',
   h2: 'text-2xl my-4 first:mt-0 last:mb-0 font-bold',
-  h3: 'text-base md:text-xl my-3 first:mt-0 last:mb-0 font-bold',
+  h3: 'text-xl my-3 first:mt-0 last:mb-0 font-bold',
   h4: 'text-base my-3 first:mt-0 last:mb-0 font-bold',
 }
 
