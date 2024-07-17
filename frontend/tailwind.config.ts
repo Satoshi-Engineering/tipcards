@@ -35,6 +35,7 @@ export default {
       },
       fontFamily: {
         sans: ['Noto Sans', ...defaultTheme.fontFamily.sans],
+        lato: ['Lato', ...defaultTheme.fontFamily.sans],
         emoji: ['Apple Color Emoji', 'Segoe UI Emoji', 'NotoColorEmoji', 'Segoe UI Symbol', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Mozilla'],
       },
       borderColor: ({ theme }) => ({
