@@ -100,6 +100,7 @@ const cssClassesPrimary = computed(() => [
     rounded-full min-h-[40px] overflow-hidden
     my-1 px-20 py-2
     font-medium text-center bg-yellow hover:text-white
+    transition-colors ease-in duration-300
   `,
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,

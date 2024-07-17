@@ -4,13 +4,14 @@
       absolute left-2 top-[50%] translate-y-[-50%]
       w-[30px] h-[30px]
       flex items-center justify-center
+      pointer-events-none
     "
   >
     <span
       class="
         absolute h-full w-full rounded-full -z-10
         bg-bluegrey
-        transition-transform duration-30 group-hover:duration-1000 group-hover:scale-[40]
+        transition-transform ease-out duration-30 group-hover:duration-700 group-hover:scale-[40]
       "
     />
     <AnimatedLoadingWheel

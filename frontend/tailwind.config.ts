@@ -77,6 +77,9 @@ export default {
       ...defaultTheme.screens,
     },
   },
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   plugins: [
     plugin(({ addUtilities }) => {
       addUtilities({
