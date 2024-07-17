@@ -99,7 +99,7 @@ const cssClassesPrimary = computed(() => [
     relative inline-flex items-center justify-center
     rounded-full min-h-[40px] overflow-hidden
     my-1 px-20 py-2
-    text-center bg-yellow hover:text-white
+    font-medium text-center bg-yellow hover:text-white
   `,
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
@@ -107,7 +107,7 @@ const cssClassesPrimary = computed(() => [
 ])
 
 const cssClassesSecondary = computed(() => [
-  'min-h-[40px] my-1 px-16 py-2 text-center underline hover:no-underline',
+  'min-h-[40px] my-1 px-16 py-2 font-medium text-center underline hover:no-underline',
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
