@@ -13,7 +13,7 @@ config({
 
 export default defineConfig({
   e2e: {
-    specPattern: 'e2e/tests/**/*.test.{js,jsx,ts,tsx}',
+    specPattern: 'e2e/**/*.test.ts',
     supportFile: false,
   },
   env: {

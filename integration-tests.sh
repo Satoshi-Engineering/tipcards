@@ -39,7 +39,7 @@ if [ "$INTEGRATION_TEST_EXIT_CODE" -ne 0 ]; then
 fi
 
 echo 'Backend integration tests finished, running frontend integration tests'
-npm run frontend-test-integration-with-build
+npm run e2e-tests-with-frontend-build
 INTEGRATION_TEST_EXIT_CODE=$?
 
 kill_proc $BACKEND_PID

@@ -24,16 +24,16 @@ test-integration:
       then 
         echo "Running on main branch"
         cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_MAIN frontend/.env.test.local
+        cp $FRONTEND_ENV_FILE_TEST_MAIN e2e/.env.test.local
       elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
       then
         echo "Running on develop branch"
         cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_DEVELOP frontend/.env.test.local
+        cp $FRONTEND_ENV_FILE_TEST_DEVELOP e2e/.env.test.local
       else
         echo "Running on feature branch"
         cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_FEATURE frontend/.env.test.local
+        cp $FRONTEND_ENV_FILE_TEST_FEATURE e2e/.env.test.local
       fi
     - echo "Running database migration to prepare database for integration tests"
     - npm run drizzle-migrate -- --envIntegrationTest
