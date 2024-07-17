@@ -1,10 +1,11 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
+@import './fonts.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* todo - check with dave - do we really want to set this to 14px? tailwind uses 16px by default */
 @layer base {
   html {
     font-size: 14px;

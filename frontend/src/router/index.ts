@@ -118,12 +118,12 @@ const router = createRouter({
               }),
           },
         },
+        {
+          path: 'style-guide',
+          name: 'style-guide',
+          component: PageStyleGuide,
+        },
       ],
-    },
-    {
-      path: '/style-guide',
-      name: 'style-guide',
-      component: PageStyleGuide,
     },
   ],
 })
