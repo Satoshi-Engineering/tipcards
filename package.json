@@ -20,7 +20,7 @@
     "backend-cli": "tsx --tsconfig ./backend/tsconfig.json ./backend/cli.ts",
     "backend-dev": "tsx watch --tsconfig ./backend/tsconfig.json ./backend/index.ts",
     "backend-debug": "tsx --tsconfig ./backend/tsconfig.json ./backend/index.ts",
-    "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.build.json  && tsc-alias -p ./backend/tsconfig.build.json",
+    "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.build.json && tsc-alias -p ./backend/tsconfig.build.json",
     "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-tmp-dev": "tsx watch --tsconfig ./backend/tsconfig.json ./backend/tmpDevelop.ts",
     "backend-test-units": "vitest run --config ./backend/vitest.config.ts ./backend/tests/units",
