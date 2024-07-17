@@ -25,22 +25,60 @@
           <LinkDefault @click="onDummyClick">Lorem Ipsum</LinkDefault> passages, and more recently
           with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </ParagraphDefault>
-        <ParagraphDefault class="text-yellow font-bold">
-          Some yellow text.
+        <ParagraphDefault class="text-yellow">
+          <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault> in yellow is simply dummy text of the printing and typesetting industry.
         </ParagraphDefault>
-        <hr class="m-5">
+
+        <hr class="my-8">
+        <HeadlineDefault level="h2">
+          Buttons
+        </HeadlineDefault>
+        <ButtonDefault @click="onDummyClick">
+          Primary Button
+        </ButtonDefault>
+
+        <HeadlineDefault level="h3">
+          Multi line
+        </HeadlineDefault>
         <div class="flex flex-col max-w-xs">
-          <HeadlineDefault level="h2">
-            Buttons
-          </HeadlineDefault>
           <ButtonDefault @click="onDummyClick">
-            Primary Button
+            This is a very long text in this button, why would you do that?
           </ButtonDefault>
           <ButtonDefault
             variant="secondary"
             @click="onDummyClick"
           >
-            Secondary Button
+            This is a very long secondary text in this button, why would you do that?
+          </ButtonDefault>
+        </div>
+
+        <HeadlineDefault level="h3">
+          Loading
+        </HeadlineDefault>
+        <div class="flex flex-col max-w-xs">
+          <ButtonDefault
+            :loading="dummyLoading"
+            @click="onDummyLoading"
+          >
+            Click Me To Load
+          </ButtonDefault>
+          <ButtonDefault
+            loading
+            @click="onDummyClick"
+          >
+            Infinite Loading
+          </ButtonDefault>
+        </div>
+
+        <HeadlineDefault level="h3">
+          Disabled
+        </HeadlineDefault>
+        <div class="flex flex-col max-w-xs">
+          <ButtonDefault
+            disabled
+            @click="onDummyClick"
+          >
+            Disabled Primary Button
           </ButtonDefault>
           <ButtonDefault
             variant="secondary"
@@ -49,9 +87,12 @@
           >
             Disabled Secondary Button
           </ButtonDefault>
-          <HeadlineDefault level="h3">
-            As Router Links
-          </HeadlineDefault>
+        </div>
+
+        <HeadlineDefault level="h3">
+          As Router Links
+        </HeadlineDefault>
+        <div class="flex flex-col max-w-xs">
           <ButtonDefault :to="dummyLink">
             Primary Button
           </ButtonDefault>
@@ -61,9 +102,12 @@
           >
             Secondary Button
           </ButtonDefault>
-          <HeadlineDefault level="h3">
-            As Hrefs
-          </HeadlineDefault>
+        </div>
+
+        <HeadlineDefault level="h3">
+          As Hrefs
+        </HeadlineDefault>
+        <div class="flex flex-col max-w-xs">
           <ButtonDefault href="https://satoshiengineering.com/">
             Primary Button
           </ButtonDefault>
@@ -80,10 +124,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
@@ -94,5 +140,12 @@ const dummyLink = {
 
 const onDummyClick = () => {
   alert('What\'s the purpose?')
+}
+
+const dummyLoading = ref(false)
+const onDummyLoading = async () => {
+  dummyLoading.value = true
+  await new Promise((resolve) => setTimeout(resolve, 3000))
+  dummyLoading.value = false
 }
 </script>

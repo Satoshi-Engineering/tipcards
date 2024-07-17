@@ -4,9 +4,16 @@
     :to="to"
     :class="cssClasses"
     :target="targetComputed"
-    :disabled="disabled"
+    :disabled="disabledComputed"
   >
-    <slot />
+    <ButtonDefaultIcon
+      v-if="variant == 'primary'"
+      class="z-10"
+      :loading="loading"
+    />
+    <span class="z-20">
+      <slot />
+    </span>
   </RouterLink>
   <a
     v-else-if="href != null"
@@ -15,24 +22,28 @@
     class="inline-block"
     :class="cssClasses"
   >
-    <slot />
-    <AnimatedLoadingWheel
-      v-if="loading"
-      class="inline-block w-5 h-5 ml-3 -mt-1"
-      color="white"
+    <ButtonDefaultIcon
+      v-if="variant == 'primary'"
+      class="z-10"
+      :loading="loading"
     />
+    <span class="z-20">
+      <slot />
+    </span>
   </a>
   <button
     v-else
     :class="cssClasses"
-    :disabled="disabled"
+    :disabled="disabledComputed"
   >
-    <slot />
-    <AnimatedLoadingWheel
-      v-if="loading"
-      class="inline-block w-5 h-5 ml-3 -mt-1"
-      color="white"
+    <ButtonDefaultIcon
+      v-if="variant == 'primary'"
+      class="z-10"
+      :loading="loading"
     />
+    <span class="z-20">
+      <slot />
+    </span>
   </button>
 </template>
 
@@ -40,7 +51,7 @@
 import { computed, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+import ButtonDefaultIcon from './ButtonDefaultIcon.vue'
 
 const props = defineProps({
   to: {
@@ -78,24 +89,27 @@ const props = defineProps({
   },
 })
 
+const disabledComputed = computed(() => props.disabled || props.loading)
+
 const cssClasses = computed(() => props.variant == 'primary' ? cssClassesPrimary.value : cssClassesSecondary.value)
 
 const cssClassesPrimary = computed(() => [
-  'border-2 border-btcorange my-1 py-2 text-center rounded-sm transition-colors duration-200',
+  `
+    group
+    relative inline-flex items-center justify-center
+    rounded-full min-h-[40px] overflow-hidden
+    my-1 px-20 py-2
+    text-center bg-yellow hover:text-white
+  `,
   {
-    'px-5': props.variant !== 'no-border',
-    'bg-btcorange text-white active:bg-btcorange-effect active:border-btcorange-effect': props.variant == null,
-    'hover:bg-btcorange-effect hover:border-btcorange-effect': props.variant == null && !props.disabled,
-    'bg-transparent text-btcorange': props.variant === 'outline',
-    'bg-transparent text-btcorange border-transparent px-0': props.variant === 'no-border',
-    'opacity-50 cursor-default pointer-events-none': props.disabled,
+    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
 ])
 
 const cssClassesSecondary = computed(() => [
-  'my-1 px-5 py-2 text-center underline hover:no-underline',
+  'min-h-[40px] my-1 px-16 py-2 text-center underline hover:no-underline',
   {
-    'opacity-50 cursor-default pointer-events-none': props.disabled,
+    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
 ])
 

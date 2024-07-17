@@ -1,7 +1,7 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 
 describe('ButtonDefault', () => {
   it('renders a router link', async () => {
@@ -53,5 +53,42 @@ describe('ButtonDefault', () => {
     const button = wrapper.find('button')
     expect(button.exists()).toBe(true)
     expect(button.text()).toBe('Satoshi Engineering')
+  })
+
+  it('renders a disabled button', async () => {
+    const wrapper = mount(ButtonDefault, {
+      components: {
+        RouterLink: RouterLinkStub,
+      },
+      slots: {
+        default: 'Satoshi Engineering',
+      },
+      props: {
+        disabled: true,
+      },
+    })
+    const button = wrapper.find('button')
+    expect(button.exists()).toBe(true)
+    expect(button.attributes('disabled')).toBeDefined()
+    expect(button.text()).toBe('Satoshi Engineering')
+  })
+
+  it('renders a disabled button when loading', async () => {
+    const wrapper = mount(ButtonDefault, {
+      components: {
+        RouterLink: RouterLinkStub,
+      },
+      slots: {
+        default: 'Satoshi Engineering',
+      },
+    })
+
+    const button = wrapper.find('button')
+    expect(button.exists()).toBe(true)
+    expect(button.attributes('disabled')).toBeUndefined()
+    expect(button.text()).toBe('Satoshi Engineering')
+
+    await wrapper.setProps({ loading: true })
+    expect(button.attributes('disabled')).toBeDefined()
   })
 })

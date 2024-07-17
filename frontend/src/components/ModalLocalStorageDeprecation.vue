@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ModalDefault from '@/components/ModalDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 

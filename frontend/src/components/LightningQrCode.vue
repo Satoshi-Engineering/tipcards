@@ -63,7 +63,7 @@ import { useI18n } from 'vue-i18n'
 
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import AnimatedCheckmark from '@/components/AnimatedCheckmark.vue'
 import IconWarning from '@/components/svgs/IconWarning.vue'
 

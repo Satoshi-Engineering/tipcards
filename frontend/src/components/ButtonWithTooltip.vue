@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import TooltipDefault from './TooltipDefault.vue'
-import ButtonDefault from './ButtonDefault.vue'
+import ButtonDefault from './buttons/ButtonDefault.vue'
 
 defineProps({
   href: {

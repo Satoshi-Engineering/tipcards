@@ -38,7 +38,7 @@ import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ModalDefault from '@/components/ModalDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'

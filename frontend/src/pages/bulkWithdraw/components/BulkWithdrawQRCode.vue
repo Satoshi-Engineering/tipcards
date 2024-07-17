@@ -38,7 +38,7 @@ import { useRouter } from 'vue-router'
 import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw'
 
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import useBacklink from '@/modules/useBackLink'

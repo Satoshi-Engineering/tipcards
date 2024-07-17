@@ -89,7 +89,7 @@ import { storeToRefs } from 'pinia'
 
 import { Profile } from '@shared/data/auth/User'
 
-import ButtonDefault from '@/components/ButtonDefault.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import useAuthService from '@/modules/useAuthService'
