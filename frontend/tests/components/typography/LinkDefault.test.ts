@@ -5,7 +5,7 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 describe('LinkDefault', () => {
   it('renders a router link', async () => {
-    const wrapper = mount( LinkDefault, {
+    const wrapper = mount(LinkDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
@@ -23,7 +23,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a hyperlink', async () => {
-    const wrapper = mount( LinkDefault, {
+    const wrapper = mount(LinkDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
@@ -41,7 +41,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a button', async () => {
-    const wrapper = mount( LinkDefault, {
+    const wrapper = mount(LinkDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
