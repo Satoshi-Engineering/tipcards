@@ -28,6 +28,52 @@
         <ParagraphDefault class="text-yellow font-bold">
           Some yellow text.
         </ParagraphDefault>
+        <hr class="m-5">
+        <div class="flex flex-col max-w-xs">
+          <HeadlineDefault level="h2">
+            Buttons
+          </HeadlineDefault>
+          <ButtonDefault @click="onDummyClick">
+            Primary Button
+          </ButtonDefault>
+          <ButtonDefault
+            variant="secondary"
+            @click="onDummyClick"
+          >
+            Secondary Button
+          </ButtonDefault>
+          <ButtonDefault
+            variant="secondary"
+            disabled
+            @click="onDummyClick"
+          >
+            Disabled Secondary Button
+          </ButtonDefault>
+          <HeadlineDefault level="h3">
+            As Router Links
+          </HeadlineDefault>
+          <ButtonDefault :to="dummyLink">
+            Primary Button
+          </ButtonDefault>
+          <ButtonDefault
+            variant="secondary"
+            :to="dummyLink"
+          >
+            Secondary Button
+          </ButtonDefault>
+          <HeadlineDefault level="h3">
+            As Hrefs
+          </HeadlineDefault>
+          <ButtonDefault href="https://satoshiengineering.com/">
+            Primary Button
+          </ButtonDefault>
+          <ButtonDefault
+            variant="secondary"
+            href="https://satoshiengineering.com/"
+          >
+            Secondary Button
+          </ButtonDefault>
+        </div>
       </div>
     </div>
   </DefaultLayout>
@@ -37,6 +83,7 @@
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
 
@@ -46,6 +93,6 @@ const dummyLink = {
 }
 
 const onDummyClick = () => {
-  alert('What\'s the purpose of this link?')
+  alert('What\'s the purpose?')
 }
 </script>

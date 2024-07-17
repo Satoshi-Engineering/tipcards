@@ -1,11 +1,11 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ButtonDefault from '@/components/ButtonDefault.vue'
 
-describe('LinkDefault', () => {
+describe('ButtonDefault', () => {
   it('renders a router link', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
@@ -23,7 +23,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a hyperlink', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
@@ -42,7 +42,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a button', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonDefault, {
       components: {
         RouterLink: RouterLinkStub,
       },
