@@ -6,9 +6,13 @@
     <slot name="header">
       <TheHeader class="w-full max-w-3xl" />
     </slot>
-    <slot name="content">
+    <slot name="content-outer">
       <div class="grid justify-items-center w-full max-w-3xl">
-        <slot name="default" />
+        <slot name="content-inner">
+          <div class="px-5 py-3">
+            <slot name="default" />
+          </div>
+        </slot>
       </div>
     </slot>
     <slot name="footer">
