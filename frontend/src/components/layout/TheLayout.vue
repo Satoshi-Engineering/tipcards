@@ -4,10 +4,10 @@
     :dir="currentTextDirection"
   >
     <slot name="header">
-      <TheHeader class="w-full max-w-3xl print:hidden" />
+      <TheHeader class="w-full max-w-xl print:hidden" />
     </slot>
     <slot name="content-outer">
-      <div class="grid justify-items-center w-full max-w-3xl">
+      <div class="grid justify-items-center w-full max-w-xl">
         <slot name="content-inner">
           <div class="px-5 py-3">
             <slot name="default" />
@@ -18,9 +18,9 @@
     <slot name="footer">
       <TheMostFrequentFAQs
         v-if="!hideFAQs"
-        class="w-full max-w-lg mb-px print:hidden"
+        class="w-full max-w-xl mb-px print:hidden"
       />
-      <TheFooter class="w-full max-w-lg print:hidden" />
+      <TheFooter class="w-full max-w-xl print:hidden" />
     </slot>
   </div>
 </template>
