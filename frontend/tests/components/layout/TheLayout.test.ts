@@ -1,11 +1,11 @@
-import { config, mount, RouterLinkStub } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 
-config.global.stubs = { RouterLink: RouterLinkStub }
+import '../../mocks/router'
 
 describe('TheLayout', () => {
   it('renders the layout', async () => {

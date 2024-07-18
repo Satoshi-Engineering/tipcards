@@ -8,12 +8,10 @@
     "../shared/src/**/*",
     "../backend/src/**/*",
     "../backend/drizzle.config.ts",
-    "tests/components/**/*.ts",
-    "tests/units/**/*.ts",
+    "tests/**/*.ts",
   ],
   "exclude": [
-    "tests/components/**/*.ts",
-    "tests/units/**/*.ts",
+    "tests/**/*.ts",
   ],
   "compilerOptions": {
     "composite": true,
