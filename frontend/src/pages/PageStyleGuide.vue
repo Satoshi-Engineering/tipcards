@@ -31,14 +31,17 @@
     <HeadlineDefault level="h2">
       Buttons
     </HeadlineDefault>
-    <ButtonDefault @click="onDummyClick">
-      Primary Button
-    </ButtonDefault>
+
+    <div class="text-center">
+      <ButtonDefault @click="onDummyClick">
+        Primary Button
+      </ButtonDefault>
+    </div>
 
     <HeadlineDefault level="h3">
       Multi line
     </HeadlineDefault>
-    <div class="flex flex-col max-w-xs">
+    <div class="flex flex-col">
       <ButtonDefault @click="onDummyClick">
         This is a very long text in this button, why would you do that?
       </ButtonDefault>
@@ -53,7 +56,7 @@
     <HeadlineDefault level="h3">
       Loading
     </HeadlineDefault>
-    <div class="flex flex-col max-w-xs">
+    <div class="flex flex-col">
       <ButtonDefault
         :loading="dummyLoading"
         @click="onDummyLoading"
@@ -71,7 +74,7 @@
     <HeadlineDefault level="h3">
       Disabled
     </HeadlineDefault>
-    <div class="flex flex-col max-w-xs">
+    <div class="flex flex-col">
       <ButtonDefault
         disabled
         @click="onDummyClick"
@@ -90,7 +93,7 @@
     <HeadlineDefault level="h3">
       As Router Links
     </HeadlineDefault>
-    <div class="flex flex-col max-w-xs">
+    <div class="flex flex-col">
       <ButtonDefault :to="dummyLink">
         Primary Button
       </ButtonDefault>
@@ -105,7 +108,7 @@
     <HeadlineDefault level="h3">
       As Hrefs
     </HeadlineDefault>
-    <div class="flex flex-col max-w-xs">
+    <div class="flex flex-col">
       <ButtonDefault href="https://satoshiengineering.com/">
         Primary Button
       </ButtonDefault>

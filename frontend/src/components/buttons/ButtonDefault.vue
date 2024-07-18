@@ -8,10 +8,10 @@
   >
     <ButtonDefaultIcon
       v-if="variant == 'primary'"
-      class="z-10"
       :loading="loading"
+      :reduced-animation="reducedAnimation"
     />
-    <span class="z-20">
+    <span class="relative">
       <slot />
     </span>
   </RouterLink>
@@ -24,10 +24,10 @@
   >
     <ButtonDefaultIcon
       v-if="variant == 'primary'"
-      class="z-10"
       :loading="loading"
+      :reduced-animation="reducedAnimation"
     />
-    <span class="z-20">
+    <span class="relative">
       <slot />
     </span>
   </a>
@@ -38,10 +38,10 @@
   >
     <ButtonDefaultIcon
       v-if="variant == 'primary'"
-      class="z-10"
       :loading="loading"
+      :reduced-animation="reducedAnimation"
     />
-    <span class="z-20">
+    <span class="relative">
       <slot />
     </span>
   </button>
@@ -87,6 +87,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  reducedAnimation: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const disabledComputed = computed(() => props.disabled || props.loading)
@@ -98,17 +102,17 @@ const cssClassesPrimary = computed(() => [
     group
     relative inline-flex items-center justify-center
     rounded-full min-h-[40px] overflow-hidden
-    my-1 px-20 py-2
-    font-medium text-center bg-yellow hover:text-white
-    transition-colors ease-in duration-300
+    w-full max-w-md mx-auto my-1 px-20 py-2
+    font-medium text-center bg-yellow
   `,
   {
+    'transition-colors ease-in duration-300 hover:text-white': !props.reducedAnimation,
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
 ])
 
 const cssClassesSecondary = computed(() => [
-  'min-h-[40px] my-1 px-16 py-2 font-medium text-center underline hover:no-underline',
+  'w-full max-w-md min-h-[40px] my-1 px-0 py-2 mx-auto font-medium text-center underline hover:no-underline',
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
