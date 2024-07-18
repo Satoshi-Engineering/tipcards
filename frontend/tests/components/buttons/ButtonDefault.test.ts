@@ -1,14 +1,13 @@
-import { mount, RouterLinkStub } from '@vue/test-utils'
+import { config, mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 
+config.global.stubs = { RouterLink: RouterLinkStub }
+
 describe('ButtonDefault', () => {
   it('renders a router link', async () => {
     const wrapper = mount(ButtonDefault, {
-      components: {
-        RouterLink: RouterLinkStub,
-      },
       props: {
         to: { name: 'home' },
       },
@@ -24,9 +23,6 @@ describe('ButtonDefault', () => {
 
   it('renders a hyperlink', async () => {
     const wrapper = mount(ButtonDefault, {
-      components: {
-        RouterLink: RouterLinkStub,
-      },
       props: {
         href: 'https://satoshiengineering.com',
       },
@@ -43,9 +39,6 @@ describe('ButtonDefault', () => {
 
   it('renders a button', async () => {
     const wrapper = mount(ButtonDefault, {
-      components: {
-        RouterLink: RouterLinkStub,
-      },
       slots: {
         default: 'Satoshi Engineering',
       },
@@ -57,9 +50,6 @@ describe('ButtonDefault', () => {
 
   it('renders a disabled button', async () => {
     const wrapper = mount(ButtonDefault, {
-      components: {
-        RouterLink: RouterLinkStub,
-      },
       slots: {
         default: 'Satoshi Engineering',
       },
@@ -75,9 +65,6 @@ describe('ButtonDefault', () => {
 
   it('renders a disabled button when loading', async () => {
     const wrapper = mount(ButtonDefault, {
-      components: {
-        RouterLink: RouterLinkStub,
-      },
       slots: {
         default: 'Satoshi Engineering',
       },
