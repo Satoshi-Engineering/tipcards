@@ -1,32 +1,24 @@
 <template>
   <div
-    class="min-h-screen flex flex-col items-center"
+    class="min-h-screen flex flex-col"
     :dir="currentTextDirection"
   >
     <slot name="header">
       <TheHeader
-        class="w-full max-w-xl print:hidden"
+        class="print:hidden"
         :current-code="currentCode"
         :locales="locales"
       />
     </slot>
     <div class="flex-1">
-      <slot name="content-outer">
-        <div class="grid justify-items-center w-full max-w-xl">
-          <slot name="content-inner">
-            <div class="px-5 py-3">
-              <slot name="default" />
-            </div>
-          </slot>
-        </div>
-      </slot>
+      <slot name="default" />
     </div>
     <slot name="footer">
       <TheMostFrequentFAQs
         v-if="!hideFAQs"
-        class="w-full max-w-xl mb-px print:hidden"
+        class="print:hidden"
       />
-      <TheFooter class="w-full max-w-xl print:hidden" />
+      <TheFooter class="print:hidden" />
     </slot>
   </div>
 </template>
@@ -34,12 +26,11 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
+import TheHeader from '@/components/layout/TheHeader.vue'
+import TheFooter from '@/components/layout/TheFooter.vue'
+import TheMostFrequentFAQs from '@/components/layout/TheMostFrequentFAQs.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
 import type { Locales } from '@/modules/langNav/Locales'
-
-import TheHeader from './TheHeader.vue'
-import TheFooter from './TheFooter.vue'
-import TheMostFrequentFAQs from './TheMostFrequentFAQs.vue'
 
 defineProps({
   hideFAQs: {

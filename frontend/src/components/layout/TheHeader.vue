@@ -2,26 +2,27 @@
   <header
     class="
       sticky top-0 z-10
-      flex justify-start items-center
-      mb-2 px-5 py-3
+      mb-2
       bg-white
     "
   >
-    <RouterLink
-      :to="{ name: 'home', params: { lang: $route.params.lang } }"
-      class="mr-auto flex flex-row items-center"
-    >
-      <IconLogo />
-    </RouterLink>
-    <div class="w-6 h-6">
-      <IconWorld />
-    </div>
-    <TheMainNav />
-    <TheLangNav
-      class="hidden"
-      :locales="locales"
-      :current-code="currentCode"
-    />
+    <CenterContainer class="flex items-center">
+      <RouterLink
+        :to="{ name: 'home', params: { lang: $route.params.lang } }"
+        class="mr-auto flex flex-row items-center"
+      >
+        <IconLogo />
+      </RouterLink>
+      <div class="w-6 h-6">
+        <IconWorld />
+      </div>
+      <TheMainNav />
+      <TheLangNav
+        class="hidden"
+        :locales="locales"
+        :current-code="currentCode"
+      />
+    </CenterContainer>
   </header>
 </template>
 
@@ -29,13 +30,12 @@
 import { RouterLink } from 'vue-router'
 import type { PropType } from 'vue'
 
-import type { Locales } from '@/modules/langNav/Locales'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
+import TheLangNav from '@/components/layout/TheLangNav.vue'
+import TheMainNav from '@/components/layout/TheMainNav.vue'
 import IconWorld from '@/components/svgs/IconWorld.vue'
-
-import TheLangNav from './TheLangNav.vue'
-import TheMainNav from './TheMainNav.vue'
-
 import IconLogo from '@/components/svgs/IconLogo.vue'
+import type { Locales } from '@/modules/langNav/Locales'
 
 defineProps({
   locales: {
@@ -47,5 +47,4 @@ defineProps({
     default: '',
   },
 })
-
 </script>

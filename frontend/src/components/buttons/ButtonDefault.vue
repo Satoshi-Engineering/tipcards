@@ -106,7 +106,7 @@ const cssClassesPrimary = computed(() => [
     font-medium text-center bg-yellow
   `,
   {
-    'transition-colors ease-in duration-300 hover:text-white': !props.reducedAnimation,
+    'transition-colors ease-in duration-50 hover:text-white': !props.reducedAnimation,
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
 ])
