@@ -6,7 +6,7 @@
     <ParagraphDefault class="mb-8 text-white">
       Hier kommen einige Fragen hin!
     </ParagraphDefault>
-    <ButtonDefault :to="{ name: 'home' }">
+    <ButtonDefault :to="{ name: 'home' }" reduced-animation>
       Zu den FAQs
     </ButtonDefault>
   </div>
