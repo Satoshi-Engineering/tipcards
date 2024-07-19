@@ -6,15 +6,17 @@
     <slot name="header">
       <TheHeader class="w-full max-w-xl print:hidden" />
     </slot>
-    <slot name="content-outer">
-      <div class="grid justify-items-center w-full max-w-xl">
-        <slot name="content-inner">
-          <div class="px-5 py-3">
-            <slot name="default" />
-          </div>
-        </slot>
-      </div>
-    </slot>
+    <div class="flex-1">
+      <slot name="content-outer">
+        <div class="grid justify-items-center w-full max-w-xl">
+          <slot name="content-inner">
+            <div class="px-5 py-3">
+              <slot name="default" />
+            </div>
+          </slot>
+        </div>
+      </slot>
+    </div>
     <slot name="footer">
       <TheMostFrequentFAQs
         v-if="!hideFAQs"
