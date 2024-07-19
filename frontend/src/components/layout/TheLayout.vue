@@ -4,7 +4,7 @@
     :dir="currentTextDirection"
   >
     <slot name="header">
-      <TheHeader class="w-full max-w-xl print:hidden" />
+      <TheHeader class="w-full max-w-xl print:hidden" :current-code="currentCode" :locales="locales" />
     </slot>
     <div class="flex-1">
       <slot name="content-outer">
@@ -28,7 +28,10 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
 import { useI18nHelpers } from '@/modules/initI18n'
+import type { Locales } from '@/modules/langNav/Locales'
 
 import TheHeader from './TheHeader.vue'
 import TheFooter from './TheFooter.vue'
@@ -38,6 +41,14 @@ defineProps({
   hideFAQs: {
     type: Boolean,
     default: false,
+  },
+  locales: {
+    type: Array as PropType<Locales>,
+    default: () => [],
+  },
+  currentCode: {
+    type: String,
+    default: '',
   },
 })
 

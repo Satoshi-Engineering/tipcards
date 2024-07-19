@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout :locales="locales" :current-code="currentCode">
     <HeadlineDefault level="h1">
       Lightning Tip Cards Style Guide
     </HeadlineDefault>
@@ -125,6 +125,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+import { LOCALES, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
+
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -146,4 +148,9 @@ const onDummyLoading = async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000))
   dummyLoading.value = false
 }
+
+const { currentLocale } = useI18nHelpers()
+const currentCode = ref<LocaleCode>(currentLocale.value)
+const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
+
 </script>

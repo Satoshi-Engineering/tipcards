@@ -13,16 +13,39 @@
     >
       <IconLogo />
     </RouterLink>
-    <TheLangNav class="mr-5" />
+    <div class="w-6 h-6">
+      <IconWorld />
+    </div>
     <TheMainNav />
+    <TheLangNav
+      class="hidden"
+      :locales="locales"
+      :current-code="currentCode"
+    />
   </header>
 </template>
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import type { PropType } from 'vue'
+
+import type { Locales } from '@/modules/langNav/Locales'
+import IconWorld from '@/components/svgs/IconWorld.vue'
 
 import TheLangNav from './TheLangNav.vue'
 import TheMainNav from './TheMainNav.vue'
 
 import IconLogo from '@/components/svgs/IconLogo.vue'
+
+defineProps({
+  locales: {
+    type: Array as PropType<Locales>,
+    default: () => [],
+  },
+  currentCode: {
+    type: String,
+    default: '',
+  },
+})
+
 </script>
