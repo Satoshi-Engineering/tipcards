@@ -4,7 +4,11 @@
     :dir="currentTextDirection"
   >
     <slot name="header">
-      <TheHeader class="w-full max-w-xl print:hidden" :current-code="currentCode" :locales="locales" />
+      <TheHeader
+        class="w-full max-w-xl print:hidden"
+        :current-code="currentCode"
+        :locales="locales"
+      />
     </slot>
     <div class="flex-1">
       <slot name="content-outer">
