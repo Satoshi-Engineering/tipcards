@@ -4,7 +4,7 @@
     :dir="currentTextDirection"
   >
     <slot name="header">
-      <TheHeader class="w-full max-w-3xl" />
+      <TheHeader class="w-full max-w-3xl print:hidden" />
     </slot>
     <slot name="content-outer">
       <div class="grid justify-items-center w-full max-w-3xl">
@@ -16,7 +16,11 @@
       </div>
     </slot>
     <slot name="footer">
-      <TheFooter class="w-full max-w-lg" />
+      <TheMostFrequentFAQs
+        v-if="!hideFAQs"
+        class="w-full max-w-lg mb-px print:hidden"
+      />
+      <TheFooter class="w-full max-w-lg print:hidden" />
     </slot>
   </div>
 </template>
@@ -26,9 +30,10 @@ import { useI18nHelpers } from '@/modules/initI18n'
 
 import TheHeader from './TheHeader.vue'
 import TheFooter from './TheFooter.vue'
+import TheMostFrequentFAQs from './TheMostFrequentFAQs.vue'
 
 defineProps({
-  hideHeader: {
+  hideFAQs: {
     type: Boolean,
     default: false,
   },

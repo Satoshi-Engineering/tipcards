@@ -3,7 +3,6 @@
     class="
       flex justify-start items-center
       px-5 py-3
-      print:hidden
     "
   >
     <RouterLink
