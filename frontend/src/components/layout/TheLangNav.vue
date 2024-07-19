@@ -32,13 +32,13 @@
   // FIL:
 
   // FIL: Component Test
-  - Hover with underline and text yellow
-  - TheHeader.test: TheLangNav: show hide
-  - TheHeader.test: add Lang Toggle Icons
+  - Header: ToggleButton Hover with underline and text yellow --> NavBarToggleButton
+  - LangNav: ButtonHover --> MenuButton with ComponentTest
 
   // FIL: Integration Test
-  - Open Close the Lang nav with icon change
+  - LangNav: change the menu
 */
+
 import { type PropType } from 'vue'
 
 import type { Locales } from '@/modules/langNav/Locales'
