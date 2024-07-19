@@ -20,12 +20,29 @@ describe('Web client', () => {
 
     // navigate to english style guide and home from there
     cy.visit(new URL('/en/style-guide', tipCards).href)
-    cy.get('header > a:first-child').click()
+    cy.get('header a').first().click()
     cy
       .url()
       .should(
         'to.match',
         urlWithOptionalTrailingSlash(new URL('/en', tipCards)),
       )
+  })
+
+  it('navigates to the about page', () => {
+    cy.visit(new URL('/style-guide', tipCards).href)
+    cy.get('footer a').first().click()
+    cy.url().should('contain', '/about')
+  })
+
+  it('navigates to satoshiengineering.com', () => {
+    cy.visit(new URL('/style-guide', tipCards).href)
+    cy.log('url start', cy.url().toString())
+    cy.get('footer a').last()
+      .invoke('attr', 'target', '_self')
+      .click()
+    cy.origin('https://satoshiengineering.com', () => {
+      cy.url().should('contain', 'satoshiengineering.com')
+    })
   })
 })
