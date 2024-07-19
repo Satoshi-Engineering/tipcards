@@ -19,7 +19,13 @@ if (typeof import.meta.env.VITE_NGROK_OVERRIDE === 'string' && import.meta.env.V
 export const BACKEND_API_ORIGIN = backendApiOrigin
 export const TIPCARDS_AUTH_ORIGIN = authOrigin
 export const TIPCARDS_ORIGIN = tipcardsOrigin
-export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || null
 export const CANONICAL_URL_ORIGIN = import.meta.env.VITE_CANONICAL_URL_ORIGIN || null
 export const DEFAULT_DOCUMENT_TITLE = import.meta.env.VITE_DEFAULT_DOCUMENT_TITLE || 'Lightning TipCards'
 export const LNBITS_ORIGIN = import.meta.env.VITE_LNBITS_ORIGIN || 'https://legend.lnbits.com'
+
+export const LINK_PRIVACY_POLICY = import.meta.env.VITE_LINK_PRIVACY_POLICY || undefined
+export const LINK_LEGAL_NOTICE = import.meta.env.VITE_LINK_LEGAL_NOTICE || undefined
+export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || undefined
+export const LINK_LINKED_IN = import.meta.env.VITE_LINK_LINKED_IN || undefined
+export const LINK_X = import.meta.env.VITE_LINK_X || undefined
+export const LINK_INSTAGRAM = import.meta.env.VITE_LINK_INSTAGRAM || undefined

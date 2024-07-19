@@ -19,6 +19,7 @@
       class="flex flex-row mt-6"
     >
       <LinkDefault
+        v-if="linkPrivacyPolicy != null"
         class="mr-8"
         no-bold
         invert-underline
@@ -27,6 +28,7 @@
         {{ $t('nav.privacyPolicy') }}
       </LinkDefault>
       <LinkDefault
+        v-if="linkLegalNotice != null"
         no-bold
         invert-underline
         :href="linkLegalNotice"
@@ -35,19 +37,48 @@
       </LinkDefault>
     </div>
     <div
-      v-if="supportEMail != null"
+      v-if="supportEmail != null"
       class="mt-6"
     >
       <LinkDefault
         no-bold
         invert-underline
-        :href="`mailto:${supportEMail}?subject=Lightning%20Tip%20Cards%20Feedback`"
+        :href="`mailto:${supportEmail}?subject=Lightning%20Tip%20Cards%20Feedback`"
       >
-        {{ supportEMail }}
+        {{ supportEmail }}
       </LinkDefault>
     </div>
-    <div class="mt-6">
-      TODO : add social links
+    <div
+      v-if="linkLinkedIn != null || linkX != null || linkInstagram != null"
+      class="flex flex-row mt-6"
+    >
+      <LinkDefault
+        v-if="linkLinkedIn != null"
+        class="mr-8"
+        no-bold
+        invert-underline
+        :href="linkLinkedIn"
+      >
+        <IconLinkedIn />
+      </LinkDefault>
+      <LinkDefault
+        v-if="linkX != null"
+        class="mr-8"
+        no-bold
+        invert-underline
+        :href="linkX"
+      >
+        <IconX />
+      </LinkDefault>
+      <LinkDefault
+        v-if="linkInstagram != null"
+        class="mr-8"
+        no-bold
+        invert-underline
+        :href="linkInstagram"
+      >
+        <IconInstagram />
+      </LinkDefault>
     </div>
     <div class="mt-5 text-right">
       <LinkDefault
@@ -63,20 +94,17 @@
 </template>
 
 <script setup lang="ts">
-import LinkDefault from '@/components/typography/LinkDefault.vue'
+import { inject } from 'vue'
 
-defineProps({
-  linkPrivacyPolicy: {
-    type: String,
-    default: undefined,
-  },
-  linkLegalNotice: {
-    type: String,
-    default: undefined,
-  },
-  supportEMail: {
-    type: String,
-    default: undefined,
-  },
-})
+import LinkDefault from '@/components/typography/LinkDefault.vue'
+import IconInstagram from '@/components/svgs/IconInstagram.vue'
+import IconLinkedIn from '@/components/svgs/IconLinkedIn.vue'
+import IconX from '@/components/svgs/IconX.vue'
+
+const linkPrivacyPolicy = inject<string | undefined>('linkPrivacyPolicy')
+const linkLegalNotice = inject<string | undefined>('linkLegalNotice')
+const supportEmail = inject<string | undefined>('supportEmail')
+const linkLinkedIn = inject<string | undefined>('linkLinkedIn')
+const linkX = inject<string | undefined>('linkX')
+const linkInstagram = inject<string | undefined>('linkInstagram')
 </script>

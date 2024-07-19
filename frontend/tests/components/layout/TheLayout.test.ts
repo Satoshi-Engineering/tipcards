@@ -7,6 +7,7 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import TheMostFrequentFAQs from '@/components/layout/TheMostFrequentFAQs.vue'
 
 import '../../mocks/i18n'
+import '../../mocks/provide'
 import '../../mocks/router'
 
 describe('TheLayout', () => {
