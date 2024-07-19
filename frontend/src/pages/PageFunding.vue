@@ -434,7 +434,7 @@ const resetInvoice = async () => {
     }
   } catch(error) {
     console.error(error)
-    userErrorMessage.value = 'Unable to reset Tip Card. Please try again later.'
+    userErrorMessage.value = 'Unable to reset TipCard. Please try again later.'
   }
 }
 

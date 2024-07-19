@@ -50,7 +50,7 @@ sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 ```
 
-# Install Tip Cards application
+# Install TipCards application
 
 1. Clone git project  
 **Attention:** if you run everything directly as root, make sure to switch to another directory than `/root` (e.g. `/opt`), otherwise nginx cannot access your source files later on.
@@ -76,10 +76,10 @@ cd ..
     * there you can either create an account an launch your own lnbits (https://my.lnbits.com)
     * or try out the lnbits demo server: https://demo.lnbits.com
   * enter a name for your wallet and click "add a new wallet"
-  * make sure to save the link (e.g. in your bookmarks) as this is where your Tip Cards' sats will go
+  * make sure to save the link (e.g. in your bookmarks) as this is where your TipCards' sats will go
   * click on "Node URL, API keys and Api docs" to the right and note "Admin key" and "Invoice/read key"
   * go to "extensions" and enable "LNURLp" and "withdraw" extensions
-  * HINT: create an invoice and put some sats into the wallet, as withdrawing funded Tip Cards can cost some sats for routing fees
+  * HINT: create an invoice and put some sats into the wallet, as withdrawing funded TipCards can cost some sats for routing fees
 
 4. Build and serve the backend
 ```bash
@@ -121,8 +121,8 @@ sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
 sudo mkdir -p /var/www/tip-cards
 sudo ln -s `pwd`/dist/frontend /var/www/tip-cards/www
 sudo chown -R www-data:www-data /var/www/tip-cards
-# make sure www-data can read your Tip Cards files
-# e.g. if you installed the Tip Cards project directly as root then it probably cannot access /root/tip-cards
+# make sure www-data can read your TipCards files
+# e.g. if you installed the TipCards project directly as root then it probably cannot access /root/tip-cards
 sudo ln -s /etc/nginx/sites-available/tip-cards /etc/nginx/sites-enabled/tip-cards
 sudo /etc/init.d/nginx reload
 ```

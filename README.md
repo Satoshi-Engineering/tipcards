@@ -1,4 +1,4 @@
-# ⚡️ Lightning Tip Cards
+# ⚡️ Lightning TipCards
 _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
 [![MIT License Badge](docs/img/license-badge.svg)](LICENSE)
@@ -7,7 +7,7 @@ _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
 # A tip card system based on LNbits and the lightning network
 
-Lightning Tip Cards are a tip (or gift) card system, where you can fund tip cards via the lightning network
+Lightning TipCards are a tip (or gift) card system, where you can fund tip cards via the lightning network
 and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning
 app recommendation to start their journey into the bitcoin rabbit hole.
 

@@ -25,7 +25,7 @@
       "footnote": "Melalui Lightning"
     },
     "introMessagePreview": {
-      "headline": "Pindai Lightning Tip Card untuk menerima Bitcoin.",
+      "headline": "Pindai Lightning TipCard untuk menerima Bitcoin.",
       "message": "Kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "introMessageAlreadyUsed": {
@@ -56,7 +56,7 @@
       "statusNormal": {
         "explanation": "Segera setelah wallet kamu terinstal,",
         "step1": "<strong>tekan</strong> QR Code di bawah ini atau",
-        "step2": "<strong>pindai</strong> QR Code di Tip Card kamu lagi<br>(dengan aplikasi wallet kamu)"
+        "step2": "<strong>pindai</strong> QR Code di TipCard kamu lagi<br>(dengan aplikasi wallet kamu)"
       },
       "statusReceived": {
         "congrats": "Selamat!",
@@ -213,19 +213,19 @@
     "actions": {
       "headline": "Aksi",
       "printHeadline": "Cetak",
-      "buttonPrint": "Cetak Tip Cards",
+      "buttonPrint": "Cetak TipCards",
       "buttonDownloadPngs": "Unduh PNG",
       "setName": "Nama Set",
       "saveHeadline": "Simpan",
       "buttonSaveCardsSet": "Simpan Set",
       "buttonSaveDisabledTooltip": "Kamu hanya dapat menyimpan set baru jika kamu telah login. Sebagai alternatif, kamu juga bisa menggunakan URL untuk mengakses set ini lagi nanti.",
       "buttonDeleteCardsSet": "Hapus Set",
-      "saveSetConfirm": "Set Tip Cards saat ini akan disimpan secara lokal di browser ini (localStorage digunakan).\n\nKamu juga dapat menggunakan URL (lihat di bilah alamat browser) untuk mengakses kembali set Tip Cards ini nanti.\n\nApakah kamu ingin menyimpan?",
-      "deleteSetConfirm": "Apakah kamu yakin ingin menghapus setelan Tip Cards saat ini dari browser?",
-      "deleteSetOnServerConfirm": "Apakah kamu ingin menghapus set Tip Cards saat ini dari server?",
+      "saveSetConfirm": "Set TipCards saat ini akan disimpan secara lokal di browser ini (localStorage digunakan).\n\nKamu juga dapat menggunakan URL (lihat di bilah alamat browser) untuk mengakses kembali set TipCards ini nanti.\n\nApakah kamu ingin menyimpan?",
+      "deleteSetConfirm": "Apakah kamu yakin ingin menghapus setelan TipCards saat ini dari browser?",
+      "deleteSetOnServerConfirm": "Apakah kamu ingin menghapus set TipCards saat ini dari server?",
       "setFunding": {
         "headline": "Isi ulang semua",
-        "intro": "Kamu dapat mengisi ulang Tip Cards satu per satu dengan memindai kode QR kartu baru. Jika kamu ingin mengisi ulang semua kartu dalam satu set sekaligus, gunakan fitur 'Isi ulang Set'.",
+        "intro": "Kamu dapat mengisi ulang TipCards satu per satu dengan memindai kode QR kartu baru. Jika kamu ingin mengisi ulang semua kartu dalam satu set sekaligus, gunakan fitur 'Isi ulang Set'.",
         "label": "Isi ulang semua kartu sekaligus",
         "button": "Isi ulang Set",
         "disabledReason": "Set ini sudah mengandung kartu yang telah digunakan. Buat set baru untuk mengisi ulang semua kartu sekaligus."
@@ -239,7 +239,7 @@
       }
     },
     "cards": {
-      "headline": "Tip Cards",
+      "headline": "TipCards",
       "filterLabel": "Filter Kartu:",
       "filter": {
         "all": "Semua",
@@ -259,7 +259,7 @@
       "accountName": "Nama Akun",
       "accountNameHint": "Label akun internal, jika kamu menggunakan beberapa akun/Node Lightning.",
       "displayName": "Nama Tampilan",
-      "displayNameHint": "Untuk fitur yang akan datang. Digunakan hanya jika kamu ingin menampilkan namamu kepada pengguna Tip Cards lainnya.",
+      "displayNameHint": "Untuk fitur yang akan datang. Digunakan hanya jika kamu ingin menampilkan namamu kepada pengguna TipCards lainnya.",
       "emailAddress": "Alamat E-mail",
       "emailAddressHint": "Untuk keadaan saat kamu kehilangan perangkat atau dompet Lightning yang digunakan untuk autentikasi.",
       "save": "Simpan"
@@ -318,8 +318,8 @@
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Transfer Set Tip Cards",
-      "text": "Set Tip Cards-mu saat ini disimpan secara lokal di browser. Transfer ke akunmu untuk mengaksesnya dari semua perangkatmu.",
+      "headline": "Transfer Set TipCards",
+      "text": "Set TipCards-mu saat ini disimpan secara lokal di browser. Transfer ke akunmu untuk mengaksesnya dari semua perangkatmu.",
       "migrate": "Transfer Set",
       "logout": "Logout",
       "confirmMigrate": "Transfer sekarang?"
@@ -331,7 +331,7 @@
     "setSavedLocally": "Set ini disimpan secara lokal di browser.",
     "moreInfo": "Info Lebih Lanjut",
     "modalHeadline": "Simpan set-mu secara permanen",
-    "modalText": "Set Tip Cards-mu saat ini disimpan secara lokal di browser. Ini berarti kamu hanya dapat melihatnya di perangkat ini. Login untuk menyimpan set-mu di akunmu dan akses dari semua perangkatmu.",
+    "modalText": "Set TipCards-mu saat ini disimpan secara lokal di browser. Ini berarti kamu hanya dapat melihatnya di perangkat ini. Login untuk menyimpan set-mu di akunmu dan akses dari semua perangkatmu.",
     "modalDeprecationHint": "Set lokalmu akan tetap terlihat di halaman utama hingga 31 Januari 2024. Pastikan untuk mentransfernya ke akunmu sebelum waktu tersebut. Jangan khawatir: Akan ada cara untuk memulihkan set lama-mu setelah itu. Atau, kamu juga bisa menyimpan link set sebagai bookmark.",
     "modalLogin": "Transfer Set",
     "modalClose": "Nanti"
@@ -345,8 +345,8 @@
     "withdrawPending": "Pengambilan kembali Sats yang tersisa sudah dimulai. Tunggu sampai ini tiba di dompet Lightning kamu. Jika ini memakan waktu lebih dari beberapa menit, silakan hubungi dukungan.",
     "buttonReset": "Batalkan Pengambilan Kembali",
     "buttonRestart": "Mulai Ulang Pengambilan Kembali",
-    "noFundedCards": "Tidak ada Tip Cards yang telah diisi dalam set ini.",
-    "description": "Pindai kode QR yang ditampilkan untuk mengambil kembali Sats dari Tip Cards yang dipilih.",
+    "noFundedCards": "Tidak ada TipCards yang telah diisi dalam set ini.",
+    "description": "Pindai kode QR yang ditampilkan untuk mengambil kembali Sats dari TipCards yang dipilih.",
     "buttonCreate": "Ambil Kembali Sekarang",
     "genericErrorMessage": "Terjadi kesalahan.",
     "reload": "Muat Ulang"

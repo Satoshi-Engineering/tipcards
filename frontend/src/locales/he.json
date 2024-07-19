@@ -79,7 +79,7 @@
       "createYourOwnTipCardsButton": "צור את כרטיסי הטיפ שלי"
     },
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
       "errorInvalidLandingPage": "Unable to load custom landing page."
     }
   },
@@ -88,7 +88,7 @@
     "headline": "טעינת כרטיס הטיפ",
     "headlineFunded": "כרטיס הטיפ טעון",
     "headlineUsed": "כרטיס הטיפ נפדה בהצלחה",
-    "headlineSetFunding": "Tip Card Funding",
+    "headlineSetFunding": "TipCard Funding",
     "text": "כרטיס טיפ זה לא נטען עדיין באף סטושי. יש לציין את כמות הסטושים ואת ההודעה שמקבל/ת הכרטיס יראה/תראה בארנק שלו/ה.",
     "textFunded": "כרטיס זה נטען ב-({amountAndUnit}) ואפשר לתת אותו למישהו שצריך את \"הגלולה הכתומה\".",
     "textUsed": "כרטיס זה נטען בעבר ב-{amountAndUnit} וכבר נפדה.",
@@ -131,7 +131,7 @@
       "totalAmountLabel": "Total amount",
       "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "noteHint": "Will be displayed on the status section of your TipCards set",
       "landingPagesHeadline": "Landing Page",
       "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
       "button": "Fund set"
@@ -193,7 +193,7 @@
       "buttonDeleteCardsSet": "מחק קבוצת כרטיסים",
       "saveSetConfirm": "קבוצת הכרטיסים הנוכחית תשמר בזכרון המקומי של הדפדפן.\n\nניתן להשתמש גם בשורת הכתובת של עמוד זה כדי לגשת לקבוצת כרטיסי הטיפ הנוכחית.\n\nלהמשיך?",
       "deleteSetConfirm": "האם את/ה בטוח/ה שברצונך למחוק את קבוצת הכרטיסים הנוכחית מהזכרון של הדפדפן?",
-      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current TipCards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -201,7 +201,7 @@
       }
     },
     "cards": {
-      "headline": "Tip Cards",
+      "headline": "TipCards",
       "filterLabel": "תצוגת כרטיסים:",
       "filter": {
         "all": "כל הכרטיסים",

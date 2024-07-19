@@ -27,7 +27,7 @@
       "footnote": "über Lightning"
     },
     "introMessagePreview": {
-      "headline": "Scanne eine Lightning Tip Card um dir Bitcoin zu holen.",
+      "headline": "Scanne eine Lightning TipCard um dir Bitcoin zu holen.",
       "message": "Du kannst dir Bitcoin auch an einer Crypto-Börse (z.B. {exchange}), einem Bitcoin-Automaten (z.B. {atm}) oder bei einem Bitcoin-Broker (z.B. {broker}) etc. kaufen."
     },
     "introMessageAlreadyUsed": {
@@ -58,7 +58,7 @@
       "statusNormal": {
         "explanation": "Sobald deine Wallet installiert ist,",
         "step1": "<strong>drücke</strong> auf den QR-Code unten oder",
-        "step2": "<strong>scanne</strong> den QR-Code auf deiner Tip Card erneut<br>(mit deiner Wallet-App)"
+        "step2": "<strong>scanne</strong> den QR-Code auf deiner TipCard erneut<br>(mit deiner Wallet-App)"
       },
       "statusReceived": {
         "congrats": "Gratulation!",
@@ -78,9 +78,9 @@
         "lightningnetworkstores": "Finde heraus, was du online machen kannst",
         "coinpages": "Such nach Geschäften, die Bitcoin akzeptieren"
       },
-      "createYourOwnTipCardsHeadline": "Erstelle eigene Tip Cards ⚡",
-      "createYourOwnTipCardsText": "Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen Tip Cards.",
-      "createYourOwnTipCardsButton": "Meine eigenen Tip Cards erstellen"
+      "createYourOwnTipCardsHeadline": "Erstelle eigene TipCards ⚡",
+      "createYourOwnTipCardsText": "Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen TipCards.",
+      "createYourOwnTipCardsButton": "Meine eigenen TipCards erstellen"
     },
     "sectionMore": {
       "headline": "Mehr über Bitcoin",
@@ -96,21 +96,21 @@
         "linkHref": "https://aprycot.media/thek/"
       }
     },
-    "bulkWithdrawExists": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Wenn du die Karte verwenden möchtest, musst du das Zurückholen abbrechen.",
-    "bulkWithdrawPending": "Die Sats von dieser Tip Card werden gerade zurückgeholt. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
+    "bulkWithdrawExists": "Die Sats von dieser TipCard werden gerade zurückgeholt. Wenn du die Karte verwenden möchtest, musst du das Zurückholen abbrechen.",
+    "bulkWithdrawPending": "Die Sats von dieser TipCard werden gerade zurückgeholt. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
     "bulkWithdrawResetError": "Beim Abbruch des Zurückholens ist ein Fehler aufgetreten.",
     "errors": {
-      "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen Tip Card.",
+      "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen TipCard.",
       "errorInvalidLandingPage": "Benutzerdefinierte Seite konnte nicht geladen werden."
     }
   },
   "funding": {
-    "title": "Lade die Tip Card auf",
-    "headline": "Lade die Tip Card auf",
-    "headlineFunded": "Die Tip Card wurde aufgeladen",
-    "headlineUsed": "Die Tip Card wurde eingelöst",
-    "headlineSetFunding": "Tip Card Funding",
-    "text": "Diese Tip Card wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht die Empfängerin in ihrer Wallet sehen soll.",
+    "title": "Lade die TipCard auf",
+    "headline": "Lade die TipCard auf",
+    "headlineFunded": "Die TipCard wurde aufgeladen",
+    "headlineUsed": "Die TipCard wurde eingelöst",
+    "headlineSetFunding": "TipCard Funding",
+    "text": "Diese TipCard wurde noch nicht mit Sats aufgeladen. Lege fest, welchen Betrag du aufladen möchtest und welche Nachricht die Empfängerin in ihrer Wallet sehen soll.",
     "textFunded": "Die Karte wurde mit {amountAndUnit} aufgeladen und kann weitergegeben werden.",
     "textUsed": "Die Karte wurde mit {amountAndUnit} aufgeladen und eingelöst.",
     "textSetFunding": "Die Karte wird gemeinsam mit dem ganzen Set aufgeladen. Bezahle die Invoice für das Set um fortzufahren.",
@@ -118,25 +118,25 @@
     "form": {
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
-      "noteHint": "Wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "noteHint": "Wird im Statusbereich der TipCards Übersichtsseite angezeigt",
       "button": "Jetzt aufladen"
     },
-    "invoiceText": "Lade {amount} Sats auf deine Tip Card:",
-    "invoiceExpired": "Die Rechnung für diese Karte ist bereits abgelaufen. Setze die Tip Card zurück um fortzufahren.",
-    "resetInvoice": "Tip Card zurücksetzen",
-    "resetDisabledTooltip": "Diese Tip Card wurde bereits mit Sats aufgeladen.",
+    "invoiceText": "Lade {amount} Sats auf deine TipCard:",
+    "invoiceExpired": "Die Rechnung für diese Karte ist bereits abgelaufen. Setze die TipCard zurück um fortzufahren.",
+    "resetInvoice": "TipCard zurücksetzen",
+    "resetDisabledTooltip": "Diese TipCard wurde bereits mit Sats aufgeladen.",
     "lnurlp": {
-      "text": "Zum Aufladen der Tip Card den QR Code mit der Wallet App scannen oder auf {buttonOpenInWallet} klicken und in der App den gewünschten Betrag eingeben."
+      "text": "Zum Aufladen der TipCard den QR Code mit der Wallet App scannen oder auf {buttonOpenInWallet} klicken und in der App den gewünschten Betrag eingeben."
     },
-    "lnurlpExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Setze sie zurück um fortzufahren.",
-    "lnurlpFundedExpired": "Die Aufladefunktion dieser Tip Card ist leider abgelaufen. Schließe sie ab um fortzufahren.",
+    "lnurlpExpired": "Die Aufladefunktion dieser TipCard ist leider abgelaufen. Setze sie zurück um fortzufahren.",
+    "lnurlpFundedExpired": "Die Aufladefunktion dieser TipCard ist leider abgelaufen. Schließe sie ab um fortzufahren.",
     "shared": {
-      "text": "Diese Tip Card kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach {buttonFinish}.",
+      "text": "Diese TipCard kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach {buttonFinish}.",
       "textEmpty": "Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.",
       "textPartiallyFunded": "Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.",
       "buttonFinish": "Aufladen abschließen",
       "finishDisabledTooltip": "Die Karte muss zuerst aufgeladen werden.",
-      "buttonMakeShared": "Tip Card gemeinsam aufladen"
+      "buttonMakeShared": "TipCard gemeinsam aufladen"
     }
   },
   "setFunding": {
@@ -154,7 +154,7 @@
       "totalAmountLabel": "Summe",
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
-      "noteHint": "Wird im Statusbereich der Tip Cards Übersichtsseite angezeigt",
+      "noteHint": "Wird im Statusbereich der TipCards Übersichtsseite angezeigt",
       "landingPagesHeadline": "Landing Page",
       "landingPagesHint": "Diese Seite wird beim Scannen der aufgeladenen Karte angezeigt.",
       "button": "Set aufladen"
@@ -166,8 +166,8 @@
   },
   "index": {
     "buttonLogin": "Einloggen mit LNURL-Auth",
-    "buttonCreate": "Erstelle dein Tip Cards-Set",
-    "savedCardsSetsHeadline": "Gespeicherte Tip Cards-Sets",
+    "buttonCreate": "Erstelle dein TipCards-Set",
+    "savedCardsSetsHeadline": "Gespeicherte TipCards-Sets",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set",
     "youtube": {
@@ -182,7 +182,7 @@
     }
   },
   "cards": {
-    "title": "Tip Cards-Set",
+    "title": "TipCards-Set",
     "status": {
       "headline": "Status",
       "noCards": "Es wurden noch keine Karten aufgeladen. Der Status der Karten dieses Sets wird hier angezeigt, sobald die erste Karte aufgeladen ist.",
@@ -215,19 +215,19 @@
     "actions": {
       "headline": "Aktionen",
       "printHeadline": "Drucken",
-      "buttonPrint": "Tip Cards drucken",
+      "buttonPrint": "TipCards drucken",
       "buttonDownloadPngs": "PNGs downloaden",
       "setName": "Set-Name",
       "saveHeadline": "Speichern",
       "buttonSaveCardsSet": "Set speichern",
       "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL verwenden, um später erneut auf dieses Set zuzugreifen.",
       "buttonDeleteCardsSet": "Set löschen",
-      "saveSetConfirm": "Das aktuelle Tip Cards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses Tip Cards-Set zuzugreifen.\n\nMöchtest du speichern?",
-      "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen Tip Cards-Sets wirklich aus dem Browser löschen?",
-      "deleteSetOnServerConfirm": "Möchtest du das aktuelle Tip Cards-Set vom Server löschen?",
+      "saveSetConfirm": "Das aktuelle TipCards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses TipCards-Set zuzugreifen.\n\nMöchtest du speichern?",
+      "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen TipCards-Sets wirklich aus dem Browser löschen?",
+      "deleteSetOnServerConfirm": "Möchtest du das aktuelle TipCards-Set vom Server löschen?",
       "setFunding": {
         "headline": "Alle aufladen",
-        "intro": "Du kannst die Tip Cards einzeln aufladen, indem du den QR-Code einer neuen Karte scannst. Wenn du alle Karten eines Sets auf einmal aufladen willst, verwende die Funktion \"Set aufladen\".",
+        "intro": "Du kannst die TipCards einzeln aufladen, indem du den QR-Code einer neuen Karte scannst. Wenn du alle Karten eines Sets auf einmal aufladen willst, verwende die Funktion \"Set aufladen\".",
         "label": "Alle Karten auf einmal aufladen",
         "button": "Set aufladen",
         "disabledReason": "In diesem Set befinden sich bereits verwendete Karten. Erstelle ein neues Set, um alle Karten auf einmal aufzuladen."
@@ -241,7 +241,7 @@
       }
     },
     "cards": {
-      "headline": "Tip Cards",
+      "headline": "TipCards",
       "filterLabel": "Karten filtern:",
       "filter": {
         "all": "Alle",
@@ -261,7 +261,7 @@
       "accountName": "Accountname",
       "accountNameHint": "Interne Account Bezeichnung, falls du mehrere Accounts/Lightning Nodes benutzt.",
       "displayName": "Anzeigename",
-      "displayNameHint": "Für zukünftige Features. Wird nur verwendet falls du anderen Tip Cards Nutzern deinen Namen anzeigen möchtest.",
+      "displayNameHint": "Für zukünftige Features. Wird nur verwendet falls du anderen TipCards Nutzern deinen Namen anzeigen möchtest.",
       "emailAddress": "E-Mail-Adresse",
       "emailAddressHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast.",
       "save": "Speichern"
@@ -320,8 +320,8 @@
   },
   "components": {
     "modalResolveLocalStorage": {
-      "headline": "Tip Cards-Sets übertragen",
-      "text": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Übertrage sie in deinen Account um von all deinen Geräten darauf zugreifen zu können.",
+      "headline": "TipCards-Sets übertragen",
+      "text": "Deine TipCards-Sets sind derzeit lokal im Browser gespeichert. Übertrage sie in deinen Account um von all deinen Geräten darauf zugreifen zu können.",
       "migrate": "Sets übertragen",
       "logout": "Ausloggen",
       "confirmMigrate": "Jetzt übertragen?"
@@ -333,7 +333,7 @@
     "setSavedLocally": "Dieses Set ist lokal im Browser gespeichert.",
     "moreInfo": "Mehr Infos",
     "modalHeadline": "Speichere deine Sets dauerhaft",
-    "modalText": "Deine Tip Cards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
+    "modalText": "Deine TipCards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
     "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
     "modalLogin": "Sets übertragen",
     "modalClose": "Später"
@@ -347,8 +347,8 @@
     "withdrawPending": "Das Zurückholen der verbleibenden Sats wurde bereits gestartet. Warte bis diese in deiner Lightning Wallet angekommen sind. Sollte dies länger als einige Minuten dauern, kontaktiere bitte den Support.",
     "buttonReset": "Zurückholen abbrechen",
     "buttonRestart": "Zurückholen neu starten",
-    "noFundedCards": "In diesem Set befinden sich keine aufgeladenen Tip Cards.",
-    "description": "Scanne den angezeigten QR-Code, um die Sats der ausgewählten Tip Cards zurückzuholen.",
+    "noFundedCards": "In diesem Set befinden sich keine aufgeladenen TipCards.",
+    "description": "Scanne den angezeigten QR-Code, um die Sats der ausgewählten TipCards zurückzuholen.",
     "buttonCreate": "Jetzt zurückholen",
     "genericErrorMessage": "Es ist ein Fehler aufgetreten.",
     "reload": "Reload"

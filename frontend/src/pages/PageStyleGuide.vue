@@ -1,16 +1,16 @@
 <template>
   <TheLayout :locales="locales" :current-code="currentCode">
     <HeadlineDefault level="h1">
-      Lightning Tip Cards Style Guide
+      Lightning TipCards Style Guide
     </HeadlineDefault>
     <HeadlineDefault level="h2">
-      Lightning Tip Cards Style Guide
+      Lightning TipCards Style Guide
     </HeadlineDefault>
     <HeadlineDefault level="h3">
-      Lightning Tip Cards Style Guide
+      Lightning TipCards Style Guide
     </HeadlineDefault>
     <HeadlineDefault level="h4">
-      Lightning Tip Cards Style Guide
+      Lightning TipCards Style Guide
     </HeadlineDefault>
     <ParagraphDefault>
       <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault> is simply dummy

@@ -86,7 +86,7 @@ router.post('/create/:cardHash', async (req, res) => {
     const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
       out: false,
       amount,
-      memo: 'Fund your Lightning Tip Card',
+      memo: 'Fund your Lightning TipCard',
       webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${req.params.cardHash}`,
     }, {
       headers: {

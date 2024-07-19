@@ -19,7 +19,7 @@ const init = () => {
     cardHash = loadCardHashFromGetParameter()
   }
   if (cardHash == null) {
-    console.warn('Tip Cards external card status: No card hash in searchParams found!')
+    console.warn('TipCards external card status: No card hash in searchParams found!')
     return
   }
   loadCardStatusInternal(cardHash)

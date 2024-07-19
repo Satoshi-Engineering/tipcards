@@ -73,16 +73,16 @@
       "createYourOwnTipCardsButton": "Crear mis propias tarjetas de propinas"
     },
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
       "errorInvalidLandingPage": "Unable to load custom landing page."
     }
   },
   "funding": {
     "title": "Cargar la tarjeta de propinas",
     "headline": "Cargar la tarjeta de propinas",
-    "headlineFunded": "Tip Card has been funded",
-    "headlineUsed": "Tip Card successfully redeemed",
-    "headlineSetFunding": "Tip Card Funding",
+    "headlineFunded": "TipCard has been funded",
+    "headlineUsed": "TipCard successfully redeemed",
+    "headlineSetFunding": "TipCard Funding",
     "text": "Esta tarjeta de propina aún no ha sido recargada con sats. Estableze la cantidad que deseas recargar y el mensaje que quieres que el destinatario vea en su cartera.",
     "textFunded": "La tarjeta está cargada con {amountAndUnit} y está lista para regalar.",
     "textUsed": "This card was funded with {amountAndUnit} and has been redeemed.",
@@ -91,18 +91,18 @@
     "form": {
       "textHint": "aparecerá en la cartera del destinatario",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "will be displayed on the status section of your Tip Cards set",
+      "noteHint": "will be displayed on the status section of your TipCards set",
       "button": "Recargar ahora"
     },
     "invoiceText": "Carga {cantidad} de sats en tu tarjeta de propinas:",
-    "invoiceExpired": "The lightning invoice for this card has expired. Please reset the Tip Card to continue.",
-    "resetInvoice": "Reset Tip Card",
+    "invoiceExpired": "The lightning invoice for this card has expired. Please reset the TipCard to continue.",
+    "resetInvoice": "Reset TipCard",
     "resetDisabledTooltip": "This card is already funded with sats.",
     "lnurlp": {
       "text": "Scan the QR code with your wallet app or click {buttonOpenInWallet} to fund the card. You can enter the desired amount in the wallet app."
     },
-    "lnurlpExpired": "Unfortunately the payment link for this Tip Card expired. Reset the card to continue.",
-    "lnurlpFundedExpired": "Unfortunately the payment link for this Tip Card expired. Complete the funding to continue.",
+    "lnurlpExpired": "Unfortunately the payment link for this TipCard expired. Reset the card to continue.",
+    "lnurlpFundedExpired": "Unfortunately the payment link for this TipCard expired. Complete the funding to continue.",
     "shared": {
       "text": "Es posible cargar esta tarjeta de propina varias veces. Escanea el código QR varias veces/paga y luego haz clic en {buttonFinish}",
       "textEmpty": "En el momento no hay Sats en la tarjeta. En cuanto la tarjeta esté cargada por lo menos una vez se puede finalizar la carga.",
@@ -124,7 +124,7 @@
       "totalAmountLabel": "Total amount",
       "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "noteHint": "Will be displayed on the status section of your TipCards set",
       "landingPagesHeadline": "Landing Page",
       "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
       "button": "Fund set"
@@ -135,7 +135,7 @@
   "index": {
     "buttonCreate": "Crea tu conjunto de tarjetas de propina",
     "savedCardsSetsHeadline": "Juegos de tarjetas de consejos guardados",
-    "noSavedCardsSetsMessage": "Actualmente no hay conjuntos de Tip Cards almacenados en este navegador",
+    "noSavedCardsSetsMessage": "Actualmente no hay conjuntos de TipCards almacenados en este navegador",
     "youtube": {
       "create": {
         "label": "Crear",
@@ -151,7 +151,7 @@
     "title": "Conjunto de tarjetas de propina",
     "status": {
       "headline": "Status",
-      "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first Tip Card.",
+      "noCards": "No cards have been funded yet. You will find the status of all cards from this set here after funding your first TipCard.",
       "labelUsed": "Canjeada | Canjeadas",
       "labelFunded": "Cargada | Cargadas",
       "labelPendingFunding": "Funding in progress",
@@ -185,7 +185,7 @@
       "buttonDeleteCardsSet": "Borrar juego",
       "saveSetConfirm": "El conjunto actual de tarjetas de consejos se almacena localmente en este navegador (se utiliza localStorage para ello). También puedes utilizar la URL (véase la barra de direcciones del navegador) para acceder de nuevo a este conjunto de tarjetas de consejos más adelante. ¿Deseas guardar?",
       "deleteSetConfirm": "¿Realmente quieres eliminar la configuración del conjunto de tarjetas de consejos actual del navegador?",
-      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current TipCards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -193,7 +193,7 @@
       }
     },
     "cards": {
-      "headline": "Tip Cards",
+      "headline": "TipCards",
       "filterLabel": "Filtro de tarjetas:",
       "filter": {
         "all": "Todas",

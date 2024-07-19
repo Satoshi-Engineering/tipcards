@@ -7,12 +7,12 @@ const urlWithOptionalTrailingSlash = (url: URL) => new RegExp(`${url}(\\/)?$`)
 describe('Web client', () => {
   it('visits the app root url and checks the headline', () => {
     cy.visit(tipCards.href)
-    cy.contains('h1', 'Lightning Tip Cards')
+    cy.contains('h1', 'Lightning TipCards')
   })
 
   it('navigates to the style-guide page and back to home', () => {
     cy.visit(new URL('/style-guide', tipCards).href)
-    cy.contains('h1', 'Lightning Tip Cards Style Guide')
+    cy.contains('h1', 'Lightning TipCards Style Guide')
 
     // navigate home
     cy.get('header > a:first-child').click()

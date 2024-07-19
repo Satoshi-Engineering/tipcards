@@ -21,5 +21,5 @@ export const TIPCARDS_AUTH_ORIGIN = authOrigin
 export const TIPCARDS_ORIGIN = tipcardsOrigin
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || null
 export const CANONICAL_URL_ORIGIN = import.meta.env.VITE_CANONICAL_URL_ORIGIN || null
-export const DEFAULT_DOCUMENT_TITLE = import.meta.env.VITE_DEFAULT_DOCUMENT_TITLE || 'Lightning Tip Cards'
+export const DEFAULT_DOCUMENT_TITLE = import.meta.env.VITE_DEFAULT_DOCUMENT_TITLE || 'Lightning TipCards'
 export const LNBITS_ORIGIN = import.meta.env.VITE_LNBITS_ORIGIN || 'https://legend.lnbits.com'

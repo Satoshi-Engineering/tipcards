@@ -6,7 +6,7 @@
           ⚡
         </div>
         <HeadlineDefault level="h1">
-          Lightning Tip Cards
+          Lightning TipCards
         </HeadlineDefault>
         <p class="mb-4">
           by <a href="https://satoshiengineering.com" target="_blank">Satoshi Engineering</a>

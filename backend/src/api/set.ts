@@ -294,7 +294,7 @@ router.post('/invoice/:setId', async (req, res) => {
     const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
       out: false,
       amount,
-      memo: `Fund ${cardIndices.length} Lightning Tip Cards`,
+      memo: `Fund ${cardIndices.length} Lightning TipCards`,
       webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
     }, {
       headers: {

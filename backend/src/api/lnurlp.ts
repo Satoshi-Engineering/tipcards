@@ -225,21 +225,21 @@ const cardUpdate = async (req: Request, res: Response, next: NextFunction) => {
   }
   if (card.isLockedByBulkWithdraw) {
     res.status(400).json(toErrorResponse({
-      message: 'This Tip Card is locked by bulk withdraw.',
+      message: 'This TipCard is locked by bulk withdraw.',
     }))
     next()
     return
   }
   if (card.lnurlp == null) {
     res.status(400).json(toErrorResponse({
-      message: 'This Tip Card has no lnurlp enabled.',
+      message: 'This TipCard has no lnurlp enabled.',
     }))
     next()
     return
   }
   if (card.lnurlp.paid) {
     res.status(400).json(toErrorResponse({
-      message: 'This Tip Card is already funded.',
+      message: 'This TipCard is already funded.',
     }))
     next()
     return
@@ -309,7 +309,7 @@ const cardFinish = async (req: Request, res: Response, next: NextFunction) => {
   }
   if (!card.lnurlp?.shared) {
     res.status(400).json(toErrorResponse({
-      message: 'This Tip Card has no shared funding enabled.',
+      message: 'This TipCard has no shared funding enabled.',
     }))
     next()
     return

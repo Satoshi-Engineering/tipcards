@@ -80,13 +80,13 @@
       }
     },
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
       "errorInvalidLandingPage": "Unable to load custom landing page."
     }
   },
   "funding":{
     "headline":"Пополнить эту ТИП-карту",
-    "headlineSetFunding": "Tip Card Funding",
+    "headlineSetFunding": "TipCard Funding",
     "text":"Эта ТИП-карта еще не пополнена сатами. Укажите сумму и сообщение, которое вы бы хотели, чтобы получатель увидел в своем кошельке.",
     "textSetFunding": "This card will be funded as soon as the invoice of the set is paid. Please come back later.",
     "form":{
@@ -128,7 +128,7 @@
       "totalAmountLabel": "Total amount",
       "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
-      "noteHint": "Will be displayed on the status section of your Tip Cards set",
+      "noteHint": "Will be displayed on the status section of your TipCards set",
       "landingPagesHeadline": "Landing Page",
       "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
       "button": "Fund set"
@@ -190,7 +190,7 @@
       "buttonDeleteCardsSet":"Удалить сохраненный набор",
       "saveSetConfirm":"Текущий набор ТИП-карт будет сохранен локально в этом браузере, используя localStorage.\n\nYВы также можете использовать URL-адрес (из адресной строки) для доступа к этому набору ТИП-карт.\n\nПродолжить?",
       "deleteSetConfirm":"Вы действительно хотите удалить текущий набор ТИП-карт и его настройки из этого браузера?",
-      "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
+      "deleteSetOnServerConfirm": "Do you really want to delete the current TipCards set from the server?",
       "setFunding": {
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
@@ -198,7 +198,7 @@
       }
     },
     "cards": {
-      "headline": "Tip Cards",
+      "headline": "TipCards",
       "filterLabel":"Показать карты:",
       "filter":{
         "all":"Все",

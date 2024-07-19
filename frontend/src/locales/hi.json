@@ -73,7 +73,7 @@
         "createYourOwnTipCardsButton": "अपने खुद के टिप कार्ड बनाएं।"
       },
       "errors": {
-        "errorInvalidLnurl": "It seems the LNURL is not from a valid Tip Card.",
+        "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
         "errorInvalidLandingPage": "Unable to load custom landing page."
       }
     },
@@ -82,7 +82,7 @@
       "headline": "इस टिप कार्ड में राशि जमा करें",
       "headlineFunded": "टिप कार्ड को निधि किया गया है",
       "headlineUsed": "टिप कार्ड का सफलतापूर्वक उपयोग किया गया",
-      "headlineSetFunding": "Tip Card Funding",
+      "headlineSetFunding": "TipCard Funding",
       "text": "इस टिप कार्ड में अभी तक सैट्स नहीं जमा किये गए है। उस राशि और संदेश का वर्णन करें जिसे आप प्राप्तकर्ता को उनके वॉलेट में दिखना चाहते हैं।",
       "textFunded": "इस टिप कार्ड में पहले से ही ({amountAndUnit}) पैसा है और इसे किसी ऐसे व्यक्ति को दिया जा सकता है जिसे ऑरेंज पिलिंग की आवश्यकता हो।",
       "textUsed": "इस कार्ड में {amountAndUnit} की राशि डाली गई थी और इसका उपयोग हो चूका है।",
@@ -125,7 +125,7 @@
         "totalAmountLabel": "Total amount",
         "textHint": "Will be displayed in the recipient's wallet",
         "notePlaceholder": "Notes / handed out to",
-        "noteHint": "Will be displayed on the status section of your Tip Cards set",
+        "noteHint": "Will be displayed on the status section of your TipCards set",
         "landingPagesHeadline": "Landing Page",
         "landingPagesHint": "This page will be shown when the QR code of a funded card is scanned.",
         "button": "Fund set"
@@ -187,7 +187,7 @@
         "buttonDeleteCardsSet": "सहेजा गया समूह हटाएं",
         "saveSetConfirm": "वर्तमान टिप कार्ड सेट को स्थानीय संग्रहण का उपयोग करके इस ब्राउज़र में स्थानीय रूप से सहेजा जाएगा।\n\nआप इस टिप कार्ड सेट को एक्सेस करने के लिए URL (एड्रेस बार से) का भी उपयोग कर सकते हैं।\n\nजारी रखें?",
         "deleteSetConfirm": "क्या आप वास्तव में इस ब्राउज़र से वर्तमान टिप कार्ड सेट और इसकी सेटिंग हटाना चाहते हैं?",
-        "deleteSetOnServerConfirm": "Do you really want to delete the current Tip Cards set from the server?",
+        "deleteSetOnServerConfirm": "Do you really want to delete the current TipCards set from the server?",
         "setFunding": {
           "labelAll": "Fund all cards at once",
           "labelUnfunded": "Fund all unfunded cards",
@@ -195,7 +195,7 @@
         }
       },
       "cards": {
-        "headline": "Tip Cards",
+        "headline": "TipCards",
         "filterLabel": "कार्ड दिखाएं:",
         "filter": {
           "all": "सभी",

@@ -4,7 +4,7 @@ import { ErrorCode } from '@shared/data/Errors.js'
 
 import { DB_CREDENTIALS  } from '../drizzle.config.js'
 
-const APP_NAME = 'Lightning Tip Cards Backend'
+const APP_NAME = 'Lightning TipCards Backend'
 
 const FAILED_STARTUPS_COUNTER_DIRECTORY = process.env.FAILED_STARTUPS_COUNTER_DIRECTORY || ''
 
