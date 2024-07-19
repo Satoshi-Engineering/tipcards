@@ -1,5 +1,5 @@
 <template>
-  <TheLayout :locales="locales" :current-code="currentCode">
+  <TheLayout :locales="locales" :current-locale="currentLocale">
     <CenterContainer class="mb-10">
       <HeadlineDefault level="h1">
         Lightning TipCards Style Guide
@@ -130,7 +130,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { LOCALES, useI18nHelpers, type LocaleCode } from '@/modules/initI18n'
+import { LOCALES, useI18nHelpers } from '@/modules/initI18n'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
@@ -156,7 +156,6 @@ const onDummyLoading = async () => {
 }
 
 const { currentLocale } = useI18nHelpers()
-const currentCode = ref<LocaleCode>(currentLocale.value)
 const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
 
 </script>

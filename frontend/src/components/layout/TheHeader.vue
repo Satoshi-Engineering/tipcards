@@ -13,14 +13,17 @@
       >
         <IconLogo />
       </RouterLink>
-      <div class="w-6 h-6">
-        <IconWorld />
-      </div>
+      <button class="hover:text-yellow w-6 h-6 " @click="showLangNav = !showLangNav">
+        <IconWorld v-if="!showLangNav" />
+        <IconClose v-if="showLangNav" />
+      </button>
       <TheMainNav />
+    </CenterContainer>
+    <CenterContainer>
       <TheLangNav
-        class="hidden"
+        v-if="showLangNav"
         :locales="locales"
-        :current-code="currentCode"
+        :current-locale="currentLocale"
       />
     </CenterContainer>
   </header>
@@ -28,12 +31,13 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import type { PropType } from 'vue'
+import { ref, type PropType } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import TheMainNav from '@/components/layout/TheMainNav.vue'
 import IconWorld from '@/components/svgs/IconWorld.vue'
+import IconClose from '@/components/svgs/IconClose.vue'
 import IconLogo from '@/components/svgs/IconLogo.vue'
 import type { Locales } from '@/modules/langNav/Locales'
 
@@ -42,9 +46,12 @@ defineProps({
     type: Array as PropType<Locales>,
     default: () => [],
   },
-  currentCode: {
+  currentLocale: {
     type: String,
     default: '',
   },
 })
+
+const showLangNav = ref(false)
+
 </script>

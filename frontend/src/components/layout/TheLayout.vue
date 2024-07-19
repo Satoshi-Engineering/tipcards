@@ -6,7 +6,7 @@
     <slot name="header">
       <TheHeader
         class="print:hidden"
-        :current-code="currentCode"
+        :current-locale="currentLocale"
         :locales="locales"
       />
     </slot>
@@ -41,7 +41,7 @@ defineProps({
     type: Array as PropType<Locales>,
     default: () => [],
   },
-  currentCode: {
+  currentLocale: {
     type: String,
     default: '',
   },

@@ -1,44 +1,45 @@
 <template>
-  <ul>
-    <li v-for="(locale, index) in locales" :key="locale.code">
-      <div
-        v-if="index !== 0"
-        class="
-          w-full
-          border-b border-black
-          m-[13px_18.5px_13px_19.5px]
-          "
-      />
-      <div
-        class="m-[13px_65px_13px_33px]"
-        :class="{ 'font-bold text-yellow': locale.code === currentCode }"
+  <ul class="pt-1">
+    <li
+      v-for="(locale, index) in locales"
+      :key="locale.code"
+      :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-menu-sperator' : index !== 0 }"
+    >
+      <router-link
+        :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
+        :hreflang="locale.code"
+        rel="alternate"
       >
-        {{ locale.name }}
-      </div>
+        <div class="pt-4 pb-4 text-lg hover:underline">
+          <div class="pl-4">
+            {{ locale.name }}
+          </div>
+        </div>
+      </router-link>
     </li>
   </ul>
 </template>
 
 <script setup lang="ts">
 /* FIL: - Questions
-  - Zusammenhang --> Icon & Liste
-  - Für links bestehende Componente verwenden? --> router-link
-  - font-size wäre 16px? --> nearest tailwind
-  - IconWorld: Size in diesem File? --> jep
-  - IconX ??? How do I get it out (of zeplin?) --> copy from somewhere
-  - Prop: current-code im Linter in StyleGuidePage --> should work
-  - Component Test File Structure ? --> mhm ...
+  - Funktionsweise --> von Icon & Nav
+    - On Select --> Close?
+  - Header: World & X Icon --> ToggleButton --> ButtonDefault with variant "ToggleIconButton" erweitern?
+  - TheLangNav --> TheLangMenu
+  - TheLangNav --> MenuButtonDefault: active yellow und hover:underline
+  - Color:         'menu-sperator': '#8a8b8b', // menu seperator (lang nav) oder white-50?
 
   // FIL:
-  - Icon: ähnlichste w-, h-
-  - Margins? ähnlichste z.B.: m-3
-  - Trennlinie: dicke und farbe
-  - LI: border in li, full width,
-  - router-link text padding, mit to attribut from DefaultFooter
 
-  - Integration Test on TheHeader which controls the lang nav
+  // FIL: Component Test
+  - Hover with underline and text yellow
+  - TheHeader.test: TheLangNav: show hide
+  - TheHeader.test: add Lang Toggle Icons
+
+  // FIL: Integration Test
+  - Open Close the Lang nav with icon change
 */
-import type { PropType } from 'vue'
+import { type PropType } from 'vue'
 
 import type { Locales } from '@/modules/langNav/Locales'
 
@@ -47,7 +48,7 @@ defineProps({
     type: Array as PropType<Locales>,
     default: () => [],
   },
-  currentCode: {
+  currentLocale: {
     type: String,
     default: '',
   },
