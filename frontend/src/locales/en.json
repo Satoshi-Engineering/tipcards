@@ -9,7 +9,9 @@
     "index": "Home",
     "cards": "Create",
     "landing": "Landing page",
-    "about": "About"
+    "about": "About",
+    "privacyPolicy": "Privacy Policy",
+    "legalNotice": "Legal Notice"
   },
   "footer": {
     "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}."

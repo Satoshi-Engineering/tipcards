@@ -1,9 +1,11 @@
 <template>
   <RouterLink
     v-if="to != null"
-    class="underline hover:no-underline break-anywhere"
+    class="break-anywhere"
     :class="{
-      'font-bold': bold,
+      'font-bold': !noBold,
+      'underline hover:no-underline': !invertUnderline,
+      'no-underline hover:underline': invertUnderline,
       'opacity-50 pointer-events-none cursor-default': disabled,
     }"
     :to="to"
@@ -15,9 +17,11 @@
   </RouterLink>
   <a
     v-else-if="href != null"
-    class="underline hover:no-underline cursor-pointer break-anywhere"
+    class="cursor-pointer break-anywhere"
     :class="{
-      'font-bold': bold,
+      'font-bold': !noBold,
+      'underline hover:no-underline': !invertUnderline,
+      'no-underline hover:underline': invertUnderline,
       'opacity-50 pointer-events-none cursor-default': disabled,
     }"
     :href="href"
@@ -30,9 +34,11 @@
   </a>
   <button
     v-else
-    class="[text-align:inherit] underline hover:no-underline cursor-pointer appearance-none break-anywhere"
+    class="[text-align:inherit] cursor-pointer appearance-none break-anywhere"
     :class="{
-      'font-bold': bold,
+      'font-bold': !noBold,
+      'underline hover:no-underline': !invertUnderline,
+      'no-underline hover:underline': invertUnderline,
       'opacity-50 pointer-events-none cursor-default': disabled,
     }"
     :disabled="disabled"
@@ -63,11 +69,15 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
-  bold: {
-    type: Boolean,
-    default: true,
-  },
   disabled: {
+    type: Boolean,
+    default: false,
+  },
+  noBold: {
+    type: Boolean,
+    default: false,
+  },
+  invertUnderline: {
     type: Boolean,
     default: false,
   },

@@ -9,7 +9,9 @@
     "index": "Home",
     "cards": "Erstellen",
     "landing": "Landing page",
-    "about": "Über"
+    "about": "Über",
+    "privacyPolicy": "Datenschutz",
+    "legalNotice": "Impressum"
   },
   "footer": {
     "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}."

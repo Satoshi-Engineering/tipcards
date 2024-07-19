@@ -16,7 +16,10 @@ export default {
         yellow: '#f2cc50', // primary color
         black: '#010101', // headlines, labels
         bluegrey: '#2a2c31', // default color
-        white: '#fff',
+        white: {
+          DEFAULT: '#ffffff', // white
+          50: '#8a8b8b', // use on bluegrey background for subtext
+        },
         grey: {
           light: '#f6f7f7', // backgrounds
 
