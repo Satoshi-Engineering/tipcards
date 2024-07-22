@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
-import TheMostFrequentFAQs from '@/components/layout/TheMostFrequentFAQs.vue'
+import TheMostFrequentFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
 
 import '../../mocks/i18n'
 import '../../mocks/provide'

@@ -1,5 +1,18 @@
 <template>
-  <TheLayout :locales="locales" :current-locale="currentLocale">
+  <TheLayout
+    :locales="locales"
+    :current-locale="currentLocale"
+    :faqs="[{
+      question: 'What is the purpose of this page? (This is just for testing as I need a multi line question)',
+      answer: 'To showcase the style guide of the Lightning TipCards.',
+    }, {
+      question: 'Why are these questions not localized?',
+      answer: 'Because this is a style guide page and not a content page. What a dumb question ... 🤦',
+    }, {
+      question: 'Is this the real reason?',
+      answer: 'No, the real reason is that I am lazy and I don\'t want to localize this page. (This answer was written by Github Copilot)',
+    }]"
+  >
     <CenterContainer class="mb-10">
       <HeadlineDefault level="h1">
         Lightning TipCards Style Guide
@@ -157,5 +170,4 @@ const onDummyLoading = async () => {
 
 const { currentLocale } = useI18nHelpers()
 const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
-
 </script>

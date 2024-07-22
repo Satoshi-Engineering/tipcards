@@ -12,6 +12,7 @@ const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 const PageStyleGuide = () => import('@/pages/PageStyleGuide.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
+const PageFAQs = () => import('@/pages/PageFAQs.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -117,6 +118,11 @@ const router = createRouter({
                 },
               }),
           },
+        },
+        {
+          path: 'faqs',
+          name: 'faqs',
+          component: PageFAQs,
         },
         {
           path: 'style-guide',

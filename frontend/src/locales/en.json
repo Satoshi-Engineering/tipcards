@@ -15,10 +15,24 @@
   },
   "footer": {
     "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}.",
-    "mostFrequentFAQs": {
+    "mostRelevantFAQs": {
       "title": "Bug, feedback or questions?",
       "subTitle": "We are constantly improving!",
-      "buttonToFAQs": "To the FAQs"
+      "buttonToFAQs": "To the FAQs",
+      "defaults": {
+        "faq1": {
+          "question": "That could be the first question?",
+          "answer": "And to make the answer to this first question a little longer, I'll write a few lines."
+        },
+        "faq2": {
+          "question": "And the second question that is not selected?",
+          "answer": "And to make the answer to this second question a little longer, I'll write a few lines."
+        },
+        "faq3": {
+          "question": "And the third question that is not selected?",
+          "answer": "And to make the answer to this third question a little longer, I'll write a few lines"
+        }
+      }
     }
   },
   "landing": {

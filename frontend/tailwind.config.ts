@@ -84,11 +84,16 @@ export default {
     hoverOnlyWhenSupported: true,
   },
   plugins: [
-    plugin(({ addUtilities }) => {
+    plugin(({ addUtilities, addVariant }) => {
+      addVariant('starting', '@starting-style')
+
       addUtilities({
         '.break-anywhere': {
           overflowWrap: 'anywhere',
           wordBreak: 'break-word',
+        },
+        '.transition-discrete': {
+          transitionBehaviour: 'allow-discrete',
         },
       })
     }),

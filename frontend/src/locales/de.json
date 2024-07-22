@@ -15,10 +15,24 @@
   },
   "footer": {
     "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.",
-    "mostFrequentFAQs": {
+    "mostRelevantFAQs": {
       "title": "Bug, Feedback oder Fragen?",
       "subTitle": "Wir sind stetig dabei uns zu verbessern!",
-      "buttonToFAQs": "Zu den FAQs"
+      "buttonToFAQs": "Zu den FAQs",
+      "defaults": {
+        "faq1": {
+          "question": "Das könnte die erste Frage sein?",
+          "answer": "Und das sie Antwort dieser ersten Frage und damit die noch etwas länger wird, schreibe ich ein paar Zeilen."
+        },
+        "faq2": {
+          "question": "Und das die zweite Frage die nicht ausgewählt ist?",
+          "answer": "Und das sie Antwort dieser zweiten Frage und damit die noch etwas länger wird, schreibe ich ein paar Zeilen."
+        },
+        "faq3": {
+          "question": "Und das die dritte Frage die nicht ausgewählt ist?",
+          "answer": "Und das sie Antwort dieser dritten Frage und damit die noch etwas länger wird, schreibe ich ein paar Zeilen."
+        }
+      }
     }
   },
   "landing": {

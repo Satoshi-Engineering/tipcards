@@ -14,9 +14,10 @@
       <slot name="default" />
     </div>
     <slot name="footer">
-      <TheMostFrequentFAQs
+      <TheMostRelevantFAQs
         v-if="!hideFAQs"
         class="print:hidden"
+        :faqs="faqs"
       />
       <TheFooter class="print:hidden" />
     </slot>
@@ -28,7 +29,7 @@ import type { PropType } from 'vue'
 
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheFooter from '@/components/layout/TheFooter.vue'
-import TheMostFrequentFAQs from '@/components/layout/TheMostFrequentFAQs.vue'
+import TheMostRelevantFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
 import type { Locales } from '@/modules/langNav/Locales'
 
@@ -44,6 +45,11 @@ defineProps({
   currentLocale: {
     type: String,
     default: '',
+  },
+  faqs: {
+    type: Array as PropType<{ question: string, answer: string }[]>,
+    default: undefined,
+    validator: (value: { question: string, answer: string }[]) => value.length <= 3,
   },
 })
 
