@@ -56,7 +56,12 @@ describe('Web client', () => {
     cy.visit(new URL('/style-guide', tipCards).href)
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('be.visible')
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('not.be.visible')
+
     cy.get('[data-test="the-most-relevant-faqs"] ul li').eq(1).click()
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('be.visible')
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('be.visible')
+
+    cy.get('[data-test="the-most-relevant-faqs"] ul li').eq(0).click()
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('not.be.visible')
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('be.visible')
   })

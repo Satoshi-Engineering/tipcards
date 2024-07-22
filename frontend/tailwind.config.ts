@@ -93,7 +93,7 @@ export default {
           wordBreak: 'break-word',
         },
         '.transition-discrete': {
-          transitionBehaviour: 'allow-discrete',
+          transitionBehavior: 'allow-discrete',
         },
         '.scrollbar-gutter-stable': {
           scrollbarGutter: 'stable',

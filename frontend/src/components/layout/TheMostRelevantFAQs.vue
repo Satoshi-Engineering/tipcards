@@ -14,8 +14,8 @@
           :key="`mostRelevantFAQs-faq${index}`"
           :question="faq.question"
           :answer="faq.answer"
-          :active="activeIndex === index"
-          @click="activeIndex = index"
+          :active="activeIndex.includes(index)"
+          @click="onClick(index)"
         />
       </ul>
       <ButtonDefault
@@ -63,5 +63,12 @@ const faqs = computed(() => {
   return faqs
 })
 
-const activeIndex = ref(0)
+const activeIndex = ref([0])
+const onClick = (index: number) => {
+  if (activeIndex.value.includes(index)) {
+    activeIndex.value = activeIndex.value.filter((i) => i !== index)
+  } else {
+    activeIndex.value = [...activeIndex.value, index]
+  }
+}
 </script>

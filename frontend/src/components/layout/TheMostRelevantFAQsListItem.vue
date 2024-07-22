@@ -2,11 +2,12 @@
   <li
     class="
       flex flex-cols gap-4 items-start
+      cursor-pointer
       transition-colors ease-in duration-50
     "
     :class="{
       'text-white': active,
-      'text-white-50 hover:text-white cursor-pointer': !active,
+      'text-white-50 hover:text-white': !active,
     }"
   >
     <span class="h-6 flex items-center">
@@ -20,7 +21,7 @@
           !m-0 pt-4
           overflow-hidden
           animate-fade-in
-          transition-[display,height] ease-in duration-200 transition-discrete @starting:h-0
+          transition-[display,height] ease-in duration-200 transition-discrete starting:h-0
         "
         :class="{
           'hidden h-0': !active,

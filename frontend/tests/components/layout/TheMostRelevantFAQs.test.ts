@@ -34,6 +34,10 @@ describe('TheMostRelevantFAQs', () => {
     expect(wrapper.findAll('ul li p')[1].classes()).toContain('hidden')
 
     await wrapper.findAll('ul li')[1].trigger('click')
+    expect(wrapper.findAll('ul li p')[0].classes()).not.toContain('hidden')
+    expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('hidden')
+
+    await wrapper.findAll('ul li')[0].trigger('click')
     expect(wrapper.findAll('ul li p')[0].classes()).toContain('hidden')
     expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('hidden')
   })
