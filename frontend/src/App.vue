@@ -22,14 +22,15 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 
 const router = useRouter()
 const route = useRoute()
-const { setDocumentTitle, setHeaderSeo } = useSeoHelpers()
+const { setDocumentTitle, initHtmlSeoWatchers } = useSeoHelpers()
+
+initHtmlSeoWatchers()
 
 router.afterEach(async () => {
   if (route?.params.lang != null && route?.params.lang !== '') {
     setLocale(route.params.lang as LocaleCode)
   }
   await nextTick()
-  setHeaderSeo()
   setDocumentTitle()
 })
 

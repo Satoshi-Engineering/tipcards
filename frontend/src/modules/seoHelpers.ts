@@ -8,20 +8,26 @@ export const useSeoHelpers = () => {
   const route = useRoute()
   const { currentLocale, currentTextDirection } = useI18nHelpers()
 
-  const setHeaderSeo = () => {
+  const initHtmlSeoWatchers = () => {
+    watch(currentLocale, (value) => {
+      document.documentElement.setAttribute('lang', value)
+    })
+
+    watch(currentTextDirection, (value) => {
+      document.documentElement.setAttribute('dir', value)
+    })
+
+    watch(route, () => {
+      updateCanonicalUrl()
+      setDocumentTitle()
+    })
+  }
+
+  const updateCanonicalUrl = () => {
     if (CANONICAL_URL_ORIGIN != null) {
       document.head.querySelector('link[rel="canonical"]')?.setAttribute('href', `${CANONICAL_URL_ORIGIN}${route.fullPath}`)
     }
   }
-
-  watch(currentLocale, (value) => {
-    document.documentElement.setAttribute('lang', value)
-  })
-
-  watch(currentTextDirection, (value) => {
-    document.documentElement.setAttribute('dir', value)
-  })
-
 
   const setDocumentTitle = (title: string | undefined = undefined) => {
     let titlePrefix
@@ -37,7 +43,7 @@ export const useSeoHelpers = () => {
   }
 
   return {
-    setHeaderSeo,
     setDocumentTitle,
+    initHtmlSeoWatchers,
   }
 }
