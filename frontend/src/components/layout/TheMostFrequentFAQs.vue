@@ -2,13 +2,13 @@
   <section class="rounded-t-2xl bg-bluegrey">
     <CenterContainer class="flex flex-col py-7 border-b border-white">
       <HeadlineDefault level="h2" class="!text-white">
-        Bug, Feedback oder Fragen?
+        {{ $t('footer.mostFrequentFAQs.title') }}
       </HeadlineDefault>
       <ParagraphDefault class="mb-8 text-white">
-        Hier kommen einige Fragen hin!
+        {{ $t('footer.mostFrequentFAQs.subTitle') }}
       </ParagraphDefault>
       <ButtonDefault :to="{ name: 'home' }" reduced-animation>
-        Zu den FAQs
+        {{ $t('footer.mostFrequentFAQs.buttonToFAQs') }}
       </ButtonDefault>
     </CenterContainer>
   </section>

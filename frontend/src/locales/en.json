@@ -14,7 +14,12 @@
     "legalNotice": "Legal Notice"
   },
   "footer": {
-    "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}."
+    "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}.",
+    "mostFrequentFAQs": {
+      "title": "Bug, feedback or questions?",
+      "subTitle": "We are constantly improving!",
+      "buttonToFAQs": "To the FAQs"
+    }
   },
   "landing": {
     "title": "Get your bitcoin",

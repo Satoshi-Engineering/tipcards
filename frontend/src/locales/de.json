@@ -14,7 +14,12 @@
     "legalNotice": "Impressum"
   },
   "footer": {
-    "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}."
+    "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.",
+    "mostFrequentFAQs": {
+      "title": "Bug, Feedback oder Fragen?",
+      "subTitle": "Wir sind stetig dabei uns zu verbessern!",
+      "buttonToFAQs": "Zu den FAQs"
+    }
   },
   "landing": {
     "title": "Hol dir deine Bitcoin",
