@@ -35,13 +35,11 @@
         <IconClose />
       </button>
     </CenterContainer>
-    <CenterContainer>
-      <TheLangNav
-        v-if="activeMenu === 'language'"
-        :locales="locales"
-        :current-locale="currentLocale"
-      />
-    </CenterContainer>
+    <TheLangNav
+      v-if="activeMenu === 'language'"
+      :locales="locales"
+      :current-locale="currentLocale"
+    />
   </header>
 </template>
 

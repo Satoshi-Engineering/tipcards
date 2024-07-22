@@ -1,23 +1,27 @@
 <template>
-  <ul class="pt-1">
-    <li
-      v-for="(locale, index) in locales"
-      :key="locale.code"
-      :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
-    >
-      <router-link
-        :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
-        :hreflang="locale.code"
-        rel="alternate"
-      >
-        <div class="pt-4 pb-4 text-lg hover:underline">
-          <div class="pl-4">
-            {{ locale.name }}
-          </div>
-        </div>
-      </router-link>
-    </li>
-  </ul>
+  <CenterContainer class="py-0">
+    <div class="relative">
+      <ul class="absolute bg-white pt-1 w-full max-h-[calc(100dvh-63px)] overflow-y-auto">
+        <li
+          v-for="(locale, index) in locales"
+          :key="locale.code"
+          :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
+        >
+          <router-link
+            :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
+            :hreflang="locale.code"
+            rel="alternate"
+          >
+            <div class="py-3 text-lg hover:underline">
+              <div class="pl-4">
+                {{ locale.name }}
+              </div>
+            </div>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+  </CenterContainer>
 </template>
 
 <script setup lang="ts">
@@ -25,9 +29,7 @@
   // FIL: - Questions
 
   // FIL:
-  - TheLangNav: Centerconaier --> rein, maxhöhe - nav wegen scrollin bsp.: BitcoinSpenden
   - On Select --> Close Ja
-  - Change Icon Close to be same when MainNav is open
   - Header Breaks: when language is changes reading direction
 
   // FIL: Component Test
@@ -41,6 +43,7 @@
 
 import { type PropType } from 'vue'
 
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import type { Locales } from '@/modules/langNav/Locales'
 
 defineProps({
