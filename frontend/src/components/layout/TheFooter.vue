@@ -12,11 +12,10 @@
       </div>
       <div
         v-if="linkPrivacyPolicy != null || linkLegalNotice != null"
-        class="flex flex-row mt-6"
+        class="grid grid-cols-[repeat(2,auto)_1fr] gap-x-8 mt-6"
       >
         <LinkDefault
           v-if="linkPrivacyPolicy != null"
-          class="mr-8"
           no-bold
           invert-underline
           :href="linkPrivacyPolicy"
@@ -46,11 +45,10 @@
       </div>
       <div
         v-if="linkLinkedIn != null || linkX != null || linkInstagram != null"
-        class="flex flex-row mt-6"
+        class="grid grid-cols-[repeat(2,auto)_1fr] gap-x-8 mt-6"
       >
         <LinkDefault
           v-if="linkLinkedIn != null"
-          class="mr-8"
           no-bold
           invert-underline
           :href="linkLinkedIn"
@@ -59,7 +57,6 @@
         </LinkDefault>
         <LinkDefault
           v-if="linkX != null"
-          class="mr-8"
           no-bold
           invert-underline
           :href="linkX"
@@ -68,7 +65,6 @@
         </LinkDefault>
         <LinkDefault
           v-if="linkInstagram != null"
-          class="mr-8"
           no-bold
           invert-underline
           :href="linkInstagram"
