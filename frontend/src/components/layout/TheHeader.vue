@@ -17,7 +17,7 @@
         <IconWorld v-if="!showLangNav" />
         <IconClose v-if="showLangNav" />
       </button>
-      <TheMainNav />
+      <TheMainNav class="ml-5" />
     </CenterContainer>
     <CenterContainer>
       <TheLangNav
