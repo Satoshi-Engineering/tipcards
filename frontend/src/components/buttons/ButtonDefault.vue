@@ -102,7 +102,7 @@ const cssClassesPrimary = computed(() => [
     group
     relative inline-flex items-center justify-center
     rounded-full min-h-[40px] overflow-hidden
-    max-w-md my-1 px-20 py-2
+    max-w-md my-1 px-16 py-2
     font-medium text-center bg-yellow
   `,
   {
