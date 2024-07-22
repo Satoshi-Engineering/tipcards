@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="min-h-screen flex flex-col"
-    :dir="currentTextDirection"
-  >
+  <div class="min-h-screen flex flex-col">
     <slot name="header">
       <TheHeader
         class="print:hidden"
@@ -30,7 +27,6 @@ import type { PropType } from 'vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheMostRelevantFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
-import { useI18nHelpers } from '@/modules/initI18n'
 import type { Locales } from '@/modules/langNav/Locales'
 
 defineProps({
@@ -52,6 +48,4 @@ defineProps({
     validator: (value: { question: string, answer: string }[]) => value.length <= 3,
   },
 })
-
-const { currentTextDirection } = useI18nHelpers()
 </script>

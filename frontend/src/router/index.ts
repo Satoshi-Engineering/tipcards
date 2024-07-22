@@ -128,6 +128,7 @@ const router = createRouter({
           path: 'style-guide',
           name: 'style-guide',
           component: PageStyleGuide,
+          meta: { title: () => 'Style Guide' },
         },
       ],
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col" :dir="currentTextDirection">
+  <div class="min-h-screen flex flex-col">
     <slot
       v-if="!hideHeader"
       name="header"
@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18nHelpers } from '@/modules/initI18n'
-
 import DefaultHeader from './components/DefaultHeader.vue'
 import DefaultFooter from './components/DefaultFooter.vue'
 
@@ -25,6 +23,4 @@ defineProps({
     default: false,
   },
 })
-
-const { currentTextDirection } = useI18nHelpers()
 </script>
