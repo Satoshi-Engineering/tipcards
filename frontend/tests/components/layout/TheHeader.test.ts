@@ -38,14 +38,22 @@ describe('TheHeader', () => {
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
   })
 
-  it('click on the WorldIcon should toggle TheLangNav (Menu)', async () => {
+  it('click on the WorldIcon should toggle TheLangNav and X should close it again', async () => {
     const wrapper = mount(TheHeader)
-    const langNavOpenButton = wrapper.getComponent(IconWorld)
+    expect(wrapper.getComponent(IconWorld)).toBeDefined()
+    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
+
+    const langNavOpenButton = wrapper.getComponent(IconWorld)
     await langNavOpenButton.trigger('click')
-    expect(wrapper.findComponent(TheLangNav).exists()).toBe(true)
+    expect(wrapper.findComponent(IconWorld).exists()).toBe(false)
+    expect(wrapper.findComponent(TheMainNav).exists()).toBe(false)
+    expect(wrapper.getComponent(TheLangNav)).toBeDefined()
+
     const langNavCloseButton = wrapper.getComponent(IconClose)
     await langNavCloseButton.trigger('click')
+    expect(wrapper.getComponent(IconWorld)).toBeDefined()
+    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
   })
 })
