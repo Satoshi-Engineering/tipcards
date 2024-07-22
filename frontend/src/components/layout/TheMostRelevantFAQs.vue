@@ -18,13 +18,15 @@
           @click="onClick(index)"
         />
       </ul>
-      <ButtonDefault
-        :to="{ name: 'faqs' }"
-        reduced-animation
-        data-test="link-faq"
-      >
-        {{ $t('footer.mostRelevantFAQs.buttonToFAQs') }}
-      </ButtonDefault>
+      <ButtonGroup>
+        <ButtonDefault
+          :to="{ name: 'faqs' }"
+          reduced-animation
+          data-test="link-faq"
+        >
+          {{ $t('footer.mostRelevantFAQs.buttonToFAQs') }}
+        </ButtonDefault>
+      </ButtonGroup>
     </CenterContainer>
   </section>
 </template>
@@ -39,6 +41,7 @@ import TheMostRelevantFAQsListItem from '@/components/layout/TheMostRelevantFAQs
 import QuestionMark from '@/components/svgs/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonGroup from '../buttons/ButtonGroup.vue'
 
 const { t } = useI18n()
 
