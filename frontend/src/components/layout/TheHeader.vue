@@ -13,15 +13,31 @@
       >
         <IconLogo />
       </RouterLink>
-      <button class="hover:text-yellow w-6 h-6 " @click="showLangNav = !showLangNav">
-        <IconWorld v-if="!showLangNav" />
-        <IconClose v-if="showLangNav" />
+      <button
+        v-if="activeMenu === 'none'"
+        class="hover:text-yellow w-6 h-6 "
+        @click="activeMenu = 'language'"
+      >
+        <IconWorld />
       </button>
-      <TheMainNav class="ml-5" />
+      <button
+        v-if="activeMenu === 'none'"
+        class="hover:text-yellow"
+        @click="activeMenu = 'language'"
+      >
+        <TheMainNav class="ml-2" />
+      </button>
+      <button
+        v-if="activeMenu !== 'none'"
+        class="hover:text-yellow w-6 h-6 "
+        @click="activeMenu = 'none'"
+      >
+        <IconClose />
+      </button>
     </CenterContainer>
     <CenterContainer>
       <TheLangNav
-        v-if="showLangNav"
+        v-if="activeMenu === 'language'"
         :locales="locales"
         :current-locale="currentLocale"
       />
@@ -52,6 +68,6 @@ defineProps({
   },
 })
 
-const showLangNav = ref(false)
+const activeMenu = ref<'none'|'language'|'main'>('none')
 
 </script>
