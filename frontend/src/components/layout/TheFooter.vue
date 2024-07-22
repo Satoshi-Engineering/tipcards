@@ -72,7 +72,7 @@
           <IconInstagram />
         </LinkDefault>
       </div>
-      <div class="mt-5 text-right">
+      <div class="mt-5 text-end">
         <LinkDefault
           href="https://satoshiengineering.com"
           class="text-white-50 text-sm"

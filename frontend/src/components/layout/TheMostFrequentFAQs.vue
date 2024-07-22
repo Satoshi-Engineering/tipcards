@@ -1,7 +1,7 @@
 <template>
   <section class="rounded-t-2xl bg-bluegrey">
     <CenterContainer class="relative flex flex-col py-7 border-b border-white">
-      <QuestionMark class="absolute -top-11 right-0 rtl:left-0 rtl:right-auto" />
+      <QuestionMark class="absolute -top-11 end-0" />
       <HeadlineDefault level="h2" class="!text-white">
         {{ $t('footer.mostFrequentFAQs.title') }}
       </HeadlineDefault>
