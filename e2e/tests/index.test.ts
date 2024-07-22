@@ -45,4 +45,19 @@ describe('Web client', () => {
       cy.url().should('contain', 'satoshiengineering.com')
     })
   })
+
+  it('navigates to the faq page via footer link', () => {
+    cy.visit(new URL('/style-guide', tipCards).href)
+    cy.get('[data-test="the-most-relevant-faqs"] [data-test="link-faq"]').first().click()
+    cy.url().should('contain', '/faqs')
+  })
+
+  it('clicks on second faq in most-relevant faqs', () => {
+    cy.visit(new URL('/style-guide', tipCards).href)
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('be.visible')
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('not.be.visible')
+    cy.get('[data-test="the-most-relevant-faqs"] ul li').eq(1).click()
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('not.be.visible')
+    cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('be.visible')
+  })
 })
