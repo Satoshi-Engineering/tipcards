@@ -23,7 +23,7 @@
       <button
         v-if="activeMenu === 'none'"
         class="hover:text-yellow"
-        @click="activeMenu = 'language'"
+        @click="activeMenu = 'main'"
       >
         <TheMainNav class="ms-2" />
       </button>

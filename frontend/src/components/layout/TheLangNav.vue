@@ -1,35 +1,38 @@
 <template>
-  <CenterContainer class="py-0">
-    <div class="relative">
-      <ul class="absolute bg-white pt-1 w-full max-h-[calc(100dvh-63px)] overflow-y-auto">
-        <li
-          v-for="(locale, index) in locales"
-          :key="locale.code"
-          :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
-        >
-          <router-link
-            :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
-            :hreflang="locale.code"
-            rel="alternate"
-            @click="() => emit('itemSelected')"
+  <nav class="relative">
+    <div class="absolute w-full bg-white ">
+      <CenterContainer>
+        <ul class="pt-1 max-h-[calc(100dvh-63px)] overflow-y-auto">
+          <li
+            v-for="(locale, index) in locales"
+            :key="locale.code"
+            :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
           >
-            <div class="py-3 text-lg hover:underline">
-              <div class="pl-4">
-                {{ locale.name }}
+            <router-link
+              :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
+              :hreflang="locale.code"
+              rel="alternate"
+              @click="() => emit('itemSelected')"
+            >
+              <div class="py-3 text-lg hover:underline">
+                <div class="pl-4">
+                  {{ locale.name }}
+                </div>
               </div>
-            </div>
-          </router-link>
-        </li>
-      </ul>
+            </router-link>
+          </li>
+        </ul>
+      </CenterContainer>
     </div>
-  </CenterContainer>
+  </nav>
 </template>
 
 <script setup lang="ts">
 /*
   // FIL: - Questions
 
-  // FIL:
+  // FIL: Todo
+
   // FIL: Component Test
   - Wichtigste Active State: NavBar Button, LangNav Button
   - Header: ToggleButton Hover with underline and text yellow --> NavBarToggleButton
