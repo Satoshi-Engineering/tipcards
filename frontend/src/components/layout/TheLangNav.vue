@@ -3,7 +3,7 @@
     <li
       v-for="(locale, index) in locales"
       :key="locale.code"
-      :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-menu-sperator' : index !== 0 }"
+      :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
     >
       <router-link
         :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
@@ -21,17 +21,17 @@
 </template>
 
 <script setup lang="ts">
-/* FIL: - Questions
-  - Funktionsweise --> von Icon & Nav
-    - On Select --> Close?
-  - Header: World & X Icon --> ToggleButton --> ButtonDefault with variant "ToggleIconButton" erweitern?
-  - TheLangNav --> TheLangMenu
-  - TheLangNav --> MenuButtonDefault: active yellow und hover:underline
-  - Color:         'menu-sperator': '#8a8b8b', // menu seperator (lang nav) oder white-50?
+/*
+  // FIL: - Questions
 
   // FIL:
+  - TheLangNav: Centerconaier --> rein, maxhöhe - nav wegen scrollin bsp.: BitcoinSpenden
+  - On Select --> Close Ja
+  - Change Icon Close to be same when MainNav is open
+  - Header Breaks: when language is changes reading direction
 
   // FIL: Component Test
+  - Wichtigste Active State: NavBar Button, LangNav Button
   - Header: ToggleButton Hover with underline and text yellow --> NavBarToggleButton
   - LangNav: ButtonHover --> MenuButton with ComponentTest
 

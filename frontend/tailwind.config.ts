@@ -18,9 +18,8 @@ export default {
         bluegrey: '#2a2c31', // default color
         white: {
           DEFAULT: '#ffffff', // white
-          50: '#8a8b8b', // use on bluegrey background for subtext
+          50: '#8a8b8b', // use on bluegrey background for subtext & dividers
         },
-        'menu-sperator': '#8a8b8b', // menu seperator (lang nav)
         grey: {
           light: '#f6f7f7', // backgrounds
 
