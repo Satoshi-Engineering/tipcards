@@ -39,6 +39,7 @@
       v-if="activeMenu === 'language'"
       :locales="locales"
       :current-locale="currentLocale"
+      class="absolute top-full"
       @item-selected="onMenuItemSelected"
     />
   </header>
@@ -46,7 +47,7 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ref, type PropType } from 'vue'
+import { ref, watch, type PropType } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
@@ -71,5 +72,14 @@ const activeMenu = ref<'none'|'language'|'main'>('none')
 const onMenuItemSelected = () => {
   activeMenu.value = 'none'
 }
+
+watch(activeMenu, (value) => {
+  // Bad voodoo magic signed off by Dave - DRAFT
+  if (value === 'none') {
+    document.documentElement.style.overflow = ''
+  } else {
+    document.documentElement.style.overflow = 'hidden'
+  }
+})
 
 </script>
