@@ -1,12 +1,12 @@
 <template>
   <header class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden">
     <BackLink class="p-4" />
-    <div v-if="isLoggedIn === true" class="col-start-2 p-4 text-right">
+    <div v-if="isLoggedIn === true" class="col-start-2 p-4 text-end">
       <LinkDefault :to="{ name: 'user-account' }">
         {{ $t('general.userAccount') }}
       </LinkDefault>
     </div>
-    <div v-else-if="isLoggedIn === false" class="col-start-2 p-4 text-right">
+    <div v-else-if="isLoggedIn === false" class="col-start-2 p-4 text-end">
       <LinkDefault @click="showModalLogin = true">
         {{ $t('general.login') }}
       </LinkDefault>
