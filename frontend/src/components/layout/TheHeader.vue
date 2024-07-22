@@ -39,6 +39,7 @@
       v-if="activeMenu === 'language'"
       :locales="locales"
       :current-locale="currentLocale"
+      @item-selected="onMenuItemSelected"
     />
   </header>
 </template>
@@ -67,5 +68,8 @@ defineProps({
 })
 
 const activeMenu = ref<'none'|'language'|'main'>('none')
+const onMenuItemSelected = () => {
+  activeMenu.value = 'none'
+}
 
 </script>

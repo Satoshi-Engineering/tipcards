@@ -11,6 +11,7 @@
             :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
             :hreflang="locale.code"
             rel="alternate"
+            @click="() => emit('itemSelected')"
           >
             <div class="py-3 text-lg hover:underline">
               <div class="pl-4">
@@ -29,22 +30,22 @@
   // FIL: - Questions
 
   // FIL:
-  - On Select --> Close Ja
-  - Header Breaks: when language is changes reading direction
-
   // FIL: Component Test
   - Wichtigste Active State: NavBar Button, LangNav Button
   - Header: ToggleButton Hover with underline and text yellow --> NavBarToggleButton
   - LangNav: ButtonHover --> MenuButton with ComponentTest
 
   // FIL: Integration Test
-  - LangNav: change the menu
+  - Header: On Select --> Close Ja --> integration Test
+  - LangNav: change the menu & language
 */
 
 import { type PropType } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import type { Locales } from '@/modules/langNav/Locales'
+
+const emit = defineEmits(['itemSelected'])
 
 defineProps({
   locales: {
