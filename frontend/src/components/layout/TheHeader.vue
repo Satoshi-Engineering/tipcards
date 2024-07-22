@@ -9,7 +9,7 @@
     <CenterContainer class="flex items-center">
       <RouterLink
         :to="{ name: 'home', params: { lang: $route.params.lang } }"
-        class="mr-auto flex flex-row items-center"
+        class="me-auto flex flex-row items-center"
       >
         <IconLogo />
       </RouterLink>
@@ -25,7 +25,7 @@
         class="hover:text-yellow"
         @click="activeMenu = 'language'"
       >
-        <TheMainNav class="ml-2" />
+        <TheMainNav class="ms-2" />
       </button>
       <button
         v-if="activeMenu !== 'none'"
