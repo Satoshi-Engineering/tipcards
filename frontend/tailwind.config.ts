@@ -95,6 +95,9 @@ export default {
         '.transition-discrete': {
           transitionBehaviour: 'allow-discrete',
         },
+        '.scrollbar-gutter-stable': {
+          scrollbarGutter: 'stable',
+        },
       })
     }),
   ],

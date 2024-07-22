@@ -1,7 +1,7 @@
 <template>
-  <nav class="w-full h-[calc(100dvh-56px)] overflow-y-auto pt-0 bg-white">
-    <CenterContainer>
-      <ul class="">
+  <nav class="w-full bg-white animate-fade-in">
+    <CenterContainer class="h-[calc(100dvh-56px)] overflow-y-auto">
+      <ul>
         <li
           v-for="(locale, index) in locales"
           :key="locale.code"

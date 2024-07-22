@@ -4,8 +4,8 @@ export const usePageScroll = () => ({
     document.documentElement.style.paddingInlineEnd = ''
   },
   disablePageScroll: () => {
-    const originalWidth = document.documentElement.clientWidth
+    const originalWidth = document.documentElement.scrollWidth
     document.documentElement.style.overflow = 'hidden'
-    document.documentElement.style.paddingInlineEnd = `${document.documentElement.clientWidth - originalWidth}px`
+    document.documentElement.style.paddingInlineEnd = `${document.documentElement.scrollWidth - originalWidth}px`
   },
 })
