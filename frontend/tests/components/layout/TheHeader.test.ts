@@ -56,4 +56,20 @@ describe('TheHeader', () => {
     expect(wrapper.getComponent(TheMainNav)).toBeDefined()
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
   })
+
+  it('Mouse over on lang icon, main icon and close icon should color icon yellow', async () => {
+    const wrapper = mount(TheHeader)
+    wrapper.findAll('button').forEach(async (button) => {
+      expect(button.classes()).not.toContain('*text-yellow')
+      await button.trigger('mouseover')
+      expect(button.classes()).toContain('hover:text-yellow')
+    })
+
+    wrapper.get('button').trigger('click')
+    wrapper.findAll('button').forEach(async (button) => {
+      expect(button.classes()).not.toContain('*text-yellow')
+      await button.trigger('mouseover')
+      expect(button.classes()).toContain('hover:text-yellow')
+    })
+  })
 })
