@@ -15,7 +15,7 @@ describe('Web client', () => {
     cy.contains('h1', 'Lightning TipCards Style Guide')
 
     // navigate home
-    cy.get('header > a:first-child').click()
+    cy.get('header a').first().click()
     cy.url().should('to.match', urlWithOptionalTrailingSlash(tipCards))
 
     // navigate to english style guide and home from there
