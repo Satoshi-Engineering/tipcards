@@ -102,7 +102,7 @@ const cssClassesPrimary = computed(() => [
     group
     relative inline-flex items-center justify-center
     rounded-full min-h-[40px] overflow-hidden
-    w-full max-w-md mx-auto my-1 px-20 py-2
+    max-w-md my-1 px-20 py-2
     font-medium text-center bg-yellow
   `,
   {
@@ -112,7 +112,7 @@ const cssClassesPrimary = computed(() => [
 ])
 
 const cssClassesSecondary = computed(() => [
-  'w-full max-w-md min-h-[40px] my-1 px-0 py-2 mx-auto font-medium text-center underline hover:no-underline',
+  'max-w-md min-h-[40px] my-1 px-0 py-2 font-medium text-center underline hover:no-underline',
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },

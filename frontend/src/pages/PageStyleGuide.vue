@@ -48,16 +48,16 @@
           Buttons
         </HeadlineDefault>
 
-        <div class="text-center">
+        <ButtonGroup>
           <ButtonDefault @click="onDummyClick">
             Primary Button
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
 
         <HeadlineDefault level="h3">
           Multi line
         </HeadlineDefault>
-        <div class="flex flex-col">
+        <ButtonGroup>
           <ButtonDefault @click="onDummyClick">
             This is a very long text in this button, why would you do that?
           </ButtonDefault>
@@ -67,12 +67,12 @@
           >
             This is a very long secondary text in this button, why would you do that?
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
 
         <HeadlineDefault level="h3">
           Loading
         </HeadlineDefault>
-        <div class="flex flex-col">
+        <ButtonGroup>
           <ButtonDefault
             :loading="dummyLoading"
             @click="onDummyLoading"
@@ -85,12 +85,12 @@
           >
             Infinite Loading
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
 
         <HeadlineDefault level="h3">
           Disabled
         </HeadlineDefault>
-        <div class="flex flex-col">
+        <ButtonGroup>
           <ButtonDefault
             disabled
             @click="onDummyClick"
@@ -104,12 +104,12 @@
           >
             Disabled Secondary Button
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
 
         <HeadlineDefault level="h3">
           As Router Links
         </HeadlineDefault>
-        <div class="flex flex-col">
+        <ButtonGroup>
           <ButtonDefault :to="dummyLink">
             Primary Button
           </ButtonDefault>
@@ -119,12 +119,12 @@
           >
             Secondary Button
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
 
         <HeadlineDefault level="h3">
           As Hrefs
         </HeadlineDefault>
-        <div class="flex flex-col">
+        <ButtonGroup>
           <ButtonDefault href="https://satoshiengineering.com/">
             Primary Button
           </ButtonDefault>
@@ -134,7 +134,7 @@
           >
             Secondary Button
           </ButtonDefault>
-        </div>
+        </ButtonGroup>
       </CenterContainer>
     </section>
   </TheLayout>
@@ -151,6 +151,7 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
 
 const dummyLink = {
   name: 'cards',
