@@ -30,15 +30,15 @@ describe('TheMostRelevantFAQs', () => {
       },
     })
     expect(wrapper.text()).toContain('Another question')
-    expect(wrapper.findAll('ul li p')[0].classes()).not.toContain('hidden')
-    expect(wrapper.findAll('ul li p')[1].classes()).toContain('hidden')
+    expect(wrapper.findAll('ul li p')[0].classes()).not.toContain('h-0')
+    expect(wrapper.findAll('ul li p')[1].classes()).toContain('h-0')
 
     await wrapper.findAll('ul li')[1].trigger('click')
-    expect(wrapper.findAll('ul li p')[0].classes()).not.toContain('hidden')
-    expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('hidden')
+    expect(wrapper.findAll('ul li p')[0].classes()).not.toContain('h-0')
+    expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('h-0')
 
     await wrapper.findAll('ul li')[0].trigger('click')
-    expect(wrapper.findAll('ul li p')[0].classes()).toContain('hidden')
-    expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('hidden')
+    expect(wrapper.findAll('ul li p')[0].classes()).toContain('h-0')
+    expect(wrapper.findAll('ul li p')[1].classes()).not.toContain('h-0')
   })
 })

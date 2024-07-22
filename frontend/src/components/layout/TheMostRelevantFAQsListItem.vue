@@ -20,12 +20,11 @@
         class="
           !m-0 pt-4
           overflow-hidden
-          animate-fade-in
-          transition-[display,height] ease-in duration-200 transition-discrete starting:h-0
+          transition-[height,opacity] ease-in duration-200
         "
         :class="{
-          'hidden h-0': !active,
-          'h-[calc-size(auto)]': active,
+          'h-0 opacity-0': !active,
+          'h-[calc-size(auto)] opacity-100': active,
         }"
       >
         {{ answer }}

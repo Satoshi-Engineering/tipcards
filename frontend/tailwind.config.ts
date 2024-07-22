@@ -84,8 +84,9 @@ export default {
     hoverOnlyWhenSupported: true,
   },
   plugins: [
-    plugin(({ addUtilities, addVariant }) => {
-      addVariant('starting', '@starting-style')
+    plugin(({ addUtilities }) => {
+      // this currently breaks the electron app from cypress during e2e tests
+      // addVariant('starting', '@starting-style')
 
       addUtilities({
         '.break-anywhere': {
