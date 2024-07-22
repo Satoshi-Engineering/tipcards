@@ -56,6 +56,7 @@ import IconWorld from '@/components/svgs/IconWorld.vue'
 import IconClose from '@/components/svgs/IconClose.vue'
 import IconLogo from '@/components/svgs/IconLogo.vue'
 import type { Locales } from '@/modules/langNav/Locales'
+import { usePageScroll } from '@/modules/usePageScroll'
 
 defineProps({
   locales: {
@@ -73,12 +74,14 @@ const onMenuItemSelected = () => {
   activeMenu.value = 'none'
 }
 
+const { disablePageScroll, enablePageScroll } = usePageScroll()
+
 watch(activeMenu, (value) => {
   // Bad voodoo magic signed off by Dave - DRAFT
   if (value === 'none') {
-    document.documentElement.style.overflow = ''
+    enablePageScroll()
   } else {
-    document.documentElement.style.overflow = 'hidden'
+    disablePageScroll()
   }
 })
 
