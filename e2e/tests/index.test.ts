@@ -4,8 +4,6 @@ import { urlWithOptionalTrailingSlash } from './lib/urlHelpers'
 
 const tipCards = new URL(Cypress.env('TIPCARDS_ORIGIN'))
 
-const urlWithOptionalTrailingSlash = (url: URL) => new RegExp(`${url}(\\/)?$`)
-
 describe('Web client', () => {
   it('visits the app root url and checks the headline', () => {
     cy.visit(tipCards.href)
