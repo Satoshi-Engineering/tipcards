@@ -1,7 +1,7 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
-import { getCardByHash, updateCard } from '@backend/database/queries.js'
+import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
+import { getCardByHash, updateCard } from '@backend/database/deprecated/queries.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'
 

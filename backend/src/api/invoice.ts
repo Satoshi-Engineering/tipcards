@@ -5,9 +5,9 @@ import type { Card as CardApi } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi.js'
-import { getCardByHash, createCard, deleteCard } from '@backend/database/queries.js'
+import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
+import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
+import { getCardByHash, createCard, deleteCard } from '@backend/database/deprecated/queries.js'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 

@@ -1,14 +1,14 @@
 import type z from 'zod'
 
-import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
-import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
+import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
 import CardWithdrawnError from '@backend/errors/CardWithdrawnError.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import {
   getSetById,
   getCardByHash, updateCard,
-} from '@backend/database/queries.js'
+} from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers.js'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'

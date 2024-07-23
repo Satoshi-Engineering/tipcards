@@ -1,13 +1,13 @@
 import type z from 'zod'
 
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
-import type { Card as CardRedis } from '@backend/database/redis/data/Card.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
+import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
 import {
   createBulkWithdraw,
   getBulkWithdrawById, getBulkWithdrawByCardHash,
   updateBulkWithdraw, deleteBulkWithdraw,
-} from '@backend/database/queries.js'
+} from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers.js'
 import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis.js'

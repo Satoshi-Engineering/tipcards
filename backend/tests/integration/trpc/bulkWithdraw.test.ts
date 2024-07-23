@@ -7,7 +7,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
-import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
+import Database from '@backend/database/Database.js'
 import { bulkWithdrawRouter } from '@backend/trpc/router/bulkWithdraw.js'
 import { setRouter } from '@backend/trpc/router/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -42,7 +42,7 @@ const CARD_HASH_FUNDED_1 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 1)
 const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 
 beforeAll(async () => {
-  await initDatabase()
+  await Database.init()
 
   const data = await wallet.getWalletDetails()
   if (data == null || data.balance <= AMOUNT_PER_CARD * 2 * 1000) {
@@ -56,7 +56,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await closeDatabaseConnections()
+  await Database.closeConnectionIfExists()
 })
 
 describe('TRpc Router BulkWithdraw', () => {

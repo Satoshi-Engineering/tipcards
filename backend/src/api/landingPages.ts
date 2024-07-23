@@ -4,9 +4,9 @@ import { LandingPage as LandingPageApi } from '@shared/data/api/LandingPage.js'
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { LandingPage } from '@backend/database/redis/data/LandingPage.js'
-import type { User } from '@backend/database/redis/data/User.js'
-import { getUserById, getLandingPage } from '@backend/database/queries.js'
+import type { LandingPage } from '@backend/database/deprecated/data/LandingPage.js'
+import type { User } from '@backend/database/deprecated/data/User.js'
+import { getUserById, getLandingPage } from '@backend/database/deprecated/queries.js'
 
 import { authGuardAccessToken } from './middleware/auth/jwt.js'
 

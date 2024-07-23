@@ -109,10 +109,6 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
   JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
 }
 
-/////
-// DATABASE
-const USE_DRIZZLE = process.env.USE_DRIZZLE === '1'
-
 ////
 // ERROR NOTIFICATION
 const TELEGRAM_BOT_ID = process.env.TELEGRAM_BOT_ID
@@ -141,7 +137,6 @@ export {
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,
   LNURL_AUTH_DEBUG,
-  USE_DRIZZLE,
   DB_CREDENTIALS,
   TELEGRAM_BOT_ID,
   TELEGRAM_GROUP_ID_ERROR,

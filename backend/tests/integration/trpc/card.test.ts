@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
+import Database from '@backend/database/Database.js'
 import { cardRouter } from '@backend/trpc/router/card.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
@@ -20,12 +20,12 @@ const callerCards = cardRouter.createCaller({
 })
 
 beforeAll(async () => {
-  await initDatabase()
+  await Database.init()
   await frontend.createCardViaAPI(testCard.cardHash, testCard.amount, testCard.text, testCard.note)
 })
 
 afterAll(async () => {
-  await closeDatabaseConnections()
+  await Database.closeConnectionIfExists()
 })
 
 describe('TRpc Router Card', () => {

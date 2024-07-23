@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { errors } from 'jose'
 import { ZodError } from 'zod'
 
-import { initUserFromAccessTokenPayload } from '@backend/database/queries.js'
+import { initUserFromAccessTokenPayload } from '@backend/database/deprecated/queries.js'
 import { validateJwt as validateJwtService } from '@backend/services/jwt.js'
 
 import { validateAuthContext } from './validateAuthContext.js'

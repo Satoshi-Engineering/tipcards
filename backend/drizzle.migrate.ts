@@ -10,8 +10,8 @@ import postgres from 'postgres'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import * as schema from '@backend/database/drizzle/schema/index.js'
-import { USE_DRIZZLE, DB_CREDENTIALS } from '@backend/constants.js'
+import * as schema from '@backend/database/schema/index.js'
+import { DB_CREDENTIALS } from '@backend/constants.js'
 
 import { MIGRATIONS_FOLDER } from './drizzle.config.js'
 
@@ -30,9 +30,4 @@ const run = async () => {
   await connection.end()
   console.info('✅ Done')
 }
-
-if (USE_DRIZZLE) {
-  run()
-} else {
-  console.info('✅ No migration needed, you are using a different database')
-}
+run()

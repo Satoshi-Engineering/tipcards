@@ -9,9 +9,9 @@ import cookieParser from 'cookie-parser'
 import { Profile } from '@shared/data/auth/User.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { User } from '@backend/database/redis/data/User.js'
+import type { User } from '@backend/database/deprecated/data/User.js'
 import corsOptions from '@backend/services/corsOptions.js'
-import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/queries.js'
+import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/deprecated/queries.js'
 import {
   getPublicKey,
   createAccessToken, createRefreshToken,

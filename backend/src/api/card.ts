@@ -3,8 +3,8 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import type { Card as CardApi } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
-import { getCardByHash } from '@backend/database/queries.js'
+import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
+import { getCardByHash } from '@backend/database/deprecated/queries.js'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'

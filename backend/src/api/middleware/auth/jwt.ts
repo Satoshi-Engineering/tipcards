@@ -4,7 +4,7 @@ import { ZodError } from 'zod'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/queries.js'
+import { getUserById, updateUser, initUserFromAccessTokenPayload } from '@backend/database/deprecated/queries.js'
 import { createRefreshToken, loadKeys, validateJwt } from '@backend/services/jwt.js'
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 

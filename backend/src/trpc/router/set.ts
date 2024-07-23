@@ -2,7 +2,7 @@ import { Card } from '@shared/data/trpc/Card.js'
 import { Set, SetId } from '@shared/data/trpc/Set.js'
 
 import CardCollection from '@backend/modules/CardCollection.js'
-import { getSetsByUserId } from '@backend/database/queries.js'
+import { getSetsByUserId } from '@backend/database/deprecated/queries.js'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis.js'
 import { router } from '../trpc.js'

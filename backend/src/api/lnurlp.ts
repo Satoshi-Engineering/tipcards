@@ -4,9 +4,9 @@ import type { Card } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi.js'
-import { createCard, getCardByHash, updateCard } from '@backend/database/queries.js'
+import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
+import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
+import { createCard, getCardByHash, updateCard } from '@backend/database/deprecated/queries.js'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,

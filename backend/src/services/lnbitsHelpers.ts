@@ -5,10 +5,10 @@ import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card.
 import { getPaidAmount } from '@shared/data/api/cardHelpers.js'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
-import type { Set } from '@backend/database/redis/data/Set.js'
-import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/redis/data/BulkWithdraw.js'
-import { cardRedisFromCardApi } from '@backend/database/redis/transforms/cardRedisFromCardApi.js'
-import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/queries.js'
+import type { Set } from '@backend/database/deprecated/data/Set.js'
+import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
+import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
+import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/deprecated/queries.js'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 

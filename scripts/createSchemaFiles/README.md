@@ -4,7 +4,7 @@
 This script:
 - is reading drizzle config from  `/backend/drizzle.config.js`
 - is reading the dbml file from `/docs/database.bdml`
-- and rewrites the directory `/backend/src/database/drizzle/schema/`
+- and rewrites the directory `/backend/src/database/schema/`
 
 ## How To
 

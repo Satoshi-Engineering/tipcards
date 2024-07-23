@@ -4,9 +4,9 @@ import { Image as ImageApi } from '@shared/data/api/Image.js'
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { User } from '@backend/database/redis/data/User.js'
-import type { Image as ImageMeta } from '@backend/database/redis/data/Image.js'
-import { getUserById, getImageMeta } from '@backend/database/queries.js'
+import type { User } from '@backend/database/deprecated/data/User.js'
+import type { Image as ImageMeta } from '@backend/database/deprecated/data/Image.js'
+import { getUserById, getImageMeta } from '@backend/database/deprecated/queries.js'
 
 import { authGuardAccessToken } from './middleware/auth/jwt.js'
 

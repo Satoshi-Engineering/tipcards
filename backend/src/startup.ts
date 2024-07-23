@@ -4,9 +4,8 @@ import type { Socket } from 'net'
 import path from 'path'
 
 import { initSocketIo } from '@backend/api/auth.js'
-import { initDatabase } from '@backend/database/index.js'
+import Database from '@backend/database/Database.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
-import { initAllWorkers } from '@backend/worker/index.js'
 import app from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
@@ -29,14 +28,11 @@ export const startup = async () => {
 const startupApplication = async () => {
   console.info(`${APP_NAME} starting`)
 
-  await initDatabase()
+  await Database.init()
   console.info(' - Database connected')
 
   await loadCoarsWhitelist()
   console.info(' - CORS whitelist loaded')
-
-  initAllWorkers()
-  console.info(' - cron workers initialized')
 
   const server = app.listen(EXPRESS_PORT, async () => {
     console.info(` - app running and listening on port ${EXPRESS_PORT}`)

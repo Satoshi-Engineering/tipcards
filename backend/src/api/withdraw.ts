@@ -4,8 +4,8 @@ import type { Card } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
 
-import { cardApiFromCardRedis } from '@backend/database/redis/transforms/cardApiFromCardRedis.js'
-import { getCardByHash } from '@backend/database/queries.js'
+import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
+import { getCardByHash } from '@backend/database/deprecated/queries.js'
 import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_ORIGIN } from '@backend/constants.js'
 

@@ -2,8 +2,8 @@ import { Router, type Request, type Response } from 'express'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
-import type { BulkWithdraw } from '@backend/database/redis/data/BulkWithdraw.js'
-import { getBulkWithdrawById, updateBulkWithdraw, getCardByHash, updateCard } from '@backend/database/queries.js'
+import type { BulkWithdraw } from '@backend/database/deprecated/data/BulkWithdraw.js'
+import { getBulkWithdrawById, updateBulkWithdraw, getCardByHash, updateCard } from '@backend/database/deprecated/queries.js'
 import { isBulkWithdrawWithdrawn } from '@backend/services/lnbitsHelpers.js'
 
 const router = Router()

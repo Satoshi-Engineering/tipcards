@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { initDatabase, closeDatabaseConnections } from '@backend/database/index.js'
+import Database from '@backend/database/Database.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import { setRouter } from '@backend/trpc/router/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -30,7 +30,7 @@ const cardHash2 = cardData.generateCardHashForSet(setWithCards.id, 1)
 const setWithSetFunding = setData.generateSet()
 
 beforeAll(async () => {
-  await initDatabase()
+  await Database.init()
 
   await frontend.createSetFundingInvoice(setIdForSetWithFundingInvoice, 100, [0, 1])
 
@@ -52,7 +52,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-  await closeDatabaseConnections()
+  await Database.closeConnectionIfExists()
 })
 
 describe('TRpc Router Set', () => {

@@ -5,12 +5,12 @@ import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
-import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
 import {
   getSetById, getSetsByUserId,
   createSet, deleteSet, updateSet,
   createCard, deleteCard, getCardByHash,
-} from '@backend/database/queries.js'
+} from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'

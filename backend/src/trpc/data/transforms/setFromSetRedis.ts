@@ -1,6 +1,6 @@
 import { Set } from '@shared/data/trpc/Set.js'
 
-import type { Set as SetRedis } from '@backend/database/redis/data/Set.js'
+import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
 
 export const setFromSetRedis = (set: SetRedis) => Set.parse({
   id: set.id,
