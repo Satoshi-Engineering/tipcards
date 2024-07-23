@@ -28,7 +28,7 @@
     "e2e-tests": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/tests/**/*.test.ts'",
     "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview http://localhost:5050 'npm run e2e-tests'",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
-    "drizzle-create-migration-files": "drizzle-kit generate --config=backend/drizzle.config.ts",
+    "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
     "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts"
   },
   "dependencies": {
