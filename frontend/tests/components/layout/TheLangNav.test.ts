@@ -48,7 +48,7 @@ describe('TheLangNav', () => {
     expect(wrapper.emitted('itemSelected')).toBeTruthy()
   })
 
-  it('On mouse over the lang nav item should be underline', async () => {
+  it('check if lang nav items have underline on hover', async () => {
     const wrapper = mount(TheLangNav, {
       props: {
         locales,
@@ -59,7 +59,6 @@ describe('TheLangNav', () => {
     const routerLinks = wrapper.findAll('li > a')
     routerLinks.forEach(async (routerLink) => {
       expect(routerLink.classes()).not.toContain('underline')
-      await routerLink.trigger('mouseover')
       expect(routerLink.classes()).toContain('hover:underline')
     })
   })
