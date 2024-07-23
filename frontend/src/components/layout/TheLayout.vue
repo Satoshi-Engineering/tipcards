@@ -3,8 +3,6 @@
     <slot name="header">
       <TheHeader
         class="print:hidden"
-        :current-locale="currentLocale"
-        :locales="locales"
       />
     </slot>
     <div class="flex-1">
@@ -27,20 +25,11 @@ import type { PropType } from 'vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheMostRelevantFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
-import type { Locales } from '@/modules/langNav/Locales'
 
 defineProps({
   hideFAQs: {
     type: Boolean,
     default: false,
-  },
-  locales: {
-    type: Array as PropType<Locales>,
-    default: () => [],
-  },
-  currentLocale: {
-    type: String,
-    default: '',
   },
   faqs: {
     type: Array as PropType<{ question: string, answer: string }[]>,

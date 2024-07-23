@@ -39,8 +39,6 @@
     </CenterContainer>
     <TheLangNav
       v-if="activeMenu === 'language'"
-      :locales="locales"
-      :current-locale="currentLocale"
       class="absolute top-full"
       @item-selected="onMenuItemSelected"
     />
@@ -49,7 +47,7 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ref, watch, type PropType } from 'vue'
+import { ref, watch } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
@@ -57,19 +55,7 @@ import TheMainNav from '@/components/layout/TheMainNav.vue'
 import IconWorld from '@/components/svgs/IconWorld.vue'
 import IconClose from '@/components/svgs/IconClose.vue'
 import IconLogo from '@/components/svgs/IconLogo.vue'
-import type { Locales } from '@/modules/langNav/Locales'
 import { usePageScroll } from '@/modules/usePageScroll'
-
-defineProps({
-  locales: {
-    type: Array as PropType<Locales>,
-    default: () => [],
-  },
-  currentLocale: {
-    type: String,
-    default: '',
-  },
-})
 
 const activeMenu = ref<'none'|'language'|'main'>('none')
 const onMenuItemSelected = () => {

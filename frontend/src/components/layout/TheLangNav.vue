@@ -24,22 +24,14 @@
 
 <script setup lang="ts">
 
-import { type PropType } from 'vue'
+import { ref } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import type { Locales } from '@/modules/langNav/Locales'
+import { useI18nHelpers, LOCALES } from '@/modules/initI18n'
+
+const { currentLocale } = useI18nHelpers()
+const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
 
 const emit = defineEmits(['itemSelected'])
-
-defineProps({
-  locales: {
-    type: Array as PropType<Locales>,
-    default: () => [],
-  },
-  currentLocale: {
-    type: String,
-    default: '',
-  },
-})
 
 </script>

@@ -1,7 +1,5 @@
 <template>
   <TheLayout
-    :locales="locales"
-    :current-locale="currentLocale"
     :faqs="[{
       question: 'What is the purpose of this page? (This is just for testing as I need a multi line question)',
       answer: 'To showcase the style guide of the Lightning TipCards.',
@@ -143,8 +141,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { LOCALES, useI18nHelpers } from '@/modules/initI18n'
-
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -169,6 +165,4 @@ const onDummyLoading = async () => {
   dummyLoading.value = false
 }
 
-const { currentLocale } = useI18nHelpers()
-const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
 </script>
