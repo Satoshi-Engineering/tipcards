@@ -15,7 +15,9 @@
       <IconCaretDown v-else class="w-4" />
     </span>
     <div>
-      <span>{{ question }}</span>
+      <button class="appearance-none text-start">
+        {{ question }}
+      </button>
       <div
         class="
           overflow-hidden
