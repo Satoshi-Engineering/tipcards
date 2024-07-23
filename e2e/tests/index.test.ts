@@ -1,5 +1,7 @@
 // https://on.cypress.io/api
 
+import { urlWithOptionalTrailingSlash } from './lib/urlHelpers'
+
 const tipCards = new URL(Cypress.env('TIPCARDS_ORIGIN'))
 
 const urlWithOptionalTrailingSlash = (url: URL) => new RegExp(`${url}(\\/)?$`)
