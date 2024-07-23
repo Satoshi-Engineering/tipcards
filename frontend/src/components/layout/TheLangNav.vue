@@ -12,6 +12,7 @@
             :hreflang="locale.code"
             rel="alternate"
             class="block py-3 pl-4 text-lg hover:underline"
+            :data-test="`the-lang-nav-item-${locale.code}`"
             @click="() => emit('itemSelected')"
           >
             {{ locale.name }}
@@ -27,7 +28,8 @@
 import { ref } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import { useI18nHelpers, LOCALES } from '@/modules/initI18n'
+import { useI18nHelpers } from '@/modules/initI18n'
+import LOCALES from '@shared/modules/i18n/locales'
 
 const { currentLocale } = useI18nHelpers()
 const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))

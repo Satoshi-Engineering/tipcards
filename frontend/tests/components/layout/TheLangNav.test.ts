@@ -2,7 +2,8 @@ import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import TheLangNav from '@/components/layout/TheLangNav.vue'
-import { useI18nHelpers, LOCALES } from '@/modules/initI18n'
+import { useI18nHelpers } from '@/modules/initI18n'
+import LOCALES from '@shared/modules/i18n/locales'
 
 import '../../mocks/router'
 import '../../mocks/i18n'

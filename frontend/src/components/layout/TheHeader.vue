@@ -9,6 +9,7 @@
     <CenterContainer class="flex items-center">
       <RouterLink
         :to="{ name: 'home', params: { lang: $route.params.lang } }"
+        data-test="the-header-home-button"
         class="me-auto flex flex-row items-center"
       >
         <IconLogo />

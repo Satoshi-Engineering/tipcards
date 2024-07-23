@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } from 'vue-router'
 
-import i18n, { LOCALES } from '@/modules/initI18n'
+import i18n from '@/modules/initI18n'
+import LOCALES from '@shared/modules/i18n/locales'
 
 const PageIndex = () => import('@/pages/PageIndex.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
