@@ -34,6 +34,20 @@ describe('TheLangNav', () => {
     })
   })
 
+  it('emits the itemSelected event on lang nav item click', async () => {
+    const wrapper = mount(TheLangNav, {
+      props: {
+        locales,
+        currentLocale: locales[activeLocalIndex].code,
+      },
+    })
+
+    const routerLinks = wrapper.findAll('li > a')
+    expect(wrapper.emitted('itemSelected')).toBeFalsy()
+    await routerLinks[routerLinks.length - 1].trigger('click')
+    expect(wrapper.emitted('itemSelected')).toBeTruthy()
+  })
+
   it('On mouse over the lang nav item should be underline', async () => {
     const wrapper = mount(TheLangNav, {
       props: {
