@@ -16,9 +16,8 @@
     </span>
     <div>
       <span>{{ question }}</span>
-      <ParagraphDefault
+      <div
         class="
-          !m-0 pt-4
           overflow-hidden
           transition-[height,opacity] ease-in duration-200
         "
@@ -26,9 +25,12 @@
           'h-0 opacity-0': !active,
           'h-[calc-size(auto)] opacity-100': active,
         }"
+        data-test="most-relevant-faq-answer"
       >
-        {{ answer }}
-      </ParagraphDefault>
+        <ParagraphDefault class="!mt-4">
+          {{ answer }}
+        </ParagraphDefault>
+      </div>
     </div>
   </li>
 </template>
