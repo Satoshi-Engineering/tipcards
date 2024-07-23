@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../mocks/process.env.js'
-import '../mocks/client.js'
-import { addData } from '../mocks/database.js'
+import '../../mocks/database/client.js'
+import { addData } from '../../mocks/database/database.js'
 
 import { getLandingPage } from '@backend/database/deprecated/queries.js'
 import {

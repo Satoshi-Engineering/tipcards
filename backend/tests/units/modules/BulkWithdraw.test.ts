@@ -1,37 +1,67 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, assert } from 'vitest'
 
-import '../mocks/process.env.js'
+import '../mocks/database/client.js'
+import {
+  addSets,
+  addCards, addCardVersions,
+  addInvoices, addCardVersionInvoices,
+  addLnurlPs, addLnurlWs,
+} from '../mocks/database/database.js'
 import '../mocks/axios.js'
-import { addBulkWithdraws, addCards, addSets } from '../mocks/redis.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
+import {
+  createSet, createCardForSet,
+  createCard, createCardVersion,
+  createInvoice,
+  createLnurlP, createLnurlW,
+} from '../../drizzleData.js'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'
 import BulkWithdraw from '@backend/modules/BulkWithdraw.js'
 import CardCollection from '@backend/modules/CardCollection.js'
 
-import { SET_EMPTY } from '../data/EmptySet.js'
-import { SET_FUNDED, CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP, BULK_WITHDRAW } from '../data/FundedSetWithBulkWithdraw.js'
-import { CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP } from '../data/SetWithUnfundedCards.js'
-
 describe('BulkWithdraw', () => {
-  it('should throw an error if not initialized', async () => {
-    addSets(SET_EMPTY)
-    const cards = await CardCollection.fromSetId(SET_EMPTY.id)
+  it('should throw an error if not created', async () => {
+    const set = createSet()
+    addSets(set)
+    const cards = await CardCollection.fromSetId(set.id)
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await expect(() => bulkWithdraw.toTRpcResponse()).rejects.toThrow(Error)
   })
 
   it('should throw an error if not funded', async () => {
-    addCards(CARD_UNFUNDED_INVOICE, CARD_UNFUNDED_LNURLP)
-    const cards = await CardCollection.fromCardHashes([CARD_UNFUNDED_INVOICE.cardHash, CARD_UNFUNDED_LNURLP.cardHash])
+    const card1 = createCard()
+    const card2 = createCard()
+    addCards(card1, card2)
+    addCardVersions(createCardVersion(card1), createCardVersion(card2))
+
+    const cards = await CardCollection.fromCardHashes([card1.hash, card2.hash])
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await expect(() => bulkWithdraw.create()).rejects.toThrow(CardNotFundedError)
   })
 
   it('should create a new bulkWithdraw for a funded set', async () => {
-    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
-    addSets(SET_FUNDED)
-    const cards = await CardCollection.fromSetId(SET_FUNDED.id)
+    const set = createSet()
+    const card1 = createCardForSet(set, 0)
+    const cardVersion1 = createCardVersion(card1)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionsHaveInvoice1 } = createInvoice(100, cardVersion1)
+    invoice1.paid = new Date()
+    const card2 = createCardForSet(set, 1)
+    const cardVersion2 = createCardVersion(card2)
+    const lnurlp = createLnurlP(cardVersion2)
+    lnurlp.finished = new Date()
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionsHaveInvoice2 } = createInvoice(200, cardVersion2)
+    invoice2.paid = new Date()
+    addSets(set)
+    addCards(card1, card2)
+    addCardVersions(cardVersion1, cardVersion2)
+    addInvoices(invoice1, invoice2)
+    addCardVersionInvoices(...cardVersionsHaveInvoice1, ...cardVersionsHaveInvoice2)
+    addLnurlPs(lnurlp)
+
+    const cards = await CardCollection.fromSetId(set.id)
     const bulkWithdraw = BulkWithdraw.fromCardCollection(cards)
     await bulkWithdraw.create()
     const apiData = await bulkWithdraw.toTRpcResponse()
@@ -41,9 +71,28 @@ describe('BulkWithdraw', () => {
   })
 
   it('should delete a bulkwithdraw', async () => {
-    addCards(CARD_FUNDED_INVOICE, CARD_FUNDED_LNURLP)
-    addBulkWithdraws(BULK_WITHDRAW)
-    const bulkWithdraw = await BulkWithdraw.fromId(BULK_WITHDRAW.id)
+    const set = createSet()
+    const card1 = createCardForSet(set, 0)
+    const cardVersion1 = createCardVersion(card1)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionsHaveInvoice1 } = createInvoice(100, cardVersion1)
+    invoice1.paid = new Date()
+    const card2 = createCardForSet(set, 1)
+    const cardVersion2 = createCardVersion(card2)
+    const lnurlp = createLnurlP(cardVersion2)
+    lnurlp.finished = new Date()
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionsHaveInvoice2 } = createInvoice(200, cardVersion2)
+    invoice2.paid = new Date()
+    const lnurlw = createLnurlW(cardVersion1, cardVersion2)
+    addSets(set)
+    addCards(card1, card2)
+    addCardVersions(cardVersion1, cardVersion2)
+    addInvoices(invoice1, invoice2)
+    addCardVersionInvoices(...cardVersionsHaveInvoice1, ...cardVersionsHaveInvoice2)
+    addLnurlPs(lnurlp)
+    addLnurlWs(lnurlw)
+
+    assert(lnurlw.bulkWithdrawId, 'lnurlw should be a bulkWithdraw')
+    const bulkWithdraw = await BulkWithdraw.fromId(lnurlw.bulkWithdrawId)
     const apiData = await bulkWithdraw.toTRpcResponse()
     expect(apiData.amount).toBe(300)
     expect(apiData.cards.length).toBe(2)

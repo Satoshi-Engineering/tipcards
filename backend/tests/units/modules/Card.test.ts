@@ -1,30 +1,43 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeAll } from 'vitest'
 
-import '../mocks/process.env.js'
+import '../mocks/database/client.js'
+import { addData } from '../mocks/database/database.js'
 import '../mocks/axios.js'
-import { addCards } from '../mocks/redis.js'
-
-import { CARD_FUNDED_INVOICE } from '../data/FundedSetWithBulkWithdraw.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
+import {
+  createCard, createCardVersion,
+  createInvoice,
+} from '../../drizzleData.js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import Card from '@backend/modules/Card.js'
 
-beforeEach(() => {
-  addCards(CARD_FUNDED_INVOICE)
+const card = createCard()
+const cardVersion = createCardVersion(card)
+const { invoice, cardVersionsHaveInvoice } = createInvoice(100, cardVersion)
+invoice.paid = new Date()
+beforeAll(() => {
+  addData({
+    cards: [card],
+    cardVersions: [cardVersion],
+    invoices: [invoice],
+    cardVersionInvoices: cardVersionsHaveInvoice,
+  })
 })
 
 describe('Card', () => {
   it('should load a card from cardHash', async () => {
-    const card = await Card.fromCardHash(CARD_FUNDED_INVOICE.cardHash)
-    const data = await card.toTRpcResponse()
-    expect(data.hash).toBe(CARD_FUNDED_INVOICE.cardHash)
+    const cardLocal = await Card.fromCardHash(card.hash)
+    const data = await cardLocal.toTRpcResponse()
+    expect(data.hash).toBe(card.hash)
     expect(data.invoice).not.toBeNull()
   })
 
   it('should load a card from cardHash, not default if it exists', async () => {
-    const card = await Card.fromCardHashOrDefault(CARD_FUNDED_INVOICE.cardHash)
-    const data = await card.toTRpcResponse()
-    expect(data.hash).toBe(CARD_FUNDED_INVOICE.cardHash)
+    const cardLocal = await Card.fromCardHashOrDefault(card.hash)
+    const data = await cardLocal.toTRpcResponse()
+    expect(data.hash).toBe(card.hash)
     expect(data.invoice).not.toBeNull()
   })
 

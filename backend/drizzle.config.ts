@@ -2,7 +2,6 @@ import { defineConfig } from 'drizzle-kit'
 
 import './src/initEnv.js' // Needed for the drizzle-kit generate:mysql command
 
-
 export const SCHEMA_PATH = './backend/src/database/schema/*'
 
 export const MIGRATIONS_FOLDER = './backend/database/drizzle/migrations'

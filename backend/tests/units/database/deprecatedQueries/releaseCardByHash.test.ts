@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest'
 
 import assert from 'assert'
 import '../../mocks/process.env.js'
-import '../mocks/client.js'
+import '../../mocks/database/client.js'
 import { lockCardByHash, releaseCardByHash } from '@backend/database/deprecated/queries.js'
 import { createCard } from '../../../drizzleData.js'
-import { addCards } from '../mocks/database.js'
+import { addCards } from '../../mocks/database/database.js'
 
 describe('releaseCardByHash', () => {
   it('should release card by hash, which was locked', async () => {

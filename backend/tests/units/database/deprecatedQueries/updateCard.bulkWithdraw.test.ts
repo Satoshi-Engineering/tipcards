@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
 
 import '../../mocks/process.env.js'
-import { queries } from '../mocks/client.js'
-import { addData } from '../mocks/database.js'
+import { queries } from '../../mocks/database/client.js'
+import { addData } from '../../mocks/database/database.js'
 
 import { updateCard } from '@backend/database/deprecated/queries.js'
 import { dateToUnixTimestamp, dateOrNullToUnixTimestamp } from '@backend/database/deprecated/transforms/dateHelpers.js'

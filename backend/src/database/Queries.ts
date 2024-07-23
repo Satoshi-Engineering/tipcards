@@ -16,7 +16,6 @@ import {
   LandingPage, UserCanUseLandingPage,
 } from '@backend/database/schema/index.js'
 
-
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
   typeof import('@backend/database/schema/index.js'),
