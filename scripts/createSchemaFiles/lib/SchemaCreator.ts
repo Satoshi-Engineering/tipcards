@@ -91,11 +91,14 @@ export class SchemaCreator {
     usedTypes.unshift('pgTable')
 
     fileData += `import { ${usedTypes.join(', ')} } from 'drizzle-orm/pg-core'\n`
+    if (tableImports.length > 0 || enumImports.length > 0) {
+      fileData += '\n'
+    }
     tableImports.forEach(table => {
-      fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}'\n`
+      fileData += `import { ${translateDrizzleObjectName(table)} } from './${translateFileName(table)}.js'\n`
     })
     enumImports.forEach(enumName => {
-      fileData += `import { ${translateEnumFunctionName(enumName)} } from './${ENUM_DIR_NAME}/${translateFileName(enumName)}'\n`
+      fileData += `import { ${translateEnumFunctionName(enumName)} } from './${ENUM_DIR_NAME}/${translateFileName(enumName)}.js'\n`
     })
 
     fileData+= '\n'

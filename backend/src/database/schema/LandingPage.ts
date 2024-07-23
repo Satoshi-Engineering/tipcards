@@ -1,4 +1,5 @@
 import { pgTable, varchar, text } from 'drizzle-orm/pg-core'
+
 import { landingPageType } from './enums/LandingPageType.js'
 
 export const LandingPage = pgTable('LandingPage', {

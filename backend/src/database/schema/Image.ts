@@ -1,4 +1,5 @@
 import { pgTable, varchar, text } from 'drizzle-orm/pg-core'
+
 import { imageType } from './enums/ImageType.js'
 
 export const Image = pgTable('Image', {

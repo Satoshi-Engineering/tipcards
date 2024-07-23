@@ -1,4 +1,5 @@
 import { pgTable, varchar, timestamp } from 'drizzle-orm/pg-core'
+
 import { Set } from './Set.js'
 
 export const Card = pgTable('Card', {

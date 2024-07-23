@@ -1,4 +1,5 @@
 import { pgTable, index, varchar, text } from 'drizzle-orm/pg-core'
+
 import { User } from './User.js'
 
 export const AllowedRefreshTokens = pgTable('AllowedRefreshTokens', {

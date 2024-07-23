@@ -8,7 +8,7 @@ export function writeIndexFile(directory: string) {
     if (file === 'index.ts') { continue }
 
     const fileName = file.split('.')[0]
-    fileData += `export { ${fileName} } from './${fileName}'\n`
+    fileData += `export { ${fileName} } from './${fileName}.js'\n`
   }
 
   fs.writeFileSync(`${directory}/index.ts`, fileData)

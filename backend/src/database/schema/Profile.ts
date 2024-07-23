@@ -1,4 +1,5 @@
 import { pgTable, varchar, text } from 'drizzle-orm/pg-core'
+
 import { User } from './User.js'
 
 export const Profile = pgTable('Profile', {

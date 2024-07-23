@@ -1,4 +1,5 @@
 import { pgTable, primaryKey, varchar, boolean } from 'drizzle-orm/pg-core'
+
 import { User } from './User.js'
 import { Image } from './Image.js'
 
