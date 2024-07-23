@@ -4,12 +4,44 @@ variables:
   POSTGRES_USER: tipcards
   POSTGRES_PASSWORD: thisisonlyusedinthepipeline
 
-test-integration:
+test-backend-integration:
+  services:
+    - name: postgres:16.3
+      alias: postgres
+  stage: integration-and-e2e
+  rules:
+    - !reference [.shared_config, rules, no_tags]
+    - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  variables:
+    NODE_ENV: test
+  script:
+    - |
+      if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
+      then 
+        echo "Running on main branch"
+        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
+      elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
+      then
+        echo "Running on develop branch"
+        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
+      else
+        echo "Running on feature branch"
+        cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
+      fi
+    - echo "Running database migration to prepare database for backend integration tests"
+    - npm run drizzle-migrate -- --envIntegrationTest
+    - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
+    - sh backend-integration-tests.sh
+
+test-e2e:
   image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   services:
     - name: postgres:16.3
       alias: postgres
-  stage: integration
+  stage: integration-and-e2e
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
@@ -35,9 +67,9 @@ test-integration:
         cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
         cp $FRONTEND_ENV_FILE_TEST_FEATURE e2e/.env.test.local
       fi
-    - echo "Running database migration to prepare database for integration tests"
+    - echo "Running database migration to prepare database for e2e tests"
     - npm run drizzle-migrate -- --envIntegrationTest
     - echo "Installing cypress"
     - npx cypress install
-    - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
-    - sh integration-tests.sh
+    - echo "Running e2e tests on branch $CI_COMMIT_BRANCH"
+    - sh e2e-tests.sh

@@ -34,19 +34,8 @@ if [ "$INTEGRATION_TEST_EXIT_CODE" -ne 0 ]; then
   echo 'Backend integration tests failed! Printing backend.log ------ START'
   cat backend.log
   echo 'Backend integration tests failed! Printing backend.log ------ END'
-  rm backend.log
   exit $INTEGRATION_TEST_EXIT_CODE
 fi
 
 echo 'Backend integration tests finished, running frontend integration tests'
-npm run e2e-tests-with-frontend-build
-INTEGRATION_TEST_EXIT_CODE=$?
-
 kill_proc $BACKEND_PID
-if [ "$INTEGRATION_TEST_EXIT_CODE" -ne 0 ]; then
-  echo 'Frontend integration tests failed! Printing backend.log ------ START'
-  cat backend.log
-  echo 'Frontend integration tests failed! Printing backend.log ------ END'
-fi
-rm backend.log
-exit $INTEGRATION_TEST_EXIT_CODE

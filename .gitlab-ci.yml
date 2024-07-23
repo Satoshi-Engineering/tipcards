@@ -36,8 +36,8 @@ image: node:lts-alpine
 stages:
   - install
   - setup
-  - test
-  - integration
+  - quality-check
+  - integration-and-e2e
   - build
   - deploy
   - live-check
@@ -47,8 +47,8 @@ include:
   - 'gitlab-ci/.shared_config.yml'
   - 'gitlab-ci/install.yml'
   - 'gitlab-ci/setup.yml'
-  - 'gitlab-ci/test.yml'
-  - 'gitlab-ci/integration.yml'
+  - 'gitlab-ci/quality-check.yml'
+  - 'gitlab-ci/integration-and-e2e.yml'
   - 'gitlab-ci/build.yml'
   - 'gitlab-ci/deploy.yml'
   - 'gitlab-ci/live-check.yml'
