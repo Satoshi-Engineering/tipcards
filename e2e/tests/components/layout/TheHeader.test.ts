@@ -10,4 +10,14 @@ describe('TheHeader', () => {
     cy.get('header button').first().click()
     cy.get('header nav').should('not.exist')
   })
+
+  it('click on a lang nav menu item should close the lang nav', () => {
+    cy.visit(new URL('/en/style-guide', tipCards).href)
+    cy.get('header nav').should('not.exist')
+    cy.get('header button').first().click()
+    cy.get('header nav').should('exist')
+    cy.get('header nav').contains('Deutsch').should('exist')
+    cy.get('header nav a[href$=\'de/style-guide\']').first().click()
+    cy.get('header nav').should('not.exist')
+  })
 })
