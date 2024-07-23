@@ -16,6 +16,7 @@
       <button
         v-if="activeMenu === 'none'"
         class="hover:text-yellow w-6 h-6 "
+        data-test="the-header-lang-button"
         @click="activeMenu = 'language'"
       >
         <IconWorld />
@@ -30,6 +31,7 @@
       <button
         v-if="activeMenu !== 'none'"
         class="hover:text-yellow w-6 h-6 "
+        data-test="the-header-close-button"
         @click="activeMenu = 'none'"
       >
         <IconClose />

@@ -1,5 +1,5 @@
 <template>
-  <nav class="w-full bg-white animate-fade-in">
+  <nav class="w-full bg-white animate-fade-in" data-test="the-lang-nav">
     <CenterContainer class="h-[calc(100dvh-56px)] overflow-y-auto">
       <ul>
         <li
