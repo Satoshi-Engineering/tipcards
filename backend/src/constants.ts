@@ -70,11 +70,6 @@ export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || un
 
 /////
 // LNURL JWT AUTH
-let JWT_AUTH_ORIGIN = TIPCARDS_API_ORIGIN
-if (typeof process.env.JWT_AUTH_ORIGIN === 'string' && process.env.JWT_AUTH_ORIGIN.length > 0) {
-  JWT_AUTH_ORIGIN = process.env.JWT_AUTH_ORIGIN
-}
-
 const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
 
 let JWT_AUTH_ISSUER = new URL(TIPCARDS_API_ORIGIN).host
@@ -97,6 +92,17 @@ if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AU
   }
 }
 
+let LNURL_SERVICE_ORIGIN: string
+try {
+  LNURL_SERVICE_ORIGIN = z.string().parse(process.env.LNURL_SERVICE_ORIGIN)
+} catch (error) {
+  console.error(ErrorCode.UnableToParseEnvVar, {
+    error,
+    constant: 'LNURL_SERVICE_ORIGIN',
+    envValue: process.env.LNURL_SERVICE_ORIGIN,
+  })
+}
+
 const LNURL_AUTH_DEBUG = process.env.LNURL_AUTH_DEBUG === '1'
 
 /////
@@ -104,9 +110,9 @@ const LNURL_AUTH_DEBUG = process.env.LNURL_AUTH_DEBUG === '1'
 if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
   TIPCARDS_ORIGIN = process.env.NGROK_OVERRIDE
   TIPCARDS_API_ORIGIN = process.env.NGROK_OVERRIDE
-  JWT_AUTH_ORIGIN = process.env.NGROK_OVERRIDE
   JWT_AUTH_ISSUER = new URL(process.env.NGROK_OVERRIDE).host
   JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
+  LNURL_SERVICE_ORIGIN = process.env.NGROK_OVERRIDE
 }
 
 ////
@@ -132,7 +138,7 @@ export {
   TIPCARDS_API_ORIGIN,
   CORS_WHITELIST_EXTEND,
   CROSS_ORIGIN_RESOURCES,
-  JWT_AUTH_ORIGIN,
+  LNURL_SERVICE_ORIGIN,
   JWT_AUTH_KEY_DIRECTORY,
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,

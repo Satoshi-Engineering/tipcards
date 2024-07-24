@@ -17,9 +17,8 @@ import {
   createAccessToken, createRefreshToken,
 } from '@backend/services/jwt.js'
 import {
-  LNURL_PORT,
+  LNURL_PORT, LNURL_SERVICE_ORIGIN,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
-  JWT_AUTH_ORIGIN,
   LNURL_AUTH_DEBUG,
 } from '@backend/constants.js'
 
@@ -36,7 +35,7 @@ const loggedIn: Record<string, string> = {}
 const lnurlServer = lnurl.createServer({
   host: 'localhost',
   port: LNURL_PORT,
-  url: JWT_AUTH_ORIGIN,
+  url: LNURL_SERVICE_ORIGIN,
   lightning: {
     backend: 'lnbits',
     config: {
