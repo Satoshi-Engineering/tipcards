@@ -2,12 +2,12 @@ import { defineConfig } from 'cypress'
 import { config } from 'dotenv'
 
 config({
-  path: './.env.test',
+  path: './.env',
   override: true, // we want to make sure that our configured values are always used
 })
 
 config({
-  path: './.env.test.local',
+  path: './.env.local',
   override: true, // we want to make sure that our configured values are always used
 })
 

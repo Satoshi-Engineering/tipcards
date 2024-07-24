@@ -15,11 +15,9 @@ live-check:
     NODE_ENV: test
   script:
     - |
-      if [ "$CI_COMMIT_BRANCH" == "main" ]
-      then 
+      if [ "$CI_COMMIT_BRANCH" == "main" ]; then
         cp $E2E_LIVE_CHECK_MAIN e2e/.env.local
-      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
-      then
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]; then
         echo "Running on develop branch"
         cp $E2E_LIVE_CHECK_DEVELOP e2e/.env.local
       else

@@ -19,13 +19,11 @@ deploy-backend:
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
   script:
     - | 
-      if [ "$CI_COMMIT_BRANCH" == "main" ]
-      then
+      if [ "$CI_COMMIT_BRANCH" == "main" ]; then
         echo "Deploying on Environment Main"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_MAIN
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_MAIN
-      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
-      then
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]; then
         echo "Deploying on Environment Develop"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_DEVELOP
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_DEVELOP
@@ -96,13 +94,11 @@ deploy-frontend:
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
   script:
     - |  
-      if [ "$CI_COMMIT_BRANCH" == "main" ]
-      then 
+      if [ "$CI_COMMIT_BRANCH" == "main" ]; then 
         echo "Deploying on Environment Main"
         export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_MAIN
         export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_MAIN
-      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
-      then
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ]; then
         echo "Deploying on Environment Develop"
         export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_DEVELOP
         export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_DEVELOP
