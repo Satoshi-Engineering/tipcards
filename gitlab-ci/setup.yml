@@ -3,15 +3,13 @@ setup-backend-env:
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, deployable_branches]
-    - !reference [.shared_config, rules, web_and_push_and_schedule]
-    - !reference [.shared_config, rules, nightly_integration]
+    - !reference [.shared_config, rules, web_and_push]
     - when: on_success
   cache:
     key: backend-env-$CI_COMMIT_BRANCH
     paths:
-      - backend/.env
       - backend/.env.local
-    policy: pull-push
+    policy: push
   script:
     # get the .env variables for the environment
     - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$BACKEND_ENV_FILE_MAIN; fi
@@ -52,15 +50,15 @@ setup-backend-env:
 setup-frontend-env:
   stage: setup
   rules:
+    - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - !reference [.shared_config, rules, deployable_branches]
     - when: always
   cache:
     key: frontend-env-$CI_COMMIT_BRANCH
     paths:
-      - frontend/.env
       - frontend/.env.local
-    policy: pull-push
+    policy: push
   script:
     # get the .env variables for the environment
     - if [ "$CI_COMMIT_BRANCH" == "main" ]; then export ENV_FILE=$FRONTEND_ENV_FILE_MAIN; fi
