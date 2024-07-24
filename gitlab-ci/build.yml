@@ -12,7 +12,6 @@ build-backend:
     paths:
       - dist
   script:
-    - npm run shared-build
     - npm run backend-build
     - cp -r backend/database dist/backend/.
     - cp -r node_modules dist/.

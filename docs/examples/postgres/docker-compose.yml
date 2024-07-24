@@ -1,0 +1,15 @@
+name: postgres
+
+services:
+  postgres:
+    image: postgres:16.3
+    container_name: postgres
+    restart: unless-stopped
+    shm_size: 128mb
+    env_file:
+      - .postgres.env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    ports:
+      - 127.0.0.1:5432:5432

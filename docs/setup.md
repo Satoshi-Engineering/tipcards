@@ -52,32 +52,33 @@ sudo ln -s /snap/bin/certbot /usr/bin/certbot
 
 # Install TipCards application
 
-1. Clone git project  
+1. Clone git project
 **Attention:** if you run everything directly as root, make sure to switch to another directory than `/root` (e.g. `/opt`), otherwise nginx cannot access your source files later on.
 ```bash
-git clone https://github.com/Satoshi-Engineering/tip-cards.git
+sudo mkdir /opt/tip-cards
+sudo chown $(id -u):$(id -g) /opt/tip-cards
+cd /opt/tip-cards
+git clone https://github.com/Satoshi-Engineering/tip-cards.git .
 ```
 
 2. Install the database
 ```bash
-cp -r tip-cards/docs/examples/redis/ .
-cp redis/.env.example redis/.env
-# change REDIS_PASSPHRASE, REDISCMD_USER and REDISCMD_PASSWORD
-# attention: do not use special chars and not more than 24 chars as nodejs redis client cannot handle it
-# it won't be reachable from outside anyways
-vi redis/.env
-cd redis
+sudo mkdir /opt/postgres
+sudo chown $(id -u):$(id -g) /opt/postgres
+cp -r /opt/tip-cards/docs/examples/postgres/* /opt/postgres/.
+cd /opt/postgres
+# change POSTGRES_PASSWORD and POSTGRES_NON_ROOT_PROJECT_USER_PASSWORD
+vi .postgres.env
 sudo docker compose up -d
-cd ..
 ```
 
-3. Create a wallet in the lnbits instance you want to use (probably https://legend.lnbits.com)
+3. Create a wallet in the lnbits instance you want to use (probably https://lnbits.com)
   * go to https://lnbits.com
-    * there you can either create an account an launch your own lnbits (https://my.lnbits.com)
+    * there you can either create an account and launch your own lnbits (https://my.lnbits.com)
     * or try out the lnbits demo server: https://demo.lnbits.com
   * enter a name for your wallet and click "add a new wallet"
   * make sure to save the link (e.g. in your bookmarks) as this is where your TipCards' sats will go
-  * click on "Node URL, API keys and Api docs" to the right and note "Admin key" and "Invoice/read key"
+  * click on "Node URL, API keys and Api docs" to the right and note "Admin key" and "Invoice/read key" for LNBITS_ADMIN_KEY and LNBITS_INVOICE_READ_KEY later
   * go to "extensions" and enable "LNURLp" and "withdraw" extensions
   * HINT: create an invoice and put some sats into the wallet, as withdrawing funded TipCards can cost some sats for routing fees
 
@@ -89,19 +90,19 @@ npm ci
 npm run backend-build
 cp -r backend/database dist/backend/.
 cp -r node_modules dist/.
-cp backend/deploy/tsconfig.json dist/.
+cp backend/deploy/package.json dist/.
 cp backend/deploy/ecosystem.config.cjs dist/.
-cp backend/.env dist/.env.local
-# change REDIS_PASSPHRASE to the passphrase you set earlier
-# change TIPCARDS_ORIGIN and TIPCARDS_API_ORIGIN to the domain name (including protocol) that your tip-cards instance will run at
-# e.g. https://my.tip-cards.custom
-# udpate LNBITS_ORIGIN
-#   * either your custom instance: https://dynamicallyGenereatedWord.lnbits.com/
-#   * or lnbits demo server: https://demo.lnbits.com
-# add the "Admin key" from the previous step to LNBITS_ADMIN_KEY
-# add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
+cp backend/.env dist/.
+# set the following variables in .env.local:
+# POSTGRES_HOST=localhost
+# POSTGRES_PASSWORD=<the-password-you-defined-in-postgres-env-before>
+# TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+# TIPCARDS_API_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+# LNBITS_ORIGIN=https://demo.lnbits.com
+# LNBITS_INVOICE_READ_KEY=<see-above>
+# LNBITS_ADMIN_KEY=<see-above>
 vi dist/.env.local
-cd backend
+cd dist
 pm2 start ecosystem.config.cjs
 pm2 startup
 # Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
@@ -119,7 +120,7 @@ npm run frontend-build
 sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
 sudo mkdir -p /var/www/tip-cards
-sudo ln -s `pwd`/dist/frontend /var/www/tip-cards/www
+sudo ln -s /opt/tip-cards/dist/frontend /var/www/tip-cards/www
 sudo chown -R www-data:www-data /var/www/tip-cards
 # make sure www-data can read your TipCards files
 # e.g. if you installed the TipCards project directly as root then it probably cannot access /root/tip-cards
