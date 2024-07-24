@@ -63,7 +63,7 @@ git clone https://github.com/Satoshi-Engineering/tip-cards.git .
 ```bash
 sudo mkdir /opt/postgres
 sudo chown $(id -u):$(id -g) /opt/postgres
-cp -r /opt/tip-cards/docs/examples/postgres/* /opt/postgres/.
+cp -r /opt/tip-cards/docs/examples/postgres/. /opt/postgres/.
 cd /opt/postgres
 # change POSTGRES_PASSWORD and POSTGRES_NON_ROOT_PROJECT_USER_PASSWORD
 vi .postgres.env
@@ -99,8 +99,10 @@ cp backend/.env dist/.
 # LNBITS_ORIGIN=https://demo.lnbits.com
 # LNBITS_INVOICE_READ_KEY=<see-above>
 # LNBITS_ADMIN_KEY=<see-above>
+# LNURL_SERVICE_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
 vi dist/.env.local
 cd dist
+node ./backend/drizzle.migrate.js
 pm2 start ecosystem.config.cjs
 pm2 startup
 # Attention: after this call pm2 will request you to run a command. Do not forget to copy+paste it to the command line and run it!
@@ -110,6 +112,12 @@ pm2 startup
 ```bash
 # switch to tipcards root
 cd /opt/tip-cards
+# set the following variables in .env.local:
+# VITE_BACKEND_API_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+# VITE_TIPCARDS_AUTH_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+# VITE_TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+# VITE_CANONICAL_URL_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+vi frontend/.env.local
 npm run frontend-build
 ```
 
