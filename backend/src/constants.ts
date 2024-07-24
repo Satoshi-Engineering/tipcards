@@ -77,7 +77,7 @@ if (typeof process.env.JWT_AUTH_ORIGIN === 'string' && process.env.JWT_AUTH_ORIG
 
 const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
 
-let JWT_AUTH_ISSUER = new URL(JWT_AUTH_ORIGIN).host
+let JWT_AUTH_ISSUER = new URL(TIPCARDS_API_ORIGIN).host
 if (typeof process.env.JWT_AUTH_ISSUER === 'string' && process.env.JWT_AUTH_ISSUER.length > 0) {
   JWT_AUTH_ISSUER = process.env.JWT_AUTH_ISSUER
 }
