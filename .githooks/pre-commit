@@ -3,6 +3,5 @@
 # exit if any command in the script exits with a code != 0
 set -e
 
-# lint + typecheck
 npm run lint
 npm run typecheck

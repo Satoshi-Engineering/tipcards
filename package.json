@@ -3,6 +3,7 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
+    "audit": "better-npm-audit audit",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore --max-warnings 0",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
     "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-tests",
@@ -101,6 +102,7 @@
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.19",
     "bech32": "^2.0.0",
+    "better-npm-audit": "^3.7.3",
     "bip32": "^4.0.0",
     "bip39": "^3.1.0",
     "cypress": "^13.13.0",

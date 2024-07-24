@@ -7,7 +7,7 @@ checks:
   cache:
     - !reference [.shared_config, cache, node_modules]
   script:
-    - npm audit
+    - npm run audit
     - npm run lint
     - npm run typecheck
 
