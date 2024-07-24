@@ -18,22 +18,10 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   script:
-    - |
-      if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
-      then 
-        echo "Running on main branch"
-        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
-      elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
-      then
-        echo "Running on develop branch"
-        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
-      else
-        echo "Running on feature branch"
-        cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
-      fi
+    - cp $BACKEND_ENV_FILE_E2E_TESTS backend/.env.integrationTest
     - echo "Running database migration to prepare database for backend integration tests"
-    - npm run drizzle-migrate -- --envIntegrationTest
-    - echo "Running backend integration test on branch $CI_COMMIT_BRANCH"
+    - npm run drizzle-migrate
+    - echo "Running backend integration tests on branch $CI_COMMIT_BRANCH"
     - sh backend-integration-tests.sh
 
 test-e2e:
@@ -51,24 +39,9 @@ test-e2e:
   variables:
     NODE_ENV: test
   script:
-    - |
-      if [ "$CI_COMMIT_BRANCH" == "main" -a -f "$BACKEND_ENV_FILE_TEST_MAIN" ]
-      then 
-        echo "Running on main branch"
-        cp $BACKEND_ENV_FILE_TEST_MAIN backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_MAIN e2e/.env.test.local
-      elif [ -f "$BACKEND_ENV_FILE_TEST_DEVELOP" ]
-      then
-        echo "Running on develop branch"
-        cp $BACKEND_ENV_FILE_TEST_DEVELOP backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_DEVELOP e2e/.env.test.local
-      else
-        echo "Running on feature branch"
-        cp $BACKEND_ENV_FILE_TEST_FEATURE backend/.env.integrationTest
-        cp $FRONTEND_ENV_FILE_TEST_FEATURE e2e/.env.test.local
-      fi
+    - cp $BACKEND_ENV_FILE_E2E_TESTS backend/.env.integrationTest
     - echo "Running database migration to prepare database for e2e tests"
-    - npm run drizzle-migrate -- --envIntegrationTest
+    - npm run drizzle-migrate
     - echo "Installing cypress"
     - npx cypress install
     - echo "Running e2e tests on branch $CI_COMMIT_BRANCH"

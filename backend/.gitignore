@@ -1,6 +1,4 @@
-.env
 .env.*
-!.env.example
 tmpDevelop.ts
 lnurl.auth.pem
 lnurl.auth.pem.pub
