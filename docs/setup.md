@@ -14,7 +14,6 @@ sudo apt-get install -y git
 
 2. Docker
 ```bash
-sudo apt-get update
 sudo apt-get install -y ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -29,14 +28,13 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 3. Nodejs + Pm2
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo npm install pm2 -g
 ```
 
 4. Nginx
 ```bash
-sudo apt-get update
 sudo apt-get install -y nginx
 ```
 
