@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-// Purpose: Run migration vs database in /backend/.env
+// Purpose: Run migration vs database in /backend/.env.local
 // Howto
 // npx tsx scripts/run-mirgration/script.ts
 

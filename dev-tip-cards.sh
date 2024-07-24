@@ -33,11 +33,11 @@ echo "Address is: $NGROK_URL"
 
 if [[ $OSTYPE == 'darwin'* ]];
 then
-  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env
-  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.development.local
+  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env.local
+  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.local
 else
-  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env
-  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.development.local
+  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env.local
+  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.local
 fi
 
 npm run frontend-dev 2>&1 >frontend.log &
@@ -58,11 +58,11 @@ kill_proc $BACKEND_PID
 
 if [[ $OSTYPE == 'darwin'* ]];
 then
-  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env
-  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.development.local
+  sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env.local
+  sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.local
 else
-  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env
-  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.development.local
+  sed -i -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env.local
+  sed -i -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.local
 fi
 
 echo "Stopped"

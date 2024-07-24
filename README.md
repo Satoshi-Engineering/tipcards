@@ -57,8 +57,8 @@ git config core.hooksPath .githooks
 * Setup a redis database on localhost. You can do that by using docker (https://hub.docker.com/_/redis). Just make sure to expose the port 6379 to the host. The modules `rejson` and `redisearch` are required.
 * Setting up redis commander is also recommended: https://hub.docker.com/r/rediscommander/redis-commander
   * See [Example](docs/examples/redis) 
-* Create your own wallet on https://demo.lnbits.com/ or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env` (see below).
-* Create a `backend/.env` file (or copy it from `backend/.env.example`) and set the following variables:
+* Create your own wallet on https://demo.lnbits.com/ or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env.local` (see below).
+* Create a `backend/.env.local` file (or copy it from `backend/.env`) and set the following variables:
   - `TIPCARDS_ORIGIN` probably http://localhost:5173 -> where your frontend will be served
   - `TIPCARDS_API_ORIGIN` probably http://localhost:4000 -> where your backend will be served
   - `LNBITS_INVOICE_READ_KEY` paste from your lnbits wallet: get this from https://demo.lnbits.com/wallet and clicking on "API info"
@@ -67,7 +67,7 @@ git config core.hooksPath .githooks
 
 #### Integration Test Env File
 
-Per default the backend loads the `backend/.env` file. If you need to start the backend for integration tests you have to use a different env file. Run the backend using `npm run backend-dev -- --envIntegrationTest` which will use the file `backend/.env.integrationTest`. You can also add the parameter to all other commands (cli, drizzle-migration, etc.).
+Per default the backend loads the `backend/.env` and `backend/.env.local` files. If you need to start the backend for integration tests you have to use a different env file. Run the backend using `npm run backend-dev -- --envIntegrationTest` which will also use the file `backend/.env.integrationTest`. You can also add the parameter to all other commands (cli, drizzle-migration, etc.).
 
 #### Integration Test Script
 
@@ -113,9 +113,9 @@ your lightning apps will refuse to work because there is no ssl connection)
 
 Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
 
-1. Copy backend/.env.example into backend/.env
+1. Copy backend/.env into backend/.env.local
 2. Go to https://ngrok.com and create an account
-3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env
+3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env.local
 
 #### Now you have two possibilities:
 
@@ -127,7 +127,7 @@ Or execute the following steps manually:
 
 4. Run `npm run backend-proxy`. This starts an express server that proxies all requests to your other services that we will start later.
 5. Run `npm run backend-ngrok`. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
-6. Open backend/.env and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
+6. Open backend/.env.local and set the ngrok url (from the previous point) for `TIPCARDS_ORIGIN` and `TIPCARDS_API_ORIGIN` as this is now your public URL for your phone and lnbits webhooks.
 7. Open frontend/.env.development.local and set `VITE_BACKEND_API_ORIGIN=` to an empty string. The API origin will be the same as the frontend origin (the ngrok URL).
 8. Run `npm run backend-dev`
 9. Run `npm run frontend-dev`

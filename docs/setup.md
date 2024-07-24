@@ -91,7 +91,7 @@ cp -r backend/database dist/backend/.
 cp -r node_modules dist/.
 cp backend/deploy/tsconfig.json dist/.
 cp backend/deploy/ecosystem.config.cjs dist/.
-cp backend/.env.example dist/.env
+cp backend/.env dist/.env.local
 # change REDIS_PASSPHRASE to the passphrase you set earlier
 # change TIPCARDS_ORIGIN and TIPCARDS_API_ORIGIN to the domain name (including protocol) that your tip-cards instance will run at
 # e.g. https://my.tip-cards.custom
@@ -100,7 +100,7 @@ cp backend/.env.example dist/.env
 #   * or lnbits demo server: https://demo.lnbits.com
 # add the "Admin key" from the previous step to LNBITS_ADMIN_KEY
 # add the "Invoice/read key" from the previous step to LNBITS_INVOICE_READ_KEY
-vi dist/.env
+vi dist/.env.local
 cd backend
 pm2 start ecosystem.config.cjs
 pm2 startup

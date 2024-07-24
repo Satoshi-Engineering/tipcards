@@ -44,9 +44,11 @@
       key: backend-env-$CI_COMMIT_BRANCH
       paths:
         - backend/.env
+        - backend/.env.local
       policy: pull
     env_frontend:
       key: frontend-env-$CI_COMMIT_BRANCH
       paths:
-        - frontend/.env.production.local
+        - frontend/.env
+        - frontend/.env.local
       policy: pull

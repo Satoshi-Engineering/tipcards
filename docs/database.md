@@ -15,7 +15,7 @@ File: [database.dbml](database.dbml)
 
 ### Create new migration files
 
-- is reading from `/backend/.env`
+- is reading from `/backend/.env.local`
 - is reading drizzle config from  `/backend/drizzle.config.js`
 - is writing the migrations to `/backend/database/drizzle/migrations`
 
@@ -27,7 +27,7 @@ File: [database.dbml](database.dbml)
 
 ### Execute the migration files
 
-- is reading from `/backend/.env`
+- is reading from `/backend/.env.local`
 - is reading drizzle config from  `/backend/drizzle.config.js`
 - is reading the migrations from `/backend/database/drizzle/migrations`
 

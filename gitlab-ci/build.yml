@@ -19,6 +19,7 @@ build-backend:
     - cp backend/deploy/package.json dist/.
     - cp backend/deploy/ecosystem.config.cjs dist/.
     - if [ -f backend/.env ]; then cp backend/.env dist/.; fi
+    - if [ -f backend/.env.local ]; then cp backend/.env.local dist/.; fi
 
 build-frontend:
   stage: build
