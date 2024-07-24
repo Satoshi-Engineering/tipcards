@@ -12,9 +12,7 @@
 # - BACKEND_DEPLOY_PATH_DEVELOP
 # - BACKEND_ENV_FILE_MAIN
 # - BACKEND_ENV_FILE_DEVELOP
-# - BACKEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE during integration tests
-# - BACKEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE during integration tests
-# - BACKEND_ENV_FILE_TEST_FEATURE # overwrites ENV_FILE during integration tests
+# - BACKEND_ENV_FILE_E2E_TESTS
 #
 # ----- FRONTEND
 # - FRONTEND_DEPLOY_SERVER_MAIN
@@ -23,11 +21,10 @@
 # - FRONTEND_DEPLOY_PATH_DEVELOP
 # - FRONTEND_ENV_FILE_MAIN
 # - FRONTEND_ENV_FILE_DEVELOP
-# - FRONTEND_ENV_FILE_TEST_MAIN # overwrites ENV_FILE during integration tests
-# - FRONTEND_ENV_FILE_TEST_DEVELOP # overwrites ENV_FILE during integration tests
-# - FRONTEND_ENV_FILE_TEST_FEATURE # overwrites ENV_FILE during integration tests
-# - FRONTEND_ENV_FILE_LIVE_CHECK_MAIN
-# - FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP
+#
+# ----- E2E Tests
+# - E2E_LIVE_CHECK_MAIN
+# - E2E_LIVE_CHECK_DEVELOP
 
 image: node:lts-alpine
 

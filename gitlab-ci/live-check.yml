@@ -15,19 +15,16 @@ live-check:
     NODE_ENV: test
   script:
     - |
-      if [ "$CI_COMMIT_BRANCH" == "main" ]
-      then 
-        echo "Running on main branch"
-        cp $FRONTEND_ENV_FILE_LIVE_CHECK_MAIN e2e/.env.test.local
-      elif [ "$CI_COMMIT_BRANCH" == "develop" ]
-      then
+      if [ "$CI_COMMIT_BRANCH" == "main" ] then 
+        cp $E2E_LIVE_CHECK_MAIN e2e/.env.local
+      elif [ "$CI_COMMIT_BRANCH" == "develop" ] then
         echo "Running on develop branch"
-        cp $FRONTEND_ENV_FILE_LIVE_CHECK_DEVELOP e2e/.env.test.local
+        cp $E2E_LIVE_CHECK_DEVELOP e2e/.env.local
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
       fi
     - echo "Installing cypress"
     - npx cypress install
-    - echo "Running frontend integration test on branch $CI_COMMIT_BRANCH"
+    - echo "Running e2e-live-checks on branch $CI_COMMIT_BRANCH"
     - npm run e2e-live-checks
