@@ -29,5 +29,5 @@ live-check:
       fi
     - echo "Installing cypress"
     - npx cypress install
-    - echo "Running frontend intergration test on branch $CI_COMMIT_BRANCH"
+    - echo "Running frontend integration test on branch $CI_COMMIT_BRANCH"
     - npm run e2e-live-checks
