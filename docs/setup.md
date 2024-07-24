@@ -138,3 +138,22 @@ sudo /etc/init.d/nginx reload
 ```bash
 sudo certbot --nginx
 ```
+
+# Update TipCards application
+
+1. Update backend
+```bash
+cd /opt/tip-cards
+git pull
+npm ci
+npm run backend-build
+cd dist
+node ./backend/drizzle.migrate.js
+pm2 restart lightning-tip-cards-backend
+```
+
+2. Update frontend
+```bash
+cd /opt/tip-cards
+npm run frontend-build
+```
