@@ -11,7 +11,8 @@
     "landing": "Landing page",
     "about": "About",
     "privacyPolicy": "Privacy Policy",
-    "legalNotice": "Legal Notice"
+    "legalNotice": "Legal Notice",
+    "goToAccount": "to your account"
   },
   "footer": {
     "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}.",

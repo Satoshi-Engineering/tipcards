@@ -6,7 +6,7 @@
       bg-white
     "
   >
-    <CenterContainer class="flex items-center">
+    <CenterContainer class="flex items-center gap-4">
       <RouterLink
         :to="{ name: 'home', params: { lang: $route.params.lang } }"
         data-test="the-header-home-button"
@@ -16,23 +16,26 @@
       </RouterLink>
       <button
         v-if="activeMenu === 'none'"
-        class="hover:text-yellow w-6 h-6 "
+        class="hover:text-yellow w-6 h-6"
         data-test="the-header-lang-button"
+        :aria-label="$t('language')"
         @click="activeMenu = 'language'"
       >
         <IconWorld />
       </button>
       <button
         v-if="activeMenu === 'none'"
-        class="hover:text-yellow"
-        @click="activeMenu = 'main'"
+        class="hover:text-yellow w-8 h-6"
+        :aria-label="$t('mainNav')"
+        @click="activeMenu = 'main-nav'"
       >
-        <TheMainNav class="ms-2" />
+        <IconMainNav />
       </button>
       <button
         v-if="activeMenu !== 'none'"
-        class="hover:text-yellow w-6 h-6 "
+        class="hover:text-yellow w-18 h-6 ps-12"
         data-test="the-header-close-button"
+        :aria-label="$t('close')"
         @click="activeMenu = 'none'"
       >
         <IconClose />
@@ -40,6 +43,11 @@
     </CenterContainer>
     <TheLangNav
       v-if="activeMenu === 'language'"
+      class="absolute top-full"
+      @item-selected="onMenuItemSelected"
+    />
+    <TheMainNav
+      v-if="activeMenu === 'main-nav'"
       class="absolute top-full"
       @item-selected="onMenuItemSelected"
     />
@@ -55,10 +63,11 @@ import TheLangNav from '@/components/layout/TheLangNav.vue'
 import TheMainNav from '@/components/layout/TheMainNav.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconClose from '@/components/icons/IconClose.vue'
+import IconMainNav from '@/components/icons/IconMainNav.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
 import { usePageScroll } from '@/modules/usePageScroll'
 
-const activeMenu = ref<'none'|'language'|'main'>('none')
+const activeMenu = ref<'none'|'language'|'main-nav'>('none')
 const onMenuItemSelected = () => {
   activeMenu.value = 'none'
 }
