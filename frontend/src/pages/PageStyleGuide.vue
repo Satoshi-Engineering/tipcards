@@ -140,18 +140,20 @@
         <HeadlineDefault level="h2">
           Slider
         </HeadlineDefault>
-        <SliderDefault>
-          <SlideDefault>
-            <img src="https://placehold.co/600x400" alt="Placeholder">
+        <SliderDefault v-slot="{ nextSlide, currentPosition }">
+          <SlideDefault :active="currentPosition === 0" @next-slide="nextSlide">
+            <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault>
+              <LinkDefault href="https://www.lipsum.com/" :tabindex="currentPosition === 0 ? 0 : -1">
+                Lorem Ipsum
+              </LinkDefault>
             </ParagraphDefault>
           </SlideDefault>
-          <SlideDefault>
-            <img src="https://placehold.co/600x400" alt="Placeholder">
+          <SlideDefault :active="currentPosition === 1" @next-slide="nextSlide">
+            <img src="https://placehold.co/800x400" alt="Placeholder">
           </SlideDefault>
-          <SlideDefault>
-            <img src="https://placehold.co/600x400" alt="Placeholder">
+          <SlideDefault :active="currentPosition === 2" @next-slide="nextSlide">
+            <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault>
               Have you ever heard of the term "Lorem Ipsum"?
             </ParagraphDefault>
@@ -160,17 +162,19 @@
       </CenterContainer>
 
       <CenterContainer class="!max-w-3xl">
-        <SliderDefault>
-          <SlideDefault>
+        <SliderDefault v-slot="{ nextSlide, currentPosition }">
+          <SlideDefault :active="currentPosition === 0" @next-slide="nextSlide">
             <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault>
+              <LinkDefault href="https://www.lipsum.com/" :tabindex="currentPosition === 0 ? 0 : -1">
+                Lorem Ipsum
+              </LinkDefault>
             </ParagraphDefault>
           </SlideDefault>
-          <SlideDefault>
+          <SlideDefault :active="currentPosition === 1" @next-slide="nextSlide">
             <img src="https://placehold.co/800x400" alt="Placeholder">
           </SlideDefault>
-          <SlideDefault>
+          <SlideDefault :active="currentPosition === 2" @next-slide="nextSlide">
             <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault>
               Have you ever heard of the term "Lorem Ipsum"?

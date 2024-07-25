@@ -1,14 +1,11 @@
 <template>
-  <div
-    class="overflow-hidden -m-5"
-    @click="currentPosition = (currentPosition + 1) % slidesCount"
-  >
+  <div class="overflow-hidden -m-5">
     <ul
       ref="slider"
       class="flex transition-transform duration-300 ease-in-out"
       :style="`transform: translateX(${translateX}px);`"
     >
-      <slot />
+      <slot :next-slide="nextSlide" :current-position="currentPosition" />
     </ul>
   </div>
 </template>
@@ -25,6 +22,10 @@ const translateX = computed(() => -width.value * currentPosition.value)
 
 const calculateWidth = () => {
   width.value = slider.value?.getBoundingClientRect().width || 0
+}
+
+const nextSlide = () => {
+  currentPosition.value = (currentPosition.value + 1) % slidesCount.value
 }
 
 onMounted(() => {
