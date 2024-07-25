@@ -8,12 +8,14 @@ import IconWorld from '@/components/icons/IconWorld.vue'
 import IconClose from '@/components/icons/IconClose.vue'
 
 import '../../mocks/router'
+import '../../mocks/i18n'
+import IconMainNav from '@/components/icons/IconMainNav.vue'
 
 describe('TheHeader', () => {
   it('renders the header', async () => {
     const wrapper = mount(TheHeader)
     expect(wrapper.getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({ name: 'home' }))
-    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
+    expect(wrapper.findComponent(TheMainNav).exists()).toBe(false)
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
   })
 
@@ -41,19 +43,19 @@ describe('TheHeader', () => {
   it('click on the WorldIcon should toggle TheLangNav and X should close it again', async () => {
     const wrapper = mount(TheHeader)
     expect(wrapper.getComponent(IconWorld)).toBeDefined()
-    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
+    expect(wrapper.getComponent(IconMainNav)).toBeDefined()
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
 
     const langNavOpenButton = wrapper.getComponent(IconWorld)
     await langNavOpenButton.trigger('click')
     expect(wrapper.findComponent(IconWorld).exists()).toBe(false)
-    expect(wrapper.findComponent(TheMainNav).exists()).toBe(false)
+    expect(wrapper.findComponent(IconMainNav).exists()).toBe(false)
     expect(wrapper.getComponent(TheLangNav)).toBeDefined()
 
     const langNavCloseButton = wrapper.getComponent(IconClose)
     await langNavCloseButton.trigger('click')
     expect(wrapper.getComponent(IconWorld)).toBeDefined()
-    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
+    expect(wrapper.getComponent(IconMainNav)).toBeDefined()
     expect(wrapper.findComponent(TheLangNav).exists()).toBe(false)
   })
 
