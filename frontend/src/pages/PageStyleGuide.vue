@@ -135,6 +135,50 @@
         </ButtonGroup>
       </CenterContainer>
     </section>
+    <section class="py-10">
+      <CenterContainer class="mb-10">
+        <HeadlineDefault level="h2">
+          Slider
+        </HeadlineDefault>
+        <SliderDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/600x400" alt="Placeholder">
+            <ParagraphDefault class="p-4">
+              <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault>
+            </ParagraphDefault>
+          </SlideDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/600x400" alt="Placeholder">
+          </SlideDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/600x400" alt="Placeholder">
+            <ParagraphDefault>
+              Have you ever heard of the term "Lorem Ipsum"?
+            </ParagraphDefault>
+          </SlideDefault>
+        </SliderDefault>
+      </CenterContainer>
+
+      <CenterContainer class="!max-w-3xl">
+        <SliderDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/800x400" alt="Placeholder">
+            <ParagraphDefault class="p-4">
+              <LinkDefault href="https://www.lipsum.com/">Lorem Ipsum</LinkDefault>
+            </ParagraphDefault>
+          </SlideDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/800x400" alt="Placeholder">
+          </SlideDefault>
+          <SlideDefault>
+            <img src="https://placehold.co/800x400" alt="Placeholder">
+            <ParagraphDefault>
+              Have you ever heard of the term "Lorem Ipsum"?
+            </ParagraphDefault>
+          </SlideDefault>
+        </SliderDefault>
+      </CenterContainer>
+    </section>
   </TheLayout>
 </template>
 
@@ -148,6 +192,8 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
+import SlideDefault from '@/components/slider/SlideDefault.vue'
+import SliderDefault from '@/components/slider/SliderDefault.vue'
 
 const dummyLink = {
   name: 'cards',
