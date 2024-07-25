@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import IconCaretDown from '@/components/svgs/IconCaretDown.vue'
-import IconCaretUp from '@/components/svgs/IconCaretUp.vue'
+import IconCaretDown from '@/components/icons/IconCaretDown.vue'
+import IconCaretUp from '@/components/icons/IconCaretUp.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
 defineProps({

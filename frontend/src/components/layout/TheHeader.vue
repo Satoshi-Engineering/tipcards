@@ -53,9 +53,9 @@ import { ref, watch } from 'vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import TheMainNav from '@/components/layout/TheMainNav.vue'
-import IconWorld from '@/components/svgs/IconWorld.vue'
-import IconClose from '@/components/svgs/IconClose.vue'
-import IconLogo from '@/components/svgs/IconLogo.vue'
+import IconWorld from '@/components/icons/IconWorld.vue'
+import IconClose from '@/components/icons/IconClose.vue'
+import IconLogo from '@/components/icons/IconLogo.vue'
 import { usePageScroll } from '@/modules/usePageScroll'
 
 const activeMenu = ref<'none'|'language'|'main'>('none')

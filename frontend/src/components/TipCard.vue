@@ -81,8 +81,8 @@ import svgToPng from '@/modules/svgToPng'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import ParagraphDefault from './typography/ParagraphDefault.vue'
 
-import IconBitcoin from '@/components/svgs/IconBitcoin.vue'
-import IconLightning from '@/components/svgs/IconLightning.vue'
+import IconBitcoin from '@/components/icons/IconBitcoin.vue'
+import IconLightning from '@/components/icons/IconLightning.vue'
 
 const props = defineProps({
   qrCodeSvg: {

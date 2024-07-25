@@ -3,5 +3,5 @@
 </template>
 
 <script setup lang="ts">
-import IconCaretUp from '@/components/svgs/IconCaretUp.vue'
+import IconCaretUp from '@/components/icons/IconCaretUp.vue'
 </script>

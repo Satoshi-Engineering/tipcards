@@ -2,9 +2,9 @@ import { config, mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import TheFooter from '@/components/layout/TheFooter.vue'
-import IconLinkedIn from '@/components/svgs/IconLinkedIn.vue'
-import IconX from '@/components/svgs/IconX.vue'
-import IconInstagram from '@/components/svgs/IconInstagram.vue'
+import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
+import IconX from '@/components/icons/IconX.vue'
+import IconInstagram from '@/components/icons/IconInstagram.vue'
 
 import '../../mocks/i18n'
 import '../../mocks/provide'

@@ -91,9 +91,9 @@ import { inject } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import IconInstagram from '@/components/svgs/IconInstagram.vue'
-import IconLinkedIn from '@/components/svgs/IconLinkedIn.vue'
-import IconX from '@/components/svgs/IconX.vue'
+import IconInstagram from '@/components/icons/IconInstagram.vue'
+import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
+import IconX from '@/components/icons/IconX.vue'
 
 const linkPrivacyPolicy = inject<string | undefined>('linkPrivacyPolicy')
 const linkLegalNotice = inject<string | undefined>('linkLegalNotice')
