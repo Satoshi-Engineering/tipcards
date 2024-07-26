@@ -36,3 +36,4 @@ build-frontend:
   script:
     - npm run frontend-build
     - VITE_BUILD_LIBS=1 npm run frontend-build
+    - cp dist/frontend/externalCardStatus.umd.cjs dist/frontend/externalCardStatus.umd.js
