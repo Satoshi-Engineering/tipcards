@@ -49,7 +49,7 @@ export default defineConfig(({ mode }) => {
     root: fileURLToPath(new URL('./', import.meta.url)),
     plugins: [vue(), createHtmlPlugin({ inject: { data: { env } } })],
     optimizeDeps: {
-      include: [ '../shared/' ],
+      include: [ './shared' ],
     },
     resolve: {
       alias: {
