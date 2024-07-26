@@ -43,12 +43,15 @@
     <section class="py-10 bg-grey-light">
       <CenterContainer>
         <HeadlineDefault level="h2">
-          Buttons
+          Button Default
         </HeadlineDefault>
 
         <ButtonGroup>
           <ButtonDefault @click="onDummyClick">
             Primary Button
+          </ButtonDefault>
+          <ButtonDefault reduced-animation @click="onDummyClick">
+            Reduced animation
           </ButtonDefault>
         </ButtonGroup>
 
@@ -135,7 +138,104 @@
         </ButtonGroup>
       </CenterContainer>
     </section>
+
     <section class="py-10">
+      <CenterContainer>
+        <HeadlineDefault level="h2">
+          Button Icon
+        </HeadlineDefault>
+        <div class="flex flex-col gap-4">
+          <div class="flex gap-4">
+            <ButtonIcon
+              :loading="dummyLoading"
+              @click="onDummyLoading"
+            />
+            <ButtonIcon disabled />
+            <ButtonIcon loading />
+            <ButtonIcon
+              variant="yellow"
+              icon="play"
+              :loading="dummyLoading"
+              @click="onDummyLoading"
+            />
+            <ButtonIcon
+              variant="yellow"
+              icon="play"
+              disabled
+            />
+            <ButtonIcon
+              variant="yellow"
+              icon="play"
+              loading
+            />
+          </div>
+          <div class="flex gap-4">
+            <ButtonIcon
+              variant="yellow"
+              :loading="dummyLoading"
+              @click="onDummyLoading"
+            />
+            <ButtonIcon variant="yellow" disabled />
+            <ButtonIcon variant="yellow" loading />
+            <ButtonIcon
+              icon="play"
+              :loading="dummyLoading"
+              @click="onDummyLoading"
+            />
+            <ButtonIcon
+              icon="play"
+              disabled
+            />
+            <ButtonIcon
+              icon="play"
+              loading
+            />
+          </div>
+        </div>
+
+        <HeadlineDefault level="h3">
+          As Router Links
+        </HeadlineDefault>
+        <div class="flex gap-4">
+          <ButtonIcon :to="dummyLink" />
+          <ButtonIcon
+            variant="yellow"
+            :to="dummyLink"
+          />
+          <ButtonIcon
+            icon="play"
+            :to="dummyLink"
+          />
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            :to="dummyLink"
+          />
+        </div>
+
+        <HeadlineDefault level="h3">
+          As Href
+        </HeadlineDefault>
+        <div class="flex gap-4">
+          <ButtonIcon href="https://satoshiengineering.com/" />
+          <ButtonIcon
+            variant="yellow"
+            href="https://satoshiengineering.com/"
+          />
+          <ButtonIcon
+            icon="play"
+            href="https://satoshiengineering.com/"
+          />
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            href="https://satoshiengineering.com/"
+          />
+        </div>
+      </CenterContainer>
+    </section>
+
+    <section class="py-10 bg-grey-light">
       <CenterContainer class="mb-10">
         <HeadlineDefault level="h2">
           Slider
@@ -206,6 +306,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
 import SlideDefault from '@/components/slider/SlideDefault.vue'
 import SliderDefault from '@/components/slider/SliderDefault.vue'
+import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 
 const dummyLink = {
   name: 'cards',
@@ -219,8 +320,7 @@ const onDummyClick = () => {
 const dummyLoading = ref(false)
 const onDummyLoading = async () => {
   dummyLoading.value = true
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  await new Promise((resolve) => setTimeout(resolve, 1000))
   dummyLoading.value = false
 }
-
 </script>
