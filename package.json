@@ -62,7 +62,7 @@
     "lodash.throttle": "^4.1.1",
     "luxon": "^3.4.4",
     "node-cron": "^3.0.3",
-    "pinia": "^2.1.7",
+    "pinia": "^2.2.0",
     "postgres": "^3.4.4",
     "qrcode-svg": "^1.1.0",
     "redis": "^4.6.15",
@@ -116,12 +116,12 @@
     "postcss": "^8.4.40",
     "secp256k1": "^5.0.0",
     "start-server-and-test": "^2.0.4",
-    "tailwindcss": "^3.4.6",
+    "tailwindcss": "^3.4.7",
     "tiny-secp256k1": "^2.2.3",
     "tsc-alias": "^1.8.10",
     "typescript": "~5.5.4",
-    "vite": "^5.3.4",
+    "vite": "^5.3.5",
     "vitest": "^2.0.4",
-    "vue-tsc": "^2.0.28"
+    "vue-tsc": "^2.0.29"
   }
 }
