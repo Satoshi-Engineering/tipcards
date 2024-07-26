@@ -53,7 +53,7 @@ const currentPosition = ref(0)
 const translateX = computed(() => {
   let translateX = -currentPosition.value * width.value
   if (pointerDown.value) {
-    translateX += pointerDeltaX.value
+    translateX += pointerXDelta.value
   }
   if (translateX > 0) {
     return translateX * 0.35
@@ -85,10 +85,32 @@ const nextSlide = () => {
 }
 
 const pointerDown = ref(false)
-const pointerStartClientX = ref(0)
-const previousClientX = ref(0)
-const pointerDeltaX = computed(() => previousClientX.value - pointerStartClientX.value)
-const swipeDirection = computed<'left' | 'right' | null>(() => null)
+const pointerXStart = ref(0)
+const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
+const lastPointerXPosition = computed(() => {
+  if (previousPointerPositions.value.length === 0) {
+    return 0
+  }
+  return previousPointerPositions.value[previousPointerPositions.value.length - 1].x
+})
+const pointerXDelta = computed(() => lastPointerXPosition.value - pointerXStart.value)
+const swipeDirection = computed<'left' | 'right' | null>(() => {
+  if (previousPointerPositions.value.length < 2) {
+    return null
+  }
+  const first = previousPointerPositions.value[0]
+  const last = previousPointerPositions.value[previousPointerPositions.value.length - 1]
+  if (Math.abs(last.x - first.x) < 10) {
+    return null
+  }
+  const velocity = (last.x - first.x) / (last.timeStamp - first.timeStamp)
+  if (velocity < -1) {
+    return 'left'
+  } else if (velocity > 1) {
+    return 'right'
+  }
+  return null
+})
 
 const onPointerDown = (event: PointerEvent) => {
   if (
@@ -115,24 +137,46 @@ const onPointerDown = (event: PointerEvent) => {
   }
   slider.value?.setPointerCapture(event.pointerId)
   pointerDown.value = true
-  pointerStartClientX.value = event.pageX
-  previousClientX.value = event.pageX
+  pointerXStart.value = event.pageX
+  previousPointerPositions.value = [{ x: event.pageX, timeStamp: event.timeStamp }]
 }
 
 const onPointerMove = (event: PointerEvent) => {
   if (!pointerDown.value) {
     return
   }
-  previousClientX.value = event.pageX
+  // only remember pointer positions in the same direction, and max 20
+  let direction: 'left' | 'right' | null = null
+  const newPreviousPointerPositions = [{ x: event.pageX, timeStamp: event.timeStamp }]
+  for (let x = previousPointerPositions.value.length -1; x >= 0; x--) {
+    if (newPreviousPointerPositions.length >= 20) {
+      break
+    }
+    let currentDirection: 'left' | 'right' | null = null
+    if (currentDirection == null) {
+      if (previousPointerPositions.value[x].x - event.pageX > 0) {
+        currentDirection = 'left'
+      } else if (previousPointerPositions.value[x].x - event.pageX < 0) {
+        currentDirection = 'right'
+      }
+    }
+    if (direction == null) {
+      direction = currentDirection
+    } else if (direction !== currentDirection) {
+      break
+    }
+    newPreviousPointerPositions.unshift(previousPointerPositions.value[x])
+  }
+  previousPointerPositions.value = newPreviousPointerPositions
 }
 
 const onPointerUp = (event: PointerEvent) => {
   const currentPanPosition = -translateX.value / width.value
   let targetPosition = Math.round(currentPanPosition)
   if (swipeDirection.value === 'left') {
-    targetPosition = Math.floor(currentPanPosition)
-  } else if (swipeDirection.value === 'right') {
     targetPosition = Math.ceil(currentPanPosition)
+  } else if (swipeDirection.value === 'right') {
+    targetPosition = Math.floor(currentPanPosition)
   }
   slider.value?.releasePointerCapture(event.pointerId)
   pointerDown.value = false
