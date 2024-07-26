@@ -141,10 +141,14 @@
           Slider
         </HeadlineDefault>
         <SliderDefault v-slot="{ nextSlide, currentPosition }">
-          <SlideDefault :active="currentPosition === 0" @next-slide="nextSlide">
+          <SlideDefault
+            v-slot="{ active }"
+            :active="currentPosition === 0"
+            @next-slide="nextSlide"
+          >
             <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/" :tabindex="currentPosition === 0 ? 0 : -1">
+              <LinkDefault href="https://www.lipsum.com/" :tabindex="active ? 0 : -1">
                 Lorem Ipsum
               </LinkDefault>
             </ParagraphDefault>
@@ -163,10 +167,14 @@
 
       <CenterContainer class="!max-w-3xl">
         <SliderDefault v-slot="{ nextSlide, currentPosition }">
-          <SlideDefault :active="currentPosition === 0" @next-slide="nextSlide">
+          <SlideDefault
+            v-slot="{ active }"
+            :active="currentPosition === 0"
+            @next-slide="nextSlide"
+          >
             <img src="https://placehold.co/800x400" alt="Placeholder">
             <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/" :tabindex="currentPosition === 0 ? 0 : -1">
+              <LinkDefault href="https://www.lipsum.com/" :tabindex="active ? 0 : -1">
                 Lorem Ipsum
               </LinkDefault>
             </ParagraphDefault>
