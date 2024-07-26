@@ -11,7 +11,7 @@ const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
 const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
-const PageStyleGuide = () => import('@/pages/PageStyleGuide.vue')
+const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 const PageFAQs = () => import('@/pages/PageFAQs.vue')
 

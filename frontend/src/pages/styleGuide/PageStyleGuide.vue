@@ -240,55 +240,16 @@
         <HeadlineDefault level="h2">
           Slider
         </HeadlineDefault>
-        <SliderDefault v-slot="{ nextSlide, currentPosition }">
-          <SlideDefault
-            v-slot="{ active }"
-            :active="currentPosition === 0"
-            @next-slide="nextSlide"
-          >
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-            <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/" :tabindex="active ? 0 : -1">
-                Lorem Ipsum
-              </LinkDefault>
-            </ParagraphDefault>
-          </SlideDefault>
-          <SlideDefault :active="currentPosition === 1" @next-slide="nextSlide">
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-          </SlideDefault>
-          <SlideDefault :active="currentPosition === 2" @next-slide="nextSlide">
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-            <ParagraphDefault>
-              Have you ever heard of the term "Lorem Ipsum"?
-            </ParagraphDefault>
-          </SlideDefault>
-        </SliderDefault>
+        <SliderStyleGuide />
       </CenterContainer>
 
+      <CenterContainer>
+        <HeadlineDefault level="h3">
+          A wider slider
+        </HeadlineDefault>
+      </CenterContainer>
       <CenterContainer class="!max-w-3xl">
-        <SliderDefault v-slot="{ nextSlide, currentPosition }">
-          <SlideDefault
-            v-slot="{ active }"
-            :active="currentPosition === 0"
-            @next-slide="nextSlide"
-          >
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-            <ParagraphDefault class="p-4">
-              <LinkDefault href="https://www.lipsum.com/" :tabindex="active ? 0 : -1">
-                Lorem Ipsum
-              </LinkDefault>
-            </ParagraphDefault>
-          </SlideDefault>
-          <SlideDefault :active="currentPosition === 1" @next-slide="nextSlide">
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-          </SlideDefault>
-          <SlideDefault :active="currentPosition === 2" @next-slide="nextSlide">
-            <img src="https://placehold.co/800x400" alt="Placeholder">
-            <ParagraphDefault>
-              Have you ever heard of the term "Lorem Ipsum"?
-            </ParagraphDefault>
-          </SlideDefault>
-        </SliderDefault>
+        <SliderStyleGuide />
       </CenterContainer>
     </section>
   </TheLayout>
@@ -296,6 +257,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
@@ -304,13 +266,14 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
-import SlideDefault from '@/components/slider/SlideDefault.vue'
-import SliderDefault from '@/components/slider/SliderDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
+import SliderStyleGuide from './SliderStyleGuide.vue'
+
+const route = useRoute()
 
 const dummyLink = {
   name: 'cards',
-  params: { setId: 'style-guide-set' },
+  params: { setId: 'style-guide-set', lang: route.params.lang },
 }
 
 const onDummyClick = () => {
