@@ -11,7 +11,7 @@
           variant="yellow"
           icon="play"
           class="absolute bottom-3 end-3"
-          :tabindex="currentPosition === 0 ? 0 : -1"
+          :tabindex="currentPosition === index - 1 ? 0 : -1"
         />
       </template>
       <template #default>
@@ -24,7 +24,7 @@
         <ButtonIcon
           :to="dummyLink"
           class="absolute bottom-3 end-3"
-          :tabindex="currentPosition === 0 ? 0 : -1"
+          :tabindex="currentPosition === index - 1 ? 0 : -1"
         />
       </template>
     </SlideDefault>
@@ -41,7 +41,7 @@
       <ButtonIcon
         :to="dummyLink"
         class="absolute bottom-3 end-3"
-        :tabindex="currentPosition === 0 ? 0 : -1"
+        :tabindex="currentPosition === index - 1 + slidesWithImage ? 0 : -1"
       />
     </SlideDefault>
   </SliderDefault>

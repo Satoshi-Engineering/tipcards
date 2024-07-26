@@ -1,13 +1,22 @@
 <template>
-  <div class="overflow-hidden -m-5">
+  <div
+    class="overflow-hidden -m-5"
+    tabindex="0"
+    @keyup.left="previousSlide"
+    @keyup.right="nextSlide"
+  >
     <ul
       ref="slider"
       class="flex transition-transform duration-300 ease-in-out"
       :style="`transform: translateX(${translateX}px);`"
     >
-      <slot :next-slide="nextSlide" :current-position="currentPosition" />
+      <slot
+        :previous-slide="previousSlide"
+        :next-slide="nextSlide"
+        :current-position="currentPosition"
+      />
     </ul>
-    <div class="mt-2 flex gap-1 justify-center">
+    <div class="my-2 flex gap-1 justify-center">
       <button
         v-for="index in slidesCount"
         :key="`slider-default-pagination-${index}`"
@@ -25,6 +34,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
+const props = defineProps({
+  carousel: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const width = ref(0)
 const slider = ref<HTMLElement | null>(null)
 const slidesCount = ref(0)
@@ -36,8 +52,20 @@ const calculateWidth = () => {
   width.value = slider.value?.getBoundingClientRect().width || 0
 }
 
+const previousSlide = () => {
+  if (props.carousel) {
+    currentPosition.value = (currentPosition.value - 1 + slidesCount.value) % slidesCount.value
+  } else {
+    currentPosition.value = Math.max(currentPosition.value - 1, 0)
+  }
+}
+
 const nextSlide = () => {
-  currentPosition.value = (currentPosition.value + 1) % slidesCount.value
+  if (props.carousel) {
+    currentPosition.value = (currentPosition.value + 1) % slidesCount.value
+  } else {
+    currentPosition.value = Math.min(currentPosition.value + 1, slidesCount.value - 1)
+  }
 }
 
 onMounted(() => {
