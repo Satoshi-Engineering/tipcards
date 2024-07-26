@@ -44,12 +44,13 @@
         <li v-if="isLoggedIn">
           <MainNavItem
             :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
-            :label="$t('general.userAccount')"
+            :label="userDisplayName != null && userDisplayName.length > 0 ? userDisplayName : $t('general.userAccount')"
             @click="$emit('itemSelected')"
           >
             <BIconPersonCircle />
           </MainNavItem>
           <MainNavItem
+            v-if="userDisplayName != null && userDisplayName.length > 0"
             class="!text-base !font-normal !pt-0"
             :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
             :label="$t('nav.goToAccount')"
@@ -91,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle, BIconQrCodeScan } from 'bootstrap-icons-vue'
 
@@ -106,4 +108,6 @@ const { isLoggedIn } = storeToRefs(authStore)
 
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
+
+const userDisplayName = ref('')
 </script>
