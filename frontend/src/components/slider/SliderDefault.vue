@@ -1,14 +1,18 @@
 <template>
   <div
-    class="overflow-hidden -m-5"
+    ref="slider"
+    class="-m-5 overflow-hidden touch-pan-y"
     tabindex="0"
+    @pointerdown="onPointerDown"
+    @pointermove="onPointerMove"
+    @pointerup="onPointerUp"
     @keyup.left="previousSlide"
     @keyup.right="nextSlide"
   >
     <ul
-      ref="slider"
-      class="flex transition-transform duration-300 ease-in-out"
-      :style="`transform: translateX(${translateX}px);`"
+      class="flex"
+      :class="{ 'transition-transform duration-300 ease-in-out': !pointerDown }"
+      :style="`transform: translateX(${translateX}px); user-select: none;`"
     >
       <slot
         :previous-slide="previousSlide"
@@ -46,9 +50,21 @@ const slider = ref<HTMLElement | null>(null)
 const slidesCount = ref(0)
 const currentPosition = ref(0)
 
-const translateX = computed(() => -width.value * currentPosition.value)
+const translateX = computed(() => {
+  let translateX = -currentPosition.value * width.value
+  if (pointerDown.value) {
+    translateX += pointerDeltaX.value
+  }
+  if (translateX > 0) {
+    return translateX * 0.35
+  } else if (translateX < -width.value * (slidesCount.value - 1)) {
+    return -width.value * (slidesCount.value - 1) + (translateX + width.value * (slidesCount.value - 1)) * 0.35
+  }
+  return translateX
+})
 
-const calculateWidth = () => {
+const init = () => {
+  slidesCount.value = slider.value?.querySelectorAll(':scope > ul > .w-full').length || 0
   width.value = slider.value?.getBoundingClientRect().width || 0
 }
 
@@ -68,13 +84,67 @@ const nextSlide = () => {
   }
 }
 
+const pointerDown = ref(false)
+const pointerStartClientX = ref(0)
+const previousClientX = ref(0)
+const pointerDeltaX = computed(() => previousClientX.value - pointerStartClientX.value)
+const swipeDirection = computed<'left' | 'right' | null>(() => null)
+
+const onPointerDown = (event: PointerEvent) => {
+  if (
+    event.target == null
+    || !(
+      event.target instanceof HTMLElement
+      || event.target instanceof HTMLImageElement
+    )
+  ) {
+    return
+  }
+  const target = event.target as HTMLElement | HTMLImageElement
+  if (
+    target.tagName === 'BUTTON'
+    || target.closest('button')
+    || target.tagName === 'A'
+    || target.closest('a')
+  ) {
+    return
+  }
+  event.preventDefault()
+  if (target.hasPointerCapture(event.pointerId)) {
+    target.releasePointerCapture(event.pointerId)
+  }
+  slider.value?.setPointerCapture(event.pointerId)
+  pointerDown.value = true
+  pointerStartClientX.value = event.pageX
+  previousClientX.value = event.pageX
+}
+
+const onPointerMove = (event: PointerEvent) => {
+  if (!pointerDown.value) {
+    return
+  }
+  previousClientX.value = event.pageX
+}
+
+const onPointerUp = (event: PointerEvent) => {
+  const currentPanPosition = -translateX.value / width.value
+  let targetPosition = Math.round(currentPanPosition)
+  if (swipeDirection.value === 'left') {
+    targetPosition = Math.floor(currentPanPosition)
+  } else if (swipeDirection.value === 'right') {
+    targetPosition = Math.ceil(currentPanPosition)
+  }
+  slider.value?.releasePointerCapture(event.pointerId)
+  pointerDown.value = false
+  currentPosition.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
+}
+
 onMounted(() => {
-  slidesCount.value = slider.value?.querySelectorAll(':scope > .w-full').length || 0
-  calculateWidth()
-  window.addEventListener('resize', calculateWidth)
+  init()
+  window.addEventListener('resize', init)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', calculateWidth)
+  window.removeEventListener('resize', init)
 })
 </script>
