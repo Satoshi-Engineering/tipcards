@@ -1,6 +1,9 @@
 <template>
-  <SliderDefault v-slot="{ nextSlide, currentPosition }">
-    <SlideDefault>
+  <SliderDefault v-slot="{ currentPosition }">
+    <SlideDefault
+      v-for="index in slidesWithImage"
+      :key="`slider-style-guide-slide-with-image-${index}`"
+    >
       <template #image>
         <img src="https://placehold.co/800x400" alt="Placeholder">
         <ButtonIcon
@@ -25,14 +28,21 @@
         />
       </template>
     </SlideDefault>
-    <SlideDefault :active="currentPosition === 1" @next-slide="nextSlide">
-      <img src="https://placehold.co/800x400" alt="Placeholder">
-    </SlideDefault>
-    <SlideDefault :active="currentPosition === 2" @next-slide="nextSlide">
-      <img src="https://placehold.co/800x400" alt="Placeholder">
-      <ParagraphDefault>
-        Have you ever heard of the term "Lorem Ipsum"?
+    <SlideDefault
+      v-for="index in slidesWithoutImage"
+      :key="`slider-style-guide-slide-without-image-${index}`"
+    >
+      <HeadlineDefault level="h3">
+        Create a TipCard Set
+      </HeadlineDefault>
+      <ParagraphDefault class="mb-8">
+        This is a typoblind text for this video slider that briefly describes what the video is about.
       </ParagraphDefault>
+      <ButtonIcon
+        :to="dummyLink"
+        class="absolute bottom-3 end-3"
+        :tabindex="currentPosition === 0 ? 0 : -1"
+      />
     </SlideDefault>
   </SliderDefault>
 </template>
@@ -45,6 +55,17 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import SlideDefault from '@/components/slider/SlideDefault.vue'
 import SliderDefault from '@/components/slider/SliderDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
+
+defineProps({
+  slidesWithImage: {
+    type: Number,
+    default: 3,
+  },
+  slidesWithoutImage: {
+    type: Number,
+    default: 3,
+  },
+})
 
 const route = useRoute()
 

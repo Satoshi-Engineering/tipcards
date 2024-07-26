@@ -7,6 +7,18 @@
     >
       <slot :next-slide="nextSlide" :current-position="currentPosition" />
     </ul>
+    <div class="mt-2 flex gap-1 justify-center">
+      <button
+        v-for="index in slidesCount"
+        :key="`slider-default-pagination-${index}`"
+        class="h-1.5 rounded-full bg-bluegrey transition-width duration-300 ease-in-out"
+        :class="{
+          'w-10': currentPosition === index - 1,
+          'w-5 opacity-50': currentPosition !== index - 1,
+        }"
+        @click="currentPosition = index - 1"
+      />
+    </div>
   </div>
 </template>
 

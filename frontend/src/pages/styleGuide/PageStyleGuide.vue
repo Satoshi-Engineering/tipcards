@@ -235,12 +235,16 @@
       </CenterContainer>
     </section>
 
-    <section class="py-10 bg-grey-light">
+    <section class="mb-10 py-10 bg-grey-light">
       <CenterContainer class="mb-10">
         <HeadlineDefault level="h2">
           Slider
         </HeadlineDefault>
-        <SliderStyleGuide />
+        <SliderStyleGuide class="mb-10" :slides-without-image="0" />
+        <HeadlineDefault level="h3">
+          Without image
+        </HeadlineDefault>
+        <SliderStyleGuide :slides-with-image="0" />
       </CenterContainer>
 
       <CenterContainer>
@@ -249,7 +253,10 @@
         </HeadlineDefault>
       </CenterContainer>
       <CenterContainer class="!max-w-3xl">
-        <SliderStyleGuide />
+        <SliderStyleGuide
+          :slides-with-image="6"
+          :slides-without-image="6"
+        />
       </CenterContainer>
     </section>
   </TheLayout>
