@@ -16,7 +16,7 @@
       </template>
       <template #default>
         <HeadlineDefault level="h3">
-          Create a TipCard Set
+          <IconUseTipCards class="inline -mt-1 me-3 text-yellow" /> Use TipCards
         </HeadlineDefault>
         <ParagraphDefault class="mb-8">
           This is a typoblind text for this video slider that briefly describes what the video is about.
@@ -32,6 +32,7 @@
       v-for="index in slidesWithoutImage"
       :key="`slider-style-guide-slide-without-image-${index}`"
     >
+      <IconCreateTipCard class="text-yellow" />
       <HeadlineDefault level="h3">
         Create a TipCard Set
       </HeadlineDefault>
@@ -55,6 +56,8 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import SlideDefault from '@/components/slider/SlideDefault.vue'
 import SliderDefault from '@/components/slider/SliderDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
+import IconCreateTipCard from '@/components/icons/IconCreateTipCard.vue'
+import IconUseTipCards from '@/components/icons/IconUseTipCards.vue'
 
 defineProps({
   slidesWithImage: {
