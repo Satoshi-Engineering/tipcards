@@ -3,15 +3,15 @@
     <CenterContainer class="relative flex flex-col py-7 border-b border-white">
       <QuestionMark class="absolute -top-11 end-0" />
       <HeadlineDefault level="h2" class="!text-white">
-        {{ $t('footer.mostRelevantFAQs.title') }}
+        {{ $t('footer.mostRelevantFaqs.title') }}
       </HeadlineDefault>
       <ParagraphDefault class="mb-8 text-white">
-        {{ $t('footer.mostRelevantFAQs.subTitle') }}
+        {{ $t('footer.mostRelevantFaqs.subTitle') }}
       </ParagraphDefault>
       <ul class="mb-8 flex flex-col gap-4">
-        <TheMostRelevantFAQsListItem
+        <MostRelevantFaqsListItem
           v-for="(faq, index) in faqs"
-          :key="`mostRelevantFAQs-faq${index}`"
+          :key="`mostRelevantFaqs-faq${index}`"
           :question="faq.question"
           :answer="faq.answer"
           :active="activeIndex.includes(index)"
@@ -24,7 +24,7 @@
           reduced-animation
           data-test="link-faq"
         >
-          {{ $t('footer.mostRelevantFAQs.buttonToFAQs') }}
+          {{ $t('footer.mostRelevantFaqs.buttonToFaqs') }}
         </ButtonDefault>
       </ButtonGroup>
     </CenterContainer>
@@ -37,11 +37,11 @@ import { useI18n } from 'vue-i18n'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import TheMostRelevantFAQsListItem from '@/components/layout/TheMostRelevantFAQsListItem.vue'
+import MostRelevantFaqsListItem from '@/components/layout/theMostRelevantFaqs/MostRelevantFaqsListItem.vue'
 import QuestionMark from '@/components/icons/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonGroup from '../buttons/ButtonGroup.vue'
+import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
 
 const { t } = useI18n()
 
@@ -58,8 +58,8 @@ const faqs = computed(() => {
   let startingIndex = 1
   while (faqs.length < 3) {
     faqs.push({
-      question: t(`footer.mostRelevantFAQs.defaults.faq${startingIndex}.question`),
-      answer: t(`footer.mostRelevantFAQs.defaults.faq${startingIndex}.answer`),
+      question: t(`footer.mostRelevantFaqs.defaults.faq${startingIndex}.question`),
+      answer: t(`footer.mostRelevantFaqs.defaults.faq${startingIndex}.answer`),
     })
     startingIndex += 1
   }

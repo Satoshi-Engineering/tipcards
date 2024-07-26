@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
-import TheMostFrequentFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
+import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
 
 import '../../mocks/i18n'
 import '../../mocks/provide'
@@ -19,7 +19,7 @@ describe('TheLayout', () => {
     })
     expect(wrapper.getComponent(TheHeader)).toBeDefined()
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(wrapper.getComponent(TheMostFrequentFAQs)).toBeDefined()
+    expect(wrapper.getComponent(TheMostRelevantFaqs)).toBeDefined()
     expect(wrapper.getComponent(TheFooter)).toBeDefined()
   })
 
@@ -34,7 +34,7 @@ describe('TheLayout', () => {
     expect(() => wrapper.getComponent(TheHeader)).toThrowError()
     expect(wrapper.text()).toContain('Custom Header')
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(() => wrapper.getComponent(TheMostFrequentFAQs)).toThrowError()
+    expect(() => wrapper.getComponent(TheMostRelevantFaqs)).toThrowError()
     expect(() => wrapper.getComponent(TheFooter)).toThrowError()
     expect(wrapper.text()).toContain('Custom Footer')
   })
@@ -45,12 +45,12 @@ describe('TheLayout', () => {
         default: 'Satoshi Engineering Layout Test',
       },
       props: {
-        hideFAQs: true,
+        hideFaqs: true,
       },
     })
     expect(wrapper.getComponent(TheHeader)).toBeDefined()
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(() => wrapper.getComponent(TheMostFrequentFAQs)).toThrowError()
+    expect(() => wrapper.getComponent(TheMostRelevantFaqs)).toThrowError()
     expect(wrapper.getComponent(TheFooter)).toBeDefined()
   })
 })

@@ -3,7 +3,12 @@
     "back": "Zurück",
     "cards": "{count} Karte | {count} Karten",
     "userAccount": "Account",
-    "login": "Login"
+    "login": "Login",
+    "close": "Schließen"
+  },
+  "header": {
+    "mainNavLabel": "Hauptnavigation",
+    "langNavLabel": "Sprachnavigation"
   },
   "nav": {
     "index": "Home",
@@ -16,10 +21,10 @@
   },
   "footer": {
     "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.",
-    "mostRelevantFAQs": {
+    "mostRelevantFaqs": {
       "title": "Bug, Feedback oder Fragen?",
       "subTitle": "Wir sind stetig dabei uns zu verbessern!",
-      "buttonToFAQs": "Zu den FAQs",
+      "buttonToFaqs": "Zu den FAQs",
       "defaults": {
         "faq1": {
           "question": "Das könnte die erste Frage sein?",

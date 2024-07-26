@@ -9,8 +9,8 @@
       <slot name="default" />
     </div>
     <slot name="footer">
-      <TheMostRelevantFAQs
-        v-if="!hideFAQs"
+      <TheMostRelevantFaqs
+        v-if="!hideFaqs"
         class="print:hidden"
         :faqs="faqs"
       />
@@ -24,10 +24,10 @@ import type { PropType } from 'vue'
 
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheFooter from '@/components/layout/TheFooter.vue'
-import TheMostRelevantFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
+import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
 
 defineProps({
-  hideFAQs: {
+  hideFaqs: {
     type: Boolean,
     default: false,
   },

@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, type PropType } from 'vue'
-import { type RouteLocationNamedRaw } from 'vue-router'
+import type { PropType } from 'vue'
+import type { RouteLocationNamedRaw } from 'vue-router'
 
-import LinkDefault from '../typography/LinkDefault.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 defineProps({
   to: {

@@ -3,7 +3,12 @@
     "back": "Back",
     "cards": "{count} card | {count} cards",
     "userAccount": "Account",
-    "login": "Login"
+    "login": "Login",
+    "close": "Close"
+  },
+  "header": {
+    "mainNavLabel": "Main navigation",
+    "langNavLabel": "Language selection"
   },
   "nav": {
     "index": "Home",
@@ -16,10 +21,10 @@
   },
   "footer": {
     "support": "Any questions or feedback? Or did you find a problem or bug? Don't hesitate to contact us: {email}.",
-    "mostRelevantFAQs": {
+    "mostRelevantFaqs": {
       "title": "Bug, feedback or questions?",
       "subTitle": "We are constantly improving!",
-      "buttonToFAQs": "To the FAQs",
+      "buttonToFaqs": "To the FAQs",
       "defaults": {
         "faq1": {
           "question": "That could be the first question?",

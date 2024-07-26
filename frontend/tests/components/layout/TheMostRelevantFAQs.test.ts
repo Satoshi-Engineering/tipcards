@@ -1,15 +1,15 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import TheMostRelevantFAQs from '@/components/layout/TheMostRelevantFAQs.vue'
+import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
 
 import '../../mocks/i18n'
 import '../../mocks/provide'
 import '../../mocks/router'
 
-describe('TheMostRelevantFAQs', () => {
+describe('TheMostRelevantFaqs', () => {
   it('renders the most relevant faqs', async () => {
-    const wrapper = mount(TheMostRelevantFAQs, {
+    const wrapper = mount(TheMostRelevantFaqs, {
       props: {
         faqs: [
           { question: 'What is the meaning of life?', answer: '42' },
@@ -21,7 +21,7 @@ describe('TheMostRelevantFAQs', () => {
   })
 
   it('show the second answer when question is clicked', async () => {
-    const wrapper = mount(TheMostRelevantFAQs, {
+    const wrapper = mount(TheMostRelevantFaqs, {
       props: {
         faqs: [
           { question: 'What is the meaning of life?', answer: '42' },

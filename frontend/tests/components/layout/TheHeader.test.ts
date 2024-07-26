@@ -2,7 +2,7 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import TheHeader from '@/components/layout/TheHeader.vue'
-import TheMainNav from '@/components/layout/TheMainNav.vue'
+import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconClose from '@/components/icons/IconClose.vue'

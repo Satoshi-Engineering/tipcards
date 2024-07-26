@@ -95,7 +95,7 @@ import { storeToRefs } from 'pinia'
 import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle, BIconQrCodeScan } from 'bootstrap-icons-vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import MainNavItem from '@/components/layout/MainNavItem.vue'
+import MainNavItem from '@/components/layout/theMainNav/MainNavItem.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 
