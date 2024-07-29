@@ -38,30 +38,48 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-const props = defineProps({
-  carousel: {
-    type: Boolean,
-    default: false,
-  },
-})
+import { useI18nHelpers } from '@/modules/initI18n'
+
+const { currentTextDirection } = useI18nHelpers()
 
 const width = ref(0)
 const slider = ref<HTMLElement | null>(null)
 const slidesCount = ref(0)
 const currentPosition = ref(0)
 
-const translateX = computed(() => {
+const translateX = computed(() =>
+  currentTextDirection.value === 'ltr'
+    ? translateXLTR.value
+    : translateXRTL.value,
+)
+
+const translateXLTR = computed(() => {
   let translateX = -currentPosition.value * width.value
   if (pointerDown.value) {
     translateX += pointerXDelta.value
   }
   if (translateX > 0) {
     return translateX * 0.35
-  } else if (translateX < -width.value * (slidesCount.value - 1)) {
-    return -width.value * (slidesCount.value - 1) + (translateX + width.value * (slidesCount.value - 1)) * 0.35
+  } else if (translateX < -maxSlideDistance.value) {
+    return -maxSlideDistance.value + (translateX + maxSlideDistance.value) * 0.35
   }
   return translateX
 })
+
+const translateXRTL = computed(() => {
+  let translateX = currentPosition.value * width.value
+  if (pointerDown.value) {
+    translateX += pointerXDelta.value
+  }
+  if (translateX < 0) {
+    return translateX * 0.35
+  } else if (translateX > maxSlideDistance.value) {
+    return maxSlideDistance.value + (translateX - maxSlideDistance.value) * 0.35
+  }
+  return translateX
+})
+
+const maxSlideDistance = computed(() => width.value * (slidesCount.value - 1))
 
 const init = () => {
   slidesCount.value = slider.value?.querySelectorAll(':scope > ul > .w-full').length || 0
@@ -69,19 +87,11 @@ const init = () => {
 }
 
 const previousSlide = () => {
-  if (props.carousel) {
-    currentPosition.value = (currentPosition.value - 1 + slidesCount.value) % slidesCount.value
-  } else {
-    currentPosition.value = Math.max(currentPosition.value - 1, 0)
-  }
+  currentPosition.value = Math.max(currentPosition.value - 1, 0)
 }
 
 const nextSlide = () => {
-  if (props.carousel) {
-    currentPosition.value = (currentPosition.value + 1) % slidesCount.value
-  } else {
-    currentPosition.value = Math.min(currentPosition.value + 1, slidesCount.value - 1)
-  }
+  currentPosition.value = Math.min(currentPosition.value + 1, slidesCount.value - 1)
 }
 
 const pointerDown = ref(false)
@@ -171,12 +181,20 @@ const onPointerMove = (event: PointerEvent) => {
 }
 
 const onPointerUp = (event: PointerEvent) => {
-  const currentPanPosition = -translateX.value / width.value
+  const currentPanPosition = Math.abs(translateX.value) / width.value
   let targetPosition = Math.round(currentPanPosition)
-  if (swipeDirection.value === 'left') {
-    targetPosition = Math.ceil(currentPanPosition)
-  } else if (swipeDirection.value === 'right') {
-    targetPosition = Math.floor(currentPanPosition)
+  if (currentTextDirection.value === 'ltr') {
+    if (swipeDirection.value === 'left') {
+      targetPosition = Math.ceil(currentPanPosition)
+    } else if (swipeDirection.value === 'right') {
+      targetPosition = Math.floor(currentPanPosition)
+    }
+  } else {
+    if (swipeDirection.value === 'left') {
+      targetPosition = Math.floor(currentPanPosition)
+    } else if (swipeDirection.value === 'right') {
+      targetPosition = Math.ceil(currentPanPosition)
+    }
   }
   slider.value?.releasePointerCapture(event.pointerId)
   pointerDown.value = false

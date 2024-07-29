@@ -19,6 +19,7 @@
           <IconUseTipCards class="inline -mt-1 me-3 text-yellow" /> Use TipCards
         </HeadlineDefault>
         <ParagraphDefault class="mb-8">
+          Slide {{ index }}<br>
           This is a typoblind text for this video slider that briefly describes what the video is about.
         </ParagraphDefault>
         <ButtonIcon
@@ -37,6 +38,7 @@
         Create a TipCard Set
       </HeadlineDefault>
       <ParagraphDefault class="mb-8">
+        Slide {{ index }}<br>
         This is a typoblind text for this video slider that briefly describes what the video is about.
       </ParagraphDefault>
       <ButtonIcon
