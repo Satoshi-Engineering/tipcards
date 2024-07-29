@@ -47,6 +47,9 @@ export default {
       spacing: {
         '18': '4.5rem',
       },
+      borderRadius: {
+        'default': '0.857rem',
+      },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
         'spin-reverse': 'spin 1s linear infinite reverse',

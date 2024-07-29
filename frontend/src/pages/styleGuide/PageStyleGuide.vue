@@ -259,6 +259,46 @@
         />
       </CenterContainer>
     </section>
+
+    <section>
+      <HeroSection>
+        <template #default>
+          <HeadlineDefault level="h1">
+            Hero Section
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+        </template>
+        <template #button>
+          <ButtonDefault>
+            Button somewhere
+          </ButtonDefault>
+        </template>
+        <template #image>
+          <img
+            src="https://placehold.co/800x600"
+            alt="Placeholder"
+            class="w-full h-full object-cover rounded-default"
+          >
+        </template>
+      </HeroSection>
+      <HeroSection>
+        <template #default>
+          <HeadlineDefault level="h1">
+            Another Hero Section without an image
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+        </template>
+        <template #button>
+          <ButtonDefault>
+            Another Button
+          </ButtonDefault>
+        </template>
+      </HeroSection>
+    </section>
   </TheLayout>
 </template>
 
@@ -275,6 +315,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import SliderStyleGuide from './SliderStyleGuide.vue'
+import HeroSection from '@/components/HeroSection.vue'
 
 const route = useRoute()
 
