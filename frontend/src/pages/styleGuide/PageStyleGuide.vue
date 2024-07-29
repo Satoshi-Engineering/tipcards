@@ -46,19 +46,19 @@
           Button Default
         </HeadlineDefault>
 
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault @click="onDummyClick">
             Primary Button
           </ButtonDefault>
           <ButtonDefault reduced-animation @click="onDummyClick">
             Reduced animation
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
 
         <HeadlineDefault level="h3">
           Multi line
         </HeadlineDefault>
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault @click="onDummyClick">
             This is a very long text in this button, why would you do that?
           </ButtonDefault>
@@ -68,12 +68,12 @@
           >
             This is a very long secondary text in this button, why would you do that?
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
 
         <HeadlineDefault level="h3">
           Loading
         </HeadlineDefault>
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault
             :loading="dummyLoading"
             @click="onDummyLoading"
@@ -86,12 +86,12 @@
           >
             Infinite Loading
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
 
         <HeadlineDefault level="h3">
           Disabled
         </HeadlineDefault>
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault
             disabled
             @click="onDummyClick"
@@ -105,12 +105,12 @@
           >
             Disabled Secondary Button
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
 
         <HeadlineDefault level="h3">
           As Router Links
         </HeadlineDefault>
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault :to="dummyLink">
             Primary Button
           </ButtonDefault>
@@ -120,12 +120,12 @@
           >
             Secondary Button
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
 
         <HeadlineDefault level="h3">
           As Hrefs
         </HeadlineDefault>
-        <ButtonGroup>
+        <ButtonContainer>
           <ButtonDefault href="https://satoshiengineering.com/">
             Primary Button
           </ButtonDefault>
@@ -135,7 +135,7 @@
           >
             Secondary Button
           </ButtonDefault>
-        </ButtonGroup>
+        </ButtonContainer>
       </CenterContainer>
     </section>
 
@@ -272,7 +272,7 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import SliderStyleGuide from './SliderStyleGuide.vue'
 

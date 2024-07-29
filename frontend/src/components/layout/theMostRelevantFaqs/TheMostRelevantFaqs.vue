@@ -18,7 +18,7 @@
           @click="onClick(index)"
         />
       </ul>
-      <ButtonGroup>
+      <ButtonContainer>
         <ButtonDefault
           :to="{ name: 'faqs' }"
           reduced-animation
@@ -26,7 +26,7 @@
         >
           {{ $t('footer.mostRelevantFaqs.buttonToFaqs') }}
         </ButtonDefault>
-      </ButtonGroup>
+      </ButtonContainer>
     </CenterContainer>
   </section>
 </template>
@@ -41,7 +41,7 @@ import MostRelevantFaqsListItem from '@/components/layout/theMostRelevantFaqs/Mo
 import QuestionMark from '@/components/icons/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import ButtonGroup from '@/components/buttons/ButtonGroup.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 
 const { t } = useI18n()
 
