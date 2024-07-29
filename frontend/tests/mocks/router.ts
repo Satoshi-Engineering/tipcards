@@ -1,4 +1,13 @@
 import { config, RouterLinkStub } from '@vue/test-utils'
+import { vi } from 'vitest'
+
+export const mockRoute = {
+  params: {},
+}
+
+export const mockRouter = {
+  push: vi.fn(),
+}
 
 config.global.stubs = {
   ...config.global.stubs,
@@ -6,7 +15,6 @@ config.global.stubs = {
 }
 config.global.mocks = {
   ...config.global.mocks,
-  $route: {
-    params: {},
-  },
+  $route: mockRoute,
+  $router: mockRouter,
 }

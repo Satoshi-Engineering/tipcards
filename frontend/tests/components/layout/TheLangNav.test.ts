@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import '../../mocks/router'
@@ -47,5 +47,16 @@ describe('TheLangNav', () => {
       expect(routerLink.classes()).not.toContain('underline')
       expect(routerLink.classes()).toContain('hover:underline')
     })
+  })
+
+  it('switches the language', async () => {
+    const wrapper = mount(TheLangNav)
+    const routerLinks = wrapper.findAll('li > a')
+    const localeCodes = Object.keys(LOCALES)
+    expect(routerLinks[routerLinks.length - 1].getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({
+      params: {
+        lang: localeCodes[localeCodes.length - 1],
+      },
+    }))
   })
 })
