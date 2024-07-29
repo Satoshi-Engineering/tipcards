@@ -18,19 +18,19 @@
       <slot
         :previous-slide="previousSlide"
         :next-slide="nextSlide"
-        :current-position="currentPosition"
+        :current-position="currentSlide"
       />
     </ul>
     <div class="my-2 flex gap-1 justify-center" data-test="slider-default-pagination">
       <button
-        v-for="index in slidesCount"
+        v-for="(_, index) in slidesCount"
         :key="`slider-default-pagination-${index}`"
         class="h-1.5 rounded-full bg-bluegrey transition-width duration-300 ease-in-out"
         :class="{
-          'w-10': currentPosition === index - 1,
-          'w-5 opacity-50': currentPosition !== index - 1,
+          'w-10': currentSlide === index,
+          'w-5 opacity-50': currentSlide !== index,
         }"
-        @click="currentPosition = index - 1"
+        @click="currentSlide = index"
       />
     </div>
   </div>
@@ -46,86 +46,19 @@ const { currentTextDirection } = useI18nHelpers()
 const MIN_DISTANCE_SWIPED_FOR_SLIDE = 10
 const MIN_VELOCITY_FOR_SLIDE = 0.1 // px/ms
 
-const width = ref(0)
-const slider = ref<HTMLElement | null>(null)
+/////
+// public properties
 const slidesCount = ref(0)
-const currentPosition = ref(0)
 
-const translateX = computed(() =>
-  currentTextDirection.value === 'ltr'
-    ? translateXLTR.value
-    : translateXRTL.value,
-)
-
-const translateXLTR = computed(() => {
-  let translateX = -currentPosition.value * width.value
-  if (pointerDown.value) {
-    translateX += pointerXDelta.value
-  }
-  if (translateX > 0) {
-    return translateX * 0.35
-  } else if (translateX < -maxSlideDistance.value) {
-    return -maxSlideDistance.value + (translateX + maxSlideDistance.value) * 0.35
-  }
+const translateX = computed(() => {
+  let translateX = translateXForCurrentSlide.value
+  translateX = addPointerXDeltaIfNecessary(translateX)
+  translateX = applyResistanceIfNecessary(translateX)
   return translateX
 })
 
-const translateXRTL = computed(() => {
-  let translateX = currentPosition.value * width.value
-  if (pointerDown.value) {
-    translateX += pointerXDelta.value
-  }
-  if (translateX < 0) {
-    return translateX * 0.35
-  } else if (translateX > maxSlideDistance.value) {
-    return maxSlideDistance.value + (translateX - maxSlideDistance.value) * 0.35
-  }
-  return translateX
-})
-
-const maxSlideDistance = computed(() => width.value * (slidesCount.value - 1))
-
-const init = () => {
-  slidesCount.value = slider.value?.querySelectorAll(':scope > ul > .w-full').length || 0
-  width.value = slider.value?.getBoundingClientRect().width || 0
-}
-
-const previousSlide = () => {
-  currentPosition.value = Math.max(currentPosition.value - 1, 0)
-}
-
-const nextSlide = () => {
-  currentPosition.value = Math.min(currentPosition.value + 1, slidesCount.value - 1)
-}
-
-const pointerDown = ref(false)
-const pointerXStart = ref(0)
-const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
-const lastPointerXPosition = computed(() => {
-  if (previousPointerPositions.value.length === 0) {
-    return 0
-  }
-  return previousPointerPositions.value[previousPointerPositions.value.length - 1].x
-})
-const pointerXDelta = computed(() => lastPointerXPosition.value - pointerXStart.value)
-const swipeDirection = computed<'left' | 'right' | null>(() => {
-  if (previousPointerPositions.value.length < 2) {
-    return null
-  }
-  const first = previousPointerPositions.value[0]
-  const last = previousPointerPositions.value[previousPointerPositions.value.length - 1]
-  if (Math.abs(last.x - first.x) < MIN_DISTANCE_SWIPED_FOR_SLIDE) {
-    return null
-  }
-  const velocity = (last.x - first.x) / (last.timeStamp - first.timeStamp)
-  if (velocity < -MIN_VELOCITY_FOR_SLIDE) {
-    return 'left'
-  } else if (velocity > MIN_VELOCITY_FOR_SLIDE) {
-    return 'right'
-  }
-  return null
-})
-
+/////
+// public methods
 const onPointerDown = (event: PointerEvent) => {
   if (
     event.target == null
@@ -202,7 +135,113 @@ const onPointerUp = (event: PointerEvent) => {
   }
   slider.value?.releasePointerCapture(event.pointerId)
   pointerDown.value = false
-  currentPosition.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
+  currentSlide.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
+}
+
+const previousSlide = () => {
+  currentSlide.value = Math.max(currentSlide.value - 1, 0)
+}
+
+const nextSlide = () => {
+  currentSlide.value = Math.min(currentSlide.value + 1, slidesCount.value - 1)
+}
+
+/////
+// private properties
+const width = ref(0)
+const slider = ref<HTMLElement | null>(null)
+const currentSlide = ref(0)
+const pointerDown = ref(false)
+const pointerXStart = ref(0)
+const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
+
+const translateXForCurrentSlide = computed(() => {
+  if (currentTextDirection.value === 'ltr') {
+    return -currentSlide.value * width.value
+  }
+  return currentSlide.value * width.value
+})
+
+const maxSlideDistance = computed(() => width.value * (slidesCount.value - 1))
+
+const lastPointerXPosition = computed(() => {
+  if (previousPointerPositions.value.length === 0) {
+    return 0
+  }
+  return previousPointerPositions.value[previousPointerPositions.value.length - 1].x
+})
+
+const pointerXDelta = computed(() => lastPointerXPosition.value - pointerXStart.value)
+
+const swipeDirection = computed<'left' | 'right' | null>(() => {
+  if (!minimumSwipeDistanceForSlideReached.value) {
+    return null
+  }
+  if (swipeVelocity.value < -MIN_VELOCITY_FOR_SLIDE) {
+    return 'left'
+  } else if (swipeVelocity.value > MIN_VELOCITY_FOR_SLIDE) {
+    return 'right'
+  }
+  return null
+})
+
+const minimumSwipeDistanceForSlideReached = computed(() => {
+  if (previousPointerPositions.value.length < 2) {
+    return false
+  }
+  const first = previousPointerPositions.value[0]
+  const last = previousPointerPositions.value[previousPointerPositions.value.length - 1]
+  return Math.abs(last.x - first.x) >= MIN_DISTANCE_SWIPED_FOR_SLIDE
+})
+
+const swipeVelocity = computed(() => {
+  if (previousPointerPositions.value.length < 2) {
+    return 0
+  }
+  const first = previousPointerPositions.value[0]
+  const last = previousPointerPositions.value[previousPointerPositions.value.length - 1]
+  return (last.x - first.x) / (last.timeStamp - first.timeStamp)
+})
+
+/////
+// private methods
+const outOfBoundsStart = (translateX: number) => {
+  if (currentTextDirection.value === 'ltr') {
+    return translateX > 0
+  }
+  return translateX < 0
+}
+
+const outOfBoundsEnd = (translateX: number) => {
+  if (currentTextDirection.value === 'ltr') {
+    return translateX < -maxSlideDistance.value
+  }
+  return translateX > maxSlideDistance.value
+}
+
+const applyResistanceIfNecessary = (translateX: number) => {
+  if (outOfBoundsStart(translateX)) {
+    return translateX * 0.35
+  }
+  if (!outOfBoundsEnd(translateX)) {
+    return translateX
+  }
+  if (currentTextDirection.value === 'ltr') {
+    return -maxSlideDistance.value + (translateX + maxSlideDistance.value) * 0.35
+  }
+  return maxSlideDistance.value + (translateX - maxSlideDistance.value) * 0.35
+}
+
+const addPointerXDeltaIfNecessary = (translateX: number) => {
+  if (!pointerDown.value) {
+    return translateX
+  }
+  return translateX + pointerXDelta.value
+}
+
+const init = () => {
+  slidesCount.value = slider.value?.querySelectorAll(':scope > ul > .w-full').length || 0
+  width.value = slider.value?.getBoundingClientRect().width || 0
 }
 
 onMounted(() => {
