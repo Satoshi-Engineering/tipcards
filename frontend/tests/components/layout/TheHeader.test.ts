@@ -1,6 +1,9 @@
+import '../../mocks/i18n'
+import '../../mocks/pinia'
+import '../../mocks/router'
+
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import { createPinia, setActivePinia } from 'pinia'
 
 import '../../mocks/router'
 import '../../mocks/i18n'
@@ -77,8 +80,6 @@ describe('TheHeader', () => {
   })
 
   it('click on the Main nav button should toggle TheMainNav and X should close it again', async () => {
-    setActivePinia(createPinia())
-
     const wrapper = mount(TheHeader)
     expect(wrapper.getComponent(IconWorld)).toBeDefined()
     expect(wrapper.getComponent(IconMainNav)).toBeDefined()

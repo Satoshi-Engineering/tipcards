@@ -80,6 +80,7 @@
   },
   "devDependencies": {
     "@dbml/core": "^3.6.1",
+    "@pinia/testing": "^0.1.4",
     "@rushstack/eslint-patch": "^1.10.3",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",

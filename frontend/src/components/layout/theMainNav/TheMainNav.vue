@@ -40,25 +40,45 @@
         </li>
       </menu>
       <hr class="my-3 border-t border-white-50">
+      <template v-if="authStore.isLoggedIn">
+        <menu>
+          <li>
+            <MainNavItem
+              :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
+              :label="userDisplayName != null && userDisplayName.length > 0 ? userDisplayName : $t('general.userAccount')"
+              @click="$emit('itemSelected')"
+            >
+              <BIconPersonCircle />
+            </MainNavItem>
+            <MainNavItem
+              v-if="userDisplayName != null && userDisplayName.length > 0"
+              class="!text-base !font-normal !pt-0"
+              :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
+              :label="$t('nav.goToAccount')"
+              @click="$emit('itemSelected')"
+            />
+          </li>
+        </menu>
+        <hr class="my-3 border-t border-white-50">
+      </template>
       <menu>
         <li v-if="isLoggedIn">
           <MainNavItem
+            data-test="main-nav-link-logout"
+            class="!text-base"
             :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
-            :label="userDisplayName != null && userDisplayName.length > 0 ? userDisplayName : $t('general.userAccount')"
-            @click="$emit('itemSelected')"
+            :label="$t('auth.buttonLogout')"
+            @click="async () => {
+              await authStore.logout()
+              $emit('itemSelected')
+            }"
           >
-            <BIconPersonCircle />
+            <BIconArrowLeftCircleFill class="rtl:rotate-180" />
           </MainNavItem>
-          <MainNavItem
-            v-if="userDisplayName != null && userDisplayName.length > 0"
-            class="!text-base !font-normal !pt-0"
-            :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
-            :label="$t('nav.goToAccount')"
-            @click="$emit('itemSelected')"
-          />
         </li>
         <li v-else>
           <MainNavItem
+            data-test="main-nav-link-login"
             :label="$t('general.login')"
             @click="() => {
               showModalLogin = true
@@ -69,24 +89,6 @@
           </MainNavItem>
         </li>
       </menu>
-      <template v-if="isLoggedIn">
-        <hr class="my-3 border-t border-white-50">
-        <menu>
-          <li>
-            <MainNavItem
-              class="!text-base"
-              :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
-              :label="$t('auth.buttonLogout')"
-              @click="async () => {
-                await authStore.logout()
-                $emit('itemSelected')
-              }"
-            >
-              <BIconArrowLeftCircleFill class="rtl:rotate-180" />
-            </MainNavItem>
-          </li>
-        </menu>
-      </template>
     </CenterContainer>
   </nav>
 </template>
