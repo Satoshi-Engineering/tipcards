@@ -3,6 +3,7 @@
     ref="slider"
     class="-m-5 overflow-hidden touch-pan-y"
     tabindex="0"
+    data-test="slider-default"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
