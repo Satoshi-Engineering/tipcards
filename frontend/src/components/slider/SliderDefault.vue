@@ -20,7 +20,7 @@
         :current-position="currentPosition"
       />
     </ul>
-    <div class="my-2 flex gap-1 justify-center">
+    <div class="my-2 flex gap-1 justify-center" data-test="slider-default-pagination">
       <button
         v-for="index in slidesCount"
         :key="`slider-default-pagination-${index}`"

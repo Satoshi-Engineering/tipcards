@@ -1,14 +1,14 @@
 import { config, mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
+import '../../mocks/i18n'
+import '../../mocks/provide'
+import '../../mocks/router'
+
 import TheFooter from '@/components/layout/TheFooter.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
 import IconX from '@/components/icons/IconX.vue'
 import IconInstagram from '@/components/icons/IconInstagram.vue'
-
-import '../../mocks/i18n'
-import '../../mocks/provide'
-import '../../mocks/router'
 
 describe('TheFooter', () => {
   it('renders the footer', async () => {

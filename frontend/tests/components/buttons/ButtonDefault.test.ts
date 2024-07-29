@@ -1,9 +1,9 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-
 import '../../mocks/router'
+
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 
 describe('ButtonDefault', () => {
   it('renders a router link', async () => {

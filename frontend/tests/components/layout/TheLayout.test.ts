@@ -1,14 +1,14 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
+import '../../mocks/i18n'
+import '../../mocks/provide'
+import '../../mocks/router'
+
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
-
-import '../../mocks/i18n'
-import '../../mocks/provide'
-import '../../mocks/router'
 
 describe('TheLayout', () => {
   it('renders the layout', async () => {

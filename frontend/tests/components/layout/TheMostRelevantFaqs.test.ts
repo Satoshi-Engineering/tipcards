@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
-
 import '../../mocks/i18n'
 import '../../mocks/provide'
 import '../../mocks/router'
+
+import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
 
 describe('TheMostRelevantFaqs', () => {
   it('renders the most relevant faqs', async () => {

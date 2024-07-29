@@ -2,14 +2,14 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 
+import '../../mocks/router'
+import '../../mocks/i18n'
+
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconClose from '@/components/icons/IconClose.vue'
-
-import '../../mocks/router'
-import '../../mocks/i18n'
 import IconMainNav from '@/components/icons/IconMainNav.vue'
 
 describe('TheHeader', () => {
