@@ -43,6 +43,9 @@ import { useI18nHelpers } from '@/modules/initI18n'
 
 const { currentTextDirection } = useI18nHelpers()
 
+const MIN_DISTANCE_SWIPED_FOR_SLIDE = 10
+const MIN_VELOCITY_FOR_SLIDE = 0.1 // px/ms
+
 const width = ref(0)
 const slider = ref<HTMLElement | null>(null)
 const slidesCount = ref(0)
@@ -111,13 +114,13 @@ const swipeDirection = computed<'left' | 'right' | null>(() => {
   }
   const first = previousPointerPositions.value[0]
   const last = previousPointerPositions.value[previousPointerPositions.value.length - 1]
-  if (Math.abs(last.x - first.x) < 10) {
+  if (Math.abs(last.x - first.x) < MIN_DISTANCE_SWIPED_FOR_SLIDE) {
     return null
   }
   const velocity = (last.x - first.x) / (last.timeStamp - first.timeStamp)
-  if (velocity < -1) {
+  if (velocity < -MIN_VELOCITY_FOR_SLIDE) {
     return 'left'
-  } else if (velocity > 1) {
+  } else if (velocity > MIN_VELOCITY_FOR_SLIDE) {
     return 'right'
   }
   return null
