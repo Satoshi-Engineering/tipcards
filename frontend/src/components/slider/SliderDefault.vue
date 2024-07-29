@@ -60,29 +60,22 @@ const translateX = computed(() => {
 /////
 // public methods
 const onPointerDown = (event: PointerEvent) => {
-  if (
-    event.target == null
-    || !(
-      event.target instanceof HTMLElement
-      || event.target instanceof HTMLImageElement
-    )
-  ) {
+  const target = getEventTarget(event)
+  if (target == null) {
     return
   }
-  const target = event.target as HTMLElement | HTMLImageElement
-  if (
-    target.tagName === 'BUTTON'
-    || target.closest('button')
-    || target.tagName === 'A'
-    || target.closest('a')
-  ) {
+  if (targetIsButtonOrLink(target)) {
     return
   }
   event.preventDefault()
+
+  // release pointer capture from previous target
   if (target.hasPointerCapture(event.pointerId)) {
     target.releasePointerCapture(event.pointerId)
   }
   slider.value?.setPointerCapture(event.pointerId)
+
+  // reset previous pointer positions
   pointerDown.value = true
   pointerXStart.value = event.pageX
   previousPointerPositions.value = [{ x: event.pageX, timeStamp: event.timeStamp }]
@@ -120,19 +113,23 @@ const onPointerMove = (event: PointerEvent) => {
 const onPointerUp = (event: PointerEvent) => {
   const currentPanPosition = Math.abs(translateX.value) / width.value
   let targetPosition = Math.round(currentPanPosition)
+
+  // apply swipe direction (if distance and velocity are sufficient)
   if (currentTextDirection.value === 'ltr') {
-    if (swipeDirection.value === 'left') {
+    if (swipeDirectionIfDistanceAndVelocitySufficient.value === 'left') {
       targetPosition = Math.ceil(currentPanPosition)
-    } else if (swipeDirection.value === 'right') {
+    } else if (swipeDirectionIfDistanceAndVelocitySufficient.value === 'right') {
       targetPosition = Math.floor(currentPanPosition)
     }
   } else {
-    if (swipeDirection.value === 'left') {
+    if (swipeDirectionIfDistanceAndVelocitySufficient.value === 'left') {
       targetPosition = Math.floor(currentPanPosition)
-    } else if (swipeDirection.value === 'right') {
+    } else if (swipeDirectionIfDistanceAndVelocitySufficient.value === 'right') {
       targetPosition = Math.ceil(currentPanPosition)
     }
   }
+
+  // reset
   slider.value?.releasePointerCapture(event.pointerId)
   pointerDown.value = false
   currentSlide.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
@@ -173,7 +170,7 @@ const lastPointerXPosition = computed(() => {
 
 const pointerXDelta = computed(() => lastPointerXPosition.value - pointerXStart.value)
 
-const swipeDirection = computed<'left' | 'right' | null>(() => {
+const swipeDirectionIfDistanceAndVelocitySufficient = computed<'left' | 'right' | null>(() => {
   if (!minimumSwipeDistanceForSlideReached.value) {
     return null
   }
@@ -205,6 +202,29 @@ const swipeVelocity = computed(() => {
 
 /////
 // private methods
+const getEventTarget = (event: PointerEvent) => {
+  if (event.target == null) {
+    return null
+  }
+  if (
+    event.target instanceof HTMLElement
+    || event.target instanceof HTMLImageElement
+  ) {
+    return event.target
+  }
+  return null
+}
+
+const targetIsButtonOrLink = (target: HTMLElement) => {
+  if (target.tagName === 'BUTTON' || target.closest('button')) {
+    return true
+  }
+  if (target.tagName === 'A' || target.closest('a')) {
+    return true
+  }
+  return false
+}
+
 const outOfBoundsStart = (translateX: number) => {
   if (currentTextDirection.value === 'ltr') {
     return translateX > 0
