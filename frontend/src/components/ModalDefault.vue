@@ -8,7 +8,7 @@
       @click.stop
     >
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow p-4">
+      <div class="relative bg-white rounded-default shadow p-4">
         <div class="flex items-start justify-between mb-4">
           <slot name="headline">
             <HeadlineDefault level="h3">
@@ -18,7 +18,7 @@
           <button
             v-if="showCloseButton"
             type="button"
-            class="text-grey bg-transparent hover:bg-grey-light hover:text-grey-dark rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            class="text-grey bg-transparent hover:bg-grey-light hover:text-grey-dark rounded-default text-sm p-1.5 ml-auto inline-flex items-center"
             @click="$emit('close')"
           >
             <svg

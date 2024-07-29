@@ -1,5 +1,5 @@
 <template>
-  <section class="rounded-t-2xl bg-bluegrey" data-test="the-most-relevant-faqs">
+  <section class="mt-10 rounded-t-default bg-bluegrey" data-test="the-most-relevant-faqs">
     <CenterContainer class="relative flex flex-col py-7 border-b border-white">
       <QuestionMark class="absolute -top-11 end-0" />
       <HeadlineDefault level="h2" class="!text-white">
