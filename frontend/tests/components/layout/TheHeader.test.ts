@@ -1,5 +1,6 @@
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { createPinia, setActivePinia } from 'pinia'
 
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
@@ -73,5 +74,26 @@ describe('TheHeader', () => {
       await button.trigger('mouseover')
       expect(button.classes()).toContain('hover:text-yellow')
     })
+  })
+
+  it('click on the Main nav button should toggle TheMainNav and X should close it again', async () => {
+    setActivePinia(createPinia())
+
+    const wrapper = mount(TheHeader)
+    expect(wrapper.getComponent(IconWorld)).toBeDefined()
+    expect(wrapper.getComponent(IconMainNav)).toBeDefined()
+    expect(wrapper.findComponent(TheMainNav).exists()).toBe(false)
+
+    const mainNavOpenButton = wrapper.getComponent(IconMainNav)
+    await mainNavOpenButton.trigger('click')
+    expect(wrapper.findComponent(IconWorld).exists()).toBe(false)
+    expect(wrapper.findComponent(IconMainNav).exists()).toBe(false)
+    expect(wrapper.getComponent(TheMainNav)).toBeDefined()
+
+    const langNavCloseButton = wrapper.getComponent(IconClose)
+    await langNavCloseButton.trigger('click')
+    expect(wrapper.getComponent(IconWorld)).toBeDefined()
+    expect(wrapper.getComponent(IconMainNav)).toBeDefined()
+    expect(wrapper.findComponent(TheMainNav).exists()).toBe(false)
   })
 })
