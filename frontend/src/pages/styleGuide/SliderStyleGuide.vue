@@ -16,7 +16,7 @@
       </template>
       <template #default>
         <HeadlineDefault level="h3">
-          <IconRectanglesQuestionmark class="inline -mt-1 me-3 text-yellow" /> Use TipCards
+          <IconRectanglesQuestionmark class="inline w-10 -mt-1 me-3 text-yellow" /> Use TipCards
         </HeadlineDefault>
         <ParagraphDefault class="mb-8">
           Slide {{ index }}<br>
@@ -33,7 +33,7 @@
       v-for="index in slidesWithoutImage"
       :key="`slider-style-guide-slide-without-image-${index}`"
     >
-      <IconRectanglePlus class="text-yellow" />
+      <IconRectanglePlus class="text-yellow w-10" />
       <HeadlineDefault level="h3">
         Create a TipCard Set
       </HeadlineDefault>
