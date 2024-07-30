@@ -396,7 +396,16 @@
     "modalText": "Deine TipCards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
     "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
     "modalLogin": "Sets übertragen",
-    "modalClose": "Später"
+    "modalClose": "Später",
+    "setsPage": {
+      "headline": "Lokale Sets",
+      "text": "Diese Sets sind lokal im Browser gespeichert. Log dich ein, um sie in deinem Account zu speichern und von all deinen Geräten darauf zuzugreifen.",
+      "explanation": "Klicke auf den Set Namen um das Set zu öffnen. Im eingeloggten Zustand kannst du es dann speichern. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
+      "noSets": "Du hast keine Sets lokal gespeichert.",
+      "buttonClearAll": "Alle löschen",
+      "confirmClearAll": "Möchtest du wirklich alle lokalen Sets löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "buttonBack": "Zurück"
+    }
   },
   "bulkWithdraw": {
     "title": "Sats zurückholen",

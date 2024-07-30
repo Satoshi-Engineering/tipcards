@@ -362,7 +362,16 @@
     "modalText": "Your TipCards sets are currently stored locally in the browser. This means you can only see them on this device. Log in to save your sets in your account and get access from all your devices.",
     "modalDeprecationHint": "Your local sets will remain visible here until January 31, 2024. Please make sure you transfer them to your account before that date. Don't worry: There will still be a recovery option for your old sets afterwards. Alternatively, you can bookmark the set links.",
     "modalLogin": "Transfer sets",
-    "modalClose": "Later"
+    "modalClose": "Later",
+    "setsPage": {
+      "headline": "Local TipCards sets",
+      "text": "Your TipCards sets are currently stored locally in your browser. Transfer them to your account to access them from all your devices.",
+      "explanation": "Click on the set name to open the set. When logged in, you can save it. Alternatively, you can bookmark the set links.",
+      "noSets": "You do not have any saved sets yet.",
+      "buttonClearAll": "Delete all local sets",
+      "confirmClearAll": "Do you really want to delete all local sets? This action cannot be undone.",
+      "buttonBack": "Back"
+    }
   },
   "bulkWithdraw": {
     "title": "Withdraw remaining sats",

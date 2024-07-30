@@ -17,6 +17,7 @@ const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 const PageFAQs = () => import('@/pages/PageFAQs.vue')
+const PageLocalStorageSets = () => import('@/pages/PageLocalStorageSets.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -141,12 +142,18 @@ const router = createRouter({
           path: 'faqs',
           name: 'faqs',
           component: PageFAQs,
+          meta: { title: () => 'FAQs' },
         },
         {
           path: 'style-guide',
           name: 'style-guide',
           component: PageStyleGuide,
           meta: { title: () => 'Style Guide' },
+        },
+        {
+          path: 'local-storage-sets',
+          name: 'local-storage-sets',
+          component: PageLocalStorageSets,
         },
       ],
     },

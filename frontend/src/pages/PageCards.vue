@@ -520,12 +520,17 @@ import useNewFeatures from '@/modules/useNewFeatures'
 import useLandingPages from '@/modules/useLandingPages'
 import useSetFunding from '@/modules/useSetFunding'
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
+import useLocalStorageSets from '@/modules/useLocalStorageSets'
 import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
+
+// this is just for debugging purposes,
+// as it enables saving the current set to localStorage via the browser console
+useLocalStorageSets()
 
 const route = useRoute()
 const router = useRouter()

@@ -1,0 +1,1 @@
+declare function saveCurrentSetToLocalStorage(): void
