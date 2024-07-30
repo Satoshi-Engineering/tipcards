@@ -27,13 +27,19 @@
     </HeroSection>
     <CenterContainer>
       <HeadlineDefault level="h3" styling="h1">
-        Es ist leicht, bei alten Gewohnheiten zu bleiben. Alte Muster aufzubrechen <em class="not-italic text-yellow">zahlt sich aber aus.</em>
+        <I18nT keypath="home.quote">
+          <template #em>
+            <em class="not-italic text-yellow">{{ $t('home.quoteEm') }}</em>
+          </template>
+        </I18nT>
       </HeadlineDefault>
     </CenterContainer>
   </TheLayout>
 </template>
 
 <script setup lang="ts">
+import { I18nT } from 'vue-i18n'
+
 import TheLayout from '@/components/layout/TheLayout.vue'
 import HeroSection from '@/components/HeroSection.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
