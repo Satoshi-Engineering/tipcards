@@ -27,8 +27,7 @@
     >
       <AnimatedLoadingWheel
         v-if="loading"
-        class="block w-5 h-5"
-        color="white"
+        class="text-white"
       />
       <IconArrowRight
         v-else
