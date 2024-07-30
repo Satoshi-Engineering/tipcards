@@ -350,5 +350,8 @@
     "buttonCreate": "Ambil Kembali Sekarang",
     "genericErrorMessage": "Terjadi kesalahan.",
     "reload": "Muat Ulang"
+  },
+  "home": {
+    "buttonCreate": "Buat Set Kartu Tip kamu"
   }
 }

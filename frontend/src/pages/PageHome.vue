@@ -10,7 +10,7 @@
         </ParagraphDefault>
       </template>
       <template #buttonContainer>
-        <ButtonDefault :to="{ name: 'cards' }">
+        <ButtonDefault :to="{ name: 'cards' }" data-test="button-create">
           {{ $t('home.buttonCreate') }}
         </ButtonDefault>
         <ButtonDefault :to="{ name: 'cards' }" variant="secondary">

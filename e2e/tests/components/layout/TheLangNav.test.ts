@@ -25,9 +25,9 @@ describe('TheLangNav', () => {
       cy.get('html').first().should('have.attr', 'lang', languageCode)
       cy.url().should(
         'to.match',
-        urlWithOptionalTrailingSlash(new URL(`/${languageCode}`, tipCards)),
+        urlWithOptionalTrailingSlash(new URL(`/${languageCode}/home`, tipCards)),
       )
-      cy.get('button').first().contains(rootPageButtonText[languageCode])
+      cy.get('[data-test=button-create]').first().contains(rootPageButtonText[languageCode])
     })
   })
 })

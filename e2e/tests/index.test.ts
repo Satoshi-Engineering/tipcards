@@ -16,7 +16,10 @@ describe('Web client', () => {
 
     // navigate home
     cy.get('header a').first().click()
-    cy.url().should('to.match', urlWithOptionalTrailingSlash(tipCards))
+    cy.url().should(
+      'to.match',
+      urlWithOptionalTrailingSlash(new URL('/home', tipCards)),
+    )
 
     // navigate to english style guide and home from there
     cy.visit(new URL('/en/style-guide', tipCards).href)
@@ -25,7 +28,7 @@ describe('Web client', () => {
       .url()
       .should(
         'to.match',
-        urlWithOptionalTrailingSlash(new URL('/en', tipCards)),
+        urlWithOptionalTrailingSlash(new URL('/en/home', tipCards)),
       )
   })
 

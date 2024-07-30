@@ -259,5 +259,8 @@
       "logout": "Logout",
       "confirmMigrate": "Migrate now?"
     }
+  },
+  "home": {
+    "buttonCreate": "ליצירת כרטיסי טיפ"
   }
 }

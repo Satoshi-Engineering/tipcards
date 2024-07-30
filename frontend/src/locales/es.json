@@ -251,5 +251,8 @@
       "logout": "Logout",
       "confirmMigrate": "Migrate now?"
     }
+  },
+  "home": {
+    "buttonCreate": "Crea tu conjunto de tarjetas de propina"
   }
 }
