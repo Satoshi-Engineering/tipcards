@@ -11,10 +11,11 @@ import {
 
 export default () => {
   const route = useRoute()
+  const { settings } = useSetSettingsFromUrl()
 
   onMounted(() => {
     loadSetsFromlocalStorage()
-    globalThis.saveCurrentSetToLocalStorage = () => saveCurrentSetToLocalStorage(route)
+    globalThis.saveCurrentSetToLocalStorage = () => saveCurrentSetToLocalStorage(route, settings)
   })
   onBeforeUnmount(() => {
     globalThis.saveCurrentSetToLocalStorage = () => undefined
@@ -31,7 +32,6 @@ export default () => {
 
 //////
 // privates
-const { settings } = useSetSettingsFromUrl()
 const sets = ref<Set[]>([])
 const SAVED_CARDS_SETS_KEY = 'savedTipCardsSets'
 
@@ -121,7 +121,7 @@ const deleteAllSets = () => {
 /**
  * for debugging
  */
-const saveCurrentSetToLocalStorage = (route: RouteLocation) => {
+const saveCurrentSetToLocalStorage = (route: RouteLocation, settings: Set['settings']) => {
   const setId = route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId)
   if (setId == null) {
     throw new Error('No setId on current route!')
