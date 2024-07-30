@@ -16,18 +16,10 @@
             {{ t('index.buttonCreate') }}
           </ButtonDefault>
         </p>
-        <div v-if="isLoggedIn || hasSetsInLocalStorage" class="mt-24">
+        <div v-if="isLoggedIn" class="mt-24">
           <HeadlineDefault level="h2" styling="h4">
             {{ t('index.savedCardsSetsHeadline') }}
           </HeadlineDefault>
-          <div v-if="hasSetsInLocalStorage" class="max-w-lg mb-5 mx-auto text-sm text-grey">
-            <I18nT keypath="localStorageDeprecation.loginCta">
-              <template #loginCtaAction>
-                <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
-              </template>
-            </I18nT>
-            <br><LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
-          </div>
           <div class="flex flex-col">
             <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
             <div
@@ -79,12 +71,20 @@
                     {{ t('index.unnamedSetNameFallback') }}
                   </span>
                 </LinkDefault>
-                <template v-if="!isLoggedIn">
-                  &nbsp;<LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
-                </template>
               </li>
             </ul>
           </div>
+        </div>
+        <div v-if="hasSetsInLocalStorage" class="max-w-lg mt-8 mx-auto text-sm text-grey">
+          <ParagraphDefault>
+            {{ t('localStorageDeprecation.message') }}
+          </ParagraphDefault>
+          <ButtonDefault
+            :to="{ name: 'local-storage-sets', params: { lang: $route.params.lang } }"
+            variant="secondary"
+          >
+            {{ t('localStorageDeprecation.buttonToLocalStorageSetsPage') }}
+          </ButtonDefault>
         </div>
         <div
           v-if="t('index.youtube.create.link').length > 0 && t('index.youtube.use.link').length > 0"
@@ -138,44 +138,33 @@
       </div>
     </div>
   </DefaultLayout>
-  <ModalLocalStorageDeprecation
-    v-if="showModalDeprecation"
-    @login="onLogin"
-    @close="showModalDeprecation = false"
-  />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, computed, ref } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
+import useLocalStorageSets from '@/modules/useLocalStorageSets'
 import { useAuthStore } from '@/stores/auth'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
-import { useModalLoginStore } from '@/stores/modalLogin'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
 const { t, d } = useI18n()
+
+const { hasSetsInLocalStorage } = useLocalStorageSets()
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 
 const cardsStore = useCardsSetsStore()
 const { subscribe } = cardsStore
-const { sets, hasSetsInLocalStorage, fetchingUserErrorMessages } = storeToRefs(cardsStore)
-
-const { showModalLogin } = storeToRefs(useModalLoginStore())
-
-const showModalDeprecation = ref(false)
-const onLogin = () => {
-  showModalDeprecation.value = false
-  showModalLogin.value = true
-}
+const { sets, fetchingUserErrorMessages } = storeToRefs(cardsStore)
 
 const sortedSavedCardsSets = computed(() => {
   return [...sets.value]

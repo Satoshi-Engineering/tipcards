@@ -279,9 +279,9 @@
       "setName": "Set-Name",
       "saveHeadline": "Speichern",
       "buttonSaveCardsSet": "Set speichern",
-      "buttonSaveDisabledTooltip": "Du kannst neue Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL verwenden, um später erneut auf dieses Set zuzugreifen.",
+      "buttonSaveDisabledTooltip": "Du kannst Sets nur speichern, wenn du eingeloggt bist. Alternativ kannst du auch die URL verwenden, um später erneut auf dieses Set zuzugreifen.",
       "buttonDeleteCardsSet": "Set löschen",
-      "saveSetConfirm": "Das aktuelle TipCards-Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses TipCards-Set zuzugreifen.\n\nMöchtest du speichern?",
+      "saveSetConfirm": "Das aktuelle TipCards Set wird lokal in diesem Browser gespeichert (dafür wird localStorage verwendet).\n\nDu kannst auch die URL (siehe Browser-Adressleiste) verwenden um später erneut auf dieses TipCards-Set zuzugreifen.\n\nMöchtest du speichern?",
       "deleteSetConfirm": "Möchtest du die Einstellungen des aktuellen TipCards-Sets wirklich aus dem Browser löschen?",
       "deleteSetOnServerConfirm": "Möchtest du das aktuelle TipCards-Set vom Server löschen?",
       "setFunding": {
@@ -390,13 +390,8 @@
   "localStorageDeprecation": {
     "loginCta": "{loginCtaAction}, um deine Sets dauerhaft zu speichern.",
     "loginCtaAction": "Log dich ein",
-    "setSavedLocally": "Dieses Set ist lokal im Browser gespeichert.",
-    "moreInfo": "Mehr Infos",
-    "modalHeadline": "Speichere deine Sets dauerhaft",
-    "modalText": "Deine TipCards-Sets sind derzeit lokal im Browser gespeichert. Das bedeutet, du kannst sie nur auf diesem Gerät sehen. Log dich ein, um deine Sets in deinem Account zu speichern und erhalte Zugriff von all deinen Geräten.",
-    "modalDeprecationHint": "Deine lokalen Sets bleiben bis 31. Januar 2024 auf der Startseite sichtbar. Bitte stelle sicher, dass du sie vor diesem Zeitpunkt in deinen Account überträgst. Keine Sorge: Es wird auch danach noch eine Recovery-Möglichkeit für deine alten Sets geben. Alternativ kannst du dir die Set-Links auch als Lesezeichen speichern.",
-    "modalLogin": "Sets übertragen",
-    "modalClose": "Später",
+    "message": "⚠️ Du hast TipCards Sets lokal im Browser gespeichert. Übertrage sie in deinen Account um von all deinen Geräten darauf zugreifen zu können.",
+    "buttonToLocalStorageSetsPage": "Zu den lokalen Sets",
     "setsPage": {
       "headline": "Lokale Sets",
       "text": "Diese Sets sind lokal im Browser gespeichert. Log dich ein, um sie in deinem Account zu speichern und von all deinen Geräten darauf zuzugreifen.",

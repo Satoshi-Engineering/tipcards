@@ -205,11 +205,6 @@
             {{ deletingError }}
           </ParagraphDefault>
         </div>
-        <ParagraphDefault v-if="hasBeenSaved && !isLoggedIn" class="text-sm text-grey">
-          <LinkDefault class="no-underline" @click="showModalDeprecation = true">⚠️</LinkDefault>
-          {{ $t('localStorageDeprecation.setSavedLocally') }}
-          <LinkDefault @click="showModalDeprecation = true">{{ $t('localStorageDeprecation.moreInfo') }}</LinkDefault>
-        </ParagraphDefault>
         <ParagraphDefault v-if="!isLoggedIn" class="text-sm">
           <I18nT keypath="localStorageDeprecation.loginCta">
             <template #loginCtaAction>
@@ -474,11 +469,6 @@
       </div>
     </div>
   </DefaultLayout>
-  <ModalLocalStorageDeprecation
-    v-if="showModalDeprecation"
-    @login="onLogin"
-    @close="showModalDeprecation = false"
-  />
 </template>
 
 <script lang="ts" setup>
@@ -500,7 +490,6 @@ import LNURL from '@shared/modules/LNURL/LNURL'
 
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
 import SetFunding from '@/components/cardActions/SetFunding.vue'
-import ModalLocalStorageDeprecation from '@/components/ModalLocalStorageDeprecation.vue'
 import IconBitcoin from '@/components/icons/IconBitcoin.vue'
 import IconLightning from '@/components/icons/IconLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -547,12 +536,6 @@ const { subscribe, saveSet, deleteSet } = cardsStore
 const { sets } = storeToRefs(cardsStore)
 
 const { showModalLogin } = storeToRefs(useModalLoginStore())
-
-const showModalDeprecation = ref(false)
-const onLogin = () => {
-  showModalDeprecation.value = false
-  showModalLogin.value = true
-}
 
 ///////////////////////
 // CARDS SETS + SETTINGS

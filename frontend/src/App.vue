@@ -1,6 +1,5 @@
 <template>
   <RouterView />
-  <ModalResolveLocalStorage v-if="showResolveLocalStorage" />
   <ModalLogin
     v-if="showModalLogin"
     @close="showModalLogin = false"
@@ -9,15 +8,12 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, nextTick, watchEffect } from 'vue'
+import {  nextTick } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 
-import ModalResolveLocalStorage from '@/components/ModalResolveLocalStorage.vue'
 import ModalLogin from '@/components/ModalLogin.vue'
 import { setLocale, type LocaleCode } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
-import { useAuthStore } from '@/stores/auth'
-import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 
 const router = useRouter()
@@ -34,19 +30,6 @@ router.afterEach(async () => {
   setDocumentTitle()
 })
 
-const authStore = useAuthStore()
-const { isLoggedIn } = storeToRefs(authStore)
-
-const cardsSetsStore = useCardsSetsStore()
-const { hasSetsInLocalStorage } = storeToRefs(cardsSetsStore)
-const showResolveLocalStorage = computed(() => isLoggedIn.value && hasSetsInLocalStorage.value)
-
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
-
-watchEffect(() => {
-  if (showResolveLocalStorage.value) {
-    showModalLogin.value = false
-  }
-})
 </script>

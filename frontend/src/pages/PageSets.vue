@@ -99,7 +99,7 @@ const { showModalLogin } = storeToRefs(modalLoginStore)
 
 const cardsStore = useCardsSetsStore()
 const { subscribe } = cardsStore
-const { sets, hasSetsInLocalStorage, fetchingUserErrorMessages } = storeToRefs(cardsStore)
+const { sets, fetchingUserErrorMessages } = storeToRefs(cardsStore)
 
 const sortedSavedCardsSets = computed(() => {
   return [...sets.value]
@@ -131,19 +131,5 @@ const sortedSavedCardsSets = computed(() => {
     })
 })
 
-onMounted(async () => {
-  await subscribe()
-
-  const originMapping: Record<string, string> = {
-    'https://tipcards.sate.tools': 'https://tipcards.io',
-    'https://dev.tipcards.sate.tools': 'https://dev.tipcards.io',
-  }
-  if (
-    !hasSetsInLocalStorage.value
-    && typeof originMapping[location.origin] === 'string'
-  ) {
-    location.href = `${originMapping[location.origin]}${location.pathname}${location.search}${location.hash}`
-  }
-})
-
+onMounted(subscribe)
 </script>

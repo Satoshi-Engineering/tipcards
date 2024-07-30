@@ -13,7 +13,7 @@
         <ButtonDefault :to="{ name: 'cards' }" data-test="button-create">
           {{ $t('home.buttonCreate') }}
         </ButtonDefault>
-        <ButtonDefault :to="{ name: 'cards' }" variant="secondary">
+        <ButtonDefault :to="{ name: 'sets' }" variant="secondary">
           {{ $t('home.buttonSets') }}
         </ButtonDefault>
       </template>

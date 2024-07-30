@@ -12,9 +12,9 @@
       </ParagraphDefault>
       <div
         v-if="sets.length < 1"
-        class="flex flex-col items-center"
+        class="flex flex-col items-center text-sm text-grey"
       >
-        <ParagraphDefault class="text-sm text-grey">
+        <ParagraphDefault>
           {{ t('localStorageDeprecation.setsPage.noSets') }}
         </ParagraphDefault>
         <ButtonDefault
