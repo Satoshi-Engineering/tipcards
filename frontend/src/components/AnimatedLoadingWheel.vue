@@ -1,13 +1,6 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    style="shape-rendering: auto;"
-    class="block m-auto"
-    :class="`text-${color}`"
-    width="50px"
-    height="50px"
-    viewBox="0 0 100 100"
-    preserveAspectRatio="xMidYMid"
+    viewBox="-30 -30 160 160"
   >
     <circle
       cx="50"

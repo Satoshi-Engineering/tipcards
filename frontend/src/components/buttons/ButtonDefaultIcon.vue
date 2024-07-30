@@ -32,7 +32,7 @@
       />
       <IconArrowRight
         v-else
-        class="w-4 rtl:-scale-x-100 text-white"
+        class="rtl:-scale-x-100 text-white"
       />
     </span>
   </span>

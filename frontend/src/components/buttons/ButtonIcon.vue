@@ -8,20 +8,19 @@
   >
     <AnimatedLoadingWheel
       v-if="loading"
-      class="block w-5 h-5"
+      class="rtl:-scale-x-100"
       :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
     />
     <IconArrowRight
       v-else-if="props.icon === 'arrow'"
-      class="w-4 rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlay
       v-else-if="props.icon === 'play'"
-      class="w-[12px] ms-[3px] rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlus
       v-else-if="props.icon === 'plus'"
-      class="rtl:-scale-x-100"
     />
   </RouterLink>
   <a
@@ -33,20 +32,19 @@
   >
     <AnimatedLoadingWheel
       v-if="loading"
-      class="block w-5 h-5"
+      class="rtl:-scale-x-100"
       :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
     />
     <IconArrowRight
       v-else-if="props.icon === 'arrow'"
-      class="w-4 rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlay
       v-else-if="props.icon === 'play'"
-      class="w-[12px] ms-[3px] rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlus
       v-else-if="props.icon === 'plus'"
-      class="rtl:-scale-x-100"
     />
   </a>
   <button
@@ -55,20 +53,19 @@
   >
     <AnimatedLoadingWheel
       v-if="loading"
-      class="block w-5 h-5"
+      class="rtl:-scale-x-100"
       :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
     />
     <IconArrowRight
       v-else-if="props.icon === 'arrow'"
-      class="w-4 rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlay
       v-else-if="props.icon === 'play'"
-      class="w-[12px] ms-[3px] rtl:-scale-x-100"
+      class="rtl:-scale-x-100"
     />
     <IconPlus
       v-else-if="props.icon === 'plus'"
-      class="rtl:-scale-x-100"
     />
   </button>
 </template>
@@ -103,6 +100,10 @@ const props = defineProps({
     type: String as PropType<'arrow' | 'play' | 'plus'>,
     default: 'arrow',
   },
+  size: {
+    type: String as PropType<'default' | 'small'>,
+    default: 'default',
+  },
   disabled: {
     type: Boolean,
     default: false,
@@ -121,7 +122,7 @@ const disabledComputed = computed(() => props.disabled || props.loading)
 
 const cssClasses = computed(() => [
   `
-    w-[30px] h-[30px] rounded-full
+    rounded-full
     flex items-center justify-center
     hover:opacity-90
   `,
@@ -129,7 +130,19 @@ const cssClasses = computed(() => [
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
   ...(props.variant === 'bluegrey' ? cssClassesBluegrey.value : cssClassesYellow.value),
+  cssClassesSize.value,
 ])
+
+const cssClassesSize = computed(() => {
+  switch (props.size) {
+    case 'small':
+      return 'w-[20px] h-[20px]'
+    case 'default':
+      return 'w-[30px] h-[30px]'
+    default:
+      throw new Error(`Size not implemented: ${props.size}`)
+  }
+})
 
 const cssClassesBluegrey = computed(() => [
   'bg-bluegrey text-white',

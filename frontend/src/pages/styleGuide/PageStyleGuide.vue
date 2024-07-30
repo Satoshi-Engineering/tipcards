@@ -191,24 +191,6 @@
               loading
             />
           </div>
-          <div class="flex gap-4">
-            <ButtonIcon
-              icon="plus"
-            />
-            <ButtonIcon
-              icon="plus"
-              disabled
-            />
-            <ButtonIcon
-              icon="plus"
-              variant="yellow"
-            />
-            <ButtonIcon
-              variant="yellow"
-              icon="plus"
-              disabled
-            />
-          </div>
         </div>
 
         <HeadlineDefault level="h3">
@@ -248,6 +230,57 @@
             variant="yellow"
             icon="play"
             href="https://satoshiengineering.com/"
+          />
+        </div>
+
+        <HeadlineDefault level="h3">
+          Sizes
+        </HeadlineDefault>
+        <div class="flex gap-4">
+          <ButtonIcon />
+          <ButtonIcon
+            size="small"
+          />
+          <ButtonIcon
+            icon="play"
+          />
+          <ButtonIcon
+            size="small"
+            icon="play"
+          />
+          <ButtonIcon
+            icon="plus"
+          />
+          <ButtonIcon
+            size="small"
+            icon="plus"
+          />
+          <ButtonIcon loading />
+          <ButtonIcon
+            size="small"
+            loading
+          />
+        </div>
+
+        <HeadlineDefault level="h3">
+          More icons
+        </HeadlineDefault>
+        <div class="flex gap-4">
+          <ButtonIcon
+            icon="plus"
+          />
+          <ButtonIcon
+            icon="plus"
+            disabled
+          />
+          <ButtonIcon
+            icon="plus"
+            variant="yellow"
+          />
+          <ButtonIcon
+            variant="yellow"
+            icon="plus"
+            disabled
           />
         </div>
       </CenterContainer>
