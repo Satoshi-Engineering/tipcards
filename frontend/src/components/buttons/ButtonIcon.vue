@@ -19,6 +19,10 @@
       v-else-if="props.icon === 'play'"
       class="w-[12px] ms-[3px] rtl:-scale-x-100"
     />
+    <IconPlus
+      v-else-if="props.icon === 'plus'"
+      class="rtl:-scale-x-100"
+    />
   </RouterLink>
   <a
     v-else-if="href != null"
@@ -40,6 +44,10 @@
       v-else-if="props.icon === 'play'"
       class="w-[12px] ms-[3px] rtl:-scale-x-100"
     />
+    <IconPlus
+      v-else-if="props.icon === 'plus'"
+      class="rtl:-scale-x-100"
+    />
   </a>
   <button
     v-else
@@ -58,6 +66,10 @@
       v-else-if="props.icon === 'play'"
       class="w-[12px] ms-[3px] rtl:-scale-x-100"
     />
+    <IconPlus
+      v-else-if="props.icon === 'plus'"
+      class="rtl:-scale-x-100"
+    />
   </button>
 </template>
 
@@ -67,6 +79,7 @@ import type { RouteLocationRaw } from 'vue-router'
 
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
 import IconPlay from '@/components/icons/IconPlay.vue'
+import IconPlus from '@/components/icons/IconPlus.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
 
 const props = defineProps({
@@ -87,7 +100,7 @@ const props = defineProps({
     default: 'bluegrey',
   },
   icon: {
-    type: String as PropType<'arrow' | 'play'>,
+    type: String as PropType<'arrow' | 'play' | 'plus'>,
     default: 'arrow',
   },
   disabled: {

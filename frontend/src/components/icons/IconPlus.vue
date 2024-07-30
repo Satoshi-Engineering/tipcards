@@ -10,12 +10,6 @@
     viewBox="0 0 20 20"
   >
     <g fill="none" fill-rule="evenodd">
-      <rect
-        fill="#F2CC50"
-        width="20"
-        height="20"
-        rx="10"
-      />
       <path
         fill="currentColor"
         fill-rule="nonzero"

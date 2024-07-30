@@ -191,6 +191,24 @@
               loading
             />
           </div>
+          <div class="flex gap-4">
+            <ButtonIcon
+              icon="plus"
+            />
+            <ButtonIcon
+              icon="plus"
+              disabled
+            />
+            <ButtonIcon
+              icon="plus"
+              variant="yellow"
+            />
+            <ButtonIcon
+              variant="yellow"
+              icon="plus"
+              disabled
+            />
+          </div>
         </div>
 
         <HeadlineDefault level="h3">
