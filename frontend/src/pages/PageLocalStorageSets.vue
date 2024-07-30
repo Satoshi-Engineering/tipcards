@@ -25,7 +25,7 @@
         </ButtonDefault>
       </div>
       <div v-else class="flex flex-col items-center">
-        <ul class="mb-8">
+        <ul class="mb-8" data-test="local-storage-sets-list">
           <li
             v-for="cardsSet in sortedSavedCardsSets"
             :key="cardsSet.setId"
@@ -67,7 +67,10 @@
             </LinkDefault>
           </li>
         </ul>
-        <ButtonDefault @click="confirmAndDeleteAllSets">
+        <ButtonDefault
+          data-test="local-storage-sets-clear-all"
+          @click="confirmAndDeleteAllSets"
+        >
           {{ t('localStorageDeprecation.setsPage.buttonClearAll') }}
         </ButtonDefault>
       </div>

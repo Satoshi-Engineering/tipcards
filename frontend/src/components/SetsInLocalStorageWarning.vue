@@ -1,5 +1,9 @@
 <template>
-  <div v-if="hasSetsInLocalStorage" class="text-sm text-grey">
+  <div
+    v-if="hasSetsInLocalStorage"
+    class="text-sm text-grey"
+    data-test="sets-in-local-storage-warning"
+  >
     <ParagraphDefault>
       {{ t('localStorageDeprecation.message') }}
     </ParagraphDefault>
