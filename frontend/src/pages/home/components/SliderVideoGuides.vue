@@ -1,24 +1,46 @@
 <template>
-  <SliderDefault v-slot="{ currentPosition }" class="text-center">
+  <SliderDefault v-slot="{ currentPosition }">
     <SlideDefault v-for="(slide, index) in slides" :key="index">
-      <div class="max-w-xs mx-auto">
-        <component
-          :is="slide.icon"
-          v-if="slide.icon"
-          class="text-yellow mx-auto w-12 max-h-12"
-        />
-        <HeadlineDefault level="h3">
-          {{ slide.headline() }}
-        </HeadlineDefault>
+      <template #image>
+        <a
+          :href="slide.videoLink()"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block"
+        >
+          <img
+            :src="slide.image"
+            alt="Video guide"
+            class="rounded-default object-cover w-full h-72"
+          >
+          <ButtonIcon
+            :tabindex="currentPosition === index ? 0 : -1"
+            class="absolute bottom-3 end-3"
+            variant="yellow"
+            icon="play"
+          />
+        </a>
+      </template>
+      <article class="pb-6">
+        <header class="flex items-center gap-3">
+          <component
+            :is="slide.icon"
+            v-if="slide.icon"
+            class="text-yellow h-8"
+          />
+          <HeadlineDefault level="h3" class="my-0">
+            {{ slide.headline() }}
+          </HeadlineDefault>
+        </header>
         <ParagraphDefault>
           {{ slide.text() }}
         </ParagraphDefault>
-      </div>
-      <ButtonIcon
-        :to="{ name: 'cards' }"
-        class="absolute bottom-3 end-3"
-        :tabindex="currentPosition === index ? 0 : -1"
-      />
+        <ButtonIcon
+          :to="{ name: 'cards' }"
+          :tabindex="currentPosition === index ? 0 : -1"
+          class="absolute bottom-3 end-3"
+        />
+      </article>
     </SlideDefault>
   </SliderDefault>
 </template>
@@ -33,22 +55,25 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import IconRectanglesQuestionmark from '@/components/icons/IconRectanglesQuestionmark.vue'
 import IconRectanglesPencil from '@/components/icons/IconRectanglesPencil.vue'
-
+import imageCreate from '@/assets/images/create-tipcards.square.webp'
+import imageUse from '@/assets/images/use-tipcards.square.webp'
 
 const { t } = useI18n()
 
 const slides = [
   {
-    icon: IconRectanglesQuestionmark,
-    headline: () => t('home.videoGuides.use.headline'),
-    text: () => t('home.videoGuides.use.text'),
-    videoLink: () => t('home.videoGuides.use.link'),
-  },
-  {
     icon: IconRectanglesPencil,
     headline: () => t('home.videoGuides.create.headline'),
     text: () => t('home.videoGuides.create.text'),
     videoLink: () => t('home.videoGuides.create.link'),
+    image: imageUse,
+  },
+  {
+    icon: IconRectanglesQuestionmark,
+    headline: () => t('home.videoGuides.use.headline'),
+    text: () => t('home.videoGuides.use.text'),
+    videoLink: () => t('home.videoGuides.use.link'),
+    image: imageCreate,
   },
 ]
 </script>

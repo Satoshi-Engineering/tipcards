@@ -25,7 +25,7 @@
         >
       </template>
     </HeroSection>
-    <CenterContainer>
+    <CenterContainer class="my-10">
       <HeadlineDefault level="h3" styling="h1">
         <I18nT keypath="home.quote">
           <template #em>
@@ -34,11 +34,20 @@
         </I18nT>
       </HeadlineDefault>
     </CenterContainer>
-    <CenterContainer>
+    <CenterContainer class="my-10">
       <HeadlineDefault level="h2">
         {{ $t('home.howItWorksHeadline') }}
       </HeadlineDefault>
       <SliderHowItWorks />
+    </CenterContainer>
+    <CenterContainer class="my-10">
+      <HeadlineDefault level="h2" class="text-center">
+        {{ $t('home.videoGuidesHeadline') }}
+      </HeadlineDefault>
+      <ParagraphDefault class="text-center">
+        {{ $t('home.videoGuidesText') }}
+      </ParagraphDefault>
+      <SliderVideoGuides class="mt-1" />
     </CenterContainer>
   </TheLayout>
 </template>
@@ -53,4 +62,5 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import SliderHowItWorks from '@/pages/home/components/SliderHowItWorks.vue'
+import SliderVideoGuides from '@/pages/home/components/SliderVideoGuides.vue'
 </script>

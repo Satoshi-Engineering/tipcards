@@ -219,13 +219,15 @@
       }
     },
     "videoGuides": {
+      "headline": "Video guides",
+      "text": "You received a TipCard or want to create one yourself? In our video guides we show you how it works.",
       "create": {
         "headline": "Create",
         "text": "How to configure your TipCards, print and cut them.",
         "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
       },
       "use": {
-        "label": "Use",
+        "headline": "Use",
         "text": "How to fund and redeem the TipCards.",
         "link": "https://www.youtube.com/watch?v=26dj0580HYc"
       }

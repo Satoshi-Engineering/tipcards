@@ -232,14 +232,16 @@
         "text": "Verschenke die TipCards und mache jemandem eine Freude."
       }
     },
-    "videoGuides": {
+    "videoGuidesHeadline": "Video Guides",
+    "videoGuidesText": "Du hast eine TipCard erhalten oder möchtest selbst eine erstellen? In unseren Video Guides zeigen dir wie das funktioniert.",
+    "videoGuidesSlides": {
       "create": {
         "headline": "Erstellen",
         "text": "Konfiguriere deine TipCards, drucke sie aus und schneide sie zu.",
         "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
       },
       "use": {
-        "label": "Verwenden",
+        "headline": "Verwenden",
         "text": "Lade die TipCards auf oder löse sie ein.",
         "link": "https://www.youtube.com/watch?v=26dj0580HYc"
       }
