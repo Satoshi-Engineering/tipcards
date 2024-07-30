@@ -5,6 +5,7 @@ import LOCALES from '@shared/modules/i18n/locales'
 
 const PageIndex = () => import('@/pages/PageIndex.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
+const PageSets = () => import('@/pages/PageSets.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
 const PageFunding = () => import('@/pages/PageFunding.vue')
 const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
@@ -43,6 +44,15 @@ const router = createRouter({
           path: 'preview',
           name: 'preview',
           redirect: { name: 'landing' },
+        },
+        {
+          path: 'sets',
+          name: 'sets',
+          component: PageSets,
+          meta: {
+            title: () => i18n.global.t('sets.title'),
+            backlink: 'home',
+          },
         },
         {
           path: 'cards/:setId?/:settings?',

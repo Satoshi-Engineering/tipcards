@@ -192,6 +192,11 @@
       }
     }
   },
+  "sets": {
+    "title": "All my sets",
+    "noSavedCardsSetsMessage": "You do not have any saved sets yet",
+    "unnamedSetNameFallback": "Unnamed set"    
+  },  
   "cards": {
     "title": "TipCards Set",
     "status": {
