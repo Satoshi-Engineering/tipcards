@@ -1,7 +1,7 @@
-import { urlWithOptionalTrailingSlash } from '../../lib/urlHelpers'
 import LOCALES from '../../../../shared/src/modules/i18n/locales'
 
-const tipCards = new URL(Cypress.env('TIPCARDS_ORIGIN'))
+import { urlWithOptionalTrailingSlash } from '../../lib/urlHelpers'
+import { TIPCARDS_ORIGIN } from '../../lib/constants'
 
 describe('TheLangNav', () => {
   const rootPageButtonText = {
@@ -16,7 +16,7 @@ describe('TheLangNav', () => {
 
   Object.keys(LOCALES).forEach((languageCode) => {
     it(`click on "${LOCALES[languageCode].name}" lang nav menu item and check if the language of the website changed to "${languageCode}"`, () => {
-      cy.visit(new URL('/style-guide', tipCards).href)
+      cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
       cy.get('header [data-test=the-header-lang-button]').first().click()
       cy.contains(`header nav[data-test=the-lang-nav] [data-test=the-lang-nav-item-${languageCode}]`, LOCALES[languageCode].name)
       cy.get(`header nav[data-test=the-lang-nav] [data-test=the-lang-nav-item-${languageCode}]`).first().click()
@@ -25,7 +25,7 @@ describe('TheLangNav', () => {
       cy.get('html').first().should('have.attr', 'lang', languageCode)
       cy.url().should(
         'to.match',
-        urlWithOptionalTrailingSlash(new URL(`/${languageCode}/home`, tipCards)),
+        urlWithOptionalTrailingSlash(new URL(`/${languageCode}/home`, TIPCARDS_ORIGIN)),
       )
       cy.get('[data-test=button-create]').first().contains(rootPageButtonText[languageCode])
     })

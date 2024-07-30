@@ -1,8 +1,8 @@
-const tipCards = new URL(Cypress.env('TIPCARDS_ORIGIN'))
+import { TIPCARDS_ORIGIN } from '../../lib/constants'
 
 describe('SliderDefault', () => {
   it('renders the slider and swipes to the second slide', () => {
-    cy.visit(new URL('/style-guide', tipCards).href)
+    cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
 
     // renders the slider
     cy.get('[data-test="slide-default"]').first().should('be.visible')
