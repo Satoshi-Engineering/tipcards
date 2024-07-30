@@ -52,8 +52,5 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import SliderHowItWorks from './home/SliderHowItWorks.vue'
-
-
-
+import SliderHowItWorks from '@/pages/home/components/SliderHowItWorks.vue'
 </script>

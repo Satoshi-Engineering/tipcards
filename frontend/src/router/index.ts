@@ -5,7 +5,7 @@ import LOCALES from '@shared/modules/i18n/locales'
 
 import PageIndex from '@/pages/PageIndex.vue'
 
-const PageHome = () => import('@/pages/PageHome.vue')
+const PageHome = () => import('@/pages/home/PageHome.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageSets = () => import('@/pages/PageSets.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
