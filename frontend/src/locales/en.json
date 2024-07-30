@@ -194,6 +194,7 @@
   },
   "sets": {
     "title": "All my sets",
+    "description": "Here you can see all your saved TipCards sets.",
     "noSavedCardsSetsMessage": "You do not have any saved sets yet",
     "unnamedSetNameFallback": "Unnamed set"    
   },  

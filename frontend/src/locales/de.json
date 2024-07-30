@@ -208,6 +208,7 @@
   },
   "sets": {
     "title": "Alle meine Sets",
+    "description": "Hier findest du eine Liste deiner erstellten Sets.",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set"
   },
