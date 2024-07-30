@@ -1,3 +1,7 @@
 {
-  "tailwindCSS.rootFontSize": 14
+  "tailwindCSS.rootFontSize": 14,
+  "i18n-ally.localesPaths": [
+    "frontend/src/locales",
+    "shared/src/modules/i18n"
+  ]
 }

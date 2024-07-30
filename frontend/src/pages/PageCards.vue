@@ -609,7 +609,7 @@ const deleteCardsSet = async () => {
   deletingError.value = undefined
   try {
     await deleteSet(setId.value)
-    router.push({ name: 'home', params: { lang: route.params.lang } })
+    router.push({ name: 'index', params: { lang: route.params.lang } })
   } catch (error) {
     console.error(error)
     savingError.value = t('cards.errors.unableToDeleteSet')

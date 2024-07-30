@@ -56,7 +56,7 @@ import { SUPPORT_EMAIL } from '@/constants'
 const { currentLocale } = useI18nHelpers()
 
 const navLinks = [
-  { routeName: 'home', labelKey: 'nav.index' },
+  { routeName: 'index', labelKey: 'nav.index' },
   { routeName: 'cards', labelKey: 'nav.cards' },
   { routeName: 'landing', labelKey: 'nav.landing' },
   { routeName: 'about', labelKey: 'nav.about' },

@@ -3,15 +3,18 @@
     <CenterContainer class="h-[calc(100dvh-56px)] overflow-y-auto py-6">
       <ul>
         <li
-          v-for="(locale, index) in locales"
+          v-for="locale in locales"
           :key="locale.code"
-          :class="{ 'font-bold text-yellow': locale.code === currentLocale, 'border-t border-white-50' : index !== 0 }"
+          class="border-t border-white-50 first:border-t-0"
         >
           <RouterLink
             :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
             :hreflang="locale.code"
             rel="alternate"
             class="block py-3 pl-4 text-lg hover:underline"
+            :class="{
+              'font-bold text-yellow hover:no-underline': locale.code === currentLocale,
+            }"
             :data-test="`the-lang-nav-item-${locale.code}`"
             @click="() => emit('itemSelected')"
           >

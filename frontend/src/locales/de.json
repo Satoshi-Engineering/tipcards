@@ -206,6 +206,12 @@
       }
     }
   },
+  "home": {
+    "headline": "Die einfachste Art, mit Bitcoin Trinkgeld zu geben",
+    "intro": "Einfach TipCards ausdrucken, Sats aufladen und jemandem eine Freude machen.",
+    "buttonCreate": "Losstarten",
+    "buttonSets": "Gespeicherte TipCards-Sets"
+  },
   "sets": {
     "title": "Alle meine Sets",
     "description": "Hier findest du eine Liste deiner erstellten Sets.",

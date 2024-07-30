@@ -15,7 +15,7 @@ describe('TheLangNav', () => {
   it('Renders TheLangNav', async () => {
     const wrapper = mount(TheLangNav)
 
-    const items = wrapper.findAll('li')
+    const items = wrapper.findAll('li a')
     items.forEach((item, index) => {
       const locale = {
         ...Object.values(LOCALES)[index],

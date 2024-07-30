@@ -3,7 +3,9 @@ import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } fr
 import i18n from '@/modules/initI18n'
 import LOCALES from '@shared/modules/i18n/locales'
 
-const PageIndex = () => import('@/pages/PageIndex.vue')
+import PageIndex from '@/pages/PageIndex.vue'
+
+const PageHome = () => import('@/pages/PageHome.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageSets = () => import('@/pages/PageSets.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
@@ -28,8 +30,13 @@ const router = createRouter({
       children: [
         {
           path: ':',
-          name: 'home',
+          name: 'index',
           component: PageIndex,
+        },
+        {
+          path: 'home',
+          name: 'home',
+          component: PageHome,
         },
         {
           path: 'landing/:cardHash?',
@@ -60,7 +67,7 @@ const router = createRouter({
           component: PageCards,
           meta: {
             title: () => false, // title will be set in the page component
-            backlink: 'home',
+            backlink: 'index',
           },
         },
         {

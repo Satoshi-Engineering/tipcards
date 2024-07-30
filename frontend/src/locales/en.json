@@ -192,12 +192,18 @@
       }
     }
   },
+  "home": {
+    "headline": "The easiest way to tip with Bitcoin",
+    "intro": "Simply print out TipCards, top up Sats and make someone happy.",
+    "buttonCreate": "Get started",
+    "buttonSets": "Saved TipCards sets"
+  },
   "sets": {
     "title": "All my sets",
     "description": "Here you can see all your saved TipCards sets.",
     "noSavedCardsSetsMessage": "You do not have any saved sets yet",
-    "unnamedSetNameFallback": "Unnamed set"    
-  },  
+    "unnamedSetNameFallback": "Unnamed set"
+  },
   "cards": {
     "title": "TipCards Set",
     "status": {

@@ -312,7 +312,7 @@
           </ParagraphDefault>
           <ParagraphDefault class="text-center">
             <ButtonDefault
-              @click="$router.push({ name: 'home', params: { lang: $route.params.lang } })"
+              @click="$router.push({ name: 'index', params: { lang: $route.params.lang } })"
             >
               {{ t('landing.sectionUse.createYourOwnTipCardsButton') }}
             </ButtonDefault>

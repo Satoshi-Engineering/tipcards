@@ -3,7 +3,7 @@
     :to="to"
     rel="alternate"
     class="flex items-center gap-4 py-3 pl-4 text-lg font-semibold hover:underline"
-    active-class="font-bold text-yellow"
+    active-class="font-bold text-yellow hover:no-underline"
     invert-underline
     @click="$emit('itemSelected')"
   >
