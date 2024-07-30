@@ -60,6 +60,9 @@ const translateX = computed(() => {
 /////
 // public methods
 const onPointerDown = (event: PointerEvent) => {
+  if (isModifiedMouseEvent(event)) {
+    return
+  }
   const target = getEventTarget(event)
   if (target == null) {
     return
@@ -224,6 +227,15 @@ const targetIsButtonOrLink = (target: HTMLElement | SVGElement) => {
     return true
   }
   return false
+}
+
+const isModifiedMouseEvent = (event: PointerEvent) => {
+  return (event.button !== 0
+    || event.buttons !== 1
+    || event.ctrlKey
+    || event.metaKey
+    || event.altKey
+    || event.shiftKey)
 }
 
 const outOfBoundsStart = (translateX: number) => {
