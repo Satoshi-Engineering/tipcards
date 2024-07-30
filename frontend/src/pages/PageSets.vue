@@ -1,9 +1,15 @@
 <template>
   <TheLayout>
     <CenterContainer class="mb-10">
-      <HeadlineDefault level="h1">
-        {{ t('sets.title') }}
-      </HeadlineDefault>
+      <div class="flex justify-between">
+        <HeadlineDefault level="h1">
+          {{ t('sets.title') }}
+        </HeadlineDefault>
+        <LinkDefault class="-mt-4" @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })">
+          <IconPlus class="w-8 h-8 inline" />
+          {{ t('sets.newSet') }}
+        </LinkDefault>
+      </div>
       <ParagraphDefault v-if="!isLoggedIn">
         Your are not logged in. Please
         <LinkDefault @click="showModalLogin = true">
@@ -80,6 +86,7 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+import IconPlus from '@/components/icons/IconPlus.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
