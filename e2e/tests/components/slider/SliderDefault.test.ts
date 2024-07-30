@@ -14,6 +14,8 @@ describe('SliderDefault', () => {
     cy.get('[data-test="slider-default"]').first()
       .trigger('pointerover')
       .trigger('pointerdown', {
+        button: 0,
+        buttons: 1,
         pointerId: 1,
         clientX: 1000,
         clientY: 1000,
