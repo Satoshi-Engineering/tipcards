@@ -9,6 +9,15 @@ export const mockRouter = {
   push: vi.fn(),
 }
 
+vi.mock('vue-router', async (importOriginal) => {
+  const actual: object = await importOriginal()
+  return {
+    ...actual,
+    useRoute: vi.fn(() => mockRoute),
+    useRouter: vi.fn(() => mockRouter),
+  }
+})
+
 config.global.stubs = {
   ...config.global.stubs,
   RouterLink: RouterLinkStub,
