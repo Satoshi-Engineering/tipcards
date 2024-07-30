@@ -75,17 +75,7 @@
             </ul>
           </div>
         </div>
-        <div v-if="hasSetsInLocalStorage" class="max-w-lg mt-8 mx-auto text-sm text-grey">
-          <ParagraphDefault>
-            {{ t('localStorageDeprecation.message') }}
-          </ParagraphDefault>
-          <ButtonDefault
-            :to="{ name: 'local-storage-sets', params: { lang: $route.params.lang } }"
-            variant="secondary"
-          >
-            {{ t('localStorageDeprecation.buttonToLocalStorageSetsPage') }}
-          </ButtonDefault>
-        </div>
+        <SetsInLocalStorageWarning class="max-w-lg mt-8 mx-auto" />
         <div
           v-if="t('index.youtube.create.link').length > 0 && t('index.youtube.use.link').length > 0"
           class="mt-24"
@@ -149,12 +139,12 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vue'
 import useLocalStorageSets from '@/modules/useLocalStorageSets'
 import { useAuthStore } from '@/stores/auth'
 import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@/stores/cardsSets'
 
 import DefaultLayout from './layouts/DefaultLayout.vue'
-import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
 const { t, d } = useI18n()
 

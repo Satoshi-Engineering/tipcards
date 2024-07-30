@@ -72,6 +72,7 @@
           </ul>
         </div>
       </div>
+      <SetsInLocalStorageWarning class="mt-8" />
     </CenterContainer>
   </TheLayout>
 </template>
@@ -87,6 +88,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
+import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
