@@ -34,6 +34,12 @@
         </I18nT>
       </HeadlineDefault>
     </CenterContainer>
+    <CenterContainer>
+      <HeadlineDefault level="h2">
+        {{ $t('home.howItWorksHeadline') }}
+      </HeadlineDefault>
+      <SliderHowItWorks />
+    </CenterContainer>
   </TheLayout>
 </template>
 
@@ -46,6 +52,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
+import SliderHowItWorks from './home/SliderHowItWorks.vue'
 
 
 

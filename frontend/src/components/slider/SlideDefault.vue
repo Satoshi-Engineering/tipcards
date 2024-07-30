@@ -9,7 +9,6 @@
       </div>
       <div
         class="flex-1 relative px-4 py-6"
-        :class="{ 'flex flex-col justify-center items-center': !$slots.image }"
       >
         <slot name="default" />
       </div>

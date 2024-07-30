@@ -198,7 +198,26 @@
     "buttonCreate": "Create your TipCards set",
     "buttonSets": "Saved TipCards sets",
     "quote": "It's easy to stick to old habits. But breaking old patterns {em}",
-    "quoteEm": "pays off."
+    "quoteEm": "pays off.",
+    "howItWorksHeadline": "How it works",
+    "howItWorksSlides": {
+      "create": {
+        "headline": "Create",
+        "text": "Create a TipCards set with one or more TipCards. You can configure them as you like."
+      },
+      "print": {
+        "headline": "Print",
+        "text": "Print out the TipCards and cut them out."
+      },
+      "fund": {
+        "headline": "Fund the cards",
+        "text": "Top up the TipCards with Bitcoin."
+      },
+      "give": {
+        "headline": "Give away",
+        "text": "Give away the TipCards and make someone happy."
+      }
+    }
   },
   "sets": {
     "title": "All my sets",
