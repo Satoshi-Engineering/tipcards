@@ -27,12 +27,12 @@
             {{ t('sets.description') }}
           </ParagraphDefault>
           <ul
-            class="mx-auto"
+            class="mx-auto pt-2"
           >
             <li
               v-for="cardsSet in sortedSavedCardsSets"
               :key="cardsSet.setId"
-              class="leading-tight my-2 text-center"
+              class="leading-tight my-2"
             >
               <LinkDefault
                 class="no-underline group"
