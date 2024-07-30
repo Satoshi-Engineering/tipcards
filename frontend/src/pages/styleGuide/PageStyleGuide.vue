@@ -263,6 +263,41 @@
         </div>
 
         <HeadlineDefault level="h3">
+          With Text
+        </HeadlineDefault>
+        <div class="flex flex-wrap gap-4">
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            @click="onDummyLoading"
+          >
+            Play my Song as Button
+          </ButtonIcon>
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            href="https://satoshiengineering.com/"
+          >
+            Play my Song as href
+          </ButtonIcon>
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            :to="dummyLink"
+          >
+            Play my Song as Routerlink
+          </ButtonIcon>
+          <ButtonIcon
+            variant="yellow"
+            icon="play"
+            size="small"
+            :to="dummyLink"
+          >
+            Play my Small as Routerlink
+          </ButtonIcon>
+        </div>
+
+        <HeadlineDefault level="h3">
           More icons
         </HeadlineDefault>
         <div class="flex gap-4">

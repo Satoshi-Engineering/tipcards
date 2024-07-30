@@ -5,10 +5,14 @@
         <HeadlineDefault level="h1">
           {{ t('sets.title') }}
         </HeadlineDefault>
-        <LinkDefault class="-mt-4" @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })">
-          <IconPlus class="w-8 h-8 inline" />
+        <ButtonIcon
+          icon="plus"
+          size="small"
+          variant="yellow"
+          @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })"
+        >
           {{ t('sets.newSet') }}
-        </LinkDefault>
+        </ButtonIcon>
       </div>
       <div v-if="!isLoggedIn">
         <ParagraphDefault>
@@ -87,8 +91,9 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import IconPlus from '@/components/icons/IconPlus.vue'
+
 import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vue'
 
 import { useAuthStore } from '@/stores/auth'

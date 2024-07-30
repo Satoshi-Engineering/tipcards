@@ -2,76 +2,99 @@
   <RouterLink
     v-if="to != null"
     :to="to"
-    :class="cssClasses"
     :target="targetComputed"
     :disabled="disabledComputed"
+    class="inline-flex items-center group"
+    :class="{ 'gap-1': !isSlotEmpty }"
   >
-    <AnimatedLoadingWheel
-      v-if="loading"
-      class="rtl:-scale-x-100"
-      :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-    />
-    <IconArrowRight
-      v-else-if="props.icon === 'arrow'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlay
-      v-else-if="props.icon === 'play'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlus
-      v-else-if="props.icon === 'plus'"
-    />
+    <span
+      class="inline"
+      :class="cssClasses"
+    >
+      <AnimatedLoadingWheel
+        v-if="loading"
+        class="rtl:-scale-x-100"
+        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
+      />
+      <IconArrowRight
+        v-else-if="props.icon === 'arrow'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlay
+        v-else-if="props.icon === 'play'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlus
+        v-else-if="props.icon === 'plus'"
+      />
+    </span>
+    <span :class="linkTextClasses">
+      <slot />
+    </span>
   </RouterLink>
   <a
     v-else-if="href != null"
+    class="inline-flex items-center group"
+    :class="{ 'gap-1': !isSlotEmpty }"
     :href="href"
     :target="targetComputed"
-    class="inline-block"
-    :class="cssClasses"
   >
-    <AnimatedLoadingWheel
-      v-if="loading"
-      class="rtl:-scale-x-100"
-      :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-    />
-    <IconArrowRight
-      v-else-if="props.icon === 'arrow'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlay
-      v-else-if="props.icon === 'play'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlus
-      v-else-if="props.icon === 'plus'"
-    />
+    <span
+      class="inline"
+      :class="cssClasses"
+    >
+      <AnimatedLoadingWheel
+        v-if="loading"
+        class="rtl:-scale-x-100"
+        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
+      />
+      <IconArrowRight
+        v-else-if="props.icon === 'arrow'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlay
+        v-else-if="props.icon === 'play'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlus
+        v-else-if="props.icon === 'plus'"
+      />
+    </span>
+    <span :class="linkTextClasses">
+      <slot />
+    </span>
   </a>
   <button
     v-else
-    :class="cssClasses"
+    class="inline-flex items-center group"
+    :class="{ 'gap-1': !isSlotEmpty }"
   >
-    <AnimatedLoadingWheel
-      v-if="loading"
-      class="rtl:-scale-x-100"
-      :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-    />
-    <IconArrowRight
-      v-else-if="props.icon === 'arrow'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlay
-      v-else-if="props.icon === 'play'"
-      class="rtl:-scale-x-100"
-    />
-    <IconPlus
-      v-else-if="props.icon === 'plus'"
-    />
+    <span :class="cssClasses">
+      <AnimatedLoadingWheel
+        v-if="loading"
+        class="rtl:-scale-x-100"
+        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
+      />
+      <IconArrowRight
+        v-else-if="props.icon === 'arrow'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlay
+        v-else-if="props.icon === 'play'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlus
+        v-else-if="props.icon === 'plus'"
+      />
+    </span>
+    <span :class="linkTextClasses">
+      <slot />
+    </span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { ref, computed, useSlots, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
@@ -119,12 +142,12 @@ const props = defineProps({
 })
 
 const disabledComputed = computed(() => props.disabled || props.loading)
-
+const linkTextClasses = ref('group-hover:underline text-left')
 const cssClasses = computed(() => [
   `
     rounded-full
     flex items-center justify-center
-    hover:opacity-90
+    group-hover:opacity-90
   `,
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
@@ -151,6 +174,11 @@ const cssClassesBluegrey = computed(() => [
 const cssClassesYellow = computed(() => [
   'bg-yellow text-bluegrey',
 ])
+
+const isSlotEmpty = computed(() => {
+  const slotContent = useSlots().default?.()
+  return !slotContent || slotContent.length === 0
+})
 
 const targetComputed = computed(() => {
   if (props.target != null) {
