@@ -209,13 +209,14 @@ const getEventTarget = (event: PointerEvent) => {
   if (
     event.target instanceof HTMLElement
     || event.target instanceof HTMLImageElement
+    || event.target instanceof SVGElement
   ) {
     return event.target
   }
   return null
 }
 
-const targetIsButtonOrLink = (target: HTMLElement) => {
+const targetIsButtonOrLink = (target: HTMLElement | SVGElement) => {
   if (target.tagName === 'BUTTON' || target.closest('button')) {
     return true
   }
