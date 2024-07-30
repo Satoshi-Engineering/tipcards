@@ -1,7 +1,5 @@
 <template>
   <svg
-    width="33"
-    height="24"
     viewBox="0 0 33 24"
     xmlns="http://www.w3.org/2000/svg"
   >
