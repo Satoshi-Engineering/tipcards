@@ -223,6 +223,7 @@
     "title": "All my sets",
     "newSet": "new set",
     "description": "Here you can see all your saved TipCards sets.",
+    "loginToSeeYourSets": "Log in to see your saved TipCards sets.",
     "noSavedCardsSetsMessage": "You do not have any saved sets yet",
     "unnamedSetNameFallback": "Unnamed set"
   },

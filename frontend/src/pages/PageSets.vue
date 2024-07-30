@@ -10,13 +10,14 @@
           {{ t('sets.newSet') }}
         </LinkDefault>
       </div>
-      <ParagraphDefault v-if="!isLoggedIn">
-        Your are not logged in. Please
+      <div v-if="!isLoggedIn">
+        <ParagraphDefault>
+          {{ t('sets.loginToSeeYourSets') }}
+        </ParagraphDefault>
         <LinkDefault @click="showModalLogin = true">
-          {{ $t('general.login') }}
+          {{ t('general.login') }}
         </LinkDefault>
-        to list your sets!
-      </ParagraphDefault>
+      </div>
       <div v-if="isLoggedIn" class="flex flex-col">
         <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
         <ParagraphDefault v-if="sets.length < 1">

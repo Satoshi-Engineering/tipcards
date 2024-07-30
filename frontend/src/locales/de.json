@@ -237,6 +237,7 @@
     "title": "Alle meine Sets",
     "newSet": "neues Set",
     "description": "Hier findest du eine Liste deiner erstellten Sets.",
+    "loginToSeeYourSets": "Melde dich an, um eine Liste deiner erstellten TipCards zu sehen.",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set"
   },
