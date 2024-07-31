@@ -202,15 +202,6 @@
             variant="yellow"
             :to="dummyLink"
           />
-          <ButtonIcon
-            :to="dummyLink"
-            disabled
-          />
-          <ButtonIcon
-            variant="yellow"
-            :to="dummyLink"
-            disabled
-          />
         </div>
 
         <HeadlineDefault level="h3">
@@ -221,15 +212,6 @@
           <ButtonIcon
             variant="yellow"
             href="https://satoshiengineering.com/"
-          />
-          <ButtonIcon
-            href="https://satoshiengineering.com/"
-            disabled
-          />
-          <ButtonIcon
-            variant="yellow"
-            href="https://satoshiengineering.com/"
-            disabled
           />
         </div>
 
@@ -277,9 +259,9 @@
             variant="yellow"
             icon="play"
             disabled
-            href="https://satoshiengineering.com/"
+            @click="onDummyLoading"
           >
-            Play my Song as Href & disables
+            Play my Song as Disabled
           </ButtonIcon>
           <ButtonIcon
             variant="yellow"

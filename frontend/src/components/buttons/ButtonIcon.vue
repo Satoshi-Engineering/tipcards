@@ -5,7 +5,6 @@
     :target="targetComputed"
     class="inline-flex items-center group"
     :class="{ 'gap-1': !isSlotEmpty }"
-    :disabled="disabledComputed"
   >
     <span
       class="inline"
@@ -38,7 +37,6 @@
     :class="{ 'gap-1': !isSlotEmpty }"
     :href="href"
     :target="targetComputed"
-    :disabled="disabledComputed"
   >
     <span
       class="inline"
@@ -69,7 +67,6 @@
     v-else-if="element === 'span'"
     class="inline-flex items-center group"
     :class="{ 'gap-1': !isSlotEmpty }"
-    :disabled="disabledComputed"
   >
     <span :class="cssClassesIcon">
       <AnimatedLoadingWheel
