@@ -3,10 +3,12 @@
     <SlideDefault v-for="(slide, index) in slides" :key="index">
       <template #image>
         <a
+          :tabindex="currentPosition === index ? 0 : -1"
           :href="slide.videoLink()"
           target="_blank"
           rel="noopener noreferrer"
-          class="block"
+          class="block group"
+          data-test="slider-video-link"
         >
           <img
             :src="slide.image"
@@ -14,7 +16,7 @@
             class="rounded-default object-cover w-full h-72"
           >
           <ButtonIcon
-            :tabindex="currentPosition === index ? 0 : -1"
+            element="span"
             class="absolute bottom-3 end-3"
             variant="yellow"
             icon="play"

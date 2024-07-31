@@ -65,6 +65,34 @@
       <slot />
     </span>
   </a>
+  <span
+    v-else-if="element === 'span'"
+    class="inline-flex items-center group"
+    :class="{ 'gap-1': !isSlotEmpty }"
+    :disabled="disabledComputed"
+  >
+    <span :class="cssClassesIcon">
+      <AnimatedLoadingWheel
+        v-if="loading"
+        class="rtl:-scale-x-100"
+        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
+      />
+      <IconArrowRight
+        v-else-if="props.icon === 'arrow'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlay
+        v-else-if="props.icon === 'play'"
+        class="rtl:-scale-x-100"
+      />
+      <IconPlus
+        v-else-if="props.icon === 'plus'"
+      />
+    </span>
+    <span :class="cssClassesSlot">
+      <slot />
+    </span>
+  </span>
   <button
     v-else
     class="inline-flex items-center group"
@@ -140,6 +168,10 @@ const props = defineProps({
   reducedAnimation: {
     type: Boolean,
     default: false,
+  },
+  element: {
+    type: String as PropType<'span'>,
+    default: undefined,
   },
 })
 
