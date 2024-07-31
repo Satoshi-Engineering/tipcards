@@ -401,8 +401,8 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
-import SliderStyleGuide from './SliderStyleGuide.vue'
 import HeroSection from '@/components/HeroSection.vue'
+import SliderStyleGuide from '@/pages/styleGuide/components/SliderStyleGuide.vue'
 
 const route = useRoute()
 

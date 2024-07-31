@@ -37,7 +37,7 @@ import { useI18n } from 'vue-i18n'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import MostRelevantFaqsListItem from '@/components/layout/theMostRelevantFaqs/MostRelevantFaqsListItem.vue'
+import MostRelevantFaqsListItem from '@/components/layout/theMostRelevantFaqs/components/MostRelevantFaqsListItem.vue'
 import QuestionMark from '@/components/icons/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

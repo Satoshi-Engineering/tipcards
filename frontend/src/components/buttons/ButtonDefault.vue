@@ -51,7 +51,7 @@
 import { computed, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
-import ButtonDefaultIcon from './ButtonDefaultIcon.vue'
+import ButtonDefaultIcon from '@/components/buttons/components/ButtonDefaultIcon.vue'
 
 const props = defineProps({
   to: {
