@@ -1,5 +1,5 @@
 <template>
-  <CenterContainer>
+  <CenterContainer data-test="hero-section">
     <section class="bg-grey-light px-4 pb-5 pt-7 rounded-default text-center">
       <div v-if="$slots.default" class="max-w-sm mx-auto">
         <slot name="default" />

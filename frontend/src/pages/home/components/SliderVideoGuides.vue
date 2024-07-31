@@ -1,5 +1,5 @@
 <template>
-  <SliderDefault v-slot="{ currentPosition }">
+  <SliderDefault v-slot="{ currentPosition }" data-test="slider-video-guides">
     <SlideDefault v-for="(slide, index) in slides" :key="index">
       <template #image>
         <a
@@ -20,6 +20,7 @@
             class="absolute bottom-3 end-3"
             variant="yellow"
             icon="play"
+            data-test="slider-video-button-play"
           />
         </a>
       </template>
@@ -41,6 +42,7 @@
           :to="{ name: 'cards' }"
           :tabindex="currentPosition === index ? 0 : -1"
           class="absolute bottom-3 end-3"
+          data-test="slider-button-start"
         />
       </article>
     </SlideDefault>

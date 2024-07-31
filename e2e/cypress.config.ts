@@ -15,6 +15,20 @@ export default defineConfig({
   e2e: {
     specPattern: 'e2e/**/*.test.ts',
     supportFile: false,
+    // Mute audio for all tests
+    setupNodeEvents(on) {
+      on('before:browser:launch', (browser, launchOptions) => {
+        if (browser.family !== 'chromium') {
+          return launchOptions
+        }
+        if (browser.name == 'electron') {
+          launchOptions.preferences.webPreferences.autoplayPolicy = 'user-gesture-required'
+        } else {
+          launchOptions.args.push('--mute-audio')
+        }
+        return launchOptions
+      })
+    },
   },
   env: {
     BACKEND_API_ORIGIN: process.env.BACKEND_API_ORIGIN || 'http://localhost:4000',

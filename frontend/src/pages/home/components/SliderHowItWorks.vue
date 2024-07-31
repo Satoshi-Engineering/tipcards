@@ -1,5 +1,9 @@
 <template>
-  <SliderDefault v-slot="{ currentPosition }" class="text-center">
+  <SliderDefault
+    v-slot="{ currentPosition }"
+    class="text-center"
+    data-test="slider-how-it-works"
+  >
     <SlideDefault v-for="(slide, index) in slides" :key="index">
       <div class="max-w-xs mx-auto">
         <component
@@ -16,8 +20,9 @@
       </div>
       <ButtonIcon
         :to="{ name: 'cards' }"
-        class="absolute bottom-3 end-3"
         :tabindex="currentPosition === index ? 0 : -1"
+        class="absolute bottom-3 end-3"
+        data-test="slider-button-start"
       />
     </SlideDefault>
   </SliderDefault>
