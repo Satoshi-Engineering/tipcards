@@ -1,6 +1,6 @@
 <template>
   <header class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden">
-    <BackLinkDepricated class="p-4" />
+    <BackLinkDeprecated class="p-4" />
     <div v-if="isLoggedIn === true" class="col-start-2 p-4 text-end">
       <LinkDefault :to="{ name: 'user-account' }">
         {{ $t('general.userAccount') }}
@@ -18,7 +18,7 @@
 import { storeToRefs } from 'pinia'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import BackLinkDepricated from '@/components/BackLinkDepricated.vue'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 

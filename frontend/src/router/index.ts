@@ -45,7 +45,7 @@ const router = createRouter({
           component: PageLanding,
           meta: {
             title: () => i18n.global.t('landing.title'),
-            backlink: true,
+            backlink: true, // Is only used by BackLinkDeprecated
           },
         },
         {
@@ -59,7 +59,6 @@ const router = createRouter({
           component: PageSets,
           meta: {
             title: () => i18n.global.t('sets.title'),
-            backlink: 'home',
           },
         },
         {
@@ -68,7 +67,7 @@ const router = createRouter({
           component: PageCards,
           meta: {
             title: () => false, // title will be set in the page component
-            backlink: 'index',
+            backlink: 'index', // Is only used by BackLinkDeprecated
           },
         },
         {
@@ -77,7 +76,7 @@ const router = createRouter({
           component: PageFunding,
           meta: {
             title: () => i18n.global.t('funding.title'),
-            backlink: true,
+            backlink: true, // Is only used by BackLinkDeprecated
           },
         },
         {
@@ -86,7 +85,7 @@ const router = createRouter({
           component: PageSetFunding,
           meta: {
             title: () => i18n.global.t('setFunding.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) =>
+            backlink: (route: RouteLocationNormalizedLoaded) => // Is only used by BackLinkDeprecated
               router.resolve({
                 name: 'cards',
                 params: {
@@ -103,7 +102,7 @@ const router = createRouter({
           component: PageAbout,
           meta: {
             title: () => 'About',
-            backlink: true,
+            backlink: true, // Is only used by BackLinkDeprecated
           },
         },
         {
@@ -112,7 +111,7 @@ const router = createRouter({
           component: PageUserAccount,
           meta: {
             title: () => i18n.global.t('userAccount.title'),
-            backlink: true,
+            backlink: true, // Is only used by BackLinkDeprecated
           },
         },
         {
@@ -127,7 +126,7 @@ const router = createRouter({
           component: PageBulkWithdraw,
           meta: {
             title: () => i18n.global.t('bulkWithdraw.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) =>
+            backlink: (route: RouteLocationNormalizedLoaded) => // Is only used by BackLinkDeprecated
               router.resolve({
                 name: 'cards',
                 params: {
