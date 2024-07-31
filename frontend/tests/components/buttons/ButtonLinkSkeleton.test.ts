@@ -3,11 +3,11 @@ import '../../mocks/router'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
-import LinkDefault from '@/components/typography/LinkDefault.vue'
+import ButtonLinkSkeleton from '@/components/buttons/components/ButtonLinkSkeleton.vue'
 
 describe('LinkDefault', () => {
   it('renders a router link', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonLinkSkeleton, {
       props: {
         to: { name: 'home' },
       },
@@ -22,7 +22,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a hyperlink', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonLinkSkeleton, {
       props: {
         href: 'https://satoshiengineering.com',
       },
@@ -38,7 +38,7 @@ describe('LinkDefault', () => {
   })
 
   it('renders a button', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonLinkSkeleton, {
       slots: {
         default: 'Satoshi Engineering',
       },
@@ -48,8 +48,22 @@ describe('LinkDefault', () => {
     expect(button.text()).toBe('Satoshi Engineering')
   })
 
+  it('renders a span', async () => {
+    const wrapper = mount(ButtonLinkSkeleton, {
+      slots: {
+        default: 'Satoshi Engineering',
+      },
+      props: {
+        element: 'span',
+      },
+    })
+    const span = wrapper.find('span')
+    expect(span.exists()).toBe(true)
+    expect(span.text()).toBe('Satoshi Engineering')
+  })
+
   it('sets target to _blank if the href begins with http', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonLinkSkeleton, {
       props: {
         href: 'https://satoshiengineering.com',
       },
@@ -62,7 +76,7 @@ describe('LinkDefault', () => {
   })
 
   it('does not set target to _blank if the href is a relative link', async () => {
-    const wrapper = mount(LinkDefault, {
+    const wrapper = mount(ButtonLinkSkeleton, {
       props: {
         href: '/about',
       },

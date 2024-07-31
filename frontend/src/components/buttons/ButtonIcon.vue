@@ -1,58 +1,11 @@
 <template>
-  <RouterLink
-    v-if="to != null"
+  <ButtonLinkSkeleton
     :to="to"
-    :target="targetComputed"
-    :class="cssClassesContainer"
-  >
-    <span
-      :class="cssClassesIcon"
-    >
-      <IconWithBackground
-        :icon="loading ? 'loading' : props.icon"
-        :variant="props.variant"
-      />
-    </span>
-    <span>
-      <slot />
-    </span>
-  </RouterLink>
-  <a
-    v-else-if="href != null"
-    :class="cssClassesContainer"
     :href="href"
-    :target="targetComputed"
-  >
-    <span
-      :class="cssClassesIcon"
-    >
-      <IconWithBackground
-        :icon="loading ? 'loading' : props.icon"
-        :variant="props.variant"
-      />
-    </span>
-    <span>
-      <slot />
-    </span>
-  </a>
-  <span
-    v-else-if="element === 'span'"
-    :class="cssClassesContainer"
-  >
-    <span :class="cssClassesIcon">
-      <IconWithBackground
-        :icon="loading ? 'loading' : props.icon"
-        :variant="props.variant"
-      />
-    </span>
-    <span>
-      <slot />
-    </span>
-  </span>
-  <button
-    v-else
+    :target="target"
     :class="cssClassesContainer"
     :disabled="disabledComputed"
+    :element="element"
   >
     <span :class="cssClassesIcon">
       <IconWithBackground
@@ -63,12 +16,14 @@
     <span>
       <slot />
     </span>
-  </button>
+  </ButtonLinkSkeleton>
 </template>
 
 <script setup lang="ts">
 import { computed, useSlots, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
+
+import ButtonLinkSkeleton from './components/ButtonLinkSkeleton.vue'
 import IconWithBackground, { type IconType, type IconVariant } from '@/components/buttons/components/IconWithBackground.vue'
 
 export type ButtonIconSize = 'default' | 'small'
@@ -143,15 +98,5 @@ const cssClassesSize = computed(() => {
 const isSlotEmpty = computed(() => {
   const slotContent = useSlots().default?.()
   return !slotContent || slotContent.length === 0
-})
-
-const targetComputed = computed(() => {
-  if (props.target != null) {
-    return props.target
-  }
-  if (props.href != null && /^https?:\/\/.+/.test(props.href)) {
-    return '_blank'
-  }
-  return undefined
 })
 </script>

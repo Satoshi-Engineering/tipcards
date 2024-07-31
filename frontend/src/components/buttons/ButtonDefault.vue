@@ -1,39 +1,10 @@
 <template>
-  <RouterLink
-    v-if="to != null"
+  <ButtonLinkSkeleton
     :to="to"
-    :class="cssClasses"
-    :target="targetComputed"
-    :disabled="disabledComputed"
-  >
-    <ButtonDefaultIcon
-      v-if="variant == 'primary'"
-      :loading="loading"
-      :reduced-animation="reducedAnimation"
-    />
-    <span class="relative">
-      <slot />
-    </span>
-  </RouterLink>
-  <a
-    v-else-if="href != null"
     :href="href"
-    :target="targetComputed"
-    class="inline-block"
     :class="cssClasses"
-  >
-    <ButtonDefaultIcon
-      v-if="variant == 'primary'"
-      :loading="loading"
-      :reduced-animation="reducedAnimation"
-    />
-    <span class="relative">
-      <slot />
-    </span>
-  </a>
-  <button
-    v-else
-    :class="cssClasses"
+    :active-class="activeClass"
+    :target="target"
     :disabled="disabledComputed"
   >
     <ButtonDefaultIcon
@@ -44,13 +15,14 @@
     <span class="relative">
       <slot />
     </span>
-  </button>
+  </ButtonLinkSkeleton>
 </template>
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
+import ButtonLinkSkeleton from '@/components/buttons/components/ButtonLinkSkeleton.vue'
 import ButtonDefaultIcon from '@/components/buttons/components/ButtonDefaultIcon.vue'
 
 const props = defineProps({
@@ -87,6 +59,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  activeClass: {
+    type: String,
+    default: undefined,
+  },
   reducedAnimation: {
     type: Boolean,
     default: false,
@@ -117,14 +93,4 @@ const cssClassesSecondary = computed(() => [
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
 ])
-
-const targetComputed = computed(() => {
-  if (props.target != null) {
-    return props.target
-  }
-  if (props.href != null && /^https?:\/\/.+/.test(props.href)) {
-    return '_blank'
-  }
-  return undefined
-})
 </script>

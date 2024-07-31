@@ -1,57 +1,28 @@
 <template>
-  <RouterLink
-    v-if="to != null"
-    class="break-anywhere"
-    :class="{
-      'font-bold': !noBold,
-      'underline hover:no-underline': !invertUnderline,
-      'no-underline hover:underline': invertUnderline,
-      'opacity-50 pointer-events-none cursor-default': disabled,
-    }"
+  <ButtonLinkSkeleton
     :to="to"
-    :active-class="activeClass"
-    :target="targetComputed"
-    :disabled="disabled"
-  >
-    <slot />
-  </RouterLink>
-  <a
-    v-else-if="href != null"
-    class="cursor-pointer break-anywhere"
-    :class="{
-      'font-bold': !noBold,
-      'underline hover:no-underline': !invertUnderline,
-      'no-underline hover:underline': invertUnderline,
-      'opacity-50 pointer-events-none cursor-default': disabled,
-    }"
     :href="href"
-    :target="targetComputed"
-    tabindex="0"
-  >
-    <slot>
-      {{ href }}
-    </slot>
-  </a>
-  <button
-    v-else
-    class="[text-align:inherit] cursor-pointer appearance-none break-anywhere"
+    :target="target"
+    :disabled="disabled"
+    :active-class="activeClass"
     :class="{
       'font-bold': !noBold,
       'underline hover:no-underline': !invertUnderline,
       'no-underline hover:underline': invertUnderline,
-      'opacity-50 pointer-events-none cursor-default': disabled,
     }"
-    :disabled="disabled"
+    class="cursor-pointer break-anywhere"
   >
     <slot />
-  </button>
+  </ButtonLinkSkeleton>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import type { PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
-const props = defineProps({
+import ButtonLinkSkeleton from '@/components/buttons/components/ButtonLinkSkeleton.vue'
+
+defineProps({
   href: {
     type: String,
     default: undefined,
@@ -81,15 +52,5 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-})
-
-const targetComputed = computed(() => {
-  if (props.target != null) {
-    return props.target
-  }
-  if (props.href != null && /^https?:\/\/.+/.test(props.href)) {
-    return '_blank'
-  }
-  return undefined
 })
 </script>
