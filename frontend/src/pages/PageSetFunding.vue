@@ -195,7 +195,7 @@ import type { Set, Settings } from '@shared/data/api/Set'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'

@@ -46,7 +46,7 @@ import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import ModalDefault from '@/components/ModalDefault.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

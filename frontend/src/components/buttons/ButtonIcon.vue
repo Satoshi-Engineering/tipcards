@@ -3,118 +3,64 @@
     v-if="to != null"
     :to="to"
     :target="targetComputed"
-    class="inline-flex items-center group"
-    :class="{ 'gap-1': !isSlotEmpty }"
+    :class="cssClassesContainer"
   >
     <span
-      class="inline"
       :class="cssClassesIcon"
     >
-      <AnimatedLoadingWheel
-        v-if="loading"
-        class="rtl:-scale-x-100"
-        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-      />
-      <IconArrowRight
-        v-else-if="props.icon === 'arrow'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlay
-        v-else-if="props.icon === 'play'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlus
-        v-else-if="props.icon === 'plus'"
+      <IconWithBackground
+        :icon="loading ? 'loading' : props.icon"
+        :variant="props.variant"
       />
     </span>
-    <span :class="cssClassesSlot">
+    <span>
       <slot />
     </span>
   </RouterLink>
   <a
     v-else-if="href != null"
-    class="inline-flex items-center group"
-    :class="{ 'gap-1': !isSlotEmpty }"
+    :class="cssClassesContainer"
     :href="href"
     :target="targetComputed"
   >
     <span
-      class="inline"
       :class="cssClassesIcon"
     >
-      <AnimatedLoadingWheel
-        v-if="loading"
-        class="rtl:-scale-x-100"
-        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-      />
-      <IconArrowRight
-        v-else-if="props.icon === 'arrow'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlay
-        v-else-if="props.icon === 'play'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlus
-        v-else-if="props.icon === 'plus'"
+      <IconWithBackground
+        :icon="loading ? 'loading' : props.icon"
+        :variant="props.variant"
       />
     </span>
-    <span :class="cssClassesSlot">
+    <span>
       <slot />
     </span>
   </a>
   <span
     v-else-if="element === 'span'"
-    class="inline-flex items-center group"
-    :class="{ 'gap-1': !isSlotEmpty }"
+    :class="cssClassesContainer"
   >
     <span :class="cssClassesIcon">
-      <AnimatedLoadingWheel
-        v-if="loading"
-        class="rtl:-scale-x-100"
-        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-      />
-      <IconArrowRight
-        v-else-if="props.icon === 'arrow'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlay
-        v-else-if="props.icon === 'play'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlus
-        v-else-if="props.icon === 'plus'"
+      <IconWithBackground
+        :icon="loading ? 'loading' : props.icon"
+        :variant="props.variant"
       />
     </span>
-    <span :class="cssClassesSlot">
+    <span>
       <slot />
     </span>
   </span>
   <button
     v-else
-    class="inline-flex items-center group"
-    :class="{ 'gap-1': !isSlotEmpty }"
+    :class="cssClassesContainer"
     :disabled="disabledComputed"
   >
     <span :class="cssClassesIcon">
-      <AnimatedLoadingWheel
-        v-if="loading"
-        class="rtl:-scale-x-100"
-        :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
-      />
-      <IconArrowRight
-        v-else-if="props.icon === 'arrow'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlay
-        v-else-if="props.icon === 'play'"
-        class="rtl:-scale-x-100"
-      />
-      <IconPlus
-        v-else-if="props.icon === 'plus'"
+      <IconWithBackground
+        :icon="loading ? 'loading' : props.icon"
+        :variant="props.variant"
       />
     </span>
-    <span :class="cssClassesSlot">
+    <span>
       <slot />
     </span>
   </button>
@@ -123,11 +69,9 @@
 <script setup lang="ts">
 import { computed, useSlots, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
+import IconWithBackground, { type IconType, type IconVariant } from '@/components/buttons/components/IconWithBackground.vue'
 
-import IconArrowRight from '@/components/icons/IconArrowRight.vue'
-import IconPlay from '@/components/icons/IconPlay.vue'
-import IconPlus from '@/components/icons/IconPlus.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+export type ButtonIconSize = 'default' | 'small'
 
 const props = defineProps({
   to: {
@@ -143,15 +87,15 @@ const props = defineProps({
     default: undefined,
   },
   variant: {
-    type: String as PropType<'bluegrey' | 'yellow'>,
+    type: String as PropType<IconVariant>,
     default: 'bluegrey',
   },
   icon: {
-    type: String as PropType<'arrow' | 'play' | 'plus'>,
+    type: String as PropType<IconType>,
     default: 'arrow',
   },
   size: {
-    type: String as PropType<'default' | 'small'>,
+    type: String as PropType<ButtonIconSize>,
     default: 'default',
   },
   disabled: {
@@ -162,10 +106,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  reducedAnimation: {
-    type: Boolean,
-    default: false,
-  },
   element: {
     type: String as PropType<'span'>,
     default: undefined,
@@ -173,24 +113,20 @@ const props = defineProps({
 })
 
 const disabledComputed = computed(() => props.disabled || props.loading)
+const cssClassesContainer = computed(() => [
+  'inline-flex items-center underline group',
+  {
+    'hover:no-underline': !disabledComputed.value,
+    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
+    'gap-1': !isSlotEmpty.value,
+  },
+])
+
 const cssClassesIcon = computed(() => [
-  `
-    rounded-full
-    flex items-center justify-center
-  `,
   {
     'group-hover:opacity-90': !disabledComputed.value,
-    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
-  ...(props.variant === 'bluegrey' ? cssClassesBluegrey.value : cssClassesYellow.value),
   cssClassesSize.value,
-])
-const cssClassesSlot = computed(() => [
-  'text-left',
-  {
-    'group-hover:underline': !disabledComputed.value,
-    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
-  },
 ])
 
 const cssClassesSize = computed(() => {
@@ -200,17 +136,9 @@ const cssClassesSize = computed(() => {
     case 'default':
       return 'w-[30px] h-[30px]'
     default:
-      throw new Error(`Size not implemented: ${props.size}`)
+      throw new Error(`ButtonIconSize not implemented: ${props.size}`)
   }
 })
-
-const cssClassesBluegrey = computed(() => [
-  'bg-bluegrey text-white',
-])
-
-const cssClassesYellow = computed(() => [
-  'bg-yellow text-bluegrey',
-])
 
 const isSlotEmpty = computed(() => {
   const slotContent = useSlots().default?.()

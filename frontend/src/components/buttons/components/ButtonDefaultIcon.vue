@@ -19,18 +19,13 @@
       class="
         flex items-center justify-center
         absolute start-0 top-0
-        w-full h-full rounded-full
-        bg-bluegrey
+        w-full h-full
         transition-transform duration-300
         ltr:group-hover:translate-x-1 ltr:group-active:translate-x-1 rtl:group-hover:-translate-x-1 rtl:group-active:-translate-x-1
       "
     >
-      <AnimatedLoadingWheel
-        v-if="loading"
-        class="text-white"
-      />
-      <IconArrowRight
-        v-else
+      <IconWithBackground
+        :icon="loading ? 'loading' : 'arrow'"
         class="rtl:-scale-x-100 text-white"
       />
     </span>
@@ -38,8 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import IconArrowRight from '@/components/icons/IconArrowRight.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheel.vue'
+import IconWithBackground from '@/components/buttons/components/IconWithBackground.vue'
 
 defineProps({
   loading: {
