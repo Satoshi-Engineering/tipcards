@@ -3,13 +3,13 @@
     v-if="to != null"
     :to="to"
     :target="targetComputed"
-    :disabled="disabledComputed"
     class="inline-flex items-center group"
     :class="{ 'gap-1': !isSlotEmpty }"
+    :disabled="disabledComputed"
   >
     <span
       class="inline"
-      :class="cssClasses"
+      :class="cssClassesIcon"
     >
       <AnimatedLoadingWheel
         v-if="loading"
@@ -28,7 +28,7 @@
         v-else-if="props.icon === 'plus'"
       />
     </span>
-    <span :class="linkTextClasses">
+    <span :class="cssClassesSlot">
       <slot />
     </span>
   </RouterLink>
@@ -38,10 +38,11 @@
     :class="{ 'gap-1': !isSlotEmpty }"
     :href="href"
     :target="targetComputed"
+    :disabled="disabledComputed"
   >
     <span
       class="inline"
-      :class="cssClasses"
+      :class="cssClassesIcon"
     >
       <AnimatedLoadingWheel
         v-if="loading"
@@ -60,7 +61,7 @@
         v-else-if="props.icon === 'plus'"
       />
     </span>
-    <span :class="linkTextClasses">
+    <span :class="cssClassesSlot">
       <slot />
     </span>
   </a>
@@ -68,8 +69,9 @@
     v-else
     class="inline-flex items-center group"
     :class="{ 'gap-1': !isSlotEmpty }"
+    :disabled="disabledComputed"
   >
-    <span :class="cssClasses">
+    <span :class="cssClassesIcon">
       <AnimatedLoadingWheel
         v-if="loading"
         class="rtl:-scale-x-100"
@@ -87,14 +89,14 @@
         v-else-if="props.icon === 'plus'"
       />
     </span>
-    <span :class="linkTextClasses">
+    <span :class="cssClassesSlot">
       <slot />
     </span>
   </button>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, useSlots, type PropType } from 'vue'
+import { computed, useSlots, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
@@ -142,18 +144,24 @@ const props = defineProps({
 })
 
 const disabledComputed = computed(() => props.disabled || props.loading)
-const linkTextClasses = ref('group-hover:underline text-left')
-const cssClasses = computed(() => [
+const cssClassesIcon = computed(() => [
   `
     rounded-full
     flex items-center justify-center
-    group-hover:opacity-90
   `,
   {
+    'group-hover:opacity-90': !disabledComputed.value,
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
   ...(props.variant === 'bluegrey' ? cssClassesBluegrey.value : cssClassesYellow.value),
   cssClassesSize.value,
+])
+const cssClassesSlot = computed(() => [
+  'text-left',
+  {
+    'group-hover:underline': !disabledComputed.value,
+    'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
+  },
 ])
 
 const cssClassesSize = computed(() => {

@@ -203,13 +203,13 @@
             :to="dummyLink"
           />
           <ButtonIcon
-            icon="play"
             :to="dummyLink"
+            disabled
           />
           <ButtonIcon
             variant="yellow"
-            icon="play"
             :to="dummyLink"
+            disabled
           />
         </div>
 
@@ -223,13 +223,13 @@
             href="https://satoshiengineering.com/"
           />
           <ButtonIcon
-            icon="play"
             href="https://satoshiengineering.com/"
+            disabled
           />
           <ButtonIcon
             variant="yellow"
-            icon="play"
             href="https://satoshiengineering.com/"
+            disabled
           />
         </div>
 
@@ -276,9 +276,10 @@
           <ButtonIcon
             variant="yellow"
             icon="play"
+            disabled
             href="https://satoshiengineering.com/"
           >
-            Play my Song as href
+            Play my Song as Href & disables
           </ButtonIcon>
           <ButtonIcon
             variant="yellow"
