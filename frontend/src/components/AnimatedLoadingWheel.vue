@@ -1,6 +1,10 @@
 <template>
   <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="160"
+    height="160"
     viewBox="-30 -30 160 160"
+    preserveAspectRatio="xMidYMid meet"
   >
     <circle
       cx="50"

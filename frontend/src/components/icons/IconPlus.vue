@@ -1,13 +1,10 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    xml:space="preserve"
-    shape-rendering="geometricPrecision"
-    text-rendering="geometricPrecision"
-    image-rendering="optimizeQuality"
-    fill-rule="evenodd"
-    clip-rule="evenodd"
+    width="20"
+    height="20"
     viewBox="0 0 20 20"
+    preserveAspectRatio="xMidYMid meet"
   >
     <g fill="none" fill-rule="evenodd">
       <path
