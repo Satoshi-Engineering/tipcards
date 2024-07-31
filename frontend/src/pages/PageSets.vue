@@ -5,7 +5,7 @@
         {{ t('sets.backLink') }}
       </BackLink>
       <div class="flex justify-between">
-        <HeadlineDefault level="h1">
+        <HeadlineDefault level="h1" data-test="headline">
           {{ t('sets.title') }}
         </HeadlineDefault>
         <ButtonIcon
@@ -13,12 +13,13 @@
           size="small"
           variant="yellow"
           class="-mt-5"
+          data-test="button-new-set"
           @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })"
         >
           {{ t('sets.newSet') }}
         </ButtonIcon>
       </div>
-      <div v-if="!isLoggedIn">
+      <div v-if="!isLoggedIn" data-test="please-login-section">
         <ParagraphDefault>
           {{ t('sets.loginToSeeYourSets') }}
         </ParagraphDefault>
@@ -26,7 +27,11 @@
           {{ t('general.login') }}
         </LinkDefault>
       </div>
-      <div v-if="isLoggedIn" class="flex flex-col">
+      <div
+        v-if="isLoggedIn"
+        class="flex flex-col"
+        data-test="logged-in"
+      >
         <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
         <ParagraphDefault v-if="sets.length < 1">
           {{ t('sets.noSavedCardsSetsMessage') }}
