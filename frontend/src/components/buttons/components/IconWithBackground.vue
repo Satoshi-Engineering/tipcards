@@ -1,7 +1,10 @@
 <template>
-  <div
+  <span
     class="rounded-full flex items-center justify-center"
-    :class="cssClassesBackground"
+    :class="{
+      'bg-bluegrey text-white': variant === 'bluegrey',
+      'bg-yellow text-bluegrey': variant === 'yellow',
+    }"
   >
     <IconAnimatedLoadingWheel
       v-if="props.icon === 'loading'"
@@ -19,11 +22,11 @@
     <IconPlus
       v-else-if="props.icon === 'plus'"
     />
-  </div>
+  </span>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import type { PropType } from 'vue'
 
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
 import IconPlay from '@/components/icons/IconPlay.vue'
@@ -37,22 +40,11 @@ const props = defineProps({
   variant: {
     type: String as PropType<IconVariant>,
     default: 'bluegrey',
+    validator: (value: string) => ['bluegrey', 'yellow'].includes(value),
   },
   icon: {
     type: String as PropType<IconType>,
     default: 'arrow',
   },
 })
-
-const cssClassesBackground = computed(() => {
-  switch (props.variant) {
-    case 'bluegrey':
-      return 'bg-bluegrey text-white'
-    case 'yellow':
-      return 'bg-yellow text-bluegrey]'
-    default:
-      throw new Error(`IconVariant not implemented: ${props.variant}`)
-  }
-})
-
 </script>

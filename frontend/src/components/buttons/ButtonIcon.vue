@@ -13,7 +13,7 @@
         :variant="props.variant"
       />
     </span>
-    <span>
+    <span v-if="$slots.default != null">
       <slot />
     </span>
   </ButtonLinkSkeleton>
