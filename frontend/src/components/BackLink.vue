@@ -1,13 +1,10 @@
 <template>
   <div
-    v-if="showBacklink"
     class="pb-6"
   >
     <LinkDefault
       :to="to"
-      target="_self"
       :no-bold="true"
-      @click="onBacklinkClick"
     >
       <div class="flex gap-1 items-center">
         <IconCaretLeft class="w-3 h-3 rtl:hidden" />
@@ -24,16 +21,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import { computed, useSlots, type PropType } from 'vue'
+import type { RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import useBacklink from '@/modules/useBackLink'
 import IconCaretLeft from '@/components/icons/IconCaretLeft.vue'
 import IconCaretRight from '@/components/icons/IconCaretRight.vue'
 
 const { t } = useI18n()
 
-const { showBacklink, to, onBacklinkClick } = useBacklink()
+defineProps({
+  to: {
+    type: [String, Object] as PropType<RouteLocationRaw>,
+    default: undefined,
+  },
+})
 
 const isSlotEmpty = computed(() => {
   const slotContent = useSlots().default?.()

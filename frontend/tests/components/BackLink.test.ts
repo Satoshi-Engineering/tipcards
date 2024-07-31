@@ -1,22 +1,24 @@
-import { mount } from '@vue/test-utils'
-import { describe, beforeEach, it, expect } from 'vitest'
+import { mount, RouterLinkStub } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
 
-import { mockRoute } from '../mocks/router'
+import '../mocks/router'
 import { t } from '../mocks/i18n'
 
 import BackLink from '@/components/BackLink.vue'
 
-beforeEach(() => {
-  mockRoute.meta = {
-    backlink: true,
-  }
-})
-
 describe('BackLink', () => {
   it('renders a back link', async () => {
-    const wrapper = mount(BackLink)
+    const wrapper = mount(BackLink, {
+      props: {
+        to: { name: 'home' },
+      },
+    })
     const backlink = wrapper.getComponent(BackLink)
     expect(backlink.text()).toBe(t('general.back'))
+
+    const link = wrapper.find('a')
+    expect(link.getComponent(RouterLinkStub).vm.to).toEqual({ name: 'home' })
+    expect(link.exists()).toBe(true)
   })
 
   it('renders a back link with custom text', async () => {
@@ -28,16 +30,6 @@ describe('BackLink', () => {
     })
     const backlink = wrapper.getComponent(BackLink)
     expect(backlink.text()).toBe(customText)
-    expect(true).toBe(true)
-  })
-
-  it('renders an empty back link', async () => {
-    mockRoute.meta = {
-      backlink: false,
-    }
-    const wrapper = mount(BackLink)
-    const backlink = wrapper.getComponent(BackLink)
-    expect(backlink.text()).toBe('')
     expect(true).toBe(true)
   })
 })

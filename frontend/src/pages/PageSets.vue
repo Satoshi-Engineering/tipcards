@@ -1,7 +1,7 @@
 <template>
   <TheLayout>
     <CenterContainer class="mb-10">
-      <BackLink>
+      <BackLink :to="{ name: 'home', params: { lang: $route.params.lang }}">
         {{ t('sets.backLink') }}
       </BackLink>
       <div class="flex justify-between">
