@@ -1,6 +1,9 @@
 <template>
   <TheLayout>
     <CenterContainer class="mb-10">
+      <BackLink>
+        {{ t('sets.backLink') }}
+      </BackLink>
       <div class="flex justify-between">
         <HeadlineDefault level="h1">
           {{ t('sets.title') }}
@@ -9,6 +12,7 @@
           icon="plus"
           size="small"
           variant="yellow"
+          class="-mt-5"
           @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })"
         >
           {{ t('sets.newSet') }}
@@ -89,6 +93,7 @@ import { storeToRefs } from 'pinia'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
+import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'

@@ -1,8 +1,14 @@
 import { config, RouterLinkStub } from '@vue/test-utils'
 import { vi } from 'vitest'
 
-export const mockRoute = {
+type MockRoute = {
+  params: Record<string, string>
+  meta?: unknown
+}
+
+export const mockRoute: MockRoute = {
   params: {},
+  meta: undefined,
 }
 
 export const mockRouter = {

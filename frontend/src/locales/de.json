@@ -249,6 +249,7 @@
   },
   "sets": {
     "title": "Alle meine Sets",
+    "backLink": "zum Dashboard",
     "newSet": "neues Set",
     "description": "Hier findest du eine Liste deiner erstellten Sets.",
     "loginToSeeYourSets": "Melde dich an, um eine Liste deiner erstellten TipCards zu sehen.",
