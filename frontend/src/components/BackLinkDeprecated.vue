@@ -4,12 +4,20 @@
   >
     <LinkDefault
       :to="to"
+      no-bold
       target="_self"
       @click="onBacklinkClick"
     >
-      <i class="bi bi-caret-left-fill rtl:hidden" /><!--
-      --><i class="bi bi-caret-right-fill ltr:hidden" /><!--
-      -->{{ t('general.back') }}
+      <span class="flex gap-1 items-center">
+        <IconCaretLeft class="w-3 h-3 rtl:hidden" />
+        <IconCaretRight class="w-3 h-3 ltr:hidden" />
+        <span v-if="$slots.default == null">
+          {{ t('general.back') }}
+        </span>
+        <span v-else>
+          <slot />
+        </span>
+      </span>
     </LinkDefault>
   </div>
 </template>
@@ -19,6 +27,8 @@ import { useI18n } from 'vue-i18n'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import useBacklink from '@/modules/useBackLink'
+import IconCaretLeft from './icons/IconCaretLeft.vue'
+import IconCaretRight from './icons/IconCaretRight.vue'
 
 const { t } = useI18n()
 

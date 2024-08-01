@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout :hide-header="hideHeader">
+  <TheLayout :hide-faqs="!isLoggedIn">
     <div
       v-if="!showPage"
       class="fixed w-screen h-screen top-0 left-0 bg-white flex"
@@ -11,10 +11,9 @@
         <AnimatedLoadingWheel />
       </div>
     </div>
-    <div v-else class="mx-auto w-full max-w-md">
-      <div
-        class="my-10 mx-auto px-4 w-full max-w-md"
-      >
+    <div v-else>
+      <CenterContainer>
+        <BackLinkDeprecated v-if="isLoggedIn" />
         <HeadlineDefault level="h1" class="mb-8">
           <span class="text-5xl">{{ t('landing.introGreeting') }}</span>
         </HeadlineDefault>
@@ -318,9 +317,9 @@
             </ButtonDefault>
           </ParagraphDefault>
         </div>
-      </div>
+      </CenterContainer>
     </div>
-  </DefaultLayout>
+  </TheLayout>
 </template>
 
 <script lang="ts" setup>
@@ -331,6 +330,8 @@ import { useRoute } from 'vue-router'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
 import IconBitcoin from '@/components/icons/IconBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -350,8 +351,7 @@ import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vu
 import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
 import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'
-
-import DefaultLayout from './layouts/DefaultLayout.vue'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 
 const authStore = useAuthStore()
 const { t, te } = useI18n()
@@ -362,7 +362,6 @@ const { currentFiat } = useI18nHelpers()
 const { loading, showLoadingAnimation, showContent: showPage } = useDelayedLoadingAnimation()
 
 const { isLoggedIn } = storeToRefs(authStore)
-const hideHeader = computed(() => !isLoggedIn.value)
 
 const spent = ref<boolean | undefined>()
 const amount = ref<number | undefined | null>()

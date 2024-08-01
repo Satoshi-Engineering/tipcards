@@ -1,6 +1,7 @@
 <template>
   <TheLayout>
     <CenterContainer class="print:hidden">
+      <BackLinkDeprecated />
       <div
         v-for="userWarning in userWarnings"
         :key="userWarning"
@@ -516,6 +517,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console
