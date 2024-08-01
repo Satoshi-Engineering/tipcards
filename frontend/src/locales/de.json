@@ -12,12 +12,13 @@
   },
   "nav": {
     "index": "Home",
-    "cards": "Erstellen",
+    "cards": "Set erstellen",
     "landing": "Landing page",
     "about": "Über",
     "privacyPolicy": "Datenschutz",
     "legalNotice": "Impressum",
-    "goToAccount": "zum Account"
+    "goToAccount": "zum Account",
+    "sets": "Meine Sets"
   },
   "footer": {
     "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.",

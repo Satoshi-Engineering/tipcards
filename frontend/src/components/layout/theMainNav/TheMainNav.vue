@@ -13,6 +13,15 @@
         </li>
         <li>
           <MainNavItem
+            :to="{ name: 'sets', params: { lang: $route.params.lang } }"
+            :label="$t('nav.sets')"
+            @click="$emit('itemSelected')"
+          >
+            <BIconBookmarkFill />
+          </MainNavItem>
+        </li>
+        <li>
+          <MainNavItem
             :to="{ name: 'cards', params: { lang: $route.params.lang } }"
             :label="$t('nav.cards')"
             @click="$emit('itemSelected')"
@@ -66,7 +75,6 @@
           <MainNavItem
             data-test="main-nav-link-logout"
             class="!text-base"
-            :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
             :label="$t('auth.buttonLogout')"
             @click="async () => {
               await authStore.logout()
@@ -96,7 +104,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle, BIconQrCodeScan } from 'bootstrap-icons-vue'
+import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconBookmarkFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle, BIconQrCodeScan } from 'bootstrap-icons-vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import MainNavItem from '@/components/layout/theMainNav/components/MainNavItem.vue'
