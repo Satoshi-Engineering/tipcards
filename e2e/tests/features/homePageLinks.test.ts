@@ -1,6 +1,6 @@
 import { TIPCARDS_ORIGIN } from '../lib/constants'
 
-const HOME_PAGE_URL = new URL('/home', TIPCARDS_ORIGIN)
+const HOME_PAGE_URL = new URL('/', TIPCARDS_ORIGIN)
 
 describe('homePageLinks', () => {
   it('should navigate to the cards page when the create button is clicked', () => {

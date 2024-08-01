@@ -7,7 +7,7 @@ const tipCards = new URL(Cypress.env('TIPCARDS_ORIGIN'))
 describe('Web client', () => {
   it('visits the app root url and checks the headline', () => {
     cy.visit(tipCards.href)
-    cy.contains('h1', 'Lightning TipCards')
+    cy.contains('h1', 'The easiest way to tip with Bitcoin')
   })
 
   it('navigates to the style-guide page and back to home', () => {
@@ -18,7 +18,7 @@ describe('Web client', () => {
     cy.get('header a').first().click()
     cy.url().should(
       'to.match',
-      urlWithOptionalTrailingSlash(new URL('/home', tipCards)),
+      urlWithOptionalTrailingSlash(new URL('/', tipCards)),
     )
 
     // navigate to english style guide and home from there
@@ -28,7 +28,7 @@ describe('Web client', () => {
       .url()
       .should(
         'to.match',
-        urlWithOptionalTrailingSlash(new URL('/en/home', tipCards)),
+        urlWithOptionalTrailingSlash(new URL('/en/', tipCards)),
       )
   })
 
