@@ -27,6 +27,13 @@
   >
     <slot />
   </h4>
+  <blockquote
+    v-if="level === 'blockquote'"
+    :class="classes"
+    v-bind="$attrs"
+  >
+    <slot />
+  </blockquote>
 </template>
 
 <script setup lang="ts">
@@ -34,7 +41,7 @@ import { computed, type PropType } from 'vue'
 
 const props = defineProps({
   level: {
-    type: String as PropType<'h1' | 'h2' | 'h3' | 'h4'>,
+    type: String as PropType<'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'>,
     required: true,
   },
   styling: {

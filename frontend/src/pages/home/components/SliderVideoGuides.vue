@@ -31,7 +31,7 @@
             v-if="slide.icon"
             class="text-yellow h-8"
           />
-          <HeadlineDefault level="h3" class="my-0">
+          <HeadlineDefault level="h3" class="mt-0">
             {{ slide.headline() }}
           </HeadlineDefault>
         </header>

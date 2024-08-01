@@ -32,30 +32,36 @@
         >
       </template>
     </HeroSection>
-    <CenterContainer class="my-10">
-      <HeadlineDefault level="h3" styling="h1">
-        <I18nT keypath="home.quote">
-          <template #em>
-            <em class="not-italic text-yellow">{{ $t('home.quoteEm') }}</em>
-          </template>
-        </I18nT>
-      </HeadlineDefault>
-    </CenterContainer>
-    <CenterContainer class="my-10">
-      <HeadlineDefault level="h2">
-        {{ $t('home.howItWorksHeadline') }}
-      </HeadlineDefault>
-      <SliderHowItWorks />
-    </CenterContainer>
-    <CenterContainer class="my-10">
-      <HeadlineDefault level="h2" class="text-center">
-        {{ $t('home.videoGuidesHeadline') }}
-      </HeadlineDefault>
-      <ParagraphDefault class="text-center">
-        {{ $t('home.videoGuidesText') }}
-      </ParagraphDefault>
-      <SliderVideoGuides class="mt-1" />
-    </CenterContainer>
+    <section class="my-9">
+      <CenterContainer>
+        <HeadlineDefault level="blockquote" styling="h1">
+          <I18nT keypath="home.quote">
+            <template #em>
+              <em class="not-italic text-yellow">{{ $t('home.quoteEm') }}</em>
+            </template>
+          </I18nT>
+        </HeadlineDefault>
+      </CenterContainer>
+    </section>
+    <section class="my-7">
+      <CenterContainer>
+        <HeadlineDefault level="h2" class="text-center mb-0">
+          {{ $t('home.howItWorksHeadline') }}
+        </HeadlineDefault>
+        <SliderHowItWorks />
+      </CenterContainer>
+    </section>
+    <section class="py-4 bg-gradient-to-b from-grey-light to-transparent">
+      <CenterContainer>
+        <HeadlineDefault level="h2" class="text-center">
+          {{ $t('home.videoGuidesHeadline') }}
+        </HeadlineDefault>
+        <ParagraphDefault class="text-center">
+          {{ $t('home.videoGuidesText') }}
+        </ParagraphDefault>
+        <SliderVideoGuides class="mt-1" />
+      </CenterContainer>
+    </section>
   </TheLayout>
 </template>
 

@@ -1,38 +1,39 @@
 <template>
-  <div
-    ref="slider"
-    class="-m-5 overflow-hidden touch-pan-y select-none"
-    tabindex="0"
-    data-test="slider-default"
-    @pointerdown="onPointerDown"
-    @pointermove="onPointerMove"
-    @pointerup="onPointerUp"
-    @dragstart="onDragStart"
-    @keyup.left="previousSlide"
-    @keyup.right="nextSlide"
-  >
-    <ul
-      class="flex"
-      :class="{ 'transition-transform duration-300 ease-in-out': !pointerDown }"
-      :style="`transform: translateX(${translateX}px);`"
+  <div class="py-5" data-test="slider-default">
+    <div
+      ref="slider"
+      class="-m-5 overflow-hidden touch-pan-y select-none"
+      tabindex="0"
+      @pointerdown="onPointerDown"
+      @pointermove="onPointerMove"
+      @pointerup="onPointerUp"
+      @dragstart="onDragStart"
+      @keyup.left="previousSlide"
+      @keyup.right="nextSlide"
     >
-      <slot
-        :previous-slide="previousSlide"
-        :next-slide="nextSlide"
-        :current-position="currentSlide"
-      />
-    </ul>
-    <div class="my-2 flex gap-1 justify-center" data-test="slider-default-pagination">
-      <button
-        v-for="(_, index) in slidesCount"
-        :key="`slider-default-pagination-${index}`"
-        class="h-1.5 rounded-full bg-bluegrey transition-width duration-300 ease-in-out"
-        :class="{
-          'w-10': currentSlide === index,
-          'w-5 opacity-50': currentSlide !== index,
-        }"
-        @click="currentSlide = index"
-      />
+      <ul
+        class="flex"
+        :class="{ 'transition-transform duration-300 ease-in-out': !pointerDown }"
+        :style="`transform: translateX(${translateX}px);`"
+      >
+        <slot
+          :previous-slide="previousSlide"
+          :next-slide="nextSlide"
+          :current-position="currentSlide"
+        />
+      </ul>
+      <div class="my-2 flex gap-1 justify-center" data-test="slider-default-pagination">
+        <button
+          v-for="(_, index) in slidesCount"
+          :key="`slider-default-pagination-${index}`"
+          class="h-1.5 rounded-full bg-bluegrey transition-width duration-300 ease-in-out"
+          :class="{
+            'w-10': currentSlide === index,
+            'w-5 opacity-50': currentSlide !== index,
+          }"
+          @click="currentSlide = index"
+        />
+      </div>
     </div>
   </div>
 </template>
