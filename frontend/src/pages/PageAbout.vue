@@ -1,6 +1,6 @@
 <template>
-  <DefaultLayout>
-    <div class="mt-3 mx-auto w-full max-w-md px-4">
+  <TheLayout>
+    <CenterContainer>
       <HeadlineDefault level="h1">
         About Lightning TipCards
       </HeadlineDefault>
@@ -49,14 +49,14 @@
       <ParagraphDefault>
         If you want to use TipCards using your own Lightning node, you can use our open source code and set up your own instance of Lightning TipCards.
       </ParagraphDefault>
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script setup lang="ts">
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-
-import DefaultLayout from './layouts/DefaultLayout.vue'
 </script>
