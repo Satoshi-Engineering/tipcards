@@ -1,5 +1,5 @@
 <template>
-  <TheLayout hide-f-a-qs>
+  <TheLayout hide-faqs>
     <CenterContainer>
       <HeadlineDefault level="h1" styling="h2">
         Lightning TipCards FAQs

@@ -1,22 +1,22 @@
 <template>
-  <DefaultLayout>
-    <div class="flex flex-col flex-1 mx-auto w-full max-w-4xl">
-      <div class="p-4">
+  <TheLayout>
+    <CenterContainer class="!max-w-4xl">
+      <div class="py-4">
         <HeadlineDefault level="h1">
           Statistics
         </HeadlineDefault>
       </div>
 
-      <div v-if="!isLoggedIn" class="p-4">
+      <div v-if="!isLoggedIn" class="py-4">
         You need to <LinkDefault @click="showModalLogin = true">login</LinkDefault> to access the statistics.
       </div>
-      <div v-else-if="!hasPermissions" class="p-4">
+      <div v-else-if="!hasPermissions" class="py-4">
         You are missing permissions to access the statistics. Talk to an admin to get them.
       </div>
-      <div v-else-if="fetching" class="p-4">
+      <div v-else-if="fetching" class="py-4">
         Fetching data from backend ...
       </div>
-      <div v-else-if="statistics != null" class="p-4">
+      <div v-else-if="statistics != null" class="py-4">
         <HeadlineDefault level="h2">
           Weekly
         </HeadlineDefault>
@@ -37,8 +37,8 @@
           @set-bar-chart-mode="barChartMode = $event"
         />
       </div>
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script setup lang="ts">
@@ -54,8 +54,9 @@ import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 
-import DefaultLayout from '@/pages/layouts/DefaultLayout.vue'
 import StatisticsTable from './components/StatisticsTable.vue'
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 
 const authStore = useAuthStore()
 const { isLoggedIn, accessTokenPayload } = storeToRefs(authStore)

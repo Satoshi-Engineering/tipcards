@@ -1,7 +1,7 @@
 <template>
   <header
     class="
-      sticky top-0 z-10
+      sticky top-0 z-20
       mb-2
       bg-white
     "

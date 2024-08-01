@@ -1,6 +1,6 @@
 <template>
   <table class="w-full -mx-2">
-    <tr class="sticky top-0 bg-white z-20">
+    <tr class="sticky top-16 bg-white z-20">
       <th class="px-2 sticky left-0 bg-white z-10 text-left">
         {{ periodLabelColHeader }}
       </th>

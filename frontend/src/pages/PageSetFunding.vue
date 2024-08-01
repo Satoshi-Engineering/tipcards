@@ -1,15 +1,16 @@
 <template>
-  <DefaultLayout>
-    <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
+  <TheLayout>
+    <CenterContainer>
+      <BackLinkDeprecated />
       <div
         v-if="initializing"
-        class="flex justify-center flex-1 mt-8 px-4"
+        class="flex justify-center flex-1 mt-8"
       >
         <AnimatedLoadingWheel />
       </div>
       <div
         v-else-if="numberOfCardsToFund !== settings.numberOfCards"
-        class="flex-1 mt-8 px-4"
+        class="flex-1 mt-8"
       >
         <HeadlineDefault
           level="h1"
@@ -36,7 +37,7 @@
       </div>
       <div
         v-else
-        class="flex-1 mt-8 px-4"
+        class="flex-1 mt-8"
       >
         <HeadlineDefault
           level="h1"
@@ -181,8 +182,8 @@
           </ParagraphDefault>
         </div>
       </div>
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script setup lang="ts">
@@ -193,6 +194,8 @@ import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@shared/data/api/Set'
 
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
@@ -206,8 +209,7 @@ import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
 import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
 import { BACKEND_API_ORIGIN } from '@/constants'
-
-import DefaultLayout from './layouts/DefaultLayout.vue'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 
 const { t } = useI18n()
 const route = useRoute()

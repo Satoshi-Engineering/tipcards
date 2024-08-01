@@ -1,15 +1,16 @@
 <template>
-  <DefaultLayout>
-    <div class="flex flex-col flex-1 mx-auto w-full max-w-md">
+  <TheLayout>
+    <CenterContainer>
+      <BackLinkDeprecated />
       <div
         v-if="initializing"
-        class="flex justify-center flex-1 mt-8 px-4"
+        class="flex justify-center flex-1 mt-8"
       >
         <AnimatedLoadingWheel />
       </div>
       <div
         v-else-if="setFunding"
-        class="flex-1 mt-8 px-4"
+        class="flex-1 mt-8"
       >
         <HeadlineDefault
           level="h1"
@@ -23,7 +24,7 @@
       </div>
       <div
         v-else
-        class="flex-1 mt-8 px-4"
+        class="flex-1 mt-8"
       >
         <HeadlineDefault
           level="h1"
@@ -287,14 +288,14 @@
       </div>
       <LinkDefault
         v-if="!initializing && invoice == null && !shared && !funded && !setFunding"
-        class="mt-12 px-4"
+        class="mt-12"
         :disabled="creatingInvoice"
         @click.prevent="makeShared"
       >
         {{ t('funding.shared.buttonMakeShared') }}
       </LinkDefault>
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script setup lang="ts">
@@ -321,7 +322,9 @@ import { rateBtcEur } from '@/modules/rateBtcFiat'
 import useLandingPages from '@/modules/useLandingPages'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-import DefaultLayout from './layouts/DefaultLayout.vue'
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 
 const DEFAULT_AMOUNT = 2100
 

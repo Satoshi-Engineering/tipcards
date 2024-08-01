@@ -1,9 +1,6 @@
 <template>
-  <DefaultLayout>
-    <div
-      v-if="isLoggedIn"
-      class="mt-3 mx-auto w-full max-w-md px-4"
-    >
+  <TheLayout>
+    <CenterContainer v-if="isLoggedIn">
       <HeadlineDefault level="h2">
         {{ $t('userAccount.title') }}
       </HeadlineDefault>
@@ -76,8 +73,8 @@
         <small class="block">({{ $t('userAccount.logoutAllOtherDevicesHint') }})</small>
         <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
       </div>
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script setup lang="ts">
@@ -89,13 +86,13 @@ import { storeToRefs } from 'pinia'
 
 import { Profile } from '@shared/data/auth/User'
 
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import useAuthService from '@/modules/useAuthService'
 import { useAuthStore } from '@/stores/auth'
-
-import DefaultLayout from './layouts/DefaultLayout.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

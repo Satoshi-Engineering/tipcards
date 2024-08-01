@@ -1,6 +1,7 @@
 <template>
-  <DefaultLayout>
-    <div class="mt-3 mx-auto w-full max-w-md px-4">
+  <TheLayout>
+    <CenterContainer>
+      <BackLinkDeprecated />
       <HeadlineDefault
         level="h1"
         class="mt-10"
@@ -53,8 +54,8 @@
         class="w-full mt-6"
         :cards="usableCards"
       />
-    </div>
-  </DefaultLayout>
+    </CenterContainer>
+  </TheLayout>
 </template>
 
 <script lang="ts" setup>
@@ -79,7 +80,9 @@ import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
 import CardsList from './components/CardsList.vue'
 import RequestFailed from './components/RequestFailed.vue'
 import NoContent from './components/NoContent.vue'
-import DefaultLayout from '../layouts/DefaultLayout.vue'
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
+import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 
 const route = useRoute()
 const router = useRouter()
