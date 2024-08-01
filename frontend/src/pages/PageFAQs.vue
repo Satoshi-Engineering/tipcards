@@ -1,7 +1,7 @@
 <template>
   <TheLayout hide-f-a-qs>
     <CenterContainer>
-      <HeadlineDefault level="h1">
+      <HeadlineDefault level="h1" styling="h2">
         Lightning TipCards FAQs
       </HeadlineDefault>
       <ParagraphDefault>

@@ -1,7 +1,7 @@
 <template>
   <TheLayout>
     <CenterContainer class="flex flex-col">
-      <HeadlineDefault level="h2">
+      <HeadlineDefault level="h1" styling="h2">
         {{ t('localStorageDeprecation.setsPage.headline') }}
       </HeadlineDefault>
       <ParagraphDefault>
