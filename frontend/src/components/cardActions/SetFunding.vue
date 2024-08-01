@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div>
     <HeadlineDefault level="h3" class="mb-2">
       {{ t('cards.actions.setFunding.headline') }}
     </HeadlineDefault>

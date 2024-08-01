@@ -1,6 +1,6 @@
 <template>
-  <DefaultLayout>
-    <div class="mb-1 print:hidden max-w-md w-full m-auto">
+  <TheLayout>
+    <CenterContainer class="print:hidden">
       <div
         v-for="userWarning in userWarnings"
         :key="userWarning"
@@ -8,7 +8,7 @@
       >
         {{ userWarning }}
       </div>
-      <div class="p-4 mb-3">
+      <div class="py-4 mb-3">
         <div class="my-2 flex justify-between items-center">
           <HeadlineDefault level="h2" class="!my-0">
             {{ t('cards.status.headline') }}
@@ -70,7 +70,7 @@
           </ul>
         </div>
       </div>
-      <div class="p-4 mb-3">
+      <div class="py-4 mb-3">
         <HeadlineDefault level="h2">
           {{ t('cards.settings.headline') }}
         </HeadlineDefault>
@@ -175,12 +175,12 @@
           </label>
         </div>
       </div>
-      <div class="px-4">
+      <div>
         <HeadlineDefault level="h2">
           {{ t('cards.actions.headline') }}
         </HeadlineDefault>
       </div>
-      <div class="px-4 my-5">
+      <div class="my-5">
         <HeadlineDefault level="h3" class="mb-2">
           {{ t('cards.actions.saveHeadline') }}
         </HeadlineDefault>
@@ -236,7 +236,7 @@
           {{ t('cards.actions.buttonDeleteCardsSet') }}
         </ButtonDefault>
       </div>
-      <div class="px-4 my-5">
+      <div class="my-5">
         <HeadlineDefault level="h3" class="mb-2">
           {{ t('cards.actions.printHeadline') }}
         </HeadlineDefault>
@@ -266,8 +266,8 @@
         class="my-5"
         :amount-to-withdraw="fundedCardsTotalAmount"
       />
-    </div>
-    <div class="mb-1 p-4 print:hidden max-w-md w-full m-auto">
+    </CenterContainer>
+    <CenterContainer class="print:hidden">
       <HeadlineDefault level="h2">
         {{ t('cards.cards.headline') }}
       </HeadlineDefault>
@@ -300,7 +300,7 @@
           {{ userErrorMessage }}
         </p>
       </div>
-    </div>
+    </CenterContainer>
     <div v-if="cards.length > 0" dir="ltr">
       <div class="w-full overflow-x-auto print:overflow-visible pb-4 print:pb-0">
         <div class="w-[210mm] mx-auto p-[10mm] pb-0 items-start justify-end text-xs text-right hidden print:flex">
@@ -468,7 +468,7 @@
         </div>
       </div>
     </div>
-  </DefaultLayout>
+  </TheLayout>
 </template>
 
 <script lang="ts" setup>
@@ -488,6 +488,8 @@ import type { Set } from '@shared/data/api/Set'
 import type { Image as ImageMeta } from '@shared/data/api/Image'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
+import TheLayout from '@/components/layout/TheLayout.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
 import SetFunding from '@/components/cardActions/SetFunding.vue'
 import IconBitcoin from '@/components/icons/IconBitcoin.vue'
@@ -514,8 +516,6 @@ import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
-
-import DefaultLayout from './layouts/DefaultLayout.vue'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console
