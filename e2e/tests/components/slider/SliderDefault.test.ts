@@ -25,6 +25,7 @@ describe('SliderDefault', () => {
         pageY: 1000,
       })
       .trigger('pointermove', {
+        pointerId: 1,
         clientX: 900,
         clientY: 1000,
         screenX: 900,
@@ -33,6 +34,7 @@ describe('SliderDefault', () => {
         pageY: 1000,
       })
       .trigger('pointermove', {
+        pointerId: 1,
         clientX: 800,
         clientY: 1000,
         screenX: 800,

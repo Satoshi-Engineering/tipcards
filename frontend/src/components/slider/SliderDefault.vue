@@ -67,6 +67,7 @@ const onPointerDown = (event: PointerEvent) => {
 
   // initialize pointer values
   pointerId.value = event.pointerId
+  pointerCaptured.value = false
   pointerDown.value = true
   pointerXStart.value = event.pageX
   previousPointerPositions.value = [{ x: event.pageX, timeStamp: event.timeStamp }]
@@ -75,12 +76,6 @@ const onPointerDown = (event: PointerEvent) => {
 const onPointerMove = (event: PointerEvent) => {
   if (!pointerDown.value) {
     return
-  }
-
-  // set pointer capture disabled clicks on buttons/links,
-  // so we wait for a minimum swipe distance before capturing the pointer
-  if (minimumSwipeDistanceForSlideReached.value) {
-    slider.value?.setPointerCapture(event.pointerId)
   }
 
   // only remember pointer positions in the same direction, and max 20
@@ -106,6 +101,13 @@ const onPointerMove = (event: PointerEvent) => {
     newPreviousPointerPositions.unshift(previousPointerPositions.value[x])
   }
   previousPointerPositions.value = newPreviousPointerPositions
+
+  // set pointer capture disabled clicks on buttons/links,
+  // so we wait for a minimum swipe distance before capturing the pointer
+  if (!pointerCaptured.value && minimumSwipeDistanceForSlideReached.value) {
+    slider.value?.setPointerCapture(event.pointerId)
+    pointerCaptured.value = true
+  }
 }
 
 const onPointerUp = (event: PointerEvent) => {
@@ -153,6 +155,7 @@ const width = ref(0)
 const slider = ref<HTMLElement | null>(null)
 const currentSlide = ref(0)
 const pointerId = ref<number>(0)
+const pointerCaptured = ref(false)
 const pointerDown = ref(false)
 const pointerXStart = ref(0)
 const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
