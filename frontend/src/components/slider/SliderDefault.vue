@@ -74,7 +74,7 @@ const onPointerDown = (event: PointerEvent) => {
 }
 
 const onPointerMove = (event: PointerEvent) => {
-  if (!pointerDown.value) {
+  if (!pointerDown.value || event.pointerId !== pointerId.value) {
     return
   }
 
@@ -111,6 +111,10 @@ const onPointerMove = (event: PointerEvent) => {
 }
 
 const onPointerUp = (event: PointerEvent) => {
+  if (!pointerDown.value || event.pointerId !== pointerId.value) {
+    return
+  }
+
   const currentPanPosition = Math.abs(translateX.value) / width.value
   let targetPosition = Math.round(currentPanPosition)
 
@@ -129,9 +133,7 @@ const onPointerUp = (event: PointerEvent) => {
     }
   }
 
-  // reset
-  slider.value?.releasePointerCapture(event.pointerId)
-  pointerDown.value = false
+  resetPointerValues()
   currentSlide.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
 }
 
@@ -159,6 +161,17 @@ const pointerCaptured = ref(false)
 const pointerDown = ref(false)
 const pointerXStart = ref(0)
 const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
+
+const resetPointerValues = () => {
+  if (!pointerDown.value) {
+    return
+  }
+  pointerDown.value = false
+  if (pointerCaptured.value) {
+    slider.value?.releasePointerCapture(pointerId.value)
+    pointerCaptured.value = false
+  }
+}
 
 const translateXForCurrentSlide = computed(() => {
   if (currentTextDirection.value === 'ltr') {
@@ -258,12 +271,18 @@ const init = () => {
   width.value = slider.value?.getBoundingClientRect().width || 0
 }
 
+const onScroll = () => {
+  resetPointerValues()
+}
+
 onMounted(() => {
   init()
   window.addEventListener('resize', init)
+  window.addEventListener('scroll', onScroll)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', init)
+  window.removeEventListener('scroll', onScroll)
 })
 </script>
