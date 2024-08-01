@@ -4,24 +4,24 @@
   >
     <LinkDefault
       :to="to"
-      :no-bold="true"
+      no-bold
     >
-      <div class="flex gap-1 items-center">
+      <span class="flex gap-1 items-center">
         <IconCaretLeft class="w-3 h-3 rtl:hidden" />
         <IconCaretRight class="w-3 h-3 ltr:hidden" />
-        <span v-if="isSlotEmpty">
+        <span v-if="$slots.default == null">
           {{ t('general.back') }}
         </span>
         <span v-else>
           <slot />
         </span>
-      </div>
+      </span>
     </LinkDefault>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots, type PropType } from 'vue'
+import type { PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -35,10 +35,5 @@ defineProps({
     type: [String, Object] as PropType<RouteLocationRaw>,
     default: undefined,
   },
-})
-
-const isSlotEmpty = computed(() => {
-  const slotContent = useSlots().default?.()
-  return !slotContent || slotContent.length === 0
 })
 </script>
