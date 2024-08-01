@@ -1,19 +1,20 @@
 <template>
   <div
     ref="slider"
-    class="-m-5 overflow-hidden touch-pan-y"
+    class="-m-5 overflow-hidden touch-pan-y select-none"
     tabindex="0"
     data-test="slider-default"
     @pointerdown="onPointerDown"
     @pointermove="onPointerMove"
     @pointerup="onPointerUp"
+    @dragstart="onDragStart"
     @keyup.left="previousSlide"
     @keyup.right="nextSlide"
   >
     <ul
       class="flex"
       :class="{ 'transition-transform duration-300 ease-in-out': !pointerDown }"
-      :style="`transform: translateX(${translateX}px); user-select: none;`"
+      :style="`transform: translateX(${translateX}px);`"
     >
       <slot
         :previous-slide="previousSlide"
@@ -63,22 +64,9 @@ const onPointerDown = (event: PointerEvent) => {
   if (isModifiedMouseEvent(event)) {
     return
   }
-  const target = getEventTarget(event)
-  if (target == null) {
-    return
-  }
-  if (targetIsButtonOrLink(target)) {
-    return
-  }
-  event.preventDefault()
 
-  // release pointer capture from previous target
-  if (target.hasPointerCapture(event.pointerId)) {
-    target.releasePointerCapture(event.pointerId)
-  }
-  slider.value?.setPointerCapture(event.pointerId)
-
-  // reset previous pointer positions
+  // initialize pointer values
+  pointerId.value = event.pointerId
   pointerDown.value = true
   pointerXStart.value = event.pageX
   previousPointerPositions.value = [{ x: event.pageX, timeStamp: event.timeStamp }]
@@ -88,6 +76,13 @@ const onPointerMove = (event: PointerEvent) => {
   if (!pointerDown.value) {
     return
   }
+
+  // set pointer capture disabled clicks on buttons/links,
+  // so we wait for a minimum swipe distance before capturing the pointer
+  if (minimumSwipeDistanceForSlideReached.value) {
+    slider.value?.setPointerCapture(event.pointerId)
+  }
+
   // only remember pointer positions in the same direction, and max 20
   let direction: 'left' | 'right' | null = null
   const newPreviousPointerPositions = [{ x: event.pageX, timeStamp: event.timeStamp }]
@@ -138,6 +133,12 @@ const onPointerUp = (event: PointerEvent) => {
   currentSlide.value = Math.max(0, Math.min(targetPosition, slidesCount.value - 1))
 }
 
+const onDragStart = (event: DragEvent) => {
+  // prevent dragging of all child elements (e.g. images, links, ...)
+  // as those would interfere with the dragging of the slides
+  event.preventDefault()
+}
+
 const previousSlide = () => {
   currentSlide.value = Math.max(currentSlide.value - 1, 0)
 }
@@ -151,6 +152,7 @@ const nextSlide = () => {
 const width = ref(0)
 const slider = ref<HTMLElement | null>(null)
 const currentSlide = ref(0)
+const pointerId = ref<number>(0)
 const pointerDown = ref(false)
 const pointerXStart = ref(0)
 const previousPointerPositions = ref<{ x: number, timeStamp: number }[]>([])
@@ -205,30 +207,6 @@ const swipeVelocity = computed(() => {
 
 /////
 // private methods
-const getEventTarget = (event: PointerEvent) => {
-  if (event.target == null) {
-    return null
-  }
-  if (
-    event.target instanceof HTMLElement
-    || event.target instanceof HTMLImageElement
-    || event.target instanceof SVGElement
-  ) {
-    return event.target
-  }
-  return null
-}
-
-const targetIsButtonOrLink = (target: HTMLElement | SVGElement) => {
-  if (target.tagName === 'BUTTON' || target.closest('button')) {
-    return true
-  }
-  if (target.tagName === 'A' || target.closest('a')) {
-    return true
-  }
-  return false
-}
-
 const isModifiedMouseEvent = (event: PointerEvent) => {
   return (event.button !== 0
     || event.buttons !== 1

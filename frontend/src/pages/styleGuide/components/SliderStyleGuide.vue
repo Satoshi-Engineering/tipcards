@@ -23,8 +23,8 @@
           This is a typoblind text for this video slider that briefly describes what the video is about.
         </ParagraphDefault>
         <ButtonIcon
-          :to="dummyLink"
           class="absolute bottom-3 end-3"
+          :to="dummyLink"
           :tabindex="currentPosition === index - 1 ? 0 : -1"
         />
       </template>
@@ -42,8 +42,8 @@
         This is a typoblind text for this video slider that briefly describes what the video is about.
       </ParagraphDefault>
       <ButtonIcon
-        :to="dummyLink"
         class="absolute bottom-3 end-3"
+        :to="dummyLink"
         :tabindex="currentPosition === index - 1 + slidesWithImage ? 0 : -1"
       />
     </SlideDefault>
