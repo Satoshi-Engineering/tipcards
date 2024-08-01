@@ -99,7 +99,7 @@ const cards = ref<Card[]>([])
 
 onBeforeMount(async () => {
   if (setId.value == null) {
-    router.replace({ name: 'index', params: { lang: route.params.lang } })
+    router.replace({ name: 'home', params: { lang: route.params.lang } })
     return
   }
   try {

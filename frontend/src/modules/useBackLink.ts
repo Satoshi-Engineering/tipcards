@@ -37,7 +37,7 @@ export default () => {
   })
 
   const historyBackTo = computed(() => {
-    const home = { name: 'index', params: { lang: route.params.lang } }
+    const home = { name: 'home', params: { lang: route.params.lang } }
     if (!isReferrerFromApplication.value) {
       return home
     }

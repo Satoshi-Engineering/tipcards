@@ -3,9 +3,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } fr
 import i18n from '@/modules/initI18n'
 import LOCALES from '@shared/modules/i18n/locales'
 
-import PageIndex from '@/pages/PageIndex.vue'
-
-const PageHome = () => import('@/pages/home/PageHome.vue')
+import PageHome from '@/pages/home/PageHome.vue'
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageSets = () => import('@/pages/PageSets.vue')
 const PageCards = () => import('@/pages/PageCards.vue')
@@ -31,11 +29,6 @@ const router = createRouter({
       children: [
         {
           path: ':',
-          name: 'index',
-          component: PageIndex,
-        },
-        {
-          path: 'home',
           name: 'home',
           component: PageHome,
         },
@@ -67,7 +60,7 @@ const router = createRouter({
           component: PageCards,
           meta: {
             title: () => false, // title will be set in the page component
-            backlink: 'index', // Is only used by BackLinkDeprecated
+            backlink: 'home', // Is only used by BackLinkDeprecated
           },
         },
         {

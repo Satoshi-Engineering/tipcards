@@ -138,7 +138,7 @@ const logoutUserErrorMessages = ref<string[]>([])
 
 const onLogout = () => {
   logout()
-  router.push({ name: 'index' })
+  router.push({ name: 'home' })
 }
 
 const loggingOutAllOtherDevices = ref(false)
@@ -159,7 +159,7 @@ const logoutAllOtherDevices = async () => {
 
 watchEffect(() => {
   if (isLoggedIn.value === false) {
-    router.push({ name: 'index' })
+    router.push({ name: 'home' })
   }
 })
 </script>
