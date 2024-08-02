@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } from 'vue-router'
 
-import i18n from '@/modules/initI18n'
 import LOCALES from '@shared/modules/i18n/locales'
+import i18n from '@/modules/initI18n'
 
-import PageHome from '@/pages/home/PageHome.vue'
+const PageHome = () => import('@/pages/home/PageHome.vue')
 const PageLanding = () => import('@/pages/PageLanding.vue')
 const PageSets = () => import('@/pages/PageSets.vue')
 const PageCards = () => import('@/pages/PageCards.vue')

@@ -45,7 +45,6 @@ const loadLocaleMessages = async (locale: LocaleCode) => {
   }
   const messages = await import(`@/locales/${locale}.json`)
   i18n.global.setLocaleMessage(locale, messages.default)
-  await nextTick()
 }
 
 export const setLocale = async (locale: LocaleCode | undefined = 'en') => {
