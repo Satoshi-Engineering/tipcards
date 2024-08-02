@@ -37,10 +37,10 @@
         data-test="logged-in"
       >
         <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
-        <ParagraphDefault v-if="sets.length < 1">
+        <ParagraphDefault v-if="sets.length < 1" data-test="sets-list-empty">
           {{ t('sets.noSavedCardsSetsMessage') }}
         </ParagraphDefault>
-        <div v-else>
+        <div v-else data-test="sets-list-with-data">
           <ParagraphDefault>
             {{ t('sets.description') }}
           </ParagraphDefault>
@@ -104,6 +104,7 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -117,6 +118,7 @@ import { encodeCardsSetSettings, getDefaultSettings, useCardsSetsStore } from '@
 const { t, d } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const modalLoginStore = useModalLoginStore()
+
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
 const cardsStore = useCardsSetsStore()

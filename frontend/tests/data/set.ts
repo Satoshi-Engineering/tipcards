@@ -3,17 +3,17 @@ import { randomUUID } from 'node:crypto'
 import type { Set } from '@shared/data/api/Set'
 import { encodeCardsSetSettings } from '@/stores/cardsSets'
 
-export const createSet = (): Set => {
+export const createSet = (options: Partial<Set> = {}): Set => {
   const date = Math.floor(+ new Date() / 1000)
   return {
-    id: randomUUID(),
-    settings: null,
-    date,
-    created: date,
-    userId: null,
-    text: '',
-    note: '',
-    invoice: null,
+    id: options.id || randomUUID(),
+    settings: options.settings || null,
+    date: options.date || date,
+    created: options.created || date,
+    userId: options.userId || null,
+    text: options.text || '',
+    note: options.note || '',
+    invoice: options.invoice || null,
   }
 }
 
