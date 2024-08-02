@@ -236,8 +236,8 @@
   },
   "sets": {
     "title": "All my sets",
-    "backLink": "back to Home",
-    "newSet": "new set",
+    "backLink": "Back to home",
+    "newSet": "New set",
     "description": "Here you can see all your saved TipCards sets.",
     "loginToSeeYourSets": "Log in to see your saved TipCards sets.",
     "noSavedCardsSetsMessage": "You do not have any saved sets yet",

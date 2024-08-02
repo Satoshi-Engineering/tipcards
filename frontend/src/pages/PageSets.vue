@@ -5,7 +5,11 @@
         {{ t('sets.backLink') }}
       </BackLink>
       <div class="flex justify-between">
-        <HeadlineDefault level="h1" data-test="headline">
+        <HeadlineDefault
+          level="h1"
+          styling="h2"
+          data-test="headline"
+        >
           {{ t('sets.title') }}
         </HeadlineDefault>
         <ButtonIcon
@@ -14,7 +18,7 @@
           variant="yellow"
           class="-mt-5"
           data-test="button-new-set"
-          @click="$router.push({ name: 'cards', params: { lang: $route.params.lang } })"
+          :to="{ name: 'cards', params: { lang: $route.params.lang } }"
         >
           {{ t('sets.newSet') }}
         </ButtonIcon>
