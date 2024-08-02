@@ -36,6 +36,7 @@ const i18n = createI18n({
   legacy: false,
   allowComposition: true,
   fallbackLocale: 'en',
+  warnHtmlMessage: false,
 })
 i18n.global.setLocaleMessage('en', en)
 

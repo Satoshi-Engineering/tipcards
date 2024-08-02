@@ -410,7 +410,7 @@
                   <ParagraphDefault
                     v-if="settings.cardCopytext !== ''"
                     class="text-sm leading-tight"
-                    v-html="sanitizeHtml(cardCopytextComputed)"
+                    v-html="sanitizeI18n(cardCopytextComputed)"
                   />
                   <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
                 </div>
@@ -479,7 +479,6 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { storeToRefs } from 'pinia'
 import QRCode from 'qrcode-svg'
-import sanitizeHtml from 'sanitize-html'
 import { onMounted, ref, watch, computed, onBeforeMount, watchEffect } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -519,6 +518,7 @@ import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
+import sanitizeI18n from '@/modules/sanitizeI18n'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console

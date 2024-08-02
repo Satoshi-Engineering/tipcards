@@ -84,7 +84,7 @@
         </div>
         <div v-else-if="shared">
           <ParagraphDefault class="mb-8">
-            <I18nT keypath="funding.shared.text" scope="global">
+            <I18nT keypath="funding.shared.text">
               <template #buttonFinish>
                 "{{ t('funding.shared.buttonFinish') }}"
               </template>
@@ -176,7 +176,7 @@
             </I18nT>
           </ParagraphDefault>
           <ParagraphDefault v-else>
-            <I18nT keypath="funding.lnurlp.text" scope="global">
+            <I18nT keypath="funding.lnurlp.text">
               <template #buttonOpenInWallet>
                 "{{ t('lightningQrCode.buttonOpenInWallet') }}"
               </template>

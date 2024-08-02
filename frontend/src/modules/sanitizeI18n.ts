@@ -1,5 +1,7 @@
-import sanitizeHtml from 'sanitize-html'
+import DOMPurify from 'dompurify'
 
-export default (htmlString: string) => sanitizeHtml(htmlString, {
-  allowedTags: ['strong', 'em', 'b', 'i', 'br'],
+const purify = DOMPurify(window)
+
+export default (htmlString: string) => purify.sanitize(htmlString, {
+  ALLOWED_TAGS: ['strong', 'em', 'b', 'i', 'br'],
 })

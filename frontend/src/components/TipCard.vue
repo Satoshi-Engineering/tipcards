@@ -63,7 +63,7 @@
             <ParagraphDefault
               v-if="copytext != null && copytext !== ''"
               class="text-sm leading-tight"
-              v-html="sanitizeHtml(copytext)"
+              v-html="sanitizeI18n(copytext)"
             />
           <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
           </div>
@@ -75,14 +75,14 @@
 
 <script setup lang="ts">
 import { type PropType, watch, ref } from 'vue'
-import sanitizeHtml from 'sanitize-html'
 import svgToPng from '@/modules/svgToPng'
 
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import ParagraphDefault from './typography/ParagraphDefault.vue'
-
 import IconBitcoin from '@/components/icons/IconBitcoin.vue'
 import IconLightning from '@/components/icons/IconLightning.vue'
+
+import sanitizeI18n from '@/modules/sanitizeI18n'
 
 const props = defineProps({
   qrCodeSvg: {
