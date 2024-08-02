@@ -219,9 +219,9 @@
         "text": "Give away the TipCards and make someone happy."
       }
     },
-    "videoGuides": {
-      "headline": "Video guides",
-      "text": "You received a TipCard or want to create one yourself? In our video guides we show you how it works.",
+    "videoGuidesHeadline": "Video guides",
+    "videoGuidesText": "You received a TipCard or want to create one yourself? In our video guides we show you how it works.",
+    "videoGuidesSlides": {
       "create": {
         "headline": "Create",
         "text": "How to configure your TipCards, print and cut them.",

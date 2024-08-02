@@ -67,16 +67,16 @@ const { t } = useI18n()
 const slides = [
   {
     icon: IconRectanglesPencil,
-    headline: () => t('home.videoGuides.create.headline'),
-    text: () => t('home.videoGuides.create.text'),
-    videoLink: () => t('home.videoGuides.create.link'),
+    headline: () => t('home.videoGuidesSlides.create.headline'),
+    text: () => t('home.videoGuidesSlides.create.text'),
+    videoLink: () => t('home.videoGuidesSlides.create.link'),
     image: imageUse,
   },
   {
     icon: IconRectanglesQuestionmark,
-    headline: () => t('home.videoGuides.use.headline'),
-    text: () => t('home.videoGuides.use.text'),
-    videoLink: () => t('home.videoGuides.use.link'),
+    headline: () => t('home.videoGuidesSlides.use.headline'),
+    text: () => t('home.videoGuidesSlides.use.text'),
+    videoLink: () => t('home.videoGuidesSlides.use.link'),
     image: imageCreate,
   },
 ]
