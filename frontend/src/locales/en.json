@@ -28,16 +28,16 @@
       "buttonToFaqs": "To the FAQs",
       "defaults": {
         "faq1": {
-          "question": "That could be the first question?",
-          "answer": "And to make the answer to this first question a little longer, I'll write a few lines."
+          "question": "How can I track which cards have been redeemed?",
+          "answer": "Go to the page where you created your TipCards set. In the upper part you will see an overview of all cards in your set that have been funded, viewed and redeemed."
         },
         "faq2": {
-          "question": "And the second question that is not selected?",
-          "answer": "And to make the answer to this second question a little longer, I'll write a few lines."
+          "question": "How can I get unused sats back?",
+          "answer": "On the page of your TipCards set, you will find a button \"Withdraw remaining sats\". It will allow you to redeem all cards of this set that still have some value on them at once. You need to be logged in to use this feature."
         },
         "faq3": {
-          "question": "And the third question that is not selected?",
-          "answer": "And to make the answer to this third question a little longer, I'll write a few lines"
+          "question": "Can I fund multiple cards at once?",
+          "answer": "Just click on \"Fund set\" on the set's configuration page and type in the amount of sats per card. You can fund up to 100 cards with one lightning transaction."
         }
       }
     }
