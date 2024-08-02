@@ -2,7 +2,7 @@
   <header class="grid grid-cols-2 max-w-md w-full m-auto mt-0 mb-0 print:hidden">
     <BackLinkDeprecated class="p-4" />
     <div v-if="isLoggedIn === true" class="col-start-2 p-4 text-end">
-      <LinkDefault :to="{ name: 'user-account' }">
+      <LinkDefault :to="{ name: 'user-account', params: { lang: $route.params.lang } }">
         {{ $t('general.userAccount') }}
       </LinkDefault>
     </div>

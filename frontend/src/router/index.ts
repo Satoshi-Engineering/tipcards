@@ -44,7 +44,7 @@ const router = createRouter({
         {
           path: 'preview',
           name: 'preview',
-          redirect: { name: 'landing' },
+          redirect: to => ({ name: 'landing', params: { lang: to.params.lang } }),
         },
         {
           path: 'sets',

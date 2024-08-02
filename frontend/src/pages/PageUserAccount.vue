@@ -79,7 +79,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watchEffect, onBeforeMount } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import isEqual from 'lodash.isequal'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
@@ -95,6 +95,7 @@ import useAuthService from '@/modules/useAuthService'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 const { logout } = authStore
 const { isLoggedIn } = storeToRefs(authStore)
@@ -138,7 +139,7 @@ const logoutUserErrorMessages = ref<string[]>([])
 
 const onLogout = () => {
   logout()
-  router.push({ name: 'home' })
+  router.push({ name: 'home', params: { lang: route.params.lang } })
 }
 
 const loggingOutAllOtherDevices = ref(false)
@@ -159,7 +160,7 @@ const logoutAllOtherDevices = async () => {
 
 watchEffect(() => {
   if (isLoggedIn.value === false) {
-    router.push({ name: 'home' })
+    router.push({ name: 'home', params: { lang: route.params.lang } })
   }
 })
 </script>

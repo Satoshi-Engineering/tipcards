@@ -11,13 +11,13 @@
       </template>
       <template #buttonContainer>
         <ButtonDefault
-          :to="{ name: 'cards' }"
+          :to="{ name: 'cards', params: { lang: $route.params.lang } }"
           data-test="button-create"
         >
           {{ $t('home.buttonCreate') }}
         </ButtonDefault>
         <ButtonDefault
-          :to="{ name: 'sets' }"
+          :to="{ name: 'sets', params: { lang: $route.params.lang } }"
           variant="secondary"
           data-test="button-sets"
         >

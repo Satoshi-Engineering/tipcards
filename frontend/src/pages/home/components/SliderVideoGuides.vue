@@ -39,7 +39,7 @@
           {{ slide.text() }}
         </ParagraphDefault>
         <ButtonIcon
-          :to="{ name: 'cards' }"
+          :to="{ name: 'cards', params: { lang: $route.params.lang } }"
           :tabindex="currentPosition === index ? 0 : -1"
           class="absolute bottom-3 end-3"
           data-test="slider-button-start"

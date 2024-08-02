@@ -20,7 +20,7 @@
       </ul>
       <ButtonContainer>
         <ButtonDefault
-          :to="{ name: 'faqs' }"
+          :to="{ name: 'faqs', params: { lang: $route.params.lang } }"
           reduced-animation
           data-test="link-faq"
         >
