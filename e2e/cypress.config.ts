@@ -14,7 +14,7 @@ config({
 export default defineConfig({
   e2e: {
     specPattern: 'e2e/**/*.test.ts',
-    supportFile: false,
+    supportFile: 'e2e/cypress/support/e2e.ts',
     // Mute audio for all tests
     setupNodeEvents(on) {
       on('before:browser:launch', (browser, launchOptions) => {

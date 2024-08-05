@@ -5,7 +5,7 @@ const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 describe('Sets Page', () => {
   it('should show a logged out sets page', () => {
     cy.visit(SETS_PAGE_URL.href)
-    cy.get('[data-test=headline]').should('exist')
+    cy.getTestElement('headline').should('exist')
     cy.url().should('contain', 'sets')
     cy.get('[data-test=please-login-section]').should('exist')
     cy.get('[data-test=logged-in]').should('not.exist')
