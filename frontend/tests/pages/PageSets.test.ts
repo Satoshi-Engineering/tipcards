@@ -2,10 +2,11 @@ import '../mocks/i18n'
 import '../mocks/router'
 import '../mocks/pinia'
 
-import { mount, config } from '@vue/test-utils'
+import { mount, config, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 
 import PageSets from '@/pages/PageSets.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 
@@ -25,7 +26,9 @@ describe('PageSets', () => {
 
     const wrapper = mount(PageSets)
     expect(wrapper.find('[data-test=headline]').exists()).toBe(true)
-    expect(wrapper.find('[data-test=button-new-set]').exists()).toBe(true)
+    const newSetButton = wrapper.find('[data-test=button-new-set]')
+    expect(newSetButton.exists()).toBe(true)
+    expect(newSetButton.getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({ name: 'cards' }))
     expect(wrapper.find('[data-test=please-login-section]').exists()).toBe(true)
     expect(wrapper.find('[data-test=logged-in]').exists()).toBe(false)
   })
@@ -58,5 +61,9 @@ describe('PageSets', () => {
     expect(wrapper.find('[data-test=sets-list-empty]').exists()).toBe(false)
     expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(true)
     expect(wrapper.findAll('[data-test=sets-list-with-data] li').length).toBe(cardsStore.sets.length)
+    wrapper.findAll('[data-test=sets-list-with-data] li').forEach((li) => {
+      const editSetButton = li.getComponent(LinkDefault)
+      expect(editSetButton.vm.to).toEqual(expect.objectContaining({ name: 'cards' }))
+    })
   })
 })
