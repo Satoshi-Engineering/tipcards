@@ -17,12 +17,14 @@
       <IconCaretDown v-else class="w-4" />
     </span>
     <div>
-      <button
-        class="appearance-none text-start"
-        @click="$emit('click')"
-      >
-        {{ question }}
-      </button>
+      <HeadlineDefault level="h3" styling="none">
+        <button
+          class="appearance-none text-start"
+          @click="$emit('click')"
+        >
+          {{ question }}
+        </button>
+      </HeadlineDefault>
       <div
         class="
           overflow-hidden
@@ -50,6 +52,7 @@ import { onMounted, useSlots } from 'vue'
 import IconCaretDown from '@/components/icons/IconCaretDown.vue'
 import IconCaretUp from '@/components/icons/IconCaretUp.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 
 const slots = useSlots()
 

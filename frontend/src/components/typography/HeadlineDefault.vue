@@ -39,7 +39,7 @@
 <script setup lang="ts">
 
 export type HeadlineLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
-export type HeadlineStyling = 'h1' | 'h2' | 'h3' | 'h4'
+export type HeadlineStyling = 'h1' | 'h2' | 'h3' | 'h4' | 'none'
 
 import { computed, type PropType } from 'vue'
 
@@ -59,9 +59,13 @@ const classesByLevel: Record<HeadlineStyling, string> = {
   h2: 'text-2xl my-4',
   h3: 'text-xl my-3',
   h4: 'text-base my-3',
+  none: '',
 }
 
 const classes = computed(() => {
+  if (props.styling === 'none') {
+    return ''
+  }
   const baseClasses = 'first:mt-0 last:mb-0 font-lato font-bold'
   if (props.styling != null) {
     return `${baseClasses} ${classesByLevel[props.styling]}`
