@@ -33,7 +33,7 @@
     "questions": {
       "support": {
         "question": "I have questions, feedback, a problem or found a bug. What should I do?",
-        "answer": "Don't hesitate to contact us at {email}."
+        "answer": "Don't hesitate to contact us at {supportEmail}."
       },
       "monitorCards": {
         "question": "How can I track which cards have been redeemed?",

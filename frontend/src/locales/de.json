@@ -33,7 +33,7 @@
     "questions": {
       "support": {
         "question": "Ich habe Fragen, Feedback, ein Problem oder einen Bug entdeckt. An wen kann ich mich wenden?",
-        "answer": "Schreib uns an {email}."
+        "answer": "Schreib uns an {supportEmail}."
       },
       "monitorCards": {
         "question": "Wie kann ich verfolgen, welche Karten eingelöst wurden?",
