@@ -1,7 +1,7 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-import { BACKEND_API_ORIGIN } from '../../../tests/lib/constants'
+import { BACKEND_API_ORIGIN } from '../../../lib/constants'
 
 const API_REFRESH = new URL('/api/auth/refresh', BACKEND_API_ORIGIN)
 

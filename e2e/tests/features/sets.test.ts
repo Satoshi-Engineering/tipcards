@@ -1,4 +1,4 @@
-import { TIPCARDS_ORIGIN } from '../lib/constants'
+import { TIPCARDS_ORIGIN } from '../../lib/constants'
 
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 

@@ -1,7 +1,7 @@
 import LOCALES from '../../../../shared/src/modules/i18n/locales'
 
-import { urlWithOptionalTrailingSlash } from '../../lib/urlHelpers'
-import { TIPCARDS_ORIGIN } from '../../lib/constants'
+import { urlWithOptionalTrailingSlash } from '../../../lib/urlHelpers'
+import { TIPCARDS_ORIGIN } from '../../../lib/constants'
 
 describe('TheLangNav', () => {
   const rootPageButtonText = {

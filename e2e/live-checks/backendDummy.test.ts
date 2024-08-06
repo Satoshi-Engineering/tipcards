@@ -1,8 +1,8 @@
-// https://on.cypress.io/api
+import { BACKEND_API_ORIGIN } from '../lib/constants'
 
 describe('Backend', () => {
   it('call dummy route', () => {
-    cy.request('GET', `${Cypress.env('BACKEND_API_ORIGIN')}/api/dummy`).then((response) => {
+    cy.request('GET', new URL('/api/dummy', BACKEND_API_ORIGIN).href).then((response) => {
       expect(response.status).to.eq(200)
       expect(response.body.status).to.eq('success')
     })
