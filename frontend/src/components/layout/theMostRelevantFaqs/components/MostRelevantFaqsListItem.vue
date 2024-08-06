@@ -2,7 +2,6 @@
   <li
     class="
       flex flex-cols gap-4 items-start
-      cursor-pointer
       transition-colors ease-in duration-50
     "
     :class="{
@@ -11,7 +10,7 @@
     }"
   >
     <span
-      class="h-6 flex items-center"
+      class="h-6 flex items-center cursor-pointer"
       @click="$emit('click')"
     >
       <IconCaretUp v-if="active" class="w-4" />

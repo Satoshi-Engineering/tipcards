@@ -2,7 +2,7 @@
   <TheLayout :hide-faqs="!isLoggedIn">
     <div
       v-if="!showPage"
-      class="fixed w-screen h-screen top-0 left-0 bg-white flex"
+      class="fixed w-screen h-dvh top-0 left-0 bg-white flex"
     >
       <div
         v-if="showLoadingAnimation"

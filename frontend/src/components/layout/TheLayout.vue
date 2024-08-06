@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-dvh flex flex-col">
     <slot name="header">
       <TheHeader
         class="print:hidden"
