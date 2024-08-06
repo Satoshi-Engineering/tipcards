@@ -21,25 +21,30 @@
     "sets": "Meine Sets"
   },
   "footer": {
-    "support": "Hast du Fragen, Feedback, ein Problem oder einen Bug entdeckt? Schreib uns an {email}.",
     "mostRelevantFaqs": {
       "title": "Bug, Feedback oder Fragen?",
       "subTitle": "Wir sind stetig dabei uns zu verbessern!",
-      "buttonToFaqs": "Zu den FAQs",
-      "defaults": {
-        "faq1": {
-          "question": "Wie kann ich verfolgen, welche Karten eingelöst wurden?",
-          "answer": "Gehe auf die Seite, auf der du dein TipCards-Set erstellt hast. Im oberen Teil siehst du eine Übersicht aller Karten in deinem Set, die aufgeladen, angesehen oder eingelöst wurden."
-        },
-        "faq2": {
-          "question": "Wie kann ich nicht eingelöste Sats zurückholen?",
-          "answer": "Auf der Seite deines TipCards-Sets findest du einen Button \"Verbleibende Sats zurückholen\". Damit kannst du alle Karten dieses Sets, die noch einen Wert haben, auf einmal einlösen. Du musst eingeloggt sein, um diese Funktion zu nutzen."
-        },
-        "faq3": {
-          "question": "Kann ich mehrere Karten auf einmal aufladen?",
-          "answer": "Klicke einfach auf \"Set aufladen\" auf der Konfigurationsseite des Sets und gib den Betrag in Sats pro Karte ein. Du kannst bis zu 100 Karten auf einmal aufladen."
-        }
-      }
+      "buttonToFaqs": "Zu den FAQs"
+    }
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "subTitle": "Hier findest du Antworten auf die am häufigsten gestellten Fragen. Wir sind stetig dabei uns zu verbessern!",
+    "faqSupport": {
+      "question": "Ich habe Fragen, Feedback, ein Problem oder einen Bug entdeckt. An wen kann ich mich wenden?",
+      "answer": "Schreib uns an {email}."
+    },
+    "faq1": {
+      "question": "Wie kann ich verfolgen, welche Karten eingelöst wurden?",
+      "answer": "Gehe auf die Seite, auf der du dein TipCards-Set erstellt hast. Im oberen Teil siehst du eine Übersicht aller Karten in deinem Set, die aufgeladen, angesehen oder eingelöst wurden."
+    },
+    "faq2": {
+      "question": "Wie kann ich nicht eingelöste Sats zurückholen?",
+      "answer": "Auf der Seite deines TipCards-Sets findest du einen Button \"Verbleibende Sats zurückholen\". Damit kannst du alle Karten dieses Sets, die noch einen Wert haben, auf einmal einlösen. Du musst eingeloggt sein, um diese Funktion zu nutzen."
+    },
+    "faq3": {
+      "question": "Kann ich mehrere Karten auf einmal aufladen?",
+      "answer": "Klicke einfach auf \"Set aufladen\" auf der Konfigurationsseite des Sets und gib den Betrag in Sats pro Karte ein. Du kannst bis zu 100 Karten auf einmal aufladen."
     }
   },
   "landing": {

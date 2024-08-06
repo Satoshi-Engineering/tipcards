@@ -10,12 +10,26 @@
       </ParagraphDefault>
       <ul class="mb-8 flex flex-col gap-4">
         <MostRelevantFaqsListItem
+          key="mostRelevantFaqs-faq-support"
+          :question="$t('faq.faqSupport.question')"
+          :active="activeIndex.includes(0)"
+          @click="onClick(0)"
+        >
+          <template #answer>
+            <I18nT keypath="faq.faqSupport.answer">
+              <template #email>
+                <LinkDefault :href="`mailto:${SUPPORT_EMAIL}?subject=Lightning%20Tip%20Cards%20Feedback`">{{ SUPPORT_EMAIL }}</LinkDefault>
+              </template>
+            </I18nT>
+          </template>
+        </MostRelevantFaqsListItem>
+        <MostRelevantFaqsListItem
           v-for="(faq, index) in faqs"
-          :key="`mostRelevantFaqs-faq${index}`"
+          :key="`mostRelevantFaqs-faq${index+1}`"
           :question="faq.question"
           :answer="faq.answer"
-          :active="activeIndex.includes(index)"
-          @click="onClick(index)"
+          :active="activeIndex.includes(index+1)"
+          @click="onClick(index+1)"
         />
       </ul>
       <ButtonContainer>
@@ -33,7 +47,7 @@
 
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { I18nT, useI18n } from 'vue-i18n'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -42,6 +56,8 @@ import QuestionMark from '@/components/icons/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import { SUPPORT_EMAIL } from '@/constants'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 const { t } = useI18n()
 
@@ -49,17 +65,19 @@ const props = defineProps({
   faqs: {
     type: Array as PropType<{ question: string, answer: string }[]>,
     default: undefined,
-    validator: (value: { question: string, answer: string }[]) => value.length <= 3,
+    validator: (value: { question: string, answer: string }[]) => value.length <= 2,
   },
 })
 
+const defaultFaqs = ['faq1', 'faq2']
+
 const faqs = computed(() => {
   const faqs = props.faqs || []
-  let startingIndex = 1
-  while (faqs.length < 3) {
+  let startingIndex = 0
+  while (faqs.length < 2) {
     faqs.push({
-      question: t(`footer.mostRelevantFaqs.defaults.faq${startingIndex}.question`),
-      answer: t(`footer.mostRelevantFaqs.defaults.faq${startingIndex}.answer`),
+      question: t(`faq.${defaultFaqs[startingIndex]}.question`),
+      answer: t(`faq.${defaultFaqs[startingIndex]}.answer`),
     })
     startingIndex += 1
   }

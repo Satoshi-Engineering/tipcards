@@ -6,9 +6,6 @@
     }, {
       question: 'Why are these questions not localized?',
       answer: 'Because this is a style guide page and not a content page. What a dumb question ... 🤦',
-    }, {
-      question: 'Is this the real reason?',
-      answer: 'No, the real reason is that I am lazy and I don\'t want to localize this page. (This answer was written by Github Copilot)',
     }]"
   >
     <CenterContainer class="mb-10">

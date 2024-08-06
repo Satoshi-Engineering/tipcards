@@ -10,12 +10,18 @@
       'text-white-50 hover:text-white': !active,
     }"
   >
-    <span class="h-6 flex items-center">
+    <span
+      class="h-6 flex items-center"
+      @click="$emit('click')"
+    >
       <IconCaretUp v-if="active" class="w-4" />
       <IconCaretDown v-else class="w-4" />
     </span>
     <div>
-      <button class="appearance-none text-start">
+      <button
+        class="appearance-none text-start"
+        @click="$emit('click')"
+      >
         {{ question }}
       </button>
       <div
@@ -30,7 +36,9 @@
         data-test="most-relevant-faq-answer"
       >
         <ParagraphDefault class="!mt-4">
-          {{ answer }}
+          <slot name="answer">
+            {{ answer }}
+          </slot>
         </ParagraphDefault>
       </div>
     </div>
@@ -38,22 +46,34 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, useSlots } from 'vue'
+
 import IconCaretDown from '@/components/icons/IconCaretDown.vue'
 import IconCaretUp from '@/components/icons/IconCaretUp.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
-defineProps({
+const slots = useSlots()
+
+const props = defineProps({
   question: {
     type: String,
     required: true,
   },
   answer: {
     type: String,
-    required: true,
+    default: undefined,
   },
   active: {
     type: Boolean,
     default: false,
   },
+})
+
+defineEmits(['click'])
+
+onMounted(() => {
+  if (slots.answer == null && props.answer == null) {
+    console.warn('MostRelevantFaqsListItem: No "answer" provided!')
+  }
 })
 </script>
