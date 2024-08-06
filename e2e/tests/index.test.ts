@@ -3,7 +3,11 @@ import { TIPCARDS_ORIGIN } from '../lib/constants'
 
 describe('Web client', () => {
   it('visits the app root url and checks the headline', () => {
-    cy.visit(TIPCARDS_ORIGIN.href)
+    cy.visit(TIPCARDS_ORIGIN.href, {
+      onBeforeLoad: (win) => {
+        Object.defineProperty(win.navigator, 'languages', { value: ['en-US'] })
+      },
+    })
     cy.contains('h1', 'The easiest way to tip with Bitcoin')
   })
 
@@ -57,11 +61,11 @@ describe('Web client', () => {
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('be.visible')
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('not.be.visible')
 
-    cy.get('[data-test="the-most-relevant-faqs"] ul li').eq(1).click()
+    cy.get('[data-test="the-most-relevant-faqs"] ul li button').eq(1).click()
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('be.visible')
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('be.visible')
 
-    cy.get('[data-test="the-most-relevant-faqs"] ul li').eq(0).click()
+    cy.get('[data-test="the-most-relevant-faqs"] ul li button').eq(0).click()
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(0).should('not.be.visible')
     cy.get('[data-test="the-most-relevant-faqs"] ul li p').eq(1).should('be.visible')
   })
