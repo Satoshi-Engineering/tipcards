@@ -1,12 +1,6 @@
 <template>
   <TheLayout
-    :faqs="[{
-      question: 'What is the purpose of this page? (This is just for testing as I need a multi line question)',
-      answer: 'To showcase the style guide of the Lightning TipCards.',
-    }, {
-      question: 'Why are these questions not localized?',
-      answer: 'Because this is a style guide page and not a content page. What a dumb question ... 🤦',
-    }]"
+    :faqs="[FAQS.getBackSats, FAQS.bulkFunding, FAQS.support]"
   >
     <CenterContainer class="mb-10">
       <HeadlineDefault level="h1">
@@ -382,6 +376,7 @@ import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import HeroSection from '@/components/HeroSection.vue'
 import SliderStyleGuide from '@/pages/styleGuide/components/SliderStyleGuide.vue'
+import { FAQS } from '@/modules/faqs'
 
 const route = useRoute()
 

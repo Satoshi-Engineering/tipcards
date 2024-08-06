@@ -37,25 +37,38 @@
 </template>
 
 <script setup lang="ts">
+
+export type HeadlineLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'
+export type HeadlineStyling = 'h1' | 'h2' | 'h3' | 'h4'
+
 import { computed, type PropType } from 'vue'
 
 const props = defineProps({
   level: {
-    type: String as PropType<'h1' | 'h2' | 'h3' | 'h4' | 'blockquote'>,
+    type: String as PropType<HeadlineLevel>,
     required: true,
   },
   styling: {
-    type: String as PropType<'h1' | 'h2' | 'h3' | 'h4'>,
+    type: String as PropType<HeadlineStyling>,
     default: undefined,
   },
 })
 
-const classesByLevel: Record<string, string> = {
+const classesByLevel: Record<HeadlineStyling, string> = {
   h1: 'text-3xl my-6',
   h2: 'text-2xl my-4',
   h3: 'text-xl my-3',
   h4: 'text-base my-3',
 }
 
-const classes = computed(() => `text-black first:mt-0 last:mb-0 font-lato font-bold ${classesByLevel[props.styling || props.level]}`)
+const classes = computed(() => {
+  const baseClasses = 'first:mt-0 last:mb-0 font-lato font-bold'
+  if (props.styling != null) {
+    return `${baseClasses} ${classesByLevel[props.styling]}`
+  }
+  if (props.level !== 'blockquote') {
+    return `${baseClasses} ${classesByLevel[props.level]}`
+  }
+  return baseClasses
+})
 </script>

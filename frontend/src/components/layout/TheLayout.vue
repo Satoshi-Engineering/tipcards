@@ -25,6 +25,7 @@ import type { PropType } from 'vue'
 import TheHeader from '@/components/layout/TheHeader.vue'
 import TheFooter from '@/components/layout/TheFooter.vue'
 import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
+import type { Faq } from '@/modules/faqs'
 
 defineProps({
   hideFaqs: {
@@ -32,9 +33,9 @@ defineProps({
     default: false,
   },
   faqs: {
-    type: Array as PropType<{ question: string, answer: string }[]>,
+    type: Array as PropType<Faq[]>,
     default: undefined,
-    validator: (value: { question: string, answer: string }[]) => value.length <= 3,
+    validator: (value: Faq[]) => value.length <= 3,
   },
 })
 </script>

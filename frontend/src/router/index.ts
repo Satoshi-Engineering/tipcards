@@ -14,7 +14,7 @@ const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
-const PageFAQs = () => import('@/pages/PageFAQs.vue')
+const PageFAQs = () => import('@/pages/PageFaqs.vue')
 const PageLocalStorageSets = () => import('@/pages/PageLocalStorageSets.vue')
 
 const router = createRouter({

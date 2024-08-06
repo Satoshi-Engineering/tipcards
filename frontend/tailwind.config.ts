@@ -50,6 +50,9 @@ export default {
       borderRadius: {
         'default': '0.857rem',
       },
+      boxShadow: {
+        'default': '0 2px 15px 0 rgba(97, 97, 97, 0.3)',
+      },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
         'spin-reverse': 'spin 1s linear infinite reverse',

@@ -10,27 +10,16 @@
       </ParagraphDefault>
       <ul class="mb-8 flex flex-col gap-4">
         <MostRelevantFaqsListItem
-          key="mostRelevantFaqs-faq-support"
-          :question="$t('faq.faqSupport.question')"
-          :active="activeIndex.includes(0)"
-          @click="onClick(0)"
+          v-for="(faq, index) in faqs"
+          :key="`mostRelevantFaqs-faq${index}`"
+          :question="$t(faq.questionKeypath)"
+          :active="activeIndex.includes(index)"
+          @click="onClick(index)"
         >
           <template #answer>
-            <I18nT keypath="faq.faqSupport.answer">
-              <template #email>
-                <LinkDefault :href="`mailto:${SUPPORT_EMAIL}?subject=Lightning%20Tip%20Cards%20Feedback`">{{ SUPPORT_EMAIL }}</LinkDefault>
-              </template>
-            </I18nT>
+            <FaqI18nT :keypath="faq.answerKeypath" />
           </template>
         </MostRelevantFaqsListItem>
-        <MostRelevantFaqsListItem
-          v-for="(faq, index) in faqs"
-          :key="`mostRelevantFaqs-faq${index+1}`"
-          :question="faq.question"
-          :answer="faq.answer"
-          :active="activeIndex.includes(index+1)"
-          @click="onClick(index+1)"
-        />
       </ul>
       <ButtonContainer>
         <ButtonDefault
@@ -47,7 +36,6 @@
 
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue'
-import { I18nT, useI18n } from 'vue-i18n'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -56,29 +44,24 @@ import QuestionMark from '@/components/icons/QuestionMark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
-import { SUPPORT_EMAIL } from '@/constants'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
-
-const { t } = useI18n()
+import FaqI18nT from '@/components/FaqI18nT.vue'
+import { FAQS, type Faq } from '@/modules/faqs'
 
 const props = defineProps({
   faqs: {
-    type: Array as PropType<{ question: string, answer: string }[]>,
+    type: Array as PropType<Faq[]>,
     default: undefined,
-    validator: (value: { question: string, answer: string }[]) => value.length <= 2,
+    validator: (value: Faq[]) => value.length <= 3,
   },
 })
 
-const defaultFaqs = ['faq1', 'faq2']
+const defaultFaqs = [FAQS.support, FAQS.monitorCards, FAQS.getBackSats]
 
 const faqs = computed(() => {
   const faqs = props.faqs || []
   let startingIndex = 0
-  while (faqs.length < 2) {
-    faqs.push({
-      question: t(`faq.${defaultFaqs[startingIndex]}.question`),
-      answer: t(`faq.${defaultFaqs[startingIndex]}.answer`),
-    })
+  while (faqs.length < 3) {
+    faqs.push(defaultFaqs[startingIndex])
     startingIndex += 1
   }
   return faqs

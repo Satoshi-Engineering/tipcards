@@ -2,7 +2,7 @@
   <TheLayout>
     <HeroSection>
       <template #default>
-        <HeadlineDefault level="h1" styling="h2">
+        <HeadlineDefault level="h1">
           About Lightning TipCards
         </HeadlineDefault>
         <ParagraphDefault>
