@@ -12,7 +12,7 @@
       :loading="loading"
       :reduced-animation="reducedAnimation"
     />
-    <span class="relative">
+    <span class="relative block text-center">
       <slot />
     </span>
   </ButtonLinkSkeleton>
@@ -78,7 +78,7 @@ const cssClassesPrimary = computed(() => [
     group
     relative inline-flex items-center justify-center
     rounded-full min-h-[40px] overflow-hidden
-    max-w-md my-1 px-16 py-2
+    max-w-sm my-1 px-14 py-2
     font-medium text-center bg-yellow
   `,
   {
@@ -88,7 +88,7 @@ const cssClassesPrimary = computed(() => [
 ])
 
 const cssClassesSecondary = computed(() => [
-  'max-w-md min-h-[40px] my-1 px-0 py-2 font-medium text-center underline hover:no-underline',
+  'max-w-sm min-h-[40px] my-1 px-0 py-2 font-medium text-center underline hover:no-underline',
   {
     'opacity-50 cursor-default pointer-events-none': disabledComputed.value,
   },
