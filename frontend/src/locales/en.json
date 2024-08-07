@@ -46,6 +46,14 @@
       "bulkFunding": {
         "question": "Can I fund multiple cards at once?",
         "answer": "Just click on \"Fund set\" on the set's configuration page and type in the amount of sats per card. You can fund up to 100 cards with one lightning transaction."
+      },
+      "custodial": {
+        "question": "Is TipCards a custodial service?",
+        "answer": "Lightning TipCards is a custodial service and should not be used as a long-term storage for your sats. We highly recommend not to leave a significant amount on a TipCard for a longer time."
+      },
+      "lightningNode": {
+        "question": "Which Lightning node are you using?",
+        "answer": "We are using the Lightning node {lightningNode}."
       }
     }
   },

@@ -39,6 +39,8 @@ const faqs: Faq[] = [
   FAQS.monitorCards,
   FAQS.getBackSats,
   FAQS.bulkFunding,
+  FAQS.custodial,
+  FAQS.lightningNode,
 ]
 </script>
 

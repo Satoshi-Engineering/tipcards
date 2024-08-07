@@ -15,6 +15,14 @@ export const FAQS: Record<string, { questionKeypath: string, answerKeypath: stri
     questionKeypath: 'faqs.questions.bulkFunding.question',
     answerKeypath: 'faqs.questions.bulkFunding.answer',
   },
+  custodial: {
+    questionKeypath: 'faqs.questions.custodial.question',
+    answerKeypath: 'faqs.questions.custodial.answer',
+  },
+  lightningNode: {
+    questionKeypath: 'faqs.questions.lightningNode.question',
+    answerKeypath: 'faqs.questions.lightningNode.answer',
+  },
 }
 
 export type Faq = typeof FAQS[keyof typeof FAQS]

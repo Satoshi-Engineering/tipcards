@@ -46,6 +46,14 @@
       "bulkFunding": {
         "question": "Kann ich mehrere Karten auf einmal aufladen?",
         "answer": "Klicke einfach auf \"Set aufladen\" auf der Konfigurationsseite des Sets und gib den Betrag in Sats pro Karte ein. Du kannst bis zu 100 Karten auf einmal aufladen."
+      },
+      "custodial": {
+        "question": "Ist TipCards ein custodial Service?",
+        "answer": "Lightning TipCards ist ein custodial Service und sollte nicht als Langzeitspeicher für deine Sats verwendet werden. Wir empfehlen dringend, keine größeren Beträge über einen längeren Zeitraum auf einer TipCard zu belassen."
+      },
+      "lightningNode": {
+        "question": "Welcher Lightning Node wird verwendet?",
+        "answer": "Wir verwenden den Node {lightningNode}."
       }
     }
   },
