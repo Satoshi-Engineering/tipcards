@@ -46,6 +46,9 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
+    server: {
+      host: '0.0.0.0',
+    },
     root: fileURLToPath(new URL('./', import.meta.url)),
     plugins: [vue(), createHtmlPlugin({ inject: { data: { env } } })],
     resolve: {
