@@ -33,8 +33,6 @@
     "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts"
   },
   "dependencies": {
-    "@node-redis/json": "^1.0.2",
-    "@node-redis/search": "^1.0.5",
     "@popperjs/core": "^2.11.8",
     "@trpc/client": "^10.45.2",
     "@trpc/server": "^10.45.2",
@@ -66,7 +64,6 @@
     "pinia": "^2.2.0",
     "postgres": "^3.4.4",
     "qrcode-svg": "^1.1.0",
-    "redis": "^4.7.0",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5",
     "superjson": "^2.2.1",
