@@ -1,4 +1,4 @@
-import { TIPCARDS_ORIGIN } from '../../lib/constants'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 const HOME_PAGE_URL = new URL('/', TIPCARDS_ORIGIN)
 

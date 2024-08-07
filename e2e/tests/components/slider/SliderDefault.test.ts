@@ -1,4 +1,4 @@
-import { TIPCARDS_ORIGIN } from '../../../lib/constants'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('SliderDefault', () => {
   it('renders the slider and swipes to the second slide', () => {

@@ -1,5 +1,27 @@
 import { defineConfig } from 'cypress'
 import { config } from 'dotenv'
+import path from 'path'
+
+import webpack from '@cypress/webpack-preprocessor'
+
+const webpackOptions = {
+  resolve: {
+    extensions: ['.ts', '.js'],
+    alias: {
+      '@shared': path.resolve(process.cwd(), '../dist/shared/src'),
+      '@e2e': path.resolve(process.cwd(), './'),
+    },
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
+      },
+    ],
+  },
+}
 
 config({
   path: './.env',
@@ -14,9 +36,12 @@ config({
 export default defineConfig({
   e2e: {
     specPattern: 'e2e/**/*.test.ts',
-    supportFile: 'e2e/cypress/support/e2e.ts',
+    supportFile: 'e2e/support/e2e.ts',
     // Mute audio for all tests
     setupNodeEvents(on) {
+
+      on('file:preprocessor', webpack({ webpackOptions }))
+
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.family !== 'chromium') {
           return launchOptions

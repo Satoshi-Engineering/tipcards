@@ -1,4 +1,4 @@
-import { TIPCARDS_ORIGIN } from '../../../lib/constants'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('TheHeader', () => {
   it('clicks on the lang icon in the header and the lang nav should appear and disappear', () => {

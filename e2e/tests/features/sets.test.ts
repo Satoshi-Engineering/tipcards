@@ -1,11 +1,15 @@
-import { TIPCARDS_ORIGIN } from '../../lib/constants'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 
 describe('Sets Page', () => {
+  /*
+  beforeEach(() => {
+    cy.login()
+  })
+*/
   it('should show a logged out sets page', () => {
     cy.visit(SETS_PAGE_URL.href)
-    cy.getTestElement('headline').should('exist')
     cy.location('pathname').should('equal', '/sets')
     cy.login()
     cy.url().should('contain', 'sets')

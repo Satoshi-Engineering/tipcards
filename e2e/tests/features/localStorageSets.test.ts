@@ -1,5 +1,5 @@
-import { TIPCARDS_ORIGIN } from '../../lib/constants'
-import { urlWithOptionalTrailingSlash } from '../../lib/urlHelpers'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
+import { urlWithOptionalTrailingSlash } from '@e2e/lib/urlHelpers'
 
 describe('localStorageSets', () => {
   it('should render no warning, if no localStorage sets exist', () => {

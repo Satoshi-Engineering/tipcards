@@ -4,7 +4,7 @@
 /// <reference types="cypress" />
 
 declare namespace Cypress {
-  interface Chainable {
-    login(value: string): void
+  interface Chainable  {
+    login(): void
   }
 }

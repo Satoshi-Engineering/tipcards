@@ -1,4 +1,4 @@
-import { BACKEND_API_ORIGIN } from '../lib/constants'
+import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
 describe('Backend', () => {
   it('call dummy route', () => {

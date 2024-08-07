@@ -1,5 +1,5 @@
-import { urlWithOptionalTrailingSlash } from '../lib/urlHelpers'
-import { TIPCARDS_ORIGIN } from '../lib/constants'
+import { urlWithOptionalTrailingSlash } from '@e2e/lib/urlHelpers'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('Web client', () => {
   it('visits the app root url and checks the headline', () => {

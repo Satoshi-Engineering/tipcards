@@ -1,4 +1,4 @@
-import { FUNDED_CARD_ON_EXTERNAL_LANDING_PAGE } from '../lib/constants'
+import { FUNDED_CARD_ON_EXTERNAL_LANDING_PAGE } from '@e2e/lib/constants'
 
 describe('External landing page', () => {
   it('check if the funded card is loaded', () => {

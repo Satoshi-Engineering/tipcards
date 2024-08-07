@@ -1,11 +1,17 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.cypress.json"
-    },
-  ],
+  "include": ["**/*.ts"],
   "compilerOptions": {
-    "module": "NodeNext"
-  }
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "types": [
+      "cypress",
+      "node",
+    ],
+    "paths": {
+      "@shared/*": ["../dist/shared/src/*"],
+      "@e2e/*": ["./*"],
+    }
+  },
 }

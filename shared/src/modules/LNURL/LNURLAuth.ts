@@ -28,7 +28,7 @@ export default class LNURLAuth {
     return await axios.get(url.toString())
   }
 
-  getValidLoginUrlFromLNURLAuth(lnurlAuth: string) {
+  public getValidLoginUrlFromLNURLAuth(lnurlAuth: string) {
     const urlString = LNURL.decode(lnurlAuth)
     const url = new URL(urlString)
 
