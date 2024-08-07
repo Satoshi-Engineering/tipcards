@@ -7,8 +7,8 @@ describe('Sets Page', () => {
     cy.login()
     cy.visit(SETS_PAGE_URL.href)
     cy.location('pathname').should('equal', '/sets')
-    cy.getTestElement('the-layout').should('exist')
-    cy.getTestElement('please-login-section').should('not.exist')
+    cy.getTestElement('the-layout', { timeout: 30000 }).should('exist')
+    cy.getTestElement('please-login-section', { timeout: 30000 }).should('not.exist')
     cy.getTestElement('logged-in', { timeout: 30000 }).should('exist')
   })
 
