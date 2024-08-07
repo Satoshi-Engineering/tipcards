@@ -33,7 +33,7 @@ type LoginEvent = {
 const loggedIn: Record<string, string> = {}
 
 const lnurlServer = lnurl.createServer({
-  host: 'localhost',
+  host: '0.0.0.0',
   port: LNURL_PORT,
   url: LNURL_SERVICE_ORIGIN,
   lightning: {
