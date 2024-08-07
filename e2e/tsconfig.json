@@ -10,8 +10,11 @@
       "node",
     ],
     "paths": {
-      "@shared/*": ["../dist/shared/src/*"],
+      "@shared/*": ["../shared/src/*"],
       "@e2e/*": ["./*"],
     }
   },
+  "references": [
+    { "path" : "../shared/tsconfig.json" }
+  ]
 }

@@ -7,8 +7,11 @@ import webpack from '@cypress/webpack-preprocessor'
 const webpackOptions = {
   resolve: {
     extensions: ['.ts', '.js'],
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+    },
     alias: {
-      '@shared': path.resolve(process.cwd(), '../dist/shared/src'),
+      '@shared': path.resolve(process.cwd(), '../shared/src'),
       '@e2e': path.resolve(process.cwd(), './'),
     },
   },
