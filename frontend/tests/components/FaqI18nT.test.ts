@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
+import '../mocks/router'
 import '../mocks/i18n'
 import '../mocks/constants'
 
