@@ -6,6 +6,6 @@
  *
  * @example cy.getTestElement('headline')
  */
-Cypress.Commands.add('getTestElement', (value) => cy.get(`[data-test=${value}]`))
+Cypress.Commands.add('getTestElement', (value, options) => cy.get(`[data-test=${value}]`, options))
 
 // the types for the custom commands will be defined in "types.d.ts" file

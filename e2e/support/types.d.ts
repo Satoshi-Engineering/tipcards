@@ -10,6 +10,6 @@ declare namespace Cypress {
      * Custom command to select DOM element by data-test attribute.
      * @example cy.getTestElement('headline')
      */
-    getTestElement(value: string): Chainable<JQuery<HTMLElement>>
+    getTestElement(value: string, options?: Partial<Loggable & Timeoutable & Withinable & Shadow>): Chainable<JQuery<HTMLElement>>
   }
 }
