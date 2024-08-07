@@ -61,7 +61,7 @@
       },
       "localStorageSets": {
         "question": "Wo sind meine alten Sets?",
-        "answer": "Wenn du Sets vor September 2023 gespeichert hast, wurden diese lokal in deinem Browser gespeichert. Du kannst zu {lang}/local-storage-sets gehen, um sie anzusehen. Wir empfehlen dir, sie in deinem Konto zu speichern, damit du von jedem Gerät aus darauf zugreifen kannst."
+        "answer": "Wenn du Sets vor September 2023 gespeichert hast, wurden diese lokal in deinem Browser gespeichert. Du kannst zu {localSetsPage} gehen, um sie anzusehen. Wir empfehlen dir, sie in deinem Konto zu speichern, damit du von jedem Gerät aus darauf zugreifen kannst."
       }
     }
   },

@@ -1,7 +1,7 @@
 <template>
   <footer class="bg-bluegrey text-white">
     <CenterContainer class="pt-7 pb-5">
-      <div>
+      <div class="flex gap-8 mt-6">
         <LinkDefault
           no-bold
           invert-underline
@@ -9,10 +9,17 @@
         >
           {{ $t('nav.about') }}
         </LinkDefault>
+        <LinkDefault
+          no-bold
+          invert-underline
+          :to="{ name: 'landing', params: { lang: $route.params.lang } }"
+        >
+          {{ $t('nav.landing') }}
+        </LinkDefault>
       </div>
       <div
         v-if="linkPrivacyPolicy != null || linkLegalNotice != null"
-        class="grid grid-cols-[repeat(2,auto)_1fr] gap-x-8 mt-6"
+        class="flex gap-8 mt-6"
       >
         <LinkDefault
           v-if="linkPrivacyPolicy != null"
