@@ -53,7 +53,7 @@
           invert-underline
           :href="linkLinkedIn"
         >
-          <IconLogoLinkedIn />
+          <IconLogoLinkedIn class="w-8 text-white" />
         </LinkDefault>
         <LinkDefault
           v-if="linkX != null"
@@ -61,7 +61,7 @@
           invert-underline
           :href="linkX"
         >
-          <IconLogoX />
+          <IconLogoX class="w-8 text-white" />
         </LinkDefault>
         <LinkDefault
           v-if="linkInstagram != null"
@@ -69,7 +69,7 @@
           invert-underline
           :href="linkInstagram"
         >
-          <IconLogoInstagram />
+          <IconLogoInstagram class="w-8 text-white" />
         </LinkDefault>
       </div>
       <div class="mt-5 text-end">

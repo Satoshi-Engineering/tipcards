@@ -29,7 +29,7 @@
           <component
             :is="slide.icon"
             v-if="slide.icon"
-            class="text-yellow h-8"
+            class="text-yellow h-8 w-auto"
           />
           <HeadlineDefault level="h3" class="mt-0">
             {{ slide.headline() }}

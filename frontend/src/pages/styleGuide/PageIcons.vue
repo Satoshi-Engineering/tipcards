@@ -59,7 +59,11 @@
       <div class="mb-8 flex flex-wrap items-center gap-5">
         <IconLogo class="h-10 w-auto bg-grey-medium" />
         <IconBitcoin class="w-10 bg-grey-medium" />
+        <IconLogoInstagram class="w-10 bg-grey-medium" />
+        <IconLogoInstagram class="w-10 bg-grey-medium text-yellow" />
         <IconLogoLightning class="w-10 bg-grey-medium" />
+        <IconLogoLinkedIn class="w-10 bg-grey-medium" />
+        <IconLogoLinkedIn class="w-10 bg-grey-medium text-yellow" />
         <IconLogoX class="w-10 bg-grey-medium" />
         <IconLogoX class="w-10 bg-grey-medium text-yellow" />
       </div>
@@ -109,4 +113,6 @@ import IconTriangleExclamationMark from '@/components/icons/IconTriangleExclamat
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconAnimatedCheckmark from '@/components/icons/IconAnimatedCheckmark.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
+import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
+import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
 </script>

@@ -26,7 +26,7 @@
     >
       <IconWithBackground
         :icon="loading ? 'loading' : 'arrow'"
-        class="rtl:-scale-x-100 text-white"
+        class="w-full h-full text-white"
       />
     </span>
   </span>

@@ -33,7 +33,7 @@
       v-for="index in slidesWithoutImage"
       :key="`slider-style-guide-slide-without-image-${index}`"
     >
-      <IconRectanglePlus class="text-yellow w-10" />
+      <IconRectanglePlus class="text-yellow w-10 h-auto" />
       <HeadlineDefault level="h3">
         Create a TipCard Set
       </HeadlineDefault>

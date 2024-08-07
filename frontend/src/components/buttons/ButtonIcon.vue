@@ -9,6 +9,7 @@
   >
     <span :class="cssClassesIcon">
       <IconWithBackground
+        class="w-full h-full"
         :icon="loading ? 'loading' : props.icon"
         :variant="props.variant"
       />

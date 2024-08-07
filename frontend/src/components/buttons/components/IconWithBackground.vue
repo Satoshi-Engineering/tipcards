@@ -4,23 +4,26 @@
     :class="{
       'bg-bluegrey text-white': variant === 'bluegrey',
       'bg-yellow text-bluegrey': variant === 'yellow',
+      'p-[20%]': icon === 'loading',
+      'p-[28%]': icon === 'arrow',
+      'p-[22%]': icon === 'play',
+      'p-[30%]': icon === 'plus',
     }"
   >
     <IconAnimatedLoadingWheel
-      v-if="props.icon === 'loading'"
-      class="rtl:-scale-x-100"
-      :color="props.variant === 'bluegrey' ? 'white' : 'bluegrey'"
+      v-if="icon === 'loading'"
+      :color="variant === 'bluegrey' ? 'white' : 'bluegrey'"
     />
     <IconArrowRight
-      v-else-if="props.icon === 'arrow'"
+      v-else-if="icon === 'arrow'"
       class="rtl:-scale-x-100"
     />
     <IconPlay
-      v-else-if="props.icon === 'play'"
-      class="rtl:-scale-x-100"
+      v-else-if="icon === 'play'"
+      class="ml-1"
     />
     <IconPlus
-      v-else-if="props.icon === 'plus'"
+      v-else-if="icon === 'plus'"
     />
   </span>
 </template>
@@ -36,7 +39,7 @@ import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWhee
 export type IconType = 'arrow' | 'loading' | 'play' | 'plus'
 export type IconVariant = 'bluegrey' | 'yellow'
 
-const props = defineProps({
+defineProps({
   variant: {
     type: String as PropType<IconVariant>,
     default: 'bluegrey',
