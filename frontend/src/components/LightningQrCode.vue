@@ -9,11 +9,11 @@
     />
     <!-- eslint-enable vue/no-v-html -->
     <div v-if="error != null" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
-      <IconWarning class="w-18" />
+      <IconTriangleExclamationMark class="w-18" />
     </div>
     <div v-else-if="success || pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
-      <AnimatedCheckmark
-        class="w-5/12"
+      <IconAnimatedCheckmark
+        class="w-5/12 text-[#22AE73]"
         :pending="pending && !success"
       />
     </div>
@@ -64,8 +64,8 @@ import { useI18n } from 'vue-i18n'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import CopyToClipboard from '@/components/CopyToClipboard.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-import AnimatedCheckmark from '@/components/AnimatedCheckmark.vue'
-import IconWarning from '@/components/icons/IconWarning.vue'
+import IconAnimatedCheckmark from '@/components/icons/IconAnimatedCheckmark.vue'
+import IconTriangleExclamationMark from '@/components/icons/IconTriangleExclamationMark.vue'
 
 const props = defineProps({
   value: {

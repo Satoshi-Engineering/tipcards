@@ -13,6 +13,7 @@ const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
+const PageIcons = () => import('@/pages/styleGuide/PageIcons.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 const PageFAQs = () => import('@/pages/PageFaqs.vue')
 const PageLocalStorageSets = () => import('@/pages/PageLocalStorageSets.vue')
@@ -141,6 +142,12 @@ const router = createRouter({
           name: 'style-guide',
           component: PageStyleGuide,
           meta: { title: () => 'Style Guide' },
+        },
+        {
+          path: 'style-guide/icons',
+          name: 'style-guide/icons',
+          component: PageIcons,
+          meta: { title: () => 'Style Guide Icons' },
         },
         {
           path: 'local-storage-sets',

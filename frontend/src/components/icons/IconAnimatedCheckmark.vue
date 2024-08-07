@@ -1,12 +1,13 @@
 <template>
   <svg
-    xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 152 152"
-    class="aspect-square"
+    xmlns="http://www.w3.org/2000/svg"
+    width="100%"
+    height="100%"
   >
     <g
       fill="none"
-      stroke="#22AE73"
+      stroke="currentColor"
       stroke-width="6"
     >
       <circle
@@ -27,7 +28,7 @@
       <circle
         v-if="!pending"
         class="colored"
-        fill="#22AE73"
+        fill="currentColor"
         cx="77"
         cy="77"
         r="72"

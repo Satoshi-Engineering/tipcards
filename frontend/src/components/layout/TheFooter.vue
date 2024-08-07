@@ -53,7 +53,7 @@
           invert-underline
           :href="linkLinkedIn"
         >
-          <IconLinkedIn />
+          <IconLogoLinkedIn />
         </LinkDefault>
         <LinkDefault
           v-if="linkX != null"
@@ -61,7 +61,7 @@
           invert-underline
           :href="linkX"
         >
-          <IconX />
+          <IconLogoX />
         </LinkDefault>
         <LinkDefault
           v-if="linkInstagram != null"
@@ -69,7 +69,7 @@
           invert-underline
           :href="linkInstagram"
         >
-          <IconInstagram />
+          <IconLogoInstagram />
         </LinkDefault>
       </div>
       <div class="mt-5 text-end">
@@ -91,9 +91,9 @@ import { inject } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import IconInstagram from '@/components/icons/IconInstagram.vue'
-import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
-import IconX from '@/components/icons/IconX.vue'
+import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
+import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
+import IconLogoX from '@/components/icons/IconLogoX.vue'
 
 const linkPrivacyPolicy = inject<string | undefined>('linkPrivacyPolicy')
 const linkLegalNotice = inject<string | undefined>('linkLegalNotice')

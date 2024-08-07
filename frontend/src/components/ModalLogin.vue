@@ -10,7 +10,7 @@
       {{ $t('auth.modalLogin.text') }}
     </ParagraphDefault>
 
-    <AnimatedLoadingWheel v-if="fetchingLogin" />
+    <IconAnimatedLoadingWheelDeprecated v-if="fetchingLogin" />
     <LightningQrCode
       v-else-if="lnurl != null"
       :value="lnurl"
@@ -46,7 +46,7 @@ import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import ModalDefault from '@/components/ModalDefault.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
+import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

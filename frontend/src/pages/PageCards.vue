@@ -362,14 +362,14 @@
                     <!-- eslint-disable vue/no-v-html -->
                     <g v-html="card.qrCodeSvg" />
                     <!-- eslint-enable vue/no-v-html -->
-                    <IconBitcoin
+                    <IconLogoBitcoin
                       v-if="settings.cardsQrCodeLogo === 'bitcoin'"
                       :width="0.26 * 256"
                       :height="0.26 * 256"
                       :x="0.37 * 256"
                       :y="0.37 * 256"
                     />
-                    <IconLightning
+                    <IconLogoLightning
                       v-else-if="settings.cardsQrCodeLogo === 'lightning'"
                       :width="0.26 * 256"
                       :height="0.26 * 256"
@@ -493,8 +493,8 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BulkWithdraw from '@/components/cardActions/BulkWithdraw.vue'
 import SetFunding from '@/components/cardActions/SetFunding.vue'
-import IconBitcoin from '@/components/icons/IconBitcoin.vue'
-import IconLightning from '@/components/icons/IconLightning.vue'
+import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
+import IconLogoLightning from '@/components/icons/IconLogoLightning.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'

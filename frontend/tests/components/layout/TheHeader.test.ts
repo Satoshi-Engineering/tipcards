@@ -12,7 +12,7 @@ import TheHeader from '@/components/layout/TheHeader.vue'
 import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
-import IconClose from '@/components/icons/IconClose.vue'
+import IconX from '@/components/icons/IconX.vue'
 import IconMainNav from '@/components/icons/IconMainNav.vue'
 
 describe('TheHeader', () => {
@@ -56,7 +56,7 @@ describe('TheHeader', () => {
     expect(wrapper.findComponent(IconMainNav).exists()).toBe(false)
     expect(wrapper.getComponent(TheLangNav)).toBeDefined()
 
-    const langNavCloseButton = wrapper.getComponent(IconClose)
+    const langNavCloseButton = wrapper.getComponent(IconX)
     await langNavCloseButton.trigger('click')
     expect(wrapper.getComponent(IconWorld)).toBeDefined()
     expect(wrapper.getComponent(IconMainNav)).toBeDefined()
@@ -91,7 +91,7 @@ describe('TheHeader', () => {
     expect(wrapper.findComponent(IconMainNav).exists()).toBe(false)
     expect(wrapper.getComponent(TheMainNav)).toBeDefined()
 
-    const langNavCloseButton = wrapper.getComponent(IconClose)
+    const langNavCloseButton = wrapper.getComponent(IconX)
     await langNavCloseButton.trigger('click')
     expect(wrapper.getComponent(IconWorld)).toBeDefined()
     expect(wrapper.getComponent(IconMainNav)).toBeDefined()

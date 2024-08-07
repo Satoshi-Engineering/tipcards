@@ -1,16 +1,15 @@
 <template>
   <svg
+    viewBox="0 0 100 100"
     xmlns="http://www.w3.org/2000/svg"
     width="100%"
     height="100%"
-    viewBox="-30 -30 160 160"
-    preserveAspectRatio="xMidYMid"
   >
     <circle
       cx="50"
       cy="50"
       fill="none"
-      class="stroke-current"
+      stroke="currentColor"
       stroke-width="8"
       r="35"
       stroke-dasharray="164.93361431346415 56.97787143782138"

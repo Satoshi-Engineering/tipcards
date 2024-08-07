@@ -6,7 +6,7 @@
         v-if="initializing"
         class="flex justify-center flex-1 mt-8"
       >
-        <AnimatedLoadingWheel />
+        <IconAnimatedLoadingWheelDeprecated />
       </div>
       <div
         v-else-if="setFunding"
@@ -310,7 +310,7 @@ import LNURL from '@shared/modules/LNURL/LNURL'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
+import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'

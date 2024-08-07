@@ -58,7 +58,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import IconRectanglesQuestionmark from '@/components/icons/IconRectanglesQuestionmark.vue'
-import IconRectanglesPencil from '@/components/icons/IconRectanglesPencil.vue'
+import IconRectanglePencil from '@/components/icons/IconRectanglePencil.vue'
 import imageCreate from '@/assets/images/create-tipcards.square.webp'
 import imageUse from '@/assets/images/use-tipcards.square.webp'
 
@@ -66,7 +66,7 @@ const { t } = useI18n()
 
 const slides = [
   {
-    icon: IconRectanglesPencil,
+    icon: IconRectanglePencil,
     headline: () => t('home.videoGuidesSlides.create.headline'),
     text: () => t('home.videoGuidesSlides.create.text'),
     videoLink: () => t('home.videoGuidesSlides.create.link'),

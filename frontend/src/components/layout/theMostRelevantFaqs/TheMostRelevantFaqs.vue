@@ -1,7 +1,7 @@
 <template>
   <section class="mt-10 rounded-t-default bg-bluegrey" data-test="the-most-relevant-faqs">
     <CenterContainer class="relative flex flex-col py-7 border-b border-white">
-      <QuestionMark class="absolute -top-11 end-0" />
+      <IconQuestionmark class="absolute w-[103px] h-[172px] -top-11 end-0 text-[#E1E1E2] opacity-30" />
       <HeadlineDefault level="h2" class="!text-white">
         {{ $t('footer.mostRelevantFaqs.title') }}
       </HeadlineDefault>
@@ -40,7 +40,7 @@ import { computed, ref, type PropType } from 'vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import MostRelevantFaqsListItem from '@/components/layout/theMostRelevantFaqs/components/MostRelevantFaqsListItem.vue'
-import QuestionMark from '@/components/icons/QuestionMark.vue'
+import IconQuestionmark from '@/components/icons/IconQuestionmark.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'

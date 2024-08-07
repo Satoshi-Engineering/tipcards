@@ -39,7 +39,7 @@
         :title="$t('general.close')"
         @click="activeMenu = 'none'"
       >
-        <IconClose />
+        <IconX />
       </button>
     </CenterContainer>
     <TheLangNav
@@ -63,7 +63,7 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
-import IconClose from '@/components/icons/IconClose.vue'
+import IconX from '@/components/icons/IconX.vue'
 import IconMainNav from '@/components/icons/IconMainNav.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
 import { usePageScroll } from '@/modules/usePageScroll'

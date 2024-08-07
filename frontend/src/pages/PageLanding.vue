@@ -8,7 +8,7 @@
         v-if="showLoadingAnimation"
         class="flex justify-center flex-1 mt-8 px-4"
       >
-        <AnimatedLoadingWheel />
+        <IconAnimatedLoadingWheelDeprecated />
       </div>
     </div>
     <div v-else>
@@ -148,7 +148,7 @@
         </div>
 
         <div class="my-10">
-          <IconBitcoin class="w-16 mb-3 ltr:float-right ltr:ml-3 rtl:float-left rtl:mr-3" />
+          <IconLogoBitcoin class="w-16 mb-3 ltr:float-right ltr:ml-3 rtl:float-left rtl:mr-3" />
           <!-- eslint-disable vue/no-v-html, vue/no-v-text-v-html-on-component -->
           <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.0'))" />
           <ParagraphDefault v-html="sanitizeI18n(t('landing.sectionBitcoin.paragraphs.1'))" />
@@ -333,7 +333,7 @@ import LNURL from '@shared/modules/LNURL/LNURL'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
-import IconBitcoin from '@/components/icons/IconBitcoin.vue'
+import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
@@ -347,7 +347,7 @@ import sanitizeI18n from '@/modules/sanitizeI18n'
 import useTRpc from '@/modules/useTRpc'
 import router from '@/router'
 import FormatBitcoin from '@/components/FormatBitcoin.vue'
-import AnimatedLoadingWheel from '@/components/AnimatedLoadingWheelDeprecated.vue'
+import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
 import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'
