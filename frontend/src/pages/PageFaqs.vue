@@ -15,6 +15,7 @@
         :title="$t(faq.questionKeypath)"
         level="h4"
         class="my-3"
+        hover-press-effect
       >
         <ParagraphDefault>
           <FaqI18nT :keypath="faq.answerKeypath" />

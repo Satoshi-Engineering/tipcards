@@ -24,13 +24,13 @@
   "footer": {
     "mostRelevantFaqs": {
       "title": "Bug, feedback or questions?",
-      "subTitle": "We are constantly improving!",
+      "subTitle": "We are constantly striving to improve!",
       "buttonToFaqs": "To the FAQs"
     }
   },
   "faqs": {
     "title": "Frequently Asked Questions",
-    "intro": "Here you will find answers to the most frequently asked questions. We are constantly improving!",
+    "intro": "Here you will find answers to the most frequently asked questions. We are constantly striving to improve!",
     "questions": {
       "support": {
         "question": "I have questions, feedback, a problem or found a bug. What should I do?",

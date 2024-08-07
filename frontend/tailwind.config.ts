@@ -52,6 +52,7 @@ export default {
       },
       boxShadow: {
         'default': '0 2px 15px 0 rgba(97, 97, 97, 0.3)',
+        'default-flat': '0 1px 7px 0 rgba(97, 97, 97, 0.2)',
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',
