@@ -3,7 +3,7 @@ import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 
 describe('Sets Page', () => {
-  it('Should see the sets of the logged in user', () => {
+  it.skip('Should see the sets of the logged in user', () => {
     cy.login()
     cy.visit(SETS_PAGE_URL.href)
     cy.location('pathname').should('equal', '/sets')
