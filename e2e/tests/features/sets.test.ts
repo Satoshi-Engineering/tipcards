@@ -3,18 +3,13 @@ import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 
 describe('Sets Page', () => {
-  /*
-  beforeEach(() => {
+  it.skip('should show a logged out sets page', () => {
     cy.login()
-  })
-*/
-  it('should show a logged out sets page', () => {
     cy.visit(SETS_PAGE_URL.href)
     cy.location('pathname').should('equal', '/sets')
-    cy.login()
-    cy.url().should('contain', 'sets')
-    //cy.get('[data-test=please-login-section]').should('not.exist')
-    //cy.get('[data-test=logged-in]').should('exist')
+    cy.getTestElement('the-layout').should('exist')
+    cy.getTestElement('please-login-section').should('not.exist')
+    cy.getTestElement('logged-in').should('exist')
   })
 
   it.skip('should navigate to the cards page when the new set button is clicked', () => {

@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-dvh flex flex-col">
+  <div
+    class="min-h-dvh flex flex-col"
+    data-test="the-layout"
+  >
     <slot name="header">
       <TheHeader
         class="print:hidden"

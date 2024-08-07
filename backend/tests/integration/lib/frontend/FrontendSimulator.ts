@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { io, Socket } from 'socket.io-client'
 
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
@@ -34,7 +34,8 @@ export default class FrontendSimulator extends FrontendWithAuth {
       privateKeyAsHex: this.signingKey.getPrivateKeyAsHex(),
     })
     const response: AxiosResponse = await this.authCreate()
-    await lnurlAuth.loginWithLNURLAuth(response.data.data.encoded)
+    const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(response.data.data.encoded)
+    await axios.get(callbackUrl.toString())
     await this.authStatus()
   }
 

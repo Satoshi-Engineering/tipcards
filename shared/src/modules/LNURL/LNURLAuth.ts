@@ -1,7 +1,7 @@
 // Specification LNURLAuth https://github.com/lnurl/luds/blob/luds/04.md
 
-import axios from 'axios'
 import * as secp256k1 from 'secp256k1'
+import { Buffer } from 'buffer'
 
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 
@@ -19,16 +19,17 @@ export default class LNURLAuth {
     this.k1 = ''
   }
 
-  public async loginWithLNURLAuth(lnurlAuth: string) {
-    const url = this.getValidLoginUrlFromLNURLAuth(lnurlAuth)
+  public getLNURLAuthCallbackUrl(lnurlAuth: string) {
+    const url = this.getLoginUrlFromLNURLAuth(lnurlAuth)
 
     const signedK1 = LNURLAuth.sign(this.k1, this.signingKey.privateKeyAsHex)
     url.searchParams.append('sig', signedK1)
     url.searchParams.append('key', this.signingKey.publicKeyAsHex)
-    return await axios.get(url.toString())
+
+    return url
   }
 
-  public getValidLoginUrlFromLNURLAuth(lnurlAuth: string) {
+  getLoginUrlFromLNURLAuth(lnurlAuth: string) {
     const urlString = LNURL.decode(lnurlAuth)
     const url = new URL(urlString)
 

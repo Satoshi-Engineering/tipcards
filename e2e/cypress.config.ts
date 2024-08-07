@@ -40,11 +40,12 @@ export default defineConfig({
   e2e: {
     specPattern: 'e2e/**/*.test.ts',
     supportFile: 'e2e/support/e2e.ts',
-    // Mute audio for all tests
+    fixturesFolder: 'e2e/support/fixtures',
     setupNodeEvents(on) {
 
       on('file:preprocessor', webpack({ webpackOptions }))
 
+      // Mute audio for all tests
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.family !== 'chromium') {
           return launchOptions

@@ -53,7 +53,8 @@ describe('auth', () => {
       },
     }))
 
-    const loginResponse = await lnurlAuth.loginWithLNURLAuth(createResponse.data.data.encoded)
+    const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(createResponse.data.data.encoded)
+    const loginResponse = await axios.get(callbackUrl.toString())
     expect(loginResponse.data).toEqual(expect.objectContaining({
       status: 'OK',
     }))
