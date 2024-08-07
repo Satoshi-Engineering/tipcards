@@ -31,11 +31,11 @@
         </li>
         <li>
           <MainNavItem
-            :to="{ name: 'landing', params: { lang: $route.params.lang } }"
-            :label="$t('nav.landing')"
+            :to="{ name: 'faqs', params: { lang: $route.params.lang } }"
+            :label="$t('nav.faqs')"
             @click="$emit('itemSelected')"
           >
-            <BIconQrCodeScan />
+            <IconQuestionmark />
           </MainNavItem>
         </li>
         <li>
@@ -104,12 +104,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconBookmarkFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle, BIconQrCodeScan } from 'bootstrap-icons-vue'
+import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconBookmarkFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle } from 'bootstrap-icons-vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import MainNavItem from '@/components/layout/theMainNav/components/MainNavItem.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
+import IconQuestionmark from '@/components/icons/IconQuestionmark.vue'
 
 defineEmits(['itemSelected'])
 

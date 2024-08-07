@@ -8,7 +8,7 @@
         {{ $t('faqs.intro') }}
       </ParagraphDefault>
     </HeroSection>
-    <CenterContainer>
+    <CenterContainer class="mb-10">
       <CollapsibleElement
         v-for="(faq, index) in faqs"
         :key="index"
@@ -41,6 +41,8 @@ const faqs: Faq[] = [
   FAQS.bulkFunding,
   FAQS.custodial,
   FAQS.lightningNode,
+  FAQS.openSource,
+  FAQS.localStorageSets,
 ]
 </script>
 

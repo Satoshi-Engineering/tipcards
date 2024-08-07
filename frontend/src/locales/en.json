@@ -18,7 +18,8 @@
     "privacyPolicy": "Privacy Policy",
     "legalNotice": "Legal Notice",
     "goToAccount": "to your account",
-    "sets": "My Sets"
+    "sets": "My Sets",
+    "faqs": "FAQ"
   },
   "footer": {
     "mostRelevantFaqs": {
@@ -54,6 +55,14 @@
       "lightningNode": {
         "question": "Which Lightning node are you using?",
         "answer": "We are using the Lightning node {lightningNode}."
+      },
+      "openSource": {
+        "question": "Can I host TipCards myself? Is the code open source?",
+        "answer": "Yes. You are free to setup your own version of Lightning TipCards or to support us by creating issues, contributing translations, bug fixes or new features via Pull Requests on {github}."
+      },
+      "localStorageSets": {
+        "question": "Where are my old sets?",
+        "answer": "If you saved sets before September 2023, they were stored locally in your browser. You can go to {localSetsPage} to view them. We would recommend you to save them into your account, so that you can get access to them from any device."
       }
     }
   },

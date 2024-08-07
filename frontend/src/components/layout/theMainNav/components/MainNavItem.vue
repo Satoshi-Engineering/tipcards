@@ -7,7 +7,7 @@
     invert-underline
     @click="$emit('itemSelected')"
   >
-    <div class="grid w-6 pt-0.75 place-items-center text-xl">
+    <div class="grid w-5 h-5 mt-0.75 place-items-center text-xl">
       <slot />
     </div>
     <div class="flex-1">

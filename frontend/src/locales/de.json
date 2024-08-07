@@ -54,6 +54,14 @@
       "lightningNode": {
         "question": "Welcher Lightning Node wird verwendet?",
         "answer": "Wir verwenden den Node {lightningNode}."
+      },
+      "openSource": {
+        "question": "Kann ich TipCards selbst hosten? Ist das Projekt Open Source?",
+        "answer": "Ja. Du kannst deine eigene Version von Lightning TipCards hosten oder uns unterstützen, indem du Issues erstellst, Übersetzungen, Fehlerbehebungen oder neue Funktionen über Pull Requests auf {github} beiträgst."
+      },
+      "localStorageSets": {
+        "question": "Wo sind meine alten Sets?",
+        "answer": "Wenn du Sets vor September 2023 gespeichert hast, wurden diese lokal in deinem Browser gespeichert. Du kannst zu {lang}/local-storage-sets gehen, um sie anzusehen. Wir empfehlen dir, sie in deinem Konto zu speichern, damit du von jedem Gerät aus darauf zugreifen kannst."
       }
     }
   },

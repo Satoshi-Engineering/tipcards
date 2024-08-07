@@ -23,6 +23,14 @@ export const FAQS: Record<string, { questionKeypath: string, answerKeypath: stri
     questionKeypath: 'faqs.questions.lightningNode.question',
     answerKeypath: 'faqs.questions.lightningNode.answer',
   },
+  openSource: {
+    questionKeypath: 'faqs.questions.openSource.question',
+    answerKeypath: 'faqs.questions.openSource.answer',
+  },
+  localStorageSets: {
+    questionKeypath: 'faqs.questions.localStorageSets.question',
+    answerKeypath: 'faqs.questions.localStorageSets.answer',
+  },
 }
 
 export type Faq = typeof FAQS[keyof typeof FAQS]

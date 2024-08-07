@@ -6,8 +6,18 @@
       </LinkDefault>
     </template>
     <template #lightningNode>
-      &#32;<LinkDefault :href="LIGHTNING_NODE_LINK">
+      <LinkDefault :href="LIGHTNING_NODE_LINK">
         {{ LIGHTNING_NODE_NAME }}
+      </LinkDefault>
+    </template>
+    <template #github>
+      <LinkDefault :href="GITHUB_LINK">
+        GitHub
+      </LinkDefault>
+    </template>
+    <template #localSetsPage>
+      <LinkDefault :to="{ name: 'local-storage-sets', params: { lang: $route.params.lang } }">
+        {{ $t('localStorageDeprecation.setsPage.headline') }}
       </LinkDefault>
     </template>
   </I18nT>
@@ -17,7 +27,7 @@
 import { I18nT } from 'vue-i18n'
 
 import LinkDefault from './typography/LinkDefault.vue'
-import { SUPPORT_EMAIL, LIGHTNING_NODE_NAME, LIGHTNING_NODE_LINK } from '@/constants'
+import { SUPPORT_EMAIL, LIGHTNING_NODE_NAME, LIGHTNING_NODE_LINK, GITHUB_LINK } from '@/constants'
 
 defineProps({
   keypath: {
