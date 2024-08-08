@@ -48,8 +48,8 @@
           :loading="saving"
         >
           {{ $t('userAccount.form.save') }}
-          <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
-          <i v-else-if="!saving" class="bi bi-exclamation-square ml-1" />
+          <IconCheckSquareFill v-if="isSaved && !saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
+          <IconExclamationSquare v-else-if="!saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
         </ButtonDefault>
         <UserErrorMessages :user-error-messages="profileUserErrorMessages" />
       </form>
@@ -68,7 +68,7 @@
           @click="logoutAllOtherDevices"
         >
           {{ $t('auth.buttonLogoutAllOtherDevices') }}
-          <i v-if="loggingOutAllOtherDevicesSuccess" class="bi bi-check-square-fill ml-1" />
+          <IconCheckSquareFill v-if="loggingOutAllOtherDevicesSuccess" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
         </ButtonDefault>
         <small class="block">({{ $t('userAccount.logoutAllOtherDevicesHint') }})</small>
         <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
@@ -93,6 +93,8 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import useAuthService from '@/modules/useAuthService'
 import { useAuthStore } from '@/stores/auth'
+import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
+import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
 
 const router = useRouter()
 const route = useRoute()

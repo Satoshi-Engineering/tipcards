@@ -25,7 +25,7 @@
       @click="changeSelectedCurrency"
     >
       {{ selectedCurrency }}
-      <i class="bi bi-arrow-down-up" />
+      <IconArrowDownUp class="inline h-[1em] w-[1em]" />
     </button>
   </div>
 </template>
@@ -33,6 +33,7 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeMount, watch } from 'vue'
 
+import IconArrowDownUp from '@/components/icons/IconArrowDownUp.vue'
 import formatNumber from '@/modules/formatNumber'
 
 const rateBtcSats = 100 * 1000 * 1000

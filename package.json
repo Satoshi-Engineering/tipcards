@@ -40,7 +40,6 @@
     "axios": "^1.7.3",
     "bech32": "^2.0.0",
     "body-parser": "^1.20.2",
-    "bootstrap-icons": "^1.11.3",
     "buffer": "^6.0.3",
     "canvg": "^4.0.2",
     "console-hooks": "^1.0.1",

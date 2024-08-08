@@ -221,8 +221,8 @@
           @click="saveCardsSet"
         >
           {{ t('cards.actions.buttonSaveCardsSet') }}
-          <i v-if="isSaved && !saving" class="bi bi-check-square-fill ml-1" />
-          <i v-if="showSaveWarning && !saving" class="bi bi-exclamation-square ml-1" />
+          <IconCheckSquareFill v-if="isSaved && !saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
+          <IconExclamationSquare v-if="showSaveWarning && !saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
         </ButtonWithTooltip>
         &nbsp;
         <br class="xs:hidden">
@@ -503,6 +503,8 @@ import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import CardsSummary from '@/components/CardsSummary.vue'
 import CardsSummaryContainer from '@/components/CardsSummaryContainer.vue'
+import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
+import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
 import { loadCardStatus, type CardStatusDeprecated } from '@/modules/loadCardStatus'
 import svgToPng from '@/modules/svgToPng'
 import { useI18nHelpers } from '@/modules/initI18n'

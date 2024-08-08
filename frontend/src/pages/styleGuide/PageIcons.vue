@@ -64,6 +64,12 @@
         <IconLightbulbFill class="w-10 text-yellow" :class="cssClass" />
         <IconPersonCircle class="w-10" :class="cssClass" />
         <IconPersonCircle class="w-10 text-yellow" :class="cssClass" />
+        <IconArrowDownUp class="w-10" :class="cssClass" />
+        <IconArrowDownUp class="w-10 text-yellow" :class="cssClass" />
+        <IconCheckSquareFill class="w-10" :class="cssClass" />
+        <IconCheckSquareFill class="w-10 text-yellow" :class="cssClass" />
+        <IconExclamationSquare class="w-10" :class="cssClass" />
+        <IconExclamationSquare class="w-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -160,6 +166,9 @@ import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
 import IconMicrosoft from '@/components/icons/IconMicrosoft.vue'
 import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
+import IconArrowDownUp from '@/components/icons/IconArrowDownUp.vue'
+import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
+import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
 
 const addBackgroundToIcons = ref(false)
 
