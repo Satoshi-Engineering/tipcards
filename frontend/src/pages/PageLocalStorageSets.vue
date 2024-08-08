@@ -26,7 +26,11 @@
         </ButtonDefault>
       </div>
       <div v-else>
-        <ListSets :sets="sets" class="my-7" />
+        <ListSets
+          :sets="sets"
+          class="my-7"
+          data-test="local-storage-sets-list"
+        />
         <ButtonContainer>
           <ButtonDefault
             data-test="local-storage-sets-clear-all"
