@@ -5,51 +5,65 @@
         Lightning TipCards Style Guide Icons
       </HeadlineDefault>
 
+      <ButtonDefault
+        class="mb-4"
+        @click="addBackgroundToIcons = !addBackgroundToIcons"
+      >
+        Toggle Background
+      </ButtonDefault>
+
       <HeadlineDefault level="h2">
         Base Icons
       </HeadlineDefault>
 
       <div class="mb-8 flex flex-wrap items-center gap-5">
-        <IconArrowRight class="w-10 bg-grey-medium" />
-        <IconArrowRight class="w-10 bg-grey-medium text-yellow" />
-        <IconCaretDown class="w-10 bg-grey-medium" />
-        <IconCaretDown class="w-10 bg-grey-medium text-yellow" />
-        <IconCaretLeft class="w-10 bg-grey-medium" />
-        <IconCaretLeft class="w-10 bg-grey-medium text-yellow" />
-        <IconCaretRight class="w-10 bg-grey-medium" />
-        <IconCaretRight class="w-10 bg-grey-medium text-yellow" />
-        <IconCaretUp class="w-10 bg-grey-medium" />
-        <IconCaretUp class="w-10 bg-grey-medium text-yellow" />
-        <IconLightningBolt class="w-10 h-10 bg-grey-medium" />
-        <IconLightningBolt class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconMainNav class="!w-8 !h-6 bg-grey-medium" />
-        <IconMainNav class="!w-8 !h-6 bg-grey-medium text-yellow" />
-        <IconPlay class="w-10 bg-grey-medium" />
-        <IconPlay class="w-10 bg-grey-medium text-yellow" />
-        <IconPlus class="w-10 bg-grey-medium" />
-        <IconPlus class="w-10 bg-grey-medium text-yellow" />
-        <IconPrinter class="w-10 bg-grey-medium" />
-        <IconPrinter class="w-10 bg-grey-medium text-yellow" />
-        <IconQuestionmark class="w-10 h-10 bg-grey-medium" />
-        <IconQuestionmark class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectangleAvatar class="w-10 h-10 bg-grey-medium" />
-        <IconRectangleAvatar class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectanglePlus class="w-10 h-10 bg-grey-medium" />
-        <IconRectanglePlus class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectanglesArrowUp class="w-10 h-10 bg-grey-medium" />
-        <IconRectanglesArrowUp class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectanglesPencil class="w-10 h-10 bg-grey-medium" />
-        <IconRectanglesPencil class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectanglesPlus class="w-10 h-10 bg-grey-medium" />
-        <IconRectanglesPlus class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconRectanglesQuestionmark class="w-10 h-10 bg-grey-medium" />
-        <IconRectanglesQuestionmark class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconTriangleExclamationMark class="w-10 h-10 bg-grey-medium" />
-        <IconTriangleExclamationMark class="w-10 h-10 bg-grey-medium text-yellow" />
-        <IconWorld class="w-10 bg-grey-medium" />
-        <IconWorld class="w-10 bg-grey-medium text-yellow" />
-        <IconX class="w-10 bg-grey-medium" />
-        <IconX class="w-10 bg-grey-medium text-yellow" />
+        <IconArrowRight class="w-10" :class="cssClass" />
+        <IconArrowRight class="w-10 text-yellow" :class="cssClass" />
+        <IconCaretDown class="w-10" :class="cssClass" />
+        <IconCaretDown class="w-10 text-yellow" :class="cssClass" />
+        <IconCaretLeft class="w-10" :class="cssClass" />
+        <IconCaretLeft class="w-10 text-yellow" :class="cssClass" />
+        <IconCaretRight class="w-10" :class="cssClass" />
+        <IconCaretRight class="w-10 text-yellow" :class="cssClass" />
+        <IconCaretUp class="w-10" :class="cssClass" />
+        <IconCaretUp class="w-10 text-yellow" :class="cssClass" />
+        <IconLightningBolt class="w-10 h-10" :class="cssClass" />
+        <IconLightningBolt class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconMainNav class="!w-8 !h-6" :class="cssClass" />
+        <IconMainNav class="!w-8 !h-6 text-yellow" :class="cssClass" />
+        <IconPlay class="w-10" :class="cssClass" />
+        <IconPlay class="w-10 text-yellow" :class="cssClass" />
+        <IconPlus class="w-10" :class="cssClass" />
+        <IconPlus class="w-10 text-yellow" :class="cssClass" />
+        <IconPrinter class="w-10" :class="cssClass" />
+        <IconPrinter class="w-10 text-yellow" :class="cssClass" />
+        <IconQuestionmark class="w-10 h-10" :class="cssClass" />
+        <IconQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconWorld class="w-10" :class="cssClass" />
+        <IconWorld class="w-10 text-yellow" :class="cssClass" />
+        <IconX class="w-10" :class="cssClass" />
+        <IconX class="w-10 text-yellow" :class="cssClass" />
+      </div>
+
+      <HeadlineDefault level="h2">
+        Rectangle Icons
+      </HeadlineDefault>
+
+      <div class="mb-8 flex flex-wrap items-center gap-5">
+        <IconRectangleAvatar class="w-10 h-10" :class="cssClass" />
+        <IconRectangleAvatar class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconRectanglePlus class="w-10 h-10" :class="cssClass" />
+        <IconRectanglePlus class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconRectanglesArrowUp class="w-10 h-10" :class="cssClass" />
+        <IconRectanglesArrowUp class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconRectanglesPencil class="w-10 h-10" :class="cssClass" />
+        <IconRectanglesPencil class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconRectanglesPlus class="w-10 h-10" :class="cssClass" />
+        <IconRectanglesPlus class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconRectanglesQuestionmark class="w-10 h-10" :class="cssClass" />
+        <IconRectanglesQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTriangleExclamationMark class="w-10 h-10" :class="cssClass" />
+        <IconTriangleExclamationMark class="w-10 h-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -57,15 +71,15 @@
       </HeadlineDefault>
 
       <div class="mb-8 flex flex-wrap items-center gap-5">
-        <IconLogo class="h-10 w-auto bg-grey-medium" />
-        <IconBitcoin class="w-10 bg-grey-medium" />
-        <IconLogoInstagram class="w-10 bg-grey-medium" />
-        <IconLogoInstagram class="w-10 bg-grey-medium text-yellow" />
-        <IconLogoLightning class="w-10 bg-grey-medium" />
-        <IconLogoLinkedIn class="w-10 bg-grey-medium" />
-        <IconLogoLinkedIn class="w-10 bg-grey-medium text-yellow" />
-        <IconLogoX class="w-10 bg-grey-medium" />
-        <IconLogoX class="w-10 bg-grey-medium text-yellow" />
+        <IconLogo class="h-10 w-auto" :class="cssClass" />
+        <IconBitcoin class="w-10" :class="cssClass" />
+        <IconLogoInstagram class="w-10" :class="cssClass" />
+        <IconLogoInstagram class="w-10 text-yellow" :class="cssClass" />
+        <IconLogoLightning class="w-10" :class="cssClass" />
+        <IconLogoLinkedIn class="w-10" :class="cssClass" />
+        <IconLogoLinkedIn class="w-10 text-yellow" :class="cssClass" />
+        <IconLogoX class="w-10" :class="cssClass" />
+        <IconLogoX class="w-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -73,17 +87,19 @@
       </HeadlineDefault>
 
       <div class="flex flex-wrap items-center gap-5">
-        <IconAnimatedCheckmark class="w-10 bg-grey-medium" />
-        <IconAnimatedCheckmark class="w-10 bg-grey-medium text-yellow" />
-        <IconAnimatedCheckmark class="w-10 bg-grey-medium text-[#22AE73]" />
-        <IconAnimatedLoadingWheel class="w-10 bg-grey-medium" />
-        <IconAnimatedLoadingWheel class="w-10 bg-grey-medium text-yellow" />
+        <IconAnimatedCheckmark class="w-10" :class="cssClass" />
+        <IconAnimatedCheckmark class="w-10 text-yellow" :class="cssClass" />
+        <IconAnimatedCheckmark class="w-10 text-[#22AE73]" :class="cssClass" />
+        <IconAnimatedLoadingWheel class="w-10" :class="cssClass" />
+        <IconAnimatedLoadingWheel class="w-10 text-yellow" :class="cssClass" />
       </div>
     </CenterContainer>
   </TheLayout>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from 'vue'
+
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
 import IconBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 import IconCaretDown from '@/components/icons/IconCaretDown.vue'
@@ -115,4 +131,11 @@ import IconAnimatedCheckmark from '@/components/icons/IconAnimatedCheckmark.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+
+const addBackgroundToIcons = ref(false)
+
+const cssClass = computed(() => {
+  return addBackgroundToIcons.value ? 'bg-grey-medium' : ''
+})
 </script>
