@@ -22,15 +22,6 @@
         </li>
         <li>
           <MainNavItem
-            :to="{ name: 'cards', params: { lang: $route.params.lang } }"
-            :label="$t('nav.cards')"
-            @click="$emit('itemSelected')"
-          >
-            <IconMicrosoft />
-          </MainNavItem>
-        </li>
-        <li>
-          <MainNavItem
             :to="{ name: 'faqs', params: { lang: $route.params.lang } }"
             :label="$t('nav.faqs')"
             @click="$emit('itemSelected')"
@@ -114,7 +105,6 @@ import IconArrowLeftCircleFill from '@/components/icons/IconArrowLeftCircleFill.
 import IconArrowRightCircleFill from '@/components/icons/IconArrowRightCircleFill.vue'
 import IconHouseDoorFill from '@/components/icons/IconHouseDoorFill.vue'
 import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
-import IconMicrosoft from '@/components/icons/IconMicrosoft.vue'
 import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 
