@@ -13,6 +13,8 @@ const PageAbout = () => import('@/pages/PageAbout.vue')
 const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
 const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
 const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
+const PageComponents = () => import('@/pages/styleGuide/PageComponents.vue')
+const PageTypographyAndButtons = () => import('@/pages/styleGuide/PageTypographyAndButtons.vue')
 const PageIcons = () => import('@/pages/styleGuide/PageIcons.vue')
 const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
 const PageFAQs = () => import('@/pages/PageFaqs.vue')
@@ -144,10 +146,22 @@ const router = createRouter({
           meta: { title: () => 'Style Guide' },
         },
         {
+          path: 'style-guide/typography-and-buttons',
+          name: 'style-guide/typography-and-buttons',
+          component: PageTypographyAndButtons,
+          meta: { title: () => 'Tyography And Buttons' },
+        },
+        {
           path: 'style-guide/icons',
           name: 'style-guide/icons',
           component: PageIcons,
-          meta: { title: () => 'Style Guide Icons' },
+          meta: { title: () => 'Icons' },
+        },
+        {
+          path: 'style-guide/components',
+          name: 'style-guide/components',
+          component: PageComponents,
+          meta: { title: () => 'Components' },
         },
         {
           path: 'local-storage-sets',

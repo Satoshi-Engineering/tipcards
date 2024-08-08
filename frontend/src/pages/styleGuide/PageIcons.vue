@@ -1,8 +1,11 @@
 <template>
   <TheLayout>
     <CenterContainer class="mb-10">
-      <HeadlineDefault level="h1">
-        Lightning TipCards Style Guide Icons
+      <BackLink :to="{ name: 'style-guide', params: { lang: $route.params.lang }}">
+        Style Guide
+      </BackLink>
+      <HeadlineDefault level="h1" class="mt-0">
+        Icons
       </HeadlineDefault>
 
       <ButtonDefault
@@ -181,6 +184,7 @@ import IconTipCardArrowUp from '@/components/icons/IconTipCardArrowUp.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import IconShare from '@/components/icons/IconShare.vue'
 import IconArrowLeftRight from '@/components/icons/IconArrowLeftRight.vue'
+import BackLink from '@/components/BackLink.vue'
 
 const addBackgroundToIcons = ref(false)
 
