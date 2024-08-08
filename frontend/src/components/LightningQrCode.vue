@@ -3,7 +3,7 @@
     <template v-if="$slots.headline || headline != null">
       <div class="text-center max-w-sm p-5 mx-auto">
         <slot name="headline">
-          <HeadlineDefault level="h3">
+          <HeadlineDefault level="h3" data-test="lightning-qr-code-headline">
             {{ headline }}
           </HeadlineDefault>
         </slot>
@@ -63,6 +63,7 @@
       <ButtonDefault
         :disabled="success || pending"
         :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
+        data-test="lightning-qr-code-button-open-in-wallet"
         class="w-full"
         @click="checkForError"
       >
