@@ -10,7 +10,10 @@
       </div>
       <hr class="border-white-50">
     </template>
-    <div class="relative w-full max-w-xs py-7 px-5 mx-auto">
+    <div
+      class="relative w-full max-w-60 py-7 px-5 mx-auto"
+      :class="{ 'pt-10': $slots.headline == null && headline == null }"
+    >
       <!-- eslint-disable vue/no-v-html -->
       <a
         class="block transition-opacity"
@@ -30,7 +33,7 @@
       </div>
     </div>
     <hr class="border-white-50">
-    <div class="text-right text-xs py-3 px-5">
+    <div class="text-right text-sm py-3 px-5">
       <CopyToClipboard
         class="text-right inline-block no-underline font-normal min-h-[3rem]"
         :text="value"
