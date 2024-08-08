@@ -4,7 +4,8 @@
     "cards": "{count} card | {count} cards",
     "userAccount": "Account",
     "login": "Login",
-    "close": "Close"
+    "close": "Close",
+    "getStarted": "Get started"
   },
   "header": {
     "mainNavLabel": "Main navigation",
@@ -442,5 +443,30 @@
     "buttonCreate": "Withdraw all sats",
     "genericErrorMessage": "An error occurred.",
     "reload": "Reload"
+  },
+  "about": {
+    "title": "About Lightning TipCards",
+    "intro": "Lightning TipCards are a tip (or gift) card system, where you can fund tip cards with Bitcoin via the lightning network and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning app recommendation to start their journey into the bitcoin rabbit hole.",
+    "openSource": {
+      "title": "Open Source",
+      "text": "You are free to setup your own version of Lightning TipCards or to support us by creating issues, contributing translations, bug fixes or new features via Pull Requests on Github.",
+      "githubLinkTitle": "Lightning TipCards on GitHub"
+    },
+    "terms": {
+      "title": "Terms of service",
+      "text": {
+        "1": "By accessing this service, you agree to the following Terms of Service:",
+        "2": "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+      },
+      "licenseLinkTitle": "Full license terms"
+    },
+    "custodialService": {
+      "title": "Custodial service",
+      "text": {
+        "1": "Please note that Lightning TipCards is a custodial service and should not be used as a long-term storage for your sats. We highly recommend NOT to leave a significant amount on a TipCard for a longer time.",
+        "2": "In the unlikely case we ever need to take down our service, we will keep your sats available to withdraw for another 6 months and afterwards donate the remaining to one or more organizations of our choice.",
+        "3": "If you want to use TipCards using your own Lightning node, you can use our open source code and set up your own instance of Lightning TipCards."
+      }
+    }
   }
 }

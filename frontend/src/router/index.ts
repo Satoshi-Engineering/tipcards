@@ -97,7 +97,7 @@ const router = createRouter({
           name: 'about',
           component: PageAbout,
           meta: {
-            title: () => 'About',
+            title: () => i18n.global.t('about.title'),
             backlink: true, // Is only used by BackLinkDeprecated
           },
         },

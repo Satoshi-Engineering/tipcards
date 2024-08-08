@@ -3,31 +3,31 @@
     <HeroSection>
       <template #default>
         <HeadlineDefault level="h1">
-          About Lightning TipCards
+          {{ $t('about.title') }}
         </HeadlineDefault>
         <ParagraphDefault>
-          Lightning TipCards are a tip (or gift) card system, where you can fund tip cards via the lightning network and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning app recommendation to start their journey into the bitcoin rabbit hole.
+          {{ $t('about.intro') }}
         </ParagraphDefault>
       </template>
       <template #buttonContainer>
         <ButtonDefault
           :to="{ name: 'cards'}"
         >
-          Get started
+          {{ $t('general.getStarted') }}
         </ButtonDefault>
       </template>
     </HeroSection>
     <CenterContainer class="my-10">
       <HeadlineDefault level="h2">
-        Open Source
+        {{ $t('about.openSource.title') }}
       </HeadlineDefault>
       <ParagraphDefault>
-        You are free to setup your own version of Lightning TipCards or to support us by creating issues, contributing translations, bug fixes or new features via Pull Requests on Github.
+        {{ $t('about.openSource.text') }}
       </ParagraphDefault>
       <ParagraphDefault class="text-center !my-8">
         <LinkDefault
           href="https://github.com/Satoshi-Engineering/tip-cards"
-          title="Lightning TipCards on Github"
+          title="$t('about.openSource.githubLinkTitle')"
           class="group"
         >
           <!-- eslint-disable-next-line vue/multiline-html-element-content-newline, vue/max-attributes-per-line, vue/html-self-closing -->
@@ -36,39 +36,38 @@
       </ParagraphDefault>
       <ButtonContainer>
         <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards">
-          TipCards on Github
+          {{ $t('about.openSource.githubLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
     </CenterContainer>
     <CenterContainer class="my-10">
       <HeadlineDefault level="h2">
-        Terms of service
+        {{ $t('about.terms.title') }}
       </HeadlineDefault>
       <ParagraphDefault>
-        By accessing this service, you agree to the following Terms of Service:
+        {{ $t('about.terms.text.1') }}
       </ParagraphDefault>
       <ParagraphDefault>
-        This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        {{ $t('about.terms.text.2') }}
       </ParagraphDefault>
       <ButtonContainer class="my-8">
         <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE">
-          Full license terms
+          {{ $t('about.terms.licenseLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
     </CenterContainer>
     <CenterContainer class="my-10">
       <HeadlineDefault level="h2" class="mt-8">
-        Custodial service
+        {{ $t('about.custodialService.title') }}
       </HeadlineDefault>
       <ParagraphDefault>
-        Please note that Lightning TipCards is a custodial service and should not be used as a long-term storage for your sats.
-        We highly recommend <em>not</em> to leave a significant amount on a TipCard for a longer time.
+        {{ $t('about.custodialService.text.1') }}
       </ParagraphDefault>
       <ParagraphDefault>
-        In the unlikely case we ever need to take down our service, we will keep your sats available to withdraw for another 6 months and afterwards donate the remaining to one or more organizations of our choice.
+        {{ $t('about.custodialService.text.2') }}
       </ParagraphDefault>
       <ParagraphDefault>
-        If you want to use TipCards using your own Lightning node, you can use our open source code and set up your own instance of Lightning TipCards.
+        {{ $t('about.custodialService.text.3') }}
       </ParagraphDefault>
     </CenterContainer>
   </TheLayout>

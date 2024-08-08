@@ -4,7 +4,8 @@
     "cards": "{count} Karte | {count} Karten",
     "userAccount": "Account",
     "login": "Login",
-    "close": "Schließen"
+    "close": "Schließen",
+    "getStarted": "Jetzt losstarten"
   },
   "header": {
     "mainNavLabel": "Hauptnavigation",
@@ -456,5 +457,30 @@
     "buttonCreate": "Jetzt zurückholen",
     "genericErrorMessage": "Es ist ein Fehler aufgetreten.",
     "reload": "Reload"
+  },
+  "about": {
+    "title": "Über Lightning TipCards",
+    "intro": "Lightning TipCards sind ein System für Trinkgeld- oder Geschenkkarten. Du kannst die Karten mit Bitcoin über das Lightning-Netzwerk aufladen, und die beschenkte Person kann sie dann einlösen. Die beschenkte Person bekommt eine kurze Einführung in Bitcoin und eine Empfehlung für eine Lightning-App, um ihre Reise in die Bitcoin-Welt zu starten.",
+    "openSource": {
+      "title": "Open Source",
+      "text": "Du kannst deine eigene Version der Lightning TipCards einrichten oder uns unterstützen, indem du Probleme meldest, Übersetzungen, Fehlerbehebungen oder neue Funktionen über Pull Requests auf GitHub beiträgst.",
+      "githubLinkTitle": "Lightning TipCards auf GitHub"
+    },
+    "terms": {
+      "title": "Nutzungsbedingungen",
+      "text": {
+        "1": "Durch den Zugriff auf diesen Service stimmst du den folgenden Nutzungsbedingungen zu:",
+        "2": "Dieses Programm wird in der Hoffnung verteilt, dass es nützlich ist, aber OHNE JEGLICHE GEWÄHRLEISTUNG; sogar ohne die implizite Gewährleistung der MARKTGÄNGIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK."
+      },
+      "licenseLinkTitle": "Vollständige Lizenzbedingungen"
+    },
+    "custodialService": {
+      "title": "Custodial Service",
+      "text": {
+        "1": "Bitte beachte, dass Lightning TipCards ein Custodial Service ist und nicht zur langfristigen Aufbewahrung deiner Sats verwendet werden sollte. Wir empfehlen dringend, keine erheblichen Beträge für längere Zeit auf einer TipCard zu lassen.",
+        "2": "Falls wir unseren Dienst jemals einstellen müssen, werden wir deine Sats noch 6 Monate lang zur Auszahlung verfügbar halten und danach den verbleibenden Betrag an eine oder mehrere Organisationen unserer Wahl spenden.",
+        "3": "Wenn du TipCards mit deiner eigenen Lightning-Node nutzen möchtest, kannst du unseren Open-Source-Code verwenden und deine eigene Instanz der Lightning TipCards einrichten."
+      }
+    }
   }
 }
