@@ -55,9 +55,9 @@ const props = defineProps({
 })
 
 const classesByLevel: Record<HeadlineStyling, string> = {
-  h1: 'text-3xl my-6',
-  h2: 'text-2xl my-4',
-  h3: 'text-xl my-3',
+  h1: 'font-lato text-3xl my-6 text-black',
+  h2: 'font-lato text-2xl my-4 text-black',
+  h3: 'font-lato text-xl my-3',
   h4: 'text-base my-3',
   none: '',
 }
@@ -66,7 +66,7 @@ const classes = computed(() => {
   if (props.styling === 'none') {
     return ''
   }
-  const baseClasses = 'first:mt-0 last:mb-0 font-lato font-bold'
+  const baseClasses = 'first:mt-0 last:mb-0 font-bold'
   if (props.styling != null) {
     return `${baseClasses} ${classesByLevel[props.styling]}`
   }

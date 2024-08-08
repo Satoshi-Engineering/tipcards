@@ -279,7 +279,8 @@
     "description": "Hier findest du eine Liste deiner erstellten Sets.",
     "loginToSeeYourSets": "Melde dich an, um eine Liste deiner erstellten TipCards zu sehen.",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
-    "unnamedSetNameFallback": "Unbenanntes Set"
+    "unnamedSetNameFallback": "Unbenanntes Set",
+    "setInfo": "Set-Info"
   },
   "cards": {
     "title": "TipCards-Set",

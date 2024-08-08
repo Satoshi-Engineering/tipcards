@@ -9,6 +9,7 @@
       'font-bold': !noBold,
       'underline hover:no-underline': !invertUnderline,
       'no-underline hover:underline': invertUnderline,
+      'no-underline': noUnderline,
     }"
     class="cursor-pointer break-anywhere"
   >
@@ -49,6 +50,10 @@ defineProps({
     default: false,
   },
   invertUnderline: {
+    type: Boolean,
+    default: false,
+  },
+  noUnderline: {
     type: Boolean,
     default: false,
   },
