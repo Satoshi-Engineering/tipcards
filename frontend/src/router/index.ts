@@ -63,7 +63,7 @@ const router = createRouter({
           component: PageCards,
           meta: {
             title: () => false, // title will be set in the page component
-            backlink: 'home', // Is only used by BackLinkDeprecated
+            backlink: true, // Is only used by BackLinkDeprecated
           },
         },
         {

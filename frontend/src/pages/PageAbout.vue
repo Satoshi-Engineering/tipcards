@@ -12,6 +12,7 @@
       <template #buttonContainer>
         <ButtonDefault
           :to="{ name: 'cards'}"
+          data-test="button-create"
         >
           {{ $t('general.getStarted') }}
         </ButtonDefault>
@@ -35,7 +36,7 @@
         </LinkDefault>
       </ParagraphDefault>
       <ButtonContainer>
-        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards">
+        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards" data-test="button-open-source">
           {{ $t('about.openSource.githubLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
@@ -51,7 +52,7 @@
         {{ $t('about.terms.text.2') }}
       </ParagraphDefault>
       <ButtonContainer class="my-8">
-        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE">
+        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE" data-test="button-license">
           {{ $t('about.terms.licenseLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
