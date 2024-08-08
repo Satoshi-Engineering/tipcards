@@ -46,6 +46,27 @@
       </div>
 
       <HeadlineDefault level="h2">
+        Bootstrap Icons
+      </HeadlineDefault>
+
+      <div class="mb-8 flex flex-wrap items-center gap-5">
+        <IconArrowLeftCircleFill class="w-10" :class="cssClass" />
+        <IconArrowLeftCircleFill class="w-10 text-yellow" :class="cssClass" />
+        <IconArrowRightCircleFill class="w-10" :class="cssClass" />
+        <IconArrowRightCircleFill class="w-10 text-yellow" :class="cssClass" />
+        <IconHouseDoorFill class="w-10" :class="cssClass" />
+        <IconHouseDoorFill class="w-10 text-yellow" :class="cssClass" />
+        <IconBookmarkFill class="w-10" :class="cssClass" />
+        <IconBookmarkFill class="w-10 text-yellow" :class="cssClass" />
+        <IconMicrosoft class="w-10" :class="cssClass" />
+        <IconMicrosoft class="w-10 text-yellow" :class="cssClass" />
+        <IconLightbulbFill class="w-10" :class="cssClass" />
+        <IconLightbulbFill class="w-10 text-yellow" :class="cssClass" />
+        <IconPersonCircle class="w-10" :class="cssClass" />
+        <IconPersonCircle class="w-10 text-yellow" :class="cssClass" />
+      </div>
+
+      <HeadlineDefault level="h2">
         Rectangle Icons
       </HeadlineDefault>
 
@@ -132,6 +153,13 @@ import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWhee
 import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import IconArrowLeftCircleFill from '@/components/icons/IconArrowLeftCircleFill.vue'
+import IconArrowRightCircleFill from '@/components/icons/IconArrowRightCircleFill.vue'
+import IconHouseDoorFill from '@/components/icons/IconHouseDoorFill.vue'
+import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
+import IconMicrosoft from '@/components/icons/IconMicrosoft.vue'
+import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
+import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 
 const addBackgroundToIcons = ref(false)
 

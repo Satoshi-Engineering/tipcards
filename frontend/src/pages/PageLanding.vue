@@ -8,7 +8,7 @@
         v-if="showLoadingAnimation"
         class="flex justify-center flex-1 mt-8 px-4"
       >
-        <IconAnimatedLoadingWheelDeprecated />
+        <IconAnimatedLoadingWheelDeprecated class="my-20 w-10 h-10" />
       </div>
     </div>
     <div v-else>

@@ -6,7 +6,7 @@
         v-if="initializing"
         class="flex justify-center flex-1 mt-8"
       >
-        <IconAnimatedLoadingWheelDeprecated />
+        <IconAnimatedLoadingWheelDeprecated class="my-20 w-10 h-10" />
       </div>
       <div
         v-else-if="numberOfCardsToFund !== settings.numberOfCards"

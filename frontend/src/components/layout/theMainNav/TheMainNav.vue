@@ -8,7 +8,7 @@
             :label="$t('nav.index')"
             @click="$emit('itemSelected')"
           >
-            <BIconHouseDoorFill class="text-2xl" />
+            <IconHouseDoorFill class="text-2xl" />
           </MainNavItem>
         </li>
         <li>
@@ -17,7 +17,7 @@
             :label="$t('nav.sets')"
             @click="$emit('itemSelected')"
           >
-            <BIconBookmarkFill />
+            <IconBookmarkFill />
           </MainNavItem>
         </li>
         <li>
@@ -26,7 +26,7 @@
             :label="$t('nav.cards')"
             @click="$emit('itemSelected')"
           >
-            <BIconMicrosoft />
+            <IconMicrosoft />
           </MainNavItem>
         </li>
         <li>
@@ -44,7 +44,7 @@
             :label="$t('nav.about')"
             @click="$emit('itemSelected')"
           >
-            <BIconLightbulbFill />
+            <IconLightbulbFill />
           </MainNavItem>
         </li>
       </menu>
@@ -57,7 +57,7 @@
               :label="userDisplayName != null && userDisplayName.length > 0 ? userDisplayName : $t('general.userAccount')"
               @click="$emit('itemSelected')"
             >
-              <BIconPersonCircle />
+              <IconPersonCircle />
             </MainNavItem>
             <MainNavItem
               v-if="userDisplayName != null && userDisplayName.length > 0"
@@ -81,7 +81,7 @@
               $emit('itemSelected')
             }"
           >
-            <BIconArrowLeftCircleFill class="rtl:rotate-180" />
+            <IconArrowLeftCircleFill class="rtl:rotate-180" />
           </MainNavItem>
         </li>
         <li v-else>
@@ -93,7 +93,7 @@
               $emit('itemSelected')
             }"
           >
-            <BIconArrowRightCircleFill />
+            <IconArrowRightCircleFill class="rtl:rotate-180" />
           </MainNavItem>
         </li>
       </menu>
@@ -104,13 +104,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { BIconArrowLeftCircleFill, BIconArrowRightCircleFill, BIconBookmarkFill, BIconHouseDoorFill, BIconLightbulbFill, BIconMicrosoft, BIconPersonCircle } from 'bootstrap-icons-vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import MainNavItem from '@/components/layout/theMainNav/components/MainNavItem.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import IconQuestionmark from '@/components/icons/IconQuestionmark.vue'
+import IconArrowLeftCircleFill from '@/components/icons/IconArrowLeftCircleFill.vue'
+import IconArrowRightCircleFill from '@/components/icons/IconArrowRightCircleFill.vue'
+import IconHouseDoorFill from '@/components/icons/IconHouseDoorFill.vue'
+import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
+import IconMicrosoft from '@/components/icons/IconMicrosoft.vue'
+import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
+import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 
 defineEmits(['itemSelected'])
 
