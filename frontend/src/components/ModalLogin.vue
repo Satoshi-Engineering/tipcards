@@ -30,7 +30,7 @@
     <div class="text-center">
       <ButtonDefault
         class="text-sm min-w-[170px]"
-        :variant="isLoggedIn ? undefined : 'outline'"
+        variant="secondary"
         @click="$emit('close')"
       >
         {{ $t('auth.modalLogin.close') }}
