@@ -19,6 +19,8 @@
       <div class="mb-8 flex flex-wrap items-center gap-5">
         <IconArrowRight class="w-10" :class="cssClass" />
         <IconArrowRight class="w-10 text-yellow" :class="cssClass" />
+        <IconArrowLeftRight class="w-10" :class="cssClass" />
+        <IconArrowLeftRight class="w-10 text-yellow" :class="cssClass" />
         <IconCaretDown class="w-10" :class="cssClass" />
         <IconCaretDown class="w-10 text-yellow" :class="cssClass" />
         <IconCaretLeft class="w-10" :class="cssClass" />
@@ -43,6 +45,10 @@
         <IconWorld class="w-10 text-yellow" :class="cssClass" />
         <IconX class="w-10" :class="cssClass" />
         <IconX class="w-10 text-yellow" :class="cssClass" />
+        <IconShare class="w-10" :class="cssClass" />
+        <IconShare class="w-10 text-yellow" :class="cssClass" />
+        <IconTriangleExclamationMark class="w-10 h-10" :class="cssClass" />
+        <IconTriangleExclamationMark class="w-10 h-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -73,24 +79,26 @@
       </div>
 
       <HeadlineDefault level="h2">
-        Rectangle Icons
+        TipCards
       </HeadlineDefault>
 
       <div class="mb-8 flex flex-wrap items-center gap-5">
-        <IconRectangleAvatar class="w-10 h-10" :class="cssClass" />
-        <IconRectangleAvatar class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconRectanglePlus class="w-10 h-10" :class="cssClass" />
-        <IconRectanglePlus class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconRectanglesArrowUp class="w-10 h-10" :class="cssClass" />
-        <IconRectanglesArrowUp class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconRectanglesPencil class="w-10 h-10" :class="cssClass" />
-        <IconRectanglesPencil class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconRectanglesPlus class="w-10 h-10" :class="cssClass" />
-        <IconRectanglesPlus class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconRectanglesQuestionmark class="w-10 h-10" :class="cssClass" />
-        <IconRectanglesQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
-        <IconTriangleExclamationMark class="w-10 h-10" :class="cssClass" />
-        <IconTriangleExclamationMark class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardArrowUp class="w-10 h-10" :class="cssClass" />
+        <IconTipCardArrowUp class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardAvatar class="w-10 h-10" :class="cssClass" />
+        <IconTipCardAvatar class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardPencil class="w-10 h-10" :class="cssClass" />
+        <IconTipCardPencil class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardsPlus class="w-10 h-10" :class="cssClass" />
+        <IconTipCardsPlus class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardSet class="w-10 h-10" :class="cssClass" />
+        <IconTipCardSet class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardSetArrowUp class="w-10 h-10" :class="cssClass" />
+        <IconTipCardSetArrowUp class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardPlus class="w-10 h-10" :class="cssClass" />
+        <IconTipCardPlus class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconTipCardsQuestionmark class="w-10 h-10" :class="cssClass" />
+        <IconTipCardsQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -146,12 +154,12 @@ import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
 import IconPrinter from '@/components/icons/IconPrinter.vue'
 import IconQuestionmark from '@/components/icons/IconQuestionmark.vue'
-import IconRectangleAvatar from '@/components/icons/IconRectangleAvatar.vue'
-import IconRectanglePlus from '@/components/icons/IconRectanglePlus.vue'
-import IconRectanglesArrowUp from '@/components/icons/IconRectanglesArrowUp.vue'
-import IconRectanglesPencil from '@/components/icons/IconRectanglePencil.vue'
-import IconRectanglesPlus from '@/components/icons/IconRectanglesPlus.vue'
-import IconRectanglesQuestionmark from '@/components/icons/IconRectanglesQuestionmark.vue'
+import IconTipCardAvatar from '@/components/icons/IconTipCardAvatar.vue'
+import IconTipCardsPlus from '@/components/icons/IconTipCardsPlus.vue'
+import IconTipCardSetArrowUp from '@/components/icons/IconTipCardSetArrowUp.vue'
+import IconTipCardPencil from '@/components/icons/IconTipCardPencil.vue'
+import IconTipCardPlus from '@/components/icons/IconTipCardPlus.vue'
+import IconTipCardsQuestionmark from '@/components/icons/IconTipCardsQuestionmark.vue'
 import IconTriangleExclamationMark from '@/components/icons/IconTriangleExclamationMark.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconAnimatedCheckmark from '@/components/icons/IconAnimatedCheckmark.vue'
@@ -169,6 +177,10 @@ import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 import IconArrowDownUp from '@/components/icons/IconArrowDownUp.vue'
 import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
 import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
+import IconTipCardArrowUp from '@/components/icons/IconTipCardArrowUp.vue'
+import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
+import IconShare from '@/components/icons/IconShare.vue'
+import IconArrowLeftRight from '@/components/icons/IconArrowLeftRight.vue'
 
 const addBackgroundToIcons = ref(false)
 

@@ -35,18 +35,17 @@ import SlideDefault from '@/components/slider/SlideDefault.vue'
 import SliderDefault from '@/components/slider/SliderDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import IconRectanglesPlus from '@/components/icons/IconRectanglesPlus.vue'
 import IconPrinter from '@/components/icons/IconPrinter.vue'
-import IconRectanglesArrowUp from '@/components/icons/IconRectanglesArrowUp.vue'
+import IconTipCardPlus from '@/components/icons/IconTipCardPlus.vue'
+import IconTipCardSetArrowUp from '@/components/icons/IconTipCardSetArrowUp.vue'
 import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
-
 
 const { t } = useI18n()
 
 const slides = [
   {
-    icon: IconRectanglesPlus,
+    icon: IconTipCardPlus,
     headline: () => t('home.howItWorksSlides.create.headline'),
     text: () => t('home.howItWorksSlides.create.text'),
   },
@@ -56,7 +55,7 @@ const slides = [
     text: () => t('home.howItWorksSlides.print.text'),
   },
   {
-    icon: IconRectanglesArrowUp,
+    icon: IconTipCardSetArrowUp,
     headline: () => t('home.howItWorksSlides.fund.headline'),
     text: () => t('home.howItWorksSlides.fund.text'),
   },

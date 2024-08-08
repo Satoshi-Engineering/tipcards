@@ -16,7 +16,7 @@
       </template>
       <template #default>
         <HeadlineDefault level="h3">
-          <IconRectanglesQuestionmark class="inline w-10 -mt-1 me-3 text-yellow" /> Use TipCards
+          <IconTipCardsQuestionmark class="inline w-10 -mt-1 me-3 text-yellow" /> Use TipCards
         </HeadlineDefault>
         <ParagraphDefault class="mb-8">
           Slide {{ index }}<br>
@@ -33,7 +33,7 @@
       v-for="index in slidesWithoutImage"
       :key="`slider-style-guide-slide-without-image-${index}`"
     >
-      <IconRectanglePlus class="text-yellow w-10 h-auto" />
+      <IconTipCardsPlus class="text-yellow w-10 h-auto" />
       <HeadlineDefault level="h3">
         Create a TipCard Set
       </HeadlineDefault>
@@ -58,8 +58,8 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import SlideDefault from '@/components/slider/SlideDefault.vue'
 import SliderDefault from '@/components/slider/SliderDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
-import IconRectanglePlus from '@/components/icons/IconRectanglePlus.vue'
-import IconRectanglesQuestionmark from '@/components/icons/IconRectanglesQuestionmark.vue'
+import IconTipCardsPlus from '@/components/icons/IconTipCardsPlus.vue'
+import IconTipCardsQuestionmark from '@/components/icons/IconTipCardsQuestionmark.vue'
 
 defineProps({
   slidesWithImage: {
