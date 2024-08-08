@@ -43,12 +43,14 @@ describe('SliderDefault', () => {
         pageY: 1000,
       })
       .trigger('pointerup', { pointerId: 1 })
+    cy.wait(500)
     cy.get('[data-test="slide-default"]').first().should('not.be.visible')
     cy.get('[data-test="slide-default"]').eq(1).should('be.visible')
     cy.get('[data-test="slide-default"]').eq(2).should('not.be.visible')
 
     // navigates to third slide using pagination
     cy.get('[data-test="slider-default-pagination"] button').eq(2).click()
+    cy.wait(500)
     cy.get('[data-test="slide-default"]').first().should('not.be.visible')
     cy.get('[data-test="slide-default"]').eq(1).should('not.be.visible')
     cy.get('[data-test="slide-default"]').eq(2).should('be.visible')
