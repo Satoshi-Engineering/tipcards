@@ -11,8 +11,8 @@
       <hr class="border-white-50">
     </template>
     <div
-      class="relative w-full max-w-60 py-7 px-5 mx-auto"
-      :class="{ 'pt-10': $slots.headline == null && headline == null }"
+      class="relative w-full max-w-60 py-12 px-5 mx-auto"
+      :class="{ 'py-16': $slots.headline == null && headline == null }"
     >
       <!-- eslint-disable vue/no-v-html -->
       <a

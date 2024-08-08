@@ -63,6 +63,7 @@
             </I18nT>
           </ParagraphDefault>
           <LightningQrCode
+            class="my-7"
             :value="invoice"
             :success="funded"
             :error="invoiceExpired ? t('funding.invoiceExpired') : undefined"
@@ -92,6 +93,7 @@
           </ParagraphDefault>
           <div class="mb-12">
             <LightningQrCode
+              class="my-7"
               :value="lnurl"
               :success="funded"
               :error="lnurlpExpired ? (amount > 0 ? t('funding.lnurlpFundedExpired') : t('funding.lnurlpExpired')) : undefined"
@@ -183,6 +185,7 @@
             </I18nT>
           </ParagraphDefault>
           <LightningQrCode
+            class="my-7"
             :value="lnurl"
             :success="funded"
             :error="lnurlpExpired ? t('funding.lnurlpExpired') : undefined"

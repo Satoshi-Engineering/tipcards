@@ -13,6 +13,7 @@
     <IconAnimatedLoadingWheelDeprecated v-if="fetchingLogin" class="my-20 w-10 h-10" />
     <LightningQrCode
       v-else-if="lnurl != null"
+      class="my-7"
       :value="lnurl"
       :error="loginFailed ? $t('auth.modalLogin.loginErrorText') : undefined"
       :success="isLoggedIn"

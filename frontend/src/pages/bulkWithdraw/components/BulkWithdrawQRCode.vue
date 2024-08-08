@@ -5,6 +5,7 @@
     </ParagraphDefault>
 
     <LightningQrCode
+      class="my-7"
       :value="bulkWithdraw.lnurl"
       :success="bulkWithdraw.withdrawn != null"
       :pending="bulkWithdraw.withdrawPending || resetting"

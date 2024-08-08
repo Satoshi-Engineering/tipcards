@@ -41,12 +41,16 @@
         <HeadlineDefault level="h2">
           LightningQrCode
         </HeadlineDefault>
-        <LightningQrCode value="lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9" />
+        <LightningQrCode
+          class="my-7"
+          value="lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9"
+        />
 
         <HeadlineDefault level="h3" class="mt-6">
           With Headline
         </HeadlineDefault>
         <LightningQrCode
+          class="my-7"
           headline="Fund the LnurlP"
           value="lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9"
         />

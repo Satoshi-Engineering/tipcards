@@ -88,6 +88,7 @@
             </I18nT>
           </ParagraphDefault>
           <LightningQrCode
+            class="my-7"
             :value="invoice"
             :success="funded"
             :error="invoiceExpired ? t('setFunding.invoiceExpired') : undefined"

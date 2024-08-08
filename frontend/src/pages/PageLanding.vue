@@ -220,6 +220,7 @@
           </ParagraphDefault>
           <LightningQrCode
             v-if="lnurl != null"
+            class="my-7"
             :value="lnurl"
             :success="spent"
             :pending="withdrawPending"
