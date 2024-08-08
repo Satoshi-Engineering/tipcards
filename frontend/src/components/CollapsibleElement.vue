@@ -1,6 +1,6 @@
 <template>
   <div
-    class="shadow-default rounded-default hover:shadow-default-flat transition-[box-shadow,padding-bottom,transform]"
+    class="shadow-default rounded-default hover:shadow-default-flat transition-[padding-bottom]"
     :class="{
       'pb-5': isOpen,
       'hover:translate-y-0.5': hoverPressEffect,
