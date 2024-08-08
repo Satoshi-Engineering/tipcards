@@ -13,7 +13,7 @@
         data-test="the-header-home-button"
         class="me-auto flex flex-row items-center"
       >
-        <IconLogo class="h-10" />
+        <IconLogo class="h-10 w-auto" />
       </RouterLink>
       <button
         v-if="activeMenu === 'none'"
