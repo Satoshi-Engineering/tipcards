@@ -29,7 +29,7 @@
             <template v-else>{{ $t('sets.unnamedSetNameFallback') }}</template>
           </HeadlineDefault>
           <div class="col-start-1 text-sm">
-            <IconTipCardSet class="inline-block align-middle mr-2 w-auto h-5 text-yellow" />
+            <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
             <span class="align-middle">
               {{ $t('general.cards', { count: cardsSet.settings.numberOfCards }) }}
             </span>
