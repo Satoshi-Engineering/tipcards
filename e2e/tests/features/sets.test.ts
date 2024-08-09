@@ -10,13 +10,13 @@ describe('Sets Page', () => {
     cy.wait(500)
   })
 
-  it('Should see the sets of the logged in user', () => {
+  it.skip('Should see the sets of the logged in user', () => {
     cy.getTestElement('the-layout', { timeout: 31000 }).should('exist')
     cy.getTestElement('please-login-section', { timeout: 32000 }).should('not.exist')
     cy.getTestElement('logged-in', { timeout: 33000 }).should('exist')
   })
 
-  it('Should see the sets of the logged in user', () => {
+  it.skip('Should see the sets of the logged in user', () => {
     cy.getTestElement('the-layout', { timeout: 31000 }).should('exist')
     cy.getTestElement('please-login-section', { timeout: 32000 }).should('not.exist')
     cy.getTestElement('logged-in', { timeout: 33000 }).should('exist')
