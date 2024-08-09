@@ -23,6 +23,6 @@ describe('LightningQrCode', () => {
     expect(copyToClipboard.vm.text).toEqual('lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9')
 
     const button = wrapper.find('[data-test="lightning-qr-code-button-open-in-wallet"]')
-    expect(button.attributes().href).toContain('lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9')
+    expect(button.attributes().href).toEqual('lightning:lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9')
   })
 })
