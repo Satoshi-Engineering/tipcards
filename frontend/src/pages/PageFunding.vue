@@ -412,6 +412,7 @@ const createInvoice = async () => {
   } catch(error) {
     console.error(error)
   }
+  await loadLnurlData()
   creatingInvoice.value = false
 
   if (invoice.value == null) {
