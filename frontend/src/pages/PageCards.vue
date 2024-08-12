@@ -1,7 +1,11 @@
 <template>
   <TheLayout>
     <CenterContainer class="print:hidden">
-      <BackLinkDeprecated />
+      <BackLink
+        :to="{ name: 'sets', params: { lang: $route.params.lang } }"
+      >
+        {{ t('sets.title') }}
+      </BackLink>
       <div
         v-for="userWarning in userWarnings"
         :key="userWarning"
@@ -519,8 +523,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
-import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import sanitizeI18n from '@/modules/sanitizeI18n'
+import BackLink from '@/components/BackLink.vue'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console

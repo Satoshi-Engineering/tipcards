@@ -274,8 +274,8 @@
   },
   "sets": {
     "title": "Alle meine Sets",
-    "backLink": "zur Startseite",
-    "newSet": "neues Set",
+    "backLink": "Zur Startseite",
+    "newSet": "Neues Set",
     "description": "Hier findest du eine Liste deiner erstellten Sets.",
     "loginToSeeYourSets": "Melde dich an, um eine Liste deiner erstellten TipCards zu sehen.",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
