@@ -210,6 +210,6 @@ export const getAllowedRefreshTokensForRedisUserByUserId = async (queries: Queri
   }
   return allowedRefreshTokens.reduce((total, allowedRefreshTokens) => [
     ...total,
-    allowedRefreshTokens.previous != null ? [allowedRefreshTokens.previous, allowedRefreshTokens.current] : [allowedRefreshTokens.current],
+    allowedRefreshTokens.previous != null ? [allowedRefreshTokens.current, allowedRefreshTokens.previous] : [allowedRefreshTokens.current],
   ], [] as string[][])
 }

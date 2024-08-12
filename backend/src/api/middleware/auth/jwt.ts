@@ -108,22 +108,19 @@ export const cycleRefreshToken = async (req: Request, res: Response, next: NextF
       })
       return
     }
-    const refreshToken = await createRefreshToken(user)
+    const newRefreshToken = await createRefreshToken(user)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
-    const oldRefreshToken = req.cookies?.refresh_token
+    const previousRefreshToken = req.cookies?.refresh_token
     user.allowedRefreshTokens = user.allowedRefreshTokens.map((currentRefreshTokens) => {
-      if (!currentRefreshTokens.includes(oldRefreshToken)) {
+      if (!currentRefreshTokens.includes(previousRefreshToken)) {
         return currentRefreshTokens
       }
-      if (currentRefreshTokens.length === 1) {
-        return [...currentRefreshTokens, refreshToken]
-      }
-      return [currentRefreshTokens[currentRefreshTokens.length - 1], refreshToken]
+      return [newRefreshToken, previousRefreshToken]
     })
     await updateUser(user)
-    res.cookie('refresh_token', refreshToken, {
+    res.cookie('refresh_token', newRefreshToken, {
       expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
       httpOnly: true,
       secure: true,

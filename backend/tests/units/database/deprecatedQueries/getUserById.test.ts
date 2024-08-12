@@ -114,7 +114,7 @@ describe('getUserById', () => {
       availableLandingPages: null,
       allowedRefreshTokens: expect.arrayContaining([
         [allowedRefreshTokenData1.current],
-        [allowedRefreshTokenData2.previous, allowedRefreshTokenData2.current],
+        [allowedRefreshTokenData2.current, allowedRefreshTokenData2.previous],
       ]),
       profile: {
         displayName: profileData.displayName,

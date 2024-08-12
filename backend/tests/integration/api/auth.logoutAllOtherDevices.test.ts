@@ -61,6 +61,8 @@ describe('logout all other devices', () => {
   failEarly.it('should logout all frontends, except the first one', async () => {
     const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
 
+    // make sure two auth tokens exist
+    await frontend.authRefresh()
     const response = await frontend.logoutAllOtherDevices()
     expect(response.data).toEqual(expect.objectContaining({
       status: 'success',
