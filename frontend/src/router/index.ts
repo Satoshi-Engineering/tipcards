@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, type RouteLocationNormalizedLoaded } from 'vue-router'
+import {
+  createRouter,
+  createWebHistory,
+  type RouteLocationNormalizedLoaded,
+} from 'vue-router'
 
 import LOCALES from '@shared/modules/i18n/locales'
 import i18n from '@/modules/initI18n'
@@ -172,5 +176,15 @@ const router = createRouter({
     },
   ],
 })
+
+declare module 'vue-router' {
+  interface RouteLocationAsPathGeneric {
+    params: {
+      lang?: keyof typeof LOCALES
+      settings?: string
+      setId?: string
+    }
+  }
+}
 
 export default router

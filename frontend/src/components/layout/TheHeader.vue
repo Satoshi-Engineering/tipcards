@@ -83,5 +83,4 @@ watch(activeMenu, (value) => {
     disablePageScroll()
   }
 })
-
 </script>

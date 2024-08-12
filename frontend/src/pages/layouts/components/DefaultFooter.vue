@@ -35,7 +35,7 @@
           class="group"
         >
           <LinkDefault
-            :to="{ ...$route, params: { ...$route.params, lang: code } }"
+            :to="{ ...$route, params: { ...$route.params, lang: code as LOCALE } }"
             :bold="currentLocale === code"
             :hreflang="code"
             rel="alternate"
@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
-import LOCALES from '@shared/modules/i18n/locales'
+import LOCALES, { type LOCALE } from '@shared/modules/i18n/locales'
 import { SUPPORT_EMAIL } from '@/constants'
 
 const { currentLocale } = useI18nHelpers()

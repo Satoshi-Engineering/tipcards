@@ -36,4 +36,6 @@ export const LOCALES = {
   },
 }
 
+export type LOCALE = keyof typeof LOCALES
+
 export default LOCALES
