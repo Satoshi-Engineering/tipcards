@@ -9,14 +9,15 @@
     <div class="mb-2">
       {{ t('cards.actions.bulkWithdraw.label') }}:
     </div>
-    <ButtonWithTooltip
-      class="text-sm min-w-[170px]"
-      :href="bulkWithdrawHref"
-      :disabled="bulkWithdrawDisabled"
-      :tooltip="bulkWithdrawDisabled ? t('cards.actions.bulkWithdraw.disabledReason') : undefined"
-    >
-      {{ t('cards.actions.bulkWithdraw.button') }}
-    </ButtonWithTooltip>
+    <ButtonContainer>
+      <ButtonWithTooltip
+        :href="bulkWithdrawHref"
+        :disabled="bulkWithdrawDisabled"
+        :tooltip="bulkWithdrawDisabled ? t('cards.actions.bulkWithdraw.disabledReason') : undefined"
+      >
+        {{ t('cards.actions.bulkWithdraw.button') }}
+      </ButtonWithTooltip>
+    </ButtonContainer>
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import { useRoute, useRouter } from 'vue-router'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 
 const props = defineProps({
   amountToWithdraw: {

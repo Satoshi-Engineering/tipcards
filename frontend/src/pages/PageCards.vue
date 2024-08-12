@@ -223,49 +223,47 @@
             </template>
           </I18nT>
         </ParagraphDefault>
-        <ButtonWithTooltip
-          class="text-sm min-w-[170px]"
-          :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
-          :tooltip="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal')) ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
-          :loading="saving"
-          @click="saveCardsSet"
-        >
-          {{ t('cards.actions.buttonSaveCardsSet') }}
-          <IconCheckSquareFill v-if="isSaved && !saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
-          <IconExclamationSquare v-if="showSaveWarning && !saving" class="inline ml-1 mt-[-1px] h-[1em] w-[1em]" />
-        </ButtonWithTooltip>
-        &nbsp;
-        <br class="xs:hidden">
-        <ButtonDefault
-          v-if="isSaved"
-          variant="no-border"
-          class="text-sm"
-          :disabled="deleting"
-          :loading="deleting"
-          @click="deleteCardsSet"
-        >
-          {{ t('cards.actions.buttonDeleteCardsSet') }}
-        </ButtonDefault>
+        <ButtonContainer>
+          <ButtonWithTooltip
+            :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
+            :tooltip="!saving && !isLoggedIn && !hasBeenSaved && !features.includes('saveLocal') ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
+            :loading="saving"
+            @click="saveCardsSet"
+          >
+            <span class="align-middle">
+              {{ t('cards.actions.buttonSaveCardsSet') }}
+            </span>
+            <IconCheckSquareFill v-if="isSaved && !saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
+            <IconExclamationSquare v-else-if="showSaveWarning && !saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
+            <span v-else-if="saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
+          </ButtonWithTooltip>
+          <ButtonDefault
+            variant="no-border"
+            :disabled="deleting || !isSaved"
+            :loading="deleting"
+            @click="deleteCardsSet"
+          >
+            {{ t('cards.actions.buttonDeleteCardsSet') }}
+          </ButtonDefault>
+        </ButtonContainer>
       </div>
       <div class="my-5">
         <HeadlineDefault level="h3" class="mb-2">
           {{ t('cards.actions.printHeadline') }}
         </HeadlineDefault>
-        <ButtonDefault
-          class="text-sm min-w-[170px]"
-          @click="printCards()"
-        >
-          {{ t('cards.actions.buttonPrint') }}
-        </ButtonDefault>
-        &nbsp;
-        <br class="xs:hidden">
-        <ButtonDefault
-          variant="no-border"
-          class="text-sm"
-          @click="downloadZip()"
-        >
-          {{ t('cards.actions.buttonDownloadPngs') }}
-        </ButtonDefault>
+        <ButtonContainer>
+          <ButtonDefault
+            @click="printCards()"
+          >
+            {{ t('cards.actions.buttonPrint') }}
+          </ButtonDefault>
+          <ButtonDefault
+            variant="no-border"
+            @click="downloadZip()"
+          >
+            {{ t('cards.actions.buttonDownloadPngs') }}
+          </ButtonDefault>
+        </ButtonContainer>
       </div>
       <SetFunding
         class="my-5"
@@ -411,6 +409,7 @@
                   <HeadlineDefault
                     v-if="settings.cardHeadline !== ''"
                     level="h1"
+                    styling="h4"
                     class="mb-1"
                   >
                     {{ settings.cardHeadline }}
@@ -531,6 +530,7 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import BackLink from '@/components/BackLink.vue'
 import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console

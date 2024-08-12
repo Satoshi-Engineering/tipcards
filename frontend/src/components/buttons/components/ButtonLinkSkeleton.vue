@@ -7,7 +7,6 @@
     :target="targetComputed"
     :disabled="disabled"
     :tabindex="disabled ? -1 : undefined"
-    class="inline-block"
   >
     <slot />
   </RouterLink>
@@ -15,7 +14,6 @@
     v-else-if="href != null"
     :href="href"
     :target="targetComputed"
-    class="inline-block"
     :class="cssClasses"
     :tabindex="disabled ? -1 : undefined"
   >
@@ -23,14 +21,13 @@
   </a>
   <span
     v-else-if="element === 'span'"
-    class="inline-block"
     :class="cssClasses"
   >
     <slot />
   </span>
   <button
     v-else
-    class="[text-align:inherit] appearance-none inline-block"
+    class="[text-align:inherit] appearance-none"
     :class="cssClasses"
     :disabled="disabled"
   >
@@ -94,7 +91,7 @@ watchEffect(() => {
 
 const cssClasses = computed(() => [
   {
-    'opacity-50 cursor-default pointer-events-none inline-block': props.disabled,
+    'opacity-50 cursor-default pointer-events-none': props.disabled,
     'bg-red-500': buttonHasError.value,
   },
 ])

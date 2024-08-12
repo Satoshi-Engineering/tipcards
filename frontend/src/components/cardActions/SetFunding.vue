@@ -9,14 +9,15 @@
     <div class="mb-2">
       {{ t('cards.actions.setFunding.label') }}:
     </div>
-    <ButtonWithTooltip
-      class="text-sm min-w-[170px]"
-      :href="setFundingHref"
-      :disabled="buttonDisabled"
-      :tooltip="buttonDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
-    >
-      {{ t('cards.actions.setFunding.button') }}
-    </ButtonWithTooltip>
+    <ButtonContainer>
+      <ButtonWithTooltip
+        :href="setFundingHref"
+        :disabled="buttonDisabled"
+        :tooltip="buttonDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
+      >
+        {{ t('cards.actions.setFunding.button') }}
+      </ButtonWithTooltip>
+    </ButtonContainer>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import type { Set } from '@shared/data/api/Set'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import useSetFunding, { type Card } from '@/modules/useSetFunding'
 
 const props = defineProps({
