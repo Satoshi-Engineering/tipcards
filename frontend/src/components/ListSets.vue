@@ -42,7 +42,10 @@
               }) }}
             </time>
           </div>
-          <div class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]">
+          <div
+            v-if="cardsSet.cardsStatus != null"
+            class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
+          >
             <div
               v-for="n in Math.min(12, cardsSet.settings.numberOfCards)"
               :key="n"
@@ -85,6 +88,7 @@ const sortedSavedCardsSets = computed(() => {
         setId: set.id,
         date,
         settings,
+        cardsStatus: null, // implement this later after loading the number of funded/withdrawn/blank/... cards
       }
     })
     .sort((a, b) => {
