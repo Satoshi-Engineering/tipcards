@@ -8,7 +8,7 @@
           class="border-t border-white-50 first:border-t-0"
         >
           <RouterLink
-            :to="{ ...$route, params: { ...$route.params, lang: locale.code } }"
+            :to="locale.route"
             :hreflang="locale.code"
             rel="alternate"
             class="block py-3 pl-4 text-lg hover:underline"
@@ -18,7 +18,7 @@
             :data-test="`the-lang-nav-item-${locale.code}`"
             @click="() => emit('itemSelected')"
           >
-            {{ locale.name }}
+            {{ locale.label }}
           </RouterLink>
         </li>
       </ul>
@@ -28,13 +28,32 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { RouterLink, useRoute, type RouteLocationRaw } from 'vue-router'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import { useI18nHelpers } from '@/modules/initI18n'
-import LOCALES from '@shared/modules/i18n/locales'
+import LOCALES, { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales'
 
+const route = useRoute()
 const { currentLocale } = useI18nHelpers()
-const locales = ref(Object.entries(LOCALES).map(([code, { name }]) => ({ code, name })))
+
+const locales = ref<{
+  code: LocaleCode,
+  label: string,
+  route: RouteLocationRaw,
+}[]>(LOCALE_CODES.map((code) => {
+  return {
+    code,
+    label: LOCALES[code].name,
+    route: {
+      ...route,
+      params: {
+        ...route.params,
+        lang: code,
+      },
+    },
+  }
+}))
 
 const emit = defineEmits(['itemSelected'])
 </script>

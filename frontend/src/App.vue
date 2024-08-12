@@ -12,7 +12,7 @@ import {  nextTick } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 
 import ModalLogin from '@/components/ModalLogin.vue'
-import { setLocale, type LocaleCode } from '@/modules/initI18n'
+import { setLocale } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
 import { useModalLoginStore } from '@/stores/modalLogin'
 
@@ -23,8 +23,8 @@ const { setDocumentTitle, initHtmlSeoWatchers } = useSeoHelpers()
 initHtmlSeoWatchers()
 
 router.afterEach(async () => {
-  if (route?.params.lang != null && route?.params.lang !== '') {
-    setLocale(route.params.lang as LocaleCode)
+  if (route.params.lang != null) {
+    setLocale(route.params.lang)
   }
   await nextTick()
   setDocumentTitle()

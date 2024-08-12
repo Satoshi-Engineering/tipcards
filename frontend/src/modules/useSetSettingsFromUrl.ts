@@ -28,13 +28,9 @@ export default () => {
         settingsForUrl = encodeCardsSetSettings(value)
       }
 
-      router.replace({
-        ...route,
-        params: {
-          ...route.params,
-          settings: settingsForUrl,
-        },
-      })
+      const newRoute = router.resolve(router.currentRoute.value)
+      newRoute.params.settings = settingsForUrl
+      router.replace(newRoute)
     },
   })
 

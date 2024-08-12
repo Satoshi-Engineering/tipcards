@@ -24,6 +24,7 @@
 import type { PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import IconCaretLeft from '@/components/icons/IconCaretLeft.vue'
 import IconCaretRight from '@/components/icons/IconCaretRight.vue'

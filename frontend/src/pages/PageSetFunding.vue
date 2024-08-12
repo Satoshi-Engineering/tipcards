@@ -330,12 +330,18 @@ const resetInvoice = async () => {
   }
 }
 
-const cardsHref = computed(() => router.resolve({
-  name: 'cards',
-  params: {
-    lang: route.params.lang,
-    setId: route.params.setId,
-    settings: route.params.settings,
-  },
-}).href)
+const cardsHref = computed(() => {
+  if (route.name !== 'set-funding') {
+    return undefined
+  }
+  const targetRoute = router.resolve({
+    name: 'cards',
+    params: {
+      lang: route.params.lang,
+      setId: route.params.setId,
+      settings: route.params.settings,
+    },
+  })
+  return targetRoute.href
+})
 </script>

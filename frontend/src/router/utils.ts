@@ -5,14 +5,14 @@ import type {
   RouteParamsRawGeneric,
 } from 'vue-router'
 
-import { LOCALES, type LOCALE } from '@shared/modules/i18n/locales'
+import { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales'
 
 export interface LocalizedRouteParamsRaw extends RouteParamsRawGeneric {
-  lang?: LOCALE,
+  lang?: LocaleCode,
 }
 
 export interface LocalizedRouteParams extends RouteParamsGeneric {
-  lang: LOCALE,
+  lang: LocaleCode,
 }
 
 export interface AppRouteMeta extends RouteMeta {
@@ -21,6 +21,6 @@ export interface AppRouteMeta extends RouteMeta {
   backlink: boolean | string | ((route: RouteLocationNormalizedLoaded) => RouteLocationNormalizedLoaded),
 }
 
-export const localizedRoutePrefix = `/:lang(${Object.keys(LOCALES).join('|')})?`
+export const localizedRoutePrefix = `/:lang(${LOCALE_CODES.join('|')})?`
 
-export type localizedRoutePrefix = `/${LOCALE}?`
+export type localizedRoutePrefix = `/${LocaleCode}?`

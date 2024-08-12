@@ -26,7 +26,13 @@ export default () => {
 
   const setId = computed(() => route.params.setId == null || route.params.setId === '' ? undefined : String(route.params.setId))
   const setFundingHref = computed(() => {
-    if (setId.value == null) {
+    if (
+      setId.value == null
+      || (
+        route.name !== 'set-funding'
+        && route.name !== 'cards'
+      )
+    ) {
       return ''
     }
     return router.resolve({

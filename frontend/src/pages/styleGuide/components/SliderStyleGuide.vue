@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
+import { useRoute, type RouteLocationRaw } from 'vue-router'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
@@ -74,7 +74,7 @@ defineProps({
 
 const route = useRoute()
 
-const dummyLink = {
+const dummyLink: RouteLocationRaw = {
   name: 'cards',
   params: { setId: 'style-guide-set', lang: route.params.lang },
 }

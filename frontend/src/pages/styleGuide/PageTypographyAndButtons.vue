@@ -302,7 +302,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, type RouteLocationRaw } from 'vue-router'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
@@ -317,7 +317,7 @@ import { FAQS } from '@/modules/faqs'
 
 const route = useRoute()
 
-const dummyLink = {
+const dummyLink: RouteLocationRaw = {
   name: 'cards',
   params: { setId: 'style-guide-set', lang: route.params.lang },
 }

@@ -3,18 +3,14 @@ import { createI18n } from 'vue-i18n'
 
 import en from '@/locales/en.json'
 
-import LOCALES from '@shared/modules/i18n/locales'
-
-export type LocaleCode = keyof typeof LOCALES
+import LOCALES, { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales'
 
 const getPreferredLocale = () => {
+  let locale: LocaleCode | undefined = undefined
   for (const lang of navigator.languages) {
-    if (Object.keys(LOCALES).includes(lang)) {
-      return lang as LocaleCode
-    }
-    const langShort = lang.split('-')[0]
-    if (Object.keys(LOCALES).includes(langShort)) {
-      return langShort as LocaleCode
+    locale = LOCALE_CODES.find((code) => lang === code || lang.startsWith(`${code}-`))
+    if (locale != null) {
+      return locale
     }
   }
 }

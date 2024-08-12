@@ -24,8 +24,9 @@
 import { computed, useSlots, type PropType } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
-import ButtonLinkSkeleton from './components/ButtonLinkSkeleton.vue'
 import IconWithBackground, { type IconType, type IconVariant } from '@/components/buttons/components/IconWithBackground.vue'
+
+import ButtonLinkSkeleton from './components/ButtonLinkSkeleton.vue'
 
 export type ButtonIconSize = 'default' | 'small'
 

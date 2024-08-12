@@ -1,4 +1,4 @@
-export const LOCALES = {
+const LOCALES_LOCAL = {
   en: {
     name: 'English',
     dir: 'ltr',
@@ -36,6 +36,9 @@ export const LOCALES = {
   },
 }
 
-export type LOCALE = keyof typeof LOCALES
+export type LocaleCode = keyof typeof LOCALES_LOCAL
+
+export const LOCALE_CODES = Object.keys(LOCALES_LOCAL) as LocaleCode[]
+export const LOCALES = LOCALES_LOCAL as Record<LocaleCode, typeof LOCALES_LOCAL[LocaleCode]>
 
 export default LOCALES

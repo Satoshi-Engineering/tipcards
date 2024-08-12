@@ -18,13 +18,13 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { RouteLocationNamedRaw } from 'vue-router'
+import type { RouteLocationRaw } from 'vue-router'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 defineProps({
   to: {
-    type: Object as PropType<RouteLocationNamedRaw>,
+    type: [String, Object] as PropType<RouteLocationRaw>,
     default: undefined,
   },
   label: {

@@ -740,7 +740,7 @@ const cardCopytextComputed = computed(() => settings.cardCopytext
 )
 
 const createNewCards = () => {
-  router.replace({ ...route, params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
+  router.replace({ name: 'cards', params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
 }
 
 onBeforeMount(() => {
