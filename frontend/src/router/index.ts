@@ -1,28 +1,48 @@
+import { createRouter, createWebHistory } from 'vue-router'
+
+import { about, type RouteAbout } from '@/router/pages/about'
+import { bulkWithdraw, type RouteBulkWithdraw } from '@/router/pages/bulkWithdraw'
+import { cards, type RouteCards } from '@/router/pages/cards'
+import { faqs, type RouteFaqs } from '@/router/pages/faqs'
+import { funding, type RouteFunding } from '@/router/pages/funding'
+import { home, type RouteHome } from '@/router/pages/home'
+import { landing, type RouteLanding } from '@/router/pages/landing'
+import { localStorageSets, type RouteLocalStorageSets } from '@/router/pages/localStorageSets'
+import { setFunding, type RouteSetFunding } from '@/router/pages/setFunding'
+import { sets, type RouteSets } from '@/router/pages/sets'
+import { statistics, type RouteStatistics } from '@/router/pages/statistics'
 import {
-  createRouter,
-  createWebHistory,
-  type RouteLocationNormalizedLoaded,
-} from 'vue-router'
+  styleGuide, type RouteStyleGuide,
+  styleGuideTypographyAndButtons, type RouteStyleGuideTypographyAndButtons,
+  styleGuideIcons, type RouteStyleGuideIcons,
+  styleGuideComponents, type RouteStyleGuideComponents,
+} from '@/router/pages/styleGuide'
+import { userAccount, type RouteUserAccount } from '@/router/pages/userAccount'
 
-import LOCALES from '@shared/modules/i18n/locales'
-import i18n from '@/modules/initI18n'
+export interface RouteNamedMap {
+  about: RouteAbout,
+  'bulk-withdraw': RouteBulkWithdraw,
+  cards: RouteCards,
+  faqs: RouteFaqs,
+  funding: RouteFunding,
+  home: RouteHome,
+  landing: RouteLanding,
+  'local-storage-sets': RouteLocalStorageSets,
+  'set-funding': RouteSetFunding,
+  sets: RouteSets,
+  statistics: RouteStatistics,
+  'style-guide': RouteStyleGuide,
+  'style-guide/typography-and-buttons': RouteStyleGuideTypographyAndButtons,
+  'style-guide/icons': RouteStyleGuideIcons,
+  'style-guide/components': RouteStyleGuideComponents,
+  'user-account': RouteUserAccount,
+}
 
-const PageHome = () => import('@/pages/home/PageHome.vue')
-const PageLanding = () => import('@/pages/PageLanding.vue')
-const PageSets = () => import('@/pages/PageSets.vue')
-const PageCards = () => import('@/pages/PageCards.vue')
-const PageFunding = () => import('@/pages/PageFunding.vue')
-const PageSetFunding = () => import('@/pages/PageSetFunding.vue')
-const PageAbout = () => import('@/pages/PageAbout.vue')
-const PageStatistics = () => import('@/pages/statistics/PageStatistics.vue')
-const PageUserAccount = () => import('@/pages/PageUserAccount.vue')
-const PageStyleGuide = () => import('@/pages/styleGuide/PageStyleGuide.vue')
-const PageComponents = () => import('@/pages/styleGuide/PageComponents.vue')
-const PageTypographyAndButtons = () => import('@/pages/styleGuide/PageTypographyAndButtons.vue')
-const PageIcons = () => import('@/pages/styleGuide/PageIcons.vue')
-const PageBulkWithdraw = () => import('@/pages/bulkWithdraw/PageBulkWithdraw.vue')
-const PageFAQs = () => import('@/pages/PageFaqs.vue')
-const PageLocalStorageSets = () => import('@/pages/PageLocalStorageSets.vue')
+declare module 'vue-router' {
+  interface TypesConfig {
+    RouteNamedMap: RouteNamedMap
+  }
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,160 +51,23 @@ const router = createRouter({
     return { top: 0 }
   },
   routes: [
-    {
-      path: `/:lang(${Object.keys(LOCALES).join('|')})?`,
-      children: [
-        {
-          path: ':',
-          name: 'home',
-          component: PageHome,
-        },
-        {
-          path: 'landing/:cardHash?',
-          name: 'landing',
-          component: PageLanding,
-          meta: {
-            title: () => i18n.global.t('landing.title'),
-            backlink: true, // Is only used by BackLinkDeprecated
-          },
-        },
-        {
-          path: 'preview',
-          name: 'preview',
-          redirect: to => ({ name: 'landing', params: { lang: to.params.lang } }),
-        },
-        {
-          path: 'sets',
-          name: 'sets',
-          component: PageSets,
-          meta: {
-            title: () => i18n.global.t('sets.title'),
-          },
-        },
-        {
-          path: 'cards/:setId?/:settings?',
-          name: 'cards',
-          component: PageCards,
-          meta: {
-            title: () => false, // title will be set in the page component
-            backlink: true, // Is only used by BackLinkDeprecated
-          },
-        },
-        {
-          path: 'funding/:cardHash',
-          name: 'funding',
-          component: PageFunding,
-          meta: {
-            title: () => i18n.global.t('funding.title'),
-            backlink: true, // Is only used by BackLinkDeprecated
-          },
-        },
-        {
-          path: 'set-funding/:setId/:settings?',
-          name: 'set-funding',
-          component: PageSetFunding,
-          meta: {
-            title: () => i18n.global.t('setFunding.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) => // Is only used by BackLinkDeprecated
-              router.resolve({
-                name: 'cards',
-                params: {
-                  lang: route.params.lang,
-                  setId: route.params.setId,
-                  settings: route.params.settings,
-                },
-              }),
-          },
-        },
-        {
-          path: 'about',
-          name: 'about',
-          component: PageAbout,
-          meta: {
-            title: () => i18n.global.t('about.title'),
-            backlink: true, // Is only used by BackLinkDeprecated
-          },
-        },
-        {
-          path: 'user-account',
-          name: 'user-account',
-          component: PageUserAccount,
-          meta: {
-            title: () => i18n.global.t('userAccount.title'),
-            backlink: true, // Is only used by BackLinkDeprecated
-          },
-        },
-        {
-          path: 'statistics',
-          name: 'statistics',
-          component: PageStatistics,
-          meta: { title: () => 'Statistics' },
-        },
-        {
-          path: 'bulk-withdraw/:setId?/:settings?',
-          name: 'bulk-withdraw',
-          component: PageBulkWithdraw,
-          meta: {
-            title: () => i18n.global.t('bulkWithdraw.title'),
-            backlink: (route: RouteLocationNormalizedLoaded) => // Is only used by BackLinkDeprecated
-              router.resolve({
-                name: 'cards',
-                params: {
-                  lang: route.params.lang,
-                  setId: route.params.setId,
-                  settings: route.params.settings,
-                },
-              }),
-          },
-        },
-        {
-          path: 'faqs',
-          name: 'faqs',
-          component: PageFAQs,
-          meta: { title: () => 'FAQs' },
-        },
-        {
-          path: 'style-guide',
-          name: 'style-guide',
-          component: PageStyleGuide,
-          meta: { title: () => 'Style Guide' },
-        },
-        {
-          path: 'style-guide/typography-and-buttons',
-          name: 'style-guide/typography-and-buttons',
-          component: PageTypographyAndButtons,
-          meta: { title: () => 'Tyography And Buttons' },
-        },
-        {
-          path: 'style-guide/icons',
-          name: 'style-guide/icons',
-          component: PageIcons,
-          meta: { title: () => 'Icons' },
-        },
-        {
-          path: 'style-guide/components',
-          name: 'style-guide/components',
-          component: PageComponents,
-          meta: { title: () => 'Components' },
-        },
-        {
-          path: 'local-storage-sets',
-          name: 'local-storage-sets',
-          component: PageLocalStorageSets,
-        },
-      ],
-    },
+    about,
+    bulkWithdraw(() => router),
+    cards,
+    faqs,
+    funding,
+    home,
+    landing,
+    localStorageSets,
+    setFunding(() => router),
+    sets,
+    statistics,
+    styleGuide,
+    styleGuideTypographyAndButtons,
+    styleGuideIcons,
+    styleGuideComponents,
+    userAccount,
   ],
 })
-
-declare module 'vue-router' {
-  interface RouteLocationAsPathGeneric {
-    params: {
-      lang?: keyof typeof LOCALES
-      settings?: string
-      setId?: string
-    }
-  }
-}
 
 export default router
