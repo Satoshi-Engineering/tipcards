@@ -13,8 +13,14 @@
       >
         {{ userWarning }}
       </div>
-      <div class="py-4 mb-3">
-        <div class="my-2 flex justify-between items-center">
+      <div class="pb-4 mb-3">
+        <header class="text-center mb-7">
+          <IconLightningBolt class="text-yellow w-6 h-auto inline-block" />
+          <HeadlineDefault level="h1" class="mt-3">
+            {{ pageTitle }}
+          </HeadlineDefault>
+        </header>
+        <div class="mb-2 flex justify-between items-center">
           <HeadlineDefault level="h2" class="!my-0">
             {{ t('cards.status.headline') }}
           </HeadlineDefault>
@@ -396,16 +402,15 @@
                   </svg>
                 </div>
               </a>
-              <div
+              <section
                 class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
                 :dir="currentTextDirection"
               >
-                <div>
+                <article>
                   <HeadlineDefault
                     v-if="settings.cardHeadline !== ''"
                     level="h1"
-                    styling="h4"
                     class="mb-1"
                   >
                     {{ settings.cardHeadline }}
@@ -417,8 +422,8 @@
                     v-html="sanitizeI18n(cardCopytextComputed)"
                   />
                   <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
-                </div>
-              </div>
+                </article>
+              </section>
             </div>
             <div
               v-if="card.status === 'error'"
@@ -525,6 +530,7 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import BackLink from '@/components/BackLink.vue'
+import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console
@@ -625,8 +631,10 @@ const currentSetUrlQrCode = computed(() => new QRCode({
 }).svg(),
 )
 
+const pageTitle = computed(() => settings.setName || t('cards.title'))
+
 watchEffect(() => {
-  setDocumentTitle(settings.setName || t('index.unnamedSetNameFallback'))
+  setDocumentTitle(pageTitle.value)
 })
 
 const initializeCards = async () => {
