@@ -8,11 +8,19 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
+export interface FundingParamsRaw extends LocalizedRouteParamsRaw {
+  cardHash: string
+}
+
+export interface FundingParams extends LocalizedRouteParams {
+  cardHash: string
+}
+
 export interface RouteFunding extends RouteRecordInfo<
   'funding',
   `${localizedRoutePrefix}/funding/:cardHash`,
-  LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
+  FundingParamsRaw,
+  FundingParams,
   AppRouteMeta
 > {}
 

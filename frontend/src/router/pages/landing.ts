@@ -8,6 +8,14 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
+export interface LandingParamsRaw extends LocalizedRouteParamsRaw {
+  cardHash?: string
+}
+
+export interface LandingParams extends LocalizedRouteParams {
+  cardHash: string
+}
+
 export interface RouteLanding extends RouteRecordInfo<
   'landing',
   `${localizedRoutePrefix}/landing/:cardHash?`,

@@ -21,8 +21,8 @@ export interface BulkWithdrawParams extends LocalizedRouteParams {
 export interface RouteBulkWithdraw extends RouteRecordInfo<
   'bulk-withdraw',
   `${localizedRoutePrefix}/bulk-withdraw/:setId/:settings?`,
-  LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
+  BulkWithdrawParamsRaw,
+  BulkWithdrawParams,
   AppRouteMeta
 > {}
 
