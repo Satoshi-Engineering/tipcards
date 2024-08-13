@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout login-banner>
     <CenterContainer>
       <BackLinkDeprecated />
       <HeadlineDefault

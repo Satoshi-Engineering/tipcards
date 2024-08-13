@@ -9,7 +9,11 @@
   },
   "header": {
     "mainNavLabel": "Hauptnavigation",
-    "langNavLabel": "Sprachnavigation"
+    "langNavLabel": "Sprachnavigation",
+    "loginBanner": {
+      "claim": "{login}, um deine TipCards-Sets zu speichern, den Status zu überprüfen und deine Sats zurückzuholen.",
+      "login": "Einloggen"
+    }
   },
   "nav": {
     "index": "Home",

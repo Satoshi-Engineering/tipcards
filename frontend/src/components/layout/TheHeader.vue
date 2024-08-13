@@ -42,6 +42,7 @@
         <IconX />
       </button>
     </CenterContainer>
+    <TheLoginBanner v-if="loginBanner && activeMenu === 'none'" />
     <TheLangNav
       v-if="activeMenu === 'language'"
       class="absolute top-full"
@@ -62,11 +63,19 @@ import { ref, watch } from 'vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
 import TheMainNav from '@/components/layout/theMainNav/TheMainNav.vue'
+import TheLoginBanner from '@/components/layout/TheLoginBanner.vue'
 import IconWorld from '@/components/icons/IconWorld.vue'
 import IconX from '@/components/icons/IconX.vue'
 import IconMainNav from '@/components/icons/IconMainNav.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
 import { usePageScroll } from '@/modules/usePageScroll'
+
+defineProps({
+  loginBanner: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const activeMenu = ref<'none'|'language'|'main-nav'>('none')
 const onMenuItemSelected = () => {

@@ -6,6 +6,7 @@
     <slot name="header">
       <TheHeader
         class="print:hidden"
+        :login-banner="loginBanner"
       />
     </slot>
     <div class="flex-1">
@@ -31,6 +32,10 @@ import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMost
 import type { Faq } from '@/modules/faqs'
 
 defineProps({
+  loginBanner: {
+    type: Boolean,
+    default: false,
+  },
   hideFaqs: {
     type: Boolean,
     default: false,

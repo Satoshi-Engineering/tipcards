@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout login-banner>
     <CenterContainer class="print:hidden">
       <BackLink
         :to="{ name: 'sets', params: { lang: $route.params.lang } }"

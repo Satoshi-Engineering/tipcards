@@ -9,7 +9,11 @@
   },
   "header": {
     "mainNavLabel": "Main navigation",
-    "langNavLabel": "Language selection"
+    "langNavLabel": "Language selection",
+    "loginBanner": {
+      "claim": "{login} to save your TipCards sets, check the status and retrieve your sats.",
+      "login": "Log in"
+    }
   },
   "nav": {
     "index": "Home",
