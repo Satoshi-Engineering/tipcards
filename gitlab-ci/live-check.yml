@@ -13,6 +13,13 @@ live-check:
     - !reference [.shared_config, cache, node_modules]
   variables:
     NODE_ENV: test
+  artifacts:
+    name: cypress-live-check
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day    
   script:
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then

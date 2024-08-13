@@ -38,6 +38,13 @@ test-e2e:
     - !reference [.shared_config, cache, node_modules]
   variables:
     NODE_ENV: test
+  artifacts:
+    name: cypress-e2e
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day    
   script:
     - cp $BACKEND_ENV_FILE_E2E_TESTS backend/.env.integrationTest
     - echo "Running database migration to prepare database for e2e tests"
