@@ -3,56 +3,59 @@
     class="
       sticky top-0 z-30
       mb-2
+      flex flex-col
       bg-white
     "
   >
-    <CenterContainer class="flex items-center gap-4">
-      <RouterLink
-        :to="{ name: 'home', params: { lang: $route.params.lang } }"
-        :title="$t('nav.index')"
-        data-test="the-header-home-button"
-        class="me-auto flex flex-row items-center"
-      >
-        <IconLogo class="h-10 w-auto" />
-      </RouterLink>
-      <button
-        v-if="activeMenu === 'none'"
-        class="hover:text-yellow w-6 h-6"
-        data-test="the-header-lang-button"
-        :title="$t('header.langNavLabel')"
-        @click="activeMenu = 'language'"
-      >
-        <IconWorld />
-      </button>
-      <button
-        v-if="activeMenu === 'none'"
-        class="hover:text-yellow w-8 h-6"
-        :title="$t('header.mainNavLabel')"
-        @click="activeMenu = 'main-nav'"
-      >
-        <IconMainNav />
-      </button>
-      <button
-        v-if="activeMenu !== 'none'"
-        class="hover:text-yellow w-18 h-6 ps-12"
-        data-test="the-header-close-button"
-        :title="$t('general.close')"
-        @click="activeMenu = 'none'"
-      >
-        <IconX />
-      </button>
-    </CenterContainer>
-    <TheLoginBanner v-if="loginBanner && activeMenu === 'none'" />
-    <TheLangNav
-      v-if="activeMenu === 'language'"
-      class="absolute top-full"
-      @item-selected="onMenuItemSelected"
-    />
-    <TheMainNav
-      v-if="activeMenu === 'main-nav'"
-      class="absolute top-full"
-      @item-selected="onMenuItemSelected"
-    />
+    <section class="relative order-1 xs:order-2">
+      <CenterContainer class="flex items-center gap-4">
+        <RouterLink
+          :to="{ name: 'home', params: { lang: $route.params.lang } }"
+          :title="$t('nav.index')"
+          data-test="the-header-home-button"
+          class="me-auto flex flex-row items-center"
+        >
+          <IconLogo class="h-10 w-auto" />
+        </RouterLink>
+        <button
+          v-if="activeMenu === 'none'"
+          class="hover:text-yellow w-6 h-6"
+          data-test="the-header-lang-button"
+          :title="$t('header.langNavLabel')"
+          @click="activeMenu = 'language'"
+        >
+          <IconWorld />
+        </button>
+        <button
+          v-if="activeMenu === 'none'"
+          class="hover:text-yellow w-8 h-6"
+          :title="$t('header.mainNavLabel')"
+          @click="activeMenu = 'main-nav'"
+        >
+          <IconMainNav />
+        </button>
+        <button
+          v-if="activeMenu !== 'none'"
+          class="hover:text-yellow w-18 h-6 ps-12"
+          data-test="the-header-close-button"
+          :title="$t('general.close')"
+          @click="activeMenu = 'none'"
+        >
+          <IconX />
+        </button>
+      </CenterContainer>
+      <TheLangNav
+        v-if="activeMenu === 'language'"
+        class="absolute top-full"
+        @item-selected="onMenuItemSelected"
+      />
+      <TheMainNav
+        v-if="activeMenu === 'main-nav'"
+        class="absolute top-full"
+        @item-selected="onMenuItemSelected"
+      />
+    </section>
+    <TheLoginBanner v-if="loginBanner" class="order-2 xs:order-1" />
   </header>
 </template>
 
