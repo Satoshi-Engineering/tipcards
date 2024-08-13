@@ -13,6 +13,7 @@ describe('FaqI18nT', () => {
     const wrapper = mount(FaqI18nT, {
       props: {
         keypath: 'faqs.questions.lightningNode.answer',
+        i18nScope: 'global',
       },
     })
 

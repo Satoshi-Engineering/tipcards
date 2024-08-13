@@ -1,11 +1,16 @@
-import { mount } from '@vue/test-utils'
+import { config, mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import '../mocks/router'
 import '../mocks/i18n'
 
 import LightningQrCode from '@/components/LightningQrCode.vue'
-import CopyToClipboard from '@/components/CopyToClipboard.vue'
+
+const CopyToClipboardStub = {
+  props: ['text'],
+  template: '<div />',
+}
+config.global.stubs.CopyToClipboard = CopyToClipboardStub
 
 describe('LightningQrCode', () => {
   it('renders a qr code', async () => {
@@ -18,7 +23,7 @@ describe('LightningQrCode', () => {
     const headline = wrapper.find('[data-test="lightning-qr-code-headline"]')
     expect(headline.text()).toBe('This is the headline')
 
-    const copyToClipboard = wrapper.getComponent(CopyToClipboard)
+    const copyToClipboard = wrapper.getComponent(CopyToClipboardStub)
     expect(copyToClipboard).toBeDefined()
     expect(copyToClipboard.vm.text).toEqual('lnurl1dp68gurn8ghj7er9wch8g6tsvdshyern9e5k7tmpwp5j7mrww4exctm3wgkkxmmyv5khgetnwse6dyf9')
 

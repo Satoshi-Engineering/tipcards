@@ -14,6 +14,7 @@ describe('TheMostRelevantFaqs', () => {
         faqs: [
           { questionKeypath: 'faqs.questions.getBackSats.question', answerKeypath: 'faqs.questions.getBackSats.answer' },
         ],
+        i18nScope: 'global',
       },
     })
     expect(wrapper.text()).toContain(t('faqs.questions.getBackSats.question'))
@@ -27,6 +28,7 @@ describe('TheMostRelevantFaqs', () => {
           { questionKeypath: 'faqs.questions.getBackSats.question', answerKeypath: 'faqs.questions.getBackSats.answer' },
           { questionKeypath: 'faqs.questions.bulkFunding.question', answerKeypath: 'faqs.questions.bulkFunding.answer' },
         ],
+        i18nScope: 'global',
       },
     })
     expect(wrapper.text()).toContain(t('faqs.questions.bulkFunding.question'))

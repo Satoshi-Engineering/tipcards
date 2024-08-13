@@ -1,14 +1,18 @@
-import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
-
 import '../../mocks/i18n'
 import '../../mocks/provide'
 import '../../mocks/router'
 
-import TheFooter from '@/components/layout/TheFooter.vue'
-import TheHeader from '@/components/layout/TheHeader.vue'
+import { mount, config } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
+
 import TheLayout from '@/components/layout/TheLayout.vue'
-import TheMostRelevantFaqs from '@/components/layout/theMostRelevantFaqs/TheMostRelevantFaqs.vue'
+
+const TheHeaderStub = { template: '<div />' }
+const TheFooterStub = { template: '<div />' }
+const TheMostRelevantFaqsStub = { template: '<div />' }
+config.global.stubs.TheHeader = TheHeaderStub
+config.global.stubs.TheFooter = TheFooterStub
+config.global.stubs.TheMostRelevantFaqs = TheMostRelevantFaqsStub
 
 describe('TheLayout', () => {
   it('renders the layout', async () => {
@@ -17,10 +21,10 @@ describe('TheLayout', () => {
         default: 'Satoshi Engineering Layout Test',
       },
     })
-    expect(wrapper.getComponent(TheHeader)).toBeDefined()
+    expect(wrapper.getComponent(TheHeaderStub)).toBeDefined()
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(wrapper.getComponent(TheMostRelevantFaqs)).toBeDefined()
-    expect(wrapper.getComponent(TheFooter)).toBeDefined()
+    expect(wrapper.getComponent(TheMostRelevantFaqsStub)).toBeDefined()
+    expect(wrapper.getComponent(TheFooterStub)).toBeDefined()
   })
 
   it('renders without header or footer', async () => {
@@ -31,11 +35,11 @@ describe('TheLayout', () => {
         footer: 'Custom Footer',
       },
     })
-    expect(() => wrapper.getComponent(TheHeader)).toThrowError()
+    expect(() => wrapper.getComponent(TheHeaderStub)).toThrowError()
     expect(wrapper.text()).toContain('Custom Header')
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(() => wrapper.getComponent(TheMostRelevantFaqs)).toThrowError()
-    expect(() => wrapper.getComponent(TheFooter)).toThrowError()
+    expect(() => wrapper.getComponent(TheMostRelevantFaqsStub)).toThrowError()
+    expect(() => wrapper.getComponent(TheFooterStub)).toThrowError()
     expect(wrapper.text()).toContain('Custom Footer')
   })
 
@@ -48,9 +52,9 @@ describe('TheLayout', () => {
         hideFaqs: true,
       },
     })
-    expect(wrapper.getComponent(TheHeader)).toBeDefined()
+    expect(wrapper.getComponent(TheHeaderStub)).toBeDefined()
     expect(wrapper.text()).toContain('Satoshi Engineering Layout Test')
-    expect(() => wrapper.getComponent(TheMostRelevantFaqs)).toThrowError()
-    expect(wrapper.getComponent(TheFooter)).toBeDefined()
+    expect(() => wrapper.getComponent(TheMostRelevantFaqsStub)).toThrowError()
+    expect(wrapper.getComponent(TheFooterStub)).toBeDefined()
   })
 })

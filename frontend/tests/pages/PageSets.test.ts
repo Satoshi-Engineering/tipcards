@@ -12,8 +12,11 @@ import { useCardsSetsStore } from '@/stores/cardsSets'
 
 import { createSet } from '../data/set'
 
-config.global.stubs['the-layout'] = { template: '<slot />' }
-config.global.stubs['user-error-messages'] = { template: '<div />' }
+config.global.stubs.TheLayout = {
+  props: ['loginBanner'],
+  template: '<slot />',
+}
+config.global.stubs.UserErrorMessages = { template: '<div />' }
 
 describe('PageSets', () => {
   const cardsStore = vi.mocked(useCardsSetsStore())

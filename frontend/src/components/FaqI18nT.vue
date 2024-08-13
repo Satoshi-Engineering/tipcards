@@ -1,5 +1,5 @@
 <template>
-  <I18nT :keypath="keypath">
+  <I18nT :keypath="keypath" :scope="i18nScope">
     <template #supportEmail>
       <LinkDefault :href="`mailto:${SUPPORT_EMAIL}?subject=Lightning%20Tip%20Cards%20Feedback`">
         {{ SUPPORT_EMAIL }}
@@ -24,7 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { I18nT } from 'vue-i18n'
+import type { PropType } from 'vue'
+import { I18nT, type ComponentI18nScope } from 'vue-i18n'
 
 import LinkDefault from './typography/LinkDefault.vue'
 import { SUPPORT_EMAIL, LIGHTNING_NODE_NAME, LIGHTNING_NODE_LINK, GITHUB_LINK } from '@/constants'
@@ -33,6 +34,10 @@ defineProps({
   keypath: {
     type: String,
     required: true,
+  },
+  i18nScope: {
+    type: String as PropType<ComponentI18nScope>,
+    default: 'parent',
   },
 })
 </script>

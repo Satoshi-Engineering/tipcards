@@ -17,7 +17,7 @@
           @click="onClick(index)"
         >
           <template #answer>
-            <FaqI18nT :keypath="faq.answerKeypath" />
+            <FaqI18nT :keypath="faq.answerKeypath" :i18n-scope="i18nScope" />
           </template>
         </MostRelevantFaqsListItem>
       </ul>
@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue'
+import type { ComponentI18nScope } from 'vue-i18n'
 
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -52,6 +53,10 @@ const props = defineProps({
     type: Array as PropType<Faq[]>,
     default: undefined,
     validator: (value: Faq[]) => value.length <= 3,
+  },
+  i18nScope: {
+    type: String as PropType<ComponentI18nScope>,
+    default: 'local',
   },
 })
 
