@@ -8,11 +8,11 @@ import type {
 import { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales'
 
 export interface LocalizedRouteParamsRaw extends RouteParamsRawGeneric {
-  lang?: LocaleCode,
+  lang?: LocaleCode | '',
 }
 
 export interface LocalizedRouteParams extends RouteParamsGeneric {
-  lang: LocaleCode,
+  lang: LocaleCode | '',
 }
 
 export interface AppRouteMeta extends RouteMeta {
