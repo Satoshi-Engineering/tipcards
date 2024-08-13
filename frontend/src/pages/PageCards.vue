@@ -230,12 +230,12 @@
             :loading="saving"
             @click="saveCardsSet"
           >
-            <span class="align-middle">
+            <span>
               {{ t('cards.actions.buttonSaveCardsSet') }}
             </span>
-            <IconCheckSquareFill v-if="isSaved && !saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
-            <IconExclamationSquare v-else-if="showSaveWarning && !saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
-            <span v-else-if="saving" class="inline-block ms-2 h-[1em] w-[1em] align-middle" />
+            <IconCheckSquareFill v-if="isSaved && !saving" class="inline-block ms-2 h-[1em] w-[1em]" />
+            <IconExclamationSquare v-else-if="showSaveWarning && !saving" class="inline-block ms-2 h-[1em] w-[1em]" />
+            <span v-else-if="saving" class="inline-block ms-2 h-[1em] w-[1em]" />
           </ButtonWithTooltip>
           <ButtonDefault
             variant="no-border"
