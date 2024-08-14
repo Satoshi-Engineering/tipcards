@@ -40,6 +40,20 @@
         </li>
       </menu>
       <hr class="my-3 border-t border-white-50">
+      <template v-if="canAccessStatistics">
+        <menu>
+          <li v-if="canAccessStatistics">
+            <MainNavItem
+              :to="{ name: 'statistics', params: { lang: $route.params.lang } }"
+              :label="$t('nav.statistics')"
+              @click="$emit('itemSelected')"
+            >
+              <IconBarChartFill />
+            </MainNavItem>
+          </li>
+        </menu>
+        <hr class="my-3 border-t border-white-50">
+      </template>
       <template v-if="authStore.isLoggedIn">
         <menu>
           <li>
@@ -95,6 +109,9 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
+import { canAccessStatistics as hasStatisticsPermissions } from '@shared/modules/checkAccessTokenPermissions'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import MainNavItem from '@/components/layout/theMainNav/components/MainNavItem.vue'
@@ -107,15 +124,23 @@ import IconHouseDoorFill from '@/components/icons/IconHouseDoorFill.vue'
 import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
 import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
+import IconBarChartFill from '@/components/icons/IconBarChartFill.vue'
 import useProfile from '@/stores/useProfile'
 
 defineEmits(['itemSelected'])
 
 const authStore = useAuthStore()
-const { isLoggedIn } = storeToRefs(authStore)
+const { isLoggedIn, accessTokenPayload } = storeToRefs(authStore)
 
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
 const { userDisplayName } = useProfile()
+
+const canAccessStatistics = computed(() => {
+  if (accessTokenPayload.value == null) {
+    return false
+  }
+  return hasStatisticsPermissions(accessTokenPayload.value)
+})
 </script>

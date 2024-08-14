@@ -79,6 +79,8 @@
         <IconCheckSquareFill class="w-10 text-yellow" :class="cssClass" />
         <IconExclamationSquare class="w-10" :class="cssClass" />
         <IconExclamationSquare class="w-10 text-yellow" :class="cssClass" />
+        <IconBarChartFill class="w-10" :class="cssClass" />
+        <IconBarChartFill class="w-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -184,6 +186,7 @@ import IconTipCardArrowUp from '@/components/icons/IconTipCardArrowUp.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import IconShare from '@/components/icons/IconShare.vue'
 import IconArrowLeftRight from '@/components/icons/IconArrowLeftRight.vue'
+import IconBarChartFill from '@/components/icons/IconBarChartFill.vue'
 import BackLink from '@/components/BackLink.vue'
 
 const addBackgroundToIcons = ref(false)

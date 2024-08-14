@@ -23,7 +23,9 @@
     "privacyPolicy": "Datenschutz",
     "legalNotice": "Impressum",
     "goToAccount": "zum Account",
-    "sets": "Meine Sets"
+    "sets": "Meine Sets",
+    "faqs": "FAQs",
+    "statistics": "Statistiken"
   },
   "footer": {
     "mostRelevantFaqs": {
