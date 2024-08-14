@@ -2,16 +2,16 @@
 /// <reference types="cypress" />
 
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
-import { setData } from '@e2e/lib/setsHelpers'
+import { generateSet } from '@e2e/lib/api/data/sets'
 
 const API_SET = new URL('/api/set', BACKEND_API_ORIGIN)
 
-Cypress.Commands.add('addSet', (name?: string) => {
+export const generateAndAddRandomSet = (name?: string) => {
   cy.getCookie('refresh_token').should('exist')
   cy.get('@accessToken').should('exist')
 
   cy.get('@accessToken').then(function () {
-    const set = setData.generateSet()
+    const set = generateSet()
     set.settings.setName = name || set.settings.setName
 
     cy.request({
@@ -23,4 +23,4 @@ Cypress.Commands.add('addSet', (name?: string) => {
       },
     })
   })
-})
+}

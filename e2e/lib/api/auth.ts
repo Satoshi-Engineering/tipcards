@@ -7,8 +7,9 @@ import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 const API_AUTH_CREATE = new URL('/api/auth/create', BACKEND_API_ORIGIN)
 const API_AUTH_STATUS = new URL('/api/auth/status', BACKEND_API_ORIGIN)
 
-Cypress.Commands.add('login', () => {
-  cy.fixture('keys.json').then((keys) => {
+export const login = () => {
+  cy.log('whatever')
+  const firstChain = cy.fixture('keys.json').then((keys) => {
     const lnurlAuth = new LNURLAuth({
       publicKeyAsHex: keys.publicKeyAsHex,
       privateKeyAsHex: keys.privateKeyAsHex,
@@ -38,4 +39,6 @@ Cypress.Commands.add('login', () => {
     })
     cy.getCookie('refresh_token').should('exist')
   })
-})
+
+  return firstChain
+}
