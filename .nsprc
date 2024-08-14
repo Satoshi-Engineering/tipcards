@@ -1,22 +1,2 @@
 {
-  "1098397": {
-    "active": true,
-    "notes": "elliptic - low severity - waiting for fix",
-    "expiry": 1723790466812
-  },
-  "1098398": {
-    "active": true,
-    "notes": "elliptic - low severity - waiting for fix",
-    "expiry": 1723790466812
-  },
-  "1098560": {
-    "active": true,
-    "notes": "elliptic - low severity - waiting for fix",
-    "expiry": 1723790466812
-  },
-  "1098582": {
-    "active": true,
-    "notes": "axios - high severity - waiting for fix",
-    "expiry": 1723615200000
-  }
 }
