@@ -11,25 +11,27 @@
       <hr class="border-white-50">
     </template>
     <div
-      class="relative w-full max-w-60 py-12 px-5 mx-auto"
+      class="w-full max-w-60 py-12 px-5 mx-auto"
       :class="{ 'py-16': $slots.headline == null && headline == null }"
     >
-      <!-- eslint-disable vue/no-v-html -->
-      <a
-        class="block transition-opacity"
-        :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || error != null }"
-        :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
-        v-html="qrCodeSvg"
-      />
-      <!-- eslint-enable vue/no-v-html -->
-      <div v-if="error != null" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center text-6xl">
-        <IconTriangleExclamationMark class="w-18" />
-      </div>
-      <div v-else-if="success || pending" class="absolute top-10 left-10 right-10 bottom-3 grid place-items-center">
-        <IconAnimatedCheckmark
-          class="w-5/12 text-[#22AE73]"
-          :pending="pending && !success"
+      <div class="relative">
+        <!-- eslint-disable vue/no-v-html -->
+        <a
+          class="block transition-opacity"
+          :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || error != null }"
+          :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
+          v-html="qrCodeSvg"
         />
+        <!-- eslint-enable vue/no-v-html -->
+        <div v-if="error != null" class="absolute top-0 left-0 right-0 bottom-0 grid place-items-center text-6xl">
+          <IconTriangleExclamationMark class="w-18" />
+        </div>
+        <div v-else-if="success || pending" class="absolute top-0 left-0 right-0 bottom-0 grid place-items-center">
+          <IconAnimatedCheckmark
+            class="w-5/12 text-[#22AE73]"
+            :pending="pending && !success"
+          />
+        </div>
       </div>
     </div>
     <hr class="border-white-50">
