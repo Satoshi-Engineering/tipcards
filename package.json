@@ -21,6 +21,7 @@
     "backend-build": "npm run shared-build && tsc -p ./backend/tsconfig.build.json && tsc-alias -p ./backend/tsconfig.build.json",
     "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-tmp-dev": "tsx watch --tsconfig ./backend/tsconfig.json ./backend/tmpDevelop.ts",
+    "backend-test-unit": "vitest run --config ./backend/vitest.config.ts",
     "backend-test-units": "vitest run --config ./backend/vitest.config.ts ./backend/tests/units",
     "backend-test-integration": "vitest run --config ./backend/vitest.config.ts ./backend/tests/integration",
     "backend-proxy": "tsx --tsconfig ./backend/tsconfig.json ./backend/proxy.ts",
