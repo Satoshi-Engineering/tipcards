@@ -12,7 +12,7 @@
       :loading="loading"
       :reduced-animation="reducedAnimation"
     />
-    <span class="relative block text-center">
+    <span class="relative block w-full text-center">
       <slot />
     </span>
   </ButtonLinkSkeleton>
