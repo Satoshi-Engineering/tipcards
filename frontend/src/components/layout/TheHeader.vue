@@ -29,6 +29,7 @@
         <button
           v-if="activeMenu === 'none'"
           class="hover:text-yellow w-8 h-6"
+          data-test="the-header-main-nav-button"
           :title="$t('header.mainNavLabel')"
           @click="activeMenu = 'main-nav'"
         >
@@ -39,7 +40,7 @@
           class="hover:text-yellow w-18 h-6 ps-12"
           data-test="the-header-close-button"
           :title="$t('general.close')"
-          @click="activeMenu = 'none'"
+          @click="closeAllMenus"
         >
           <IconX />
         </button>
@@ -47,15 +48,19 @@
       <TheLangNav
         v-if="activeMenu === 'language'"
         class="absolute top-full"
-        @item-selected="onMenuItemSelected"
+        @item-selected="closeAllMenus"
       />
       <TheMainNav
         v-if="activeMenu === 'main-nav'"
         class="absolute top-full"
-        @item-selected="onMenuItemSelected"
+        @item-selected="closeAllMenus"
       />
     </section>
-    <TheLoginBanner v-if="loginBanner" class="order-2 xs:order-1" />
+    <TheLoginBanner
+      v-if="loginBanner"
+      class="order-2 xs:order-1"
+      @login-clicked="closeAllMenus"
+    />
   </header>
 </template>
 
@@ -81,7 +86,8 @@ defineProps({
 })
 
 const activeMenu = ref<'none'|'language'|'main-nav'>('none')
-const onMenuItemSelected = () => {
+
+const closeAllMenus = () => {
   activeMenu.value = 'none'
 }
 

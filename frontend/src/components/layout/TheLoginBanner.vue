@@ -11,7 +11,10 @@
         <template #login>
           <LinkDefault
             data-test="login-banner-login"
-            @click="showModalLogin = true"
+            @click="() => {
+              showModalLogin = true
+              $emit('loginClicked')
+            }"
           >
             {{ $t('header.loginBanner.login') }}
           </LinkDefault>
@@ -37,6 +40,8 @@ defineProps({
     default: 'parent',
   },
 })
+
+defineEmits(['loginClicked'])
 
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
