@@ -46,6 +46,7 @@
             <MainNavItem
               :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
               :label="userDisplayName != null && userDisplayName.length > 0 ? userDisplayName : $t('general.userAccount')"
+              active-class="text-bluegrey"
               @click="$emit('itemSelected')"
             >
               <IconPersonCircle />
