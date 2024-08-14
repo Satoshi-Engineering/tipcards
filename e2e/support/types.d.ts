@@ -3,6 +3,7 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 /// <reference types="./commands/auth" />
+/// <reference types="./commands/sets" />
 
 declare namespace Cypress {
   interface Chainable {

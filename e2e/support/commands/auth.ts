@@ -34,6 +34,7 @@ Cypress.Commands.add('login', () => {
       url: `${API_AUTH_STATUS.href}/${authServiceLoginHash}`,
     }).then((response) => {
       expect(response.body).to.have.nested.property('data.accessToken')
+      cy.wrap(response.body.data.accessToken).as('accessToken')
     })
     cy.getCookie('refresh_token').should('exist')
   })
