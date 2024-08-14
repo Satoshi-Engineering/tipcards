@@ -93,7 +93,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -107,6 +106,7 @@ import IconHouseDoorFill from '@/components/icons/IconHouseDoorFill.vue'
 import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
 import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
+import useProfile from '@/stores/useProfile'
 
 defineEmits(['itemSelected'])
 
@@ -116,5 +116,5 @@ const { isLoggedIn } = storeToRefs(authStore)
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const userDisplayName = ref('')
+const { userDisplayName } = useProfile()
 </script>

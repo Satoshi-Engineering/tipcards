@@ -1,4 +1,5 @@
 import '../../mocks/i18n'
+import '../../mocks/pinia'
 import '../../mocks/provide'
 import '../../mocks/router'
 

@@ -14,6 +14,7 @@
     "frontend-preview": "vite preview --port 5050 --config ./frontend/vite.config.ts",
     "frontend-build": "vite build --config ./frontend/vite.config.ts",
     "frontend-typecheck": "cd frontend && vue-tsc --build --force",
+    "frontend-test-unit": "vitest run --config ./frontend/vitest.config.ts",
     "frontend-tests": "vitest run --config ./frontend/vitest.config.ts ./frontend/tests",
     "backend-cli": "tsx --tsconfig ./backend/tsconfig.json ./backend/cli.ts",
     "backend-dev": "tsx watch --tsconfig ./backend/tsconfig.json ./backend/index.ts",
