@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { decodeJwt } from 'jose'
 
 import { Set } from '@shared/data/api/Set.js'
 
@@ -111,5 +112,13 @@ export default class FrontendWithAuth extends Frontend {
         'Authorization': this.accessToken,
       },
     }
+  }
+
+  get userId() {
+    if (this.accessToken === '') {
+      return ''
+    }
+    const accessTokenPayload = decodeJwt<{ id: string }>(this.accessToken)
+    return accessTokenPayload.id
   }
 }

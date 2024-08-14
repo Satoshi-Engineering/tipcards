@@ -47,3 +47,4 @@ const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
 export const router = tRpc.router
 export const middleware = tRpc.middleware
 export const publicProcedure = tRpc.procedure
+export const createCallerFactory = tRpc.createCallerFactory

@@ -13,7 +13,7 @@ export default class Profile {
     return new Profile(profile)
   }
 
-  public static async initProfile(userId: ProfileData['user']) {
+  public static initProfile(userId: ProfileData['user']) {
     return new Profile({
       user: userId,
       accountName: '',
@@ -23,7 +23,7 @@ export default class Profile {
   }
 
   /** @throws */
-  public async toTRpcResponse() {
+  public toTRpcResponse() {
     return ProfileDto.parse(this.profile)
   }
 

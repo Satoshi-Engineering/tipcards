@@ -111,8 +111,8 @@ export const createLnurlW = (...cardVersions: CardVersion[]): LnurlW => {
   return lnurlw
 }
 
-export const createUser = (): User => ({
-  id: randomUUID(),
+export const createUser = (id: string = randomUUID()): User => ({
+  id,
   lnurlAuthKey: hashSha256(randomUUID()),
   created: new Date(),
   permissions: [],

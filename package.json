@@ -23,6 +23,7 @@
     "backend-tmp-dev": "tsx watch --tsconfig ./backend/tsconfig.json ./backend/tmpDevelop.ts",
     "backend-test-unit": "vitest run --config ./backend/vitest.config.ts",
     "backend-test-units": "vitest run --config ./backend/vitest.config.ts ./backend/tests/units",
+    "backend-test-one-integration-route": "vitest run --config ./backend/vitest.config.ts",
     "backend-test-integration": "vitest run --config ./backend/vitest.config.ts ./backend/tests/integration",
     "backend-proxy": "tsx --tsconfig ./backend/tsconfig.json ./backend/proxy.ts",
     "backend-ngrok": "tsx --tsconfig ./backend/tsconfig.json ./backend/ngrok.ts",
