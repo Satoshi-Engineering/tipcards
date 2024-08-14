@@ -11,8 +11,7 @@ describe('SliderDefault', () => {
     cy.get('[data-test="slide-default"]').eq(2).should('not.be.visible')
 
     // swipes to the second slide
-    cy.get('[data-test="slider-default"]').first()
-      .trigger('pointerover')
+    cy.get('[data-test="slider-default"]').first().find('ul')
       .trigger('pointerdown', {
         button: 0,
         buttons: 1,
@@ -42,7 +41,7 @@ describe('SliderDefault', () => {
         pageX: 800,
         pageY: 1000,
       })
-      .trigger('pointerup', { pointerId: 1 })
+      .trigger('pointerup', { force: true, pointerId: 1 })
     cy.wait(500)
     cy.get('[data-test="slide-default"]').first().should('not.be.visible')
     cy.get('[data-test="slide-default"]').eq(1).should('be.visible')
