@@ -1,0 +1,103 @@
+<template>
+  <form @submit.prevent="update(profileInternal)">
+    <FormContainer
+      class="mb-6"
+      :headline="$t('userAccount.profileFormHeadline')"
+    >
+      <TextField
+        v-model="profileInternal.accountName"
+        :label="$t('userAccount.form.accountName')"
+        :description="`(${$t('userAccount.form.accountNameHint')})`"
+        :disabled="fetching"
+      />
+      <TextField
+        v-model="profileInternal.displayName"
+        :label="$t('userAccount.form.displayName')"
+        :description="`(${$t('userAccount.form.displayNameHint')})`"
+        :disabled="fetching"
+      />
+      <TextField
+        v-model="profileInternal.email"
+        :label="$t('userAccount.form.emailAddress')"
+        :description="`(${$t('userAccount.form.emailAddressHint')})`"
+        :disabled="fetching"
+      />
+    </FormContainer>
+    <ButtonContainer>
+      <ButtonDefault
+        type="submit"
+        :loading="fetching"
+      >
+        <span>
+          {{ $t('userAccount.form.save') }}
+        </span>
+        <IconCheckSquareFill v-if="isSaved && !fetching" class="inline-block ms-2 h-[1em] w-[1em]" />
+        <IconExclamationSquare v-else-if="!fetching" class="inline-block ms-2 h-[1em] w-[1em]" />
+        <span v-else-if="fetching" class="inline-block ms-2 h-[1em] w-[1em]" />
+      </ButtonDefault>
+      <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
+    </ButtonContainer>
+  </form>
+</template>
+
+<script setup lang="ts">
+import isEqual from 'lodash.isequal'
+import { reactive, computed, watchEffect, onBeforeMount, onBeforeUnmount } from 'vue'
+
+import { Profile } from '@shared/data/trpc/Profile'
+
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import FormContainer from '@/components/forms/FormContainer.vue'
+import TextField from '@/components/forms/TextField.vue'
+import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
+import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
+import useProfile from '@/stores/useProfile'
+
+const {
+  userAccountName,
+  userDisplayName,
+  userEmail,
+  fetching,
+  fetchingUserErrorMessages,
+  subscribe,
+  unsubscribe,
+  update,
+} = useProfile()
+
+const profileInternal = reactive(Profile.partial().parse({}))
+
+const isSaved = computed(() => isEqual({
+  accountName: userAccountName.value,
+  displayName: userDisplayName.value,
+  email: userEmail.value,
+}, profileInternal))
+
+onBeforeMount(async () => {
+  try {
+    await subscribe()
+    profileInternal.accountName = userAccountName.value
+    profileInternal.displayName = userDisplayName.value
+    profileInternal.email = userEmail.value
+  } catch (error) {
+    // do nothing
+  }
+})
+onBeforeUnmount(unsubscribe)
+watchEffect(() => {
+  if (userAccountName.value != null && profileInternal.accountName == null) {
+    profileInternal.accountName = userAccountName.value
+  }
+})
+watchEffect(() => {
+  if (userDisplayName.value != null && profileInternal.displayName == null) {
+    profileInternal.displayName = userDisplayName.value
+  }
+})
+watchEffect(() => {
+  if (userEmail.value != null && profileInternal.email == null) {
+    profileInternal.email = userEmail.value
+  }
+})
+</script>

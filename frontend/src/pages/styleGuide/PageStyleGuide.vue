@@ -13,6 +13,11 @@
           </LinkDefault>
         </li>
         <li>
+          <LinkDefault :to="{ name: 'style-guide/forms', params: { lang: $route.params.lang } }">
+            Forms
+          </LinkDefault>
+        </li>
+        <li>
           <LinkDefault :to="{ name: 'style-guide/icons', params: { lang: $route.params.lang } }">
             Icons
           </LinkDefault>

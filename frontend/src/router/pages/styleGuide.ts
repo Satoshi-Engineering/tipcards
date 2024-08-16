@@ -24,20 +24,37 @@ export const styleGuide = {
   },
 }
 
-export interface RouteStyleGuideTypographyAndButtons extends RouteRecordInfo<
-  'style-guide/typography-and-buttons',
-  `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
+export interface RouteStyleGuideComponents extends RouteRecordInfo<
+  'style-guide/components',
+  `${localizedRoutePrefix}/style-guide/components`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
 > {}
 
-export const styleGuideTypographyAndButtons = {
-  name: 'style-guide/typography-and-buttons',
-  path: `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
-  component: () => import('@/pages/styleGuide/PageTypographyAndButtons.vue'),
+export const styleGuideComponents = {
+  name: 'style-guide/components',
+  path: `${localizedRoutePrefix}/style-guide/components`,
+  component: () => import('@/pages/styleGuide/PageComponents.vue'),
   meta: {
-    title: () => 'Tyography And Buttons',
+    title: () => 'Components',
+  },
+}
+
+export interface RouteStyleGuideForms extends RouteRecordInfo<
+  'style-guide/forms',
+  `${localizedRoutePrefix}/style-guide/forms`,
+  LocalizedRouteParamsRaw,
+  LocalizedRouteParams,
+  AppRouteMeta
+> {}
+
+export const styleGuideForms = {
+  name: 'style-guide/forms',
+  path: `${localizedRoutePrefix}/style-guide/forms`,
+  component: () => import('@/pages/styleGuide/PageForms.vue'),
+  meta: {
+    title: () => 'Forms',
   },
 }
 
@@ -58,19 +75,19 @@ export const styleGuideIcons = {
   },
 }
 
-export interface RouteStyleGuideComponents extends RouteRecordInfo<
-  'style-guide/components',
-  `${localizedRoutePrefix}/style-guide/components`,
+export interface RouteStyleGuideTypographyAndButtons extends RouteRecordInfo<
+  'style-guide/typography-and-buttons',
+  `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
 > {}
 
-export const styleGuideComponents = {
-  name: 'style-guide/components',
-  path: `${localizedRoutePrefix}/style-guide/components`,
-  component: () => import('@/pages/styleGuide/PageComponents.vue'),
+export const styleGuideTypographyAndButtons = {
+  name: 'style-guide/typography-and-buttons',
+  path: `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
+  component: () => import('@/pages/styleGuide/PageTypographyAndButtons.vue'),
   meta: {
-    title: () => 'Components',
+    title: () => 'Tyography And Buttons',
   },
 }

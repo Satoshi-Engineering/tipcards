@@ -19,7 +19,7 @@ export interface RouteUserAccount extends RouteRecordInfo<
 export const userAccount = {
   name: 'user-account',
   path: `${localizedRoutePrefix}/user-account`,
-  component: () => import('@/pages/PageUserAccount.vue'),
+  component: () => import('@/pages/userAccount/PageUserAccount.vue'),
   meta: {
     title: () => i18n.global.t('userAccount.title'),
     backlink: true, // Is only used by BackLinkDeprecated

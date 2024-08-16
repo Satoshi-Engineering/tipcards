@@ -365,6 +365,7 @@
   },
   "userAccount": {
     "title": "Dein Account",
+    "profileFormHeadline": "Deine Daten",
     "form": {
       "accountName": "Accountname",
       "accountNameHint": "Interne Account Bezeichnung, falls du mehrere Accounts/Lightning Nodes benutzt.",

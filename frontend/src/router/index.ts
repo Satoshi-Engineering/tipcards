@@ -13,9 +13,10 @@ import { sets, type RouteSets } from '@/router/pages/sets'
 import { statistics, type RouteStatistics } from '@/router/pages/statistics'
 import {
   styleGuide, type RouteStyleGuide,
-  styleGuideTypographyAndButtons, type RouteStyleGuideTypographyAndButtons,
-  styleGuideIcons, type RouteStyleGuideIcons,
   styleGuideComponents, type RouteStyleGuideComponents,
+  styleGuideForms, type RouteStyleGuideForms,
+  styleGuideIcons, type RouteStyleGuideIcons,
+  styleGuideTypographyAndButtons, type RouteStyleGuideTypographyAndButtons,
 } from '@/router/pages/styleGuide'
 import { userAccount, type RouteUserAccount } from '@/router/pages/userAccount'
 
@@ -32,9 +33,10 @@ export interface RouteNamedMap {
   sets: RouteSets,
   statistics: RouteStatistics,
   'style-guide': RouteStyleGuide,
-  'style-guide/typography-and-buttons': RouteStyleGuideTypographyAndButtons,
-  'style-guide/icons': RouteStyleGuideIcons,
   'style-guide/components': RouteStyleGuideComponents,
+  'style-guide/forms': RouteStyleGuideForms,
+  'style-guide/icons': RouteStyleGuideIcons,
+  'style-guide/typography-and-buttons': RouteStyleGuideTypographyAndButtons,
   'user-account': RouteUserAccount,
 }
 
@@ -63,9 +65,10 @@ const router = createRouter({
     sets,
     statistics,
     styleGuide,
-    styleGuideTypographyAndButtons,
-    styleGuideIcons,
     styleGuideComponents,
+    styleGuideForms,
+    styleGuideIcons,
+    styleGuideTypographyAndButtons,
     userAccount,
   ],
 })
