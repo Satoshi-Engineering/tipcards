@@ -1,23 +1,26 @@
 <template>
-  <form @submit.prevent="update(profileInternal)">
+  <form data-test="profile-form" @submit.prevent="update(profileInternal)">
     <FormContainer
       class="mb-6"
       :headline="$t('userAccount.profileFormHeadline')"
     >
       <TextField
         v-model="profileInternal.accountName"
+        data-test="profile-form-account-name"
         :label="$t('userAccount.form.accountName')"
         :description="`(${$t('userAccount.form.accountNameHint')})`"
         :disabled="fetching"
       />
       <TextField
         v-model="profileInternal.displayName"
+        data-test="profile-form-display-name"
         :label="$t('userAccount.form.displayName')"
         :description="`(${$t('userAccount.form.displayNameHint')})`"
         :disabled="fetching"
       />
       <TextField
         v-model="profileInternal.email"
+        data-test="profile-form-email"
         :label="$t('userAccount.form.emailAddress')"
         :description="`(${$t('userAccount.form.emailAddressHint')})`"
         :disabled="fetching"
