@@ -13,7 +13,6 @@ const userAccountName = ref<string>()
 const userDisplayName = ref<string>()
 const userEmail = ref<string>()
 
-const fetching = ref(false)
 const fetchingUserErrorMessages = ref<string[]>([])
 
 const subscribe = async (): Promise<void> => {
@@ -21,7 +20,7 @@ const subscribe = async (): Promise<void> => {
   const promise = new Promise<void>((resolve, reject) => {
     callbacks.push({ resolve, reject })
   })
-  startLoadingProfile()
+  loadProfile()
   return promise
 }
 
@@ -30,8 +29,7 @@ const unsubscribe = (): void => {
 }
 
 const update = async (profileDto: Partial<Profile>): Promise<void> => {
-  await cancelCurrentRequest()
-  const signal = prepareNewRequest()
+  const signal = await prepareNewRequest('profile')
   try {
     const profileDtoResponse = await profile.update.mutate(profileDto, { signal })
     updateLocalData(profileDtoResponse)
@@ -50,7 +48,7 @@ export default () => {
     userAccountName: computed(() => userAccountName.value),
     userDisplayName: computed(() => userDisplayName.value),
     userEmail: computed(() => userEmail.value),
-    fetching: computed(() => fetching.value),
+    fetching: computed(() => fetching.value != null),
     fetchingUserErrorMessages: computed(() => fetchingUserErrorMessages.value),
     subscribe,
     unsubscribe,
@@ -65,20 +63,21 @@ const { getValidAccessToken } = authStore
 const { isLoggedIn } = storeToRefs(authStore)
 const { profile } = useTRpc(getValidAccessToken)
 
+const fetching = ref<'profile' | 'displayName' | null>(null)
 const subscribed = ref(false)
 const callbacks: { resolve: CallableFunction, reject: CallableFunction }[] = []
 let abortController: AbortController | null = null
 
-const startLoadingProfile = async () => {
+const loadProfile = async () => {
   if (!isLoggedIn.value) {
     callbacks.forEach(({ resolve }) => resolve())
     return
   }
-  if (fetching.value) {
+  if (fetching.value === 'profile') {
     return
   }
   try {
-    await loadProfile()
+    await queryProfileFromBackend()
     callbacks.forEach(({ resolve }) => resolve())
   } catch (error) {
     callbacks.forEach(({ reject }) => reject())
@@ -87,8 +86,8 @@ const startLoadingProfile = async () => {
   }
 }
 
-const loadProfile = async () => {
-  const signal = prepareNewRequest()
+const queryProfileFromBackend = async () => {
+  const signal = await prepareNewRequest('profile')
   try {
     const profileDto = await profile.get.query(undefined, { signal })
     updateLocalData(profileDto)
@@ -107,7 +106,7 @@ const loadDisplayName = async () => {
   if (fetching.value) {
     return
   }
-  const signal = prepareNewRequest()
+  const signal = await prepareNewRequest('displayName')
   try {
     userDisplayName.value = await profile.getDisplayName.query(undefined, { signal })
   } catch (error) {
@@ -128,8 +127,9 @@ const cancelCurrentRequest = async () => {
   await nextTick()
 }
 
-const prepareNewRequest = () => {
-  fetching.value = true
+const prepareNewRequest = async (requestTarget: 'profile' | 'displayName') => {
+  await cancelCurrentRequest()
+  fetching.value = requestTarget
   fetchingUserErrorMessages.value = []
   abortController = new AbortController()
   return abortController.signal
@@ -142,7 +142,7 @@ const updateLocalData = (profileDto: Partial<Profile>) => {
 }
 
 const cleanUpAfterRequest = () => {
-  fetching.value = false
+  fetching.value = null
   abortController = null
 }
 
@@ -157,7 +157,7 @@ watch(isLoggedIn, async () => {
   }
 
   if (subscribed.value) {
-    startLoadingProfile()
+    loadProfile()
   } else {
     loadDisplayName()
   }
