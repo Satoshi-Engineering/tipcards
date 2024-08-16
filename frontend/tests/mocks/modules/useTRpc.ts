@@ -24,4 +24,6 @@ export const tRpcMock = {
 
 vi.doMock('@/modules/useTRpc', () => ({
   default: () => tRpcMock,
+  isTRrpcClientError: vi.fn(() => true),
+  isTRpcClientAbortError: vi.fn(() => true),
 }))

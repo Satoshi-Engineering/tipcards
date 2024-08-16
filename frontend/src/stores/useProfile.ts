@@ -1,11 +1,10 @@
-import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, ref, watch } from 'vue'
 
 import type { Profile } from '@shared/data/trpc/Profile'
 
 import i18n from '@/modules/initI18n'
-import useTRpc from '@/modules/useTRpc'
+import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
 
 ///// public
@@ -34,7 +33,7 @@ const update = async (profileDto: Partial<Profile>): Promise<void> => {
     const profileDtoResponse = await profile.update.mutate(profileDto, { signal })
     updateLocalData(profileDtoResponse)
   } catch (error) {
-    if (!axios.isCancel(error)) {
+    if (!isTRpcClientAbortError(error)) {
       console.error(error)
       fetchingUserErrorMessages.value.push(t('stores.profile.errors.unableToSaveToBackend'))
     }
@@ -92,7 +91,7 @@ const queryProfileFromBackend = async () => {
     const profileDto = await profile.get.query(undefined, { signal })
     updateLocalData(profileDto)
   } catch (error) {
-    if (!axios.isCancel(error)) {
+    if (!isTRpcClientAbortError(error)) {
       console.error(error)
       fetchingUserErrorMessages.value.push(t('stores.profile.errors.unableToLoadFromBackend'))
       throw error
@@ -110,7 +109,7 @@ const loadDisplayName = async () => {
   try {
     userDisplayName.value = await profile.getDisplayName.query(undefined, { signal })
   } catch (error) {
-    if (!axios.isCancel(error)) {
+    if (!isTRpcClientAbortError(error)) {
       console.error(error)
     }
     userDisplayName.value = undefined
