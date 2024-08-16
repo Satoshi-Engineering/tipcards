@@ -27,6 +27,15 @@ export default class Profile {
     return ProfileDto.parse(this.profile)
   }
 
+  /** @throws */
+  public async update(data: Partial<Omit<ProfileData, 'user'>>) {
+    this.profile = {
+      ...this.profile,
+      ...data,
+    }
+    await asTransaction((queries) => queries.insertOrUpdateProfile(this.profile))
+  }
+
   private profile: ProfileData
   private constructor(profile: ProfileData) {
     this.profile = profile

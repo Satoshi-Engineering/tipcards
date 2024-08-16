@@ -6,6 +6,7 @@ import '../mocks/process.env.js'
 
 import { describe, it, expect, beforeAll } from 'vitest'
 
+import { asTransaction } from '@backend/database/client.js'
 import Profile from '@backend/modules/Profile.js'
 
 import { createUser, createProfileForUser } from '../../drizzleData.js'
@@ -22,7 +23,7 @@ beforeAll(() => {
 describe('Profile', () => {
   it('should load an empty profile if none exists', async () => {
     const profile = await Profile.fromUserIdOrDefault(createUser().id)
-    const data = await profile.toTRpcResponse()
+    const data = profile.toTRpcResponse()
     expect(data).toStrictEqual({
       accountName: '',
       displayName: '',
@@ -32,11 +33,34 @@ describe('Profile', () => {
 
   it('should load an existing profile', async () => {
     const profile = await Profile.fromUserIdOrDefault(userDatabase.id)
-    const data = await profile.toTRpcResponse()
+    const data = profile.toTRpcResponse()
     expect(data).toStrictEqual({
       accountName: profileDatabase.accountName,
       displayName: profileDatabase.displayName,
       email: profileDatabase.email,
+    })
+  })
+
+  it('should update existing profile', async () => {
+    const profile = await Profile.fromUserIdOrDefault(userDatabase.id)
+    await profile.update({
+      accountName: 'new account name',
+      displayName: 'new display name',
+      email: 'new email',
+    })
+
+    const data = profile.toTRpcResponse()
+    expect(data).toStrictEqual({
+      accountName: 'new account name',
+      displayName: 'new display name',
+      email: 'new email',
+    })
+    const profileDatabaseNew = await asTransaction((queries) => queries.getProfileByUserId(userDatabase.id))
+    expect(profileDatabaseNew).toStrictEqual({
+      user: userDatabase.id,
+      accountName: 'new account name',
+      displayName: 'new display name',
+      email: 'new email',
     })
   })
 })
