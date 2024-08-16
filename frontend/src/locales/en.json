@@ -409,6 +409,12 @@
         "setBelongsToAnotherUser": "Unable to save an unnamed set, as it was already saved by another user.",
         "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user."
       }
+    },
+    "profile": {
+      "errors": {
+        "unableToLoadFromBackend": "Unable to load account data from the server.",
+        "unableToSaveToBackend": "Unable to save account data to the server."
+      }
     }
   },
   "components": {

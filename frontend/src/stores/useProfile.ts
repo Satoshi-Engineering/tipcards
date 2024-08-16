@@ -2,6 +2,8 @@ import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, ref, watch } from 'vue'
 
+import type { Profile } from '@shared/data/trpc/Profile'
+
 import i18n from '@/modules/initI18n'
 import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
@@ -27,6 +29,31 @@ const unsubscribe = (): void => {
   subscribed.value = false
 }
 
+const update = async (profileDto: Partial<Profile>): Promise<void> => {
+  if (abortController != null) {
+    abortController.abort()
+    await nextTick()
+  }
+
+  fetching.value = true
+  fetchingUserErrorMessages.value = []
+  abortController = new AbortController()
+  try {
+    const profileResponse = await profile.update.mutate(profileDto, { signal: abortController.signal })
+    userAccountName.value = profileResponse.accountName
+    userDisplayName.value = profileResponse.displayName
+    userEmail.value = profileResponse.email
+  } catch (error) {
+    if (!axios.isCancel(error)) {
+      console.error(error)
+      fetchingUserErrorMessages.value.push(t('stores.profile.errors.unableToSaveToBackend'))
+    }
+  } finally {
+    abortController = null
+    fetching.value = false
+  }
+}
+
 export default () => {
   return {
     userAccountName: computed(() => userAccountName.value),
@@ -36,6 +63,7 @@ export default () => {
     fetchingUserErrorMessages: computed(() => fetchingUserErrorMessages.value),
     subscribe,
     unsubscribe,
+    update,
   }
 }
 

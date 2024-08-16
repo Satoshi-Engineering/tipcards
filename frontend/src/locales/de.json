@@ -424,6 +424,12 @@
         "setBelongsToAnotherUser": "Ein unbenanntes Set kann nicht am Server gespeichert werden, da es bereits von einem anderem Nutzer gespeichert wurde.",
         "namedSetBelongsToAnotherUser": "\"{name}\" kann nicht am Server gespeichert werden, da es bereits von einem anderem Nutzer gespeichert wurde."
       }
+    },
+    "profile": {
+      "errors": {
+        "unableToLoadFromBackend": "Account Daten konnten nicht geladen werden.",
+        "unableToSaveToBackend": "Account Daten konnten nicht gespeichert werden."
+      }
     }
   },
   "components": {
