@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import { nextTick } from 'vue'
 
 import { tRpcMock } from '../mocks/modules/useTRpc'
 import '../mocks/i18n'
@@ -33,6 +34,18 @@ describe('useProfile to update the profile', () => {
     expect(tRpcMock.profile.update.mutate).toHaveBeenCalledOnce()
   })
 
-  it.skip('should not update if the request to the backend fails', async () => {
+  it('should not update if the request to the backend fails', async () => {
+    console.error = vi.fn()
+    tRpcMock.profile.update.mutate.mockRejectedValueOnce(new Error('Failed'))
+    await update({
+      accountName: 'jane_doe',
+      displayName: 'Jane Doe',
+      email: 'hello@jane.doe',
+    })
+    await nextTick()
+    expect(userAccountName.value).toBe('john_doe')
+    expect(userDisplayName.value).toBe('John Doe')
+    expect(userEmail.value).toBe('hello@john.doe')
+    expect(tRpcMock.profile.update.mutate).toHaveBeenCalledTimes(2)
   })
 })

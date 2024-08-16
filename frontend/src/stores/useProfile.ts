@@ -30,27 +30,18 @@ const unsubscribe = (): void => {
 }
 
 const update = async (profileDto: Partial<Profile>): Promise<void> => {
-  if (abortController != null) {
-    abortController.abort()
-    await nextTick()
-  }
-
-  fetching.value = true
-  fetchingUserErrorMessages.value = []
-  abortController = new AbortController()
+  await cancelCurrentRequest()
+  const signal = prepareNewRequest()
   try {
-    const profileResponse = await profile.update.mutate(profileDto, { signal: abortController.signal })
-    userAccountName.value = profileResponse.accountName
-    userDisplayName.value = profileResponse.displayName
-    userEmail.value = profileResponse.email
+    const profileDtoResponse = await profile.update.mutate(profileDto, { signal })
+    updateLocalData(profileDtoResponse)
   } catch (error) {
     if (!axios.isCancel(error)) {
       console.error(error)
       fetchingUserErrorMessages.value.push(t('stores.profile.errors.unableToSaveToBackend'))
     }
   } finally {
-    abortController = null
-    fetching.value = false
+    cleanUpAfterRequest()
   }
 }
 
@@ -97,17 +88,10 @@ const startLoadingProfile = async () => {
 }
 
 const loadProfile = async () => {
-  if (fetching.value) {
-    return
-  }
-  fetching.value = true
-  fetchingUserErrorMessages.value = []
-  abortController = new AbortController()
+  const signal = prepareNewRequest()
   try {
-    const profileDto = await profile.get.query(undefined, { signal: abortController.signal })
-    userAccountName.value = profileDto.accountName
-    userDisplayName.value = profileDto.displayName
-    userEmail.value = profileDto.email
+    const profileDto = await profile.get.query(undefined, { signal })
+    updateLocalData(profileDto)
   } catch (error) {
     if (!axios.isCancel(error)) {
       console.error(error)
@@ -115,8 +99,7 @@ const loadProfile = async () => {
       throw error
     }
   } finally {
-    abortController = null
-    fetching.value = false
+    cleanUpAfterRequest()
   }
 }
 
@@ -124,27 +107,47 @@ const loadDisplayName = async () => {
   if (fetching.value) {
     return
   }
-  fetching.value = true
-  fetchingUserErrorMessages.value = []
-  abortController = new AbortController()
+  const signal = prepareNewRequest()
   try {
-    userDisplayName.value = await profile.getDisplayName.query(undefined, { signal: abortController.signal })
+    userDisplayName.value = await profile.getDisplayName.query(undefined, { signal })
   } catch (error) {
     if (!axios.isCancel(error)) {
       console.error(error)
     }
     userDisplayName.value = undefined
   } finally {
-    abortController = null
-    fetching.value = false
+    cleanUpAfterRequest()
   }
 }
 
-watch(isLoggedIn, async () => {
-  if (abortController != null) {
-    abortController.abort()
-    await nextTick()
+const cancelCurrentRequest = async () => {
+  if (abortController == null) {
+    return
   }
+  abortController.abort()
+  await nextTick()
+}
+
+const prepareNewRequest = () => {
+  fetching.value = true
+  fetchingUserErrorMessages.value = []
+  abortController = new AbortController()
+  return abortController.signal
+}
+
+const updateLocalData = (profileDto: Partial<Profile>) => {
+  userAccountName.value = profileDto.accountName ?? userAccountName.value
+  userDisplayName.value = profileDto.displayName ?? userDisplayName.value
+  userEmail.value = profileDto.email ?? userEmail.value
+}
+
+const cleanUpAfterRequest = () => {
+  fetching.value = false
+  abortController = null
+}
+
+watch(isLoggedIn, async () => {
+  await cancelCurrentRequest()
 
   if (!isLoggedIn.value) {
     userAccountName.value = undefined
