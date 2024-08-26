@@ -13,14 +13,18 @@ import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/l
 import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
-import CardCollection from './CardCollection.js'
+import CardCollectionDeprecated from './CardCollectionDeprecated.js'
 
 type BulkWithdrawId = z.infer<typeof BulkWithdrawRedis.shape.id>
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 
-export default class BulkWithdraw {
-  static fromCardCollection(cards: CardCollection) {
-    return new BulkWithdraw(cards)
+/**
+ * deprecated as is still uses deprecated (redis) queries
+ * @deprecated
+ */
+export default class BulkWithdrawDeprecated {
+  static fromCardCollection(cards: CardCollectionDeprecated) {
+    return new BulkWithdrawDeprecated(cards)
   }
 
   /**
@@ -29,7 +33,7 @@ export default class BulkWithdraw {
    */
   static async fromId(id: BulkWithdrawId) {
     const bulkWithdrawRedis = await getBulkWithdrawById(id)
-    return await BulkWithdraw.fromBulkWithdrawRedis(bulkWithdrawRedis)
+    return await BulkWithdrawDeprecated.fromBulkWithdrawRedis(bulkWithdrawRedis)
   }
 
   /**
@@ -38,12 +42,12 @@ export default class BulkWithdraw {
    */
   static async fromCardHash(cardHash: CardHash) {
     const bulkWithdrawRedis = await getBulkWithdrawByCardHash(cardHash)
-    return await BulkWithdraw.fromBulkWithdrawRedis(bulkWithdrawRedis)
+    return await BulkWithdrawDeprecated.fromBulkWithdrawRedis(bulkWithdrawRedis)
   }
 
   static async fromBulkWithdrawRedis(bulkWithdrawRedis: BulkWithdrawRedis) {
-    const cards = await CardCollection.fromCardHashes(bulkWithdrawRedis.cards)
-    const bulkWithdraw = new BulkWithdraw(cards)
+    const cards = await CardCollectionDeprecated.fromCardHashes(bulkWithdrawRedis.cards)
+    const bulkWithdraw = new BulkWithdrawDeprecated(cards)
     bulkWithdraw.bulkWithdrawRedis = bulkWithdrawRedis
     return bulkWithdraw
   }
@@ -76,9 +80,9 @@ export default class BulkWithdraw {
     return await bulkWithdrawFromBulkWithdrawRedis(this.bulkWithdrawRedis)
   }
 
-  public readonly cards: CardCollection
+  public readonly cards: CardCollectionDeprecated
   private _bulkWithdrawRedis: BulkWithdrawRedis | undefined = undefined
-  private constructor(cards: CardCollection) {
+  private constructor(cards: CardCollectionDeprecated) {
     this.cards = cards
   }
 

@@ -17,7 +17,11 @@ import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 type SetId = z.infer<typeof SetRedis.shape.id>
 
-export default class CardCollection {
+/**
+ * deprecated as is still uses deprecated (redis) queries
+ * @deprecated
+ */
+export default class CardCollectionDeprecated {
   /**
    * @throws NotFoundError
    * @throws ZodError
@@ -28,9 +32,9 @@ export default class CardCollection {
     if (set == null) {
       throw new NotFoundError(`Set ${setId} not found.`)
     }
-    const cardHashes = CardCollection.getCardHashesForSet(set)
-    const cards = await CardCollection.loadExistingCards(cardHashes)
-    return new CardCollection(cards)
+    const cardHashes = CardCollectionDeprecated.getCardHashesForSet(set)
+    const cards = await CardCollectionDeprecated.loadExistingCards(cardHashes)
+    return new CardCollectionDeprecated(cards)
   }
 
   /**
@@ -39,8 +43,8 @@ export default class CardCollection {
    * @throws unkown
    */
   static async fromCardHashes(cardHashes: CardHash[]) {
-    const cards = await CardCollection.loadCards(cardHashes)
-    const collection = new CardCollection(cards)
+    const cards = await CardCollectionDeprecated.loadCards(cardHashes)
+    const collection = new CardCollectionDeprecated(cards)
     return collection
   }
 

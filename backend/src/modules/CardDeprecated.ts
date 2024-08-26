@@ -7,7 +7,11 @@ import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRed
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 
-export default class Card {
+/**
+ * deprecated as is still uses deprecated (redis) queries
+ * @deprecated
+ */
+export default class CardDeprecated {
   /**
    * @throws ZodError
    * @throws unknown
@@ -17,7 +21,7 @@ export default class Card {
     if (cardRedis == null) {
       throw new NotFoundError(`Card with hash ${cardHash} not found`)
     }
-    return new Card(cardRedis)
+    return new CardDeprecated(cardRedis)
   }
 
   /**
@@ -27,9 +31,9 @@ export default class Card {
   public static async fromCardHashOrDefault(cardHash: CardHash) {
     const cardRedis = await getCardByHash(cardHash)
     if (cardRedis == null) {
-      return new Card(Card.initCardRedisFromHash(cardHash))
+      return new CardDeprecated(CardDeprecated.initCardRedisFromHash(cardHash))
     }
-    return new Card(cardRedis)
+    return new CardDeprecated(cardRedis)
   }
 
   /**

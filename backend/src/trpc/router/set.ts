@@ -1,7 +1,7 @@
 import { Card } from '@shared/data/trpc/Card.js'
 import { Set, SetId } from '@shared/data/trpc/Set.js'
 
-import CardCollection from '@backend/modules/CardCollection.js'
+import CardCollectionDeprecated from '@backend/modules/CardCollectionDeprecated.js'
 import { getSetsByUserId } from '@backend/database/deprecated/queries.js'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis.js'
@@ -23,7 +23,7 @@ export const setRouter = router({
     .output(Card.array())
     .unstable_concat(handleCardLockForSet)
     .query(async ({ input }) => {
-      const cards = await CardCollection.fromSetId(input.id)
+      const cards = await CardCollectionDeprecated.fromSetId(input.id)
       return await cards.toTRpcResponse()
     }),
 })

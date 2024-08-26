@@ -1,8 +1,8 @@
 import { CardHash } from '@shared/data/trpc/Card.js'
 import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
-import CardCollection from '@backend/modules/CardCollection.js'
-import BulkWithdrawModule from '@backend/modules/BulkWithdraw.js'
+import CardCollectionDeprecated from '@backend/modules/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/modules/BulkWithdrawDeprecated.js'
 
 import { router } from '../trpc.js'
 import publicProcedure from '../procedures/public.js'
@@ -17,7 +17,7 @@ export const bulkWithdrawRouter = router({
     .input(BulkWithdraw.shape.id)
     .output(BulkWithdraw)
     .query(async ({ input }) => {
-      const bulkWithdraw = await BulkWithdrawModule.fromId(input)
+      const bulkWithdraw = await BulkWithdrawDeprecated.fromId(input)
       return bulkWithdraw.toTRpcResponse()
     }),
 
@@ -26,8 +26,8 @@ export const bulkWithdrawRouter = router({
     .output(BulkWithdraw)
     .unstable_concat(handleCardLockForMultipleCards)
     .mutation(async ({ input }) => {
-      const cards = await CardCollection.fromCardHashes(input)
-      const bulkWithdraw = BulkWithdrawModule.fromCardCollection(cards)
+      const cards = await CardCollectionDeprecated.fromCardHashes(input)
+      const bulkWithdraw = BulkWithdrawDeprecated.fromCardCollection(cards)
       await bulkWithdraw.create()
       return bulkWithdraw.toTRpcResponse()
     }),
@@ -36,7 +36,7 @@ export const bulkWithdrawRouter = router({
     .input(BulkWithdrawId)
     .unstable_concat(handleCardLockForBulkWithdraw)
     .mutation(async ({ input }) => {
-      const bulkWithdraw = await BulkWithdrawModule.fromId(input.id)
+      const bulkWithdraw = await BulkWithdrawDeprecated.fromId(input.id)
       await bulkWithdraw.delete()
     }),
 
@@ -44,7 +44,7 @@ export const bulkWithdrawRouter = router({
     .input(CardHash)
     .unstable_concat(handleCardLockForBulkWithdrawByCardHash)
     .mutation(async ({ input }) => {
-      const bulkWithdraw = await BulkWithdrawModule.fromCardHash(input.hash)
+      const bulkWithdraw = await BulkWithdrawDeprecated.fromCardHash(input.hash)
       await bulkWithdraw.delete()
     }),
 })
