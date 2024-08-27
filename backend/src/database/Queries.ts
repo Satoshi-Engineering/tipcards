@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql } from 'drizzle-orm'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
@@ -102,6 +102,50 @@ export default class Queries {
       .innerJoin(Invoice, eq(CardVersionHasInvoice.invoice, Invoice.paymentHash))
       .where(eq(CardVersionHasInvoice.cardVersion, cardVersion.id))
     return result.map(({ Invoice }) => Invoice)
+  }
+
+  /** @throws */
+  async getAllInvoicesFundingCardVersionWithSetFundingInfo(cardVersion: CardVersion): Promise<{
+    invoice: Invoice,
+    cardCount: number,
+  }[]> {
+    const cardsFundedBySingleInvoice = aliasedTable(CardVersionHasInvoice, 'cardsFundedBySingleInvoice')
+    const result = await this.transaction.select({
+      amount: Invoice.amount,
+      paymentHash: Invoice.paymentHash,
+      paymentRequest: Invoice.paymentRequest,
+      created: Invoice.created,
+      paid: Invoice.paid,
+      expiresAt: Invoice.expiresAt,
+      extra: Invoice.extra,
+      cardCount: sql<number>`cast(count(${cardsFundedBySingleInvoice.cardVersion}) as int)`,
+    })
+      .from(CardVersionHasInvoice)
+      .innerJoin(Invoice, eq(CardVersionHasInvoice.invoice, Invoice.paymentHash))
+      .leftJoin(cardsFundedBySingleInvoice, eq(Invoice.paymentHash, cardsFundedBySingleInvoice.invoice))
+      .where(eq(CardVersionHasInvoice.cardVersion, cardVersion.id))
+      .groupBy(Invoice.paymentHash)
+    return result.map(({
+      amount,
+      paymentHash,
+      paymentRequest,
+      created,
+      paid,
+      expiresAt,
+      extra,
+      cardCount,
+    }) => ({
+      invoice: {
+        amount,
+        paymentHash,
+        paymentRequest,
+        created,
+        paid,
+        expiresAt,
+        extra,
+      },
+      cardCount,
+    }))
   }
 
   /** @throws */

@@ -1,5 +1,5 @@
 .env.*
-tmpDevelop.ts
+tmpDevelop.*
 lnurl.auth.pem
 lnurl.auth.pem.pub
 *.counter
