@@ -3,7 +3,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import Database from '@backend/database/Database.js'
-import { cardRouter } from '@backend/trpc/router/card.js'
+import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'

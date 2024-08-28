@@ -1,9 +1,9 @@
-import { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
+import { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto.js'
 
-import Profile from '@backend/domain/Profile.js'
+import Profile from '@backend/domain/tipcards/Profile.js'
 
-import { router } from '../trpc.js'
-import loggedInProcedure from '../procedures/loggedIn.js'
+import { router } from '../../trpc.js'
+import loggedInProcedure from '../../procedures/loggedIn.js'
 
 export const profileRouter = router({
   get: loggedInProcedure

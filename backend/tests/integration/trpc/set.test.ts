@@ -5,7 +5,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import Database from '@backend/database/Database.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
-import { setRouter } from '@backend/trpc/router/set.js'
+import { setRouter } from '@backend/trpc/router/tipcards/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'

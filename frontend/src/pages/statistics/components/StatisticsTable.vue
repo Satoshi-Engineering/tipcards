@@ -79,7 +79,7 @@ import { computed, type PropType } from 'vue'
 
 import formatNumber from '@/modules/formatNumber'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import type { StatisticsPeriodDto } from '@shared/data/trpc/StatisticsDto'
+import type { StatisticsPeriodDto } from '@shared/data/trpc/tipcards/StatisticsDto'
 
 const props = defineProps({
   barChartMode: {

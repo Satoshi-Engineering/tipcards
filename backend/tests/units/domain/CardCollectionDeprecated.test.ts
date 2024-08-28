@@ -18,7 +18,7 @@ import {
 } from '../../drizzleData.js'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
-import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
 describe('CardCollection', () => {
   it('should load no cards when loading an empty set', async () => {
     const set = createSet()

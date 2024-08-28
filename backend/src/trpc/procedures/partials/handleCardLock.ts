@@ -1,13 +1,13 @@
-import { BulkWithdrawId } from '@shared/data/trpc/BulkWithdraw.js'
-import { CardHash } from '@shared/data/trpc/Card.js'
-import { SetId } from '@shared/data/trpc/Set.js'
+import { BulkWithdrawId } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
+import { CardHash } from '@shared/data/trpc/tipcards/Card.js'
+import { SetId } from '@shared/data/trpc/tipcards/Set.js'
 
 import {
   lockCard, safeReleaseCard,
   lockCards, safeReleaseCards,
 } from '@backend/services/databaseCardLock.js'
-import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
-import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/domain/tipcards/BulkWithdrawDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
 
 import { publicProcedure } from '../../trpc.js'
 

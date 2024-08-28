@@ -1,9 +1,9 @@
 import { router, createContext } from './trpc.js'
-import { bulkWithdrawRouter } from './router/bulkWithdraw.js'
-import { cardRouter } from './router/card.js'
-import { profileRouter } from './router/profile.js'
-import { setRouter } from './router/set.js'
-import { statisticsRouter } from './router/statistics.js'
+import { bulkWithdrawRouter } from './router/tipcards/bulkWithdraw.js'
+import { cardRouter } from './router/tipcards/card.js'
+import { profileRouter } from './router/tipcards/profile.js'
+import { setRouter } from './router/tipcards/set.js'
+import { statisticsRouter } from './router/tipcards/statistics.js'
 
 export const appRouter = router({
   bulkWithdraw: bulkWithdrawRouter,

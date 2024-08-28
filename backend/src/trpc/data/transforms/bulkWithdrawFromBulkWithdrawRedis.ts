@@ -1,4 +1,4 @@
-import type { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
+import type { BulkWithdraw } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
 
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'

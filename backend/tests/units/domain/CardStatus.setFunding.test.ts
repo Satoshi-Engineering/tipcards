@@ -10,8 +10,8 @@ import {
   createInvoice,
 } from '../../drizzleData.js'
 
-import CardStatus from '@backend/domain/CardStatus.js'
-import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
+import CardStatus from '@backend/domain/tipcards/CardStatus.js'
+import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
 
 const setCard1 = createCard()
 const setCardVersion1 = createCardVersion(setCard1)

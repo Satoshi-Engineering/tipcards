@@ -47,7 +47,7 @@
 import isEqual from 'lodash.isequal'
 import { reactive, computed, watchEffect, onBeforeMount, onBeforeUnmount } from 'vue'
 
-import { ProfileDto } from '@shared/data/trpc/ProfileDto'
+import { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto'
 
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'

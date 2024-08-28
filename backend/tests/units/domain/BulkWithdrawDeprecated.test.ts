@@ -19,8 +19,8 @@ import {
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'
-import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
-import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/domain/tipcards/BulkWithdrawDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
 
 describe('BulkWithdraw', () => {
   it('should throw an error if not created', async () => {

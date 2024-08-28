@@ -4,7 +4,7 @@ import { TRPCError } from '@trpc/server'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import Database from '@backend/database/Database.js'
-import { profileRouter } from '@backend/trpc/router/profile.js'
+import { profileRouter } from '@backend/trpc/router/tipcards/profile.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 

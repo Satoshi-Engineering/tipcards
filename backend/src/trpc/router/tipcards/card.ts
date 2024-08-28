@@ -1,13 +1,13 @@
-import { Card, CardHash } from '@shared/data/trpc/Card.js'
-import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
+import { Card, CardHash } from '@shared/data/trpc/tipcards/Card.js'
+import { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto.js'
 
-import CardDeprecated from '@backend/domain/CardDeprecated.js'
-import CardStatus from '@backend/domain/CardStatus.js'
+import CardDeprecated from '@backend/domain/tipcards/CardDeprecated.js'
+import CardStatus from '@backend/domain/tipcards/CardStatus.js'
 // todo : do not rename on import, instead change it to CardStatus and rename trpc/CardStatus to CardStatusDto
 
-import { router } from '../trpc.js'
-import publicProcedure from '../procedures/public.js'
-import { handleCardLockForSingleCard } from '../procedures/partials/handleCardLock.js'
+import { router } from '../../trpc.js'
+import publicProcedure from '../../procedures/public.js'
+import { handleCardLockForSingleCard } from '../../procedures/partials/handleCardLock.js'
 
 export const cardRouter = router({
   /**

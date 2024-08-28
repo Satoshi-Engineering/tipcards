@@ -7,7 +7,7 @@ import '../mocks/process.env.js'
 import { describe, it, expect, beforeAll } from 'vitest'
 
 import { asTransaction } from '@backend/database/client.js'
-import Profile from '@backend/domain/Profile.js'
+import Profile from '@backend/domain/tipcards/Profile.js'
 
 import { createUser, createProfileForUser } from '../../drizzleData.js'
 

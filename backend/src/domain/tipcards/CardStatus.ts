@@ -3,7 +3,7 @@ import assert from 'node:assert'
 import {
   CardStatusEnum,
   CardStatusDto,
-} from '@shared/data/trpc/CardStatusDto.js'
+} from '@shared/data/trpc/tipcards/CardStatusDto.js'
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
