@@ -10,7 +10,7 @@ import { handleCardLockForSingleCard } from '../procedures/partials/handleCardLo
 
 export const cardRouter = router({
   /**
-   * deprecated as is still uses deprecated (redis) queries
+   * deprecated as it still uses deprecated (redis) queries
    * @deprecated
    */
   getByHash: publicProcedure

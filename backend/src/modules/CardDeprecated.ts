@@ -8,7 +8,7 @@ import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRed
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 
 /**
- * deprecated as is still uses deprecated (redis) queries
+ * deprecated as it still uses deprecated (redis) queries
  * @deprecated
  */
 export default class CardDeprecated {

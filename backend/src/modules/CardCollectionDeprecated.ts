@@ -18,7 +18,7 @@ type CardHash = z.infer<typeof CardRedis.shape.cardHash>
 type SetId = z.infer<typeof SetRedis.shape.id>
 
 /**
- * deprecated as is still uses deprecated (redis) queries
+ * deprecated as it still uses deprecated (redis) queries
  * @deprecated
  */
 export default class CardCollectionDeprecated {
