@@ -1,8 +1,8 @@
 // import * as crypto from 'crypto'
 
-import { Profile } from '@shared/data/trpc/Profile.js'
+import type { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
 
-export const generateProfile = (): Profile => ({
+export const generateProfile = (): ProfileDto => ({
   accountName: crypto.randomUUID(),
   displayName: crypto.randomUUID(),
   email: `${crypto.randomUUID()}@example.com`,
