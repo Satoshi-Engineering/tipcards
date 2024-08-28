@@ -60,61 +60,12 @@ export default class CardStatus {
 
   public get status(): TrpcCardStatusEnum {
     if (this.lnurlW != null) {
-      if (this.lnurlW.withdrawn != null) {
-        if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
-          return TrpcCardStatusEnum.enum.recentlyWithdrawn
-        }
-        return TrpcCardStatusEnum.enum.withdrawn
-      }
-      if (this.withdrawPending) {
-        return TrpcCardStatusEnum.enum.withdrawPending
-      }
-
-      return TrpcCardStatusEnum.enum.funded
+      return this.lnurlwStatus()
     }
-
     if (this.lnurlP != null) {
-      if (this.lnurlP.finished != null) {
-        return TrpcCardStatusEnum.enum.funded
-      }
-      if (this.cardVersion.sharedFunding) {
-        if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
-          if (this.amount != null && this.amount > 0) {
-            return TrpcCardStatusEnum.enum.lnurlpSharedExpiredFunded
-          }
-          return TrpcCardStatusEnum.enum.lnurlpSharedExpiredEmpty
-        }
-        return TrpcCardStatusEnum.enum.lnurlpSharedFunding
-      }
-      if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
-        return TrpcCardStatusEnum.enum.lnurlpExpired
-      }
-      return TrpcCardStatusEnum.enum.lnurlpFunding
+      return this.lnurlpStatus()
     }
-
-    if (this.invoices.length === 0) {
-      return TrpcCardStatusEnum.enum.unfunded
-    }
-
-    assert(
-      this.invoices.length === 1,
-      `More than one invoice for cardVersion ${this.cardVersion.id} even though not lnurlP sharedFunding`,
-    )
-
-    const invoice = this.invoices[0]
-    if (invoice.isPaid) {
-      return TrpcCardStatusEnum.enum.funded
-    }
-    if (invoice.isExpired) {
-      if (invoice.isSetFunding) {
-        return TrpcCardStatusEnum.enum.setInvoiceExpired
-      }
-      return TrpcCardStatusEnum.enum.invoiceExpired
-    }
-    if (invoice.isSetFunding) {
-      return TrpcCardStatusEnum.enum.setInvoiceFunding
-    }
-    return TrpcCardStatusEnum.enum.invoiceFunding
+    return this.invoiceStatus()
   }
 
   public get amount(): number | null {
@@ -192,5 +143,72 @@ export default class CardStatus {
     if (await isLnbitsWithdrawLinkUsed(this.lnurlW.lnbitsId)) {
       this.withdrawPending = true
     }
+  }
+
+  private lnurlwStatus(): TrpcCardStatusEnum {
+    assert(this.lnurlW != null, 'lnurlwStatus called without lnurlW')
+
+    if (this.lnurlW.withdrawn != null) {
+      if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
+        return TrpcCardStatusEnum.enum.recentlyWithdrawn
+      }
+      return TrpcCardStatusEnum.enum.withdrawn
+    }
+
+    if (this.withdrawPending) {
+      return TrpcCardStatusEnum.enum.withdrawPending
+    }
+
+    return TrpcCardStatusEnum.enum.funded
+  }
+
+  private lnurlpStatus(): TrpcCardStatusEnum {
+    assert(this.lnurlP != null, 'lnurlpStatus called without lnurlP')
+
+    if (this.lnurlP.finished != null) {
+      return TrpcCardStatusEnum.enum.funded
+    }
+
+    if (this.cardVersion.sharedFunding) {
+      if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
+        if (this.amount != null && this.amount > 0) {
+          return TrpcCardStatusEnum.enum.lnurlpSharedExpiredFunded
+        }
+        return TrpcCardStatusEnum.enum.lnurlpSharedExpiredEmpty
+      }
+      return TrpcCardStatusEnum.enum.lnurlpSharedFunding
+    }
+
+    if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
+      return TrpcCardStatusEnum.enum.lnurlpExpired
+    }
+
+    return TrpcCardStatusEnum.enum.lnurlpFunding
+  }
+
+  private invoiceStatus(): TrpcCardStatusEnum {
+    if (this.invoices.length === 0) {
+      return TrpcCardStatusEnum.enum.unfunded
+    }
+
+    assert(
+      this.invoices.length === 1,
+      `More than one invoice for cardVersion ${this.cardVersion.id} even though not lnurlP sharedFunding`,
+    )
+
+    const invoice = this.invoices[0]
+    if (invoice.isPaid) {
+      return TrpcCardStatusEnum.enum.funded
+    }
+    if (invoice.isExpired) {
+      if (invoice.isSetFunding) {
+        return TrpcCardStatusEnum.enum.setInvoiceExpired
+      }
+      return TrpcCardStatusEnum.enum.invoiceExpired
+    }
+    if (invoice.isSetFunding) {
+      return TrpcCardStatusEnum.enum.setInvoiceFunding
+    }
+    return TrpcCardStatusEnum.enum.invoiceFunding
   }
 }
