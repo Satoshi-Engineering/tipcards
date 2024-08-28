@@ -52,16 +52,12 @@ export default class CardStatus {
       status: this.status,
       amount: this.amount,
       created: this.cardVersion.created,
-      funded: this.lnurlW?.created ?? null,
+      funded: this.funded,
       withdrawn: this.lnurlW?.withdrawn ?? null,
     }
   }
 
   public get status(): TrpcCardStatusEnum {
-    if (this.invoices.length === 0) {
-      return TrpcCardStatusEnum.enum.unfunded
-    }
-
     if (this.lnurlW != null) {
       if (this.lnurlW.withdrawn != null) {
         if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
@@ -69,7 +65,9 @@ export default class CardStatus {
         }
         return TrpcCardStatusEnum.enum.withdrawn
       }
+
       // todo : handle withdrawPending
+
       return TrpcCardStatusEnum.enum.funded
     }
 
@@ -78,18 +76,22 @@ export default class CardStatus {
         return TrpcCardStatusEnum.enum.funded
       }
       if (this.cardVersion.sharedFunding) {
-        if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt > new Date()) {
-          if (this.amount === 0) {
+        if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
+          if (this.amount != null && this.amount > 0) {
             return TrpcCardStatusEnum.enum.lnurlpSharedExpiredFunded
           }
           return TrpcCardStatusEnum.enum.lnurlpSharedExpiredEmpty
         }
         return TrpcCardStatusEnum.enum.lnurlpSharedFunding
       }
-      if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt > new Date()) {
+      if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
         return TrpcCardStatusEnum.enum.lnurlpExpired
       }
       return TrpcCardStatusEnum.enum.lnurlpFunding
+    }
+
+    if (this.invoices.length === 0) {
+      return TrpcCardStatusEnum.enum.unfunded
     }
 
     assert(
@@ -114,15 +116,36 @@ export default class CardStatus {
   }
 
   public get amount(): number | null {
-    if (this.invoices.length === 0) {
-      return null
-    }
-    if (
-      this.lnurlP == null
-      && this.invoices.length === 1
-    ) {
+    if (this.isInvoiceFunding) {
       return this.invoices[0].amountPerCard
     }
+
+    if (this.isLnurlpFunding) {
+      return this.paidAmount
+    }
+
+    return null
+  }
+
+  public get funded(): Date | null {
+    if (this.isInvoiceFunding) {
+      return this.invoices[0].invoice.paid
+    }
+    if (this.isLnurlpFunding) {
+      return this.lnurlP?.finished ?? null
+    }
+    return null
+  }
+
+  public get isInvoiceFunding(): boolean {
+    return this.lnurlP == null && this.invoices.length === 1
+  }
+
+  public get isLnurlpFunding(): boolean {
+    return this.lnurlP != null
+  }
+
+  public get paidAmount(): number {
     return this.invoices
       .filter((invoice) => invoice.isPaid)
       .reduce((sum, invoice) => sum + invoice.amountPerCard, 0)
