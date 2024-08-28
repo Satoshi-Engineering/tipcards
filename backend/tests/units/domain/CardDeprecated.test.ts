@@ -11,7 +11,7 @@ import {
 } from '../../drizzleData.js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
-import CardDeprecated from '@backend/modules/CardDeprecated.js'
+import CardDeprecated from '@backend/domain/CardDeprecated.js'
 
 const card = createCard()
 const cardVersion = createCardVersion(card)

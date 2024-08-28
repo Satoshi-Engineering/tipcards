@@ -11,7 +11,7 @@ import {
   createInvoice,
 } from '../../drizzleData.js'
 
-import CardStatus from '@backend/modules/CardStatus.js'
+import CardStatus from '@backend/domain/CardStatus.js'
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 const card = createCard()

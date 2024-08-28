@@ -1,7 +1,7 @@
 import { Card } from '@shared/data/trpc/Card.js'
 import { Set, SetId } from '@shared/data/trpc/Set.js'
 
-import CardCollectionDeprecated from '@backend/modules/CardCollectionDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 import { getSetsByUserId } from '@backend/database/deprecated/queries.js'
 
 import { setFromSetRedis } from '../data/transforms/setFromSetRedis.js'

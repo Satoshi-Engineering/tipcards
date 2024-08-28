@@ -1,8 +1,8 @@
 import { CardHash } from '@shared/data/trpc/Card.js'
 import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
-import CardCollectionDeprecated from '@backend/modules/CardCollectionDeprecated.js'
-import BulkWithdrawDeprecated from '@backend/modules/BulkWithdrawDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
 
 import { router } from '../trpc.js'
 import publicProcedure from '../procedures/public.js'

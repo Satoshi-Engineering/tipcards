@@ -1,6 +1,6 @@
 import { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
 
-import Profile from '@backend/modules/Profile.js'
+import Profile from '@backend/domain/Profile.js'
 
 import { router } from '../trpc.js'
 import loggedInProcedure from '../procedures/loggedIn.js'

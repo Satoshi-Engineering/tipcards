@@ -13,7 +13,7 @@ import {
   createLnurlW,
 } from '../../drizzleData.js'
 
-import CardStatus from '@backend/modules/CardStatus.js'
+import CardStatus from '@backend/domain/CardStatus.js'
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 import { LnurlW } from '@backend/database/schema/LnurlW.js'
 
