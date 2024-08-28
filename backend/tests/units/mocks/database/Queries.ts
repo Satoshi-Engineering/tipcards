@@ -1,5 +1,6 @@
 import { vi } from 'vitest'
 
+import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -76,6 +77,18 @@ export default vi.fn().mockImplementation(() => ({
       .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
       .map((cardVersionInvoice) => cardVersionInvoice.invoice)
     return Object.values(invoicesByPaymentHash).filter((invoice) => paymentHashes.includes(invoice.paymentHash))
+  },
+
+  getAllInvoicesFundingCardVersionWithSetFundingInfo: async (cardVersion: CardVersion): Promise<InvoiceWithSetFundingInfo[]> => {
+    const paymentHashes = cardVersionInvoices
+      .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
+      .map((cardVersionInvoice) => cardVersionInvoice.invoice)
+    return paymentHashes.map((paymentHash) => {
+      const cardsFundedWithThisInvoice = cardVersionInvoices
+        .filter((cardVersionInvoice) => cardVersionInvoice.invoice === paymentHash)
+        .length
+      return new InvoiceWithSetFundingInfo(invoicesByPaymentHash[paymentHash], cardsFundedWithThisInvoice)
+    })
   },
 
   getInvoiceByPaymentHash: async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {

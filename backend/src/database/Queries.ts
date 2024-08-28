@@ -4,6 +4,7 @@ import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
 
+import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -105,10 +106,7 @@ export default class Queries {
   }
 
   /** @throws */
-  async getAllInvoicesFundingCardVersionWithSetFundingInfo(cardVersion: CardVersion): Promise<{
-    invoice: Invoice,
-    cardCount: number,
-  }[]> {
+  async getAllInvoicesFundingCardVersionWithSetFundingInfo(cardVersion: CardVersion): Promise<InvoiceWithSetFundingInfo[]> {
     const cardsFundedBySingleInvoice = aliasedTable(CardVersionHasInvoice, 'cardsFundedBySingleInvoice')
     const result = await this.transaction.select({
       amount: Invoice.amount,
@@ -134,8 +132,8 @@ export default class Queries {
       expiresAt,
       extra,
       cardCount,
-    }) => ({
-      invoice: {
+    }) => new InvoiceWithSetFundingInfo(
+      {
         amount,
         paymentHash,
         paymentRequest,
@@ -145,7 +143,7 @@ export default class Queries {
         extra,
       },
       cardCount,
-    }))
+    ))
   }
 
   /** @throws */

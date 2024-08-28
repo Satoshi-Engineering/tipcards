@@ -63,10 +63,10 @@ describe('Card', () => {
   it('should load the status of a card funded by set funding', async () => {
     const status = await CardStatus.latestFromCardHashOrDefault(setCard1.hash)
     expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
+      hash: setCard1.hash,
       status: CardStatusEnum.enum.setInvoiceFunding,
       amount: 50,
-      created: cardVersion.created,
+      created: setCardVersion1.created,
       funded: null,
       withdrawn: null,
     }))

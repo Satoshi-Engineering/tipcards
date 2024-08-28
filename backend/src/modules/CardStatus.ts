@@ -1,14 +1,16 @@
-import { asTransaction } from '@backend/database/client.js'
-import {
-  Card, CardVersion,
-  Invoice,
-  LnurlP, LnurlW,
-} from '@backend/database/schema/index.js'
+import assert from 'node:assert'
 
 import {
   CardStatusEnum as TrpcCardStatusEnum,
   CardStatus as TrpcCardStatus,
 } from '@shared/data/trpc/CardStatus.js'
+
+import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
+import {
+  Card, CardVersion,
+  LnurlP, LnurlW,
+} from '@backend/database/schema/index.js'
+import { asTransaction } from '@backend/database/client.js'
 
 export default class CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<CardStatus> {
@@ -56,6 +58,10 @@ export default class CardStatus {
   }
 
   public get status(): TrpcCardStatusEnum {
+    if (this.invoices.length === 0) {
+      return TrpcCardStatusEnum.enum.unfunded
+    }
+
     if (this.lnurlW != null) {
       if (this.lnurlW.withdrawn != null) {
         if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
@@ -68,6 +74,9 @@ export default class CardStatus {
     }
 
     if (this.lnurlP != null) {
+      if (this.lnurlP.finished != null) {
+        return TrpcCardStatusEnum.enum.funded
+      }
       if (this.cardVersion.sharedFunding) {
         if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt > new Date()) {
           if (this.amount === 0) {
@@ -83,33 +92,44 @@ export default class CardStatus {
       return TrpcCardStatusEnum.enum.lnurlpFunding
     }
 
-    // todo : handle set funding
+    assert(
+      this.invoices.length === 1,
+      `More than one invoice for cardVersion ${this.cardVersion.id} even though not lnurlP sharedFunding`,
+    )
 
-    if (this.invoices.length > 1) {
-      // todo : handle more than one invoice if not lnurlP sharedFunding??
+    const invoice = this.invoices[0]
+    if (invoice.isPaid) {
+      return TrpcCardStatusEnum.enum.funded
     }
-
-    if (this.invoices.length === 1) {
-      return TrpcCardStatusEnum.enum.invoiceFunding
+    if (invoice.isExpired) {
+      if (invoice.isSetFunding) {
+        return TrpcCardStatusEnum.enum.setInvoiceExpired
+      }
+      return TrpcCardStatusEnum.enum.invoiceExpired
     }
-    return TrpcCardStatusEnum.enum.unfunded
+    if (invoice.isSetFunding) {
+      return TrpcCardStatusEnum.enum.setInvoiceFunding
+    }
+    return TrpcCardStatusEnum.enum.invoiceFunding
   }
 
   public get amount(): number | null {
     if (this.invoices.length === 0) {
       return null
     }
-    if (this.invoices.length === 1) {
-      return this.invoices[0].amount
+    if (
+      this.lnurlP == null
+      && this.invoices.length === 1
+    ) {
+      return this.invoices[0].amountPerCard
     }
-    // todo : handle set funding
     return this.invoices
-      .filter((invoice) => invoice.paid != null)
-      .reduce((sum, invoice) => sum + invoice.amount, 0)
+      .filter((invoice) => invoice.isPaid)
+      .reduce((sum, invoice) => sum + invoice.amountPerCard, 0)
   }
 
   private readonly cardVersion: CardVersion
-  private invoices: Invoice[] = []
+  private invoices: InvoiceWithSetFundingInfo[] = []
   private lnurlP: LnurlP | null = null
   private lnurlW: LnurlW | null = null
 
@@ -126,8 +146,7 @@ export default class CardStatus {
   }
 
   private async loadInvoices(): Promise<void> {
-    // todo : use getAllInvoicesFundingCardVersionWithSetFundingInfo
-    this.invoices = await asTransaction(async (queries) => queries.getAllInvoicesFundingCardVersion(this.cardVersion))
+    this.invoices = await asTransaction(async (queries) => queries.getAllInvoicesFundingCardVersionWithSetFundingInfo(this.cardVersion))
   }
 
   private async loadLnurlP(): Promise<void> {
