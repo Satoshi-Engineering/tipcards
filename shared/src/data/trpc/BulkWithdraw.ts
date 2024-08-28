@@ -2,6 +2,10 @@ import { z } from 'zod'
 
 import { Card } from './Card.js'
 
+/**
+ * deprecated as this still represents the redis data model
+ * @deprecated
+ */
 export const BulkWithdraw = z.object({
   id: z.string(),
   lnurl: z.string(),

@@ -45,7 +45,7 @@
 import { storeToRefs } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
 
-import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
+import type { StatisticsDto } from '@shared/data/trpc/StatisticsDto'
 import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -74,7 +74,7 @@ const hasPermissions = computed(() => {
 
 const fetching = ref(false)
 
-const statistics = ref<{ daily: StatisticsPeriod[], weekly: StatisticsPeriod[] }>()
+const statistics = ref<StatisticsDto>()
 
 const barChartMode = ref<'transactions' | 'balance'>('transactions')
 

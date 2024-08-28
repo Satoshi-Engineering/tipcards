@@ -79,7 +79,7 @@ import { computed, type PropType } from 'vue'
 
 import formatNumber from '@/modules/formatNumber'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod'
+import type { StatisticsPeriodDto } from '@shared/data/trpc/StatisticsDto'
 
 const props = defineProps({
   barChartMode: {
@@ -87,7 +87,7 @@ const props = defineProps({
     default: 'transactions',
   },
   statistics: {
-    type: Array as PropType<StatisticsPeriod[]>,
+    type: Array as PropType<StatisticsPeriodDto[]>,
     default: () => [],
   },
   periodLabelColHeader: {
@@ -106,7 +106,7 @@ const toggleBarChartMode = () => {
   emit('setBarChartMode', 'transactions')
 }
 
-const addPercentagesToPeriods = (periods: StatisticsPeriod[]) => {
+const addPercentagesToPeriods = (periods: StatisticsPeriodDto[]) => {
   const maxTransactionsPerPeriod = Math.max(...periods.map((period) => period.fundingCount + period.withdrawCount))
   const maxAmountPerPeriod = Math.max(...periods.map((period) => Math.max(period.fundingAmount, period.withdrawAmount)))
 

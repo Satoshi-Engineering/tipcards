@@ -1,7 +1,7 @@
 import { storeToRefs } from 'pinia'
 import { computed, nextTick, ref, watch } from 'vue'
 
-import type { Profile } from '@shared/data/trpc/Profile'
+import type { ProfileDto } from '@shared/data/trpc/ProfileDto'
 
 import i18n from '@/modules/initI18n'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
@@ -27,7 +27,7 @@ const unsubscribe = (): void => {
   subscribed.value = false
 }
 
-const update = async (profileDto: Partial<Profile>): Promise<void> => {
+const update = async (profileDto: Partial<ProfileDto>): Promise<void> => {
   const signal = await prepareNewRequest('profile')
   try {
     const profileDtoResponse = await profile.update.mutate(profileDto, { signal })
@@ -134,7 +134,7 @@ const prepareNewRequest = async (requestTarget: 'profile' | 'displayName') => {
   return abortController.signal
 }
 
-const updateLocalData = (profileDto: Partial<Profile>) => {
+const updateLocalData = (profileDto: Partial<ProfileDto>) => {
   userAccountName.value = profileDto.accountName ?? userAccountName.value
   userDisplayName.value = profileDto.displayName ?? userDisplayName.value
   userEmail.value = profileDto.email ?? userEmail.value

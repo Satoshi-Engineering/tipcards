@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 
 import {
-  CardStatusEnum as TrpcCardStatusEnum,
-  CardStatus as TrpcCardStatus,
-} from '@shared/data/trpc/CardStatus.js'
+  CardStatusEnum,
+  CardStatusDto,
+} from '@shared/data/trpc/CardStatusDto.js'
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
@@ -46,7 +46,7 @@ export default class CardStatus {
    * @throws ZodError
    * @throws ErrorWithCode
    */
-  public toTrpcResponse(): TrpcCardStatus {
+  public toTrpcResponse(): CardStatusDto {
     return {
       hash: this.cardVersion.card,
 
@@ -58,7 +58,7 @@ export default class CardStatus {
     }
   }
 
-  public get status(): TrpcCardStatusEnum {
+  public get status(): CardStatusEnum {
     if (this.lnurlW != null) {
       return this.lnurlwStatus()
     }
@@ -145,50 +145,50 @@ export default class CardStatus {
     }
   }
 
-  private lnurlwStatus(): TrpcCardStatusEnum {
+  private lnurlwStatus(): CardStatusEnum {
     assert(this.lnurlW != null, 'lnurlwStatus called without lnurlW')
 
     if (this.lnurlW.withdrawn != null) {
       if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
-        return TrpcCardStatusEnum.enum.recentlyWithdrawn
+        return CardStatusEnum.enum.recentlyWithdrawn
       }
-      return TrpcCardStatusEnum.enum.withdrawn
+      return CardStatusEnum.enum.withdrawn
     }
 
     if (this.withdrawPending) {
-      return TrpcCardStatusEnum.enum.withdrawPending
+      return CardStatusEnum.enum.withdrawPending
     }
 
-    return TrpcCardStatusEnum.enum.funded
+    return CardStatusEnum.enum.funded
   }
 
-  private lnurlpStatus(): TrpcCardStatusEnum {
+  private lnurlpStatus(): CardStatusEnum {
     assert(this.lnurlP != null, 'lnurlpStatus called without lnurlP')
 
     if (this.lnurlP.finished != null) {
-      return TrpcCardStatusEnum.enum.funded
+      return CardStatusEnum.enum.funded
     }
 
     if (this.cardVersion.sharedFunding) {
       if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
         if (this.amount != null && this.amount > 0) {
-          return TrpcCardStatusEnum.enum.lnurlpSharedExpiredFunded
+          return CardStatusEnum.enum.lnurlpSharedExpiredFunded
         }
-        return TrpcCardStatusEnum.enum.lnurlpSharedExpiredEmpty
+        return CardStatusEnum.enum.lnurlpSharedExpiredEmpty
       }
-      return TrpcCardStatusEnum.enum.lnurlpSharedFunding
+      return CardStatusEnum.enum.lnurlpSharedFunding
     }
 
     if (this.lnurlP.expiresAt != null && this.lnurlP.expiresAt < new Date()) {
-      return TrpcCardStatusEnum.enum.lnurlpExpired
+      return CardStatusEnum.enum.lnurlpExpired
     }
 
-    return TrpcCardStatusEnum.enum.lnurlpFunding
+    return CardStatusEnum.enum.lnurlpFunding
   }
 
-  private invoiceStatus(): TrpcCardStatusEnum {
+  private invoiceStatus(): CardStatusEnum {
     if (this.invoices.length === 0) {
-      return TrpcCardStatusEnum.enum.unfunded
+      return CardStatusEnum.enum.unfunded
     }
 
     assert(
@@ -198,17 +198,17 @@ export default class CardStatus {
 
     const invoice = this.invoices[0]
     if (invoice.isPaid) {
-      return TrpcCardStatusEnum.enum.funded
+      return CardStatusEnum.enum.funded
     }
     if (invoice.isExpired) {
       if (invoice.isSetFunding) {
-        return TrpcCardStatusEnum.enum.setInvoiceExpired
+        return CardStatusEnum.enum.setInvoiceExpired
       }
-      return TrpcCardStatusEnum.enum.invoiceExpired
+      return CardStatusEnum.enum.invoiceExpired
     }
     if (invoice.isSetFunding) {
-      return TrpcCardStatusEnum.enum.setInvoiceFunding
+      return CardStatusEnum.enum.setInvoiceFunding
     }
-    return TrpcCardStatusEnum.enum.invoiceFunding
+    return CardStatusEnum.enum.invoiceFunding
   }
 }

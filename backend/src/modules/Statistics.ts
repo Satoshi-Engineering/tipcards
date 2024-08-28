@@ -2,7 +2,7 @@ import axios from 'axios'
 import { DateTime } from 'luxon'
 import z from 'zod'
 
-import type { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod.js'
+import type { StatisticsDto, StatisticsPeriodDto } from '@shared/data/trpc/StatisticsDto.js'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
 import loadJsonIfExists from '@backend/services/loadJsonIfExists.js'
@@ -17,7 +17,7 @@ const Payment = z.object({
 type Payment = z.infer<typeof Payment>
 
 export default class Statistics {
-  public static async getStatistics() {
+  public static async getStatistics(): Promise<StatisticsDto> {
     const payments = await Statistics.loadPayments()
     const daily = Statistics.accumulatePaymentsByPeriod(payments, 'yyyy-MM-dd')
     const weekly = Statistics.accumulatePaymentsByPeriod(payments, 'kkkk-WW')
@@ -60,7 +60,7 @@ export default class Statistics {
     return payments
   }
 
-  private static accumulatePaymentsByPeriod(payments: Payment[], periodLabelDatetimeFormat: string): StatisticsPeriod[] {
+  private static accumulatePaymentsByPeriod(payments: Payment[], periodLabelDatetimeFormat: string): StatisticsPeriodDto[] {
     const periods: Record<string, {
       fundingAmount: number,
       fundingCount: number,

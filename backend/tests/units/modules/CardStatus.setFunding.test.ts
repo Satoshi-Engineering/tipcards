@@ -11,7 +11,7 @@ import {
 } from '../../drizzleData.js'
 
 import CardStatus from '@backend/modules/CardStatus.js'
-import { CardStatusEnum } from '@shared/data/trpc/CardStatus.js'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 const setCard1 = createCard()
 const setCardVersion1 = createCardVersion(setCard1)

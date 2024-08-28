@@ -1,11 +1,11 @@
 import { vi } from 'vitest'
 
-import type { Profile } from '@shared/data/trpc/Profile'
+import type { ProfileDto } from '@shared/data/trpc/ProfileDto'
 
 export const tRpcMock = {
   profile: {
     get: {
-      query: vi.fn(async (): Promise<Profile> => ({
+      query: vi.fn(async (): Promise<ProfileDto> => ({
         accountName: '',
         displayName: '',
         email: '',
@@ -13,11 +13,11 @@ export const tRpcMock = {
     },
 
     update: {
-      mutate: vi.fn(async (profile: Profile): Promise<Profile> => profile),
+      mutate: vi.fn(async (profile: ProfileDto): Promise<ProfileDto> => profile),
     },
 
     getDisplayName: {
-      query: vi.fn(async (): Promise<Profile['displayName']> => ''),
+      query: vi.fn(async (): Promise<ProfileDto['displayName']> => ''),
     },
   },
 }

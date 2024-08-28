@@ -1,9 +1,9 @@
 import z from 'zod'
 
-export const Profile = z.object({
+export const ProfileDto = z.object({
   accountName: z.string(),
   displayName: z.string(),
   email: z.string(),
 })
 
-export type Profile = z.infer<typeof Profile>
+export type ProfileDto = z.infer<typeof ProfileDto>

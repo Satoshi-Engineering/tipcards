@@ -47,7 +47,7 @@
 import isEqual from 'lodash.isequal'
 import { reactive, computed, watchEffect, onBeforeMount, onBeforeUnmount } from 'vue'
 
-import { Profile } from '@shared/data/trpc/Profile'
+import { ProfileDto } from '@shared/data/trpc/ProfileDto'
 
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
@@ -69,7 +69,7 @@ const {
   update,
 } = useProfile()
 
-const profileInternal = reactive(Profile.partial().parse({}))
+const profileInternal = reactive(ProfileDto.partial().parse({}))
 
 const isSaved = computed(() => isEqual({
   accountName: userAccountName.value,

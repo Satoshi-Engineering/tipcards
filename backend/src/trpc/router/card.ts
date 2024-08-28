@@ -1,8 +1,9 @@
 import { Card, CardHash } from '@shared/data/trpc/Card.js'
-import { CardStatus } from '@shared/data/trpc/CardStatus.js'
+import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 
 import CardDeprecated from '@backend/modules/CardDeprecated.js'
-import CardStatusModule from '@backend/modules/CardStatus.js'
+import CardStatus from '@backend/modules/CardStatus.js'
+// todo : do not rename on import, instead change it to CardStatus and rename trpc/CardStatus to CardStatusDto
 
 import { router } from '../trpc.js'
 import publicProcedure from '../procedures/public.js'
@@ -24,9 +25,9 @@ export const cardRouter = router({
 
   status: publicProcedure
     .input(CardHash)
-    .output(CardStatus)
+    .output(CardStatusDto)
     .query(async ({ input }) => {
-      const cardStatus = await CardStatusModule.latestFromCardHashOrDefault(input.hash)
+      const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
       return cardStatus.toTrpcResponse()
     }),
 

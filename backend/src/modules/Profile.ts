@@ -1,11 +1,11 @@
-import { asTransaction } from '@backend/database/client.js'
-import { Profile as ProfileData } from '@backend/database/schema/Profile.js'
+import { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
 
-import { Profile as ProfileDto } from '@shared/data/trpc/Profile.js'
+import { asTransaction } from '@backend/database/client.js'
+import { Profile as ProfileSchema } from '@backend/database/schema/Profile.js'
 
 export default class Profile {
   /** @throws */
-  public static async fromUserIdOrDefault(userId: ProfileData['user']) {
+  public static async fromUserIdOrDefault(userId: ProfileSchema['user']) {
     const profile = await asTransaction((queries) => queries.getProfileByUserId(userId))
     if (profile == null) {
       return this.initProfile(userId)
@@ -13,7 +13,7 @@ export default class Profile {
     return new Profile(profile)
   }
 
-  public static initProfile(userId: ProfileData['user']) {
+  public static initProfile(userId: ProfileSchema['user']) {
     return new Profile({
       user: userId,
       accountName: '',
@@ -28,7 +28,7 @@ export default class Profile {
   }
 
   /** @throws */
-  public async update(data: Partial<Omit<ProfileData, 'user'>>) {
+  public async update(data: Partial<Omit<ProfileSchema, 'user'>>) {
     this.profile = {
       ...this.profile,
       ...data,
@@ -36,8 +36,8 @@ export default class Profile {
     await asTransaction((queries) => queries.insertOrUpdateProfile(this.profile))
   }
 
-  private profile: ProfileData
-  private constructor(profile: ProfileData) {
+  private profile: ProfileSchema
+  private constructor(profile: ProfileSchema) {
     this.profile = profile
   }
 }

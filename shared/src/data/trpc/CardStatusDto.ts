@@ -10,7 +10,7 @@ export const CardStatusEnum = z.enum([
 
 export type CardStatusEnum = z.infer<typeof CardStatusEnum>
 
-export const CardStatus = z.object({
+export const CardStatusDto = z.object({
   hash: z.string(),
 
   // calculated fields
@@ -21,4 +21,4 @@ export const CardStatus = z.object({
   withdrawn: z.date().nullable().default(null),
 })
 
-export type CardStatus = z.infer<typeof CardStatus>
+export type CardStatusDto = z.infer<typeof CardStatusDto>

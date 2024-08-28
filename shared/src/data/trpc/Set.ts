@@ -1,8 +1,12 @@
 import z from 'zod'
 
-import { LandingPage } from './LandingPage.js'
-import { Image } from './Image.js'
+import { LandingPageDto } from './LandingPageDto.js'
+import { ImageDto } from './ImageDto.js'
 
+/**
+ * deprecated as this still represents the redis data model
+ * @deprecated
+ */
 export const Set = z.object({
   id: z.string(),
   name: z.string().default(''),
@@ -11,8 +15,8 @@ export const Set = z.object({
   numberOfCards: z.number().default(8),
   cardHeadline: z.string(),
   cardCopytext: z.string(),
-  cardImage: Image.shape.id.nullable().default(null),
-  landingPage: LandingPage.shape.id.nullable().default(null),
+  cardImage: ImageDto.shape.id.nullable().default(null),
+  landingPage: LandingPageDto.shape.id.nullable().default(null),
 })
 export type Set = z.infer<typeof Set>
 

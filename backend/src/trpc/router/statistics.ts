@@ -1,7 +1,5 @@
-import z from 'zod'
-
 import { PermissionsEnum } from '@shared/data/auth/User.js'
-import { StatisticsPeriod } from '@shared/data/trpc/StatisticsPeriod.js'
+import { StatisticsDto } from '@shared/data/trpc/StatisticsDto.js'
 
 import Statistics from '@backend/modules/Statistics.js'
 
@@ -10,10 +8,7 @@ import loggedInProcedure from '../procedures/loggedIn.js'
 
 export const statisticsRouter = router({
   getFull: loggedInProcedure
-    .output(z.object({
-      daily: StatisticsPeriod.array(),
-      weekly: StatisticsPeriod.array(),
-    }))
+    .output(StatisticsDto)
     .meta({ requiredPermissions: [PermissionsEnum.enum.statistics] })
     .query(async () => {
       return await Statistics.getStatistics()

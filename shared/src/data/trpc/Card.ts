@@ -9,6 +9,9 @@ import z from 'zod'
  *   - withdrawPending : the user clicked on "receive sats" in his:her lightning wallet (i.e. the invoice was sent from the wallet app to lnbits) but the payment wasn't successfully completed yet
  *   - recentlyWithdrawn : the payment from lnbits to the user wallet was successfully completed not less than 5 mintues ago
  *   - withdrawn : same as above, but longer ago
+ *
+ * deprecated as this still represents the redis data model
+ * @deprecated
  */
 export const Card = z.object({
   hash: z.string(),
