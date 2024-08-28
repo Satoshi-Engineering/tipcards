@@ -11,6 +11,7 @@ import {
   LnurlP, LnurlW,
 } from '@backend/database/schema/index.js'
 import { asTransaction } from '@backend/database/client.js'
+import { isLnbitsWithdrawLinkUsed } from '@backend/services/lnbitsHelpers.js'
 
 export default class CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<CardStatus> {
@@ -65,8 +66,9 @@ export default class CardStatus {
         }
         return TrpcCardStatusEnum.enum.withdrawn
       }
-
-      // todo : handle withdrawPending
+      if (this.withdrawPending) {
+        return TrpcCardStatusEnum.enum.withdrawPending
+      }
 
       return TrpcCardStatusEnum.enum.funded
     }
@@ -155,6 +157,7 @@ export default class CardStatus {
   private invoices: InvoiceWithSetFundingInfo[] = []
   private lnurlP: LnurlP | null = null
   private lnurlW: LnurlW | null = null
+  private withdrawPending: boolean = false
 
   private constructor(cardVersion: CardVersion) {
     this.cardVersion = cardVersion
@@ -166,6 +169,7 @@ export default class CardStatus {
       this.loadLnurlP(),
       this.loadLnurlW(),
     ])
+    await this.resolveWithdrawPending()
   }
 
   private async loadInvoices(): Promise<void> {
@@ -178,5 +182,15 @@ export default class CardStatus {
 
   private async loadLnurlW(): Promise<void> {
     this.lnurlW = await asTransaction(async (queries) => queries.getLnurlWWithdrawingCardVersion(this.cardVersion))
+  }
+
+  private async resolveWithdrawPending(): Promise<void> {
+    if (this.lnurlW == null || this.lnurlW.withdrawn != null) {
+      return
+    }
+
+    if (await isLnbitsWithdrawLinkUsed(this.lnurlW.lnbitsId)) {
+      this.withdrawPending = true
+    }
   }
 }

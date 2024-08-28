@@ -3,6 +3,7 @@ import { describe, it, expect, beforeAll } from 'vitest'
 
 import '../mocks/database/client.js'
 import { addData } from '../mocks/database/database.js'
+import { isLnbitsWithdrawLinkUsed } from '../mocks/services/lnbitsHelpers.js'
 import '../mocks/axios.js'
 import '../mocks/drizzle.js'
 import '../mocks/process.env.js'
@@ -103,8 +104,20 @@ describe('Card', () => {
     }))
   })
 
-  // todo : add more test-cases:
-  // - withdrawPending
+  it('should handle a pending withdraw', async () => {
+    isLnbitsWithdrawLinkUsed.mockImplementation(async () => true)
+
+    const status = await CardStatus.latestFromCardHashOrDefault(card.hash)
+
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.withdrawPending,
+      amount: 100,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: null,
+    }))
+  })
 
   it('should load the status of a recently withdrawn card', async () => {
     lnurlw.withdrawn = new Date(Date.now() - 1000 * 60 * 4)

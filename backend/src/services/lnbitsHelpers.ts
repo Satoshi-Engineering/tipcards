@@ -316,20 +316,8 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
     return card
   }
 
-  let responseData: LnbitsWithdrawLinkResponse
-  try {
-    const response = await axios.get(
-      `${LNBITS_ORIGIN}/withdraw/api/v1/links/${card.lnbitsWithdrawId}`,
-      axiosOptionsWithReadHeaders,
-    )
-    responseData = LnbitsWithdrawLinkResponse.parse(response.data)
-  } catch (error) {
-    if (error instanceof ErrorWithCode) {
-      throw error
-    }
-    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
-  }
-  if (responseData.used === 0) {
+  const withdrawLinkIsUsed = await isLnbitsWithdrawLinkUsed(card.lnbitsWithdrawId)
+  if (!withdrawLinkIsUsed) {
     return card
   }
 
@@ -360,6 +348,23 @@ export const checkIfCardIsUsed = async (card: CardApi, persist = false): Promise
   }
 
   return card
+}
+
+export const isLnbitsWithdrawLinkUsed = async (lnbitsWithdrawId: string): Promise<boolean> => {
+  let responseData: LnbitsWithdrawLinkResponse
+  try {
+    const response = await axios.get(
+      `${LNBITS_ORIGIN}/withdraw/api/v1/links/${lnbitsWithdrawId}`,
+      axiosOptionsWithReadHeaders,
+    )
+    responseData = LnbitsWithdrawLinkResponse.parse(response.data)
+  } catch (error) {
+    if (error instanceof ErrorWithCode) {
+      throw error
+    }
+    throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsWithdrawStatus)
+  }
+  return responseData.used > 0
 }
 
 export const lnurlwCreationHappenedInLastTwoMinutes = async (lnbitsWithdrawId: string): Promise<boolean> => {
