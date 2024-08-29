@@ -1,12 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import axios, { AxiosError } from 'axios'
-import { randomUUID } from 'crypto'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
-import hashSha256 from '@backend/services/hashSha256.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import HDWallet from '../lib/HDWallet/HDWallet.js'
@@ -24,10 +22,6 @@ const lnurlAuth = new LNURLAuth({
   privateKeyAsHex: randomSigningKey.getPrivateKeyAsHex(),
 })
 const frontend = new FrontendSimulator(randomMnemonic)
-
-const accountName = `${hashSha256(randomUUID())} accountName`
-const displayName = `${hashSha256(randomUUID())} accoundisplayNametName`
-const email = `${hashSha256(randomUUID())}@email.com`
 
 describe('auth', () => {
   failEarly.it('should not be able to refresh, if no login has happened', async () => {
@@ -88,32 +82,6 @@ describe('auth', () => {
   failEarly.it('should get a new access token', async () => {
     const response = await frontend.authRefresh()
     expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
-  })
-
-  failEarly.it('should set user profile', async () => {
-    const response = await frontend.setProfile(accountName, displayName, email)
-
-    expect(response.data).toEqual(expect.objectContaining({
-      status: 'success',
-      data: {
-        accountName,
-        displayName,
-        email,
-      },
-    }))
-  })
-
-  failEarly.it('should get user profile', async () => {
-    const response = await frontend.getProfile()
-
-    expect(response.data).toEqual(expect.objectContaining({
-      status: 'success',
-      data: {
-        accountName,
-        displayName,
-        email,
-      },
-    }))
   })
 
   failEarly.it('should logout user', async () => {

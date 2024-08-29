@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server'
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import Database from '@backend/database/Database.js'
+import { asTransaction } from '@backend/database/client.js'
 import { profileRouter } from '@backend/trpc/router/tipcards/profile.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -24,8 +25,7 @@ afterAll(async () => {
 })
 
 describe('TRpc Router Profile', () => {
-  const userData = createUser(frontend.userId)
-  const profileData = createProfileForUser(userData)
+  const profileData = createProfileForUser(createUser(frontend.userId))
   let caller = createCaller({
     host: new URL(TIPCARDS_API_ORIGIN).host,
     jwt: null,
@@ -44,6 +44,7 @@ describe('TRpc Router Profile', () => {
 
   it('should load a displayName for a profile that doesnt exist', async () => {
     await frontend.login()
+    profileData.user = frontend.userId
     caller = createCaller({
       host: new URL(TIPCARDS_API_ORIGIN).host,
       jwt: frontend.accessToken,
@@ -66,18 +67,14 @@ describe('TRpc Router Profile', () => {
   })
 
   it('should load a displayName for an existing profile', async () => {
-    await frontend.setProfile(
-      profileData.accountName,
-      profileData.displayName,
-      profileData.email,
-    )
+    await asTransaction(async (client) => client.insertOrUpdateProfile(profileData))
 
     const displayName = await caller.getDisplayName()
 
     expect(displayName).toBe(profileData.displayName)
   })
 
-  it('should load a profile that does', async () => {
+  it('should load a profile that does exist', async () => {
     const profile = await caller.get()
 
     expect(profile).toStrictEqual({
@@ -87,7 +84,7 @@ describe('TRpc Router Profile', () => {
     })
   })
 
-  it('should update', async () => {
+  it('should update the profile data', async () => {
     const profile = await caller.update({
       displayName: 'newDisplayName',
       email: 'newEmail',

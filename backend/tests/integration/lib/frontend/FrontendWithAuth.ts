@@ -48,22 +48,6 @@ export default class FrontendWithAuth extends Frontend {
     return response
   }
 
-  async getProfile() {
-    const response = await axios.get(`${API_ORIGIN}/api/auth/profile`, this.getRefreshHeader())
-    this.setRefreshTokenFromResponse(response)
-    return response
-  }
-
-  async setProfile(accountName: string, displayName: string, email: string) {
-    const response = await axios.post(`${API_ORIGIN}/api/auth/profile`, {
-      accountName,
-      displayName,
-      email,
-    },this.getRefreshHeader())
-    this.setRefreshTokenFromResponse(response)
-    return response
-  }
-
   async loadSets() {
     return await axios.get(`${API_ORIGIN}/api/set/`, this.getAccessHeader())
   }
