@@ -96,6 +96,7 @@
       "message": "You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "sectionBitcoin": {
+      "title": "What is Bitcoin?",
       "paragraphs": {
         "0": "Bitcoin is a <strong>digital currency</strong>.",
         "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",

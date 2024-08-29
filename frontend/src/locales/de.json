@@ -96,6 +96,7 @@
       "message": "Mehr Bitcoin kannst du dir an einer Crypto-Börse (wie {exchange}), einem Bitcoin-Automaten (z.B. von {atm}) oder bei einem Bitcoin-Broker (beispielsweise {broker}) etc. kaufen."
     },
     "sectionBitcoin": {
+      "title": "Was genau ist Bitcoin?",
       "paragraphs": {
         "0": "Bitcoin ist eine <strong>digitale Währung</strong>.",
         "1": "Sie wird von allen Teilnehmerinnen und Teilnehmern des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.",
@@ -109,6 +110,12 @@
       "button": "Wallet of Satoshi herunterladen",
       "other": "Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.",
       "otherFootnote": "* die mit Lightning und LNURL kompatibel ist"
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "So holst du dir deine Bitcoin",
+      "explanation": "Hast du eine Lightning&#8209;Wallet installiert, <strong>scanne erneut</strong> den QR&#8209;Code auf deiner <strong>TipCard</strong> mit deiner Wallet oder <strong>drücke</strong> auf folgenden QR&#8209;Code:",
+      "qrCodeHeadline": "Drücke auf den Qr-Code unten",
+      "noWallet": "Noch keine Lightning-Wallet?"
     },
     "sectionReceive": {
       "headline": "Hol dir deine Bitcoin",
