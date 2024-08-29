@@ -6,7 +6,6 @@ import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
-import { Profile } from '@shared/data/auth/User.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
@@ -261,72 +260,6 @@ router.post(
       return
     }
     res.json({ status: 'success' })
-  },
-)
-
-router.get(
-  '/profile',
-  cookieParser(),
-  authGuardRefreshToken,
-  cycleRefreshToken,
-  async (_, res) => {
-    try {
-      const { userId } = res.locals
-      const user = await getUserById(userId)
-      res.json({
-        status: 'success',
-        data: Profile.parse(user?.profile),
-      })
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(403).json({
-        status: 'error',
-        data: 'unknown database error',
-      })
-      return
-    }
-  },
-)
-
-router.post(
-  '/profile',
-  cookieParser(),
-  authGuardRefreshToken,
-  cycleRefreshToken,
-  async (req, res) => {
-    const parseResult  = Profile.safeParse(req.body)
-    if (!parseResult.success) {
-      res.status(400).json({
-        status: 'error',
-        data: parseResult.error,
-      })
-      return
-    }
-    const { data: profile } = parseResult
-    try {
-      const { userId } = res.locals
-      const user = await getUserById(userId)
-      if (user == null) {
-        res.status(404).json({
-          status: 'error',
-          data: 'user not found',
-        })
-        return
-      }
-      user.profile = profile
-      await updateUser(user)
-      res.json({
-        status: 'success',
-        data: profile,
-      })
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(403).json({
-        status: 'error',
-        data: 'unknown database error',
-      })
-      return
-    }
   },
 )
 

@@ -2,7 +2,7 @@
 
 Do not add frontend or backend properties here. Only add inputs and outputs of trpc requests (called dto, data transfer object)
 
-Backend and frontend are encouraged to use these types, but if you need extra (or similar) fields extend the types in the respective src directories.
+Developers encouraged to use these types in backend/frontend code too, but if you need extra (or similar) fields extend the types in the respective src directories.
 
 ## Naming convention
 
