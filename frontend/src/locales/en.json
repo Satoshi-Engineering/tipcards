@@ -74,7 +74,8 @@
   },
   "landing": {
     "title": "Get your bitcoin",
-    "introGreeting": "Hey!",
+    "introGreeting": "Hi, congratulations! :)",
+    "introMessage": "You've been gifted Bitcoins.{linebreak}Get them now!",
     "introMessageReceiveBtc": {
       "message": "You are just about to receive {amountAndUnit}",
       "amountAndUnit": "{amount} bitcoin",

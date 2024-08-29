@@ -27,7 +27,7 @@ export interface RouteLanding extends RouteRecordInfo<
 export const landing = {
   name: 'landing',
   path: `${localizedRoutePrefix}/landing/:cardHash?`,
-  component: () => import('@/pages/PageLanding.vue'),
+  component: () => import('@/pages/landing/PageLanding.vue'),
   meta: {
     title: () => i18n.global.t('landing.title'),
     backlink: true, // Is only used by BackLinkDeprecated
