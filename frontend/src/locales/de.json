@@ -103,6 +103,12 @@
         "2": "Überweisungen (auch internationale) sind so einfach wie das Scannen eines QR-Codes. Probier es einfach aus!"
       }
     },
+    "sectionGetYourBitcoin": {
+      "headline": "So holst du dir deine Bitcoin",
+      "explanation": "Hast du eine Lightning&#8209;Wallet installiert, <strong>scanne erneut</strong> den QR&#8209;Code auf deiner <strong>TipCard</strong> mit deiner Wallet oder <strong>drücke</strong> auf folgenden QR&#8209;Code:",
+      "qrCodeHeadline": "Drücke auf den Qr-Code unten",
+      "noWallet": "Noch keine Lightning-Wallet?"
+    },
     "sectionWallet": {
       "headline": "Installiere eine Wallet",
       "explanation": "Um Bitcoin empfangen, speichern und ausgeben zu können, benötigst du eine <strong>Lightning-Wallet</strong>.<br>Für den alltäglichen Gebrauch und kleine Beträge ist eine Smartphone-App am bequemsten.",
@@ -110,12 +116,6 @@
       "button": "Wallet of Satoshi herunterladen",
       "other": "Du kannst auch {wallet0}, {wallet1}, {wallet2} ausprobieren oder irgendeine andere Wallet*.",
       "otherFootnote": "* die mit Lightning und LNURL kompatibel ist"
-    },
-    "sectionGetYourBitcoin": {
-      "headline": "So holst du dir deine Bitcoin",
-      "explanation": "Hast du eine Lightning&#8209;Wallet installiert, <strong>scanne erneut</strong> den QR&#8209;Code auf deiner <strong>TipCard</strong> mit deiner Wallet oder <strong>drücke</strong> auf folgenden QR&#8209;Code:",
-      "qrCodeHeadline": "Drücke auf den Qr-Code unten",
-      "noWallet": "Noch keine Lightning-Wallet?"
     },
     "sectionReceive": {
       "headline": "Hol dir deine Bitcoin",
@@ -165,6 +165,7 @@
     "bulkWithdrawResetError": "Beim Abbruch des Zurückholens ist ein Fehler aufgetreten.",
     "errors": {
       "errorInvalidLnurl": "Es scheint, als wäre die LNURL nicht von einer gültigen TipCard.",
+      "errorLoadingCardStatus": "Der Status der TipCard konnte nicht geladen werden.",
       "errorInvalidLandingPage": "Benutzerdefinierte Seite konnte nicht geladen werden."
     }
   },

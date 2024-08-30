@@ -96,12 +96,18 @@
       "message": "You can get more bitcoin at a Crypto exchange (e.g. {exchange}) at a Bitcoin ATM (e.g. {atm}) or from a Crypto broker (e.g. {broker}) etc."
     },
     "sectionBitcoin": {
-      "title": "What is Bitcoin?",
+      "title": "What exactly is Bitcoin?",
       "paragraphs": {
         "0": "Bitcoin is a <strong>digital currency</strong>.",
         "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",
         "2": "Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!"
       }
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "How to get your Bitcoin",
+      "explanation": "If you have a Lightning wallet installed, <strong>scan</strong> the QR code on your <strong>TipCard again</strong> with your wallet or <strong>press</strong> the following QR code:",
+      "qrCodeHeadline": "Press the Qr code below",
+      "noWallet": "No Lightning wallet yet?"
     },
     "sectionWallet": {
       "headline": "Download a wallet",
@@ -145,6 +151,7 @@
     "bulkWithdrawResetError": "An error occurred when cancelling the recall.",
     "errors": {
       "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
+      "errorLoadingCardStatus": "Unable to load card status.",
       "errorInvalidLandingPage": "Unable to load custom landing page."
     }
   },

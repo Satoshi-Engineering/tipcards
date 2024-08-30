@@ -1,6 +1,7 @@
 import z from 'zod'
 
 export const CardStatusEnum = z.enum([
+  'isLockedByBulkWithdraw',
   'unfunded',
   'invoiceFunding', 'lnurlpFunding', 'lnurlpSharedFunding', 'setInvoiceFunding',
   'invoiceExpired', 'lnurlpExpired', 'lnurlpSharedExpiredEmpty', 'lnurlpSharedExpiredFunded', 'setInvoiceExpired',
@@ -23,3 +24,21 @@ export const CardStatusDto = z.object({
 })
 
 export type CardStatusDto = z.infer<typeof CardStatusDto>
+
+export const unfundedStatuses: CardStatusEnum[] = [
+  CardStatusEnum.enum.unfunded,
+  CardStatusEnum.enum.invoiceFunding,
+  CardStatusEnum.enum.lnurlpFunding,
+  CardStatusEnum.enum.lnurlpSharedFunding,
+  CardStatusEnum.enum.setInvoiceFunding,
+  CardStatusEnum.enum.invoiceExpired,
+  CardStatusEnum.enum.lnurlpExpired,
+  CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
+  CardStatusEnum.enum.lnurlpSharedExpiredFunded,
+  CardStatusEnum.enum.setInvoiceExpired,
+]
+
+export const withdrawnStatuses: CardStatusEnum[] = [
+  CardStatusEnum.enum.recentlyWithdrawn,
+  CardStatusEnum.enum.withdrawn,
+]
