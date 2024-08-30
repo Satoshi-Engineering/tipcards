@@ -1,7 +1,6 @@
 import { createHash } from 'crypto'
 import { Router } from 'express'
 import type http from 'http'
-import { exportSPKI } from 'jose'
 import lnurl from 'lnurl'
 import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
@@ -12,7 +11,6 @@ import type { User } from '@backend/database/deprecated/data/User.js'
 import corsOptions from '@backend/services/corsOptions.js'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/deprecated/queries.js'
 import {
-  getPublicKey,
   createAccessToken, createRefreshToken,
 } from '@backend/services/jwt.js'
 import {
@@ -20,6 +18,7 @@ import {
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
   LNURL_AUTH_DEBUG,
 } from '@backend/constants.js'
+import Auth from '@backend/domain/auth/Auth.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
@@ -92,8 +91,7 @@ export const initSocketIo = (server: http.Server) => {
 const router = Router()
 
 router.get('/publicKey', async (_, res) => {
-  const publicKey = await getPublicKey()
-  const spkiPem = await exportSPKI(publicKey)
+  const spkiPem = await Auth.getPublicKey()
   res.json({
     status: 'success',
     data: spkiPem,

@@ -7,7 +7,7 @@ import {
 } from '@backend/services/jwt.js'
 
 export default class Auth {
-  public static async publicKey() {
+  public static async getPublicKey() {
     const publicKey = await getPublicKey()
     const spkiPem = await exportSPKI(publicKey)
     return spkiPem
