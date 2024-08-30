@@ -74,7 +74,8 @@
   },
   "landing": {
     "title": "Hol dir deine Bitcoin",
-    "introGreeting": "Hi, gratuliere! :)",
+    "introGreeting": "Hi!",
+    "introGreetingFunded": "Hi, gratuliere! :)",
     "introMessage": "Du wurdest mit Bitcoins beschenkt.{linebreak}Hol sie dir gleich!",
     "introMessageReceiveBtc": {
       "message": "Hier kannst du dir {amountAndUnit} holen.",

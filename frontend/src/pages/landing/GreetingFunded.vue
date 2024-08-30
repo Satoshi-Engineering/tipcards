@@ -8,7 +8,7 @@
       "
     />
     <HeadlineDefault level="h1" styling="h2">
-      {{ $t('landing.introGreeting') }}
+      {{ $t('landing.introGreetingFunded') }}
     </HeadlineDefault>
     <ParagraphDefault class="mb-10 text-center">
       <I18nT keypath="landing.introMessage">

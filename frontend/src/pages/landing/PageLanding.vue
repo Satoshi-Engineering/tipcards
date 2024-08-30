@@ -17,7 +17,10 @@
       </CenterContainer>
 
       <GreetingIsLockedByBulkWithdraw
-        v-if="cardStatus?.status === CardStatusEnum.enum.isLockedByBulkWithdraw"
+        v-if="cardStatus?.status === CardStatusEnum.enum.isLockedByBulkWithdraw || cardStatus?.status === CardStatusEnum.enum.bulkWithdrawPending"
+        :card-status="cardStatus"
+        :resetting-bulk-withdraw="resettingBulkWithdraw"
+        @reset-bulk-withdraw="resetBulkWithdraw"
       />
       <GreetingFunded
         v-else-if="cardStatus?.status === CardStatusEnum.enum.funded || cardStatus?.status === CardStatusEnum.enum.withdrawPending"
@@ -88,10 +91,11 @@ const route = useRoute()
 const router = useRouter()
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const { t } = useI18n()
-const { card } = useTRpc()
+const { bulkWithdraw, card } = useTRpc()
 
 const cardStatus = ref<CardStatusDto>()
 const userErrorMessage = ref<string | undefined>()
+const resettingBulkWithdraw = ref(false)
 
 const cardIsNotFunded = computed(() => {
   if (cardStatus.value == null) {
@@ -186,4 +190,20 @@ const rewriteUrlToCardHash = (cardHash: string) => router.replace({
     cardHash,
   },
 })
+
+const resetBulkWithdraw = async () => {
+  if (cardHash.value == null) {
+    return
+  }
+  userErrorMessage.value = undefined
+  resettingBulkWithdraw.value = true
+  try {
+    await bulkWithdraw.deleteByCardHash.mutate({ hash: cardHash.value })
+    await loadCardStatus()
+  } catch (error) {
+    console.error(error)
+    userErrorMessage.value = t('landing.bulkWithdrawResetError')
+  }
+  resettingBulkWithdraw.value = false
+}
 </script>
