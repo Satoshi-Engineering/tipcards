@@ -5,6 +5,7 @@ export const CardStatusEnum = z.enum([
   'invoiceFunding', 'lnurlpFunding', 'lnurlpSharedFunding', 'setInvoiceFunding',
   'invoiceExpired', 'lnurlpExpired', 'lnurlpSharedExpiredEmpty', 'lnurlpSharedExpiredFunded', 'setInvoiceExpired',
   'funded',
+  'isLockedByBulkWithdraw', 'bulkWithdrawPending',
   'withdrawPending', 'recentlyWithdrawn', 'withdrawn',
 ])
 

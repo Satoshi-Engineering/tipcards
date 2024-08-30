@@ -148,6 +148,13 @@ export default class CardStatus {
   private lnurlwStatus(): CardStatusEnum {
     assert(this.lnurlW != null, 'lnurlwStatus called without lnurlW')
 
+    if (this.lnurlW.bulkWithdrawId != null) {
+      if (this.withdrawPending) {
+        return CardStatusEnum.enum.bulkWithdrawPending
+      }
+      return CardStatusEnum.enum.isLockedByBulkWithdraw
+    }
+
     if (this.lnurlW.withdrawn != null) {
       if (this.lnurlW.withdrawn.getTime() > Date.now() - 1000 * 60 * 5) {
         return CardStatusEnum.enum.recentlyWithdrawn
