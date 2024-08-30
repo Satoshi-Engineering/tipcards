@@ -1,5 +1,5 @@
 <template>
-  <TheLayout class="overflow-x-hidden" :hide-faqs="!isLoggedIn">
+  <TheLayout :hide-faqs="!isLoggedIn">
     <CenterContainer
       v-if="!showContent"
       class="min-h-[60dvh] flex justify-center items-center"
@@ -43,15 +43,9 @@
 
       <UseYourBitcoin />
 
-      <!--
-        <section class="more-bitcoin-explanation">
-          show always
-        </section>
+      <MoreBitcoinExplanation />
 
-        <section class="create-your-own-tip-card">
-          show always
-        </section>
-      -->
+      <CreateYourOwnTipCard />
     </template>
   </TheLayout>
 </template>
@@ -82,6 +76,8 @@ import GreetingRecentlyWithdrawn from './GreetingRecentlyWithdrawn.vue'
 import GreetingWithdrawn from './GreetingWithdrawn.vue'
 import NoWallet from './NoWallet.vue'
 import UseYourBitcoin from './UseYourBitcoin.vue'
+import MoreBitcoinExplanation from './MoreBitcoinExplanation.vue'
+import CreateYourOwnTipCard from './CreateYourOwnTipCard.vue'
 
 const {
   loading: loadingCardStatus,

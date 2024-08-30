@@ -9,7 +9,7 @@
         :login-banner="loginBanner"
       />
     </slot>
-    <div class="flex-1">
+    <div class="flex-1 overflow-x-hidden">
       <slot name="default" />
     </div>
     <slot name="footer">
