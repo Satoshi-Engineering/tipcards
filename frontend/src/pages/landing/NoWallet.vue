@@ -5,14 +5,15 @@
   >
     <IconWalletArrowDown class="w-10 h-10 text-yellow" />
     <HeadlineDefault level="h2">
-      Neu hier ohne Wallet?
+      {{ $t('landing.sectionNoWallet.headline') }}
     </HeadlineDefault>
     <ParagraphDefault class="mt-0 mb-4 text-center">
-      Installiere eine Wallet, um Bitcoin zu empfangen, zu speichern und auszugeben. Für den täglichen Gebrauch und kleine Beträge ist eine Smartphone-App ideal. Wir empfehlen folgende Wallets zum Einstieg:
+      {{ $t('landing.sectionNoWallet.explanation') }}
     </ParagraphDefault>
     <div class="w-[280px] grid gap-2 grid-cols-2">
       <ButtonIconCard
-        class="h-[100px] col-span-2 p-8"
+        class="h-[100px] col-span-2"
+        icon-class="p-8"
         href="https://walletofsatoshi.com/"
       >
         <IconLogoWalletOfSatoshi />

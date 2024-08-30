@@ -1,12 +1,6 @@
 <template>
   <ButtonLinkSkeleton
-    class="
-      relative inline-flex justify-center items-center
-      min-w-[40px] max-w-sm
-      min-h-[40px] max-h-sm
-      rounded-default overflow-hidden
-      shadow-default hover:shadow-default-flat
-    "
+    class="group flex flex-row gap-2 items-stretch"
     :class="{
       'opacity-50 cursor-default pointer-events-none': disabled,
     }"
@@ -15,7 +9,24 @@
     :target="target"
     :disabled="disabled"
   >
-    <slot />
+    <div
+      class="
+        inline-flex justify-center items-center
+        min-w-[40px] max-w-sm
+        min-h-[40px]
+        rounded-default overflow-hidden
+        shadow-default group-hover:shadow-default-flat
+      "
+      :class="[iconClass, { 'flex-1': $slots.description == null }]"
+    >
+      <slot />
+    </div>
+    <div
+      v-if="$slots.description != null"
+      :class="descriptionClass"
+    >
+      <slot name="description" />
+    </div>
   </ButtonLinkSkeleton>
 </template>
 
@@ -41,6 +52,14 @@ defineProps({
   disabled: {
     type: Boolean,
     default: false,
+  },
+  iconClass: {
+    type: String,
+    default: '',
+  },
+  descriptionClass: {
+    type: String,
+    default: '',
   },
 })
 </script>

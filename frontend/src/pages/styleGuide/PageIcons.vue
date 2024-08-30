@@ -106,6 +106,8 @@
         <IconTipCardsQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
         <IconWalletArrowDown class="w-10 h-10" :class="cssClass" />
         <IconWalletArrowDown class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconMobilePhoneQuestionmark class="w-10 h-10" :class="cssClass" />
+        <IconMobilePhoneQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -127,6 +129,8 @@
         <IconLogoCoinos class="w-28" :class="cssClass" />
         <IconLogoBreez class="w-28 text-[#0085FB]" :class="cssClass" />
         <IconLogoPhoenix class="h-10" :class="cssClass" />
+        <IconLogoAprycotMedia class="w-28" :class="cssClass" />
+        <IconLogoLightningNetworkStores class="w-28" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -201,6 +205,9 @@ import IconLogoBlinkWallet from '@/components/icons/IconLogoBlinkWallet.vue'
 import IconLogoCoinos from '@/components/icons/IconLogoCoinos.vue'
 import IconLogoBreez from '@/components/icons/IconLogoBreez.vue'
 import IconLogoPhoenix from '@/components/icons/IconLogoPhoenix.vue'
+import IconLogoAprycotMedia from '@/components/icons/IconLogoAprycotMedia.vue'
+import IconLogoLightningNetworkStores from '@/components/icons/IconLogoLightningNetworkStores.vue'
+import IconMobilePhoneQuestionmark from '@/components/icons/IconMobilePhoneQuestionmark.vue'
 
 const addBackgroundToIcons = ref(false)
 

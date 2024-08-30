@@ -129,6 +129,10 @@
         "message": "Die Bitcoin wurden soeben in deine Wallet übertragen."
       }
     },
+    "sectionNoWallet": {
+      "headline": "Neu hier ohne Wallet?",
+      "explanation": "Installiere eine Wallet, um Bitcoin zu empfangen, zu speichern und auszugeben. Für den täglichen Gebrauch und kleine Beträge ist eine Smartphone-App ideal. Wir empfehlen folgende Wallets zum Einstieg:"
+    },
     "sectionUse": {
       "headline": "Verwende deine Bitcoin",
       "message": "Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst* sie einfach.",

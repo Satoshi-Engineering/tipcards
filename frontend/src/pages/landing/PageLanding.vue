@@ -41,13 +41,9 @@
 
       <NoWallet />
 
+      <UseYourBitcoin />
+
       <!--
-        todo : use this as a guide to refactor the page, move all sections into separate files/components
-
-        <section class="use-your-bitcoin">
-          show always
-        </section>
-
         <section class="more-bitcoin-explanation">
           show always
         </section>
@@ -85,6 +81,7 @@ import GreetingIsLockedByBulkWithdraw from './GreetingIsLockedByBulkWithdraw.vue
 import GreetingRecentlyWithdrawn from './GreetingRecentlyWithdrawn.vue'
 import GreetingWithdrawn from './GreetingWithdrawn.vue'
 import NoWallet from './NoWallet.vue'
+import UseYourBitcoin from './UseYourBitcoin.vue'
 
 const {
   loading: loadingCardStatus,

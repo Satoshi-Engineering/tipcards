@@ -129,6 +129,10 @@
         "message": "The bitcoin were just transferred to your wallet."
       }
     },
+    "sectionNoWallet": {
+      "headline": "New here without a wallet?",
+      "explanation": "Install a wallet to receive, store and spend Bitcoin. A smartphone app is ideal for everyday use and small amounts. We recommend the following wallets to get started:"
+    },
     "sectionUse": {
       "headline": "Use your bitcoin",
       "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl* them.",
