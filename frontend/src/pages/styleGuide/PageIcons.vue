@@ -104,6 +104,8 @@
         <IconTipCardPlus class="w-10 h-10 text-yellow" :class="cssClass" />
         <IconTipCardsQuestionmark class="w-10 h-10" :class="cssClass" />
         <IconTipCardsQuestionmark class="w-10 h-10 text-yellow" :class="cssClass" />
+        <IconWalletArrowDown class="w-10 h-10" :class="cssClass" />
+        <IconWalletArrowDown class="w-10 h-10 text-yellow" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -120,6 +122,11 @@
         <IconLogoLinkedIn class="w-10 text-yellow" :class="cssClass" />
         <IconLogoX class="w-10" :class="cssClass" />
         <IconLogoX class="w-10 text-yellow" :class="cssClass" />
+        <IconLogoWalletOfSatoshi class="w-52" :class="cssClass" />
+        <IconLogoBlinkWallet class="w-28" :class="cssClass" />
+        <IconLogoCoinos class="w-28" :class="cssClass" />
+        <IconLogoBreez class="w-28 text-[#0085FB]" :class="cssClass" />
+        <IconLogoPhoenix class="h-10" :class="cssClass" />
       </div>
 
       <HeadlineDefault level="h2">
@@ -188,6 +195,12 @@ import IconShare from '@/components/icons/IconShare.vue'
 import IconArrowLeftRight from '@/components/icons/IconArrowLeftRight.vue'
 import IconBarChartFill from '@/components/icons/IconBarChartFill.vue'
 import BackLink from '@/components/BackLink.vue'
+import IconWalletArrowDown from '@/components/icons/IconWalletArrowDown.vue'
+import IconLogoWalletOfSatoshi from '@/components/icons/IconLogoWalletOfSatoshi.vue'
+import IconLogoBlinkWallet from '@/components/icons/IconLogoBlinkWallet.vue'
+import IconLogoCoinos from '@/components/icons/IconLogoCoinos.vue'
+import IconLogoBreez from '@/components/icons/IconLogoBreez.vue'
+import IconLogoPhoenix from '@/components/icons/IconLogoPhoenix.vue'
 
 const addBackgroundToIcons = ref(false)
 

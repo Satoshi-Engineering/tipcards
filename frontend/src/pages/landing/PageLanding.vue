@@ -1,5 +1,5 @@
 <template>
-  <TheLayout :hide-faqs="!isLoggedIn">
+  <TheLayout class="overflow-x-hidden" :hide-faqs="!isLoggedIn">
     <CenterContainer
       v-if="!showContent"
       class="min-h-[60dvh] flex justify-center items-center"
@@ -39,12 +39,10 @@
         :lnurl="lnurl"
       />
 
+      <NoWallet />
+
       <!--
         todo : use this as a guide to refactor the page, move all sections into separate files/components
-
-        <section class="no-wallet">
-          show always
-        </section>
 
         <section class="use-your-bitcoin">
           show always
@@ -81,11 +79,12 @@ import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
 import { BACKEND_API_ORIGIN } from '@/constants'
 
+import GetYourBitcoin from './GetYourBitcoin.vue'
 import GreetingFunded from './GreetingFunded.vue'
 import GreetingIsLockedByBulkWithdraw from './GreetingIsLockedByBulkWithdraw.vue'
 import GreetingRecentlyWithdrawn from './GreetingRecentlyWithdrawn.vue'
 import GreetingWithdrawn from './GreetingWithdrawn.vue'
-import GetYourBitcoin from './GetYourBitcoin.vue'
+import NoWallet from './NoWallet.vue'
 
 const {
   loading: loadingCardStatus,
