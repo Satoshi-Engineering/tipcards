@@ -32,6 +32,9 @@
       <GreetingWithdrawn
         v-else-if="cardStatus?.status === CardStatusEnum.enum.withdrawn"
       />
+      <GreetingPreview
+        v-else
+      />
 
       <GetYourBitcoin
         v-if="
@@ -81,6 +84,7 @@ import NoWallet from './NoWallet.vue'
 import UseYourBitcoin from './UseYourBitcoin.vue'
 import MoreBitcoinExplanation from './MoreBitcoinExplanation.vue'
 import CreateYourOwnTipCard from './CreateYourOwnTipCard.vue'
+import GreetingPreview from './GreetingPreview.vue'
 
 const {
   loading: loadingCardStatus,
