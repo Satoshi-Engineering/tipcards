@@ -17,7 +17,10 @@
       </CenterContainer>
 
       <GreetingIsLockedByBulkWithdraw
-        v-if="cardStatus?.status === CardStatusEnum.enum.isLockedByBulkWithdraw || cardStatus?.status === CardStatusEnum.enum.bulkWithdrawPending"
+        v-if="(
+          cardStatus?.status === CardStatusEnum.enum.isLockedByBulkWithdraw
+          || cardStatus?.status === CardStatusEnum.enum.bulkWithdrawPending
+        )"
         :card-status="cardStatus"
         :resetting-bulk-withdraw="resettingBulkWithdraw"
         @reset-bulk-withdraw="resetBulkWithdraw"
@@ -37,10 +40,14 @@
       />
 
       <GetYourBitcoin
-        v-if="
-          (cardStatus?.status === CardStatusEnum.enum.funded || cardStatus?.status === CardStatusEnum.enum.withdrawPending)
-            && lnurl != null
-        "
+        v-if="(
+          (
+            cardStatus?.status === CardStatusEnum.enum.funded
+            || cardStatus?.status === CardStatusEnum.enum.withdrawPending
+            || cardStatus?.status === CardStatusEnum.enum.recentlyWithdrawn
+          )
+          && lnurl != null
+        )"
         :card-status="cardStatus"
         :lnurl="lnurl"
       />
