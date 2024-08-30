@@ -1,7 +1,6 @@
 import z from 'zod'
 
 export const CardStatusEnum = z.enum([
-  'isLockedByBulkWithdraw', 'bulkWithdrawPending',
   'unfunded',
   'invoiceFunding', 'lnurlpFunding', 'lnurlpSharedFunding', 'setInvoiceFunding',
   'invoiceExpired', 'lnurlpExpired', 'lnurlpSharedExpiredEmpty', 'lnurlpSharedExpiredFunded', 'setInvoiceExpired',
