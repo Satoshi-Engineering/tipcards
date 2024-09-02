@@ -25,11 +25,12 @@ afterAll(() => {
 })
 
 describe('auth wait for login (socket.io)', () => {
-  failEarly.it('should connect to socket in 2 sec', async () => {
+  failEarly.it('should connect to socket', async () => {
     await frontend.initSocketConnectionWithBackend()
 
     expect(frontend.hasSocketConnection()).toBe(true)
     expect(frontend.getLastSocketError()).toBe(null)
+    expect(frontend.hasLoggedInEventRecieved()).toBe(false)
   })
 
   failEarly.it('should recieve loggedIn socket event in 2 sec, after login with lnurlauth', async () => {
@@ -37,6 +38,7 @@ describe('auth wait for login (socket.io)', () => {
       throw Error('socket should be an instance and connected')
     }
 
+    expect(frontend.hasLoggedInEventRecieved()).toBe(false)
     const response: AxiosResponse = await frontend.authCreate()
     expect(frontend.authServiceLoginHash).not.toBe('')
 
