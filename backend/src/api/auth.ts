@@ -1,14 +1,11 @@
 import { createHash } from 'crypto'
 import { Router } from 'express'
-import type http from 'http'
 import lnurl from 'lnurl'
-import { Server, Socket } from 'socket.io'
 import cookieParser from 'cookie-parser'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
-import corsOptions from '@backend/services/corsOptions.js'
 import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/deprecated/queries.js'
 import {
   createAccessToken, createRefreshToken,
@@ -16,9 +13,9 @@ import {
 import {
   LNURL_PORT, LNURL_SERVICE_ORIGIN,
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
-  LNURL_AUTH_DEBUG,
 } from '@backend/constants.js'
 import Auth from '@backend/domain/auth/Auth.js'
+import SocketConnector from '@backend/domain/auth/SocketConnector.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
@@ -28,7 +25,17 @@ type LoginEvent = {
   key: string,
   hash: string,
 }
-const loggedIn: Record<string, string> = {}
+const oneTimeLoginKey: Record<string, string> = {}
+
+const addOneTimeLoginKey = (hash: string, key: string) => {
+  oneTimeLoginKey[hash] = key
+  SocketConnector.getConnector().addLoginHash(hash)
+}
+
+const removeOneTimeLoginKey = (hash: string) => {
+  delete oneTimeLoginKey[hash]
+  SocketConnector.getConnector().removeLoginHash(hash)
+}
 
 const lnurlServer = lnurl.createServer({
   host: '0.0.0.0',
@@ -46,45 +53,14 @@ lnurlServer.on('login', async (event: LoginEvent) => {
   // `key` - the public key as provided by the LNURL wallet app
   // `hash` - the hash of the secret for the LNURL used to login
   const { key, hash } = event
-  loggedIn[hash] = key
+  addOneTimeLoginKey(hash, key)
   setTimeout(() => {
-    delete loggedIn[hash]
+    removeOneTimeLoginKey(hash)
   }, 1000 * 60 * 15)
 
-  if (socketsByHash[hash] == null) {
-    return
-  }
-
-  socketsByHash[hash].emit('loggedIn')
+  SocketConnector.getConnector().emitLoginSuccessfull(hash)
 })
 
-/////
-// SOCKET CONNECTION FOR AUTH
-const socketsByHash: Record<string, Socket> = {}
-const hashesBySocketId: Record<string, string> = {}
-export const initSocketIo = (server: http.Server) => {
-  const io = new Server(server, {
-    cors: LNURL_AUTH_DEBUG ? { origin: '*' } : corsOptions,
-  })
-  io.on('connection', (socket) => {
-    socket.on('waitForLogin', async ({ hash }) => {
-      socketsByHash[hash] = socket
-      hashesBySocketId[socket.id] = hash
-      if (typeof loggedIn[hash] !== 'string') {
-        return
-      }
-      socketsByHash[hash].emit('loggedIn')
-    })
-    socket.on('disconnect', () => {
-      if (hashesBySocketId[socket.id] == null) {
-        return
-      }
-      const hash = hashesBySocketId[socket.id]
-      delete socketsByHash[hash]
-      delete hashesBySocketId[socket.id]
-    })
-  })
-}
 
 /////
 // ROUTES
@@ -102,7 +78,7 @@ router.get('/create', async (_, res) => {
   const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = createHash('sha256').update(secret).digest('hex')
-  delete loggedIn[hash]
+  removeOneTimeLoginKey(hash)
   res.json({
     status: 'success',
     data: {
@@ -114,14 +90,14 @@ router.get('/create', async (_, res) => {
 
 router.get('/status/:hash', async (req, res) => {
   const hash = req.params.hash
-  if (loggedIn[hash] == null) {
+  if (oneTimeLoginKey[hash] == null) {
     res.status(404).json({
       status: 'error',
       message: 'Hash not found.',
     })
     return
   }
-  if (typeof loggedIn[hash] !== 'string') {
+  if (typeof oneTimeLoginKey[hash] !== 'string') {
     res.status(403).json({
       status: 'error',
       message: 'No log in happened for given hash.',
@@ -131,7 +107,7 @@ router.get('/status/:hash', async (req, res) => {
 
   let user: User
   try {
-    user = await getUserByLnurlAuthKeyOrCreateNew(loggedIn[hash])
+    user = await getUserByLnurlAuthKeyOrCreateNew(oneTimeLoginKey[hash])
   } catch (error) {
     console.error(ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey, error)
     res.status(500).json({
@@ -172,7 +148,7 @@ router.get('/status/:hash', async (req, res) => {
       status: 'success',
       data: { accessToken },
     })
-  delete loggedIn[hash]
+  removeOneTimeLoginKey(hash)
 })
 
 router.get(

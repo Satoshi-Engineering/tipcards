@@ -3,12 +3,12 @@ import fs from 'fs'
 import type { Socket } from 'net'
 import path from 'path'
 
-import { initSocketIo } from '@backend/api/auth.js'
 import Database from '@backend/database/Database.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import app from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
+import SocketConnector from '@backend/domain/auth/SocketConnector.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
@@ -38,7 +38,7 @@ const startupApplication = async () => {
     console.info(` - app running and listening on port ${EXPRESS_PORT}`)
   })
 
-  initSocketIo(server)
+  SocketConnector.init(server)
   console.info(' - WebSocket initialized')
 
   let connections: Socket[] = []
