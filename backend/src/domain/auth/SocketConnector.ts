@@ -62,7 +62,7 @@ export default class SocketConnector {
       socket.on('waitForLogin', async ({ hash }) => {
         this.socketsByHash[hash] = socket
         this.hashesBySocketId[socket.id] = hash
-        if (this.loginHashExists(hash)) {
+        if (!this.loginHashExists(hash)) {
           return
         }
         this.socketsByHash[hash].emit('loggedIn')
