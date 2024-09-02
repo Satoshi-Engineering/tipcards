@@ -15,7 +15,8 @@ import {
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
 } from '@backend/constants.js'
 import Auth from '@backend/domain/auth/Auth.js'
-import SocketConnector from '@backend/domain/auth/SocketConnector.js'
+import LoginInformer from '@backend/domain/auth/LoginInformer.js'
+import SocketIoServer from '@backend/services/SocketIoServer.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
@@ -25,17 +26,25 @@ type LoginEvent = {
   key: string,
   hash: string,
 }
+
+let loginInformer: null | LoginInformer
+
+export const apiStartup = () => {
+  loginInformer = new LoginInformer(SocketIoServer.getServer())
+}
+
 const oneTimeLoginKey: Record<string, string> = {}
 
 const addOneTimeLoginKey = (hash: string, key: string) => {
   oneTimeLoginKey[hash] = key
-  SocketConnector.getConnector().addLoginHash(hash)
+  loginInformer?.addLoginHash(hash)
 }
 
 const removeOneTimeLoginKey = (hash: string) => {
   delete oneTimeLoginKey[hash]
-  SocketConnector.getConnector().removeLoginHash(hash)
+  loginInformer?.removeLoginHash(hash)
 }
+
 
 const lnurlServer = lnurl.createServer({
   host: '0.0.0.0',
@@ -58,7 +67,7 @@ lnurlServer.on('login', async (event: LoginEvent) => {
     removeOneTimeLoginKey(hash)
   }, 1000 * 60 * 15)
 
-  SocketConnector.getConnector().emitLoginSuccessfull(hash)
+  loginInformer?.emitLoginSuccessfull(hash)
 })
 
 
