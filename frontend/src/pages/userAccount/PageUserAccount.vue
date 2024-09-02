@@ -9,16 +9,19 @@
         <ProfileForm />
       </CenterContainer>
 
-      <div class="bg-gradient-to-b from-grey-light to-transparent">
+      <div class="pt-5 bg-gradient-to-b from-grey-light to-transparent">
         <CenterContainer>
+          <HeadlineDefault level="h2" class="text-center">
+            {{ $t('auth.buttonLogout') }}
+          </HeadlineDefault>
           <ButtonContainer class="my-10">
-            <HeadlineDefault level="h2" class="text-center">
-              {{ $t('auth.buttonLogout') }}
-            </HeadlineDefault>
             <ButtonDefault @click="onLogout">
               {{ $t('auth.buttonLogout') }}
             </ButtonDefault>
+          </ButtonContainer>
+          <ButtonContainer class="my-10">
             <ButtonDefault
+              variant="secondary"
               :disabled="loggingOutAllOtherDevices"
               :loading="loggingOutAllOtherDevices"
               @click="logoutAllOtherDevices"
@@ -29,8 +32,8 @@
               <IconCheckSquareFill v-if="loggingOutAllOtherDevicesSuccess" class="inline-block ms-2 h-[1em] w-[1em]" />
             </ButtonDefault>
             <small class="block">({{ $t('userAccount.logoutAllOtherDevicesHint') }})</small>
-            <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
           </ButtonContainer>
+          <UserErrorMessages :user-error-messages="logoutUserErrorMessages" />
         </CenterContainer>
       </div>
     </template>
