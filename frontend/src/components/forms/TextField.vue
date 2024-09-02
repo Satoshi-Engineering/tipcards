@@ -1,8 +1,8 @@
 <template>
   <label class="block mb-4 last:mb-0">
-    <h4 class="mb-1 font-lato">
+    <span class="block mb-1 font-lato text-black">
       {{ label }}
-    </h4>
+    </span>
     <small
       v-if="description != null"
       class="block mb-1"
