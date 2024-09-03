@@ -1,8 +1,8 @@
 import { describe, vi, it, expect, beforeEach } from 'vitest'
 
 import '../../mocks/process.env.js'
-import '../../mocks/socketIoServer.js' // This line has to be an extra statement, otherwise the vi.mock will not work!
-import { MockServer } from '../../mocks/socketIoServer.js'
+import '../../mocks/socketIo.js' // This line has to be an extra statement, otherwise the vi.mock will not work!
+import { MockServer } from '../../mocks/socketIo.js'
 
 import { Server, Socket } from 'socket.io'
 
