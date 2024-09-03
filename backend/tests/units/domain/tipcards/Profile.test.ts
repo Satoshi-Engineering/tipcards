@@ -1,15 +1,15 @@
-import '../mocks/database/client.js'
-import { addData } from '../mocks/database/database.js'
-import '../mocks/axios.js'
-import '../mocks/drizzle.js'
-import '../mocks/process.env.js'
+import '../../mocks/database/client.js'
+import { addData } from '../../mocks/database/database.js'
+import '../../mocks/axios.js'
+import '../../mocks/drizzle.js'
+import '../../mocks/process.env.js'
 
 import { describe, it, expect, beforeAll } from 'vitest'
 
 import { asTransaction } from '@backend/database/client.js'
 import Profile from '@backend/domain/tipcards/Profile.js'
 
-import { createUser, createProfileForUser } from '../../drizzleData.js'
+import { createUser, createProfileForUser } from '../../../drizzleData.js'
 
 const userDatabase = createUser()
 const profileDatabase = createProfileForUser(userDatabase)

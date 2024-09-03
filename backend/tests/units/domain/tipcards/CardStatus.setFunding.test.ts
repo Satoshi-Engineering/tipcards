@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 
-import '../mocks/database/client.js'
-import { addData } from '../mocks/database/database.js'
-import '../mocks/axios.js'
-import '../mocks/drizzle.js'
-import '../mocks/process.env.js'
+import '../../mocks/database/client.js'
+import { addData } from '../../mocks/database/database.js'
+import '../../mocks/axios.js'
+import '../../mocks/drizzle.js'
+import '../../mocks/process.env.js'
 import {
   createCard, createCardVersion,
   createInvoice,
-} from '../../drizzleData.js'
+} from '../../../drizzleData.js'
 
 import CardStatus from '@backend/domain/tipcards/CardStatus.js'
 import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
