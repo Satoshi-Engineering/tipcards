@@ -10,6 +10,7 @@ import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@back
 import { shutdown } from '@backend/shutdown.js'
 import { apiStartup } from '@backend/api/auth.js'
 import SocketIoServer from '@backend/services/SocketIoServer.js'
+import LnurlServer from '@backend/services/LnurlServer.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
@@ -41,6 +42,9 @@ const startupApplication = async () => {
 
   SocketIoServer.init(server)
   console.info(' - WebSocket initialized')
+
+  LnurlServer.init()
+  console.info(' - LnurlServer initialized')
 
   apiStartup()
   console.info(' - api/auth initialized')

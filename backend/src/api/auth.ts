@@ -1,7 +1,7 @@
 import { createHash } from 'crypto'
 import { Router } from 'express'
-import lnurl from 'lnurl'
 import cookieParser from 'cookie-parser'
+import lnurl from 'lnurl'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
@@ -10,27 +10,32 @@ import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@back
 import {
   createAccessToken, createRefreshToken,
 } from '@backend/services/jwt.js'
-import {
-  LNURL_PORT, LNURL_SERVICE_ORIGIN,
-  LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
-} from '@backend/constants.js'
 import Auth from '@backend/domain/auth/Auth.js'
 import LoginInformer from '@backend/domain/auth/LoginInformer.js'
 import SocketIoServer from '@backend/services/SocketIoServer.js'
+import LnurlServer, { type LoginEvent } from '@backend/services/LnurlServer.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
 /////
 // LNURL SERVICE
-type LoginEvent = {
-  key: string,
-  hash: string,
-}
 
 let loginInformer: null | LoginInformer
+let lnurlServer: null | lnurl.LnurlServer
 
 export const apiStartup = () => {
   loginInformer = new LoginInformer(SocketIoServer.getServer())
+  lnurlServer = LnurlServer.getServer()
+  lnurlServer.on('login', async (event: LoginEvent) => {
+    // `key` - the public key as provided by the LNURL wallet app
+    // `hash` - the hash of the secret for the LNURL used to login
+    const { key, hash } = event
+    addOneTimeLoginKey(hash, key)
+    setTimeout(() => {
+      removeOneTimeLoginKey(hash)
+    }, 1000 * 60 * 15)
+    loginInformer?.emitLoginSuccessfull(hash)
+  })
 }
 
 const oneTimeLoginKey: Record<string, string> = {}
@@ -45,32 +50,6 @@ const removeOneTimeLoginKey = (hash: string) => {
   loginInformer?.removeLoginHash(hash)
 }
 
-
-const lnurlServer = lnurl.createServer({
-  host: '0.0.0.0',
-  port: LNURL_PORT,
-  url: LNURL_SERVICE_ORIGIN,
-  lightning: {
-    backend: 'lnbits',
-    config: {
-      baseUrl: LNBITS_ORIGIN,
-      adminKey: LNBITS_ADMIN_KEY,
-    },
-  },
-})
-lnurlServer.on('login', async (event: LoginEvent) => {
-  // `key` - the public key as provided by the LNURL wallet app
-  // `hash` - the hash of the secret for the LNURL used to login
-  const { key, hash } = event
-  addOneTimeLoginKey(hash, key)
-  setTimeout(() => {
-    removeOneTimeLoginKey(hash)
-  }, 1000 * 60 * 15)
-
-  loginInformer?.emitLoginSuccessfull(hash)
-})
-
-
 /////
 // ROUTES
 const router = Router()
@@ -84,6 +63,14 @@ router.get('/publicKey', async (_, res) => {
 })
 
 router.get('/create', async (_, res) => {
+  if (lnurlServer == null) {
+    res.json({
+      status: 'error',
+      message: 'Lnurl server not initialized.',
+    }).status(500)
+    return
+  }
+
   const result = await lnurlServer.generateNewUrl('login')
   const secret = Buffer.from(result.secret, 'hex')
   const hash = createHash('sha256').update(secret).digest('hex')
