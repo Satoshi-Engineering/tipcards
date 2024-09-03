@@ -1,6 +1,6 @@
 import { exportSPKI } from 'jose'
 
-import { AuthCreateDto } from '@shared/data/trpc/auth/AuthCreateDto.js'
+import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
 
 import {
   getPublicKey,
@@ -13,7 +13,7 @@ export default class Auth {
     return spkiPem
   }
 
-  public static createLnUrlAuth(): AuthCreateDto {
+  public static createLnUrlAuth(): LnurlAuthLoginDto {
     /*
     const result = await lnurlServer.generateNewUrl('login')
     const secret = Buffer.from(result.secret, 'hex')
@@ -28,7 +28,7 @@ export default class Auth {
     })
       -*/
     return {
-      lnurl: '',
+      lnurlAuth: '',
       hash: '',
     }
   }

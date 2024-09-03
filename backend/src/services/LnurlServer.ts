@@ -5,11 +5,6 @@ import {
   LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
 } from '@backend/constants.js'
 
-export type LoginEvent = {
-  key: string,
-  hash: string,
-}
-
 export default class LnurlServer {
   static init() {
     if (LnurlServer.singleton != null) {
