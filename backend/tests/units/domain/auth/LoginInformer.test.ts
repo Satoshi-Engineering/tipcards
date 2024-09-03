@@ -2,9 +2,9 @@ import { describe, vi, it, expect, beforeEach } from 'vitest'
 
 import '../../mocks/process.env.js'
 import '../../mocks/socketIoServer.js' // This line has to be an extra statement, otherwise the vi.mock will not work!
-import { MockServer, MockSocket } from '../../mocks/socketIoServer.js'
+import { MockServer } from '../../mocks/socketIoServer.js'
 
-import { Server } from 'socket.io'
+import { Server, Socket } from 'socket.io'
 
 import LoginInformer from '@backend/domain/auth/LoginInformer.js'
 
@@ -12,8 +12,8 @@ describe('LoginInformer', () => {
   const socketServer = new Server()
   const mockServer = socketServer as unknown as MockServer
 
-  const acceptConnection = (): MockSocket => {
-    return mockServer.acceptConnection() as MockSocket
+  const acceptConnection = (): Socket => {
+    return mockServer.acceptConnection() as Socket
   }
 
   beforeEach(() => {
