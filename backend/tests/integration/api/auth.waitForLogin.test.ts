@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll } from 'vitest'
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
@@ -39,11 +39,11 @@ describe('auth wait for login (socket.io)', () => {
     }
 
     expect(frontend.hasLoggedInEventRecieved()).toBe(false)
-    const response: AxiosResponse = await frontend.authCreate()
+    const response = await frontend.authCreate()
     expect(frontend.authServiceLoginHash).not.toBe('')
 
     frontend.emitSocketEventWaitForLogin(frontend.authServiceLoginHash)
-    const url = lnurlAuth.getLNURLAuthCallbackUrl(response.data.data.encoded)
+    const url = lnurlAuth.getLNURLAuthCallbackUrl(response.lnurlAuth)
     await axios.get(url.toString())
 
     await retryFunctionWithDelayUntilSuccessWithMaxAttempts(() => frontend.hasLoggedInEventRecieved(), 20)

@@ -24,27 +24,6 @@ router.get('/publicKey', async (_, res) => {
   })
 })
 
-router.get('/create', async (_, res) => {
-  const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
-  if (lnurlAuthLogin == null) {
-    res.json({
-      status: 'error',
-      message: 'LnurlAuthLogin not initialized.',
-    }).status(500)
-    return
-  }
-
-  const result = await lnurlAuthLogin.create()
-
-  res.json({
-    status: 'success',
-    data: {
-      encoded: result.lnurlAuth,
-      hash: result.hash,
-    },
-  })
-})
-
 router.get('/status/:hash', async (req, res) => {
   const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
   const hash = req.params.hash

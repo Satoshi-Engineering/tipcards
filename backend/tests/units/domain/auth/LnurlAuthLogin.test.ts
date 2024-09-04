@@ -1,8 +1,8 @@
 import { describe, vi, it, expect, beforeEach } from 'vitest'
 
 import '../../mocks/process.env.js'
-import '../../mocks/lnurl.js'
-import { LnurlServerMock } from '../../mocks/lnurl.js'
+import '../../../lib/mocks/lnurl.js'
+import { LnurlServerMock } from '../../../lib/mocks/lnurl.js'
 
 import { createHash } from 'crypto'
 import lnurl from 'lnurl'

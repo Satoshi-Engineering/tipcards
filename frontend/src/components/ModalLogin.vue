@@ -46,6 +46,7 @@ import { storeToRefs } from 'pinia'
 import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
+import useTRpc from '@/modules/useTRpc'
 import ModalDefault from '@/components/ModalDefault.vue'
 import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
@@ -73,11 +74,10 @@ let socket: Socket
 
 onBeforeMount(async () => {
   try {
-    const response = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/create`)
-    if (response.data.status === 'success') {
-      lnurl.value = response.data.data.encoded
-      hash.value = response.data.data.hash
-    }
+    const trpc = useTRpc()
+    const response = await trpc.auth.lnurlAuth.create.query()
+    lnurl.value = response.lnurlAuth
+    hash.value = response.hash
   } catch(error) {
     console.error(error)
   }

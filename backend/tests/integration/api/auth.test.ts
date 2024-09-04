@@ -39,15 +39,7 @@ describe('auth', () => {
   failEarly.it('should login', async () => {
     const createResponse = await frontend.authCreate()
 
-    expect(createResponse.data).toEqual(expect.objectContaining({
-      status: 'success',
-      data: {
-        encoded: expect.any(String),
-        hash: expect.any(String),
-      },
-    }))
-
-    const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(createResponse.data.data.encoded)
+    const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(createResponse.lnurlAuth)
     const loginResponse = await axios.get(callbackUrl.toString())
     expect(loginResponse.data).toEqual(expect.objectContaining({
       status: 'OK',

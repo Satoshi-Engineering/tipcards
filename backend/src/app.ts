@@ -9,6 +9,7 @@ import auth from './api/auth.js'
 import bulkWithdraw from './api/bulkWithdraw.js'
 import card from './api/card.js'
 import cardLogos from './api/cardLogos.js'
+import cypress from './api/cypress.js'
 import dummy from './api/dummy.js'
 import invoice from './api/invoice.js'
 import landingPages from './api/landingPages.js'
@@ -39,6 +40,7 @@ app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
+app.use('/api/cypress', cypress)
 app.use(
   '/trpc',
   createExpressMiddleware({
