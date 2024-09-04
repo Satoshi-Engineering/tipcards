@@ -9,25 +9,8 @@ import {
   createAccessToken, createRefreshToken,
 } from '@backend/services/jwt.js'
 import Auth from '@backend/domain/auth/Auth.js'
-import LoginInformer from '@backend/domain/auth/LoginInformer.js'
-import SocketIoServer from '@backend/services/SocketIoServer.js'
-import LnurlServer from '@backend/services/LnurlServer.js'
-import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
-
-/////
-// LNURL AUTH LOGIN
-
-let lnurlAuthLogin: null | LnurlAuthLogin
-
-export const apiStartup = () => {
-  const loginInformer = new LoginInformer(SocketIoServer.getServer())
-  lnurlAuthLogin = new LnurlAuthLogin(
-    LnurlServer.getServer(),
-    loginInformer,
-  )
-}
 
 /////
 // ROUTES
@@ -42,6 +25,7 @@ router.get('/publicKey', async (_, res) => {
 })
 
 router.get('/create', async (_, res) => {
+  const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
   if (lnurlAuthLogin == null) {
     res.json({
       status: 'error',
@@ -62,6 +46,7 @@ router.get('/create', async (_, res) => {
 })
 
 router.get('/status/:hash', async (req, res) => {
+  const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
   const hash = req.params.hash
   if (lnurlAuthLogin == null || !lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
     res.status(404).json({

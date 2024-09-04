@@ -1,11 +1,12 @@
 import { exportSPKI } from 'jose'
 
-import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
-
 import {
   getPublicKey,
 } from '@backend/services/jwt.js'
-
+import LoginInformer from '@backend/domain/auth/LoginInformer.js'
+import SocketIoServer from '@backend/services/SocketIoServer.js'
+import LnurlServer from '@backend/services/LnurlServer.js'
+import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 export default class Auth {
   public static async getPublicKey() {
     const publicKey = await getPublicKey()
@@ -13,23 +14,37 @@ export default class Auth {
     return spkiPem
   }
 
-  public static createLnUrlAuth(): LnurlAuthLoginDto {
-    /*
-    const result = await lnurlServer.generateNewUrl('login')
-    const secret = Buffer.from(result.secret, 'hex')
-    const hash = createHash('sha256').update(secret).digest('hex')
-    delete loggedIn[hash]
-    res.json({
-      status: 'success',
-      data: {
-        encoded: result.encoded,
-        hash,
-      },
-    })
-      -*/
-    return {
-      lnurlAuth: '',
-      hash: '',
+  public static init() {
+    if (Auth.singleton != null) {
+      throw new Error('Auth already initialized!')
     }
+
+    const loginInformer = new LoginInformer(SocketIoServer.getServer())
+    const lnurlAuthLogin = new LnurlAuthLogin(
+      LnurlServer.getServer(),
+      loginInformer,
+    )
+
+    Auth.singleton = new Auth(lnurlAuthLogin)
+  }
+
+  static getAuth(): Auth {
+    if (Auth.singleton == null) {
+      throw new Error('Auth getAuth called before init!')
+    }
+
+    return Auth.singleton
+  }
+
+  private static singleton: Auth
+
+  private lnurlAuthLogin: LnurlAuthLogin
+
+  private constructor(lnurlAuthLogin: LnurlAuthLogin) {
+    this.lnurlAuthLogin = lnurlAuthLogin
+  }
+
+  public getLnurlAuthLogin(): LnurlAuthLogin {
+    return this.lnurlAuthLogin
   }
 }

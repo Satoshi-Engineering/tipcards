@@ -4,6 +4,7 @@ import { cardRouter } from './router/tipcards/card.js'
 import { profileRouter } from './router/tipcards/profile.js'
 import { setRouter } from './router/tipcards/set.js'
 import { statisticsRouter } from './router/tipcards/statistics.js'
+import { authRouter } from './router/auth/auth.js'
 
 export const appRouter = router({
   bulkWithdraw: bulkWithdrawRouter,
@@ -11,6 +12,7 @@ export const appRouter = router({
   profile: profileRouter,
   set: setRouter,
   statistics: statisticsRouter,
+  auth: authRouter,
 })
 
 export type AppRouter = typeof appRouter
