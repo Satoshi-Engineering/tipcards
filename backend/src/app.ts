@@ -20,6 +20,9 @@ import withdraw from './api/withdraw.js'
 import { appRouter } from './trpc/index.js'
 import { createContext } from './trpc/trpc.js'
 import { mapApplicationErrorToTrpcError } from './trpc/errorHandling.js'
+import { appRouter as authRouter } from './domain/auth/trpc/index.js'
+import { createContext as createAuthContext } from './domain/auth/trpc/trpc.js'
+import { mapApplicationErrorToTrpcError as mapAuthErrorToTrpcError } from './domain/auth/trpc/errorHandling.js'
 import corsOptions from './services/corsOptions.js'
 import xstAttack from './xstAttack.js'
 
@@ -48,6 +51,16 @@ app.use(
     createContext,
     onError: (opts) => {
       mapApplicationErrorToTrpcError(opts.error)
+    },
+  }),
+)
+app.use(
+  '/auth/trpc',
+  createExpressMiddleware({
+    router: authRouter,
+    createContext: createAuthContext,
+    onError: (opts) => {
+      mapAuthErrorToTrpcError(opts.error)
     },
   }),
 )

@@ -1,3 +1,4 @@
+import assert from 'assert'
 import lnurl from 'lnurl'
 import { createHash } from 'crypto'
 
@@ -46,6 +47,7 @@ export default class LnurlAuthLogin {
       // `key` - the public key as provided by the LNURL wallet app
       // `hash` - the hash of the secret for the LNURL used to login
       const { key: walletPublicKey, hash } = event
+      assert(walletPublicKey.length > 0, 'lnurlServer.on(login) - Wallet public key is empty')
       this.addOneTimeLoginHash(hash, walletPublicKey)
       setTimeout(() => {
         this.removeOneTimeLoginHash(hash)

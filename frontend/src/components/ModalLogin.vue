@@ -46,7 +46,7 @@ import { storeToRefs } from 'pinia'
 import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
-import useTRpc from '@/modules/useTRpc'
+import useTRpcAuth from '@/modules/useTRpcAuth'
 import ModalDefault from '@/components/ModalDefault.vue'
 import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
@@ -74,8 +74,8 @@ let socket: Socket
 
 onBeforeMount(async () => {
   try {
-    const trpc = useTRpc()
-    const response = await trpc.auth.lnurlAuth.create.query()
+    const trpcAuth = useTRpcAuth()
+    const response = await trpcAuth.lnurlAuth.create.query()
     lnurl.value = response.lnurlAuth
     hash.value = response.hash
   } catch(error) {

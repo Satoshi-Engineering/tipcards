@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 
-import { AppRouter } from '@backend/trpc/index.js'
+import { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 import axios, { AxiosResponse } from 'axios'
 import { decodeJwt } from 'jose'
 
@@ -15,15 +15,15 @@ export default class FrontendWithAuth extends Frontend {
   accessToken = ''
   refreshToken = ''
 
-  private trpc
+  private trpcAuth
 
   constructor() {
     super()
-    this.trpc = createTRPCProxyClient<AppRouter>({
+    this.trpcAuth = createTRPCProxyClient<AuthRouter>({
       transformer: superjson,
       links: [
         httpBatchLink({
-          url: `${API_ORIGIN}/trpc`,
+          url: `${API_ORIGIN}/auth/trpc`,
           maxURLLength: 2083,
           headers: async () => {
             return {
@@ -42,7 +42,7 @@ export default class FrontendWithAuth extends Frontend {
   }
 
   async authCreate() {
-    const response = await this.trpc.auth.lnurlAuth.create.query()
+    const response = await this.trpcAuth.lnurlAuth.create.query()
     this.authServiceLoginHash = response.hash
     return response
   }
