@@ -7,7 +7,7 @@ describe('profileData', () => {
   const profile = generateProfile()
 
   beforeEach(() => {
-    tipCardsApi.login()
+    tipCardsApi.auth.login()
   })
 
   it('user navigates to account page and enters their data', () => {

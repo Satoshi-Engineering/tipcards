@@ -20,6 +20,7 @@
           class="block transition-opacity"
           :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || error != null }"
           :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
+          data-test="lightning-qr-code-image"
           v-html="qrCodeSvg"
         />
         <!-- eslint-enable vue/no-v-html -->
@@ -29,6 +30,7 @@
         <div v-else-if="success || pending" class="absolute top-0 left-0 right-0 bottom-0 grid place-items-center">
           <IconAnimatedCheckmark
             class="w-5/12 text-[#22AE73]"
+            data-test="lightning-qr-code-image-success"
             :pending="pending && !success"
           />
         </div>
@@ -41,6 +43,7 @@
         :text="value"
         :error="error"
         :disabled="success || pending"
+        data-test="lnurlauth-qrcode-copy-2-clipboard"
       >
         <template #default>
           <span class="font-normal">

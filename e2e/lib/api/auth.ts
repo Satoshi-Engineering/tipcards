@@ -6,6 +6,7 @@ import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', BACKEND_API_ORIGIN)
 const API_AUTH_STATUS = new URL('/api/auth/status', BACKEND_API_ORIGIN)
+const API_AUTH_REFRESH = new URL('/api/auth/refresh', BACKEND_API_ORIGIN)
 
 export const login = () => {
   cy.fixture('keys.json').then((keys) => {
@@ -38,4 +39,26 @@ export const login = () => {
     })
     cy.getCookie('refresh_token').should('exist')
   })
+}
+
+export const refresh = () => {
+  cy.request({
+    url: `${API_AUTH_REFRESH.href}`,
+  }).then((response) => {
+    expect(response.body).to.have.nested.property('data.accessToken')
+    cy.wrap(response.body.data.accessToken).as('accessToken')
+  })
+}
+
+export const isLoggedIn = () => {
+  cy.getCookie('refresh_token').should('exist')
+  cy.get('@accessToken').should('exist')
+}
+
+export const clearAuth = () => {
+  cy.clearCookie('refresh_token')
+  cy.request({
+    url: `${API_AUTH_REFRESH.href}`,
+    failOnStatusCode: false,
+  }).its('status').should('eq', 401)
 }

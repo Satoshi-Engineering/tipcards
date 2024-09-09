@@ -3,7 +3,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Sets Page', () => {
   beforeEach(() => {
-    tipCardsApi.login()
+    tipCardsApi.auth.login()
   })
 
   it('User should see the empty sets list', () => {

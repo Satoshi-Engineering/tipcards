@@ -1,5 +1,9 @@
 <template>
-  <ModalDefault :headline="$t('auth.modalLogin.headline')" @close="$emit('close')">
+  <ModalDefault
+    :headline="$t('auth.modalLogin.headline')"
+    data-test="modal-login"
+    @close="$emit('close')"
+  >
     <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
       {{ modalLoginUserMessage }}
     </ParagraphDefault>
@@ -32,6 +36,7 @@
       <ButtonDefault
         class="text-sm min-w-[170px]"
         variant="secondary"
+        data-test="modal-login-close-button"
         @click="$emit('close')"
       >
         {{ $t('auth.modalLogin.close') }}
