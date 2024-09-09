@@ -9,7 +9,7 @@ const createClient = () => createTRPCProxyClient<AuthRouter>({
   transformer: superjson,
   links: [
     httpBatchLink({
-      url: `${BACKEND_API_ORIGIN}/trpc`,
+      url: `${BACKEND_API_ORIGIN}/auth/trpc`,
       maxURLLength: 2083,
       headers: () => {
         return {}
