@@ -1,4 +1,5 @@
 import { exportSPKI } from 'jose'
+import { Server } from 'http'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
@@ -10,15 +11,19 @@ import {
   createAccessToken,
 } from '@backend/services/jwt.js'
 import LoginInformer from '@backend/domain/auth/LoginInformer.js'
-import SocketIoServer from '@backend/services/SocketIoServer.js'
-import LnurlServer from '@backend/services/LnurlServer.js'
+import SocketIoServer from '@backend/domain/auth/services/SocketIoServer.js'
+import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 
 export default class Auth {
-  public static async getPublicKey() {
-    const publicKey = await getPublicKey()
-    const spkiPem = await exportSPKI(publicKey)
-    return spkiPem
+  public static startup(server: Server) {
+    SocketIoServer.init(server)
+    /* eslint-disable-next-line no-console */
+    console.info(' - Auth - WebSocket initialized')
+
+    LnurlServer.init()
+    /* eslint-disable-next-line no-console */
+    console.info(' - Auth - LnurlServer initialized')
   }
 
   public static init() {
@@ -41,6 +46,12 @@ export default class Auth {
     }
 
     return Auth.singleton
+  }
+
+  public static async getPublicKey() {
+    const publicKey = await getPublicKey()
+    const spkiPem = await exportSPKI(publicKey)
+    return spkiPem
   }
 
   private static singleton: Auth

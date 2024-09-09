@@ -12,9 +12,9 @@ import { createCallerFactory } from '@backend/domain/auth/trpc/trpc.js'
 
 import '../../lib/initAxios.js'
 import { lnurlAuthRouter } from '@backend/domain/auth/trpc/router/lnurlAuth.js'
-import SocketIoServer from '@backend/services/SocketIoServer.js'
+import SocketIoServer from '@backend/domain/auth/services/SocketIoServer.js'
 import Auth from '@backend/domain/auth/Auth.js'
-import LnurlServer from '@backend/services/LnurlServer.js'
+import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 import AuthSession from '@backend/domain/auth/AuthSession.js'
 

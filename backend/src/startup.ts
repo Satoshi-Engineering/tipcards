@@ -8,8 +8,6 @@ import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import app from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
-import SocketIoServer from '@backend/services/SocketIoServer.js'
-import LnurlServer from '@backend/services/LnurlServer.js'
 import Auth from './domain/auth/Auth.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
@@ -39,12 +37,8 @@ const startupApplication = async () => {
   const server = app.listen(EXPRESS_PORT, async () => {
     console.info(` - app running and listening on port ${EXPRESS_PORT}`)
   })
-
-  SocketIoServer.init(server)
-  console.info(' - WebSocket initialized')
-
-  LnurlServer.init()
-  console.info(' - LnurlServer initialized')
+  Auth.startup(server)
+  console.info(' - Auth started')
 
   Auth.init()
   console.info(' - Auth initialized')
