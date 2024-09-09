@@ -3,8 +3,8 @@ import axios from 'axios'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import '../lib/initAxios.js'
-import { API_ORIGIN } from '../lib/constants.js'
+import '../../lib/initAxios.js'
+import { API_ORIGIN } from '../../lib/constants.js'
 
 describe('auth', () => {
   it('should return public key from jwt', async () => {
