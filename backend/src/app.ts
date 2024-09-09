@@ -9,7 +9,6 @@ import auth from './api/auth.js'
 import bulkWithdraw from './api/bulkWithdraw.js'
 import card from './api/card.js'
 import cardLogos from './api/cardLogos.js'
-import cypress from './api/cypress.js'
 import dummy from './api/dummy.js'
 import invoice from './api/invoice.js'
 import landingPages from './api/landingPages.js'
@@ -20,6 +19,8 @@ import withdraw from './api/withdraw.js'
 import { appRouter } from './trpc/index.js'
 import { createContext } from './trpc/trpc.js'
 import { mapApplicationErrorToTrpcError } from './trpc/errorHandling.js'
+import authIndex from './domain/auth/api/index.js'
+import cypress from './domain/auth/api/cypress.js'
 import { appRouter as authRouter } from './domain/auth/trpc/index.js'
 import { createContext as createAuthContext } from './domain/auth/trpc/trpc.js'
 import { mapApplicationErrorToTrpcError as mapAuthErrorToTrpcError } from './domain/auth/trpc/errorHandling.js'
@@ -43,7 +44,6 @@ app.use('/api/lnurl', lnurl)
 app.use('/api/lnurlp', lnurlp)
 app.use('/api/set', set)
 app.use('/api/withdraw', withdraw)
-app.use('/api/cypress', cypress)
 app.use(
   '/trpc',
   createExpressMiddleware({
@@ -54,6 +54,8 @@ app.use(
     },
   }),
 )
+app.use('/auth/api/', authIndex)
+app.use('/auth/api/cypress', cypress)
 app.use(
   '/auth/trpc',
   createExpressMiddleware({

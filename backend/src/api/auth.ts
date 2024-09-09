@@ -16,14 +16,6 @@ import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.
 // ROUTES
 const router = Router()
 
-router.get('/publicKey', async (_, res) => {
-  const spkiPem = await Auth.getPublicKey()
-  res.json({
-    status: 'success',
-    data: spkiPem,
-  })
-})
-
 router.get('/status/:hash', async (req, res) => {
   const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
   const hash = req.params.hash

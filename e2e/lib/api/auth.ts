@@ -4,7 +4,7 @@
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
-const API_AUTH_CREATE = new URL('/api/cypress/lnurlAuth/create', BACKEND_API_ORIGIN)
+const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', BACKEND_API_ORIGIN)
 const API_AUTH_STATUS = new URL('/api/auth/status', BACKEND_API_ORIGIN)
 
 export const login = () => {
