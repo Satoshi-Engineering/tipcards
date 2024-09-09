@@ -57,8 +57,8 @@
     },
     "sectionUse": {
       "headline": "Utiliza tus Bitcoin",
-      "message": "Ahora puedes comprar algo con tus Bitcoin en una tienda o en un sitio web donde se acepte Bitcoin. O puedes transferirlos a la Lightning Wallet de un amigo o colega. O puedes simplemente guardarlos*.",
-      "messageFootnote": "* hodln = mantener, guardar",
+      "message": "Ahora puedes comprar algo con tus Bitcoin en una tienda o en un sitio web donde se acepte Bitcoin. O puedes transferirlos a la Lightning Wallet de un amigo o colega. O puedes simplemente hodl ({note}).",
+      "messageFootnote": "hodl = mantener, guardar",
       "examplesIntro": "Aquí hay algunos enlaces a sitios donde puede usar Bitcoin:",
       "examples": {
         "saltNDaisy": "Compra granola sostenible",

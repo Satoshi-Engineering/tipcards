@@ -66,7 +66,7 @@
     "sectionUse": {
       "headline": "Gunakan Bitcoin kamu",
       "message": "Kamu sekarang bisa membeli sesuatu di toko atau situs web yang menerima Bitcoin. Atau kamu bisa mentransfernya ke Lightning Wallet teman atau kolega. Atau cukup simpan saja.",
-      "messageFootnote": "* hodln = menyimpan, menabung",
+      "messageFootnote": "hodln = menyimpan, menabung",
       "examplesIntro": "Berikut adalah beberapa tautan situs tempat kamu bisa menggunakan Bitcoin:",
       "examples": {
         "saltNDaisy": "Beli granola yang sustainabel",

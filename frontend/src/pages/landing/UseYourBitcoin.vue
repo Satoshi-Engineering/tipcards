@@ -1,22 +1,26 @@
 <template>
-  <CenterContainer class="relative mb-14">
+  <CenterContainer class="relative">
     <IconMobilePhoneQuestionmark class="mx-auto w-10 h-10 text-yellow" />
     <HeadlineDefault level="h2" class="text-center">
       {{ $t('landing.sectionUse.headline') }}
     </HeadlineDefault>
     <ParagraphDefault class="text-center">
-      {{ $t('landing.sectionUse.message') }}
+      <span class="hidden">{{ $t('landing.sectionUse.message') }}</span>
+      <I18nT :keypath="'landing.sectionUse.message'">
+        <template #note>
+          <small class="text-sm">
+            {{ $t('landing.sectionUse.messageFootnote') }}
+          </small>
+        </template>
+      </I18nT>
     </ParagraphDefault>
-    <ParagraphDefault class="text-sm mb-5">
-      {{ $t('landing.sectionUse.messageFootnote') }}
-    </ParagraphDefault>
-    <ParagraphDefault>
+    <ParagraphDefault class="mt-10 mb-5">
       {{ $t('landing.sectionUse.examplesIntro') }}
     </ParagraphDefault>
     <ul class="flex flex-col gap-4">
       <li>
         <ButtonIconCard
-          icon-class="w-[70px] h-[50px] p-1"
+          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://satoshistore.io/"
         >
           <template #default>
@@ -38,7 +42,7 @@
       </li>
       <li>
         <ButtonIconCard
-          icon-class="w-[70px] h-[50px]"
+          icon-class="w-[70px] h-[50px] flex-none"
           href="https://aprycot.media/"
         >
           <template #default>
@@ -56,7 +60,7 @@
       </li>
       <li>
         <ButtonIconCard
-          icon-class="w-[70px] h-[50px] p-1"
+          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://copiaro.de/"
         >
           <template #default>
@@ -77,7 +81,7 @@
       </li>
       <li>
         <ButtonIconCard
-          icon-class="w-[70px] h-[50px] p-1"
+          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://lightningnetworkstores.com/"
         >
           <template #default>
@@ -95,7 +99,7 @@
       </li>
       <li>
         <ButtonIconCard
-          icon-class="w-[70px] h-[50px] p-1"
+          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://coinpages.io/"
         >
           <template #default>
@@ -130,4 +134,5 @@ import IconMobilePhoneQuestionmark from '@/components/icons/IconMobilePhoneQuest
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import { I18nT } from 'vue-i18n'
 </script>

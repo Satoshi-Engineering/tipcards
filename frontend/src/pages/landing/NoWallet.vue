@@ -1,44 +1,49 @@
 <template>
   <CenterContainer
     id="no-wallet"
-    class="relative mb-14 flex flex-col items-center"
+    class="relative flex flex-col items-center"
   >
     <IconWalletArrowDown class="w-10 h-10 text-yellow" />
     <HeadlineDefault level="h2">
       {{ $t('landing.sectionNoWallet.headline') }}
     </HeadlineDefault>
-    <ParagraphDefault class="mt-0 mb-4 text-center">
+    <ParagraphDefault class="mt-0 mb-7 text-center">
       {{ $t('landing.sectionNoWallet.explanation') }}
     </ParagraphDefault>
-    <div class="w-[280px] grid gap-2 grid-cols-2">
+    <div class="w-[280px] grid gap-3 grid-cols-2">
       <ButtonIconCard
         class="h-[100px] col-span-2"
         icon-class="p-8"
         href="https://walletofsatoshi.com/"
+        title="Wallet of Satoshi"
       >
         <IconLogoWalletOfSatoshi />
       </ButtonIconCard>
       <ButtonIconCard
         class="h-[70px]"
         href="https://coinos.io/"
+        title="Coinos"
       >
         <IconLogoCoinos class="h-[26px]" />
       </ButtonIconCard>
       <ButtonIconCard
         class="h-[70px]"
         href="https://blink.sv/"
+        title="Blink Wallet"
       >
         <IconLogoBlinkWallet class="h-[20px] text-[#fb5607]" />
       </ButtonIconCard>
       <ButtonIconCard
         class="h-[50px]"
         href="https://breez.technology/mobile/"
+        title="Breez Wallet"
       >
         <IconLogoBreez class="h-[20px] text-[#0085FB]" />
       </ButtonIconCard>
       <ButtonIconCard
         class="h-[50px]"
         href="https://phoenix.acinq.co/"
+        title="Phoenix Wallet"
       >
         <IconLogoPhoenix class="h-10" />
       </ButtonIconCard>

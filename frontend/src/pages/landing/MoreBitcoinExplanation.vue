@@ -1,7 +1,7 @@
 <template>
   <CenterContainer
     v-if="$te('landing.sectionMore.headline')"
-    class="relative mb-14 flex flex-col"
+    class="relative flex flex-col"
   >
     <HeadlineDefault level="h2">
       {{ $t('landing.sectionMore.headline') }}

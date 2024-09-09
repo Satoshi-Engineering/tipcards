@@ -75,8 +75,8 @@
   "landing": {
     "title": "Hol dir deine Bitcoin",
     "introGreeting": "Hi!",
-    "introGreetingFunded": "Hi, gratuliere! :)",
-    "introMessage": "Du wurdest mit Bitcoins beschenkt.{linebreak}Hol sie dir gleich!",
+    "introGreetingFunded": "Gratulation!",
+    "introMessage": "Du wurdest mit Bitcoin beschenkt.{linebreak}Hol sie dir gleich!",
     "introMessageReceiveBtc": {
       "message": "Hier kannst du dir {amountAndUnit} holen.",
       "amountAndUnit": "{amount} Bitcoin",
@@ -102,7 +102,8 @@
         "0": "Bitcoin ist eine <strong>digitale Währung</strong>.",
         "1": "Sie wird von allen Teilnehmerinnen und Teilnehmern des Bitcoin-Netzwerks verwaltet, das bedeutet, sie ist <strong>nicht unter Kontrolle</strong> einer Zentralbank, Regierung oder eines Konzerns.",
         "2": "Überweisungen (auch internationale) sind so einfach wie das Scannen eines QR-Codes. Probier es einfach aus!"
-      }
+      },
+      "headline": "Was ist Bitcoin?"
     },
     "sectionGetYourBitcoin": {
       "headline": "So holst du dir deine Bitcoin",
@@ -136,8 +137,8 @@
     },
     "sectionUse": {
       "headline": "Verwende deine Bitcoin",
-      "message": "Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst* sie einfach.",
-      "messageFootnote": "* hodln = halten, sparen",
+      "message": "Du kannst mit deinen Bitcoin jetzt etwas in einem Geschäft oder auf einer Website, wo Bitcoin akzeptiert werden, kaufen. Oder du überweist sie in die Lightning Wallet eines Freundes oder einer Kollegin. Oder du hodlst ({note}) sie einfach.",
+      "messageFootnote": "hodln = halten, sparen",
       "examplesIntro": "Hier sind ein paar Links auf Sites, auf denen du Bitcoin verwenden kannst:",
       "examples": {
         "saltNDaisy": "Kauf dir nachhaltiges Granola",

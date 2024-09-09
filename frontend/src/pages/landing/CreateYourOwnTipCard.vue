@@ -1,5 +1,5 @@
 <template>
-  <CenterContainer class="relative mb-14 flex flex-col">
+  <CenterContainer class="relative flex flex-col">
     <HeadlineDefault level="h2">
       {{ $t('landing.sectionUse.createYourOwnTipCardsHeadline') }}
     </HeadlineDefault>

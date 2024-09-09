@@ -23,21 +23,42 @@
         )"
         :card-status="cardStatus"
         :resetting-bulk-withdraw="resettingBulkWithdraw"
+        class="mb-7"
         @reset-bulk-withdraw="resetBulkWithdraw"
       />
       <GreetingFunded
         v-else-if="cardStatus?.status === CardStatusEnum.enum.funded || cardStatus?.status === CardStatusEnum.enum.withdrawPending"
+        class="mb-7"
         :card-status="cardStatus"
       />
       <GreetingRecentlyWithdrawn
         v-else-if="cardStatus?.status === CardStatusEnum.enum.recentlyWithdrawn"
+        class="mb-7"
       />
       <GreetingWithdrawn
         v-else-if="cardStatus?.status === CardStatusEnum.enum.withdrawn"
+        class="mb-7"
       />
       <GreetingPreview
         v-else
+        class="mb-7"
       />
+
+      <CenterContainer class="my-7">
+        <ParagraphDefault class="text-center">
+          <LinkDefault
+            href="#what-is-bitcoin"
+            no-bold
+            no-underline
+            class="group"
+          >
+            <IconLogoBitcoin class="inline-block w-8 h-auto align-middle me-3" />
+            <span class="underline group-hover:no-underline align-middle">
+              {{ $t('landing.sectionBitcoin.title') }}
+            </span>
+          </LinkDefault>
+        </ParagraphDefault>
+      </CenterContainer>
 
       <GetYourBitcoin
         v-if="(
@@ -52,13 +73,15 @@
         :lnurl="lnurl"
       />
 
-      <NoWallet />
+      <NoWallet class="my-12" />
 
-      <UseYourBitcoin />
+      <UseYourBitcoin class="my-12" />
 
-      <MoreBitcoinExplanation />
+      <WhatIsBitcoin id="what-is-bitcoin" class="my-12" />
 
-      <CreateYourOwnTipCard />
+      <MoreBitcoinExplanation class="my-12" />
+
+      <CreateYourOwnTipCard class="mt-12 mb-10" />
     </template>
   </TheLayout>
 </template>
@@ -92,6 +115,9 @@ import UseYourBitcoin from './UseYourBitcoin.vue'
 import MoreBitcoinExplanation from './MoreBitcoinExplanation.vue'
 import CreateYourOwnTipCard from './CreateYourOwnTipCard.vue'
 import GreetingPreview from './GreetingPreview.vue'
+import WhatIsBitcoin from './WhatIsBitcoin.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
+import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 
 const {
   loading: loadingCardStatus,

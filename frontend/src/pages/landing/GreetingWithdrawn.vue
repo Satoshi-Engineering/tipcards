@@ -1,12 +1,6 @@
 <template>
-  <CenterContainer class="relative mb-14 flex flex-col text-center">
-    <IconLightningBolt
-      class="
-        absolute w-[100px] h-[150px] -top-2 -end-8
-        scale-x-[-1]
-        text-yellow opacity-20
-      "
-    />
+  <CenterContainer class="relative flex flex-col text-center">
+    <GreetingIcon />
     <HeadlineDefault level="h1" styling="h2">
       {{ $t('landing.introMessageAlreadyUsed.headline') }}
     </HeadlineDefault>
@@ -30,6 +24,5 @@
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 </script>

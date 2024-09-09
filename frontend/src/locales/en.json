@@ -75,8 +75,8 @@
   "landing": {
     "title": "Get your bitcoin",
     "introGreeting": "Hi!",
-    "introGreetingFunded": "Hi, gratuliere! :)",
-    "introMessage": "You've been gifted Bitcoins.{linebreak}Get them now!",
+    "introGreetingFunded": "Congratulations!",
+    "introMessage": "You have been gifted with Bitcoin.{linebreak}Get them now!",
     "introMessageReceiveBtc": {
       "message": "You are just about to receive {amountAndUnit}",
       "amountAndUnit": "{amount} bitcoin",
@@ -102,7 +102,8 @@
         "0": "Bitcoin is a <strong>digital currency</strong>.",
         "1": "It is being managed by all members of the bitcoin network, which means it is <strong>not under control</strong> of any central bank, government, or company.",
         "2": "Transactions (including international ones) are as easy as scanning a QR code. Just give it a try!"
-      }
+      },
+      "headline": "What is Bitcoin?"
     },
     "sectionGetYourBitcoin": {
       "headline": "How to get your Bitcoin",
@@ -136,8 +137,8 @@
     },
     "sectionUse": {
       "headline": "Use your bitcoin",
-      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl* them.",
-      "messageFootnote": "* to hodl = to hold, to save up",
+      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl ({note}) them.",
+      "messageFootnote": "to hodl = to hold, to save up",
       "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
       "examples": {
         "saltNDaisy": "Buy some sustainable granola",

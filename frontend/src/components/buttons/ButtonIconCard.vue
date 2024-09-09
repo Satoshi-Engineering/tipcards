@@ -1,6 +1,6 @@
 <template>
   <ButtonLinkSkeleton
-    class="group flex flex-row gap-2 items-stretch"
+    class="group flex flex-row gap-4 items-stretch"
     :class="{
       'opacity-50 cursor-default pointer-events-none': disabled,
     }"
