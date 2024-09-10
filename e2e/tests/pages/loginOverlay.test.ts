@@ -30,13 +30,27 @@ describe('Login Overlay', () => {
     cy.getTestElement('modal-login').should('not.exist')
   })
 
-  it('Login with qr code', () => {
+  it('Login with click on qr code', () => {
     openModalLogin()
 
-    cy.getTestElement('lightning-qr-code-image').then((element) => {
-      const link = element.attr('href')
-      cy.log(element.attr('href'))
-      const lnurlAuthUrl = link.substring(10)
+    cy.getTestElement('lightning-qr-code-image')
+      .should('have.attr', 'href')
+      .and('match', /^lightning:.+/)
+
+    // Stub the link click, because cypress can not handle different protocolls, then http and https
+    // Attention: You should not use variables! Please refactor if you have an idea!
+    let lnurlAuthUrlHref = ''
+    cy.get('a[href^="lightning:"]').then(($link) => {
+      $link.on('click', (e) => {
+        e.preventDefault()
+        lnurlAuthUrlHref = $link.attr('href')
+      })
+    })
+
+    cy.getTestElement('lightning-qr-code-image').click()
+
+    cy.then(() => {
+      const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
       cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
     })
 
@@ -44,28 +58,17 @@ describe('Login Overlay', () => {
     checkLoginSuccess()
   })
 
-  it.skip('Login with qr code link click', () => {
-    openModalLogin()
-
-    cy.getTestElement('lightning-qr-code-image').click()
-
-    const lnurlAuthUrl = ''
-    cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
-
-    login()
-    checkLoginSuccess()
-  })
-
-
-  it.skip('Login with lnurl from clipboard', () => {
+  it('Login with lnurl from clipboard', () => {
     openModalLogin()
     cy.addListener('copy', (event) => {
       cy.log(event)
     })
 
     cy.getTestElement('lnurlauth-qrcode-copy-2-clipboard').click()
-    const lnurlAuthUrl = navigator.clipboard.readText()
-    cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
+    cy.task<string>('getClipboard').then((clipboardText) => {
+      cy.wrap(clipboardText).as('lnurlAuthUrl')
+    })
+
     login()
     checkLoginSuccess()
   })

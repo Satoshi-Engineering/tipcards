@@ -110,6 +110,7 @@
     "better-npm-audit": "^3.7.3",
     "bip32": "^4.0.0",
     "bip39": "^3.1.0",
+    "clipboardy": "^4.0.0",
     "cypress": "^13.13.2",
     "drizzle-kit": "^0.23.1",
     "eslint": "^8.57.0",

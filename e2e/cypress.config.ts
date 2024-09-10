@@ -4,6 +4,8 @@ import path from 'path'
 
 import webpack from '@cypress/webpack-preprocessor'
 
+import setupClipboardy from './plugins/clipboardy.js'
+
 const webpackOptions = {
   resolve: {
     extensions: ['.ts', '.js'],
@@ -41,7 +43,7 @@ export default defineConfig({
     specPattern: 'e2e/**/*.test.ts',
     supportFile: 'e2e/support/e2e.ts',
     fixturesFolder: 'e2e/support/fixtures',
-    setupNodeEvents(on) {
+    setupNodeEvents(on, config) {
 
       on('file:preprocessor', webpack({ webpackOptions }))
 
@@ -57,6 +59,8 @@ export default defineConfig({
         }
         return launchOptions
       })
+
+      setupClipboardy(on, config)
     },
   },
   env: {
