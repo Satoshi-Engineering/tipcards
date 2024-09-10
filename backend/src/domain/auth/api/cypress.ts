@@ -31,4 +31,20 @@ router.get('/lnurlAuth/create', async (_, res) => {
   })
 })
 
+router.get('/loginWithLnurlAuthHash/:hash', async (req, res) => {
+  const hash = req.params.hash
+  const result = await Auth.getAuth().loginWithLnurlAuthHash(hash)
+  res
+    .cookie('refresh_token', result.refreshToken, {
+      expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+    .json({
+      status: 'success',
+      data: { accessToken: result.accessToken },
+    })
+})
+
 export default router

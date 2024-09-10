@@ -1,10 +1,13 @@
 import { describe, it, expect } from 'vitest'
 import axios, { AxiosError } from 'axios'
+import { TRPCClientError } from '@trpc/client'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
+
+import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import HDWallet from '../lib/HDWallet/HDWallet.js'
@@ -45,30 +48,24 @@ describe('auth', () => {
       status: 'OK',
     }))
 
-    const authStatusResponse = await frontend.authStatus()
+    const authStatusResponse = await frontend.authLoginWithLnurlAuthHash()
 
-    expect(authStatusResponse.data).toEqual(expect.objectContaining(    {
-      status: 'success',
-      data: {
-        accessToken: expect.any(String),
-      },
+    expect(authStatusResponse).toEqual(expect.objectContaining(    {
+      accessToken: expect.any(String),
     }))
   })
 
   failEarly.it('should fail the login, if it has already been called', async () => {
-    let caughtError: AxiosError | undefined
+    let caughtError: TRPCClientError<AuthRouter> | undefined
 
     try {
-      await frontend.authStatus()
+      await frontend.authLoginWithLnurlAuthHash()
     } catch (error) {
-      caughtError = error as AxiosError
+      caughtError = error as TRPCClientError<AuthRouter>
     }
-    expect(axios.isAxiosError(caughtError)).toBe(true)
-    expect(caughtError?.response?.status).toBe(404)
-    expect(caughtError?.response?.data).toEqual(expect.objectContaining({
-      status: 'error',
-      message: expect.any(String),
-    }))
+    expect(caughtError).toBeInstanceOf(TRPCClientError)
+    expect(caughtError?.data?.httpStatus).toBe(500)
+    expect(caughtError?.data?.code).toBe('INTERNAL_SERVER_ERROR')
   })
 
   failEarly.it('should get a new access token', async () => {

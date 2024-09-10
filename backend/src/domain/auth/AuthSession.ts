@@ -7,7 +7,7 @@ export default class AuthSession {
     this.response = response
   }
 
-  public setRefreshCookie(refreshToken: string) {
+  public setRefreshTokenCookie(refreshToken: string) {
     this.response.cookie('refresh_token', refreshToken, {
       expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
       httpOnly: true,

@@ -11,7 +11,7 @@ export const authRouter = router({
     .output(LoginWithLnurlAuthHashDto)
     .query(async ({ ctx, input }) => {
       const result = await ctx.auth.loginWithLnurlAuthHash(input.hash)
-      ctx.session.setRefreshCookie(result.refreshToken)
+      ctx.session.setRefreshTokenCookie(result.refreshToken)
       return {
         accessToken: result.accessToken,
       }

@@ -5,7 +5,7 @@ import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', BACKEND_API_ORIGIN)
-const API_AUTH_STATUS = new URL('/api/auth/status', BACKEND_API_ORIGIN)
+const API_AUTH_LOGIN = new URL('/auth/api/cypress/loginWithLnurlAuthHash', BACKEND_API_ORIGIN)
 const API_AUTH_REFRESH = new URL('/api/auth/refresh', BACKEND_API_ORIGIN)
 
 export const login = () => {
@@ -32,7 +32,7 @@ export const login = () => {
     })
 
     cy.request({
-      url: `${API_AUTH_STATUS.href}/${authServiceLoginHash}`,
+      url: `${API_AUTH_LOGIN.href}/${authServiceLoginHash}`,
     }).then((response) => {
       expect(response.body).to.have.nested.property('data.accessToken')
       cy.wrap(response.body.data.accessToken).as('accessToken')

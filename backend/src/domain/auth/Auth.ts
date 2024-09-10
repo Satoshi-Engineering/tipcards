@@ -95,9 +95,9 @@ export default class Auth {
       throw new Error(`${ErrorCode.UnableToUpdateUser} - Unable to update user authentication`)
     }
 
-    this.lnurlAuthLogin.invalidateLoginHash(hash)
     // split access token in extra function?
     const accessToken = await createAccessToken(user)
+    this.lnurlAuthLogin.invalidateLoginHash(hash)
     return {
       refreshToken,
       accessToken,

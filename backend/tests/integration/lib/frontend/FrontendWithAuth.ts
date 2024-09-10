@@ -30,6 +30,14 @@ export default class FrontendWithAuth extends Frontend {
               Authorization: this.accessToken || '',
             }
           },
+          fetch: async (url, options) => {
+            const response = await fetch(url, options)
+            const cookies = response.headers.get('set-cookie')
+            if (cookies) {
+              this.setRefreshTokenFromCookies([cookies])
+            }
+            return response
+          },
         }),
       ],
     })
@@ -47,11 +55,11 @@ export default class FrontendWithAuth extends Frontend {
     return response
   }
 
-  async authStatus() {
-    const response = await axios.get(`${API_ORIGIN}/api/auth/status/${this.authServiceLoginHash}`)
-
-    this.accessToken = response.data.data.accessToken
-    this.setRefreshTokenFromResponse(response)
+  async authLoginWithLnurlAuthHash() {
+    const response = await this.trpcAuth.auth.loginWithLnurlAuthHash.query({
+      hash: this.authServiceLoginHash,
+    })
+    this.accessToken = response.accessToken
     return response
   }
 
@@ -86,11 +94,13 @@ export default class FrontendWithAuth extends Frontend {
 
   setRefreshTokenFromResponse(response: AxiosResponse) {
     const cookies = response.headers['set-cookie']
-
     if (cookies === undefined) {
       throw new Error('no cookies set')
     }
+    this.setRefreshTokenFromCookies(cookies)
+  }
 
+  setRefreshTokenFromCookies(cookies: string[]) {
     const match = cookies[0].match(/(^| )refresh_token=(?<refreshToken>[^;]+)/)
     if (match == null) {
       throw new Error('refresh_token in cookies not found or cookie not in cookies[0]')
@@ -98,7 +108,6 @@ export default class FrontendWithAuth extends Frontend {
     if (match.groups == null) {
       throw new Error('refresh_token not found in cookie')
     }
-
     this.refreshToken = match.groups['refreshToken']
   }
 

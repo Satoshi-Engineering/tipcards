@@ -36,7 +36,7 @@ export default class FrontendSimulator extends FrontendWithAuth {
     const response = await this.authCreate()
     const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(response.lnurlAuth)
     await axios.get(callbackUrl.toString())
-    await this.authStatus()
+    await this.authLoginWithLnurlAuthHash()
   }
 
   async initSocketConnectionWithBackend() {
