@@ -76,7 +76,7 @@ describe('Login Overlay', () => {
 
 const openModalLogin = () => {
   cy.intercept('/auth/trpc/lnurlAuth.create**').as('trpcLnurlAuthCreate')
-  cy.intercept('/api/auth/status/**').as('apiAuthStatus')
+  cy.intercept('/auth/trpc/auth.loginWithLnurlAuthHash**').as('trpcLoginWithLnurlAuthHash')
 
   cy.getTestElement('the-layout').should('exist')
   cy.getTestElement('logged-in').should('not.exist')
@@ -94,7 +94,7 @@ const login = () => {
       url: LNURLAuthCallbackUrl.href,
     }).its('status').should('eq', 200)
   })
-  cy.wait('@apiAuthStatus')
+  cy.wait('@trpcLoginWithLnurlAuthHash')
 }
 
 const checkLoginSuccess = () => {

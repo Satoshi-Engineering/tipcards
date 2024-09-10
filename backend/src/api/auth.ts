@@ -3,84 +3,16 @@ import cookieParser from 'cookie-parser'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import type { User } from '@backend/database/deprecated/data/User.js'
-import { getUserByLnurlAuthKeyOrCreateNew, getUserById, updateUser } from '@backend/database/deprecated/queries.js'
+import { getUserById, updateUser } from '@backend/database/deprecated/queries.js'
 import {
-  createAccessToken, createRefreshToken,
+  createAccessToken,
 } from '@backend/services/jwt.js'
-import Auth from '@backend/domain/auth/Auth.js'
 
 import { authGuardRefreshToken, cycleRefreshToken } from './middleware/auth/jwt.js'
 
 /////
 // ROUTES
 const router = Router()
-
-router.get('/status/:hash', async (req, res) => {
-  const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
-  const hash = req.params.hash
-  if (lnurlAuthLogin == null || !lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
-    res.status(404).json({
-      status: 'error',
-      message: 'Hash not found.',
-    })
-    return
-  }
-  const walletPublicKey = lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)
-
-  if (typeof walletPublicKey !== 'string' || walletPublicKey.length === 0) {
-    res.status(403).json({
-      status: 'error',
-      message: 'No log in happened for given hash.',
-    })
-    return
-  }
-
-  let user: User
-  try {
-    user = await getUserByLnurlAuthKeyOrCreateNew(walletPublicKey)
-  } catch (error) {
-    console.error(ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey, error)
-    res.status(500).json({
-      status: 'error',
-      message: 'Unable to get or create user.',
-      code: ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey,
-    })
-    return
-  }
-
-  const refreshToken = await createRefreshToken(user)
-  if (user.allowedRefreshTokens == null) {
-    user.allowedRefreshTokens = []
-  }
-  user.allowedRefreshTokens.push([refreshToken])
-
-  try {
-    await updateUser(user)
-  } catch (error) {
-    console.error(ErrorCode.UnableToUpdateUser, error)
-    res.status(500).json({
-      status: 'error',
-      message: 'Unable to update user authentication.',
-      code: ErrorCode.UnableToUpdateUser,
-    })
-    return
-  }
-
-  const accessToken = await createAccessToken(user)
-  res
-    .cookie('refresh_token', refreshToken, {
-      expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    })
-    .json({
-      status: 'success',
-      data: { accessToken },
-    })
-  lnurlAuthLogin?.invalidateLoginHash(hash)
-})
 
 router.get(
   '/refresh',

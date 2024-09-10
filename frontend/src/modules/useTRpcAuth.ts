@@ -14,6 +14,12 @@ const createClient = () => createTRPCProxyClient<AuthRouter>({
       headers: () => {
         return {}
       },
+      fetch(url, options) {
+        return fetch(url, {
+          ...options,
+          credentials: 'include',
+        })
+      },
     }),
   ],
 })

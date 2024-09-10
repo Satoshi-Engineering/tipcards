@@ -6,6 +6,7 @@ import { AccessTokenPayload, AccessTokenFromResponse } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'
+import useTRpcAuth from '@/modules/useTRpcAuth'
 import i18n from '@/modules/initI18n'
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
@@ -17,6 +18,8 @@ export const useAuthStore = defineStore('auth', () => ({
   logout,
   getValidAccessToken,
 }))
+
+const trpcAuth = useTRpcAuth()
 
 /**
  * If accessToken is null the user is currently not authorized (i.e. logged out).
@@ -57,7 +60,22 @@ const login = async (hash: string) => {
   if (fetchingAccessToken.value) {
     return awaitNewAccessToken()
   }
-  return getNewAccessToken(`${TIPCARDS_AUTH_ORIGIN}/api/auth/status/${hash}`)
+
+  fetchingAccessToken.value = true
+  const isInitialCheck = accessToken.value === undefined
+  try {
+    const loginResponse = await trpcAuth.auth.loginWithLnurlAuthHash.query({
+      hash,
+    })
+    accessToken.value = loginResponse.accessToken
+    return accessToken.value
+  } catch (error) {
+    return resetAccessTokenDependingOnError(error, isInitialCheck)
+  } finally {
+    callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
+    callbacksAwaitingAccessToken.value = []
+    fetchingAccessToken.value = false
+  }
 }
 
 /**
