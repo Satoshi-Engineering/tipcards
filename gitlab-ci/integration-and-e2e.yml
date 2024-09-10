@@ -44,7 +44,9 @@ test-e2e:
     paths:
       - cypress/videos/**/*.mp4
       - cypress/screenshots/**/*.png
-    expire_in: 1 day    
+    expire_in: 1 day
+  before_script:
+    - apt-get update && apt-get install -y xsel # xsel is needed for clipbordly packages 
   script:
     - cp $BACKEND_ENV_FILE_E2E_TESTS backend/.env.integrationTest
     - echo "Running database migration to prepare database for e2e tests"
