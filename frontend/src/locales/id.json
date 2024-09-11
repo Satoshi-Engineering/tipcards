@@ -17,9 +17,11 @@
   "landing": {
     "title": "Dapatkan Bitcoin kamu",
     "introGreeting": "Hai!",
+    "introGreetingFunded": "Selamat!",
+    "introMessage": "Kamu telah mendapatkan Bitcoin.{linebreak}Ambil sekarang!",
     "introMessageReceiveBtc": {
-      "message": "Di sini kamu bisa mendapatkan {amountAndUnit}.",
-      "amountAndUnit": "{amount} Bitcoin",
+      "message": "Kamu akan segera menerima {amountAndUnit}",
+      "amountAndUnit": "{amount} bitcoin",
       "amountAndUnitBtc": "{amount} BTC",
       "footnoteFiat": "{btc} = {fiat}",
       "footnote": "Melalui Lightning"
@@ -29,19 +31,27 @@
       "message": "Kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "introMessageAlreadyUsed": {
-      "headline": "QR Code ini tampaknya sudah ditukarkan.",
-      "message": "Tapi jangan khawatir: kamu juga bisa membeli Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
+      "headline": "Tampaknya QR Code ini sudah digunakan.",
+      "message": "Tapi jangan khawatir: kamu bisa mendapatkan Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "introMessageJustReceived": {
-      "headline": "QR Code kamu baru saja ditukarkan. {emoji}",
+      "headline": "QR Code kamu baru saja digunakan. {emoji}",
       "message": "Kamu bisa mendapatkan lebih banyak Bitcoin di bursa kripto (seperti {exchange}), ATM Bitcoin (seperti {atm}) atau melalui broker Bitcoin (seperti {broker}), dll."
     },
     "sectionBitcoin": {
+      "title": "Apa itu Bitcoin?",
       "paragraphs": {
         "0": "Bitcoin adalah <strong>mata uang digital</strong>.",
         "1": "Dikelola oleh semua peserta jaringan Bitcoin, yang berarti tidak dikontrol oleh bank sentral, pemerintah, atau perusahaan manapun.",
         "2": "Cara transfer bitcoin (termasuk transfer internasional) semudah memindai QR Code. Coba saja!"
-      }
+      },
+      "headline": "Apa itu Bitcoin?"
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "Cara mendapatkan Bitcoin kamu",
+      "explanation": "Jika kamu sudah punya wallet Lightning, <strong>pindai</strong> QR Code di <strong>TipCard</strong> kamu dengan wallet atau <strong>tekan</strong> QR Code berikut:",
+      "qrCodeHeadline": "Tekan QR Code di bawah ini",
+      "noWallet": "Belum punya wallet Lightning?"
     },
     "sectionWallet": {
       "headline": "Instal Wallet",
@@ -63,43 +73,33 @@
         "message": "Bitcoin telah ditransfer ke wallet kamu."
       }
     },
+    "sectionNoWallet": {
+      "headline": "Baru di sini tanpa wallet?",
+      "explanation": "Instal wallet untuk menerima, menyimpan, dan membelanjakan Bitcoin. Aplikasi smartphone sangat ideal untuk pemakaian sehari-hari dan jumlah kecil. Kami merekomendasikan wallet berikut untuk memulai:"
+    },
     "sectionUse": {
       "headline": "Gunakan Bitcoin kamu",
-      "message": "Kamu sekarang bisa membeli sesuatu di toko atau situs web yang menerima Bitcoin. Atau kamu bisa mentransfernya ke Lightning Wallet teman atau kolega. Atau cukup simpan saja.",
-      "messageFootnote": "hodln = menyimpan, menabung",
-      "examplesIntro": "Berikut adalah beberapa tautan situs tempat kamu bisa menggunakan Bitcoin:",
+      "message": "Kamu sekarang bisa membelanjakan Bitcoin di toko atau situs web yang menerima Bitcoin, mentransfernya ke Lightning Wallet teman atau kolega, atau cukup simpan.",
+      "examplesIntro": "Berikut beberapa situs web tempat kamu bisa membayar dengan Bitcoin melalui Lightning:",
       "examples": {
         "saltNDaisy": "Beli granola yang sustainabel",
         "satoshistore": "Beli baju Bitcoin yang keren",
         "aprycotMedia": "Buku, media & lainnya tentang Bitcoin",
         "copiaro": "Hardwarewallet & alat HODL",
-        "lightningnetworkstores": "Temukan apa yang dapat kamu lakukan secara online",
-        "coinpages": "Cari toko yang menerima Bitcoin"
+        "lightningnetworkstores": "Temukan lebih banyak hal yang bisa dilakukan online",
+        "coinpages": "Temukan toko yang menerima Bitcoin"
       },
-      "createYourOwnTipCardsHeadline": "Buat Kartu Tip Sendiri ⚡",
-      "createYourOwnTipCardsText": "Kamu ingin memberi teman atau kenalan beberapa Sats (1 Sat = 0,00000001 Bitcoin) atau memberi tip Bitcoin kepada seseorang? Klik tombol berikut dan konfigurasikan Kartu Tip kamu sendiri.",
-      "createYourOwnTipCardsButton": "Buat Kartu Tip aku Sendiri"
+      "createYourOwnTipCardsHeadline": "Buat Kartu Tip kamu sendiri",
+      "createYourOwnTipCardsText": "Ingin memberi teman atau kolega beberapa sats (1 Sat = 0,00000001 Bitcoin) atau memberikan tip dalam bentuk Bitcoin? Klik tombol di bawah ini dan atur Kartu Tip pribadi kamu.",
+      "createYourOwnTipCardsButton": "Buat Kartu Tip aku sendiri"
     },
-    "sectionMore": {
-      "0": {
-        "text": "<strong>Bitcoin Indonesia</strong> adalah sebuah inisiatif yang mendorong adopsi Bitcoin di Indonesia melalui edukasi dan komunitas.",
-        "linkLabel": "Situs Bitcoin Indonesia",
-        "linkHref": "https://bitcoinforindonesia.com/"
-      },
-      "1": {
-        "text": "<strong>Kelas Bitcoin</strong> adalah komunitas edukasi untuk belajar Bitcoin. Bertujuan untuk memudahkan masyarakat mengenal, memahami dan menggunakan Bitcoin sebagai aset investasi jangka panjang.",
-        "linkLabel": "Situs Kelas Bitcoin",
-        "linkHref": "https://kelasbitcoin.com/"
-      },
-      "headline": "Lebih banyak tentang Bitcoin",
-      "text": "Ada banyak cara untuk mempelajari lebih lanjut tentang Bitcoin."
-    },
-    "bulkWithdrawExists": "Sats dari Kartu Tip ini sedang ditarik kembali. Jika kamu ingin menggunakan kartu ini, kamu harus membatalkan pengambilan kembali.",
+    "bulkWithdrawExists": "Penarikan sedang berlangsung dari Kartu Tip ini. Kamu harus membatalkannya terlebih dahulu untuk menggunakan kartu.",
     "bulkWithdrawPending": "Sats dari Kartu Tip ini sedang ditarik kembali. Jika ini memakan waktu lebih dari beberapa menit, silakan hubungi support.",
-    "bulkWithdrawResetError": "Terjadi kesalahan saat membatalkan pengambilan kembali.",
+    "bulkWithdrawResetError": "Terjadi kesalahan saat membatalkan penarikan.",
     "errors": {
       "errorInvalidLnurl": "Sepertinya LNURL tidak berasal dari Kartu Tip yang valid.",
-      "errorInvalidLandingPage": "Halaman khusus tidak dapat dimuat."
+      "errorLoadingCardStatus": "Tidak bisa memuat status kartu.",
+      "errorInvalidLandingPage": "Halaman kustom tidak dapat dimuat."
     }
   },
   "funding": {
