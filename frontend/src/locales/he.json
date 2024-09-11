@@ -15,6 +15,8 @@
   "landing": {
     "title": "קבלת הביטקוין שלך",
     "introGreeting": "היי!",
+    "introGreetingFunded": "מזל טוב!",
+    "introMessage": "קיבלת ביטקוין במתנה.{linebreak}קבל/י אותם עכשיו!",
     "introMessageReceiveBtc": {
       "message": "את/ה עומד/ת לקבל {amountAndUnit}",
       "amountAndUnit": "{amount} ביטקוין",
@@ -35,11 +37,19 @@
       "message": "אפשר לקנות עוד ביטקוין בבורסת קריפטו (לדוגמא {exchange}), בכספומט ביטקוין (לדוגמא {atm}), מחלפן קריפטו (לדוגמא {broker}) וכו'."
     },
     "sectionBitcoin": {
+      "title": "מה בדיוק ביטקוין?",
+      "headline": "מה זה ביטקוין?",
       "paragraphs": {
         "0": "ביטקוין הוא <strong>מטבע דיגיטלי</strong>.",
         "1": "הוא מנוהל ע\"י כל החברים ברשת הביטקוין, כלומר הוא <strong>לא תחת שליטה</strong> של אף בנק מרכזי, ממשלה או תאגיד.",
         "2": "קל מאוד לשלוח ביטקוין (כולל העברות בינלאומיות) באמצעות סריקת קוד QR. נסו בעצמכם!"
       }
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "איך לקבל את הביטקוין שלך",
+      "explanation": "אם יש לך ארנק לייטנינג מותקן, <strong>סרוק</strong> את קוד ה-QR על כרטיס הטיפ שלך שוב עם הארנק שלך או <strong>לחץ</strong> על קוד ה-QR הבא:",
+      "qrCodeHeadline": "לחץ על קוד ה-QR למטה",
+      "noWallet": "עדיין אין לך ארנק לייטנינג?"
     },
     "sectionWallet": {
       "headline": "התקנת ארנק",
@@ -61,6 +71,10 @@
         "message": "הביטקוין הועבר לארנק שלך."
       }
     },
+    "sectionNoWallet": {
+      "headline": "חדש כאן בלי ארנק?",
+      "explanation": "התקן/י ארנק על מנת לקבל, לשמור ולהשתמש בביטקוין. אפליקציית סמארטפון היא הבחירה הטובה ביותר לשימוש יומיומי וכמויות קטנות. אנו ממליצים על הארנקים הבאים למתחילים:"
+    },
     "sectionUse": {
       "headline": "שימוש בביטקוין שלך",
       "message": "כעת את/ה יכול/ה להשתמש בביטקוין שלך בחנויות ואתרים שמקבלים ביטקוין, לשלוח אותו לארנקי לייטנינג של חברים, או סתם להדל (הודל = להחזיק, לחסוך).",
@@ -77,9 +91,13 @@
       "createYourOwnTipCardsText": "רוצה לתת לחברים כמה סטושים (1 סטושי = 0.00000001 ביטקוין) או לתת טיפ בביטקוין? יש ללחוץ על הכפתור מטה ולהגדיר את כרטיסי הטיפ האישיים שלך.",
       "createYourOwnTipCardsButton": "צור את כרטיסי הטיפ שלי"
     },
+    "bulkWithdrawExists": "משיכת הכרטיס הזה כבר מתבצעת. עליך לבטל אותה לפני שתוכל להשתמש בכרטיס.",
+    "bulkWithdrawPending": "הסאטושים של כרטיס הטיפ הזה בתהליך משיכה. אם זה לוקח יותר מכמה דקות, צור קשר עם התמיכה.",
+    "bulkWithdrawResetError": "אירעה שגיאה בעת ביטול המשיכה.",
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
-      "errorInvalidLandingPage": "Unable to load custom landing page."
+      "errorInvalidLnurl": "נראה שה-LNURL אינו מכרטיס טיפ תקף.",
+      "errorLoadingCardStatus": "לא ניתן לטעון את מצב הכרטיס.",
+      "errorInvalidLandingPage": "לא ניתן לטעון את דף הנחיתה המותאם אישית."
     }
   },
   "funding": {
