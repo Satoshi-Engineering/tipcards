@@ -15,66 +15,90 @@
   "landing": {
     "title": "Consigue tu Bitcoin",
     "introGreeting": "¡Hola!",
+    "introGreetingFunded": "¡Felicidades!",
+    "introMessage": "Te han regalado Bitcoin.{linebreak}¡Consíguelos ahora!",
     "introMessageReceiveBtc": {
-      "message": "Puedes obtener {amountAndUnit} aquí.",
+      "message": "Estás a punto de recibir {amountAndUnit}",
       "amountAndUnit": "{amount} Bitcoin",
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
       "footnote": "con Lightning"
+    },
+    "introMessagePreview": {
+      "headline": "Escanea una Tarjeta TipCard Lightning para recibir algo de bitcoin.",
+      "message": "También puedes obtener bitcoin en un criptointercambio (por ejemplo, {exchange}), en una máquina de Bitcoin (por ejemplo, {atm}) o de un broker de Bitcoin (por ejemplo, {broker}), etc."
     },
     "introMessageAlreadyUsed": {
       "headline": "Al parecer, este código QR ya ha sido canjeado.",
-      "message": "Pero no te preocupes: también puedes comprar Bitcoin en un criptointercambio (por ejemplo, {exchange}), una máquina de Bitcoin (por ejemplo, {atm}) o un broker de Bitcoin (por ejemplo, {broker}), etc."
+      "message": "Pero no te preocupes: también puedes comprar Bitcoin en un criptointercambio (por ejemplo, {exchange}), en una máquina de Bitcoin (por ejemplo, {atm}) o de un broker de Bitcoin (por ejemplo, {broker}), etc."
     },
     "introMessageJustReceived": {
       "headline": "Tu código QR acaba de ser canjeado. {emoji}",
-      "message": "Puedes comprar más Bitcoin en un criptointercambio (como {exchange}), en una máquina de Bitcoin (por ejemplo de {atm}) o en un broker de Bitcoin (por ejemplo {broker})."
+      "message": "Puedes comprar más Bitcoin en un criptointercambio (como {exchange}), en una máquina de Bitcoin (por ejemplo, {atm}) o en un broker de Bitcoin (por ejemplo, {broker})."
     },
     "sectionBitcoin": {
+      "title": "¿Qué es exactamente Bitcoin?",
       "paragraphs": {
         "0": "Bitcoin es una <strong>moneda digital</strong>.",
         "1": "Está gestionado por todos los participantes de la red Bitcoin, lo que significa que <strong>no está bajo el control</strong> de un banco central, gobierno o corporación.",
-        "2": "Transferir dinero (incluso a nivel internacional) es tan fácil como escanear un código QR. Pruébalo."
-      }
+        "2": "Transferir dinero (incluso a nivel internacional) es tan fácil como escanear un código QR. ¡Pruébalo!"
+      },
+      "headline": "¿Qué es Bitcoin?"
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "Cómo conseguir tu Bitcoin",
+      "explanation": "Si tienes una billetera Lightning instalada, <strong>escanea</strong> el código QR de tu <strong>TipCard</strong> con tu billetera o <strong>presiona</strong> el siguiente código QR:",
+      "qrCodeHeadline": "Presiona el código QR de abajo",
+      "noWallet": "¿No tienes una billetera Lightning aún?"
     },
     "sectionWallet": {
-      "headline": "Instala una cartera",
-      "explanation": "Para poder recibir, almacenar y gastar bitcoin, se necesita un <strong>monedero Lightning<strong>.<br>Para el uso cotidiano y las pequeñas cantidades, lo más cómodo es una aplicación para smartphone.",
-      "recommendation": "Para empezar, recomendamos el {walletOfSatoshi}.",
+      "headline": "Descarga una billetera",
+      "explanation": "Para recibir, almacenar y gastar tus bitcoins, necesitas una <strong>billetera Lightning</strong>.<br>Para uso cotidiano y pequeñas cantidades, una aplicación para smartphone es la más conveniente.",
+      "recommendation": "Para empezar, recomendamos {walletOfSatoshi}.",
       "button": "Descargar Wallet of Satoshi",
-      "other": "También puedes probar con {wallet0}, {wallet1}, {wallet2} o cualquier otra cartera.*.",
-      "otherFootnote": "* que es compatible con Lightning y LNURL"
+      "other": "También puedes probar con {wallet0}, {wallet1}, {wallet2} o cualquier otra billetera Lightning*.",
+      "otherFootnote": "* que sea compatible con Lightning y LNURL"
     },
     "sectionReceive": {
-      "headline": "Consigue tu Bitcoin",
+      "headline": "Recibe tu Bitcoin",
       "statusNormal": {
-        "explanation": "Una vez instalada la cartera,",
-        "step1": "<strong>haz clic</strong> en el código QR de abajo, o",
-        "step2": "<strong>escanea</strong> el código QR de tu tarjeta de propinas de nuevo<br>(con tu aplicación wallet)."
+        "explanation": "Una vez que tu billetera esté instalada,",
+        "step1": "<strong>toca</strong> el código QR de abajo, o",
+        "step2": "<strong>escanea</strong> el código QR en tu tarjeta de propinas de nuevo<br>(usando tu aplicación de billetera)"
       },
       "statusReceived": {
-        "congrats": "¡Felicicades!",
-        "message": "Los Bitcoin acaban de ser transferidos a tu cartera."
+        "congrats": "¡Felicidades!",
+        "message": "Los bitcoins se acaban de transferir a tu billetera."
       }
     },
+    "sectionNoWallet": {
+      "headline": "¿Eres nuevo aquí sin una billetera?",
+      "explanation": "Instala una billetera para recibir, almacenar y gastar Bitcoin. Una aplicación para smartphone es ideal para el uso diario y pequeñas cantidades. Recomendamos las siguientes billeteras para empezar:"
+    },
     "sectionUse": {
-      "headline": "Utiliza tus Bitcoin",
-      "message": "Ahora puedes comprar algo con tus Bitcoin en una tienda o en un sitio web donde se acepte Bitcoin. O puedes transferirlos a la Lightning Wallet de un amigo o colega. O puedes simplemente hodl ({note}).",
+      "headline": "Usa tus Bitcoin",
+      "message": "Ahora puedes gastar tus bitcoins en una tienda o en un sitio web que acepte Bitcoin, transferirlos a la billetera Lightning de un amigo o colega, o simplemente hodl ({note}).",
       "messageFootnote": "hodl = mantener, guardar",
-      "examplesIntro": "Aquí hay algunos enlaces a sitios donde puede usar Bitcoin:",
+      "examplesIntro": "Aquí hay algunos sitios web donde puedes pagar con Bitcoin a través de Lightning:",
       "examples": {
         "saltNDaisy": "Compra granola sostenible",
-        "satoshistore": "Compra ropa Bitcoin de moda",
-        "aprycotMedia": "Libros de Bitcoin, medios de comunicación y más",
+        "satoshistore": "Compra ropa Bitcoin",
+        "aprycotMedia": "Libros de Bitcoin, medios y más",
         "copiaro": "Carteras de hardware y herramientas HODL",
-        "lightningnetworkstores": "Descubre lo que puedes hacer online",
-        "coinpages": "Busca tiendas que acepten Bitcoin"
+        "lightningnetworkstores": "Descubre qué más puedes hacer en línea",
+        "coinpages": "Encuentra tiendas que acepten Bitcoin"
       },
-      "createYourOwnTipCardsHeadline": "Crea tus propias tarjetas de propina ⚡",
-      "createYourOwnTipCardsText": "¿Quieres regalar a tus amigos o conocidos unos sats (1 Sat = 0,00000001 Bitcoin) o dar a alguien una propina en forma de Bitcoin? Haz clic en el siguiente botón y configura tus tarjetas de propina personales.",
-      "createYourOwnTipCardsButton": "Crear mis propias tarjetas de propinas"
+      "createYourOwnTipCardsHeadline": "Crea tus propias TipCards",
+      "createYourOwnTipCardsText": "¿Te gustaría regalar a tus amigos o colegas unos sats (1 Sat = 0,00000001 Bitcoin) o dar una propina en Bitcoin? Haz clic en el siguiente botón y configura tus TipCards personales.",
+      "createYourOwnTipCardsButton": "Crear mis propias TipCards"
     },
+    "bulkWithdrawExists": "Actualmente se está realizando un retiro de esta TipCard. Debes cancelarlo primero para usar la tarjeta.",
+    "bulkWithdrawPending": "Los sats de esta TipCard están siendo recuperados. Si esto demora más de unos minutos, por favor contacta al soporte.",
+    "bulkWithdrawResetError": "Ocurrió un error al cancelar el retiro.",
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
-      "errorInvalidLandingPage": "Unable to load custom landing page."
+      "errorInvalidLnurl": "Parece que el LNURL no es de una TipCard válida.",
+      "errorLoadingCardStatus": "No se pudo cargar el estado de la tarjeta.",
+      "errorInvalidLandingPage": "No se pudo cargar la página de destino personalizada."
     }
   },
   "funding": {

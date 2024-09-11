@@ -6,17 +6,18 @@
     <ParagraphDefault>
       {{ $t('landing.sectionUse.createYourOwnTipCardsText') }}
     </ParagraphDefault>
-    <ParagraphDefault class="text-center">
+    <ButtonContainer class="mt-5">
       <ButtonDefault
         @click="$router.push({ name: 'home', params: { lang: $route.params.lang } })"
       >
         {{ $t('landing.sectionUse.createYourOwnTipCardsButton') }}
       </ButtonDefault>
-    </ParagraphDefault>
+    </ButtonContainer>
   </CenterContainer>
 </template>
 
 <script setup lang="ts">
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'

@@ -19,5 +19,6 @@
 import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 </script>
