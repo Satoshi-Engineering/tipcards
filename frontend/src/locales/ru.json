@@ -14,10 +14,18 @@
   },
   "landing": {
     "introGreeting": "Привет!",
+    "introGreetingFunded": "Поздравляем!",
+    "introMessage": "Вам подарили биткоины.{linebreak}Получите их сейчас!",
     "introMessageReceiveBtc": {
       "message": "Вы вот-вот получите {amountAndUnit}",
       "amountAndUnit": "{amount} биткоин",
+      "amountAndUnitBtc": "{amount} BTC",
+      "footnoteFiat": "{btc} = {fiat}",
       "footnote": "через сеть Молния"
+    },
+    "introMessagePreview": {
+      "headline": "Отсканируйте Lightning TipCard, чтобы получить биткоины.",
+      "message": "Вы также можете приобрести биткоины на криптобирже (например, {exchange}), через биткоин-банкомат (например, {atm}) или у криптоброкера (например, {broker}) и т.д."
     },
     "introMessageAlreadyUsed": {
       "headline": "Похоже, этот QR-код уже был использован.",
@@ -28,11 +36,19 @@
       "message": "Вы можете приобрести больше биткоинов на криптовалютной бирже (например {exchange}), через биткоин-банкомат (например {atm}) или у криптоброкера (например {broker}) и т.д."
     },
     "sectionBitcoin": {
+      "title": "Что такое Биткоин?",
       "paragraphs": {
         "0": "Биткоин - это <strong>цифровая валюта</strong>.",
         "1": "Он управляется всеми участниками сети Биткоин, что означает, что он <strong>не подконтролен</strong> ни одному центральному банку, правительству или компании.",
         "2": "Провести транзакцию (в том числе международную) так же просто, как отсканировать QR-код. Просто попробуйте!"
-      }
+      },
+      "headline": "Что такое Биткоин?"
+    },
+    "sectionGetYourBitcoin": {
+      "headline": "Как получить свои биткоины",
+      "explanation": "Если у вас установлен Lightning-кошелек, <strong>отсканируйте</strong> QR-код на вашей <strong>TipCard</strong> с помощью кошелька или <strong>нажмите</strong> на следующий QR-код:",
+      "qrCodeHeadline": "Нажмите на QR-код ниже",
+      "noWallet": "Еще нет Lightning-кошелька?"
     },
     "sectionWallet": {
       "headline": "Скачайте кошелек",
@@ -50,7 +66,7 @@
         "step2": "<strong>отсканируйте</strong> QR-код на вашей тип-карте еще раз<br>(используя установленный кошелек)"
       },
       "statusReceived": {
-        "congrats": "Подравляем!",
+        "congrats": "Поздравляем!",
         "message": "Биткоины только что были переведены на ваш кошелек."
       }
     },
@@ -78,9 +94,13 @@
       },
       "headline": "Больше о Биткоине"
     },
+    "bulkWithdrawExists": "В настоящий момент идет процесс отзыва этой ТИП-карты. Сначала нужно отменить его, чтобы воспользоваться картой.",
+    "bulkWithdrawPending": "Саты с этой ТИП-карты изымаются. Если это занимает больше нескольких минут, обратитесь в службу поддержки.",
+    "bulkWithdrawResetError": "Произошла ошибка при отмене отзыва.",
     "errors": {
-      "errorInvalidLnurl": "It seems the LNURL is not from a valid TipCard.",
-      "errorInvalidLandingPage": "Unable to load custom landing page."
+      "errorInvalidLnurl": "Похоже, LNURL не относится к действительной ТИП-карте.",
+      "errorLoadingCardStatus": "Не удалось загрузить статус карты.",
+      "errorInvalidLandingPage": "Не удалось загрузить пользовательскую страницу."
     }
   },
   "funding": {
