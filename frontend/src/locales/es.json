@@ -77,8 +77,7 @@
     },
     "sectionUse": {
       "headline": "Usa tus Bitcoin",
-      "message": "Ahora puedes gastar tus bitcoins en una tienda o en un sitio web que acepte Bitcoin, transferirlos a la billetera Lightning de un amigo o colega, o simplemente hodl ({note}).",
-      "messageFootnote": "hodl = mantener, guardar",
+      "message": "Ahora puedes gastar tus bitcoins en una tienda o en un sitio web que acepte Bitcoin, transferirlos a la billetera Lightning de un amigo o colega. O simplemente puedes hodlear (hodl = mantener, ahorrar) tus bitcoins.",
       "examplesIntro": "Aquí hay algunos sitios web donde puedes pagar con Bitcoin a través de Lightning:",
       "examples": {
         "saltNDaisy": "Compra granola sostenible",

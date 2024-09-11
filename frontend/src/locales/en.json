@@ -137,8 +137,7 @@
     },
     "sectionUse": {
       "headline": "Use your bitcoin",
-      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl ({note}) them.",
-      "messageFootnote": "to hodl = to hold, to save up",
+      "message": "You can now spend your bitcoin at a store or on a website that accepts bitcoin, transfer them to your friend's or colleague's Lightning wallet, or just hodl (to hodl = to hold, to save up) them.",
       "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
       "examples": {
         "saltNDaisy": "Buy some sustainable granola",

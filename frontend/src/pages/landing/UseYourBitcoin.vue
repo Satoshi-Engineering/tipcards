@@ -5,14 +5,7 @@
       {{ $t('landing.sectionUse.headline') }}
     </HeadlineDefault>
     <ParagraphDefault class="text-center">
-      <span class="hidden">{{ $t('landing.sectionUse.message') }}</span>
-      <I18nT :keypath="'landing.sectionUse.message'">
-        <template #note>
-          <small class="text-sm">
-            {{ $t('landing.sectionUse.messageFootnote') }}
-          </small>
-        </template>
-      </I18nT>
+      {{ $t('landing.sectionUse.message') }}
     </ParagraphDefault>
     <ParagraphDefault class="mt-10 mb-5">
       {{ $t('landing.sectionUse.examplesIntro') }}
@@ -134,5 +127,4 @@ import IconMobilePhoneQuestionmark from '@/components/icons/IconMobilePhoneQuest
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import { I18nT } from 'vue-i18n'
 </script>
