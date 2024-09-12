@@ -234,13 +234,13 @@
     "buttonOpenInWallet": "Abrir en la cartera",
     "copyToClipboard": {
       "lnurl": {
-        "beforeCopy": "Puedes {actuar} para añadirlos a tu cartera.",
-        "beforeCopyAction": "También copiar LNURL.",
+        "beforeCopy": "Puedes {action} para añadirlos a tu cartera.",
+        "beforeCopyAction": "también copiar LNURL",
         "afterCopySuccess": "Copiado con éxito.",
         "afterCopyNextStep": "Añádalos ahora<br>en tu aplicación de cartera :)"
       },
       "invoice": {
-        "beforeCopy": "Puedes {actuar} para añadirlos a tu cartera.",
+        "beforeCopy": "Puedes {action} para añadirlos a tu cartera.",
         "beforeCopyAction": "también copiar la factura",
         "afterCopySuccess": "Copiado con éxito.",
         "afterCopyNextStep": "Añádalos ahora<br>en tu aplicación de cartera :)"
