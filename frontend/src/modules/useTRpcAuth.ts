@@ -3,13 +3,13 @@ import superjson from 'superjson'
 
 import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc'
 
-import { BACKEND_API_ORIGIN } from '@/constants'
+import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 const createClient = () => createTRPCProxyClient<AuthRouter>({
   transformer: superjson,
   links: [
     httpBatchLink({
-      url: `${BACKEND_API_ORIGIN}/auth/trpc`,
+      url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
       maxURLLength: 2083,
       headers: () => {
         return {}
