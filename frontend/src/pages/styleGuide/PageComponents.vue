@@ -96,10 +96,109 @@
         </template>
       </HeroSection>
     </section>
+    <section>
+      <CenterContainer>
+        <HeadlineDefault level="h2">
+          Modal dialogs
+        </HeadlineDefault>
+
+        <ButtonContainer>
+          <ButtonDefault @click="showDialogs[0] = true">
+            Modal
+          </ButtonDefault>
+          <ButtonDefault @click="showDialogs[1] = true">
+            Modal with more content
+          </ButtonDefault>
+          <ButtonDefault @click="showDialogs[2] = true">
+            Modal with no close button
+          </ButtonDefault>
+          <ButtonDefault @click="showDialogs[3] = true">
+            Modal with custom close button text
+          </ButtonDefault>
+        </ButtonContainer>
+        <ModalDefault
+          :open="showDialogs[0]"
+          @close="showDialogs[0] = false"
+        >
+          <HeadlineDefault level="h1" class="text-center">
+            Modal dialog
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+        </ModalDefault>
+
+        <ModalDefault
+          :open="showDialogs[1]"
+          @close="showDialogs[1] = false"
+        >
+          <HeadlineDefault level="h1" class="text-center">
+            Modal dialog
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+          <img
+            src="https://placehold.co/800x600"
+            alt="Placeholder"
+            class="w-full h-full object-cover rounded-default"
+          >
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+          <img
+            src="https://placehold.co/800x600"
+            alt="Placeholder"
+            class="w-full h-full object-cover rounded-default"
+          >
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+          <ButtonContainer>
+            <ButtonDefault variant="secondary" @click="showDialogs[1] = false">
+              Close me
+            </ButtonDefault>
+          </ButtonContainer>
+        </ModalDefault>
+
+        <ModalDefault
+          :open="showDialogs[2]"
+          no-close-button
+          @close="showDialogs[2] = false"
+        >
+          <HeadlineDefault level="h1" class="text-center">
+            Modal dialog
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+          <ButtonContainer>
+            <ButtonDefault variant="secondary" @click="showDialogs[2] = false">
+              Close me
+            </ButtonDefault>
+          </ButtonContainer>
+        </ModalDefault>
+
+        <ModalDefault
+          :open="showDialogs[3]"
+          close-button-text="Bring me back"
+          @close="showDialogs[3] = false"
+        >
+          <HeadlineDefault level="h1">
+            Modal dialog
+          </HeadlineDefault>
+          <ParagraphDefault>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          </ParagraphDefault>
+        </ModalDefault>
+      </CenterContainer>
+    </section>
   </TheLayout>
 </template>
 
 <script setup lang="ts">
+import { reactive } from 'vue'
+
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -109,5 +208,10 @@ import BackLink from '@/components/BackLink.vue'
 import HeroSection from '@/components/HeroSection.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SliderStyleGuide from '@/pages/styleGuide/components/SliderStyleGuide.vue'
+import ModalDefault from '@/components/ModalDefault.vue'
+
 import { FAQS } from '@/modules/faqs'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+
+const showDialogs = reactive<boolean[]>([])
 </script>
