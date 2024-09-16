@@ -6,7 +6,7 @@ import '../../../lib/mocks/http.js'
 
 import { describe, it, expect, vi } from 'vitest'
 import http from 'http'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import { createCallerFactory } from '@backend/domain/auth/trpc/trpc.js'
 
@@ -21,8 +21,12 @@ import AuthSession from '@backend/domain/auth/AuthSession.js'
 const createCaller = createCallerFactory(authRouter)
 
 describe('TRpc Router Auth', () => {
+  const mockRequest = {
+    cookie: vi.fn(),
+  } as unknown as Request
   const mockResponse = {
     cookie: vi.fn(),
+    clearCookie: vi.fn(),
   } as unknown as Response
 
   const server = new http.Server()
@@ -30,12 +34,14 @@ describe('TRpc Router Auth', () => {
   SocketIoServer.init(server)
   Auth.init()
 
+  const authSession = new AuthSession(mockRequest, mockResponse)
+
   const caller = createCaller({
     auth: Auth.getAuth(),
-    session: new AuthSession(mockResponse),
+    session: authSession,
   })
 
-  it('should login with a valid ', async () => {
+  it('should login the user', async () => {
     const accessToken = 'mockAccessToken'
     const refreshToken = 'mockRefreshToken'
     const secret = 'mockSecret'
@@ -50,5 +56,22 @@ describe('TRpc Router Auth', () => {
     })
 
     expect(loginResult.accessToken).toBe(accessToken)
+  })
+
+  it('should logout the user ', async () => {
+    vi.spyOn(authSession, 'logout')
+    vi.spyOn(mockResponse, 'clearCookie')
+
+    await caller.logout()
+
+    expect(authSession.logout).toHaveBeenCalled()
+    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
+      'refresh_token',
+      {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      },
+    )
   })
 })

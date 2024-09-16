@@ -74,11 +74,7 @@ describe('auth', () => {
   })
 
   failEarly.it('should logout user', async () => {
-    const response= await frontend.logout()
-
-    expect(response.data).toEqual(expect.objectContaining({
-      status: 'success',
-    }))
+    await frontend.logout()
   })
 
   failEarly.it('should fail refreshing the access token, if the user is logged out', async () => {
@@ -92,9 +88,7 @@ describe('auth', () => {
     expect(axios.isAxiosError(caughtError)).toBe(true)
     expect(caughtError?.response?.status).toBe(401)
     expect(caughtError?.response?.data).toEqual(expect.objectContaining({
-      status: 'error',
-      message: 'Refresh token denied.',
-      code: ErrorCode.RefreshTokenDenied,
+      code: ErrorCode.RefreshTokenMissing,
     }))
   })
 })

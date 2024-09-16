@@ -16,4 +16,9 @@ export const authRouter = router({
         accessToken: result.accessToken,
       }
     }),
+
+  logout: publicProcedure
+    .query(async ({ ctx }) => {
+      await ctx.session.logout()
+    }),
 })

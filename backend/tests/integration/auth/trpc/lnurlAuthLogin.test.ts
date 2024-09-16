@@ -6,7 +6,7 @@ import '../../../lib/mocks/http.js'
 
 import { describe, it, expect, vi } from 'vitest'
 import http from 'http'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 
 import { createCallerFactory } from '@backend/domain/auth/trpc/trpc.js'
 
@@ -21,8 +21,12 @@ import AuthSession from '@backend/domain/auth/AuthSession.js'
 const createCaller = createCallerFactory(lnurlAuthRouter)
 
 describe('TRpc Router Auth LnurlAuthLogin', () => {
+  const mockRequest = {
+    cookie: vi.fn(),
+  } as unknown as Request
   const mockResponse = {
     cookie: vi.fn(),
+    clearCookie: vi.fn(),
   } as unknown as Response
 
   const server = new http.Server()
@@ -32,7 +36,7 @@ describe('TRpc Router Auth LnurlAuthLogin', () => {
 
   const caller = createCaller({
     auth: Auth.getAuth(),
-    session: new AuthSession(mockResponse),
+    session: new AuthSession(mockRequest, mockResponse),
   })
 
   it('should return an encoded lnurlauth with hashed auth secret', async () => {

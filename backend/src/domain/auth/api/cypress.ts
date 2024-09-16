@@ -1,8 +1,12 @@
 // Since Cypress isn't fully compatible with tRPC and implementing automated login would require too much effort, we'll handle some backend calls directly here.
 
 import { Router } from 'express'
+import cookieParser from 'cookie-parser'
 
 import Auth from '@backend/domain/auth/Auth.js'
+import { getUserById, updateUser } from '@backend/database/deprecated/queries.js'
+
+import { ErrorCode } from '@shared/data/Errors.js'
 
 const router = Router()
 
@@ -45,6 +49,35 @@ router.get('/loginWithLnurlAuthHash/:hash', async (req, res) => {
       status: 'success',
       data: { accessToken: result.accessToken },
     })
+})
+
+
+router.post('/logout', cookieParser(), async (req, res) => {
+  const oldRefreshToken = req.cookies?.refresh_token
+  res.clearCookie('refresh_token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  })
+  if (oldRefreshToken != null) {
+    try {
+      const { id } = JSON.parse(atob(oldRefreshToken.split('.')[1]))
+      const user = await getUserById(id)
+      if (user?.allowedRefreshTokens != null) {
+        user.allowedRefreshTokens = user.allowedRefreshTokens
+          .filter((currentRefreshTokens) => !currentRefreshTokens.includes(oldRefreshToken))
+        await updateUser(user)
+      }
+    } catch (error) {
+      console.error(ErrorCode.UnknownDatabaseError, error)
+      res.status(403).json({
+        status: 'error',
+        data: 'unknown database error',
+      })
+      return
+    }
+  }
+  res.json({ status: 'success' })
 })
 
 export default router

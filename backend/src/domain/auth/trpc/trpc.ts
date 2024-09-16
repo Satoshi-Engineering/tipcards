@@ -15,7 +15,7 @@ export type Meta = Record<string, never>
 export const createContext = (opts: CreateExpressContextOptions): Context => {
   return {
     auth: Auth.getAuth(),
-    session: new AuthSession(opts.res),
+    session: new AuthSession(opts.req, opts.res),
   }
 }
 

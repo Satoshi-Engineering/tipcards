@@ -27,15 +27,13 @@ export default class FrontendWithAuth extends Frontend {
           maxURLLength: 2083,
           headers: async () => {
             return {
+              Cookie: this.refreshToken ? `refresh_token=${this.refreshToken}` : '',
               Authorization: this.accessToken || '',
             }
           },
           fetch: async (url, options) => {
             const response = await fetch(url, options)
-            const cookies = response.headers.get('set-cookie')
-            if (cookies) {
-              this.setRefreshTokenFromCookies([cookies])
-            }
+            this.setRefreshTokenFromFetchResponse(response)
             return response
           },
         }),
@@ -66,17 +64,17 @@ export default class FrontendWithAuth extends Frontend {
   async authRefresh() {
     const response = await axios.get(`${API_ORIGIN}/api/auth/refresh`, this.getRefreshHeader())
     this.accessToken = response.data.data.accessToken
-    this.setRefreshTokenFromResponse(response)
+    this.setRefreshTokenFromAxiosResponse(response)
     return response
   }
 
   async logout() {
-    return await axios.post(`${API_ORIGIN}/api/auth/logout`, {}, this.getRefreshHeader())
+    await this.trpcAuth.auth.logout.query()
   }
 
   async logoutAllOtherDevices() {
     const response = await axios.post(`${API_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, this.getRefreshHeader())
-    this.setRefreshTokenFromResponse(response)
+    this.setRefreshTokenFromAxiosResponse(response)
     return response
   }
 
@@ -92,7 +90,14 @@ export default class FrontendWithAuth extends Frontend {
     return await axios.post(`${API_ORIGIN}/api/set/${set.id}`, set, this.getAccessHeader())
   }
 
-  setRefreshTokenFromResponse(response: AxiosResponse) {
+  setRefreshTokenFromFetchResponse(response: Response) {
+    const cookies = response.headers.get('set-cookie')
+    if (typeof cookies === 'string') {
+      this.setRefreshTokenFromCookies([cookies])
+    }
+  }
+
+  setRefreshTokenFromAxiosResponse(response: AxiosResponse) {
     const cookies = response.headers['set-cookie']
     if (cookies === undefined) {
       throw new Error('no cookies set')
@@ -101,14 +106,16 @@ export default class FrontendWithAuth extends Frontend {
   }
 
   setRefreshTokenFromCookies(cookies: string[]) {
+    if (!cookies[0].includes('refresh_token')) {
+      return
+    }
+
     const match = cookies[0].match(/(^| )refresh_token=(?<refreshToken>[^;]+)/)
-    if (match == null) {
-      throw new Error('refresh_token in cookies not found or cookie not in cookies[0]')
+    if (match == null || match.groups == null) {
+      this.refreshToken = ''
+    } else {
+      this.refreshToken = match.groups['refreshToken']
     }
-    if (match.groups == null) {
-      throw new Error('refresh_token not found in cookie')
-    }
-    this.refreshToken = match.groups['refreshToken']
   }
 
   getRefreshHeader() {
