@@ -1,9 +1,10 @@
 <template>
   <ModalDefault
+    :open="open"
     data-test="modal-login"
     @close="$emit('close')"
   >
-    <CenterContainer class="text-center">
+    <div class="text-center">
       <HeadlineDefault level="h1">
         {{ $t('auth.modalLogin.headline') }}
       </HeadlineDefault>
@@ -46,7 +47,7 @@
           {{ $t('general.cancel') }}
         </ButtonDefault>
       </ButtonContainer>
-    </CenterContainer>
+    </div>
   </ModalDefault>
 </template>
 
@@ -66,10 +67,17 @@ import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
-import CenterContainer from './layout/CenterContainer.vue'
 import ButtonContainer from './buttons/ButtonContainer.vue'
 
+defineProps({
+  open: {
+    type: Boolean,
+    required: true,
+  },
+})
+
 defineEmits(['close'])
+
 const authStore = useAuthStore()
 const { login } = authStore
 const { isLoggedIn } = storeToRefs(authStore)

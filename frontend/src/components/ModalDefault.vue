@@ -1,44 +1,50 @@
 <template>
-  <div
-    class="grid place-items-center fixed z-40 top-0 left-0 right-0 w-full h-full lg:p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
-    @click="onBackdropClick"
-  >
+  <Teleport to="body">
     <div
-      class="relative w-full h-full lg:max-w-xl bg-white lg:h-auto"
-      @click.stop
+      v-if="open"
+      class="grid place-items-center fixed z-40 top-0 left-0 right-0 w-full h-full lg:p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
+      @click="onBackdropClick"
     >
-      <!-- Modal content -->
-      <div class="appearance-none relative py-4">
-        <CenterContainer
-          v-if="showCloseButton"
-        >
-          <BackLink
-            v-if="showCloseButton"
-            class="!pb-2"
-            @click="$emit('close')"
+      <div
+        class="relative w-full h-full lg:max-w-xl bg-white lg:h-auto"
+        @click.stop
+      >
+        <!-- Modal content -->
+        <div class="appearance-none relative py-4">
+          <CenterContainer
+            v-if="!noCloseButton"
           >
-            {{ closeButtonText || $t('general.back') }}
-          </BackLink>
-        </CenterContainer>
-        <slot name="default" />
-        <div v-if="$slots.footer != null" class="flex items-start mt-4">
-          <slot name="footer" />
+            <BackLink
+              class="!pb-2"
+              @click="$emit('close')"
+            >
+              {{ closeButtonText || $t('general.close') }}
+            </BackLink>
+          </CenterContainer>
+          <CenterContainer>
+            <slot name="default" />
+          </CenterContainer>
         </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onBeforeUnmount } from 'vue'
+import { onBeforeMount, onBeforeUnmount, watch } from 'vue'
 
 import BackLink from './BackLink.vue'
 import CenterContainer from './layout/CenterContainer.vue'
+import { usePageScroll } from '@/modules/usePageScroll'
 
 const props = defineProps({
-  showCloseButton: {
+  open: {
     type: Boolean,
-    default: true,
+    required: true,
+  },
+  noCloseButton: {
+    type: Boolean,
+    default: false,
   },
   closeButtonText: {
     type: String,
@@ -75,5 +81,16 @@ onBeforeMount(() => {
 })
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeyDown)
+})
+
+/////
+// disable page scroll when modal is open
+const { disablePageScroll, enablePageScroll } = usePageScroll()
+watch(() => props.open, (value) => {
+  if (value) {
+    disablePageScroll()
+  } else {
+    enablePageScroll()
+  }
 })
 </script>
