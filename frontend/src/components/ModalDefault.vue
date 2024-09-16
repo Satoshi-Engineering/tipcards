@@ -1,8 +1,8 @@
 <template>
-  <Teleport to="body">
+  <Teleport v-if="open" to="body">
     <div
-      v-if="open"
       class="grid place-items-center fixed z-40 top-0 left-0 right-0 w-full h-full lg:p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
+      v-bind="$attrs"
       @click="onBackdropClick"
     >
       <div
