@@ -246,34 +246,6 @@
       }
     }
   },
-  "auth": {
-    "modalLogin": {
-      "headline": "Login using LNURL-Auth",
-      "text": "Login and enjoy some cool features! You need a lightning app that supports LNURL-Auth.",
-      "loginErrorText": "Something went wrong. Please try again later or contact support.",
-      "cookieWarning": "Your logged in state will be stored as a cookie until you log out."
-    },
-    "buttonLogout": "Logout"
-  },
-  "stores": {
-    "cardsSets": {
-      "errors": {
-        "unableToLoadSetsFromBackend": "Unable to load sets from the server.",
-        "unableToMigrateSets": "Migration failed. You can delete the sets manually and save them when logged in.",
-        "setBelongsToAnotherUser": "Unable to save an unnamed set, as it was already saved by another user.",
-        "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user."
-      }
-    }
-  },
-  "components": {
-    "modalResolveLocalStorage": {
-      "headline": "Sets stored in your browser (LocalStorage)",
-      "text": "You have sets stored locally. To use the LNURL-Auth feature we need to move those to the server. You can do so by clicking \"Migrate\". Alternatively you can log out again and delete them manually first.",
-      "migrate": "Migrate",
-      "logout": "Logout",
-      "confirmMigrate": "Migrate now?"
-    }
-  },
   "home": {
     "buttonCreate": "अपना टिप कार्ड समूह बनाएं'"
   }

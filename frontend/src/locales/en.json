@@ -5,7 +5,8 @@
     "userAccount": "Account",
     "login": "Login",
     "close": "Close",
-    "getStarted": "Get started"
+    "getStarted": "Get started",
+    "cancel": "Cancel"
   },
   "header": {
     "mainNavLabel": "Main navigation",
@@ -400,11 +401,12 @@
   },
   "auth": {
     "modalLogin": {
-      "headline": "Login using LNURL-Auth",
-      "text": "You need a lightning app that supports LNURL-Auth.",
+      "headline": "Nice to meet you!",
+      "qrCodeHeadline": "Login using LNURL-Auth",
+      "text": "Just scan the QR code with your Lightning wallet app and get started. You need a wallet that supports LNURL-Auth.",
       "loginErrorText": "Something went wrong. Please try again later or contact support.",
       "cookieWarning": "Your logged in state will be stored as a cookie until you log out.",
-      "emailHint": "For the case you lose your lightning wallet or device that you used to authenticate, you can store your email address.",
+      "emailHint": "For the case you lose your Lightning wallet or device that you used to authenticate, you can store your email address.",
       "emailCta": "Enter email address on account page",
       "close": "Close"
     },

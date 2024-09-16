@@ -5,6 +5,7 @@
     "userAccount": "Account",
     "login": "Login",
     "close": "Schließen",
+    "cancel": "Abbrechen",
     "getStarted": "Jetzt losstarten"
   },
   "header": {
@@ -417,8 +418,9 @@
   },
   "auth": {
     "modalLogin": {
-      "headline": "Login mit LNURL-Auth",
-      "text": "Du benötigst eine App, die LNURL-Auth unterstützt.",
+      "headline": "Hi, schön, dass du da bist!",
+      "qrCodeHeadline": "Login mit LNURL-Auth",
+      "text": "Einfach den QR-Code mit deiner Lightning-App scannen und loslegen. Du benötigst eine App, die LNURL-Auth unterstützt.",
       "loginErrorText": "Etwas ist schiefgegangen. Bitte versuche es nochmal oder kontaktiere den Support.",
       "cookieWarning": "Dein Login wird bis zum Ausloggen als Cookie im Browser gespeichert.",
       "emailHint": "Für den Fall, dass du das Gerät oder die Lightning-Wallet verlierst, mit der du dich authentifiziert hast, kannst du deine E-Mail-Adresse hinterlegen.",

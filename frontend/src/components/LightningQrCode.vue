@@ -18,8 +18,8 @@
         <!-- eslint-disable vue/no-v-html -->
         <a
           class="block transition-opacity"
-          :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || error != null }"
-          :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
+          :class="{ 'opacity-20 blur-sm pointer-events-none': success || pending || loading || error != null }"
+          :href="(success || pending || loading || error != null) ? undefined : `lightning:${value}`"
           data-test="lightning-qr-code-image"
           v-html="qrCodeSvg"
         />
@@ -34,6 +34,9 @@
             :pending="pending && !success"
           />
         </div>
+        <div v-else-if="loading" class="absolute top-0 left-0 right-0 bottom-0 grid place-items-center">
+          <IconAnimatedLoadingWheel class="w-10 h-10" />
+        </div>
       </div>
     </div>
     <hr class="border-white-50">
@@ -42,7 +45,7 @@
         class="text-right inline-block no-underline font-normal min-h-[3rem]"
         :text="value"
         :error="error"
-        :disabled="success || pending"
+        :disabled="success || pending || loading"
         data-test="lnurlauth-qrcode-copy-2-clipboard"
       >
         <template #default>
@@ -66,8 +69,8 @@
     </div>
     <div class="text-center max-w-sm mb-5 px-5 mx-auto">
       <ButtonDefault
-        :disabled="success || pending"
-        :href="(success || pending || error != null) ? undefined : `lightning:${value}`"
+        :disabled="success || pending || loading"
+        :href="(success || pending || loading || error != null) ? undefined : `lightning:${value}`"
         data-test="lightning-qr-code-button-open-in-wallet"
         class="w-full"
         @click="checkForError"
@@ -89,6 +92,7 @@ import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import IconAnimatedCheckmark from '@/components/icons/IconAnimatedCheckmark.vue'
 import IconTriangleExclamationMark from '@/components/icons/IconTriangleExclamationMark.vue'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
+import IconAnimatedLoadingWheel from './icons/IconAnimatedLoadingWheel.vue'
 
 const props = defineProps({
   headline: {
@@ -104,6 +108,10 @@ const props = defineProps({
     default: false,
   },
   pending: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },

@@ -290,7 +290,7 @@
   },
   "auth": {
     "modalLogin": {
-      "headline": "Login dengan LNURL-Auth",
+      "qrCodeHeadline": "Login dengan LNURL-Auth",
       "text": "Kamu memerlukan aplikasi yang mendukung LNURL-Auth.",
       "loginErrorText": "Ada yang salah. Silakan coba lagi atau hubungi dukungan.",
       "cookieWarning": "Loginmu akan disimpan sebagai cookie di browser sampai kamu logout.",

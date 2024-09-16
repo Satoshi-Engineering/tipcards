@@ -1,7 +1,8 @@
 <template>
   <LinkDefault
     v-if="!recentlyCopied"
-    class="inline-block animate-fade-in"
+    class="inline-block"
+    :class="{ 'animate-fade-in': !disabled }"
     :disabled="disabled"
     @click="copyToClipboard(text)"
   >

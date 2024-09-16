@@ -1,47 +1,52 @@
 <template>
   <ModalDefault
-    :headline="$t('auth.modalLogin.headline')"
     data-test="modal-login"
     @close="$emit('close')"
   >
-    <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
-      {{ modalLoginUserMessage }}
-    </ParagraphDefault>
-    <ParagraphDefault v-if="loginFailed" class="mb-4 text-red-500">
-      {{ $t('auth.modalLogin.loginErrorText') }}
-    </ParagraphDefault>
-    <ParagraphDefault v-else-if="!isLoggedIn" class="mb-3">
-      {{ $t('auth.modalLogin.text') }}
-    </ParagraphDefault>
+    <CenterContainer class="text-center">
+      <HeadlineDefault level="h1">
+        {{ $t('auth.modalLogin.headline') }}
+      </HeadlineDefault>
+      <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
+        {{ modalLoginUserMessage }}
+      </ParagraphDefault>
+      <ParagraphDefault v-if="loginFailed" class="mb-4 text-red-500">
+        {{ $t('auth.modalLogin.loginErrorText') }}
+      </ParagraphDefault>
+      <ParagraphDefault v-else-if="!isLoggedIn" class="mb-3">
+        {{ $t('auth.modalLogin.text') }}
+      </ParagraphDefault>
 
-    <IconAnimatedLoadingWheelDeprecated v-if="fetchingLogin" class="my-20 w-10 h-10" />
-    <LightningQrCode
-      v-else-if="lnurl != null"
-      class="my-7"
-      :value="lnurl"
-      :error="loginFailed ? $t('auth.modalLogin.loginErrorText') : undefined"
-      :success="isLoggedIn"
-    />
-    <ParagraphDefault v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
-      {{ $t('auth.modalLogin.emailHint') }}
-      <br>
-      <LinkDefault :to="{ name: 'user-account', params: { lang: $route.params.lang } }" @click="$emit('close')">
-        {{ $t('auth.modalLogin.emailCta') }}
-      </LinkDefault>
-    </ParagraphDefault>
-    <ParagraphDefault v-if="!isLoggedIn" class="mt-12 text-sm text-grey">
-      {{ $t('auth.modalLogin.cookieWarning') }}
-    </ParagraphDefault>
-    <div class="text-center">
-      <ButtonDefault
-        class="text-sm min-w-[170px]"
-        variant="secondary"
-        data-test="modal-login-close-button"
-        @click="$emit('close')"
-      >
-        {{ $t('auth.modalLogin.close') }}
-      </ButtonDefault>
-    </div>
+      <LightningQrCode
+        v-if="fetchingLogin || lnurl != null"
+        class="my-7"
+        :headline="$t('auth.modalLogin.qrCodeHeadline')"
+        :value="lnurl || 'lnurl:loadingloadingloading'"
+        :loading="fetchingLogin"
+        :error="loginFailed ? $t('auth.modalLogin.loginErrorText') : undefined"
+        :success="isLoggedIn"
+      />
+      <ParagraphDefault v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
+        {{ $t('auth.modalLogin.emailHint') }}
+        <br>
+        <LinkDefault :to="{ name: 'user-account', params: { lang: $route.params.lang } }" @click="$emit('close')">
+          {{ $t('auth.modalLogin.emailCta') }}
+        </LinkDefault>
+      </ParagraphDefault>
+      <ParagraphDefault v-if="!isLoggedIn" class="mt-12 mb-4 text-sm">
+        {{ $t('auth.modalLogin.cookieWarning') }}
+      </ParagraphDefault>
+      <ButtonContainer>
+        <ButtonDefault
+          class="min-w-[170px]"
+          variant="secondary"
+          data-test="modal-login-close-button"
+          @click="$emit('close')"
+        >
+          {{ $t('general.cancel') }}
+        </ButtonDefault>
+      </ButtonContainer>
+    </CenterContainer>
   </ModalDefault>
 </template>
 
@@ -53,7 +58,6 @@ import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import useTRpcAuth from '@/modules/useTRpcAuth'
 import ModalDefault from '@/components/ModalDefault.vue'
-import IconAnimatedLoadingWheelDeprecated from '@/components/icons/IconAnimatedLoadingWheelDeprecated.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -61,6 +65,9 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
+import HeadlineDefault from './typography/HeadlineDefault.vue'
+import CenterContainer from './layout/CenterContainer.vue'
+import ButtonContainer from './buttons/ButtonContainer.vue'
 
 defineEmits(['close'])
 const authStore = useAuthStore()

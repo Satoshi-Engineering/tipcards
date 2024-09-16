@@ -5,6 +5,7 @@
     <LinkDefault
       :to="to"
       no-bold
+      @click="$emit('click')"
     >
       <span class="flex gap-1 items-center">
         <IconCaretLeft class="w-3 h-3 rtl:hidden" />
@@ -37,4 +38,6 @@ defineProps({
     default: undefined,
   },
 })
+
+defineEmits(['click'])
 </script>
