@@ -44,7 +44,7 @@
           data-test="modal-login-close-button"
           @click="$emit('close')"
         >
-          {{ $t('general.cancel') }}
+          {{ !isLoggedIn ? $t('general.cancel') : $t('general.close') }}
         </ButtonDefault>
       </ButtonContainer>
     </div>
