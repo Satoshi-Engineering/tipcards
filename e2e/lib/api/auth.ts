@@ -1,12 +1,12 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
+import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
-const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', BACKEND_API_ORIGIN)
-const API_AUTH_LOGIN = new URL('/auth/api/cypress/loginWithLnurlAuthHash', BACKEND_API_ORIGIN)
-const API_AUTH_REFRESH = new URL('/api/auth/refresh', BACKEND_API_ORIGIN)
+const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', TIPCARDS_AUTH_ORIGIN)
+const API_AUTH_LOGIN = new URL('/auth/api/cypress/loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
+const API_AUTH_REFRESH = new URL('/api/auth/refresh', TIPCARDS_AUTH_ORIGIN)
 
 export const login = () => {
   cy.fixture('keys.json').then((keys) => {
@@ -37,7 +37,9 @@ export const login = () => {
       expect(response.body).to.have.nested.property('data.accessToken')
       cy.wrap(response.body.data.accessToken).as('accessToken')
     })
-    cy.getCookie('refresh_token').should('exist')
+    cy.getCookie('refresh_token', {
+      domain: TIPCARDS_AUTH_ORIGIN.hostname,
+    }).should('exist')
   })
 }
 
@@ -51,12 +53,16 @@ export const refresh = () => {
 }
 
 export const isLoggedIn = () => {
-  cy.getCookie('refresh_token').should('exist')
+  cy.getCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  }).should('exist')
   cy.get('@accessToken').should('exist')
 }
 
 export const clearAuth = () => {
-  cy.clearCookie('refresh_token')
+  cy.clearCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  })
   cy.request({
     url: `${API_AUTH_REFRESH.href}`,
     failOnStatusCode: false,
