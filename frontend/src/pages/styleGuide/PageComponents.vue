@@ -117,7 +117,7 @@
           </ButtonDefault>
         </ButtonContainer>
         <ModalDefault
-          :open="showDialogs[0]"
+          v-if="showDialogs[0]"
           @close="showDialogs[0] = false"
         >
           <HeadlineDefault level="h1" class="text-center">
@@ -129,7 +129,7 @@
         </ModalDefault>
 
         <ModalDefault
-          :open="showDialogs[1]"
+          v-if="showDialogs[1]"
           @close="showDialogs[1] = false"
         >
           <HeadlineDefault level="h1" class="text-center">
@@ -162,7 +162,7 @@
         </ModalDefault>
 
         <ModalDefault
-          :open="showDialogs[2]"
+          v-if="showDialogs[2]"
           no-close-button
           @close="showDialogs[2] = false"
         >
@@ -180,7 +180,7 @@
         </ModalDefault>
 
         <ModalDefault
-          :open="showDialogs[3]"
+          v-if="showDialogs[3]"
           close-button-text="Bring me back"
           @close="showDialogs[3] = false"
         >

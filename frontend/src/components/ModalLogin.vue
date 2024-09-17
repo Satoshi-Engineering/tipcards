@@ -1,6 +1,5 @@
 <template>
   <ModalDefault
-    :open="open"
     data-test="modal-login"
     @close="$emit('close')"
   >
@@ -55,7 +54,7 @@
 import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { io, Socket } from 'socket.io-client'
-import { onBeforeMount, onBeforeUnmount, ref, watch } from 'vue'
+import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import useTRpcAuth from '@/modules/useTRpcAuth'
 import ModalDefault from '@/components/ModalDefault.vue'
@@ -68,13 +67,6 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import ButtonContainer from './buttons/ButtonContainer.vue'
-
-const props = defineProps({
-  open: {
-    type: Boolean,
-    required: true,
-  },
-})
 
 defineEmits(['close'])
 
@@ -92,15 +84,7 @@ const loginFailed = ref(false)
 const missingEmail = ref(false)
 let socket: Socket
 
-watch(() => props.open, (value) => {
-  if (value) {
-    onOpen()
-  } else {
-    onClose()
-  }
-})
-
-const onOpen = async () => {
+onBeforeMount(async () => {
   try {
     const trpcAuth = useTRpcAuth()
     const response = await trpcAuth.lnurlAuth.create.query()
@@ -112,7 +96,7 @@ const onOpen = async () => {
   connectSocket()
   fetchingLogin.value = false
   loginFailed.value = false
-}
+})
 const connectSocket = () => {
   socket = io(TIPCARDS_AUTH_ORIGIN)
   socket.on('error', () => {
@@ -142,13 +126,13 @@ const connectSocket = () => {
     socket.emit('waitForLogin', { hash: hash.value })
   })
 }
-const onClose = () => {
+onBeforeUnmount(() => {
   hash.value = undefined
   lnurl.value = undefined
   if (socket != null) {
     socket.close()
   }
-}
+})
 
 /////
 // reconnect on tab change (connection gets lost on smartphones sometimes)

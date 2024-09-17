@@ -1,7 +1,7 @@
 <template>
   <RouterView />
   <ModalLogin
-    :open="showModalLogin"
+    v-if="showModalLogin"
     @close="showModalLogin = false"
   />
 </template>
