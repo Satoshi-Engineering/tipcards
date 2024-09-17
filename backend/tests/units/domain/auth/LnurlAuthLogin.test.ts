@@ -9,7 +9,7 @@ import lnurl from 'lnurl'
 
 import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 import LoginInformer from '@backend/domain/auth/LoginInformer.js'
-import { type LoginEvent } from '@backend/domain/auth/LoginEvent.js'
+import { type LoginEvent } from '@backend/domain/auth/types/LoginEvent.js'
 import { delay } from '@backend/services/timingUtils.js'
 
 describe('LnurlAuthLogin', () => {
