@@ -66,7 +66,7 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLangNav from '@/components/layout/TheLangNav.vue'
@@ -76,7 +76,6 @@ import IconWorld from '@/components/icons/IconWorld.vue'
 import IconX from '@/components/icons/IconX.vue'
 import IconMainNav from '@/components/icons/IconMainNav.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
-import { usePageScroll } from '@/modules/usePageScroll'
 
 defineProps({
   loginBanner: {
@@ -90,15 +89,4 @@ const activeMenu = ref<'none'|'language'|'main-nav'>('none')
 const closeAllMenus = () => {
   activeMenu.value = 'none'
 }
-
-const { disablePageScroll, enablePageScroll } = usePageScroll()
-
-watch(activeMenu, (value) => {
-  // Bad voodoo magic signed off by Dave - DRAFT
-  if (value === 'none') {
-    enablePageScroll()
-  } else {
-    disablePageScroll()
-  }
-})
 </script>

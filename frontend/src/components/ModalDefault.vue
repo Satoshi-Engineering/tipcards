@@ -1,41 +1,40 @@
 <template>
   <Teleport to="body">
-    <div
-      class="grid place-items-center fixed z-40 top-0 left-0 right-0 w-full h-full lg:p-4 overflow-x-hidden overflow-y-auto bg-grey bg-opacity-50"
+    <dialog
+      ref="dialog"
+      class="
+        w-full max-w-full sm:max-w-xl max-h-full sm:max-h-[calc(100dvh-32px)] h-full sm:h-fit bg-white
+        backdrop:bg-opacity-50 backdrop:bg-grey backdrop:overflow-y-auto
+      "
       v-bind="$attrs"
-      @click="onBackdropClick"
+      @click="onDialogClick"
     >
-      <div
-        class="relative w-full h-full lg:max-w-xl bg-white lg:h-auto"
-        @click.stop
-      >
-        <!-- Modal content -->
-        <div class="appearance-none relative py-4">
-          <CenterContainer
-            v-if="!noCloseButton"
+      <!-- Modal content -->
+      <div class="py-4">
+        <CenterContainer
+          v-if="!noCloseButton"
+        >
+          <BackLink
+            autofocus
+            class="!pb-2"
+            @click="dialog?.close()"
           >
-            <BackLink
-              class="!pb-2"
-              @click="$emit('close')"
-            >
-              {{ closeButtonText || $t('general.close') }}
-            </BackLink>
-          </CenterContainer>
-          <CenterContainer>
-            <slot name="default" />
-          </CenterContainer>
-        </div>
+            {{ closeButtonText || $t('general.close') }}
+          </BackLink>
+        </CenterContainer>
+        <CenterContainer>
+          <slot name="default" />
+        </CenterContainer>
       </div>
-    </div>
+    </dialog>
   </Teleport>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onBeforeUnmount } from 'vue'
+import { nextTick, onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
 import BackLink from './BackLink.vue'
 import CenterContainer from './layout/CenterContainer.vue'
-import { usePageScroll } from '@/modules/usePageScroll'
 
 const props = defineProps({
   noCloseButton: {
@@ -50,40 +49,31 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  noCloseOnEsc: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const emit = defineEmits(['close'])
 
-const onBackdropClick = () => {
+const dialog = ref<HTMLDialogElement | null>(null)
+
+const onCloseEvent = () => {
+  emit('close')
+}
+
+const onDialogClick = (event: MouseEvent) => {
   if (props.noCloseOnBackdropClick) {
     return
   }
-  emit('close')
-}
-
-/////
-// close on escape
-const onKeyDown = (event: KeyboardEvent) => {
-  if (props.noCloseOnEsc || event.key !== 'Escape') {
-    return
+  if (event.target === dialog.value) {
+    dialog.value?.close()
   }
-  emit('close')
 }
 
-/////
-// disable page scroll when modal is open
-const { disablePageScroll, enablePageScroll } = usePageScroll()
-
-onBeforeMount(() => {
-  document.addEventListener('keydown', onKeyDown)
-  disablePageScroll()
+onBeforeMount(async () => {
+  await nextTick()
+  dialog.value?.showModal()
+  dialog.value?.addEventListener('close', onCloseEvent)
 })
 onBeforeUnmount(() => {
-  document.removeEventListener('keydown', onKeyDown)
-  enablePageScroll()
+  dialog.value?.removeEventListener('close', onCloseEvent)
 })
 </script>

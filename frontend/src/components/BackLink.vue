@@ -3,7 +3,9 @@
     class="pb-6"
   >
     <LinkDefault
+      v-bind="$attrs"
       :to="to"
+      :autofocus="autofocus"
       no-bold
       @click="$emit('click')"
     >
@@ -36,6 +38,10 @@ defineProps({
   to: {
     type: [String, Object] as PropType<RouteLocationRaw>,
     default: undefined,
+  },
+  autofocus: {
+    type: Boolean,
+    default: false,
   },
 })
 

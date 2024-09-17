@@ -1,5 +1,9 @@
 <template>
-  <nav class="w-full bg-white animate-fade-in" data-test="the-main-nav">
+  <nav
+    id="the-main-nav"
+    class="w-full bg-white animate-fade-in"
+    data-test="the-main-nav"
+  >
     <CenterContainer class="h-[calc(100dvh-56px)] overflow-y-auto py-6">
       <menu>
         <li>

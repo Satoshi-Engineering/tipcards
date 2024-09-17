@@ -5,6 +5,7 @@
   >
     <slot name="header">
       <TheHeader
+        id="the-header"
         class="print:hidden"
         :login-banner="loginBanner"
       />
