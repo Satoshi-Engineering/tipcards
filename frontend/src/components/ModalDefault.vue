@@ -7,6 +7,7 @@
         backdrop:bg-opacity-50 backdrop:bg-grey backdrop:overflow-y-auto
       "
       v-bind="$attrs"
+      data-test="modal"
       @click="onDialogClick"
     >
       <!-- Modal content -->
@@ -15,6 +16,7 @@
           v-if="!noCloseButton"
         >
           <BackLink
+            data-test="modal-close-button"
             autofocus
             class="!pb-2"
             @click="dialog?.close()"
@@ -22,7 +24,7 @@
             {{ closeButtonText || $t('general.close') }}
           </BackLink>
         </CenterContainer>
-        <CenterContainer>
+        <CenterContainer data-test="modal-content">
           <slot name="default" />
         </CenterContainer>
       </div>
