@@ -6,8 +6,8 @@
         w-full max-w-full sm:max-w-xl max-h-full sm:max-h-[calc(100dvh-32px)] h-full sm:h-fit bg-white
         backdrop:bg-opacity-50 backdrop:bg-grey backdrop:overflow-y-auto
       "
-      v-bind="$attrs"
       data-test="modal"
+      v-bind="$attrs"
       @click="onDialogClick"
     >
       <!-- Modal content -->
