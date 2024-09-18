@@ -106,6 +106,6 @@ const checkLoginSuccess = () => {
   cy.getTestElement('modal-login-close-button').click()
   cy.getTestElement('modal-login').should('not.exist')
 
-  tipCardsApi.auth.refresh()
-  tipCardsApi.auth.isLoggedIn()
+  tipCards.reloadPage()
+  tipCards.isLoggedIn()
 }

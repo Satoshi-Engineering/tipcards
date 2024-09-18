@@ -1,6 +1,6 @@
 import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
-import { reload as reloadGeneric } from './utils.js'
+import { reloadPage as reloadGeneric } from './utils.js'
 
 const USER_ACOUNT_PAGE_URL = new URL('/user-account', TIPCARDS_ORIGIN)
 

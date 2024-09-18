@@ -6,10 +6,16 @@ import {
 import {
   goto as gotoHomePage,
 } from './pages/home.js'
-import { reload } from './pages/utils.js'
+import {
+  isLoggedIn,
+  isLoggedOut,
+  reloadPage,
+} from './pages/utils.js'
 
 export default {
-  reload,
+  isLoggedIn,
+  isLoggedOut,
+  reloadPage,
   gotoSetsPage,
   gotoUserAccount,
   gotoHomePage,

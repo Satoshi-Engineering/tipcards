@@ -52,7 +52,7 @@ export const refresh = () => {
   })
 }
 
-export const isLoggedIn = () => {
+export const isLoggedInViaCypress = () => {
   cy.getCookie('refresh_token', {
     domain: TIPCARDS_AUTH_ORIGIN.hostname,
   }).should('exist')
