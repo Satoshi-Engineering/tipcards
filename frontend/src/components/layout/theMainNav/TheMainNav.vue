@@ -85,7 +85,7 @@
           <MainNavItem
             data-test="main-nav-link-logout"
             class="!text-base"
-            :label="$t('auth.buttonLogout')"
+            :label="$t('general.logout')"
             @click="async () => {
               await authStore.logout()
               $emit('itemSelected')

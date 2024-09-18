@@ -4,6 +4,7 @@
     "cards": "{count} Karte | {count} Karten",
     "userAccount": "Account",
     "login": "Login",
+    "logout": "Logout",
     "close": "Schließen",
     "cancel": "Abbrechen",
     "getStarted": "Jetzt losstarten"

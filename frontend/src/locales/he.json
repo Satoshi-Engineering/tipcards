@@ -1,16 +1,40 @@
 {
   "general": {
     "back": "חזרה",
-    "cards": "כרטיס אחד | {count} כרטיסים"
+    "cards": "כרטיס אחד | {count} כרטיסים",
+    "userAccount": "חשבון",
+    "login": "התחבר",
+    "logout": "התנתק",
+    "close": "סגור",
+    "getStarted": "התחל",
+    "cancel": "ביטול"
+  },
+  "header": {
+    "mainNavLabel": "ניווט ראשי",
+    "langNavLabel": "בחירת שפה",
+    "loginBanner": {
+      "claim": "{login} כדי לשמור את מערכי TipCards שלך, לבדוק את הסטטוס ולהחזיר את הסאטושיס שלך.",
+      "login": "התחבר"
+    }
   },
   "nav": {
-    "index": "עמוד הבית",
-    "cards": "עמוד יצירה",
-    "landing": "עמוד נחיתה",
-    "about": "אודות"
+    "index": "דף הבית",
+    "cards": "צור מערך",
+    "landing": "דף נחיתה",
+    "about": "אודות",
+    "privacyPolicy": "מדיניות פרטיות",
+    "legalNotice": "הודעה משפטית",
+    "goToAccount": "לחשבון שלך",
+    "sets": "המערכים שלי",
+    "faqs": "שאלות נפוצות",
+    "statistics": "סטטיסטיקות"
   },
   "footer": {
-    "support": "יש לך שאלות, הערות והארות? מצאת בעיה או באג? אל תהסס/י ליצור קשר: {email}"
+    "mostRelevantFaqs": {
+      "title": "באג, משוב או שאלות?",
+      "subTitle": "אנחנו שואפים לשפר ללא הרף!",
+      "buttonToFaqs": "לשאלות הנפוצות"
+    }
   },
   "landing": {
     "title": "קבלת הביטקוין שלך",

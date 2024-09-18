@@ -1,16 +1,40 @@
 {
   "general": {
     "back": "Atrás",
-    "cards": "{count} tarjeta | {count} tarjetas"
+    "cards": "{count} tarjeta | {count} tarjetas",
+    "userAccount": "Cuenta",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "close": "Cerrar",
+    "getStarted": "Comenzar",
+    "cancel": "Cancelar"
+  },
+  "header": {
+    "mainNavLabel": "Navegación principal",
+    "langNavLabel": "Selección de idioma",
+    "loginBanner": {
+      "claim": "{login} para guardar tus conjuntos de TipTarjetas, verificar el estado y recuperar tus sats.",
+      "login": "Iniciar sesión"
+    }
   },
   "nav": {
-    "index": "Home",
-    "cards": "Create",
-    "landing": "Landing page",
-    "about": "About"
+    "index": "Inicio",
+    "cards": "Crear un conjunto",
+    "landing": "Página de aterrizaje",
+    "about": "Acerca de",
+    "privacyPolicy": "Política de privacidad",
+    "legalNotice": "Aviso legal",
+    "goToAccount": "a tu cuenta",
+    "sets": "Mis Conjuntos",
+    "faqs": "FAQ",
+    "statistics": "Estadísticas"
   },
   "footer": {
-    "support": "¿Tienes preguntas, comentarios, un problema o encontraste un error? Escríbenos a {email}."
+    "mostRelevantFaqs": {
+      "title": "¿Error, comentario o preguntas?",
+      "subTitle": "¡Nos esforzamos constantemente por mejorar!",
+      "buttonToFaqs": "Ir a las FAQ"
+    }
   },
   "landing": {
     "title": "Consigue tu Bitcoin",

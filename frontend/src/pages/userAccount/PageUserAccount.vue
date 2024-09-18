@@ -12,11 +12,11 @@
       <div class="pt-5 bg-gradient-to-b from-grey-light to-transparent">
         <CenterContainer>
           <HeadlineDefault level="h2" class="text-center">
-            {{ $t('auth.buttonLogout') }}
+            {{ $t('general.logout') }}
           </HeadlineDefault>
           <ButtonContainer class="my-10">
             <ButtonDefault @click="onLogout">
-              {{ $t('auth.buttonLogout') }}
+              {{ $t('general.logout') }}
             </ButtonDefault>
           </ButtonContainer>
           <ButtonContainer class="my-10">

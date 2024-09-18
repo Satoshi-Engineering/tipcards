@@ -1,16 +1,40 @@
 {
   "general": {
     "back": "Назад",
-    "cards": "{count} карта | {count} карты"
+    "cards": "{count} карта | {count} карты | {count} карт",
+    "userAccount": "Аккаунт",
+    "login": "Войти",
+    "logout": "Выйти",
+    "close": "Закрыть",
+    "getStarted": "Начать",
+    "cancel": "Отмена"
+  },
+  "header": {
+    "mainNavLabel": "Основная навигация",
+    "langNavLabel": "Выбор языка",
+    "loginBanner": {
+      "claim": "{login}, чтобы сохранить свои наборы ТИП-карт, проверить статус и вернуть свои сатоши.",
+      "login": "Войти"
+    }
   },
   "nav": {
-    "index": "Home",
-    "cards": "Create",
-    "landing": "Landing page",
-    "about": "About"
+    "index": "Главная",
+    "cards": "Создать набор",
+    "landing": "Целевая страница",
+    "about": "О нас",
+    "privacyPolicy": "Политика конфиденциальности",
+    "legalNotice": "Юридическое уведомление",
+    "goToAccount": "в ваш аккаунт",
+    "sets": "Мои наборы",
+    "faqs": "FAQ",
+    "statistics": "Статистика"
   },
   "footer": {
-    "support": "Есть вопросы или предложения? Нашли проблему или ошибку? Свяжитесь с нами: {email}."
+    "mostRelevantFaqs": {
+      "title": "Ошибка, обратная связь или вопросы?",
+      "subTitle": "Мы постоянно стараемся улучшаться!",
+      "buttonToFaqs": "Перейти к FAQ"
+    }
   },
   "landing": {
     "introGreeting": "Привет!",

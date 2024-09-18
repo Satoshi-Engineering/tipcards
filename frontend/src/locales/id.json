@@ -2,17 +2,39 @@
   "general": {
     "back": "Kembali",
     "cards": "{count} kartu | {count} kartu",
-    "userAccount": "akun",
-    "login": "Login"
+    "userAccount": "Akun",
+    "login": "Masuk",
+    "logout": "Keluar",
+    "close": "Tutup",
+    "getStarted": "Mulai",
+    "cancel": "Batal"
+  },
+  "header": {
+    "mainNavLabel": "Navigasi utama",
+    "langNavLabel": "Pemilihan bahasa",
+    "loginBanner": {
+      "claim": "{login} untuk menyimpan set TipCards Anda, memeriksa status, dan mengambil sats Anda.",
+      "login": "Masuk"
+    }
   },
   "nav": {
-    "index": "Indeks",
-    "cards": "Kartu",
-    "landing": "Pratinjau",
-    "about": "Tentang"
+    "index": "Beranda",
+    "cards": "Buat set",
+    "landing": "Halaman arahan",
+    "about": "Tentang",
+    "privacyPolicy": "Kebijakan Privasi",
+    "legalNotice": "Pemberitahuan Hukum",
+    "goToAccount": "ke akun Anda",
+    "sets": "Set Saya",
+    "faqs": "FAQ",
+    "statistics": "Statistik"
   },
   "footer": {
-    "support": "Punya pertanyaan, umpan balik, masalah atau menemukan bug? Hubungi kami di {email}."
+    "mostRelevantFaqs": {
+      "title": "Masalah, umpan balik, atau pertanyaan?",
+      "subTitle": "Kami terus berusaha untuk meningkatkan!",
+      "buttonToFaqs": "Ke FAQ"
+    }
   },
   "landing": {
     "title": "Dapatkan Bitcoin kamu",

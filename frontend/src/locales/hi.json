@@ -1,16 +1,40 @@
 {
   "general": {
-    "back": "पीछे",
-    "cards": "{count} कार्ड | {count} कार्डस"
+    "back": "वापस",
+    "cards": "{count} कार्ड | {count} कार्ड्स",
+    "userAccount": "खाता",
+    "login": "लॉगिन",
+    "logout": "लॉगआउट",
+    "close": "बंद करें",
+    "getStarted": "शुरू करें",
+    "cancel": "रद्द करें"
+  },
+  "header": {
+    "mainNavLabel": "मुख्य नेविगेशन",
+    "langNavLabel": "भाषा चयन",
+    "loginBanner": {
+      "claim": "{login} अपने TipCards सेट्स को सहेजने, स्थिति जांचने और अपने सैट्स पुनः प्राप्त करने के लिए।",
+      "login": "लॉगिन करें"
+    }
   },
   "nav": {
-    "index": "Home",
-    "cards": "Create",
-    "landing": "Landing page",
-    "about": "About"
+    "index": "होम",
+    "cards": "एक सेट बनाएं",
+    "landing": "लैंडिंग पेज",
+    "about": "हमारे बारे में",
+    "privacyPolicy": "गोपनीयता नीति",
+    "legalNotice": "कानूनी सूचना",
+    "goToAccount": "अपने खाते में जाएं",
+    "sets": "मेरे सेट्स",
+    "faqs": "सामान्य प्रश्न",
+    "statistics": "सांख्यिकी"
   },
   "footer": {
-    "support": "कोई प्रश्न या प्रतिक्रिया? या आपको कोई समस्या या गलती मिली? हमसे संपर्क करने में संकोच न करें: {email}।"
+    "mostRelevantFaqs": {
+      "title": "बग, प्रतिक्रिया या प्रश्न?",
+      "subTitle": "हम लगातार सुधार की दिशा में काम कर रहे हैं!",
+      "buttonToFaqs": "सामान्य प्रश्न पर जाएं"
+    }
   },
   "landing": {
     "title": "अपने बिटकॉइन प्राप्त करें",
