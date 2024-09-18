@@ -15,7 +15,7 @@ describe('Login Overlay', () => {
       cy.wrap(lnurlAuth).as('lnurlAuth')
     })
 
-    tipCards.gotoLoginPage()
+    tipCards.gotoHomePage()
   })
 
   it('check if user is logged out', () => {
@@ -71,6 +71,10 @@ describe('Login Overlay', () => {
 
     login()
     checkLoginSuccess()
+  })
+
+  it.skip('Login --> Logout --> Login', () => {
+    // tipCardsApi.isloggedout
   })
 })
 

@@ -84,7 +84,7 @@ const login = async (hash: string) => {
 const logout = async () => {
   accessToken.value = null
   try {
-    await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/logout`, { withCredentials: true })
+    await trpcAuth.auth.logout.query()
   } catch (error) {
     console.error(error)
   }

@@ -4,14 +4,14 @@ import {
   reload as reloadUserAccount,
 } from './pages/userAccount.js'
 import {
-  goto as gotoLoginPage,
-} from './pages/login.js'
+  goto as gotoHomePage,
+} from './pages/home.js'
 import { reload } from './pages/utils.js'
 
 export default {
   reload,
   gotoSetsPage,
   gotoUserAccount,
-  gotoLoginPage,
+  gotoHomePage,
   reloadUserAccount,
 }

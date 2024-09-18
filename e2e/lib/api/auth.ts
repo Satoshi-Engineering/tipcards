@@ -59,6 +59,12 @@ export const isLoggedIn = () => {
   cy.get('@accessToken').should('exist')
 }
 
+export const isLoggedOut = () => {
+  cy.getCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  }).should('not.exist')
+}
+
 export const clearAuth = () => {
   cy.clearCookie('refresh_token', {
     domain: TIPCARDS_AUTH_ORIGIN.hostname,
