@@ -374,6 +374,44 @@
     "reload": "Muat Ulang"
   },
   "home": {
-    "buttonCreate": "Buat Set Kartu Tip kamu"
+    "headline": "Cara termudah untuk memberi tip dengan Bitcoin",
+    "intro": "Cukup cetak TipCards, isi dengan Sats, dan buat seseorang bahagia.",
+    "buttonCreate": "Buat set TipCards Anda",
+    "buttonSets": "Set TipCards yang disimpan",
+    "quote": "Sangat mudah untuk berpegang pada kebiasaan lama. Tetapi mematahkan pola lama {em}",
+    "quoteEm": "membuahkan hasil.",
+    "howItWorksHeadline": "Cara kerjanya",
+    "howItWorksSlides": {
+      "create": {
+        "headline": "Buat",
+        "text": "Buat set TipCards dengan satu atau lebih TipCards. Anda dapat mengonfigurasinya sesuai keinginan."
+      },
+      "print": {
+        "headline": "Cetak",
+        "text": "Cetak TipCards dan potong."
+      },
+      "fund": {
+        "headline": "Isi kartu",
+        "text": "Isi TipCards dengan Bitcoin."
+      },
+      "give": {
+        "headline": "Bagikan",
+        "text": "Berikan TipCards dan buat seseorang bahagia."
+      }
+    },
+    "videoGuidesHeadline": "Panduan video",
+    "videoGuidesText": "Apakah Anda menerima TipCard atau ingin membuatnya sendiri? Dalam panduan video kami, kami menunjukkan cara kerjanya.",
+    "videoGuidesSlides": {
+      "create": {
+        "headline": "Buat",
+        "text": "Cara mengonfigurasi, mencetak, dan memotong TipCards Anda.",
+        "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
+      },
+      "use": {
+        "headline": "Gunakan",
+        "text": "Cara mengisi dan menukarkan TipCards.",
+        "link": "https://www.youtube.com/watch?v=26dj0580HYc"
+      }
+    }
   }
 }

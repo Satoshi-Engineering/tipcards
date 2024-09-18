@@ -7,11 +7,11 @@ describe('TheLangNav', () => {
   const rootPageButtonText = {
     en: 'Create your TipCards set',
     de: 'Erstelle dein TipCards-Set',
-    es: 'Crea tu conjunto de tarjetas de propina',
-    he: 'ליצירת כרטיסי טיפ',
-    ru: 'Создайте собственный набор ТИП-карт',
-    hi: 'अपना टिप कार्ड समूह बनाएं',
-    id: 'Buat Set Kartu Tip kamu',
+    es: 'Crea tu conjunto de TipCards',
+    he: 'צור את סט ה-TipCards שלך',
+    ru: 'Создать набор ТИП-карт',
+    hi: 'अपना TipCards सेट बनाएं',
+    id: 'Buat set TipCards Anda',
   }
 
   Object.keys(LOCALES).forEach((languageCode) => {

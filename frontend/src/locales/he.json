@@ -264,6 +264,44 @@
     }
   },
   "home": {
-    "buttonCreate": "ליצירת כרטיסי טיפ"
+    "headline": "הדרך הקלה ביותר לתת טיפ עם ביטקוין",
+    "intro": "פשוט הדפס את כרטיסי ה-TipCards, הטען סאטושי ושמח מישהו.",
+    "buttonCreate": "צור את סט ה-TipCards שלך",
+    "buttonSets": "סטים שמורים של TipCards",
+    "quote": "קל להיצמד להרגלים ישנים. אבל שבירת דפוסים ישנים {em}",
+    "quoteEm": "משתלמת.",
+    "howItWorksHeadline": "איך זה עובד",
+    "howItWorksSlides": {
+      "create": {
+        "headline": "צור",
+        "text": "צור סט של TipCards עם כרטיס אחד או יותר. אתה יכול להגדיר אותם כרצונך."
+      },
+      "print": {
+        "headline": "הדפסה",
+        "text": "הדפס את TipCards וגזור אותם."
+      },
+      "fund": {
+        "headline": "הטען את הכרטיסים",
+        "text": "הטען את TipCards עם ביטקוין."
+      },
+      "give": {
+        "headline": "תן במתנה",
+        "text": "תן את TipCards במתנה ושמח מישהו."
+      }
+    },
+    "videoGuidesHeadline": "מדריכי וידאו",
+    "videoGuidesText": "קיבלת TipCard או רוצה ליצור אחד בעצמך? במדריכי הווידאו שלנו נראה לך איך זה עובד.",
+    "videoGuidesSlides": {
+      "create": {
+        "headline": "צור",
+        "text": "איך להגדיר את TipCards שלך, להדפיס ולגזור אותם.",
+        "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
+      },
+      "use": {
+        "headline": "שימוש",
+        "text": "איך להטעין ולממש את TipCards.",
+        "link": "https://www.youtube.com/watch?v=26dj0580HYc"
+      }
+    }
   }
 }

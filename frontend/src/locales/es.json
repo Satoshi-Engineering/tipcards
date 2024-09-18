@@ -300,6 +300,44 @@
     }
   },
   "home": {
-    "buttonCreate": "Crea tu conjunto de tarjetas de propina"
+    "headline": "La forma más fácil de dar propinas con Bitcoin",
+    "intro": "Simplemente imprime TipCards, recarga Sats y haz feliz a alguien.",
+    "buttonCreate": "Crea tu conjunto de TipCards",
+    "buttonSets": "Conjuntos de TipCards guardados",
+    "quote": "Es fácil aferrarse a viejos hábitos. Pero romper viejos patrones {em}",
+    "quoteEm": "vale la pena.",
+    "howItWorksHeadline": "Cómo funciona",
+    "howItWorksSlides": {
+      "create": {
+        "headline": "Crear",
+        "text": "Crea un conjunto de TipCards con una o más TipCards. Puedes configurarlas como desees."
+      },
+      "print": {
+        "headline": "Imprimir",
+        "text": "Imprime las TipCards y recórtalas."
+      },
+      "fund": {
+        "headline": "Recargar las tarjetas",
+        "text": "Recarga las TipCards con Bitcoin."
+      },
+      "give": {
+        "headline": "Regalar",
+        "text": "Regala las TipCards y haz feliz a alguien."
+      }
+    },
+    "videoGuidesHeadline": "Guías en video",
+    "videoGuidesText": "¿Recibiste una TipCard o quieres crear una tú mismo? En nuestras guías en video te mostramos cómo funciona.",
+    "videoGuidesSlides": {
+      "create": {
+        "headline": "Crear",
+        "text": "Cómo configurar tus TipCards, imprimirlas y recortarlas.",
+        "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
+      },
+      "use": {
+        "headline": "Usar",
+        "text": "Cómo recargar y canjear las TipCards.",
+        "link": "https://www.youtube.com/watch?v=26dj0580HYc"
+      }
+    }
   }
 }

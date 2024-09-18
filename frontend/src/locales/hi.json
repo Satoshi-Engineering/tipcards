@@ -271,6 +271,44 @@
     }
   },
   "home": {
-    "buttonCreate": "अपना टिप कार्ड समूह बनाएं'"
+    "headline": "Bitcoin के साथ टिप देने का सबसे आसान तरीका",
+    "intro": "बस TipCards प्रिंट करें, सैट्स से रिचार्ज करें और किसी को खुश करें।",
+    "buttonCreate": "अपना TipCards सेट बनाएं",
+    "buttonSets": "सहेजे गए TipCards सेट्स",
+    "quote": "पुरानी आदतों से चिपके रहना आसान है। लेकिन पुराने पैटर्न को तोड़ना {em}",
+    "quoteEm": "फायदेमंद होता है।",
+    "howItWorksHeadline": "यह कैसे काम करता है",
+    "howItWorksSlides": {
+      "create": {
+        "headline": "बनाएं",
+        "text": "एक या अधिक TipCards के साथ एक सेट बनाएं। आप इन्हें अपनी पसंद के अनुसार कॉन्फ़िगर कर सकते हैं।"
+      },
+      "print": {
+        "headline": "प्रिंट करें",
+        "text": "TipCards को प्रिंट करें और उन्हें काटें।"
+      },
+      "fund": {
+        "headline": "कार्ड्स को फंड करें",
+        "text": "TipCards को Bitcoin से रिचार्ज करें।"
+      },
+      "give": {
+        "headline": "उपहार दें",
+        "text": "TipCards किसी को उपहार में दें और उसे खुश करें।"
+      }
+    },
+    "videoGuidesHeadline": "वीडियो गाइड्स",
+    "videoGuidesText": "क्या आपको एक TipCard मिला है या आप स्वयं एक बनाना चाहते हैं? हमारे वीडियो गाइड्स में हम आपको बताते हैं कि यह कैसे काम करता है।",
+    "videoGuidesSlides": {
+      "create": {
+        "headline": "बनाएं",
+        "text": "अपने TipCards को कॉन्फ़िगर कैसे करें, प्रिंट और काटें।",
+        "link": "https://www.youtube.com/watch?v=Oq__BT6oVoM"
+      },
+      "use": {
+        "headline": "उपयोग",
+        "text": "TipCards को कैसे फंड करें और उनका उपयोग कैसे करें।",
+        "link": "https://www.youtube.com/watch?v=26dj0580HYc"
+      }
+    }
   }
 }
