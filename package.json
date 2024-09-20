@@ -51,7 +51,7 @@
     "dompurify": "^3.1.6",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.32.1",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-http-proxy": "^2.0.0",
     "file-saver": "^2.0.5",
     "helmet": "^7.1.0",
@@ -126,5 +126,10 @@
     "vite": "^5.3.5",
     "vitest": "^2.0.5",
     "vue-tsc": "^2.0.29"
+  },
+  "overrides": {
+    "lnurl": {
+      "express": "$express"
+    }
   }
 }
