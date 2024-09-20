@@ -2,26 +2,26 @@
   "1099520": {
     "active": true,
     "notes": "No update of body-parser in express yet",
-    "expiry": 1726729200000
+    "expiry": 1727086800000
   },
   "1099562": {
     "active": true,
     "notes": "No update of path-to-regex in express yet",
-    "expiry": 1726729200000
+    "expiry": 1727086800000
   },
   "1099529": {
     "active": true,
     "notes": "No update of express yet",
-    "expiry": 1726729200000
+    "expiry": 1727086800000
   },
   "1099525": {
     "active": true,
     "notes": "No update of send yet",
-    "expiry": 1726729200000
+    "expiry": 1727086800000
   },
   "1099527": {
     "active": true,
     "notes": "No update of serve-static yet",
-    "expiry": 1726729200000
+    "expiry": 1727086800000
   }
 }
