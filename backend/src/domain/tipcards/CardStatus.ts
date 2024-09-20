@@ -152,6 +152,9 @@ export default class CardStatus {
       if (this.withdrawPending) {
         return CardStatusEnum.enum.bulkWithdrawPending
       }
+      if (this.lnurlW.withdrawn != null) {
+        return CardStatusEnum.enum.withdrawnByBulkWithdraw
+      }
       return CardStatusEnum.enum.isLockedByBulkWithdraw
     }
 

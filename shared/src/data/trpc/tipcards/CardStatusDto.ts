@@ -5,7 +5,7 @@ export const CardStatusEnum = z.enum([
   'invoiceFunding', 'lnurlpFunding', 'lnurlpSharedFunding', 'setInvoiceFunding',
   'invoiceExpired', 'lnurlpExpired', 'lnurlpSharedExpiredEmpty', 'lnurlpSharedExpiredFunded', 'setInvoiceExpired',
   'funded',
-  'isLockedByBulkWithdraw', 'bulkWithdrawPending',
+  'isLockedByBulkWithdraw', 'bulkWithdrawPending', 'withdrawnByBulkWithdraw',
   'withdrawPending', 'recentlyWithdrawn', 'withdrawn',
 ])
 
@@ -40,4 +40,5 @@ export const unfundedStatuses: CardStatusEnum[] = [
 export const withdrawnStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.recentlyWithdrawn,
   CardStatusEnum.enum.withdrawn,
+  CardStatusEnum.enum.withdrawnByBulkWithdraw,
 ]

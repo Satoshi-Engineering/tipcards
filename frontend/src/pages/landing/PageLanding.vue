@@ -36,7 +36,7 @@
         class="mb-7"
       />
       <GreetingWithdrawn
-        v-else-if="cardStatus?.status === CardStatusEnum.enum.withdrawn"
+        v-else-if="cardStatus?.status != null && withdrawnStatuses.includes(cardStatus?.status)"
         class="mb-7"
       />
       <GreetingPreview
@@ -92,7 +92,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import { CardStatusEnum, unfundedStatuses, type CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import { CardStatusEnum, unfundedStatuses, withdrawnStatuses, type CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
