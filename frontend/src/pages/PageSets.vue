@@ -36,8 +36,18 @@
         class="flex flex-col"
         data-test="logged-in"
       >
-        <UserErrorMessages :user-error-messages="fetchingUserErrorMessages" />
-        <ParagraphDefault v-if="sets.length < 1" data-test="sets-list-empty">
+        <IconAnimatedLoadingWheel
+          v-if="fetching"
+          class="w-10 h-auto mx-auto my-10"
+        />
+        <UserErrorMessages
+          v-else-if="fetchingUserErrorMessages.length > 0"
+          :user-error-messages="fetchingUserErrorMessages"
+        />
+        <ParagraphDefault
+          v-else-if="sets.length < 1"
+          data-test="sets-list-empty"
+        >
           {{ t('sets.noSavedCardsSetsMessage') }}
         </ParagraphDefault>
         <div v-else data-test="sets-list-with-data">
@@ -70,8 +80,9 @@ import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vu
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import { useCardsSetsStore } from '@/stores/cardsSets'
+import useSets from '@/modules/useSets'
 import ListSets from '@/components/ListSets.vue'
+import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -79,9 +90,7 @@ const modalLoginStore = useModalLoginStore()
 
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const cardsStore = useCardsSetsStore()
-const { subscribe } = cardsStore
-const { sets, fetchingUserErrorMessages } = storeToRefs(cardsStore)
+const { sets, fetching, getAllSets, fetchingUserErrorMessages } = useSets()
 
-onMounted(subscribe)
+onMounted(getAllSets)
 </script>

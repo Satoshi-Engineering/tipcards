@@ -1,4 +1,4 @@
-import { createTRPCProxyClient, httpBatchLink, TRPCClientError } from '@trpc/client'
+import { createTRPCProxyClient, httpBatchLink, TRPCClientError, type CreateTRPCProxyClient } from '@trpc/client'
 import superjson from 'superjson'
 
 import type { AppRouter } from '@backend/trpc'
@@ -26,7 +26,7 @@ const createClient = (getValidAccessToken: () => Promise<string | null>) => crea
   ],
 })
 
-export default (getValidAccessToken?: () => Promise<string | null>) => {
+export default (getValidAccessToken?: () => Promise<string | null>): CreateTRPCProxyClient<AppRouter> => {
   return createClient(getValidAccessToken || (async () => null))
 }
 

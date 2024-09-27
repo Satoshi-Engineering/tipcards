@@ -2,6 +2,7 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, type RouteLocation } from 'vue-router'
 
 import type { Set } from '@shared/data/api/Set'
+import { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import {
@@ -22,8 +23,9 @@ export default () => {
   })
 
   return {
-    hasSetsInLocalStorage: computed(() => sets.value.length > 0),
-    sets: computed(() => sets.value),
+    hasSetsInLocalStorage: computed(() => setsDeprecated.value.length > 0),
+    setsDeprecated: computed(() => setsDeprecated.value),
+    sets: computed(() => setsDeprecated.value.map(toSetDto)),
     saveSet,
     deleteSet,
     deleteAllSets,
@@ -32,7 +34,7 @@ export default () => {
 
 //////
 // privates
-const sets = ref<Set[]>([])
+const setsDeprecated = ref<Set[]>([])
 const SAVED_CARDS_SETS_KEY = 'savedTipCardsSets'
 
 type SetWithEncodedSettings = {
@@ -82,10 +84,27 @@ const toSet = (set: SetWithEncodedSettings): Set => {
   }
 }
 
+/**
+ * transform deprecated api Set into new SetDto
+ */
+const toSetDto = (set: Set): SetDto => SetDto.parse({
+  id: set.id,
+  settings: {
+    numberOfCards: set.settings?.numberOfCards,
+    cardHeadline: set.settings?.cardHeadline,
+    cardCopytext: set.settings?.cardCopytext,
+    image: set.settings?.cardsQrCodeLogo,
+    name: set.settings?.setName,
+    landingPage: set.settings?.landingPage,
+  },
+  created: new Date(set.created * 1000),
+  changed: set.date != null ? new Date(set.date * 1000) : new Date(set.created * 1000),
+})
+
 const loadSetsFromlocalStorage = () => {
   try {
     const fromLocalStorage = JSON.parse(localStorage.getItem(SAVED_CARDS_SETS_KEY) || '[]') as SetWithEncodedSettings[]
-    sets.value = fromLocalStorage.map((set) => toSet(set))
+    setsDeprecated.value = fromLocalStorage.map((set) => toSet(set))
   } catch (error) {
     // do nothing
   }
@@ -93,8 +112,8 @@ const loadSetsFromlocalStorage = () => {
 
 const saveSet = (set: Set) => {
   loadSetsFromlocalStorage()
-  const existingIndex = sets.value.findIndex(({ id: existingSetId }) => existingSetId === set.id)
-  const newSets: SetWithEncodedSettings[] = sets.value.map((currentSet) => fromSet(currentSet))
+  const existingIndex = setsDeprecated.value.findIndex(({ id: existingSetId }) => existingSetId === set.id)
+  const newSets: SetWithEncodedSettings[] = setsDeprecated.value.map((currentSet) => fromSet(currentSet))
   if (existingIndex > -1) {
     newSets[existingIndex] = fromSet(set)
   } else {
@@ -106,7 +125,7 @@ const saveSet = (set: Set) => {
 
 const deleteSet = (id: string) => {
   loadSetsFromlocalStorage()
-  const newSets: SetWithEncodedSettings[] = sets.value
+  const newSets: SetWithEncodedSettings[] = setsDeprecated.value
     .filter((set) => set.id !== id)
     .map((set) => fromSet(set))
   localStorage.setItem(SAVED_CARDS_SETS_KEY, JSON.stringify(newSets))
@@ -127,7 +146,7 @@ const saveCurrentSetToLocalStorage = (route: RouteLocation, settings: Set['setti
     throw new Error('No setId on current route!')
   }
   let created = Math.floor(+ new Date() / 1000)
-  const currentSet = sets.value.find(({ id }) => id === setId)
+  const currentSet = setsDeprecated.value.find(({ id }) => id === setId)
   if (currentSet?.created != null) {
     created = currentSet.created
   }

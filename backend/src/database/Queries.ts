@@ -23,6 +23,8 @@ export type Transaction = PgTransaction<
   ExtractTablesWithRelations<typeof import('@backend/database/schema/index.js')>
 >
 
+export type SetWithSettings = Set & { settings: SetSettings }
+
 export default class Queries {
   readonly transaction: Transaction
 
@@ -543,6 +545,19 @@ export default class Queries {
       .innerJoin(UserCanUseSet, eq(Set.id, UserCanUseSet.set))
       .where(eq(UserCanUseSet.user, userId))
     return result.map(({ Set }) => Set)
+  }
+
+  /** @throws */
+  async getSetsWithSettingsByUserId(userId: User['id']): Promise<SetWithSettings[]> {
+    const result = await this.transaction.select()
+      .from(Set)
+      .innerJoin(UserCanUseSet, eq(Set.id, UserCanUseSet.set))
+      .innerJoin(SetSettings, eq(Set.id, SetSettings.set))
+      .where(eq(UserCanUseSet.user, userId))
+    return result.map(({ Set, SetSettings }) => ({
+      ...Set,
+      settings: SetSettings,
+    }))
   }
 
   /** @throws */

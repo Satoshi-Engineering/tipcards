@@ -5,8 +5,8 @@
     </header>
     <ul>
       <li
-        v-for="cardsSet in sortedSavedCardsSets"
-        :key="cardsSet.setId"
+        v-for="set in sortedSavedSets"
+        :key="set.id"
         class="mx-5 border-b last:border-0 border-white-50 group"
       >
         <LinkDefault
@@ -16,38 +16,38 @@
           :to="{
             name: 'cards',
             params: {
-              setId: cardsSet.setId,
-              settings: encodeCardsSetSettings(cardsSet.settings),
+              setId: set.id,
+              settings: encodeCardsSetSettings(set.settings),
               lang: $route.params.lang,
             }
           }"
         >
           <HeadlineDefault level="h4" class="col-start-1 col-span-2">
-            <template v-if="typeof cardsSet.settings.setName === 'string' && cardsSet.settings.setName !== ''">
-              {{ cardsSet.settings.setName }}
+            <template v-if="typeof set.settings.name === 'string' && set.settings.name !== ''">
+              {{ set.settings.name }}
             </template>
             <template v-else>{{ $t('sets.unnamedSetNameFallback') }}</template>
           </HeadlineDefault>
           <div class="col-start-1 text-sm">
             <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
             <span class="align-middle">
-              {{ $t('general.cards', { count: cardsSet.settings.numberOfCards }) }}
+              {{ $t('general.cards', { count: set.settings.numberOfCards }) }}
             </span>
           </div>
           <div class="col-start-1">
             <time class="text-sm">
-              {{ $d(cardsSet.date, {
+              {{ $d(set.created, {
                 year: 'numeric', month: 'numeric', day: 'numeric',
                 hour: 'numeric', minute: 'numeric'
               }) }}
             </time>
           </div>
           <div
-            v-if="cardsSet.cardsStatus != null"
+            v-if="set.cardsStatus != null"
             class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
           >
             <div
-              v-for="n in Math.min(12, cardsSet.settings.numberOfCards)"
+              v-for="n in Math.min(12, set.settings.numberOfCards)"
               :key="n"
               class="w-full h-full bg-white border-2 border-white-50"
             />
@@ -59,41 +59,31 @@
 </template>
 
 <script setup lang="ts">
-import { encodeCardsSetSettings, getDefaultSettings } from '@/stores/cardsSets'
-import type { Set } from '@backend/database/deprecated/data/Set'
+import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 import { computed, type PropType } from 'vue'
 import LinkDefault from './typography/LinkDefault.vue'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import IconTipCardSet from './icons/IconTipCardSet.vue'
+import useSets from '@/modules/useSets'
+
+const { encodeCardsSetSettings } = useSets()
 
 const props = defineProps({
   sets: {
-    type: Array as PropType<Set[]>,
+    type: Array as PropType<SetDto[]>,
     required: true,
   },
 })
 
-const sortedSavedCardsSets = computed(() => {
+const sortedSavedSets = computed(() => {
   return [...props.sets]
-    .map((set) => {
-      let date = new Date()
-      if (set.date != null) {
-        date = new Date(set.date * 1000)
-      }
-      let settings = getDefaultSettings()
-      if (set.settings != null) {
-        settings = set.settings
-      }
-      return {
-        setId: set.id,
-        date,
-        settings,
-        cardsStatus: null, // implement this later after loading the number of funded/withdrawn/blank/... cards
-      }
-    })
+    .map((set) => ({
+      ...set,
+      cardsStatus: null, // Implement this later
+    }))
     .sort((a, b) => {
-      const nameA = a.settings.setName?.toLowerCase()
-      const nameB = b.settings.setName?.toLowerCase()
+      const nameA = a.settings.name?.toLowerCase()
+      const nameB = b.settings.name?.toLowerCase()
       if (nameA == null || nameA === '') {
         return 1
       }

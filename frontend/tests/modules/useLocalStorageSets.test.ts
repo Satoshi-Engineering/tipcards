@@ -19,19 +19,19 @@ describe('useLocalStorageSets', () => {
   it('saves and deletes sets', () => {
     const wrapper = mount(testComponent)
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(false)
-    expect(wrapper.vm.sets.length).toBe(0)
+    expect(wrapper.vm.setsDeprecated.length).toBe(0)
 
     const set = createSet()
     wrapper.vm.saveSet(set)
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(true)
-    expect(wrapper.vm.sets.length).toBe(1)
-    expect(wrapper.vm.sets).toEqual(expect.arrayContaining([
+    expect(wrapper.vm.setsDeprecated.length).toBe(1)
+    expect(wrapper.vm.setsDeprecated).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: set.id }),
     ]))
 
     wrapper.vm.deleteSet(set.id)
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(false)
-    expect(wrapper.vm.sets.length).toBe(0)
+    expect(wrapper.vm.setsDeprecated.length).toBe(0)
   })
 
   it('reads sets from localStorage and deletes them', () => {
@@ -41,14 +41,14 @@ describe('useLocalStorageSets', () => {
 
     const wrapper = mount(testComponent)
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(true)
-    expect(wrapper.vm.sets.length).toBe(2)
-    expect(wrapper.vm.sets).toEqual(expect.arrayContaining([
+    expect(wrapper.vm.setsDeprecated.length).toBe(2)
+    expect(wrapper.vm.setsDeprecated).toEqual(expect.arrayContaining([
       expect.objectContaining({ id: set1.setId }),
       expect.objectContaining({ id: set2.setId }),
     ]))
 
     wrapper.vm.deleteAllSets()
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(false)
-    expect(wrapper.vm.sets.length).toBe(0)
+    expect(wrapper.vm.setsDeprecated.length).toBe(0)
   })
 })

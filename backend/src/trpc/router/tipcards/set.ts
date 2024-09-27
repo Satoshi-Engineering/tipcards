@@ -1,10 +1,10 @@
 import { Card } from '@shared/data/trpc/tipcards/Card.js'
-import { Set, SetId } from '@shared/data/trpc/tipcards/Set.js'
+import { SetId } from '@shared/data/trpc/tipcards/Set.js'
+import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
 
 import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
-import { getSetsByUserId } from '@backend/database/deprecated/queries.js'
+import SetCollection from '@backend/domain/tipcards/SetCollection.js'
 
-import { setFromSetRedis } from '../../data/transforms/setFromSetRedis.js'
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
 import loggedInProcedure from '../../procedures/loggedIn.js'
@@ -12,10 +12,10 @@ import { handleCardLockForSet } from '../../procedures/partials/handleCardLock.j
 
 export const setRouter = router({
   getAll: loggedInProcedure
-    .output(Set.array())
+    .output(SetDto.array())
     .query(async ({ ctx }) => {
-      const setsDatabase = await getSetsByUserId(ctx.accessToken.id)
-      return setsDatabase.map((set) => setFromSetRedis(set))
+      const setCollection = await SetCollection.fromUserId(ctx.accessToken.id)
+      return setCollection.sets
     }),
 
   getCards: publicProcedure
