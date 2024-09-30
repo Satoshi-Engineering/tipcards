@@ -149,6 +149,22 @@ describe('Card', () => {
     }))
   })
 
+  it('should load the status of a card that has been withdrawn by bulkWithdraw', async () => {
+    lnurlw.withdrawn = new Date(1230980400000)
+    lnurlw.bulkWithdrawId = 'bulkWithdrawId'
+
+    const status = await CardStatus.latestFromCardHashOrDefault(card.hash)
+
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.withdrawnByBulkWithdraw,
+      amount: 100,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: lnurlw.withdrawn,
+    }))
+  })
+
   it('should throw an error if a card has multiple invoices without shared funding', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
