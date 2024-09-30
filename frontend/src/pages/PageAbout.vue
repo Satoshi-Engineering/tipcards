@@ -27,7 +27,7 @@
       </ParagraphDefault>
       <ParagraphDefault class="text-center !my-8">
         <LinkDefault
-          href="https://github.com/Satoshi-Engineering/tip-cards"
+          :href="GITHUB_LINK"
           title="$t('about.openSource.githubLinkTitle')"
           class="group"
         >
@@ -36,7 +36,7 @@
         </LinkDefault>
       </ParagraphDefault>
       <ButtonContainer>
-        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards" data-test="button-open-source">
+        <ButtonDefault :href="GITHUB_LINK" data-test="button-open-source">
           {{ $t('about.openSource.githubLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
@@ -52,7 +52,7 @@
         {{ $t('about.terms.text.2') }}
       </ParagraphDefault>
       <ButtonContainer class="my-8">
-        <ButtonDefault href="https://github.com/Satoshi-Engineering/tip-cards/blob/main/LICENSE" data-test="button-license">
+        <ButtonDefault :href="`${GITHUB_LINK}/blob/main/LICENSE`" data-test="button-license">
           {{ $t('about.terms.licenseLinkTitle') }}
         </ButtonDefault>
       </ButtonContainer>
@@ -83,4 +83,5 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeroSection from '@/components/HeroSection.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import { GITHUB_LINK } from '@/constants'
 </script>

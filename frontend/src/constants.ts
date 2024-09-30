@@ -31,4 +31,4 @@ export const LINK_X = import.meta.env.VITE_LINK_X || undefined
 export const LINK_INSTAGRAM = import.meta.env.VITE_LINK_INSTAGRAM || undefined
 export const LIGHTNING_NODE_NAME = import.meta.env.VITE_LIGHTNING_NODE_NAME || undefined
 export const LIGHTNING_NODE_LINK = import.meta.env.VITE_LIGHTNING_NODE_LINK || undefined
-export const GITHUB_LINK = 'https://github.com/Satoshi-Engineering/tip-cards'
+export const GITHUB_LINK = 'https://github.com/Satoshi-Engineering/tipcards'

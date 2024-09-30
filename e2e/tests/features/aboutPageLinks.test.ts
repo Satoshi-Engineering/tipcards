@@ -20,7 +20,7 @@ describe('aboutPageLinks', () => {
       })
       .click()
     cy.origin('https://github.com', () => {
-      cy.url().should('contain', 'tip-cards')
+      cy.url().should('contain', 'tipcards')
     })
   })
 
@@ -31,7 +31,7 @@ describe('aboutPageLinks', () => {
       .then(($link) => {
         expect($link).to.have.attr('target', '_blank')
         expect($link).attr('href').to.contain('github')
-        expect($link).attr('href').to.contain('tip-cards')
+        expect($link).attr('href').to.contain('tipcards')
         expect($link).attr('href').to.contain('LICENSE')
       })
   })
