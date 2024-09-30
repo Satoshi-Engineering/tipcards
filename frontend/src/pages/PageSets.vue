@@ -80,7 +80,7 @@ import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vu
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets from '@/modules/useSets'
+import useSets from '@/stores/useSets'
 import ListSets from '@/components/ListSets.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 

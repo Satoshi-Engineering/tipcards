@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
 
@@ -13,12 +13,16 @@ const fetchingUserErrorMessages = ref<string[]>([])
 
 const getAllSets = async () => {
   fetching.value = true
+  fetchingUserErrorMessages.value.length = 0
   try {
     sets.value = await set.getAll.query()
   } catch(error) {
     if (!isTRpcClientAbortError(error)) {
       console.error(error)
       fetchingUserErrorMessages.value.push(t('stores.cardsSets.errors.unableToLoadSetsFromBackend'))
+      if (error instanceof Error) {
+        fetchingUserErrorMessages.value.push(error.message)
+      }
     }
   } finally {
     fetching.value = false
@@ -42,12 +46,10 @@ const authStore = useAuthStore()
 const { getValidAccessToken } = authStore
 const { set } = useTRpc(getValidAccessToken)
 
-export default () => {
-  return {
-    sets,
-    fetching,
-    fetchingUserErrorMessages,
-    getAllSets,
-    encodeCardsSetSettings,
-  }
-}
+export default () => ({
+  sets: computed(() => sets.value),
+  fetching,
+  fetchingUserErrorMessages,
+  getAllSets,
+  encodeCardsSetSettings,
+})

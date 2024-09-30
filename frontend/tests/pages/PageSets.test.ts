@@ -1,6 +1,7 @@
 import '../mocks/i18n'
 import '../mocks/router'
 import '../mocks/pinia'
+import { sets } from '../mocks/stores/useSets'
 
 import { mount, config, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
@@ -8,8 +9,6 @@ import { describe, it, expect, vi } from 'vitest'
 import PageSets from '@/pages/PageSets.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useCardsSetsStore } from '@/stores/cardsSets'
-
 import { createSet } from '../data/set'
 
 config.global.stubs.TheLayout = {
@@ -19,10 +18,7 @@ config.global.stubs.TheLayout = {
 config.global.stubs.UserErrorMessages = { template: '<div />' }
 
 describe('PageSets', () => {
-  const cardsStore = vi.mocked(useCardsSetsStore())
   const authStore = vi.mocked(useAuthStore())
-
-  cardsStore.subscribe = vi.fn()
 
   it('should show a logged out sets page', async () => {
     authStore.isLoggedIn = false
@@ -54,16 +50,16 @@ describe('PageSets', () => {
 
   it('should show a list of named and nameless sets', () => {
     authStore.isLoggedIn = true
-    cardsStore.sets = [
-      createSet({ text: 'namedset1' }),
-      createSet({ text: 'namedset2' }),
-      createSet({ text: 'namedset3' }),
+    sets.value = [
+      createSet({ settings: { name: 'set1' } }),
+      createSet({ id: 'set2' }),
+      createSet({ id: 'set3' }),
     ]
 
     const wrapper = mount(PageSets)
     expect(wrapper.find('[data-test=sets-list-empty]').exists()).toBe(false)
     expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(true)
-    expect(wrapper.findAll('[data-test=sets-list-with-data] li').length).toBe(cardsStore.sets.length)
+    expect(wrapper.findAll('[data-test=sets-list-with-data] li').length).toBe(sets.value.length)
     wrapper.findAll('[data-test=sets-list-with-data] li').forEach((li) => {
       const editSetButton = li.getComponent(LinkDefault)
       expect(editSetButton.vm.to).toEqual(expect.objectContaining({ name: 'cards' }))

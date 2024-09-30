@@ -8,7 +8,7 @@ import { defineComponent } from 'vue'
 
 import useLocalStorageSets from '@/modules/useLocalStorageSets'
 
-import { createSet, createLocalStorageSet } from '../data/set'
+import { createSetDeprecated, createLocalStorageSet } from '../data/set'
 
 describe('useLocalStorageSets', () => {
   const testComponent = defineComponent({
@@ -21,7 +21,7 @@ describe('useLocalStorageSets', () => {
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(false)
     expect(wrapper.vm.setsDeprecated.length).toBe(0)
 
-    const set = createSet()
+    const set = createSetDeprecated()
     wrapper.vm.saveSet(set)
     expect(wrapper.vm.hasSetsInLocalStorage).toBe(true)
     expect(wrapper.vm.setsDeprecated.length).toBe(1)

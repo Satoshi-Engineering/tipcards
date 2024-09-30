@@ -64,7 +64,7 @@ import { computed, type PropType } from 'vue'
 import LinkDefault from './typography/LinkDefault.vue'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import IconTipCardSet from './icons/IconTipCardSet.vue'
-import useSets from '@/modules/useSets'
+import useSets from '@/stores/useSets'
 
 const { encodeCardsSetSettings } = useSets()
 
