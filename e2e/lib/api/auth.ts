@@ -4,18 +4,13 @@
 import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
+const API_CYPRESS_CREATE_AUTH_KEYS = new URL('/auth/api/cypress/createRandomPublicPrivateKeyPairAsHex', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_CREATE = new URL('/auth/api/cypress/lnurlAuth/create', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_LOGIN = new URL('/auth/api/cypress/loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_REFRESH = new URL('/api/auth/refresh', TIPCARDS_AUTH_ORIGIN)
 
 export const login = () => {
-  cy.fixture('keys.json').then((keys) => {
-    const lnurlAuth = new LNURLAuth({
-      publicKeyAsHex: keys.publicKeyAsHex,
-      privateKeyAsHex: keys.privateKeyAsHex,
-    })
-    cy.wrap(lnurlAuth).as('lnurlAuth')
-  })
+  createAndWrapLNURLAuth()
 
   cy.request({
     url: API_AUTH_CREATE.href,
@@ -73,4 +68,23 @@ export const clearAuth = () => {
     url: `${API_AUTH_REFRESH.href}`,
     failOnStatusCode: false,
   }).its('status').should('eq', 401)
+}
+
+export const createAndWrapLNURLAuth = () => {
+  // Due to the numerous errors caused by importing the crypto libraries in the Cypress browser, the private/public key generation was shifted to the backend.
+  cy.request({
+    url: API_CYPRESS_CREATE_AUTH_KEYS.href,
+  }).then((response) => {
+    expect(response.body).to.have.nested.property('data.publicKeyAsHex')
+    expect(response.body).to.have.nested.property('data.privateKeyAsHex')
+
+    const publicKeyAsHex = response.body.data.publicKeyAsHex
+    const privateKeyAsHex = response.body.data.privateKeyAsHex
+
+    const lnurlAuth = new LNURLAuth({
+      publicKeyAsHex,
+      privateKeyAsHex,
+    })
+    cy.wrap(lnurlAuth).as('lnurlAuth')
+  })
 }

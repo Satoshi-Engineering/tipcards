@@ -1,4 +1,4 @@
-import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth } from '@e2e/lib/api/auth'
+import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth, createAndWrapLNURLAuth } from '@e2e/lib/api/auth'
 import { generateAndAddRandomSet } from '@e2e/lib/api/sets'
 
 export default {
@@ -8,6 +8,7 @@ export default {
     isLoggedIn: isLoggedInViaCypress,
     isLoggedOut,
     clearAuth,
+    createAndWrapLNURLAuth,
   },
   generateAndAddRandomSet,
 }

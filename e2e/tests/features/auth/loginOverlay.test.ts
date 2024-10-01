@@ -1,19 +1,10 @@
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
-
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Login Overlay', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
-
-    cy.fixture('keys.json').then((keys) => {
-      const lnurlAuth = new LNURLAuth({
-        publicKeyAsHex: keys.publicKeyAsHex,
-        privateKeyAsHex: keys.privateKeyAsHex,
-      })
-      cy.wrap(lnurlAuth).as('lnurlAuth')
-    })
+    tipCardsApi.auth.createAndWrapLNURLAuth()
 
     tipCards.gotoHomePage()
   })
