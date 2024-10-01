@@ -9,7 +9,6 @@
     "./src/**/*.ts",
     "./tests/**/*.ts",
     "./src/types/global.d.ts",
-    "tests/integration/lib/HDWallet/HDWallet.ts",
   ],
   "compilerOptions": {
     "types": ["node"]

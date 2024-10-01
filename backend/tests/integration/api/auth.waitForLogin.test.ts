@@ -5,11 +5,11 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils.js'
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
-import HDWallet from '../lib/HDWallet/HDWallet.js'
 
 const failEarly = new FailEarly(it)
 

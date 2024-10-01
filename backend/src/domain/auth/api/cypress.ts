@@ -3,10 +3,11 @@
 import { Router } from 'express'
 import cookieParser from 'cookie-parser'
 
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
+import { ErrorCode } from '@shared/data/Errors.js'
+
 import Auth from '@backend/domain/auth/Auth.js'
 import { getUserById, updateUser } from '@backend/database/deprecated/queries.js'
-
-import { ErrorCode } from '@shared/data/Errors.js'
 
 const router = Router()
 
@@ -78,6 +79,20 @@ router.post('/logout', cookieParser(), async (req, res) => {
     }
   }
   res.json({ status: 'success' })
+})
+
+router.get('/createRandomPublicPrivateKeyPairAsHex', async (_, res) => {
+  const randomMnemonic = HDWallet.generateRandomMnemonic()
+  const hdWallet = new HDWallet(randomMnemonic)
+  const signingKey = hdWallet.getNodeAtPath(0, 0, 0)
+
+  res.json({
+    status: 'success',
+    data: {
+      publicKeyAsHex: signingKey.getPublicKeyAsHex(),
+      privateKeyAsHex: signingKey.getPrivateKeyAsHex(),
+    },
+  })
 })
 
 export default router

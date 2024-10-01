@@ -3,10 +3,11 @@ import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
+
 import { delay } from '@backend/services/timingUtils.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
-import HDWallet from '../lib/HDWallet/HDWallet.js'
 import { authData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'

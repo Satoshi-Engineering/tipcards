@@ -6,11 +6,11 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { ErrorCode } from '@shared/data/Errors.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
 import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
-import HDWallet from '../lib/HDWallet/HDWallet.js'
 import { authData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'

@@ -2,10 +2,11 @@ import axios from 'axios'
 import { io, Socket } from 'socket.io-client'
 
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
+
 import { retryFunctionWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/timingUtils.js'
 
 import FrontendWithAuth from './FrontendWithAuth.js'
-import HDWallet from '../HDWallet/HDWallet.js'
 import { API_ORIGIN } from '../constants.js'
 
 export default class FrontendSimulator extends FrontendWithAuth {
