@@ -51,11 +51,11 @@
 </template>
 
 <script lang="ts" setup>
-import axios from 'axios'
 import { storeToRefs } from 'pinia'
 import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
+// import useProfile from '@/stores/useProfile'
 import useTRpcAuth from '@/modules/useTRpcAuth'
 import ModalDefault from '@/components/ModalDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
@@ -113,14 +113,15 @@ const connectSocket = () => {
       console.error(error)
     }
     modalLoginUserMessage.value = null
-    try {
-      const { data } = await axios.get(`${TIPCARDS_AUTH_ORIGIN}/api/auth/profile`)
-      if (typeof data.data?.email !== 'string' || data.data.email.length === 0) {
-        missingEmail.value = true
-      }
-    } catch (error) {
-      console.error(error)
-    }
+    // try {
+    //   const { subscribe, userEmail } = useProfile()
+    //   await subscribe()
+    //   if (typeof userEmail.value != 'string' || userEmail.value.length < 1) {
+    //     missingEmail.value = true
+    //   }
+    // } catch (error) {
+    //   console.error(error)
+    // }
   })
   socket.on('connect', () => {
     socket.emit('waitForLogin', { hash: hash.value })
