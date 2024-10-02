@@ -16,6 +16,8 @@ export default {
         yellow: '#f2cc50', // primary color
         black: '#010101', // headlines, labels
         bluegrey: '#2a2c31', // default color
+        green: '#99be5a', // statistics
+        red: '#c05749', // statistics
         white: {
           DEFAULT: '#ffffff', // white
           50: '#8a8b8b', // use on bluegrey background for subtext & dividers

@@ -7,7 +7,8 @@
     "logout": "Logout",
     "close": "Close",
     "getStarted": "Get started",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "status": "Status"
   },
   "header": {
     "mainNavLabel": "Main navigation",
@@ -425,7 +426,8 @@
         "unableToLoadSetsFromBackend": "Unable to load sets from the server.",
         "unableToMigrateSets": "Migration failed. You can delete the sets manually and save them when logged in.",
         "setBelongsToAnotherUser": "Unable to save an unnamed set, as it was already saved by another user.",
-        "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user."
+        "namedSetBelongsToAnotherUser": "Unable to save {name}, as it was already saved by another user.",
+        "unableToLoadSetStatisticsFromBackend": "Unable to load set status from the server."
       }
     },
     "profile": {

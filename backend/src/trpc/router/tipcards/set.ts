@@ -1,9 +1,12 @@
 import { Card } from '@shared/data/trpc/tipcards/Card.js'
-import { SetId } from '@shared/data/trpc/tipcards/Set.js'
 import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
+import { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto.js'
+import { SetDeprecatedId } from '@shared/data/trpc/tipcards/Set.js'
+
+import Set from '@backend/domain/tipcards/Set.js'
+import SetCollection from '@backend/domain/tipcards/SetCollection.js'
 
 import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
-import SetCollection from '@backend/domain/tipcards/SetCollection.js'
 
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
@@ -18,8 +21,16 @@ export const setRouter = router({
       return setCollection.sets
     }),
 
+  getStatisticsBySetId: loggedInProcedure
+    .input(SetDto.shape.id)
+    .output(SetStatisticsDto)
+    .query(async ({ input }) => {
+      const set = await Set.fromId(input)
+      return set.getStatisticsById()
+    }),
+
   getCards: publicProcedure
-    .input(SetId)
+    .input(SetDeprecatedId)
     .output(Card.array())
     .unstable_concat(handleCardLockForSet)
     .query(async ({ input }) => {

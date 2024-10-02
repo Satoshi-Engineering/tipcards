@@ -1,6 +1,6 @@
 import { BulkWithdrawId } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
 import { CardHash } from '@shared/data/trpc/tipcards/Card.js'
-import { SetId } from '@shared/data/trpc/tipcards/Set.js'
+import { SetDeprecatedId } from '@shared/data/trpc/tipcards/Set.js'
 
 import {
   lockCard, safeReleaseCard,
@@ -62,7 +62,7 @@ export const handleCardLockForBulkWithdrawByCardHash = publicProcedure
   })
 
 export const handleCardLockForSet = publicProcedure
-  .input(SetId)
+  .input(SetDeprecatedId)
   .use(async ({ input, next }) => {
     const cards = await CardCollectionDeprecated.fromSetId(input.id)
     const lockValues = await lockCards(cards.cardHashes)

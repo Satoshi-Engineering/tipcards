@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
 
 import type { ProfileDto } from '../../../../shared/src/data/trpc/tipcards/ProfileDto'
+import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
 export const tRpcMock = {
   profile: {
@@ -18,6 +19,12 @@ export const tRpcMock = {
 
     getDisplayName: {
       query: vi.fn(async (): Promise<ProfileDto['displayName']> => ''),
+    },
+  },
+
+  set: {
+    getAll: {
+      query: vi.fn(async (): Promise<SetDto[]> => []),
     },
   },
 }

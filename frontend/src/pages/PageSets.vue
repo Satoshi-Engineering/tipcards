@@ -36,16 +36,12 @@
         class="flex flex-col"
         data-test="logged-in"
       >
-        <IconAnimatedLoadingWheel
-          v-if="fetching"
-          class="w-10 h-auto mx-auto my-10"
-        />
         <UserErrorMessages
-          v-else-if="fetchingUserErrorMessages.length > 0"
+          v-if="fetchingUserErrorMessages.length > 0"
           :user-error-messages="fetchingUserErrorMessages"
         />
         <ParagraphDefault
-          v-else-if="sets.length < 1"
+          v-else-if="!fetchingAllSets && sets.length < 1"
           data-test="sets-list-empty"
         >
           {{ t('sets.noSavedCardsSetsMessage') }}
@@ -54,7 +50,12 @@
           <ParagraphDefault>
             {{ t('sets.description') }}
           </ParagraphDefault>
-          <ListSets :sets="sets" class="my-7" />
+          <SetsList
+            :sets="sets"
+            :statistics="statistics"
+            :fetching="fetchingAllSets"
+            class="my-7"
+          />
         </div>
       </div>
       <SetsInLocalStorageWarning class="mt-8" />
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
@@ -80,9 +81,10 @@ import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vu
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets from '@/stores/useSets'
-import ListSets from '@/components/ListSets.vue'
-import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
+import useSets, { type SetStatisticsBySetId } from '@/modules/useSets'
+import SetsList from '@/components/SetsList.vue'
+import { watch } from 'vue'
+import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -90,7 +92,20 @@ const modalLoginStore = useModalLoginStore()
 
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const { sets, fetching, getAllSets, fetchingUserErrorMessages } = useSets()
+const { getAllSets, getStatisticsBySetId, fetchingAllSets, fetchingUserErrorMessages } = useSets()
 
-onMounted(getAllSets)
+const sets = ref<SetDto[]>([])
+const statistics = ref<SetStatisticsBySetId | undefined>()
+
+watch(isLoggedIn, async (isLoggedIn) => {
+  if (!isLoggedIn) {
+    sets.value = []
+    statistics.value = undefined
+    return
+  }
+
+  sets.value = await getAllSets()
+
+  statistics.value = await getStatisticsBySetId(sets.value)
+}, { immediate: true })
 </script>

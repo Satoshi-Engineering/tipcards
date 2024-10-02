@@ -1,9 +1,10 @@
 import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
+import { User } from '@backend/database/schema/User.js'
 
 import { asTransaction } from '@backend/database/client.js'
 
 export default class SetCollection {
-  public static async fromUserId(userId: string): Promise<SetCollection> {
+  public static async fromUserId(userId: User['id']): Promise<SetCollection> {
     const setsWithSettings = await asTransaction(
       async (queries) => await queries.getSetsWithSettingsByUserId(userId),
     )

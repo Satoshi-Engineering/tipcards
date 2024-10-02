@@ -7,7 +7,7 @@ import { ImageDto } from './ImageDto.js'
  * deprecated as this still represents the redis data model
  * @deprecated
  */
-export const Set = z.object({
+export const SetDeprecated = z.object({
   id: z.string(),
   name: z.string().default(''),
   created: z.date().default(() => new Date()),
@@ -18,10 +18,10 @@ export const Set = z.object({
   cardImage: ImageDto.shape.id.nullable().default(null),
   landingPage: LandingPageDto.shape.id.nullable().default(null),
 })
-export type Set = z.infer<typeof Set>
+export type SetDeprecated = z.infer<typeof SetDeprecated>
 
-export const SetId = z.object({
-  id: Set.shape.id,
+export const SetDeprecatedId = z.object({
+  id: SetDeprecated.shape.id,
 })
 
-export type SetId = z.infer<typeof SetId>
+export type SetDeprecatedId = z.infer<typeof SetDeprecatedId>

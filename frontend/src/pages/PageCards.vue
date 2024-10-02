@@ -487,7 +487,7 @@ import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
 import { storeToRefs } from 'pinia'
 import QRCode from 'qrcode-svg'
-import { onMounted, ref, watch, computed, onBeforeMount, watchEffect } from 'vue'
+import { onMounted, ref, watch, computed, onBeforeMount, watchEffect, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import debounce from 'lodash.debounce'
@@ -739,8 +739,9 @@ const cardCopytextComputed = computed(() => settings.cardCopytext
   .replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1<br>$2'),
 )
 
-const createNewCards = () => {
-  router.replace({ name: 'cards', params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
+const createNewCards = async () => {
+  await nextTick()
+  router.replace({ ...route, name: 'cards', params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
 }
 
 onBeforeMount(() => {
