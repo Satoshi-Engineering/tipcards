@@ -20,8 +20,8 @@
       >
         <SetsListItem
           :set="set"
-          :statistics="statistics != null ? statistics[set.id] : undefined"
-          :no-statistics="noStatistics"
+          :statistics="statistics[set.id]"
+          :no-statistics="noStatistics || statistics[set.id] === null"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
         />
       </li>
@@ -51,7 +51,7 @@ const props = defineProps({
   },
   statistics: {
     type: Object as PropType<SetStatisticsBySetId>,
-    default: undefined,
+    default: () => ({}),
   },
   noStatistics: {
     type: Boolean,

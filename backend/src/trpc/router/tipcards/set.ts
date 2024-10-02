@@ -26,7 +26,7 @@ export const setRouter = router({
     .output(SetStatisticsDto)
     .query(async ({ input }) => {
       const set = await Set.fromId(input)
-      return set.getStatisticsById()
+      return set.getStatistics()
     }),
 
   getCards: publicProcedure

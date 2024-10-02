@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/auth'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import type { SetSettingsDto } from '@shared/data/trpc/tipcards/SetSettingsDto'
 
-export type SetStatisticsBySetId = Record<SetDto['id'], SetStatisticsDto>
+export type SetStatisticsBySetId = Record<SetDto['id'], SetStatisticsDto | null>
 
 export default () => {
   /** @throws */
@@ -30,44 +30,31 @@ export default () => {
     }
   }
 
-  /** @throws */
-  const getStatisticsForSet = async (setId: SetDto['id']): Promise<SetStatisticsDto> => {
-    fetchingUserErrorMessages.value.length = 0
+  /** @returns null if statistics cannot be retrieved */
+  const getStatisticsForSet = async (setId: SetDto['id']): Promise<SetStatisticsDto | null> => {
     try {
       return await set.getStatisticsBySetId.query(setId)
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
-        console.error(error)
-        fetchingUserErrorMessages.value.push(t('stores.cardsSets.errors.unableToLoadSetsFromBackend'))
-        if (error instanceof Error) {
-          fetchingUserErrorMessages.value.push(error.message)
-        }
+        console.error(`Error for set.getStatisticsBySetId for set ${setId}`, error)
       }
-      throw error
+      return null
     }
   }
 
   /** @throws */
   const getStatisticsBySetId = async (sets: SetDto[]): Promise<SetStatisticsBySetId> => {
     fetchingStatistics.value = true
-    try {
-      const statisticsWithSetId = await Promise.all(sets.map(async ({ id }) => ({
-        setId: id,
-        statistics: await getStatisticsForSet(id),
-      })))
+    const statisticsWithSetId = await Promise.all(sets.map(async ({ id }) => ({
+      setId: id,
+      statistics: await getStatisticsForSet(id),
+    })))
+    fetchingStatistics.value = false
 
-      return statisticsWithSetId.reduce((acc, { setId, statistics }) => {
-        acc[setId] = statistics
-        return acc
-      }, {} as SetStatisticsBySetId)
-    } catch(error) {
-      if (!isTRpcClientAbortError(error)) {
-        console.error(error)
-      }
-      throw error
-    } finally {
-      fetchingStatistics.value = false
-    }
+    return statisticsWithSetId.reduce((acc, { setId, statistics }) => {
+      acc[setId] = statistics
+      return acc
+    }, {} as SetStatisticsBySetId)
   }
 
 

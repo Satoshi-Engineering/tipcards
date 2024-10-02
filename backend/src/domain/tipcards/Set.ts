@@ -21,7 +21,7 @@ export default class Set {
     return new Set(setWithSettings)
   }
 
-  public async getStatisticsById(): Promise<SetStatisticsDto> {
+  public async getStatistics(): Promise<SetStatisticsDto> {
     const cardHashes = this.getAllCardHashes()
     const cardStatuses = await Promise.all(
       cardHashes.map(async (hash) => await CardStatus.latestFromCardHashOrDefault(hash)),
