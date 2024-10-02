@@ -33,10 +33,10 @@
       </time>
     </div>
     <div
-      v-if="!noStatistics || statistics === null"
+      v-if="!noStatistics"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
     >
-      <template v-if="statistics === undefined">
+      <template v-if="statistics == null">
         <div
           v-for="n in displayedStatisticsItems"
           :key="n"
@@ -88,7 +88,7 @@ const props = defineProps({
     required: true,
   },
   statistics: {
-    type: Object as PropType<SetStatisticsDto | null>,
+    type: Object as PropType<SetStatisticsDto>,
     default: undefined,
   },
   noStatistics: {

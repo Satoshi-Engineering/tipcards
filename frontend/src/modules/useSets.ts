@@ -43,7 +43,7 @@ export default () => {
   }
 
   /** @throws */
-  const getStatisticsBySetId = async (sets: SetDto[]): Promise<SetStatisticsBySetId> => {
+  const getStatisticsForAllSetsBySetId = async (sets: SetDto[]): Promise<SetStatisticsBySetId> => {
     fetchingStatistics.value = true
     const statisticsWithSetId = await Promise.all(sets.map(async ({ id }) => ({
       setId: id,
@@ -83,7 +83,7 @@ export default () => {
     fetchingAllSets,
     fetchingStatistics,
     getAllSets,
-    getStatisticsBySetId,
+    getStatisticsBySetId: getStatisticsForAllSetsBySetId,
     encodeCardsSetSettings,
   }
 }

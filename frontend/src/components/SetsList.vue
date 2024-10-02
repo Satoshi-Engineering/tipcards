@@ -20,7 +20,7 @@
       >
         <SetsListItem
           :set="set"
-          :statistics="statistics[set.id]"
+          :statistics="statistics[set.id] ?? undefined"
           :no-statistics="noStatistics || statistics[set.id] === null"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
         />
