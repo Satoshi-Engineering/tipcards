@@ -25,7 +25,7 @@ export const getDrizzleDataObjectsForRedisSet = async (queries: Queries, setRedi
   }
   const setSettings = getDrizzleSetSettingsForRedisSet(setRedis)
   const userCanUseSet = getUserCanUseSetForRedisSet(setRedis)
-  const cardsAndVersions = getCardsForRedisSet(setRedis)
+  const cardsAndVersions = await getCardsForRedisSet(queries, setRedis)
   const invoice = getInvoiceForRedisSet(setRedis)
   const cardVersionInvoices = getCardVersionInvoicesForRedisSet(cardsAndVersions, invoice)
 
@@ -95,27 +95,52 @@ const getUserCanUseSetForRedisSet = (setRedis: SetRedis): UserCanUseSet | null =
   }
 }
 
-const getCardsForRedisSet = (setRedis: SetRedis): { cards: Card[], cardVersions: CardVersion[] } | null => {
+const getCardsForRedisSet = async (
+  queries: Queries,
+  setRedis: SetRedis,
+): Promise<{ cards: Card[], cardVersions: CardVersion[] } | null> => {
   if (setRedis.invoice == null) {
     return null
   }
-  const cards: Card[] = setRedis.invoice.fundedCards.map((index) => ({
-    hash: hashSha256(`${setRedis.id}/${index}`),
-    created: new Date(),
-    set: setRedis.id,
-    locked: null,
+
+  const cards: Card[] = await Promise.all(setRedis.invoice.fundedCards.map(async (index) => {
+    const card = await queries.getCardByHash(hashSha256(`${setRedis.id}/${index}`))
+    if (card != null) {
+      return {
+        ...card,
+        set: setRedis.id,
+      }
+    }
+    return {
+      hash: hashSha256(`${setRedis.id}/${index}`),
+      created: new Date(),
+      set: setRedis.id,
+      locked: null,
+    }
   }))
-  const cardVersions: CardVersion[] = cards.map((card) => ({
-    id: randomUUID(),
-    created: new Date(),
-    card: card.hash,
-    lnurlP: null,
-    lnurlW: null,
-    textForWithdraw: setRedis.text,
-    noteForStatusPage: setRedis.note,
-    sharedFunding: false,
-    landingPageViewed: null,
+
+  const cardVersions: CardVersion[] = await Promise.all(cards.map(async (card) => {
+    const cardVersion = await queries.getLatestCardVersion(card.hash)
+    if (cardVersion != null) {
+      return {
+        ...cardVersion,
+        textForWithdraw: setRedis.text,
+        noteForStatusPage: setRedis.note,
+      }
+    }
+    return {
+      id: randomUUID(),
+      created: new Date(),
+      card: card.hash,
+      lnurlP: null,
+      lnurlW: null,
+      textForWithdraw: setRedis.text,
+      noteForStatusPage: setRedis.note,
+      sharedFunding: false,
+      landingPageViewed: null,
+    }
   }))
+
   return { cards, cardVersions }
 }
 
