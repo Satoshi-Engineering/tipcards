@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia, storeToRefs } from 'pinia'
 import { describe, it, expect, vi } from 'vitest'
 import { nextTick } from 'vue'
 
@@ -7,15 +8,17 @@ import '../mocks/pinia'
 import '../mocks/provide'
 import '../mocks/router'
 
-import useProfile from '@/stores/useProfile'
+import { useProfileStore } from '@/stores/profile'
 
 describe('useProfile to update the profile', () => {
+  setActivePinia(createPinia())
+  const profileStore = useProfileStore()
   const {
     userAccountName,
     userDisplayName,
     userEmail,
-    update,
-  } = useProfile()
+  } = storeToRefs(profileStore)
+  const { update } = profileStore
 
   it('should update the profile', async () => {
     await update({

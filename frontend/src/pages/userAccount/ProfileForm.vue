@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import isEqual from 'lodash.isequal'
+import { storeToRefs } from 'pinia'
 import { reactive, computed, watchEffect, onBeforeMount, onBeforeUnmount } from 'vue'
 
 import { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto'
@@ -56,18 +57,21 @@ import TextField from '@/components/forms/TextField.vue'
 import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
 import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
-import useProfile from '@/stores/useProfile'
+import { useProfileStore } from '@/stores/profile'
 
+const profileStore = useProfileStore()
 const {
   userAccountName,
   userDisplayName,
   userEmail,
   fetching,
   fetchingUserErrorMessages,
+} = storeToRefs(profileStore)
+const {
   subscribe,
   unsubscribe,
   update,
-} = useProfile()
+} = profileStore
 
 const profileInternal = reactive(ProfileDto.partial().parse({}))
 

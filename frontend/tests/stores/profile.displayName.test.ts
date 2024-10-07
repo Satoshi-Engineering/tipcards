@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia, storeToRefs } from 'pinia'
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 
 import { tRpcMock } from '../mocks/modules/useTRpc'
@@ -7,11 +8,14 @@ import '../mocks/provide'
 import '../mocks/router'
 
 import { useAuthStore } from '@/stores/auth'
-import useProfile from '@/stores/useProfile'
+import { useProfileStore } from '@/stores/profile'
 
 describe('useProfile', () => {
   const authStore = vi.mocked(useAuthStore())
-  const { userDisplayName } = useProfile()
+
+  setActivePinia(createPinia())
+  const { userDisplayName } = storeToRefs(useProfileStore())
+
   const originalQuery = tRpcMock.profile.getDisplayName.query
   const queryDisplayName = vi.fn(async () => 'John Doe')
 

@@ -129,7 +129,7 @@ import IconBookmarkFill from '@/components/icons/IconBookmarkFill.vue'
 import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 import IconBarChartFill from '@/components/icons/IconBarChartFill.vue'
-import useProfile from '@/stores/useProfile'
+import { useProfileStore } from '@/stores/profile'
 
 defineEmits(['itemSelected'])
 
@@ -139,7 +139,8 @@ const { isLoggedIn, accessTokenPayload } = storeToRefs(authStore)
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const { userDisplayName } = useProfile()
+const profileStore = useProfileStore()
+const { userDisplayName } = storeToRefs(profileStore)
 
 const canAccessStatistics = computed(() => {
   if (accessTokenPayload.value == null) {
