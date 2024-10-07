@@ -76,15 +76,29 @@ export const getAndLinkDrizzleLnurlPFromRedisLnurlP = async (
 }
 
 /** side-effect: set lnurlW in cardVersion */
-export const getAndLinkDrizzleLnurlWFromRedisCard = (cardRedis: CardRedis, cardVersion: CardVersion): LnurlW | null => {
+export const getAndLinkDrizzleLnurlWFromRedisCard = async (
+  queries: Queries,
+  cardRedis: CardRedis,
+  cardVersion: CardVersion,
+): Promise<LnurlW | null> => {
   if (cardRedis.isLockedByBulkWithdraw) {
     return null
   }
+
   if (cardRedis.lnbitsWithdrawId == null) {
     cardVersion.lnurlW = null
     return null
   }
   cardVersion.lnurlW = cardRedis.lnbitsWithdrawId
+
+  const lnurlW = await queries.getLnurlWById(cardRedis.lnbitsWithdrawId)
+  if (lnurlW != null) {
+    return {
+      ...lnurlW,
+      withdrawn: unixTimestampOrNullToDate(cardRedis.used),
+    }
+  }
+
   return {
     lnbitsId: cardRedis.lnbitsWithdrawId,
     created: new Date(),

@@ -23,7 +23,7 @@ export const getDrizzleDataObjectsForRedisCardChanges = async (queries: Queries,
   const lnurlP = await getAndLinkDrizzleLnurlPFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoices, cardVersionInvoices } = await getDrizzleInvoicesFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
-  const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)
+  const lnurlW = await getAndLinkDrizzleLnurlWFromRedisCard(queries, cardRedis, cardVersion)
 
   const dataObjectsToDelete = await getDrizzleInvoicesToDeleteFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   return {
