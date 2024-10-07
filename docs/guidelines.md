@@ -52,3 +52,9 @@ Info:
 
 - Do not import from process.env in application code. Instead always import them from constants.ts.
 - Ideally the environment variables should already be validated and type checked in constants.ts
+
+## Database
+
+### Queries
+
+Do not throw errors when a query returns no rows. Instead return null. If you want a NotFoundError in the application, if a specific domain model does not exist in the database, throw the error in the respective domain logic instead.

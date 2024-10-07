@@ -2,8 +2,6 @@ import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, alia
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
-import NotFoundError from '@backend/errors/NotFoundError.js'
-
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
   Set, SetSettings,
@@ -16,6 +14,7 @@ import {
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
 } from '@backend/database/schema/index.js'
+import assert from 'node:assert'
 
 export type Transaction = PgTransaction<
   PostgresJsQueryResultHKT,
@@ -25,6 +24,9 @@ export type Transaction = PgTransaction<
 
 export type SetWithSettings = Set & { settings: SetSettings }
 
+/**
+ * As all methods in this class are database queries they are async and can throw errors.
+ */
 export default class Queries {
   readonly transaction: Transaction
 
@@ -32,7 +34,6 @@ export default class Queries {
     this.transaction = transaction
   }
 
-  /** @throws */
   async getSetById(setId: Set['id']): Promise<Set | null> {
     const result = await this.transaction.select()
       .from(Set)
@@ -43,12 +44,10 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getSetSettingsForSet(set: Set): Promise<SetSettings | null> {
     return this.getSetSettingsBySetId(set.id)
   }
 
-  /** @throws */
   async getSetSettingsBySetId(setId: Set['id']): Promise<SetSettings | null> {
     const result = await this.transaction.select()
       .from(SetSettings)
@@ -59,19 +58,16 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getAllCardsForSet(set: Set): Promise<Card[]> {
     return this.getAllCardsForSetBySetId(set.id)
   }
 
-  /** @throws */
   async getAllCardsForSetBySetId(setId: Set['id']): Promise<Card[]> {
     return this.transaction.select()
       .from(Card)
       .where(eq(Card.set, setId))
   }
 
-  /** @throws */
   async getLatestCardVersion(cardHash: Card['hash']): Promise<CardVersion | null> {
     const result = await this.transaction.select()
       .from(CardVersion)
@@ -84,7 +80,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getLnurlPFundingCardVersion(cardVersion: CardVersion): Promise<LnurlP | null> {
     if (cardVersion.lnurlP == null) {
       return null
@@ -92,7 +87,6 @@ export default class Queries {
     return this.getLnurlPById(cardVersion.lnurlP)
   }
 
-  /** @throws */
   async getLnurlPById(id: LnurlP['lnbitsId']): Promise<LnurlP | null> {
     const result = await this.transaction.select()
       .from(LnurlP)
@@ -103,7 +97,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getAllInvoicesFundingCardVersion(cardVersion: CardVersion): Promise<Invoice[]> {
     const result = await this.transaction.select()
       .from(CardVersionHasInvoice)
@@ -112,7 +105,6 @@ export default class Queries {
     return result.map(({ Invoice }) => Invoice)
   }
 
-  /** @throws */
   async getAllInvoicesFundingCardVersionWithSetFundingInfo(cardVersion: CardVersion): Promise<InvoiceWithSetFundingInfo[]> {
     const cardsFundedBySingleInvoice = aliasedTable(CardVersionHasInvoice, 'cardsFundedBySingleInvoice')
     const result = await this.transaction.select({
@@ -153,7 +145,6 @@ export default class Queries {
     ))
   }
 
-  /** @throws */
   async getInvoiceByPaymentHash(paymentHash: Invoice['paymentHash']): Promise<Invoice | null> {
     const result = await this.transaction.select()
       .from(Invoice)
@@ -164,7 +155,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getUnpaidInvoicesForCardVersion(cardVersion: CardVersion): Promise<Invoice[]> {
     const result = await this.transaction.select()
       .from(Invoice)
@@ -176,7 +166,6 @@ export default class Queries {
     return result.map(({ Invoice }) => Invoice)
   }
 
-  /** @throws */
   async getAllCardVersionsFundedByInvoice(invoice: Invoice): Promise<CardVersion[]> {
     const result = await this.transaction.select()
       .from(CardVersionHasInvoice)
@@ -185,14 +174,12 @@ export default class Queries {
     return result.map(({ CardVersion }) => CardVersion)
   }
 
-  /** @throws */
   getAllCardVersionInvoicesForInvoice(invoice: Invoice): Promise<CardVersionHasInvoice[]> {
     return this.transaction.select()
       .from(CardVersionHasInvoice)
       .where(eq(CardVersionHasInvoice.invoice, invoice.paymentHash))
   }
 
-  /** @throws */
   async getLnurlWWithdrawingCardVersion(cardVersion: CardVersion): Promise<LnurlW | null> {
     if (cardVersion.lnurlW == null) {
       return null
@@ -203,13 +190,10 @@ export default class Queries {
     if (result.length === 0) {
       return null
     }
-    if (result.length > 1) {
-      throw new Error(`More than one withdraw exists for card ${cardVersion.card}`)
-    }
+    assert(result.length === 1, `Primary key violation. More than one withdraw exists for card ${cardVersion.card}`)
     return result[0]
   }
 
-  /** @throws */
   async getAllCardVersionsWithdrawnByLnurlW(lnurlw: LnurlW): Promise<CardVersion[]> {
     const result = await this.transaction.select()
       .from(CardVersion)
@@ -217,32 +201,29 @@ export default class Queries {
     return result
   }
 
-  /** @throws */
-  async getLnurlWById(id: LnurlW['lnbitsId']): Promise<LnurlW> {
+  async getLnurlWById(id: LnurlW['lnbitsId']): Promise<LnurlW | null> {
     const result = await this.transaction.select()
       .from(LnurlW)
       .where(eq(LnurlW.lnbitsId, id))
     if (result.length !== 1) {
-      throw new NotFoundError(`Found no lnurlW for id ${id}`)
+      return null
     }
     return result[0]
   }
 
-  /** @throws */
   async getLnurlWByBulkWithdrawId(bulkWithdrawId: LnurlW['bulkWithdrawId']): Promise<LnurlW | null> {
     if (bulkWithdrawId == null) {
-      throw new NotFoundError('Unable to load lnurlw if bulkWithdrawId is null')
+      throw new Error('Unable to load lnurlW if bulkWithdrawId is null')
     }
     const result = await this.transaction.select()
       .from(LnurlW)
       .where(eq(LnurlW.bulkWithdrawId, bulkWithdrawId))
     if (result.length !== 1) {
-      throw new NotFoundError(`Found no lnurlW for bulkWithdrawId ${bulkWithdrawId}`)
+      return null
     }
     return result[0]
   }
 
-  /** @throws */
   async getLnurlWByCardHash(cardHash: Card['hash']): Promise<LnurlW | null> {
     const latestCardVersion = await this.getLatestCardVersion(cardHash)
     if (latestCardVersion?.lnurlW == null) {
@@ -257,14 +238,12 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getAllLnurlWs(): Promise<LnurlW[]> {
     const result = await this.transaction.select()
       .from(LnurlW)
     return result
   }
 
-  /** @throws */
   async getAllLnurlWsWithBulkWithdrawId(): Promise<LnurlW[]> {
     const result = await this.transaction.select()
       .from(LnurlW)
@@ -272,13 +251,11 @@ export default class Queries {
     return result
   }
 
-  /** @throws */
   async insertCards(...cards: Card[]): Promise<void> {
     await this.transaction.insert(Card)
       .values(cards)
   }
 
-  /** @throws */
   async getCardByHash(hash: Card['hash']): Promise<Card | null> {
     const result = await this.transaction.select()
       .from(Card)
@@ -289,7 +266,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async setCardLock(hash: Card['hash'], locked: string): Promise<void> {
     await this.transaction.update(Card)
       .set({ locked })
@@ -299,7 +275,6 @@ export default class Queries {
       ))
   }
 
-  /** @throws */
   async releaseCardLock(hash: Card['hash'], locked: string): Promise<void> {
     await this.transaction.update(Card)
       .set({ locked: null })
@@ -309,55 +284,46 @@ export default class Queries {
       ))
   }
 
-  /** @throws */
   async insertCardVersions(...cardVersions: CardVersion[]): Promise<void> {
     await this.transaction.insert(CardVersion)
       .values(cardVersions)
   }
 
-  /** @throws */
   async insertInvoices(...invoices: Invoice[]): Promise<void> {
     await this.transaction.insert(Invoice)
       .values(invoices)
   }
 
-  /** @throws */
   async insertCardVersionInvoices(...cardVersionInvoices: CardVersionHasInvoice[]): Promise<void> {
     await this.transaction.insert(CardVersionHasInvoice)
       .values(cardVersionInvoices)
   }
 
-  /** @throws */
   async insertLnurlPs(...lnurlps: LnurlP[]): Promise<void> {
     await this.transaction.insert(LnurlP)
       .values(lnurlps)
   }
 
-  /** @throws */
   async insertLnurlWs(...lnurlws: LnurlW[]): Promise<void> {
     await this.transaction.insert(LnurlW)
       .values(lnurlws)
   }
 
-  /** @throws */
   async insertSets(...sets: Set[]): Promise<void> {
     await this.transaction.insert(Set)
       .values(sets)
   }
 
-  /** @throws */
   async insertSetSettings(...setSettings: SetSettings[]): Promise<void> {
     await this.transaction.insert(SetSettings)
       .values(setSettings)
   }
 
-  /** @throws */
   async insertUsersCanUseSets(...usersCanUseSets: UserCanUseSet[]): Promise<void> {
     await this.transaction.insert(UserCanUseSet)
       .values(usersCanUseSets)
   }
 
-  /** @throws */
   async insertOrUpdateCard(card: Card): Promise<void> {
     await this.transaction.insert(Card)
       .values(card)
@@ -367,7 +333,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async insertOrUpdateLatestCardVersion(cardVersion: CardVersion): Promise<void> {
     const latestCardVersion = await this.getLatestCardVersion(cardVersion.card)
     if (latestCardVersion != null) {
@@ -380,7 +345,6 @@ export default class Queries {
     }
   }
 
-  /** @throws */
   async insertOrUpdateInvoice(invoice: Invoice): Promise<void> {
     await this.transaction.insert(Invoice)
       .values(invoice)
@@ -390,14 +354,12 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async updateInvoice(invoice: Invoice): Promise<void> {
     await this.transaction.update(Invoice)
       .set(invoice)
       .where(eq(Invoice.paymentHash, invoice.paymentHash))
   }
 
-  /** @throws */
   async insertOrUpdateCardVersionInvoice(cardVersionInvoice: CardVersionHasInvoice): Promise<void> {
     await this.transaction.insert(CardVersionHasInvoice)
       .values(cardVersionInvoice)
@@ -407,7 +369,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async insertOrUpdateLnurlP(lnurlp: LnurlP): Promise<void> {
     await this.transaction.insert(LnurlP)
       .values(lnurlp)
@@ -417,7 +378,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async insertOrUpdateLnurlW(lnurlw: LnurlW): Promise<void> {
     await this.transaction.insert(LnurlW)
       .values(lnurlw)
@@ -427,14 +387,12 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async updateLnurlW(lnurlw: LnurlW): Promise<void> {
     await this.transaction.update(LnurlW)
       .set(lnurlw)
       .where(eq(LnurlW.lnbitsId, lnurlw.lnbitsId))
   }
 
-  /** @throws */
   async insertOrUpdateSet(set: Set): Promise<void> {
     await this.transaction.insert(Set)
       .values(set)
@@ -444,14 +402,12 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async updateSet(set: Set): Promise<void> {
     await this.transaction.update(Set)
       .set(set)
       .where(eq(Set.id, set.id))
   }
 
-  /** @throws */
   async insertOrUpdateSetSettings(setSettings: SetSettings): Promise<void> {
     await this.transaction.insert(SetSettings)
       .values(setSettings)
@@ -461,7 +417,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async insertOrUpdateUser(user: User): Promise<void> {
     await this.transaction.insert(User)
       .values(user)
@@ -471,7 +426,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async insertOrUpdateUserCanUseSet(userCanUseSet: UserCanUseSet): Promise<void> {
     await this.transaction.insert(UserCanUseSet)
       .values(userCanUseSet)
@@ -481,7 +435,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async updateCard(card: Card): Promise<void> {
     await this.transaction.update(Card)
       .set({
@@ -491,32 +444,27 @@ export default class Queries {
       .where(eq(Card.hash, card.hash))
   }
 
-  /** @throws */
   async updateCardVersion(cardVersion: CardVersion): Promise<void> {
     await this.transaction.update(CardVersion)
       .set(cardVersion)
       .where(eq(CardVersion.id, cardVersion.id))
   }
 
-  /** @throws */
   async deleteCard(card: Card): Promise<void> {
     await this.transaction.delete(Card)
       .where(eq(Card.hash, card.hash))
   }
 
-  /** @throws */
   async deleteCardVersion(cardVersion: CardVersion): Promise<void> {
     await this.transaction.delete(CardVersion)
       .where(eq(CardVersion.id, cardVersion.id))
   }
 
-  /** @throws */
   async deleteInvoice(invoice: Invoice): Promise<void> {
     await this.transaction.delete(Invoice)
       .where(eq(Invoice.paymentHash, invoice.paymentHash))
   }
 
-  /** @throws */
   async deleteCardVersionInvoice(cardVersionInvoice: CardVersionHasInvoice): Promise<void> {
     await this.transaction.delete(CardVersionHasInvoice)
       .where(and(
@@ -525,25 +473,21 @@ export default class Queries {
       ))
   }
 
-  /** @throws */
   async deleteLnurlWByBulkWithdrawId(bulkWithdrawId: string): Promise<void> {
     await this.transaction.delete(LnurlW)
       .where(eq(LnurlW.bulkWithdrawId, bulkWithdrawId))
   }
 
-  /** @throws */
   async getAllUsersThatCanUseSet(set: Set): Promise<UserCanUseSet[]> {
     return this.getAllUsersThatCanUseSetBySetId(set.id)
   }
 
-  /** @throws */
   getAllUsersThatCanUseSetBySetId(setId: Set['id']): Promise<UserCanUseSet[]> {
     return this.transaction.select()
       .from(UserCanUseSet)
       .where(eq(UserCanUseSet.set, setId))
   }
 
-  /** @throws */
   async getSetsByUserId(userId: User['id']): Promise<Set[]> {
     const result = await this.transaction.select()
       .from(Set)
@@ -552,7 +496,6 @@ export default class Queries {
     return result.map(({ Set }) => Set)
   }
 
-  /** @throws */
   async getSetsWithSettingsByUserId(userId: User['id']): Promise<SetWithSettings[]> {
     const result = await this.transaction.select()
       .from(Set)
@@ -565,7 +508,6 @@ export default class Queries {
     }))
   }
 
-  /** @throws */
   async getLandingPage(landingPageId: LandingPage['id']): Promise<LandingPage | null> {
     const result = await this.transaction.select()
       .from(LandingPage)
@@ -578,44 +520,37 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   getUserCanUseLandingPagesByLandingPage(landingPage: LandingPage): Promise<UserCanUseLandingPage[]> {
     return this.transaction.select()
       .from(UserCanUseLandingPage)
       .where(eq(UserCanUseLandingPage.landingPage, landingPage.id))
   }
 
-  /** @throws */
   getAllLandingPages(): Promise<LandingPage[]> {
     return this.transaction.select()
       .from(LandingPage)
   }
 
-  /** @throws */
   async getAllUserCanUseLandingPagesForUser(user: User): Promise<UserCanUseLandingPage[]> {
     return this.getAllUserCanUseLandingPagesForUserId(user.id)
   }
 
-  /** @throws */
   getAllUserCanUseLandingPagesForUserId(userId: User['id']): Promise<UserCanUseLandingPage[]> {
     return this.transaction.select()
       .from(UserCanUseLandingPage)
       .where(eq(UserCanUseLandingPage.user, userId))
   }
 
-  /** @throws */
   async deleteSet(set: Set): Promise<void> {
     await this.transaction.delete(Set)
       .where(eq(Set.id, set.id))
   }
 
-  /** @throws */
   async deleteSetSettings(setSettings: SetSettings): Promise<void> {
     await this.transaction.delete(SetSettings)
       .where(eq(SetSettings.set, setSettings.set))
   }
 
-  /** @throws */
   async deleteUserCanUseSet(userCanUseSet: UserCanUseSet): Promise<void> {
     await this.transaction.delete(UserCanUseSet)
       .where(and(
@@ -624,7 +559,6 @@ export default class Queries {
       ))
   }
 
-  /** @throws */
   async getImageById(id: Image['id']): Promise<Image> {
     const result = await this.transaction.select()
       .from(Image)
@@ -632,31 +566,26 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getAllUsersThatCanUseImage(image: Image): Promise<UserCanUseImage[]> {
     return this.getAllUsersThatCanUseImageByImageId(image.id)
   }
 
-  /** @throws */
   getAllUsersThatCanUseImageByImageId(imageId: Image['id']): Promise<UserCanUseImage[]> {
     return this.transaction.select()
       .from(UserCanUseImage)
       .where(eq(UserCanUseImage.image, imageId))
   }
 
-  /** @throws */
   async getAllUserCanUseImagesForUser(user: User): Promise<UserCanUseImage[]> {
     return this.getAllUserCanUseImagesForUserId(user.id)
   }
 
-  /** @throws */
   getAllUserCanUseImagesForUserId(userId: User['id']): Promise<UserCanUseImage[]> {
     return this.transaction.select()
       .from(UserCanUseImage)
       .where(eq(UserCanUseImage.user, userId))
   }
 
-  /** @throws */
   async getUserById(userId: User['id']): Promise<User | null> {
     const result = await this.transaction.select()
       .from(User)
@@ -669,7 +598,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async getUserByLnurlAuthKey(lnurlAuthKey: User['lnurlAuthKey']): Promise<User | null> {
     const result = await this.transaction.select()
       .from(User)
@@ -682,13 +610,11 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   getAllUsers(): Promise<User[]> {
     return this.transaction.select()
       .from(User)
   }
 
-  /** @throws */
   async getProfileByUserId(userId: User['id']): Promise<Profile | null> {
     const result = await this.transaction.select()
       .from(Profile)
@@ -701,7 +627,6 @@ export default class Queries {
     return result[0]
   }
 
-  /** @throws */
   async insertOrUpdateProfile(profile: Profile): Promise<void> {
     await this.transaction.insert(Profile)
       .values(profile)
@@ -711,19 +636,16 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   getAllAllowedRefreshTokensForUser(user: User): Promise<AllowedRefreshTokens[]> {
     return this.getAllAllowedRefreshTokensForUserId(user.id)
   }
 
-  /** @throws */
   async getAllAllowedRefreshTokensForUserId(userId: User['id']): Promise<AllowedRefreshTokens[]> {
     return this.transaction.select()
       .from(AllowedRefreshTokens)
       .where(eq(AllowedRefreshTokens.user, userId))
   }
 
-  /** @throws */
   async insertOrUpdateAllowedRefreshTokens(allowedRefreshTokens: AllowedRefreshTokens): Promise<void> {
     await this.transaction.insert(AllowedRefreshTokens)
       .values(allowedRefreshTokens)
@@ -733,7 +655,6 @@ export default class Queries {
       })
   }
 
-  /** @throws */
   async deleteAllAllowedRefreshTokensForUserId(userId: User['id']): Promise<void> {
     await this.transaction.delete(AllowedRefreshTokens)
       .where(eq(AllowedRefreshTokens.user, userId))
