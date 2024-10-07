@@ -14,10 +14,10 @@ import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprec
 
 import { unixTimestampOrNullToDate, unixTimestampToDate } from './dateHelpers.js'
 
-export const getDrizzleDataObjectsFromRedisCard = (cardRedis: CardRedis): DataObjects => {
+export const getDrizzleDataObjectsFromRedisCard = async (queries: Queries, cardRedis: CardRedis): Promise<DataObjects> => {
   const card = getDrizzleCardFromRedisCard(cardRedis)
   const cardVersion = getDrizzleCardVersionFromRedisCard(cardRedis)
-  const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const lnurlP = await getAndLinkDrizzleLnurlPFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
   return toDataObjects({
     card,
@@ -48,11 +48,25 @@ export const getDrizzleCardVersionFromRedisCard = (cardRedis: CardRedis): CardVe
 })
 
 /** side-effect: set lnurlP in cardVersion */
-export const getAndLinkDrizzleLnurlPFromRedisLnurlP = (lnurlPRedis: CardRedis['lnurlp'], cardVersion: CardVersion): LnurlP | null => {
+export const getAndLinkDrizzleLnurlPFromRedisLnurlP = async (
+  queries: Queries,
+  lnurlPRedis: CardRedis['lnurlp'],
+  cardVersion: CardVersion,
+): Promise<LnurlP | null> => {
   if (lnurlPRedis == null) {
     return null
   }
+
   cardVersion.lnurlP = String(lnurlPRedis.id)
+
+  const lnurlP = await queries.getLnurlPById(String(lnurlPRedis.id))
+  if (lnurlP != null) {
+    return {
+      ...lnurlP,
+      finished: unixTimestampOrNullToDate(lnurlPRedis.paid),
+    }
+  }
+
   return {
     lnbitsId: String(lnurlPRedis.id),
     created: unixTimestampToDate(lnurlPRedis.created),

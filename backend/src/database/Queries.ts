@@ -89,9 +89,14 @@ export default class Queries {
     if (cardVersion.lnurlP == null) {
       return null
     }
+    return this.getLnurlPById(cardVersion.lnurlP)
+  }
+
+  /** @throws */
+  async getLnurlPById(id: LnurlP['lnbitsId']): Promise<LnurlP | null> {
     const result = await this.transaction.select()
       .from(LnurlP)
-      .where(eq(LnurlP.lnbitsId, cardVersion.lnurlP))
+      .where(eq(LnurlP.lnbitsId, id))
     if (result.length === 0) {
       return null
     }

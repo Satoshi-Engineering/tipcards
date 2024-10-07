@@ -20,7 +20,7 @@ export const getDrizzleDataObjectsForRedisCardChanges = async (queries: Queries,
     throw new Error(`Cannot update card ${cardRedis.cardHash} as it doesn't exist.`)
   }
   const cardVersion = getUpdatedCardVersionForRedisCard(cardVersionCurrent, cardRedis)
-  const lnurlP = getAndLinkDrizzleLnurlPFromRedisLnurlP(cardRedis.lnurlp, cardVersion)
+  const lnurlP = await getAndLinkDrizzleLnurlPFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoices, cardVersionInvoices } = await getDrizzleInvoicesFromRedisLnurlP(queries, cardRedis.lnurlp, cardVersion)
   const { invoice, cardVersionInvoice } = getDrizzleInvoiceFromRedisInvoice(cardRedis.invoice, cardVersion)
   const lnurlW = getAndLinkDrizzleLnurlWFromRedisCard(cardRedis, cardVersion)

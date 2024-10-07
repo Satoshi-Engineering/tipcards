@@ -75,7 +75,7 @@ export const getCardByHash = async (cardHash: string): Promise<CardRedis | null>
 })
 
 export const createCard = async (cardRedis: CardRedis): Promise<void> => asTransaction(async (queries) => {
-  const drizzleData = getDrizzleDataObjectsFromRedisCard(cardRedis)
+  const drizzleData = await getDrizzleDataObjectsFromRedisCard(queries, cardRedis)
   await insertOrUpdateDataObjects(queries, drizzleData)
 })
 

@@ -52,6 +52,13 @@ const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion
   return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
 }
 
+const getLnurlPById = async (lnbitsId: LnurlP['lnbitsId']): Promise<LnurlP | null> => {
+  if (lnurlPsByLnbitsId[lnbitsId] == null) {
+    return null
+  }
+  return lnurlPsByLnbitsId[lnbitsId]
+}
+
 export default vi.fn().mockImplementation(() => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
 
@@ -66,11 +73,13 @@ export default vi.fn().mockImplementation(() => ({
   getLatestCardVersion,
 
   getLnurlPFundingCardVersion: async (cardVersion: CardVersion): Promise<LnurlP | null> => {
-    if (cardVersion.lnurlP == null || lnurlPsByLnbitsId[cardVersion.lnurlP] == null) {
+    if (cardVersion.lnurlP == null) {
       return null
     }
-    return lnurlPsByLnbitsId[cardVersion.lnurlP]
+    return getLnurlPById(cardVersion.lnurlP)
   },
+
+  getLnurlPById,
 
   getAllInvoicesFundingCardVersion: async (cardVersion: CardVersion): Promise<Invoice[]> => {
     const paymentHashes = cardVersionInvoices
