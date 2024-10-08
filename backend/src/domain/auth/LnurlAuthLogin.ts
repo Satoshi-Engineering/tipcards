@@ -42,6 +42,15 @@ export default class LnurlAuthLogin {
     }
   }
 
+  public getAuthenticatedWalletPublicKey(hash: string): string {
+    if (!this.isOneTimeLoginHashValid(hash)) {
+      throw new Error('Hash not found')
+    }
+    const walletPublicKey = this.getPublicKeyFromOneTimeLoginHash(hash)
+    this.invalidateLoginHash(hash)
+    return walletPublicKey
+  }
+
   private initSocketEvents() {
     this.lnurlServer.on('login', async (event: LoginEvent) => {
       // `key` - the public key as provided by the LNURL wallet app

@@ -4,9 +4,11 @@ import superjson from 'superjson'
 
 import Auth from '@backend/domain/auth/Auth.js'
 import AuthSession from '../AuthSession.js'
+import RefreshGuard from '../RefreshGuard.js'
 
 export type Context = {
   auth: Auth,
+  refreshGuard: RefreshGuard,
   session: AuthSession,
 }
 
@@ -15,6 +17,7 @@ export type Meta = Record<string, never>
 export const createContext = (opts: CreateExpressContextOptions): Context => {
   return {
     auth: Auth.getAuth(),
+    refreshGuard: new RefreshGuard(opts.req, opts.res),
     session: new AuthSession(opts.req, opts.res),
   }
 }

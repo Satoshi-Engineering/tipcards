@@ -17,6 +17,7 @@ import Auth from '@backend/domain/auth/Auth.js'
 import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
 import AuthSession from '@backend/domain/auth/AuthSession.js'
+import RefreshGuard from '@backend/domain/auth/RefreshGuard.js'
 
 const createCaller = createCallerFactory(authRouter)
 
@@ -35,36 +36,38 @@ describe('TRpc Router Auth', () => {
   Auth.init()
 
   const authSession = new AuthSession(mockRequest, mockResponse)
+  const refreshGuard = new RefreshGuard(mockRequest, mockResponse)
 
   const caller = createCaller({
     auth: Auth.getAuth(),
     session: authSession,
+    refreshGuard,
   })
 
   it('should login the user', async () => {
     const accessToken = 'mockAccessToken'
-    const refreshToken = 'mockRefreshToken'
+    const walletPublicKey = 'mockWalletPublicKey'
     const secret = 'mockSecret'
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
-    vi.spyOn(Auth.getAuth(), 'loginWithLnurlAuthHash').mockResolvedValueOnce({
-      accessToken,
-      refreshToken,
-    })
 
+    vi.spyOn(Auth.getAuth().getLnurlAuthLogin(), 'getAuthenticatedWalletPublicKey').mockReturnValueOnce(walletPublicKey)
+    vi.spyOn(refreshGuard, 'loginWithWalletPublicKey').mockResolvedValueOnce(accessToken)
     const loginResult = await caller.loginWithLnurlAuthHash({
       hash,
     })
 
+    expect(Auth.getAuth().getLnurlAuthLogin().getAuthenticatedWalletPublicKey).toBeCalledWith(hash)
+    expect(refreshGuard.loginWithWalletPublicKey).toBeCalledWith(walletPublicKey)
     expect(loginResult.accessToken).toBe(accessToken)
   })
 
   it('should logout the user ', async () => {
-    vi.spyOn(authSession, 'logout')
+    vi.spyOn(refreshGuard, 'logout')
     vi.spyOn(mockResponse, 'clearCookie')
 
     await caller.logout()
 
-    expect(authSession.logout).toHaveBeenCalled()
+    expect(refreshGuard.logout).toHaveBeenCalled()
     expect(mockResponse.clearCookie).toHaveBeenCalledWith(
       'refresh_token',
       {
