@@ -9,7 +9,7 @@
         class="w-10 h-10 text-yellow"
       />
     </CenterContainer>
-    <template v-else>
+    <template v-else-if="cardIsNotFunded === false">
       <CenterContainer v-if="userErrorMessage != null">
         <ParagraphDefault class="text-center text-red-500">
           {{ userErrorMessage }}

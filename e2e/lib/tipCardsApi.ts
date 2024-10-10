@@ -1,4 +1,5 @@
 import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth, createAndWrapLNURLAuth } from '@e2e/lib/api/auth'
+import { createInvoiceForCardHash } from '@e2e/lib/api/card'
 import { generateAndAddRandomSet } from '@e2e/lib/api/sets'
 
 export default {
@@ -10,5 +11,6 @@ export default {
     clearAuth,
     createAndWrapLNURLAuth,
   },
+  createInvoiceForCardHash,
   generateAndAddRandomSet,
 }

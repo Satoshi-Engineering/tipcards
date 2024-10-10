@@ -45,7 +45,7 @@
           {{ t('funding.text') }}
         </ParagraphDefault>
         <div v-if="invoice != null">
-          <ParagraphDefault>
+          <ParagraphDefault data-test="funding-invoice-text">
             <I18nT
               v-if="funded || usedDate != null"
               :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'"

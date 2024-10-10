@@ -1,17 +1,26 @@
 import { generateCardHash } from '@e2e/lib/api/data/card'
 import tipCards from '@e2e/lib/tipCards'
+import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
   it('should redirect to funding page if the card does not exist', () => {
-    generateCardHash().then((cardHash) => {
+    cy.then(async () => {
+      const cardHash = await generateCardHash()
       tipCards.gotoLandingPagePreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
     })
   })
 
-  it.skip('should should redirect to the invoice for an unfunded card with invoice', () => {
-    // todo : create invoice via api #1252
+  it('should should redirect to the invoice for an unfunded card with invoice', () => {
+    cy.then(async () => {
+      const cardHash = await generateCardHash()
+      tipCardsApi.createInvoiceForCardHash(cardHash, 210)
+      tipCards.gotoLandingPagePreview(cardHash)
+
+      cy.url().should('contain', `/funding/${cardHash}`)
+      cy.getTestElement('funding-invoice-text').should('contain', '210 sats')
+    })
   })
 
   it.skip('should show the default landing page for a funded card', () => {
