@@ -43,7 +43,6 @@ export default class RefreshGuard {
       // Deprecated Function
       await updateUser(user)
     } catch (error) {
-      console.error(ErrorCode.UnableToUpdateUser, error)
       throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
     }
 
@@ -62,7 +61,12 @@ export default class RefreshGuard {
     }
     const refreshJwtPayload = await validateJwt(refreshJwt, host)
 
-    const user = await getUserById(refreshJwtPayload.id)
+    let user
+    try {
+      user = await getUserById(refreshJwtPayload.id)
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
+    }
     if (
       user?.allowedRefreshTokens == null
       || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(refreshJwt))
@@ -92,7 +96,12 @@ export default class RefreshGuard {
       }
       return [newRefreshToken, previousRefreshToken]
     })
-    await updateUser(this.user)
+    try {
+      // Deprecated Function
+      await updateUser(this.user)
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
+    }
     this.setRefreshTokenCookie(newRefreshToken)
   }
 

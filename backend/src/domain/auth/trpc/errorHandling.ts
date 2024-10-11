@@ -9,7 +9,7 @@ type Mutable = {
   -readonly [key in keyof TRPCError]: TRPCError[key];
 }
 
-const transformErrorWithCodeErrors = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
+const transformTRPCErrorAccordingToErrorWithCodeErrorCode = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
   trpcError.message = errorWithCoderError.toTrpcMessage()
 
   if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvaid) {
@@ -17,13 +17,21 @@ const transformErrorWithCodeErrors = (errorWithCoderError: ErrorWithCode, trpcEr
   }
 }
 
-export const mapApplicationErrorToTrpcError = (trpcError: TRPCError) => {
+export const mapApplicationErrorToTrpcError = (error: Error) => {
+  let trpcError: TRPCError
+
+  if (error instanceof TRPCError) {
+    trpcError = error
+  } else {
+    trpcError = new TRPCError({ code: 'INTERNAL_SERVER_ERROR', cause: error })
+  }
+
   const mutableError = trpcError as Mutable
   if (trpcError.cause instanceof NotFoundError) {
     mutableError.code = 'NOT_FOUND'
     mutableError.message = trpcError.cause.message
   } else if (trpcError.cause instanceof ErrorWithCode) {
-    transformErrorWithCodeErrors(trpcError.cause, mutableError)
+    transformTRPCErrorAccordingToErrorWithCodeErrorCode(trpcError.cause, mutableError)
   } else if (trpcError.cause instanceof ZodError) {
     mutableError.message = 'Unexpected zod parsing error.'
   }

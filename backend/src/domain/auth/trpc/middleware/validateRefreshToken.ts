@@ -14,6 +14,13 @@ const mapErrorToTRpcError = (error: unknown) => {
   } else if (error instanceof ZodError) {
     message = `ZodError - JWT payload parsing failed - ${error.message}`
     code = 'INTERNAL_SERVER_ERROR'
+  } else if (error instanceof ErrorWithCode) {
+    if (error.code === ErrorCode.UnknownDatabaseError) {
+      code = 'INTERNAL_SERVER_ERROR'
+    }
+    if (error.code === ErrorCode.UnableToUpdateUser) {
+      code = 'INTERNAL_SERVER_ERROR'
+    }
   }
 
   return new TRPCError({ message, code, cause })
