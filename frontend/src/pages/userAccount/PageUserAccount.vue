@@ -80,7 +80,7 @@ const logoutAllOtherDevices = async () => {
   loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
-    await authService.post('logoutAllOtherDevices')
+    await authService.logoutAllOtherDevices()
     loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
     console.error(error)

@@ -14,6 +14,7 @@ export const useAuthStore = defineStore('auth', () => ({
   accessTokenPayload,
   login,
   logout,
+  logoutAllOtherDevices,
   getValidAccessToken,
 }))
 
@@ -73,6 +74,18 @@ const login = async (hash: string) => {
     callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     callbacksAwaitingAccessToken.value = []
     fetchingAccessToken.value = false
+  }
+}
+
+/**
+ * @throws
+ */
+const logoutAllOtherDevices = async () => {
+  try {
+    const result = await trpcAuth.auth.logoutAllOtherDevices.query()
+    accessToken.value = result.accessToken
+  } catch (error) {
+    console.error(error)
   }
 }
 

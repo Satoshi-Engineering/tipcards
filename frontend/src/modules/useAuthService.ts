@@ -12,7 +12,7 @@ import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 export default () => {
   const { t } = useI18n()
 
-  const { logout } = useAuthStore()
+  const { logout, logoutAllOtherDevices } = useAuthStore()
 
   const modalLoginStore = useModalLoginStore()
   const { showModalLogin, modalLoginUserMessage } = storeToRefs(modalLoginStore)
@@ -45,6 +45,14 @@ export default () => {
     post: async (route: string, data?: unknown) => {
       try {
         return await axios.post(`${TIPCARDS_AUTH_ORIGIN}/api/auth/${route}`, data, { withCredentials: true })
+      } catch (error) {
+        showModalLoginWithErrorMessage(error)
+        throw error
+      }
+    },
+    logoutAllOtherDevices: async () => {
+      try {
+        await logoutAllOtherDevices()
       } catch (error) {
         showModalLoginWithErrorMessage(error)
         throw error
