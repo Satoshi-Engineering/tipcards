@@ -5,7 +5,6 @@ import cors from 'cors'
 import helmet from 'helmet'
 
 import assets from './api/assets.js'
-import auth from './api/auth.js'
 import bulkWithdraw from './api/bulkWithdraw.js'
 import card from './api/card.js'
 import cardLogos from './api/cardLogos.js'
@@ -33,7 +32,6 @@ app.use(cors(corsOptions))
 app.use(helmet())
 app.use(xstAttack())
 app.use('/api/assets', assets)
-app.use('/api/auth', auth)
 app.use('/api/bulkWithdraw', bulkWithdraw)
 app.use('/api/card', card)
 app.use('/api/cardLogos', cardLogos)
