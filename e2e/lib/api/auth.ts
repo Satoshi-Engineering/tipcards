@@ -9,8 +9,10 @@ const API_AUTH_CREATE = new URL('/auth/trpc/lnurlAuth.create', TIPCARDS_AUTH_ORI
 const API_AUTH_LOGIN = new URL('/auth/trpc/auth.loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
-export const login = () => {
-  createAndWrapLNURLAuth()
+export const login = (genereateNewLNRULAuth = true) => {
+  if (genereateNewLNRULAuth) {
+    createAndWrapLNURLAuth()
+  }
 
   cy.request({
     url: API_AUTH_CREATE.href,

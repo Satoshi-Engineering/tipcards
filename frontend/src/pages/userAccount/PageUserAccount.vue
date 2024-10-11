@@ -22,6 +22,7 @@
           <ButtonContainer class="my-10">
             <ButtonDefault
               variant="secondary"
+              data-test="user-account-button-logout-all-other-devices"
               :disabled="loggingOutAllOtherDevices"
               :loading="loggingOutAllOtherDevices"
               @click="logoutAllOtherDevices"
