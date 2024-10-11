@@ -1,7 +1,11 @@
 <template>
   <CenterContainer class="relative items-center">
     <GreetingIcon />
-    <HeadlineDefault level="h1" class="text-center">
+    <HeadlineDefault
+      level="h1"
+      class="text-center"
+      data-test="greeting-funded-headline"
+    >
       {{ $t('landing.introGreetingFunded') }}
     </HeadlineDefault>
     <ParagraphDefault class="mb-10 text-center">
@@ -14,6 +18,7 @@
     <div
       v-if="cardStatus.amount != null"
       class="mb-5 p-2 md:p-5 border border-yellow rounded-default text-center md:text-2xl"
+      data-test="greeting-funded-bitcoin-amount"
     >
       <div class="font-bold">
         <FormatBitcoin

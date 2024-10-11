@@ -53,5 +53,6 @@ test-e2e:
     - npm run drizzle-migrate
     - echo "Installing cypress"
     - npx cypress install
+    - cp $E2E_ENV_FILE_TESTS e2e/.env.local
     - echo "Running e2e tests on branch $CI_COMMIT_BRANCH"
     - sh e2e-tests.sh

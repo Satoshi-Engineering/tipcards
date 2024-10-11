@@ -67,6 +67,8 @@ export default defineConfig({
     BACKEND_API_ORIGIN: process.env.BACKEND_API_ORIGIN || 'http://localhost:4000',
     TIPCARDS_AUTH_ORIGIN: process.env.TIPCARDS_AUTH_ORIGIN || 'http://localhost:4000',
     TIPCARDS_ORIGIN: process.env.TIPCARDS_ORIGIN || 'http://localhost:5050',
+    LNBITS_ORIGIN: process.env.LNBITS_ORIGIN || '',
+    LNBITS_ADMIN_KEY: process.env.LNBITS_ADMIN_KEY || '',
     FUNDED_CARD_ON_EXTERNAL_LANDING_PAGE: process.env.FUNDED_CARD_ON_EXTERNAL_LANDING_PAGE || 'http://localhost:5051',
   },
 })

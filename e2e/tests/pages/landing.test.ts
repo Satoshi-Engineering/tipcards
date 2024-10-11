@@ -23,8 +23,17 @@ describe('Landing Page', () => {
     })
   })
 
-  it.skip('should show the default landing page for a funded card', () => {
-    // todo : fund a card via api #1252
+  it('should show the default landing page for a funded card', () => {
+    cy.then(async () => {
+      const cardHash = await generateCardHash()
+      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
+        const invoice = response.body.data
+        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
+      })
+      tipCards.gotoLandingPagePreview(cardHash)
+      cy.getTestElement('greeting-funded-headline').should('contain', 'Congratulations!')
+      cy.getTestElement('greeting-funded-bitcoin-amount').should('contain', '0.00000210 BTC')
+    })
   })
 
   it.skip('should rewrite the url to cardHash from /landing/?lightning=lnurl', () => {
