@@ -35,8 +35,13 @@ export const authRouter = router({
     }),
 
   logoutAllOtherDevices: validRefreshTokenProcedure
+    .output(AccessTokenDto)
     .query(async ({ ctx }) => {
-      await ctx.refreshGuard.cycleRefreshToken() // This line was also in the api/logoutAllOtherDevices endpoint
+      await ctx.refreshGuard.cycleRefreshToken()
       await ctx.refreshGuard.logoutAllOtherDevices()
+      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
+      return {
+        accessToken,
+      }
     }),
 })

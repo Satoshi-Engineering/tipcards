@@ -72,8 +72,8 @@ export default class FrontendWithAuth extends Frontend {
   }
 
   async logoutAllOtherDevices() {
-    const response = await axios.post(`${API_ORIGIN}/api/auth/logoutAllOtherDevices`, {}, this.getRefreshHeader())
-    this.setRefreshTokenFromAxiosResponse(response)
+    const response = await this.trpcAuth.auth.logoutAllOtherDevices.query()
+    this.accessToken = response.accessToken
     return response
   }
 

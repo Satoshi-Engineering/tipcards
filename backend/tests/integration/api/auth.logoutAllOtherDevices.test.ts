@@ -81,9 +81,7 @@ describe('logout all other devices', () => {
 
     const response = await frontend.logoutAllOtherDevices()
 
-    expect(response.data).toEqual(expect.objectContaining({
-      status: 'success',
-    }))
+    expect(response.accessToken).toEqual(expect.any(String))
   })
 
   failEarly.it('should fail to refresh all frontends, except for the first one', async () => {

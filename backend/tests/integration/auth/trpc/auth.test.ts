@@ -93,12 +93,15 @@ describe('TRpc Router Auth', () => {
   })
 
   it('should logout all other devices', async () => {
+    const accessToken = 'mockAccessToken'
     vi.spyOn(refreshGuard, 'validateRefreshToken').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'cycleRefreshToken').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'logoutAllOtherDevices').mockResolvedValueOnce()
+    vi.spyOn(refreshGuard, 'createAuthorizationToken').mockResolvedValueOnce(accessToken)
     vi.spyOn(mockResponse, 'clearCookie')
 
-    await caller.logoutAllOtherDevices()
+    const reponse =await caller.logoutAllOtherDevices()
+    expect(reponse.accessToken).toBe(accessToken)
 
     expect(refreshGuard.validateRefreshToken).toHaveBeenCalled()
     expect(refreshGuard.cycleRefreshToken).toHaveBeenCalled()
