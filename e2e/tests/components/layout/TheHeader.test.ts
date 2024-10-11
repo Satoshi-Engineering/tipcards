@@ -1,4 +1,5 @@
 import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
+import tipCards from '@e2e/lib/tipCards'
 
 describe('TheHeader', () => {
   it('clicks on the lang icon in the header and the lang nav should appear and disappear', () => {
@@ -40,9 +41,7 @@ describe('TheHeader', () => {
   })
 
   it('opening the login modal via button in login banner should close the lang nav', () => {
-    cy.intercept('/api/auth/refresh').as('refreshRoute')
-    cy.visit(new URL('/sets', TIPCARDS_ORIGIN).href)
-    cy.wait('@refreshRoute')
+    tipCards.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
     cy.get('header [data-test=the-header-lang-button]').first().click()
@@ -52,9 +51,7 @@ describe('TheHeader', () => {
   })
 
   it('opening the login modal via button in login banner should close the main nav', () => {
-    cy.intercept('/api/auth/refresh').as('refreshRoute')
-    cy.visit(new URL('/sets', TIPCARDS_ORIGIN).href)
-    cy.wait('@refreshRoute')
+    tipCards.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
     cy.get('header [data-test=the-header-main-nav-button]').first().click()

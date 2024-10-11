@@ -1,4 +1,3 @@
-import { expect } from 'vitest'
 import crypto, { randomUUID } from 'crypto'
 
 import LNURL from '@shared/modules/LNURL/LNURL.js'
@@ -53,17 +52,6 @@ export const setData = {
       text: '',
       note: '',
       invoice: null,
-    }
-  },
-}
-
-export const authData = {
-  getAuthRefreshTestObject: () => {
-    return {
-      status: 'success',
-      data: {
-        accessToken: expect.any(String),
-      },
     }
   },
 }

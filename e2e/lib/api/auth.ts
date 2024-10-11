@@ -7,7 +7,7 @@ import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 const API_CYPRESS_CREATE_AUTH_KEYS = new URL('/auth/api/cypress/createRandomPublicPrivateKeyPairAsHex', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_CREATE = new URL('/auth/trpc/lnurlAuth.create', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_LOGIN = new URL('/auth/trpc/auth.loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
-const API_AUTH_REFRESH = new URL('/api/auth/refresh', TIPCARDS_AUTH_ORIGIN)
+const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
 export const login = () => {
   createAndWrapLNURLAuth()
@@ -55,10 +55,10 @@ export const login = () => {
 
 export const refresh = () => {
   cy.request({
-    url: `${API_AUTH_REFRESH.href}`,
+    url: API_AUTH_REFRESH.href,
   }).then((response) => {
-    expect(response.body).to.have.nested.property('data.accessToken')
-    cy.wrap(response.body.data.accessToken).as('accessToken')
+    expect(response.body).to.have.nested.property('result.data.json.accessToken')
+    cy.wrap(response.body.result.data.json.accessToken).as('accessToken')
   })
 }
 

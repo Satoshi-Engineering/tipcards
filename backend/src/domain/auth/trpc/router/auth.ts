@@ -4,6 +4,7 @@ import { AccessTokenDto } from '@shared/data/trpc/auth/AccessTokenDto.js'
 
 import { router } from '../trpc.js'
 import publicProcedure from '../procedures/public.js'
+import validRefreshTokenProcedure from '../procedures/validRefreshToken.js'
 
 export const authRouter = router({
   loginWithLnurlAuthHash: publicProcedure
@@ -11,7 +12,18 @@ export const authRouter = router({
     .output(AccessTokenDto)
     .query(async ({ ctx, input }) => {
       const walletPublicKey = ctx.auth.getLnurlAuthLogin().getAuthenticatedWalletPublicKey(input.hash)
-      const accessToken = await ctx.refreshGuard.loginWithWalletPublicKey(walletPublicKey)
+      await ctx.refreshGuard.loginWithWalletPublicKey(walletPublicKey)
+      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
+      return {
+        accessToken,
+      }
+    }),
+
+  refreshRefreshToken: validRefreshTokenProcedure
+    .output(AccessTokenDto)
+    .query(async ({ ctx }) => {
+      await ctx.refreshGuard.cycleRefreshToken()
+      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
       return {
         accessToken,
       }

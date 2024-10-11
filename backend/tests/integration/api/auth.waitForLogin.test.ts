@@ -39,7 +39,7 @@ describe('auth wait for login (socket.io)', () => {
     }
 
     expect(frontend.hasLoggedInEventRecieved()).toBe(false)
-    const response = await frontend.authCreate()
+    const response = await frontend.authCreateLnUrlAuth()
     expect(frontend.authServiceLoginHash).not.toBe('')
 
     frontend.emitSocketEventWaitForLogin(frontend.authServiceLoginHash)

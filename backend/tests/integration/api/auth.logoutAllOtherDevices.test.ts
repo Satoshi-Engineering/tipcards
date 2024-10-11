@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import axios, { AxiosError } from 'axios'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
 import { delay } from '@backend/services/timingUtils.js'
+import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
-import { authData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
+import { TRPCClientError } from '@trpc/client'
 
 const failEarly = new FailEarly(it)
 
@@ -52,7 +52,7 @@ describe('logout all other devices', () => {
 
   failEarly.it('should refresh all frontends', async () => {
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
-      await frontend.authRefresh()
+      await frontend.authRefreshRefreshToken()
       // NOTE
       // In redis the refresh tokens were stored in the user object. Even after the switch to drizzle we still
       // build a temporary user object (in the application) that holds all refresh tokens.
@@ -77,7 +77,7 @@ describe('logout all other devices', () => {
   failEarly.it('should logout all frontends, except the first one', async () => {
     const frontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
     // make sure two auth tokens exist
-    await frontend.authRefresh()
+    await frontend.authRefreshRefreshToken()
 
     const response = await frontend.logoutAllOtherDevices()
 
@@ -90,19 +90,21 @@ describe('logout all other devices', () => {
     const loggedInFrontend = multipleFrondendSimulatorsWithSameSigningDevice[0]
     const loggedOutFrontends = multipleFrondendSimulatorsWithSameSigningDevice.slice(1)
 
-    const response = await loggedInFrontend.authRefresh()
-    expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
+    const authRefreshTokenResponse = await loggedInFrontend.authRefreshRefreshToken()
+    expect(authRefreshTokenResponse).toEqual(expect.objectContaining({
+      accessToken: expect.any(String),
+    }))
 
     await Promise.all(loggedOutFrontends.map(async (frontend) => {
-      let caughtError: AxiosError | undefined
+      let caughtError: TRPCClientError<AuthRouter> | undefined
 
       try {
-        await frontend.authRefresh()
+        await frontend.authRefreshRefreshToken()
       } catch (error) {
-        caughtError = error as AxiosError
+        caughtError = error as TRPCClientError<AuthRouter>
       }
-      expect(axios.isAxiosError(caughtError)).toBe(true)
-      expect(caughtError?.response?.status).toBe(401)
+      expect(caughtError).toBeInstanceOf(TRPCClientError)
+      expect(caughtError?.data?.httpStatus).toBe(401)
     }))
   })
 })

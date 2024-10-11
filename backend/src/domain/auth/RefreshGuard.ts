@@ -1,6 +1,6 @@
 import type { Response, Request } from 'express'
 
-import { ErrorCode } from '@shared/data/Errors.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
 import {
@@ -13,26 +13,24 @@ import {
   createAccessToken,
 } from '@backend/services/jwt.js'
 
-import { AuthErrorCodes } from './types/AuthErrorCodes.js'
-
 export default class RefreshGuard {
   private request: Request
   private response: Response
-  private userId: string | null = null
+  private user: User | null = null
 
   constructor(request: Request, response: Response) {
     this.request = request
     this.response = response
   }
 
-  public async loginWithWalletPublicKey(walletPublicKey: string): Promise<string> {
+  public async loginWithWalletPublicKey(walletPublicKey: string){
     let user: User
     try {
       // Deprecated Function
       user = await getUserByLnurlAuthKeyOrCreateNew(walletPublicKey)
     } catch (error) {
       console.error(ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey, error)
-      throw new Error(`${ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey} - Unable to get or create user`)
+      throw new ErrorWithCode('Unable to get or create user', ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey)
     }
 
     const refreshToken = await createRefreshToken(user)
@@ -46,22 +44,21 @@ export default class RefreshGuard {
       await updateUser(user)
     } catch (error) {
       console.error(ErrorCode.UnableToUpdateUser, error)
-      throw new Error(`${ErrorCode.UnableToUpdateUser} - Unable to update user authentication`)
+      throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
     }
 
-    const accessToken = await createAccessToken(user)
     this.setRefreshTokenCookie(refreshToken)
-    return accessToken
+    this.user = user
   }
 
   async validateRefreshToken() {
     const host = this.getHostFromRequest()
     if (host == null ) {
-      throw new Error(AuthErrorCodes.HOST_MISSING)
+      throw new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest)
     }
-    const refreshJwt = this.getRefreshTokenFromCookies()
+    const refreshJwt = this.getRefreshTokenFromRequestCookies()
     if (refreshJwt == null ) {
-      throw new Error(AuthErrorCodes.REFRESH_TOKEN_MISSING)
+      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
     }
     const refreshJwtPayload = await validateJwt(refreshJwt, host)
 
@@ -71,14 +68,43 @@ export default class RefreshGuard {
       || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(refreshJwt))
     ) {
       this.clearRefreshTokenCookie()
-      throw new Error(AuthErrorCodes.REFRESH_TOKEN_DENIED)
+      throw new ErrorWithCode('Refresh token not found in allowed refresh tokens', ErrorCode.RefreshTokenDenied)
     }
 
-    this.userId = refreshJwtPayload.id
+    this.user = user
+  }
+
+  async cycleRefreshToken() {
+    if (this.user == null) {
+      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    }
+    const previousRefreshToken = this.getRefreshTokenFromRequestCookies()
+    if (previousRefreshToken == null ) {
+      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
+    }
+    const newRefreshToken = await createRefreshToken(this.user)
+    if (this.user.allowedRefreshTokens == null) {
+      this.user.allowedRefreshTokens = []
+    }
+    this.user.allowedRefreshTokens = this.user.allowedRefreshTokens.map((currentRefreshTokens) => {
+      if (!currentRefreshTokens.includes(previousRefreshToken)) {
+        return currentRefreshTokens
+      }
+      return [newRefreshToken, previousRefreshToken]
+    })
+    await updateUser(this.user)
+    this.setRefreshTokenCookie(newRefreshToken)
+  }
+
+  async createAuthorizationToken() {
+    if (this.user == null) {
+      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    }
+    return createAccessToken(this.user)
   }
 
   public async logout() {
-    const refreshToken = this.getRefreshTokenFromCookies()
+    const refreshToken = this.getRefreshTokenFromRequestCookies()
     this.clearRefreshTokenCookie()
     if (refreshToken != null) {
       try {
@@ -91,7 +117,7 @@ export default class RefreshGuard {
           await updateUser(user)
         }
       } catch (error) {
-        throw new Error(`${ErrorCode.UnknownDatabaseError} - unknown database error`)
+        throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
       }
     }
   }
@@ -104,11 +130,9 @@ export default class RefreshGuard {
     return null
   }
 
-  private getRefreshTokenFromCookies() {
-    if (typeof this.request.cookies?.refresh_token === 'string') {
-      return this.request.cookies?.refresh_token
-    }
-    return null
+  private getRefreshTokenFromRequestCookies() {
+    const cookies = this.getRequestCookies()
+    return cookies['refresh_token'] || null
   }
 
   private setRefreshTokenCookie(refreshToken: string) {
@@ -126,5 +150,28 @@ export default class RefreshGuard {
       secure: true,
       sameSite: 'none',
     })
+  }
+
+  private getRequestCookies() {
+    const cookies: { [key: string]: string } = {}
+    if (!this.request.headers || !this.request.headers.cookie) {
+      return cookies
+    }
+
+    if (typeof this.request.headers.cookie !== 'string') {
+      return cookies
+    }
+
+    if (this.request.headers.cookie.length <= 0) {
+      return cookies
+    }
+
+    const cookiePairs = this.request.headers.cookie.split('; ')
+    cookiePairs.forEach(cookie => {
+      const [key, value] = cookie.split('=')
+      cookies[key] = decodeURIComponent(value)
+    })
+
+    return cookies
   }
 }

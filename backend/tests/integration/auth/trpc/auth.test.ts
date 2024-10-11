@@ -51,7 +51,8 @@ describe('TRpc Router Auth', () => {
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
 
     vi.spyOn(Auth.getAuth().getLnurlAuthLogin(), 'getAuthenticatedWalletPublicKey').mockReturnValueOnce(walletPublicKey)
-    vi.spyOn(refreshGuard, 'loginWithWalletPublicKey').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'loginWithWalletPublicKey').mockResolvedValueOnce()
+    vi.spyOn(refreshGuard, 'createAuthorizationToken').mockResolvedValueOnce(accessToken)
     const loginResult = await caller.loginWithLnurlAuthHash({
       hash,
     })

@@ -25,9 +25,6 @@ export enum ErrorCode {
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
   CardNeedsSetFunding = 'CardNeedsSetFunding',
   CannotCreateLnurlPCardHasInvoice = 'CannotCreateLnurlPCardHasInvoice',
-  AccessTokenMissing = 'AccessTokenMissing',
-  AccessTokenInvalid = 'AccessTokenInvalid',
-  AccessTokenExpired = 'AccessTokenExpired',
   InvalidInput = 'InvalidInput',
   SetBelongsToAnotherUser = 'SetBelongsToAnotherUser',
   SetAlreadyFunded = 'SetAlreadyFunded',
@@ -35,10 +32,6 @@ export enum ErrorCode {
   CardLogoNotFound = 'CardLogoNotFound',
   LnurlpTooManyPaymentRequests = 'LnurlpTooManyPaymentRequests',
   LnbitsPaymentRequestsMalformedResponse = 'LnbitsPaymentRequestsMalformedResponse',
-  RefreshTokenMissing = 'RefreshTokenMissing',
-  RefreshTokenInvalid = 'RefreshTokenInvalid',
-  RefreshTokenExpired = 'RefreshTokenExpired',
-  RefreshTokenDenied = 'RefreshTokenDenied',
   LnbitsLnurlpPaymentsNotFound = 'LnbitsLnurlpPaymentsNotFound',
   TooManySetsForUser = 'TooManySetsForUser',
   FoundMultipleUsersForLnurlAuthKey = 'FoundMultipleUsersForLnurlAuthKey',
@@ -50,6 +43,17 @@ export enum ErrorCode {
   UnableToGetOrCreateUserByLnurlAuthKey = 'UnableToGetOrCreateUserByLnurlAuthKey',
   UnableToUpdateUser = 'UnableToUpdateUser',
   CardIsLockedByBulkWithdraw = 'CardIsLockedByBulkWithdraw',
+
+  AuthUserNotLoaded = 'AuthUserNotLoaded',
+  AuthHostMissingInRequest = 'AuthHostMissingInRequest',
+  LnurlAuthLoginHashInvaid = 'LnurlAuthLoginHashInvaid',
+  RefreshTokenMissing = 'RefreshTokenMissing',
+  RefreshTokenInvalid = 'RefreshTokenInvalid',
+  RefreshTokenExpired = 'RefreshTokenExpired',
+  RefreshTokenDenied = 'RefreshTokenDenied',
+  AccessTokenMissing = 'AccessTokenMissing',
+  AccessTokenInvalid = 'AccessTokenInvalid',
+  AccessTokenExpired = 'AccessTokenExpired',
 
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
@@ -78,13 +82,18 @@ export type ErrorResponse = z.infer<typeof ErrorResponse>
 export type ToErrorResponse = ({ message, code }: { message: string, code?: ErrorCode })
   => ErrorResponse
 
-export class ErrorWithCode {
+export class ErrorWithCode extends Error {
   error: unknown
   code: ErrorCode
 
   constructor(error: unknown, code: ErrorCode) {
+    super(code)
     this.error = error
     this.code = code
     Object.setPrototypeOf(this, ErrorWithCode.prototype)
+  }
+
+  toTrpcMessage() {
+    return `ErrorWithCode|${this.code}|${this.error}`
   }
 }

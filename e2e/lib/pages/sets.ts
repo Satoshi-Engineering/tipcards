@@ -1,11 +1,11 @@
 import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
+import { gotoPage } from './utils'
+
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 
 export const goto = () => {
-  cy.intercept('/api/auth/refresh').as('apiAuthRefresh')
   cy.intercept('/trpc/set.getAll**').as('apiSet')
-  cy.visit(SETS_PAGE_URL.href)
-  cy.wait('@apiAuthRefresh')
+  gotoPage(SETS_PAGE_URL)
   cy.wait('@apiSet')
 }

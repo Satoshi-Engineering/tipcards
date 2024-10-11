@@ -11,11 +11,15 @@ import {
   isLoggedOut,
   reloadPage,
 } from './pages/utils.js'
+import {
+  gotoPage,
+} from './pages/utils.js'
 
 export default {
   isLoggedIn,
   isLoggedOut,
   reloadPage,
+  gotoPage,
   gotoSetsPage,
   gotoUserAccount,
   gotoHomePage,

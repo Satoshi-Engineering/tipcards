@@ -1,17 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { TRPCClientError } from '@trpc/client'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { ErrorCode } from '@shared/data/Errors.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
 import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
-import { authData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 
@@ -27,20 +25,20 @@ const lnurlAuth = new LNURLAuth({
 const frontend = new FrontendSimulator(randomMnemonic)
 
 describe('auth', () => {
-  failEarly.it('should not be able to refresh, if no login has happened', async () => {
-    let caughtError: AxiosError | undefined
+  it('should not be able to refresh, if no login has happened', async () => {
+    let caughtError: TRPCClientError<AuthRouter> | undefined
 
     try {
-      await frontend.authRefresh()
+      await frontend.authRefreshRefreshToken()
     } catch (error) {
-      caughtError = error as AxiosError
+      caughtError = error as TRPCClientError<AuthRouter>
     }
-    expect(axios.isAxiosError(caughtError)).toBe(true)
-    expect(caughtError?.response?.status).toBe(401)
+    expect(caughtError).toBeInstanceOf(TRPCClientError)
+    expect(caughtError?.data?.httpStatus).toBe(401)
   })
 
   failEarly.it('should login', async () => {
-    const createResponse = await frontend.authCreate()
+    const createResponse = await frontend.authCreateLnUrlAuth()
 
     const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(createResponse.lnurlAuth)
     const loginResponse = await axios.get(callbackUrl.toString())
@@ -50,7 +48,7 @@ describe('auth', () => {
 
     const authStatusResponse = await frontend.authLoginWithLnurlAuthHash()
 
-    expect(authStatusResponse).toEqual(expect.objectContaining(    {
+    expect(authStatusResponse).toEqual(expect.objectContaining({
       accessToken: expect.any(String),
     }))
   })
@@ -64,13 +62,15 @@ describe('auth', () => {
       caughtError = error as TRPCClientError<AuthRouter>
     }
     expect(caughtError).toBeInstanceOf(TRPCClientError)
-    expect(caughtError?.data?.httpStatus).toBe(500)
-    expect(caughtError?.data?.code).toBe('INTERNAL_SERVER_ERROR')
+    expect(caughtError?.data?.httpStatus).toBe(401)
+    expect(caughtError?.data?.code).toBe('UNAUTHORIZED')
   })
 
   failEarly.it('should get a new access token', async () => {
-    const response = await frontend.authRefresh()
-    expect(response.data).toEqual(expect.objectContaining(authData.getAuthRefreshTestObject()))
+    const response = await frontend.authRefreshRefreshToken()
+    expect(response).toEqual(expect.objectContaining({
+      accessToken: expect.any(String),
+    }))
   })
 
   failEarly.it('should logout user', async () => {
@@ -78,17 +78,14 @@ describe('auth', () => {
   })
 
   failEarly.it('should fail refreshing the access token, if the user is logged out', async () => {
-    let caughtError: AxiosError | undefined
+    let caughtError: TRPCClientError<AuthRouter> | undefined
 
     try {
-      await frontend.authRefresh()
+      await frontend.authRefreshRefreshToken()
     } catch (error) {
-      caughtError = error as AxiosError
+      caughtError = error as TRPCClientError<AuthRouter>
     }
-    expect(axios.isAxiosError(caughtError)).toBe(true)
-    expect(caughtError?.response?.status).toBe(401)
-    expect(caughtError?.response?.data).toEqual(expect.objectContaining({
-      code: ErrorCode.RefreshTokenMissing,
-    }))
+    expect(caughtError).toBeInstanceOf(TRPCClientError)
+    expect(caughtError?.data?.httpStatus).toBe(401)
   })
 })

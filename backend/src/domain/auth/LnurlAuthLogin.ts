@@ -6,6 +6,7 @@ import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
 
 import LoginInformer from './LoginInformer.js'
 import { type LoginEvent } from './types/LoginEvent.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 const DEFAULT_LOGINHASH_EXPIRATION_TIME = 1000 * 60 * 15
 
@@ -44,7 +45,7 @@ export default class LnurlAuthLogin {
 
   public getAuthenticatedWalletPublicKey(hash: string): string {
     if (!this.isOneTimeLoginHashValid(hash)) {
-      throw new Error('Hash not found')
+      throw new ErrorWithCode('(one time) login has is not valid', ErrorCode.LnurlAuthLoginHashInvaid)
     }
     const walletPublicKey = this.getPublicKeyFromOneTimeLoginHash(hash)
     this.invalidateLoginHash(hash)

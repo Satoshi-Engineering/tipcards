@@ -28,9 +28,6 @@ export default () => {
   return createClient()
 }
 
-export const isTRrpcClientError = (cause: unknown):
-  cause is TRPCClientError<AuthRouter> =>
-  cause instanceof TRPCClientError
-
-export const isTRpcClientAbortError = (cause: unknown) =>
-  isTRrpcClientError(cause) && cause.message.includes('aborted')
+export const asTRrpcClientError = (cause: unknown):
+  TRPCClientError<AuthRouter> | undefined =>
+  cause instanceof TRPCClientError ? cause : undefined

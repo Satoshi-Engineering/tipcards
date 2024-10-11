@@ -9,9 +9,9 @@ import { addData } from '../../mocks/database/database.js'
 
 import { validateJwt, createRefreshToken, createAccessToken } from '@backend/services/jwt.js'
 import RefreshGuard from '@backend/domain/auth/RefreshGuard.js'
-import { AuthErrorCodes } from '@backend/domain/auth/types/AuthErrorCodes.js'
 
 import { createUser, createProfileForUser, createAllowedRefreshTokens } from '../../../drizzleData.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 const mockWalletPublicKey = 'mockWalletPublicKey'
 const mockUserId = 'mockUserId'
@@ -20,6 +20,39 @@ mockUser.lnurlAuthKey = mockWalletPublicKey
 const mockProfile = createProfileForUser(mockUser)
 const mockAllowedRefreshTokens = createAllowedRefreshTokens(mockUser)
 const mockRefreshToken = mockAllowedRefreshTokens.current
+const mockRefreshTokenCookie = `refresh_token=${mockRefreshToken}`
+const mockRequest = {
+  get: vi.fn(),
+  headers: {
+    cookie: undefined,
+    authorization: undefined,
+  },
+} as unknown as Request
+const mockResponse = {
+  cookie: vi.fn(),
+  clearCookie: vi.fn(),
+} as unknown as Response
+const mockHost = 'domain.com'
+let refreshGuard: RefreshGuard
+
+// Authenticate User via Refresh Token
+const setValidRefreshToken = () => {
+  vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
+  mockRequest.headers.cookie = mockRefreshTokenCookie
+
+  const mockRefreshTokenPayload = {
+    id: mockUserId,
+    lnurlAuthKey: 'mockLnurlAuthKey',
+    permissions: [],
+    nonce: 'mockNonce',
+  }
+  vi.mocked(validateJwt).mockResolvedValueOnce(mockRefreshTokenPayload)
+}
+
+const authUserViaRefreshToken = async () => {
+  setValidRefreshToken()
+  await refreshGuard.validateRefreshToken()
+}
 
 beforeAll(() => {
   addData({
@@ -30,37 +63,17 @@ beforeAll(() => {
 })
 
 describe('RefreshGuard', () => {
-  let refreshGuard: RefreshGuard
-
-  const mockRequest = {
-    cookies: {
-      refresh_token: undefined,
-    },
-    get: vi.fn(),
-    headers: {
-      authorization: undefined,
-    },
-  } as unknown as Request
-  const mockResponse = {
-    cookie: vi.fn(),
-    clearCookie: vi.fn(),
-  } as unknown as Response
-  const mockHost = 'domain.com'
-
   beforeEach(() => {
     refreshGuard = new RefreshGuard(mockRequest, mockResponse)
   })
 
   it('should create refresh token for login with walletPublicKey ', async () => {
     const mockNewRefreshToken = 'mockNewRefreshToken'
-    const mockNewAccessToken = 'mockNewAccessToken'
     vi.mocked(createRefreshToken).mockResolvedValueOnce(mockNewRefreshToken)
-    vi.mocked(createAccessToken).mockResolvedValueOnce(mockNewAccessToken)
 
     await refreshGuard.loginWithWalletPublicKey(mockWalletPublicKey)
 
     expect(createRefreshToken).toHaveBeenCalledOnce()
-    expect(createAccessToken).toHaveBeenCalledOnce()
     expect(mockResponse.cookie).toHaveBeenCalledWith(
       'refresh_token',
       mockNewRefreshToken,
@@ -90,7 +103,7 @@ describe('RefreshGuard', () => {
 
     await expect(async () => {
       await refreshGuard.validateRefreshToken()
-    }).rejects.toThrowError(new Error(AuthErrorCodes.HOST_MISSING))
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthHostMissingInRequest))
   })
 
   it('should fail refresh token validation due json web token is missing in cookie', async () => {
@@ -98,31 +111,15 @@ describe('RefreshGuard', () => {
 
     await expect(async () => {
       await refreshGuard.validateRefreshToken()
-    }).rejects.toThrowError(new Error(AuthErrorCodes.REFRESH_TOKEN_MISSING))
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenMissing))
   })
 
   it('should fail refresh token validation due missing entry in database', async () => {
+    const tokenGargabe = 'DIFFERENT TOKEN'
+    const randomRefreshTokenCookie = `${mockRefreshTokenCookie}${tokenGargabe}`
+
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
-    const randomToken = `${mockRefreshToken} - DIFFERENT TOKEN`
-    mockRequest.cookies.refresh_token = randomToken
-
-    const mockRefreshTokenPayload = {
-      id: 'mockUserId',
-      lnurlAuthKey: 'mockLnurlAuthKey',
-      permissions: [],
-      nonce: 'mockNonce',
-    }
-    vi.mocked(validateJwt).mockResolvedValueOnce(mockRefreshTokenPayload)
-
-    await expect(async () => {
-      await refreshGuard.validateRefreshToken()
-    }).rejects.toThrowError(new Error(AuthErrorCodes.REFRESH_TOKEN_DENIED))
-    expect(validateJwt).toHaveBeenCalledWith(randomToken, mockHost)
-  })
-
-  it('should validate refresh json web token from cookie', async () => {
-    vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
-    mockRequest.cookies.refresh_token = mockRefreshToken
+    mockRequest.headers.cookie = randomRefreshTokenCookie
 
     const mockRefreshTokenPayload = {
       id: mockUserId,
@@ -132,7 +129,58 @@ describe('RefreshGuard', () => {
     }
     vi.mocked(validateJwt).mockResolvedValueOnce(mockRefreshTokenPayload)
 
+    await expect(async () => {
+      await refreshGuard.validateRefreshToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenDenied))
+    expect(validateJwt).toHaveBeenCalledWith(`${mockRefreshToken}${tokenGargabe}`, mockHost)
+  })
+
+  it('should validate refresh json web token from cookie', async () => {
+    setValidRefreshToken()
+
     await refreshGuard.validateRefreshToken()
     expect(validateJwt).toHaveBeenCalledWith(mockRefreshToken, mockHost)
+  })
+
+  it('should fail refresh token cycling due missing user', async () => {
+    await expect(async () => {
+      await refreshGuard.cycleRefreshToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotLoaded))
+  })
+
+  it('should cycle refresh token', async () => {
+    await authUserViaRefreshToken()
+
+    const mockNewRefreshToken = 'mockNewRefreshToken'
+    vi.mocked(createRefreshToken).mockResolvedValueOnce(mockNewRefreshToken)
+
+    await refreshGuard.cycleRefreshToken()
+    expect(createRefreshToken).toHaveBeenCalledTimes(2)
+    expect(mockResponse.cookie).toHaveBeenCalledWith(
+      'refresh_token',
+      mockNewRefreshToken,
+      {
+        expires: expect.any(Date),
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      },
+    )
+  })
+
+  it('should fail authorization token creation due missing user', async () => {
+    await expect(async () => {
+      await refreshGuard.createAuthorizationToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotLoaded))
+  })
+
+  it('should create an new authorization token for the user', async () => {
+    await authUserViaRefreshToken()
+
+    const mockAuthorizationToken = 'mockAuthorizationToken'
+    vi.mocked(createAccessToken).mockResolvedValueOnce(mockAuthorizationToken)
+
+    const authorizationToken = await refreshGuard.createAuthorizationToken()
+    expect(authorizationToken).toBe(mockAuthorizationToken)
   })
 })

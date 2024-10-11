@@ -1,14 +1,12 @@
-import axios, { AxiosError } from 'axios'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-import { AccessTokenPayload, AccessTokenFromResponse } from '@shared/data/auth'
+import { AccessTokenPayload } from '@shared/data/auth'
 import { ErrorCode } from '@shared/data/Errors'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'
-import useTRpcAuth from '@/modules/useTRpcAuth'
+import useTRpcAuth, { asTRrpcClientError } from '@/modules/useTRpcAuth'
 import i18n from '@/modules/initI18n'
-import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 export const useAuthStore = defineStore('auth', () => ({
   userId,
@@ -132,19 +130,19 @@ const refreshAccessToken = async (): Promise<string | null> => {
   if (fetchingAccessToken.value) {
     return awaitNewAccessToken()
   }
-  return getNewAccessToken(`${TIPCARDS_AUTH_ORIGIN}/api/auth/refresh`)
+  return getNewAccessToken()
 }
 
 /**
  * @throws ErrorUnauthorized
  * @throws AxiosError
  */
-const getNewAccessToken = async (route: string): Promise<string | null> => {
+const getNewAccessToken = async (): Promise<string | null> => {
   fetchingAccessToken.value = true
   const isInitialCheck = accessToken.value === undefined
   try {
-    const response = await axios.get(route, { withCredentials: true })
-    accessToken.value = AccessTokenFromResponse.parse(response.data)
+    const refreshTokenResponse = await trpcAuth.auth.refreshRefreshToken.query()
+    accessToken.value = refreshTokenResponse.accessToken
     return accessToken.value || null
   } catch (error) {
     return resetAccessTokenDependingOnError(error, isInitialCheck)
@@ -159,23 +157,27 @@ const awaitNewAccessToken = () => new Promise<string | null>((resolve) => {
   callbacksAwaitingAccessToken.value.push(resolve)
 })
 
-const isUnauthorizedError = (error: AxiosError) => error.response?.status === 401
-
 const resetAccessTokenDependingOnError = (error: unknown, isInitialCheck: boolean) => {
-  if (!axios.isAxiosError(error) || !isUnauthorizedError(error)) {
+  const trpcError = asTRrpcClientError(error)
+  if (trpcError === undefined) {
     accessToken.value = undefined
     throw error
   }
-  accessToken.value = null
-  switch (error.response?.data?.code) {
-    case ErrorCode.RefreshTokenExpired:
-      throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenExpired'))
-    case ErrorCode.RefreshTokenDenied:
-      throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDenied'))
-    default:
-      if (isInitialCheck) {
-        return null
-      }
-      throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDefaultError'))
+
+  if (trpcError.data?.httpStatus !== 401) {
+    accessToken.value = undefined
+    throw error
   }
+
+  accessToken.value = null
+  if (trpcError.message.includes(ErrorCode.RefreshTokenExpired)) {
+    throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenExpired'))
+  }
+  if (trpcError.message.includes(ErrorCode.RefreshTokenDenied)) {
+    throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDenied'))
+  }
+  if (isInitialCheck) {
+    return null
+  }
+  throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDefaultError'))
 }

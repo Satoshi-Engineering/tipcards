@@ -47,7 +47,7 @@ export default class FrontendWithAuth extends Frontend {
     this.refreshToken = ''
   }
 
-  async authCreate() {
+  async authCreateLnUrlAuth() {
     const response = await this.trpcAuth.lnurlAuth.create.query()
     this.authServiceLoginHash = response.hash
     return response
@@ -61,10 +61,9 @@ export default class FrontendWithAuth extends Frontend {
     return response
   }
 
-  async authRefresh() {
-    const response = await axios.get(`${API_ORIGIN}/api/auth/refresh`, this.getRefreshHeader())
-    this.accessToken = response.data.data.accessToken
-    this.setRefreshTokenFromAxiosResponse(response)
+  async authRefreshRefreshToken() {
+    const response = await this.trpcAuth.auth.refreshRefreshToken.query()
+    this.accessToken = response.accessToken
     return response
   }
 
