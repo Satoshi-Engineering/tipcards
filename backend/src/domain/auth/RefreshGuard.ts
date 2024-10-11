@@ -122,6 +122,26 @@ export default class RefreshGuard {
     }
   }
 
+  public async logoutAllOtherDevices() {
+    if (this.user == null) {
+      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    }
+    const refreshToken = this.getRefreshTokenFromRequestCookies()
+    if (refreshToken == null ) {
+      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
+    }
+    if (this.user?.allowedRefreshTokens != null) {
+      this.user.allowedRefreshTokens = this.user.allowedRefreshTokens
+        .filter((currentRefreshTokens) => currentRefreshTokens.includes(refreshToken))
+      try {
+        // Deprecated Function
+        await updateUser(this.user)
+      } catch (error) {
+        throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
+      }
+    }
+  }
+
   private getHostFromRequest() {
     const host = this.request.get('host')
     if (typeof host === 'string') {

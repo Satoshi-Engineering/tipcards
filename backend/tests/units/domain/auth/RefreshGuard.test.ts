@@ -5,7 +5,7 @@ import '../../mocks/process.env.js'
 import '../../mocks/jwt.js'
 import '../../mocks/drizzle.js'
 import '../../mocks/database/client.js'
-import { addData } from '../../mocks/database/database.js'
+import { addData, allowedRefreshTokensByHash } from '../../mocks/database/database.js'
 
 import { validateJwt, createRefreshToken, createAccessToken } from '@backend/services/jwt.js'
 import RefreshGuard from '@backend/domain/auth/RefreshGuard.js'
@@ -19,6 +19,7 @@ const mockUser = createUser(mockUserId)
 mockUser.lnurlAuthKey = mockWalletPublicKey
 const mockProfile = createProfileForUser(mockUser)
 const mockAllowedRefreshTokens = createAllowedRefreshTokens(mockUser)
+const mockAllowedOtherRefreshTokens = createAllowedRefreshTokens(mockUser)
 const mockRefreshToken = mockAllowedRefreshTokens.current
 const mockRefreshTokenCookie = `refresh_token=${mockRefreshToken}`
 const mockRequest = {
@@ -58,13 +59,18 @@ beforeAll(() => {
   addData({
     users: [mockUser],
     profiles: [mockProfile],
-    allowedRefreshTokens: [mockAllowedRefreshTokens],
   })
 })
 
 describe('RefreshGuard', () => {
   beforeEach(() => {
     refreshGuard = new RefreshGuard(mockRequest, mockResponse)
+    Object.keys(allowedRefreshTokensByHash).forEach(key => {
+      delete allowedRefreshTokensByHash[key]
+    })
+    addData({
+      allowedRefreshTokens: [mockAllowedRefreshTokens, mockAllowedOtherRefreshTokens],
+    })
   })
 
   it('should create refresh token for login with walletPublicKey ', async () => {
@@ -182,5 +188,19 @@ describe('RefreshGuard', () => {
 
     const authorizationToken = await refreshGuard.createAuthorizationToken()
     expect(authorizationToken).toBe(mockAuthorizationToken)
+  })
+
+  it('should fail to logoutAllOtherDevices due missing user', async () => {
+    await expect(async () => {
+      await refreshGuard.logoutAllOtherDevices()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotLoaded))
+  })
+
+  it('should logoutAllOtherDevices', async () => {
+    await authUserViaRefreshToken()
+    await refreshGuard.logoutAllOtherDevices()
+    expect(allowedRefreshTokensByHash).toEqual(expect.objectContaining({
+      [mockAllowedRefreshTokens.hash]: mockAllowedRefreshTokens,
+    }))
   })
 })
