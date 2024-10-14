@@ -16,7 +16,6 @@ import SocketIoServer from '@backend/domain/auth/services/SocketIoServer.js'
 import Auth from '@backend/domain/auth/Auth.js'
 import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
-import AuthSession from '@backend/domain/auth/AuthSession.js'
 import RefreshGuard from '@backend/domain/auth/RefreshGuard.js'
 
 const createCaller = createCallerFactory(lnurlAuthRouter)
@@ -37,7 +36,6 @@ describe('TRpc Router Auth LnurlAuthLogin', () => {
 
   const caller = createCaller({
     auth: Auth.getAuth(),
-    session: new AuthSession(mockRequest, mockResponse),
     refreshGuard: new RefreshGuard(mockRequest, mockResponse),
   })
 
