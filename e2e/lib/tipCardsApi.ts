@@ -2,6 +2,7 @@ import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth, createAnd
 import {
   fundCardWithInvoice,
   createInvoiceForCardHash,
+  createLnurlpLinkForCardHash,
   withdrawAllSatsFromCard,
 } from '@e2e/lib/api/card'
 import { generateAndAddRandomSet } from '@e2e/lib/api/sets'
@@ -18,6 +19,7 @@ export default {
   card: {
     fundCardWithInvoice,
     createInvoiceForCardHash,
+    createLnurlpLinkForCardHash,
     withdrawAllSatsFromCard,
   },
   generateAndAddRandomSet,

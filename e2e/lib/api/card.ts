@@ -29,6 +29,12 @@ export const createInvoiceForCardHash = (cardHash: CardStatusDto['hash'], amount
     },
   })
 
+export const createLnurlpLinkForCardHash = (cardHash: CardStatusDto['hash']) =>
+  cy.request({
+    url: `${API_LNURL.href}/${cardHash}`,
+    method: 'GET',
+  })
+
 export const withdrawAllSatsFromCard = (cardHash: CardStatusDto['hash']) =>
   cy.request({
     url: `${API_LNURL.href}/${cardHash}`,

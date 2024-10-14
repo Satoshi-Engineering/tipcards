@@ -22,6 +22,17 @@ describe('Landing Page', () => {
     })
   })
 
+  it('should should redirect to the lnurlp link for an unfunded card with lnurlp link', () => {
+    generateCardHash().then((cardHash) => {
+      tipCardsApi.card.createLnurlpLinkForCardHash(cardHash)
+
+      tipCards.gotoLandingPagePreview(cardHash)
+
+      cy.url().should('contain', `/funding/${cardHash}`)
+      cy.getTestElement('funding-lnurlp').should('contain', 'Scan the QR code with your wallet app')
+    })
+  })
+
   it('should show the default landing page for a funded card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)

@@ -167,7 +167,7 @@
             </ButtonWithTooltip>
           </div>
         </div>
-        <div v-else-if="lnurlp">
+        <div v-else-if="lnurlp" data-test="funding-lnurlp">
           <ParagraphDefault v-if="funded">
             <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
               <template #amountAndUnit>
