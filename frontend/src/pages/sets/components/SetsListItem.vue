@@ -12,7 +12,11 @@
       }
     }"
   >
-    <HeadlineDefault level="h4" class="col-start-1 col-span-2">
+    <HeadlineDefault
+      level="h4"
+      class="col-start-1 col-span-2"
+      data-test="sets-list-item-name"
+    >
       <template v-if="typeof set.settings.name === 'string' && set.settings.name !== ''">
         {{ set.settings.name }}
       </template>
@@ -25,7 +29,7 @@
       </span>
     </div>
     <div class="col-start-1">
-      <time class="text-sm">
+      <time class="text-sm" data-test="sets-list-item-date">
         {{ $d(set.created, {
           year: 'numeric', month: 'numeric', day: 'numeric',
           hour: 'numeric', minute: 'numeric'
@@ -35,6 +39,7 @@
     <div
       v-if="!noStatistics"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
+      data-test="sets-list-item-statistics"
     >
       <template v-if="statistics == null">
         <div
@@ -47,21 +52,25 @@
         <div
           v-for="n in statisticsItems.withdrawn"
           :key="n"
+          data-test="sets-list-item-statistics-withdrawn"
           class="w-full h-full bg-green"
         />
         <div
           v-for="n in statisticsItems.funded"
           :key="n"
+          data-test="sets-list-item-statistics-funded"
           class="w-full h-full bg-yellow"
         />
         <div
           v-for="n in statisticsItems.pending"
           :key="n"
+          data-test="sets-list-item-statistics-pending"
           class="w-full h-full bg-red"
         />
         <div
           v-for="n in statisticsItems.unfunded"
           :key="n"
+          data-test="sets-list-item-statistics-unfunded"
           class="w-full h-full bg-white border-[0.7px] border-black"
         />
       </template>
