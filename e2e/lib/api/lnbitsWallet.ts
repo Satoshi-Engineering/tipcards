@@ -8,7 +8,7 @@ import {
 
 const API_INVOICE = new URL('/api/invoice', BACKEND_API_ORIGIN)
 
-export const payInvoice = (cardHash: string, invoice: string) => {
+export const payCardInvoice = (cardHash: string, invoice: string) => {
   cy.request({
     url: `${LNBITS_ORIGIN}/api/v1/payments`,
     method: 'POST',

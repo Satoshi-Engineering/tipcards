@@ -6,11 +6,18 @@ import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdraw
 
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
-import { withdrawAllSatsFromLnurlWithdrawRequest } from '@e2e/lib/api/lnbitsWallet'
+import { payCardInvoice, withdrawAllSatsFromLnurlWithdrawRequest } from '@e2e/lib/api/lnbitsWallet'
 
 const API_INVOICE = new URL('/api/invoice', BACKEND_API_ORIGIN)
 const API_LNURL = new URL('/api/lnurl', BACKEND_API_ORIGIN)
 const API_WITHDRAW = new URL('/api/withdraw', BACKEND_API_ORIGIN)
+
+export const fundCardWithInvoice = (cardHash: CardStatusDto['hash'], amount: number) => {
+  createInvoiceForCardHash(cardHash, amount).then((response) => {
+    const invoice = response.body.data
+    payCardInvoice(cardHash, invoice)
+  })
+}
 
 export const createInvoiceForCardHash = (cardHash: CardStatusDto['hash'], amount: number) =>
   cy.request({

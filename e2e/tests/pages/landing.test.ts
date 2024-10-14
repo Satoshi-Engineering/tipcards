@@ -4,9 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
   it('should redirect to funding page if the card does not exist', () => {
-    cy.then(async () => {
-      const cardHash = await generateCardHash()
-
+    generateCardHash().then((cardHash) => {
       tipCards.gotoLandingPagePreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
@@ -14,9 +12,8 @@ describe('Landing Page', () => {
   })
 
   it('should should redirect to the invoice for an unfunded card with invoice', () => {
-    cy.then(async () => {
-      const cardHash = await generateCardHash()
-      tipCardsApi.createInvoiceForCardHash(cardHash, 210)
+    generateCardHash().then((cardHash) => {
+      tipCardsApi.card.createInvoiceForCardHash(cardHash, 210)
 
       tipCards.gotoLandingPagePreview(cardHash)
 
@@ -26,12 +23,8 @@ describe('Landing Page', () => {
   })
 
   it('should show the default landing page for a funded card', () => {
-    cy.then(async () => {
-      const cardHash = await generateCardHash()
-      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
-        const invoice = response.body.data
-        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
-      })
+    generateCardHash().then((cardHash) => {
+      tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
       tipCards.gotoLandingPagePreview(cardHash)
 
@@ -41,12 +34,8 @@ describe('Landing Page', () => {
   })
 
   it('should rewrite the url to cardHash from /landing?lightning=lnurl', () => {
-    cy.then(async () => {
-      const cardHash = await generateCardHash()
-      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
-        const invoice = response.body.data
-        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
-      })
+    generateCardHash().then((cardHash) => {
+      tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
       tipCards.gotoLandingPage(cardHash)
 
@@ -57,14 +46,10 @@ describe('Landing Page', () => {
   })
 
   it('should load the status of a recently withdrawn card', () => {
-    cy.then(async () => {
-      const cardHash = await generateCardHash()
-      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
-        const invoice = response.body.data
-        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
-      })
+    generateCardHash().then((cardHash) => {
+      tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
       cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
-      tipCardsApi.withdrawAllSatsFromCard(cardHash)
+      tipCardsApi.card.withdrawAllSatsFromCard(cardHash)
 
       tipCards.gotoLandingPagePreview(cardHash)
 

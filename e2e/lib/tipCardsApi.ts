@@ -1,6 +1,9 @@
 import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth, createAndWrapLNURLAuth } from '@e2e/lib/api/auth'
-import { createInvoiceForCardHash, withdrawAllSatsFromCard } from '@e2e/lib/api/card'
-import { payInvoice } from '@e2e/lib/api/lnbitsWallet'
+import {
+  fundCardWithInvoice,
+  createInvoiceForCardHash,
+  withdrawAllSatsFromCard,
+} from '@e2e/lib/api/card'
 import { generateAndAddRandomSet } from '@e2e/lib/api/sets'
 
 export default {
@@ -12,10 +15,10 @@ export default {
     clearAuth,
     createAndWrapLNURLAuth,
   },
-  lnbitsWallet: {
-    payInvoice,
+  card: {
+    fundCardWithInvoice,
+    createInvoiceForCardHash,
+    withdrawAllSatsFromCard,
   },
-  createInvoiceForCardHash,
-  withdrawAllSatsFromCard,
   generateAndAddRandomSet,
 }
