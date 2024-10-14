@@ -19,7 +19,7 @@ export interface RouteSets extends RouteRecordInfo<
 export const sets = {
   name: 'sets',
   path: `${localizedRoutePrefix}/sets`,
-  component: () => import('@/pages/PageSets.vue'),
+  component: () => import('@/pages/sets/PageSets.vue'),
   meta: {
     title: () => i18n.global.t('sets.title'),
   },

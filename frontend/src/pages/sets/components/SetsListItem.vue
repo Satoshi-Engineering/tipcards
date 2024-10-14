@@ -76,9 +76,9 @@ import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 import type { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto'
 
 import useSets from '@/modules/useSets'
-import LinkDefault from './typography/LinkDefault.vue'
-import HeadlineDefault from './typography/HeadlineDefault.vue'
-import IconTipCardSet from './icons/IconTipCardSet.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 
 const { encodeCardsSetSettings } = useSets()
 

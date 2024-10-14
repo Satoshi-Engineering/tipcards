@@ -77,12 +77,12 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
-import SetsInLocalStorageWarning from '@/components/SetsInLocalStorageWarning.vue'
+import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetStatisticsBySetId } from '@/modules/useSets'
-import SetsList from '@/components/SetsList.vue'
+import SetsList from '@/pages/sets/components/SetsList.vue'
 import { watch } from 'vue'
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 

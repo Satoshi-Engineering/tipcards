@@ -40,9 +40,9 @@ import { computed, type PropType } from 'vue'
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
 import type { SetStatisticsBySetId } from '@/modules/useSets'
-import SetsListItem from './SetsListItem.vue'
-import IconAnimatedLoadingWheel from './icons/IconAnimatedLoadingWheel.vue'
-import HeadlineDefault from './typography/HeadlineDefault.vue'
+import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
+import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 
 const props = defineProps({
   sets: {
