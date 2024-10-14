@@ -56,7 +56,19 @@ describe('Landing Page', () => {
     })
   })
 
-  it.skip('should load the status of a recently withdrawn card', () => {
-    // todo : withdraw funded card #1252
+  it('should load the status of a recently withdrawn card', () => {
+    cy.then(async () => {
+      const cardHash = await generateCardHash()
+      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
+        const invoice = response.body.data
+        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
+      })
+      cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
+      tipCardsApi.withdrawAllSatsFromCard(cardHash)
+
+      tipCards.gotoLandingPagePreview(cardHash)
+
+      cy.getTestElement('greeting-recently-withdrawn').should('contain', 'Your QR code has just been used')
+    })
   })
 })
