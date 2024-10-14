@@ -4,7 +4,6 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
-import { delay } from '@backend/services/timingUtils.js'
 import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
@@ -24,12 +23,6 @@ describe('logout all other devices', () => {
   failEarly.it('should login all frontends', async () => {
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.login()
-      // NOTE
-      // In redis the refresh tokens were stored in the user object. Even after the switch to drizzle we still
-      // build a temporary user object (in the application) that holds all refresh tokens.
-      // This is why we need to add a delay to prevent backend to write the same user object at the same time.
-      // Also the backend has no data lock on user object.
-      await delay(500)
     }
   })
 
@@ -53,12 +46,6 @@ describe('logout all other devices', () => {
   failEarly.it('should refresh all frontends', async () => {
     for (const frontend of multipleFrondendSimulatorsWithSameSigningDevice) {
       await frontend.authRefreshRefreshToken()
-      // NOTE
-      // In redis the refresh tokens were stored in the user object. Even after the switch to drizzle we still
-      // build a temporary user object (in the application) that holds all refresh tokens.
-      // This is why we need to add a delay to prevent backend to write the same user object at the same time.
-      // Also the backend has no data lock on user object.
-      await delay(500)
     }
   })
 
