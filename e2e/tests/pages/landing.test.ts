@@ -6,6 +6,7 @@ describe('Landing Page', () => {
   it('should redirect to funding page if the card does not exist', () => {
     cy.then(async () => {
       const cardHash = await generateCardHash()
+
       tipCards.gotoLandingPagePreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
@@ -16,6 +17,7 @@ describe('Landing Page', () => {
     cy.then(async () => {
       const cardHash = await generateCardHash()
       tipCardsApi.createInvoiceForCardHash(cardHash, 210)
+
       tipCards.gotoLandingPagePreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
@@ -30,14 +32,28 @@ describe('Landing Page', () => {
         const invoice = response.body.data
         tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
       })
+
       tipCards.gotoLandingPagePreview(cardHash)
+
       cy.getTestElement('greeting-funded-headline').should('contain', 'Congratulations!')
       cy.getTestElement('greeting-funded-bitcoin-amount').should('contain', '0.00000210 BTC')
     })
   })
 
-  it.skip('should rewrite the url to cardHash from /landing/?lightning=lnurl', () => {
-    // todo : fund a card and then navigate to /landing/?lightning=lnurl i/o /landing/:cardHash #1252
+  it('should rewrite the url to cardHash from /landing?lightning=lnurl', () => {
+    cy.then(async () => {
+      const cardHash = await generateCardHash()
+      tipCardsApi.createInvoiceForCardHash(cardHash, 210).then((response) => {
+        const invoice = response.body.data
+        tipCardsApi.lnbitsWallet.payInvoice(cardHash, invoice)
+      })
+
+      tipCards.gotoLandingPage(cardHash)
+
+      cy.url().should('contain', `/landing/${cardHash}`)
+      cy.getTestElement('greeting-funded-headline').should('contain', 'Congratulations!')
+      cy.getTestElement('greeting-funded-bitcoin-amount').should('contain', '0.00000210 BTC')
+    })
   })
 
   it.skip('should load the status of a recently withdrawn card', () => {

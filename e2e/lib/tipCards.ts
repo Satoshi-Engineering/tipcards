@@ -2,6 +2,7 @@ import {
   goto as gotoHomePage,
 } from './pages/home.js'
 import {
+  goto as gotoLandingPage,
   gotoPreview as gotoLandingPagePreview,
 } from './pages/landing.js'
 import { goto as gotoSetsPage } from './pages/sets'
@@ -26,6 +27,7 @@ export default {
   gotoSetsPage,
   gotoUserAccount,
   gotoHomePage,
+  gotoLandingPage,
   gotoLandingPagePreview,
   reloadUserAccount,
 }
