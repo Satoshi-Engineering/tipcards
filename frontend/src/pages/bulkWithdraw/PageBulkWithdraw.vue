@@ -22,7 +22,7 @@
           class="col-span-2"
           :loading="initializing"
           :cards-count="usableCards.length"
-          :color="bulkWithdraw?.withdrawn ? 'lightningpurple' : 'btcorange'"
+          :color="bulkWithdraw?.withdrawn ? 'green' : 'yellow'"
           :title="bulkWithdraw?.withdrawn ? $t('cards.status.labelBulkWithdrawn', 2) : $t('cards.status.labelFunded', 2)"
           :sats="fundedCardsTotalAmount"
         />

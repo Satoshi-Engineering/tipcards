@@ -42,13 +42,13 @@
         <div v-else>
           <CardsSummaryContainer>
             <CardsSummary
-              color="lightningpurple"
+              color="green"
               :cards-count="usedCards.length"
               :title="$t('cards.status.labelUsed', 2)"
               :sats="usedCardsTotalAmount"
             />
             <CardsSummary
-              color="btcorange"
+              color="yellow"
               :cards-count="fundedCards.length"
               :title="$t('cards.status.labelFunded', 2)"
               :sats="fundedCardsTotalAmount"
@@ -432,7 +432,7 @@
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'used'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-green text-white text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-green text-black text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>
@@ -444,7 +444,7 @@
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'funded'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow text-white text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow text-black text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>

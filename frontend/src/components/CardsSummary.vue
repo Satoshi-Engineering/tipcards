@@ -1,17 +1,19 @@
 <template>
   <div class="border flex flex-col">
-    <div class="p-2 flex-1">
+    <div
+      class="p-2 flex-1"
+      :class="{
+        'bg-green': !loading && color === 'green',
+        'bg-yellow': !loading && color === 'yellow',
+      }"
+    >
       <strong
         class="text-4xl"
         :class="{ 'opacity-0': loading }"
       >{{ cardsCount }}</strong>
       <div
-        class="text-sm  uppercase"
-        :class="{
-          'opacity-0': loading,
-          'text-btcorange': color === 'btcorange',
-          'text-lightningpurple': color === 'lightningpurple',
-        }"
+        class="text-sm text-black uppercase"
+        :class="{ 'opacity-0': loading }"
       >
         {{ title }}
       </div>
@@ -31,8 +33,8 @@ defineProps({
     default: false,
   },
   color: {
-    type: String as PropType<'btcorange' | 'lightningpurple'>,
-    default: 'btcorange',
+    type: String as PropType<'green' | 'yellow'>,
+    default: 'green',
   },
   cardsCount: {
     type: Number,
