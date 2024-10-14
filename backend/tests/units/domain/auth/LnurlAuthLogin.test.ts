@@ -72,10 +72,10 @@ describe('LnurlAuthLogin', () => {
     const loginEvent = { key: walletPublicKey, hash: hash }
 
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
     sendLoginEvent(loginEvent)
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
   })
 
   it('should expire one-time login hash', async () => {
@@ -84,14 +84,14 @@ describe('LnurlAuthLogin', () => {
     const loginEvent = { key: walletPublicKey, hash: hash }
 
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
     sendLoginEvent(loginEvent)
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
 
     await delay(loginHashExpirationTime)
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
   })
 
   it('should remove hash on create, if it exists', async () => {
@@ -109,7 +109,7 @@ describe('LnurlAuthLogin', () => {
     })
     await lnurlAuthLogin.create()
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
   })
 
   it('should invalidate existing one time login hash', async () => {
@@ -118,14 +118,14 @@ describe('LnurlAuthLogin', () => {
     const loginEvent = { key: walletPublicKey, hash: hash }
 
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
     sendLoginEvent(loginEvent)
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
 
     lnurlAuthLogin.invalidateLoginHash(hash)
     expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getPublicKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
   })
 
   it('should call loginInformer.addLoginHash after addling a one-time login hash', () => {

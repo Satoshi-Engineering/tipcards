@@ -77,7 +77,7 @@ describe('RefreshGuard', () => {
     const mockNewRefreshToken = 'mockNewRefreshToken'
     vi.mocked(createRefreshToken).mockResolvedValueOnce(mockNewRefreshToken)
 
-    await refreshGuard.loginWithWalletPublicKey(mockWalletPublicKey)
+    await refreshGuard.loginWithWalletLinkingKey(mockWalletPublicKey)
 
     expect(createRefreshToken).toHaveBeenCalledOnce()
     expect(mockResponse.cookie).toHaveBeenCalledWith(

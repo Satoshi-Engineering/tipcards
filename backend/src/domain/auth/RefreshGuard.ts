@@ -23,7 +23,7 @@ export default class RefreshGuard {
     this.response = response
   }
 
-  public async loginWithWalletPublicKey(walletPublicKey: string){
+  public async loginWithWalletLinkingKey(walletPublicKey: string){
     let user: User
     try {
       // Deprecated Function

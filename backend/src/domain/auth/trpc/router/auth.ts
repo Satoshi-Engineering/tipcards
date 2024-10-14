@@ -11,8 +11,9 @@ export const authRouter = router({
     .input(z.object({ hash: z.string() }))
     .output(AccessTokenDto)
     .query(async ({ ctx, input }) => {
-      const walletPublicKey = ctx.auth.getLnurlAuthLogin().getAuthenticatedWalletPublicKey(input.hash)
-      await ctx.refreshGuard.loginWithWalletPublicKey(walletPublicKey)
+      const lnurlAuthLogin = ctx.auth.getLnurlAuthLogin()
+      const linkingKey = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(input.hash)
+      await ctx.refreshGuard.loginWithWalletLinkingKey(linkingKey)
       const accessToken = await ctx.refreshGuard.createAuthorizationToken()
       return {
         accessToken,

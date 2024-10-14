@@ -18,7 +18,7 @@ export default class LnurlAuthLogin {
 
   private lnurlServer: lnurl.LnurlServer
   private loginInformer: LoginInformer
-  private oneTimeLoginWalletPublicKeys: Record<string, string> = {}
+  private oneTimeLoginWalletLinkingKeys: Record<string, string> = {}
   private loginHashExpirationTime: number
 
   constructor(
@@ -43,22 +43,22 @@ export default class LnurlAuthLogin {
     }
   }
 
-  public getAuthenticatedWalletPublicKey(hash: string): string {
+  public getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash: string): string {
     if (!this.isOneTimeLoginHashValid(hash)) {
       throw new ErrorWithCode('(one time) login has is not valid', ErrorCode.LnurlAuthLoginHashInvaid)
     }
-    const walletPublicKey = this.getPublicKeyFromOneTimeLoginHash(hash)
+    const linkingKey = this.getLinkingKeyFromOneTimeLoginHash(hash)
     this.invalidateLoginHash(hash)
-    return walletPublicKey
+    return linkingKey
   }
 
   private initSocketEvents() {
     this.lnurlServer.on('login', async (event: LoginEvent) => {
       // `key` - the public key as provided by the LNURL wallet app
       // `hash` - the hash of the secret for the LNURL used to login
-      const { key: walletPublicKey, hash } = event
-      assert(walletPublicKey.length > 0, 'lnurlServer.on(login) - Wallet public key is empty')
-      this.addOneTimeLoginHash(hash, walletPublicKey)
+      const { key: walletLinkingKey, hash } = event
+      assert(walletLinkingKey.length > 0, 'lnurlServer.on(login) - Wallet linking key is empty')
+      this.addOneTimeLoginHash(hash, walletLinkingKey)
       setTimeout(() => {
         this.removeOneTimeLoginHash(hash)
       }, this.loginHashExpirationTime)
@@ -66,8 +66,8 @@ export default class LnurlAuthLogin {
     })
   }
 
-  private addOneTimeLoginHash(hash: string, walletPublicKey: string) {
-    this.oneTimeLoginWalletPublicKeys[hash] = walletPublicKey
+  private addOneTimeLoginHash(hash: string, walletLinkingKey: string) {
+    this.oneTimeLoginWalletLinkingKeys[hash] = walletLinkingKey
     this.loginInformer.addLoginHash(hash)
   }
 
@@ -76,15 +76,15 @@ export default class LnurlAuthLogin {
   }
 
   public isOneTimeLoginHashValid(hash: string): boolean {
-    return hash in this.oneTimeLoginWalletPublicKeys
+    return hash in this.oneTimeLoginWalletLinkingKeys
   }
 
-  public getPublicKeyFromOneTimeLoginHash(hash: string): string {
-    return this.oneTimeLoginWalletPublicKeys[hash]
+  public getLinkingKeyFromOneTimeLoginHash(hash: string): string {
+    return this.oneTimeLoginWalletLinkingKeys[hash]
   }
 
   private removeOneTimeLoginHash(hash: string) {
-    delete this.oneTimeLoginWalletPublicKeys[hash]
+    delete this.oneTimeLoginWalletLinkingKeys[hash]
     this.loginInformer.removeLoginHash(hash)
   }
 }
