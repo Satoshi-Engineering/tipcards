@@ -3,10 +3,14 @@
     <div
       class="w-3 h-3 mt-1 rounded-full flex-none"
       :class="{
-        'bg-btcorange': status === 'funded',
-        'bg-lightningpurple': status === 'used',
-        'bg-red-500': status === 'error',
-        'bg-grey': status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw,
+        'bg-yellow': status === 'funded',
+        'bg-green': status === 'used',
+        'bg-red':
+          status === 'error'
+          || (
+            status !== 'used'
+            && (status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw)
+          ),
       }"
     />
     <div class="flex-1">
