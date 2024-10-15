@@ -478,7 +478,7 @@
   },
   "about": {
     "title": "About Lightning TipCards",
-    "intro": "Lightning TipCards are a tip (or gift) card system, where you can fund tip cards with Bitcoin via the lightning network and the gifted person can redeem the funded cards. The gifted person gets a short introduction to bitcoin and a lightning app recommendation to start their journey into the bitcoin rabbit hole.",
+    "intro": "Lightning TipCards are a system for tip or gift cards. You can fund the cards with Bitcoin via the Lightning Network, and the recipient can then redeem them. The recipient receives a brief introduction to Bitcoin and a recommendation for a Lightning app to start their journey into the Bitcoin rabbit hole.",
     "openSource": {
       "title": "Open Source",
       "text": "You are free to setup your own version of Lightning TipCards or to support us by creating issues, contributing translations, bug fixes or new features via Pull Requests on Github.",
