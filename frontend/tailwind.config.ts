@@ -13,11 +13,20 @@ export default {
     extend: {
       // move colors outside extend when new design is finished
       colors: {
-        yellow: '#f2cc50', // primary color
+        yellow: {
+          DEFAULT: '#f2cc50', // primary color
+          light: '#FDF5DD',
+        },
         black: '#010101', // headlines, labels
         bluegrey: '#2a2c31', // default color
-        green: '#99be5a', // statistics
-        red: '#c05749', // statistics
+        green: {
+          DEFAULT: '#99be5a', // statistics
+          light: '#EBF3DF', // statistics
+        },
+        red: {
+          DEFAULT: '#c05749', // statistics
+          light: '#F3DEDB', // statistics
+        },
         white: {
           DEFAULT: '#ffffff', // white
           50: '#8a8b8b', // use on bluegrey background for subtext & dividers

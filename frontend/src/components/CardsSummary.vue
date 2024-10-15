@@ -3,8 +3,8 @@
     <div
       class="p-2 flex-1"
       :class="{
-        'bg-green': !loading && color === 'green',
-        'bg-yellow': !loading && color === 'yellow',
+        'bg-green-light text-green': !loading && color === 'green',
+        'bg-yellow-light text-yellow': !loading && color === 'yellow',
       }"
     >
       <strong

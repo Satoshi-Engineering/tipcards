@@ -432,25 +432,25 @@
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'used'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-green text-black text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-green-light text-green text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>
             <div
               v-else-if="card.isLockedByBulkWithdraw"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red text-white text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-light text-red text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'funded'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow text-black text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow-light text-yellow text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>
             <div
               v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red text-white text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-light text-red text-xs break-anywhere print:hidden"
             >
               <span
                 v-if="card.status === 'lnurlp' && card.shared"

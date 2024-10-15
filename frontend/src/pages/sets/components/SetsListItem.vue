@@ -65,7 +65,7 @@
           v-for="n in statisticsItems.pending"
           :key="n"
           data-test="sets-list-item-statistics-pending"
-          class="w-full h-full bg-red"
+          class="w-full h-full bg-red-light"
         />
         <div
           v-for="n in statisticsItems.unfunded"

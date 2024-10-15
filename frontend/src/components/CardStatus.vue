@@ -5,12 +5,9 @@
       :class="{
         'bg-yellow': status === 'funded',
         'bg-green': status === 'used',
-        'bg-red':
-          status === 'error'
-          || (
-            status !== 'used'
-            && (status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw)
-          ),
+        'bg-red': status === 'error',
+        'bg-red-light': status !== 'used'
+          && (status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw),
       }"
     />
     <div class="flex-1">
