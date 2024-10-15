@@ -20,7 +20,7 @@
       <template v-if="typeof set.settings.name === 'string' && set.settings.name !== ''">
         {{ set.settings.name }}
       </template>
-      <template v-else>{{ $t('sets.unnamedSetNameFallback') }}</template>
+      <span v-else class="italic">{{ $t('sets.unnamedSetNameFallback') }}</span>
     </HeadlineDefault>
     <div class="col-start-1 text-sm">
       <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />

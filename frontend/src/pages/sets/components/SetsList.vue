@@ -13,7 +13,7 @@
       </HeadlineDefault>
     </header>
     <div v-if="message" class="px-5 py-4">
-      <ParagraphDefault class="text-center">
+      <ParagraphDefault>
         {{ message }}
       </ParagraphDefault>
     </div>
@@ -48,6 +48,7 @@ import type { SetStatisticsBySetId } from '@/modules/useSets'
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 
 const props = defineProps({
   sets: {
