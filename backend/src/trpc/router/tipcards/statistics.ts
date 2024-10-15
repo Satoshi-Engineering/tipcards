@@ -1,7 +1,7 @@
 import { PermissionsEnum } from '@shared/data/auth/User.js'
 import { StatisticsDto } from '@shared/data/trpc/tipcards/StatisticsDto.js'
 
-import Statistics from '@backend/domain/tipcards/Statistics.js'
+import Statistics from '@backend/domain/Statistics.js'
 
 import { router } from '../../trpc.js'
 import loggedInProcedure from '../../procedures/loggedIn.js'

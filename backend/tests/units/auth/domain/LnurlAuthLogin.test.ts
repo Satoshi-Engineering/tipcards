@@ -7,9 +7,9 @@ import { LnurlServerMock } from '../../../lib/mocks/lnurl.js'
 import { createHash } from 'crypto'
 import lnurl from 'lnurl'
 
-import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
-import LoginInformer from '@backend/domain/auth/LoginInformer.js'
-import { type LoginEvent } from '@backend/domain/auth/types/LoginEvent.js'
+import LnurlAuthLogin from '@backend/auth/domain/LnurlAuthLogin.js'
+import LoginInformer from '@backend/auth/domain/LoginInformer.js'
+import { type LoginEvent } from '@backend/auth/types/LoginEvent.js'
 import { delay } from '@backend/services/timingUtils.js'
 
 describe('LnurlAuthLogin', () => {

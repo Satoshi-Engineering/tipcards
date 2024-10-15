@@ -8,15 +8,15 @@ import { describe, it, expect, vi } from 'vitest'
 import http from 'http'
 import { Request, Response } from 'express'
 
-import { createCallerFactory } from '@backend/domain/auth/trpc/trpc.js'
+import { createCallerFactory } from '@backend/auth/trpc/trpc.js'
 
-import '../../lib/initAxios.js'
-import { lnurlAuthRouter } from '@backend/domain/auth/trpc/router/lnurlAuth.js'
-import SocketIoServer from '@backend/domain/auth/services/SocketIoServer.js'
-import Auth from '@backend/domain/auth/Auth.js'
-import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
-import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
-import RefreshGuard from '@backend/domain/auth/RefreshGuard.js'
+import '../../../integration/lib/initAxios.js'
+import { lnurlAuthRouter } from '@backend/auth/trpc/router/lnurlAuth.js'
+import SocketIoServer from '@backend/auth/services/SocketIoServer.js'
+import Auth from '@backend/auth/domain/Auth.js'
+import LnurlServer from '@backend/auth/services/LnurlServer.js'
+import LnurlAuthLogin from '@backend/auth/domain/LnurlAuthLogin.js'
+import RefreshGuard from '@backend/auth/domain/RefreshGuard.js'
 
 const createCaller = createCallerFactory(lnurlAuthRouter)
 

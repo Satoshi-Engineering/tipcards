@@ -4,10 +4,10 @@ import { Server } from 'http'
 import {
   getPublicKey,
 } from '@backend/services/jwt.js'
-import LoginInformer from '@backend/domain/auth/LoginInformer.js'
-import SocketIoServer from '@backend/domain/auth/services/SocketIoServer.js'
-import LnurlServer from '@backend/domain/auth/services/LnurlServer.js'
-import LnurlAuthLogin from '@backend/domain/auth/LnurlAuthLogin.js'
+import LoginInformer from '@backend/auth/domain/LoginInformer.js'
+import SocketIoServer from '@backend/auth/services/SocketIoServer.js'
+import LnurlServer from '@backend/auth/services/LnurlServer.js'
+import LnurlAuthLogin from '@backend/auth/domain/LnurlAuthLogin.js'
 
 export default class Auth {
   public static startup(server: Server) {

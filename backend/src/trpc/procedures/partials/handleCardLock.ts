@@ -6,8 +6,8 @@ import {
   lockCard, safeReleaseCard,
   lockCards, safeReleaseCards,
 } from '@backend/services/databaseCardLock.js'
-import BulkWithdrawDeprecated from '@backend/domain/tipcards/BulkWithdrawDeprecated.js'
-import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 
 import { publicProcedure } from '../../trpc.js'
 

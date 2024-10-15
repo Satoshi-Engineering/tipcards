@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server'
 import { ZodError } from 'zod'
 
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 
-import NotFoundError from '../../../errors/NotFoundError.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 type Mutable = {
   -readonly [key in keyof TRPCError]: TRPCError[key];

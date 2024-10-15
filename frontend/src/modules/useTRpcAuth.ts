@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink, TRPCClientError } from '@trpc/client'
 import superjson from 'superjson'
 
-import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc'
+import type { AppRouter as AuthRouter } from '@backend/auth/trpc'
 
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 

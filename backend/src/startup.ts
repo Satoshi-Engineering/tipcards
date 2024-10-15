@@ -8,7 +8,7 @@ import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import app from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
-import Auth from './domain/auth/Auth.js'
+import Auth from './auth/domain/Auth.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'

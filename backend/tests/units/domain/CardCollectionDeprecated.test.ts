@@ -1,24 +1,24 @@
 import { describe, it, expect } from 'vitest'
 
-import '../../mocks/database/client.js'
+import '../mocks/database/client.js'
 import {
   addSets,
   addCards, addCardVersions,
   addInvoices, addCardVersionInvoices,
   addLnurlPs,
-} from '../../mocks/database/database.js'
-import '../../mocks/axios.js'
-import '../../mocks/drizzle.js'
-import '../../mocks/process.env.js'
+} from '../mocks/database/database.js'
+import '../mocks/axios.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
 import {
   createSet, createCardForSet,
   createCardVersion,
   createInvoice,
   createLnurlP,
-} from '../../../drizzleData.js'
+} from '../../drizzleData.js'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
-import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 describe('CardCollection', () => {
   it('should load no cards when loading an empty set', async () => {
     const set = createSet()

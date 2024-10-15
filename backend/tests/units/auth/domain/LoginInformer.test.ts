@@ -6,7 +6,7 @@ import { MockServer } from '../../../lib/mocks/socketIo.js'
 
 import { Server, Socket } from 'socket.io'
 
-import LoginInformer from '@backend/domain/auth/LoginInformer.js'
+import LoginInformer from '@backend/auth/domain/LoginInformer.js'
 
 describe('LoginInformer', () => {
   const socketServer = new Server()

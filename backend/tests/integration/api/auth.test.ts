@@ -7,7 +7,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 
-import type { AppRouter as AuthRouter } from '@backend/domain/auth/trpc/index.js'
+import type { AppRouter as AuthRouter } from '@backend/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import '../lib/initAxios.js'

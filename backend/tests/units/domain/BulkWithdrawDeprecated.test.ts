@@ -1,26 +1,26 @@
 import { describe, it, expect, assert } from 'vitest'
 
-import '../../mocks/database/client.js'
+import '../mocks/database/client.js'
 import {
   addSets,
   addCards, addCardVersions,
   addInvoices, addCardVersionInvoices,
   addLnurlPs, addLnurlWs,
-} from '../../mocks/database/database.js'
-import '../../mocks/axios.js'
-import '../../mocks/drizzle.js'
-import '../../mocks/process.env.js'
+} from '../mocks/database/database.js'
+import '../mocks/axios.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
 import {
   createSet, createCardForSet,
   createCard, createCardVersion,
   createInvoice,
   createLnurlP, createLnurlW,
-} from '../../../drizzleData.js'
+} from '../../drizzleData.js'
 
 import CardNotFundedError from '@backend/errors/CardNotFundedError.js'
 import WithdrawDeletedError from '@backend/errors/WithdrawDeletedError.js'
-import BulkWithdrawDeprecated from '@backend/domain/tipcards/BulkWithdrawDeprecated.js'
-import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
+import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 
 describe('BulkWithdraw', () => {
   it('should throw an error if not created', async () => {

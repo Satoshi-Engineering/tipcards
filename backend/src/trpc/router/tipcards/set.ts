@@ -3,10 +3,10 @@ import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
 import { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto.js'
 import { SetDeprecatedId } from '@shared/data/trpc/tipcards/Set.js'
 
-import Set from '@backend/domain/tipcards/Set.js'
-import SetCollection from '@backend/domain/tipcards/SetCollection.js'
+import Set from '@backend/domain/Set.js'
+import SetCollection from '@backend/domain/SetCollection.js'
 
-import CardCollectionDeprecated from '@backend/domain/tipcards/CardCollectionDeprecated.js'
+import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'

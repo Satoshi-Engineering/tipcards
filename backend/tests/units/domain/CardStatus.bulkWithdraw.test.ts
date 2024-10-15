@@ -1,20 +1,21 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 
-import '../../mocks/database/client.js'
-import { addData } from '../../mocks/database/database.js'
-import { isLnbitsWithdrawLinkUsed } from '../../mocks/services/lnbitsHelpers.js'
-import '../../mocks/axios.js'
-import '../../mocks/drizzle.js'
-import '../../mocks/process.env.js'
+import '../mocks/database/client.js'
+import { addData } from '../mocks/database/database.js'
+import { isLnbitsWithdrawLinkUsed } from '../mocks/services/lnbitsHelpers.js'
+import '../mocks/axios.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
 import {
   createCard, createCardVersion,
   createInvoice,
   createLnurlW,
-} from '../../../drizzleData.js'
+} from '../../drizzleData.js'
 
-import CardStatus from '@backend/domain/tipcards/CardStatus.js'
-import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
+import CardStatus from '@backend/domain/CardStatus.js'
 import { LnurlW } from '@backend/database/schema/LnurlW.js'
+
+import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
 
 const card = createCard()
 const cardVersion = createCardVersion(card)

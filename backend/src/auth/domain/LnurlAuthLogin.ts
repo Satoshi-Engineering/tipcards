@@ -5,7 +5,7 @@ import { createHash } from 'crypto'
 import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
 
 import LoginInformer from './LoginInformer.js'
-import { type LoginEvent } from './types/LoginEvent.js'
+import { type LoginEvent } from '../types/LoginEvent.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 const DEFAULT_LOGINHASH_EXPIRATION_TIME = 1000 * 60 * 15

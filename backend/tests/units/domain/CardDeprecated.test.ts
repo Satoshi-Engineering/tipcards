@@ -1,17 +1,17 @@
 import { describe, it, expect, beforeAll } from 'vitest'
 
-import '../../mocks/database/client.js'
-import { addData } from '../../mocks/database/database.js'
-import '../../mocks/axios.js'
-import '../../mocks/drizzle.js'
-import '../../mocks/process.env.js'
+import '../mocks/database/client.js'
+import { addData } from '../mocks/database/database.js'
+import '../mocks/axios.js'
+import '../mocks/drizzle.js'
+import '../mocks/process.env.js'
 import {
   createCard, createCardVersion,
   createInvoice,
-} from '../../../drizzleData.js'
+} from '../../drizzleData.js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
-import CardDeprecated from '@backend/domain/tipcards/CardDeprecated.js'
+import CardDeprecated from '@backend/domain/CardDeprecated.js'
 
 const card = createCard()
 const cardVersion = createCardVersion(card)

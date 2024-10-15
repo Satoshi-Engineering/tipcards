@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-import Auth from '@backend/domain/auth/Auth.js'
+import Auth from '@backend/auth/domain/Auth.js'
 
 /////
 // ROUTES
