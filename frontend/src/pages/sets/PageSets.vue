@@ -36,6 +36,10 @@
         class="flex flex-col"
         data-test="logged-in"
       >
+        <SetsListFilterSection
+          class="my-8"
+          @text-search="textSearch = $event"
+        />
         <UserErrorMessages
           v-if="fetchingUserErrorMessages.length > 0"
           :user-error-messages="fetchingUserErrorMessages"
@@ -51,9 +55,10 @@
             {{ t('sets.description') }}
           </ParagraphDefault>
           <SetsList
-            :sets="sets"
+            :sets="filteredSets"
             :statistics="statistics"
             :fetching="fetchingAllSets"
+            :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             class="my-7"
           />
         </div>
@@ -64,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 
@@ -76,13 +81,13 @@ import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-
+import SetsList from '@/pages/sets/components/SetsList.vue'
+import SetsListFilterSection from '@/pages/sets/components/SetsListFilterSection.vue'
 import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetStatisticsBySetId } from '@/modules/useSets'
-import SetsList from '@/pages/sets/components/SetsList.vue'
 import { watch } from 'vue'
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
@@ -108,4 +113,14 @@ watch(isLoggedIn, async (isLoggedIn) => {
 
   statistics.value = await getStatisticsBySetId(sets.value)
 }, { immediate: true })
+
+const textSearch = ref<string>('')
+const filteredSets = computed(() => {
+  if (!textSearch.value) {
+    return sets.value
+  }
+
+  return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
+})
+
 </script>

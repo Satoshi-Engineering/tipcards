@@ -12,6 +12,11 @@
         {{ $t('general.status') }}
       </HeadlineDefault>
     </header>
+    <div v-if="message" class="px-5 py-4">
+      <ParagraphDefault class="text-center">
+        {{ message }}
+      </ParagraphDefault>
+    </div>
     <ul v-if="!fetching">
       <li
         v-for="set in sortedSavedSets"
@@ -60,6 +65,10 @@ const props = defineProps({
   fetching: {
     type: Boolean,
     defaut: false,
+  },
+  message: {
+    type: String,
+    default: undefined,
   },
 })
 

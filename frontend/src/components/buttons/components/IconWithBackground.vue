@@ -8,6 +8,7 @@
       'p-[28%]': icon === 'arrow',
       'p-[22%]': icon === 'play',
       'p-[30%]': icon === 'plus',
+      'p-[21%]': icon === 'search',
     }"
   >
     <IconAnimatedLoadingWheel
@@ -25,6 +26,9 @@
     <IconPlus
       v-else-if="icon === 'plus'"
     />
+    <IconSearch
+      v-else-if="icon === 'search'"
+    />
   </span>
 </template>
 
@@ -34,9 +38,10 @@ import type { PropType } from 'vue'
 import IconArrowRight from '@/components/icons/IconArrowRight.vue'
 import IconPlay from '@/components/icons/IconPlay.vue'
 import IconPlus from '@/components/icons/IconPlus.vue'
+import IconSearch from '@/components/icons/IconSearch.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 
-export type IconType = 'arrow' | 'loading' | 'play' | 'plus'
+export type IconType = 'arrow' | 'loading' | 'play' | 'plus' | 'search'
 export type IconVariant = 'bluegrey' | 'yellow'
 
 defineProps({

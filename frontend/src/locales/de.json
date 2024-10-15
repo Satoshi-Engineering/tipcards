@@ -8,7 +8,8 @@
     "close": "Schließen",
     "cancel": "Abbrechen",
     "getStarted": "Jetzt losstarten",
-    "status": "Status"
+    "status": "Status",
+    "search": "Suche"
   },
   "header": {
     "mainNavLabel": "Hauptnavigation",
@@ -305,7 +306,8 @@
     "loginToSeeYourSets": "Melde dich an, um eine Liste deiner erstellten TipCards zu sehen.",
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set",
-    "setInfo": "Set-Info"
+    "setInfo": "Set-Info",
+    "noSetsMatchingFilter": "Keine Sets gefunden."
   },
   "cards": {
     "title": "TipCards-Set",

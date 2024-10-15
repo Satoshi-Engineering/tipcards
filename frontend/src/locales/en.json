@@ -8,7 +8,8 @@
     "close": "Close",
     "getStarted": "Get started",
     "cancel": "Cancel",
-    "status": "Status"
+    "status": "Status",
+    "search": "Search"
   },
   "header": {
     "mainNavLabel": "Main navigation",
@@ -289,7 +290,8 @@
     "loginToSeeYourSets": "Log in to see your saved TipCards sets.",
     "noSavedCardsSetsMessage": "You do not have any saved sets yet",
     "unnamedSetNameFallback": "Unnamed set",
-    "setInfo": "Set info"
+    "setInfo": "Set info",
+    "noSetsMatchingFilter": "No sets found."
   },
   "cards": {
     "title": "TipCards Set",
