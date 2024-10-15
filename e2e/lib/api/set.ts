@@ -1,8 +1,10 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 import { generateSet } from '@e2e/lib/api/data/set'
+import { paySetInvoice } from '@e2e/lib/api/lnbitsWallet'
+import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
+
 import tipCardsApi from '../tipCardsApi'
 
 const API_SET = new URL('/api/set', BACKEND_API_ORIGIN)
@@ -37,4 +39,15 @@ export const createInvoiceForSet = (
       amountPerCard,
       cardIndices: [...new Array(cards).keys()],
     },
-  }).then((response) => response.body.data)
+  })
+
+export const fundSet = (
+  setId: string,
+  amountPerCard = 210,
+  cards = 8,
+) => {
+  createInvoiceForSet(setId, amountPerCard, cards).then((response) => {
+    const invoice = response.body.data.invoice.payment_request
+    paySetInvoice(setId, invoice)
+  })
+}

@@ -1,5 +1,8 @@
 <template>
-  <CenterContainer class="relative flex flex-col items-center">
+  <CenterContainer
+    class="relative flex flex-col items-center"
+    data-test="greeting-is-locked-by-bulk-withdraw"
+  >
     <GreetingIcon />
     <HeadlineDefault level="h1" styling="h2">
       {{ $t('landing.introGreeting') }}
@@ -15,6 +18,7 @@
       v-if="cardStatus.status !== CardStatusEnum.enum.bulkWithdrawPending"
       type="submit"
       variant="outline"
+      data-test="reset-bulk-withdraw"
       :disabled="resettingBulkWithdraw"
       @click="$emit('resetBulkWithdraw')"
     >

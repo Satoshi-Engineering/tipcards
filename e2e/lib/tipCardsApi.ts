@@ -1,4 +1,12 @@
-import { login, isLoggedInViaCypress, isLoggedOut, refresh, clearAuth, createAndWrapLNURLAuth } from '@e2e/lib/api/auth'
+import {
+  login,
+  isLoggedInViaCypress,
+  isLoggedOut,
+  refresh,
+  clearAuth,
+  createAndWrapLNURLAuth,
+} from '@e2e/lib/api/auth'
+import { startBulkWithdraw } from '@e2e/lib/api/bulkWithdraw'
 import {
   fundCardWithInvoice,
   createInvoiceForCardHash,
@@ -9,6 +17,7 @@ import {
 import {
   generateAndAddRandomSet,
   createInvoiceForSet,
+  fundSet,
 } from '@e2e/lib/api/set'
 
 export default {
@@ -20,6 +29,9 @@ export default {
     clearAuth,
     createAndWrapLNURLAuth,
   },
+  bulkWithdraw: {
+    startBulkWithdraw,
+  },
   card: {
     fundCardWithInvoice,
     createInvoiceForCardHash,
@@ -30,5 +42,6 @@ export default {
   set: {
     generateAndAddRandomSet,
     createInvoiceForSet,
+    fundSet,
   },
 }
