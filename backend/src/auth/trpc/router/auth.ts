@@ -1,10 +1,9 @@
 import z from 'zod'
 
-import { AccessTokenDto } from '@shared/data/trpc/auth/AccessTokenDto.js'
-
-import { router } from '../trpc.js'
-import publicProcedure from '../procedures/public.js'
-import validRefreshTokenProcedure from '../procedures/validRefreshToken.js'
+import { router } from '@auth/trpc/trpc.js'
+import publicProcedure from '@auth/trpc/procedures/public.js'
+import validRefreshTokenProcedure from '@auth/trpc/procedures/validRefreshToken.js'
+import { AccessTokenDto } from '@auth/data/trpc/AccessTokenDto.js'
 
 export const authRouter = router({
   loginWithLnurlAuthHash: publicProcedure

@@ -2,8 +2,9 @@ import { TRPCError } from '@trpc/server'
 import { ZodError } from 'zod'
 import { errors } from 'jose'
 
-import { middleware } from '../trpc.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+
+import { middleware } from '@auth/trpc/trpc.js'
 
 const mapErrorToTRpcError = (error: unknown) => {
   let cause = error

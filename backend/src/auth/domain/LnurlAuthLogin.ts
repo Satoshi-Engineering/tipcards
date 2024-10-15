@@ -2,7 +2,7 @@ import assert from 'assert'
 import lnurl from 'lnurl'
 import { createHash } from 'crypto'
 
-import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
+import { LnurlAuthLoginDto } from '@auth/data/trpc/LnurlAuthLoginDto.js'
 
 import LoginInformer from './LoginInformer.js'
 import { type LoginEvent } from '../types/LoginEvent.js'
