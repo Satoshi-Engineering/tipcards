@@ -18,6 +18,7 @@ import {
   generateAndAddRandomSet,
   createInvoiceForSet,
   fundSet,
+  addSet,
 } from '@e2e/lib/api/set'
 
 export default {
@@ -43,5 +44,6 @@ export default {
     generateAndAddRandomSet,
     createInvoiceForSet,
     fundSet,
+    addSet,
   },
 }

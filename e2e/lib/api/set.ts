@@ -6,25 +6,15 @@ import { paySetInvoice } from '@e2e/lib/api/lnbitsWallet'
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
 import tipCardsApi from '../tipCardsApi'
+import { Set } from '@shared/data/api/Set'
 
 const API_SET = new URL('/api/set', BACKEND_API_ORIGIN)
 
 export const generateAndAddRandomSet = (name?: string) => {
-  tipCardsApi.auth.isLoggedIn()
+  const set = generateSet()
+  set.settings.setName = name || set.settings.setName
 
-  cy.get('@accessToken').then(function () {
-    const set = generateSet()
-    set.settings.setName = name || set.settings.setName
-
-    cy.request({
-      url: `${API_SET.href}/${set.id}/`,
-      method: 'POST',
-      body: set,
-      headers: {
-        Authorization: this.accessToken,
-      },
-    })
-  })
+  addSet(set)
 }
 
 export const createInvoiceForSet = (
@@ -49,5 +39,20 @@ export const fundSet = (
   createInvoiceForSet(setId, amountPerCard, cards).then((response) => {
     const invoice = response.body.data.invoice.payment_request
     paySetInvoice(setId, invoice)
+  }).then((response) => response.body.data)
+}
+
+export const addSet = (set: Set) => {
+  tipCardsApi.auth.isLoggedIn()
+
+  cy.get('@accessToken').then(function () {
+    cy.request({
+      url: `${API_SET.href}/${set.id}/`,
+      method: 'POST',
+      body: set,
+      headers: {
+        Authorization: this.accessToken,
+      },
+    })
   })
 }
