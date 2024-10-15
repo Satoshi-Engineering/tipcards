@@ -105,7 +105,7 @@ export default class RefreshGuard {
     this.setRefreshTokenCookie(newRefreshToken)
   }
 
-  async createAuthorizationToken() {
+  async createAccessToken() {
     if (this.user == null) {
       throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
     }

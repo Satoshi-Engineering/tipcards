@@ -176,7 +176,7 @@ describe('RefreshGuard', () => {
 
   it('should fail authorization token creation due missing user', async () => {
     await expect(async () => {
-      await refreshGuard.createAuthorizationToken()
+      await refreshGuard.createAccessToken()
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotLoaded))
   })
 
@@ -186,7 +186,7 @@ describe('RefreshGuard', () => {
     const mockAuthorizationToken = 'mockAuthorizationToken'
     vi.mocked(createAccessToken).mockResolvedValueOnce(mockAuthorizationToken)
 
-    const authorizationToken = await refreshGuard.createAuthorizationToken()
+    const authorizationToken = await refreshGuard.createAccessToken()
     expect(authorizationToken).toBe(mockAuthorizationToken)
   })
 

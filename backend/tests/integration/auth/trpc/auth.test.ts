@@ -50,7 +50,7 @@ describe('TRpc Router Auth', () => {
 
     vi.spyOn(lnurlAuthLogin, 'getWalletLinkingKeyAfterSuccessfulOneTimeLogin').mockReturnValueOnce(walletLinkingKey)
     vi.spyOn(refreshGuard, 'loginWithWalletLinkingKey').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAuthorizationToken').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'createAccessToken').mockResolvedValueOnce(accessToken)
     const loginResult = await caller.loginWithLnurlAuthHash({
       hash,
     })
@@ -81,13 +81,13 @@ describe('TRpc Router Auth', () => {
     const accessToken = 'mockAccessToken'
     vi.spyOn(refreshGuard, 'validateRefreshToken').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'cycleRefreshToken').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAuthorizationToken').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'createAccessToken').mockResolvedValueOnce(accessToken)
 
     const reponse = await caller.refreshRefreshToken()
 
     expect(reponse.accessToken).toBe(accessToken)
     expect(refreshGuard.cycleRefreshToken).toHaveBeenCalled()
-    expect(refreshGuard.createAuthorizationToken).toHaveBeenCalled()
+    expect(refreshGuard.createAccessToken).toHaveBeenCalled()
   })
 
   it('should logout all other devices', async () => {
@@ -95,7 +95,7 @@ describe('TRpc Router Auth', () => {
     vi.spyOn(refreshGuard, 'validateRefreshToken').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'cycleRefreshToken').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'logoutAllOtherDevices').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAuthorizationToken').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'createAccessToken').mockResolvedValueOnce(accessToken)
     vi.spyOn(mockResponse, 'clearCookie')
 
     const reponse =await caller.logoutAllOtherDevices()

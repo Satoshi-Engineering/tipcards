@@ -14,7 +14,7 @@ export const authRouter = router({
       const lnurlAuthLogin = ctx.auth.getLnurlAuthLogin()
       const linkingKey = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(input.hash)
       await ctx.refreshGuard.loginWithWalletLinkingKey(linkingKey)
-      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
+      const accessToken = await ctx.refreshGuard.createAccessToken()
       return {
         accessToken,
       }
@@ -24,7 +24,7 @@ export const authRouter = router({
     .output(AccessTokenDto)
     .query(async ({ ctx }) => {
       await ctx.refreshGuard.cycleRefreshToken()
-      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
+      const accessToken = await ctx.refreshGuard.createAccessToken()
       return {
         accessToken,
       }
@@ -40,7 +40,7 @@ export const authRouter = router({
     .query(async ({ ctx }) => {
       await ctx.refreshGuard.cycleRefreshToken()
       await ctx.refreshGuard.logoutAllOtherDevices()
-      const accessToken = await ctx.refreshGuard.createAuthorizationToken()
+      const accessToken = await ctx.refreshGuard.createAccessToken()
       return {
         accessToken,
       }
