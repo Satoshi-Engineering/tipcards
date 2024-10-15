@@ -8,7 +8,6 @@ import { describe, it, expect, vi } from 'vitest'
 import http from 'http'
 import { Request, Response } from 'express'
 
-
 import '../../../integration/lib/initAxios.js'
 
 import { createCallerFactory } from '@auth/trpc/trpc.js'

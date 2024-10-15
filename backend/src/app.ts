@@ -4,6 +4,8 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 
+import authRouter from '@auth/domain/expressRouter.js'
+
 import assets from './api/assets.js'
 import bulkWithdraw from './api/bulkWithdraw.js'
 import card from './api/card.js'
@@ -18,11 +20,6 @@ import withdraw from './api/withdraw.js'
 import { appRouter } from './trpc/index.js'
 import { createContext } from './trpc/trpc.js'
 import { mapApplicationErrorToTrpcError } from './trpc/errorHandling.js'
-import authIndex from './auth/api/index.js'
-import cypress from './auth/api/cypress.js'
-import { appRouter as authRouter } from './auth/trpc/index.js'
-import { createContext as createAuthContext } from './auth/trpc/trpc.js'
-import { mapApplicationErrorToTrpcError as mapAuthErrorToTrpcError } from './auth/trpc/errorHandling.js'
 import corsOptions from './services/corsOptions.js'
 import xstAttack from './xstAttack.js'
 
@@ -52,17 +49,6 @@ app.use(
     },
   }),
 )
-app.use('/auth/api/', authIndex)
-app.use('/auth/api/cypress', cypress)
-app.use(
-  '/auth/trpc',
-  createExpressMiddleware({
-    router: authRouter,
-    createContext: createAuthContext,
-    onError: (opts) => {
-      mapAuthErrorToTrpcError(opts.error)
-    },
-  }),
-)
+app.use('/auth', authRouter)
 
 export default app
