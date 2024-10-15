@@ -4,10 +4,10 @@ import { TRPCClientError } from '@trpc/client'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
+import type { AppRouter as AuthRouter } from '@auth/trpc/index.js'
+
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
-
-import type { AppRouter as AuthRouter } from '@backend/auth/trpc/index.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import '../lib/initAxios.js'

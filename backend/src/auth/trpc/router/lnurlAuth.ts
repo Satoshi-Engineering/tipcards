@@ -1,8 +1,8 @@
 import { LnurlAuthLoginDto } from '@shared/data/trpc/auth/LnurlAuthLoginDto.js'
 
-import { router } from '@backend/auth/trpc/trpc.js'
-import publicProcedure from '@backend/auth/trpc/procedures/public.js'
-import Auth from '@backend/auth/domain/Auth.js'
+import { router } from '@auth/trpc/trpc.js'
+import publicProcedure from '@auth/trpc/procedures/public.js'
+import Auth from '@auth/domain/Auth.js'
 
 export const lnurlAuthRouter = router({
   create: publicProcedure

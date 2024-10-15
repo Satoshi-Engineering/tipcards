@@ -2,8 +2,8 @@ import { initTRPC } from '@trpc/server'
 import type { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import superjson from 'superjson'
 
-import Auth from '@backend/auth/domain/Auth.js'
-import RefreshGuard from '@backend/auth/domain/RefreshGuard.js'
+import Auth from '@auth/domain/Auth.js'
+import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
 export type Context = {
   auth: Auth,

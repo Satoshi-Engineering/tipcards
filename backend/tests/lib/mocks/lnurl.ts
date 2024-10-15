@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { LoginEvent } from '@backend/auth/types/LoginEvent.js'
+import { LoginEvent } from '@auth/types/LoginEvent.js'
 
 export class LnurlServerMock {
   private handlers: Record<string, (event: LoginEvent) => void> = {}

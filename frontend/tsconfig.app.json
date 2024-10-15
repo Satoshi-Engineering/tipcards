@@ -22,6 +22,7 @@
       "@/*": ["./src/*"],
       "@shared/*": ["../shared/src/*"],
       "@backend/*": ["../backend/src/*"],
+      "@auth/*": ["../backend/src/auth/*"],
     },
     "target": "ES2022",
     "typeRoots": [

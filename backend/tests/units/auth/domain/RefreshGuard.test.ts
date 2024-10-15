@@ -7,8 +7,9 @@ import '../../mocks/drizzle.js'
 import '../../mocks/database/client.js'
 import { addData, allowedRefreshTokensByHash } from '../../mocks/database/database.js'
 
+import RefreshGuard from '@auth/domain/RefreshGuard.js'
+
 import { validateJwt, createRefreshToken, createAccessToken } from '@backend/services/jwt.js'
-import RefreshGuard from '@backend/auth/domain/RefreshGuard.js'
 
 import { createUser, createProfileForUser, createAllowedRefreshTokens } from '../../../drizzleData.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'

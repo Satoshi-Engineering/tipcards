@@ -1,9 +1,9 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
-
-import { AppRouter as AuthRouter } from '@backend/auth/trpc/index.js'
 import axios, { AxiosResponse } from 'axios'
 import { decodeJwt } from 'jose'
+
+import { AppRouter as AuthRouter } from '@auth/trpc/index.js'
 
 import { Set } from '@shared/data/api/Set.js'
 

@@ -11,6 +11,7 @@
   "compilerOptions": {
     "paths": {
       "@backend/*": ["./src/*"],
+      "@auth/*": ["./src/auth/*"],
       "@shared/*": ["../shared/src/*"],
     },
     "target": "ES2023",
