@@ -11,6 +11,7 @@
       <div
         v-else-if="setFunding"
         class="flex-1 mt-8"
+        data-test="funding-set"
       >
         <HeadlineDefault
           level="h1"
@@ -44,8 +45,8 @@
         >
           {{ t('funding.text') }}
         </ParagraphDefault>
-        <div v-if="invoice != null">
-          <ParagraphDefault data-test="funding-invoice-text">
+        <div v-if="invoice != null" data-test="funding-invoice">
+          <ParagraphDefault>
             <I18nT
               v-if="funded || usedDate != null"
               :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'"
@@ -83,7 +84,7 @@
             </ButtonWithTooltip>
           </div>
         </div>
-        <div v-else-if="shared">
+        <div v-else-if="shared" data-test="funding-shared">
           <ParagraphDefault class="mb-8">
             <I18nT keypath="funding.shared.text">
               <template #buttonFinish>

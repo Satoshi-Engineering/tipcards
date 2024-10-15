@@ -11,6 +11,7 @@ import { payCardInvoice, withdrawAllSatsFromLnurlWithdrawRequest } from '@e2e/li
 const API_INVOICE = new URL('/api/invoice', BACKEND_API_ORIGIN)
 const API_LNURL = new URL('/api/lnurl', BACKEND_API_ORIGIN)
 const API_WITHDRAW = new URL('/api/withdraw', BACKEND_API_ORIGIN)
+const API_LNURLP = new URL('/api/lnurlp', BACKEND_API_ORIGIN)
 
 export const fundCardWithInvoice = (cardHash: CardStatusDto['hash'], amount: number) => {
   createInvoiceForCardHash(cardHash, amount).then((response) => {
@@ -34,6 +35,12 @@ export const createLnurlpLinkForCardHash = (cardHash: CardStatusDto['hash']) =>
     url: `${API_LNURL.href}/${cardHash}`,
     method: 'GET',
   })
+
+export const createSharedFundingForCardHash = (cardHash: CardStatusDto['hash']) =>
+  cy.request({
+    url: `${API_LNURLP.href}/create/${cardHash}`,
+    method: 'POST',
+  }).then((response) => response.body.data)
 
 export const withdrawAllSatsFromCard = (cardHash: CardStatusDto['hash']) =>
   cy.request({

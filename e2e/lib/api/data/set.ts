@@ -2,7 +2,7 @@
 
 import { Set } from '@shared/data/api/Set'
 
-export const generateSetId = () => { return crypto.randomUUID() }
+export const generateSetId = () => crypto.randomUUID()
 
 export const generateSet = (): Set => {
   const setId = generateSetId()

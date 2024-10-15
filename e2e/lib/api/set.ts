@@ -2,7 +2,7 @@
 /// <reference types="cypress" />
 
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
-import { generateSet } from '@e2e/lib/api/data/sets'
+import { generateSet } from '@e2e/lib/api/data/set'
 import tipCardsApi from '../tipCardsApi'
 
 const API_SET = new URL('/api/set', BACKEND_API_ORIGIN)
@@ -24,3 +24,17 @@ export const generateAndAddRandomSet = (name?: string) => {
     })
   })
 }
+
+export const createInvoiceForSet = (
+  setId: string,
+  amountPerCard = 210,
+  cards = 8,
+) =>
+  cy.request({
+    url: `${API_SET.href}/invoice/${setId}`,
+    method: 'POST',
+    body: {
+      amountPerCard,
+      cardIndices: [...new Array(cards).keys()],
+    },
+  }).then((response) => response.body.data)

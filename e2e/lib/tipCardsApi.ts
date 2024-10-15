@@ -3,9 +3,13 @@ import {
   fundCardWithInvoice,
   createInvoiceForCardHash,
   createLnurlpLinkForCardHash,
+  createSharedFundingForCardHash,
   withdrawAllSatsFromCard,
 } from '@e2e/lib/api/card'
-import { generateAndAddRandomSet } from '@e2e/lib/api/sets'
+import {
+  generateAndAddRandomSet,
+  createInvoiceForSet,
+} from '@e2e/lib/api/set'
 
 export default {
   auth: {
@@ -20,7 +24,11 @@ export default {
     fundCardWithInvoice,
     createInvoiceForCardHash,
     createLnurlpLinkForCardHash,
+    createSharedFundingForCardHash,
     withdrawAllSatsFromCard,
   },
-  generateAndAddRandomSet,
+  set: {
+    generateAndAddRandomSet,
+    createInvoiceForSet,
+  },
 }
