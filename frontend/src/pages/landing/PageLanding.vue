@@ -1,7 +1,7 @@
 <template>
   <TheLayout :hide-faqs="!isLoggedIn">
     <CenterContainer
-      v-if="!showContent"
+      v-if="!showLandingPage"
       class="min-h-[60dvh] flex justify-center items-center"
     >
       <IconAnimatedLoadingWheel
@@ -9,7 +9,7 @@
         class="w-10 h-10 text-yellow"
       />
     </CenterContainer>
-    <template v-else-if="cardIsNotFunded === false">
+    <template v-else>
       <CenterContainer v-if="userErrorMessage != null">
         <ParagraphDefault class="text-center text-red-500">
           {{ userErrorMessage }}
@@ -51,6 +51,7 @@
             no-bold
             no-underline
             class="group"
+            data-test="link-what-is-bitcoin"
           >
             <IconLogoBitcoin class="inline-block w-8 h-auto align-middle me-3" />
             <span class="underline group-hover:no-underline align-middle">
@@ -133,6 +134,13 @@ const { bulkWithdraw, card } = useTRpc()
 const cardStatus = ref<CardStatusDto>()
 const userErrorMessage = ref<string | undefined>()
 const resettingBulkWithdraw = ref(false)
+
+const showLandingPage = computed(() => {
+  if (!showContent.value) {
+    return false
+  }
+  return cardHash.value == null || cardIsNotFunded.value === false
+})
 
 const cardIsNotFunded = computed(() => {
   if (cardStatus.value == null) {
