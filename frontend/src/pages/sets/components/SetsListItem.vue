@@ -109,19 +109,39 @@ const props = defineProps({
 const displayedStatisticsItems = computed(() => Math.min(12, props.set.settings.numberOfCards))
 
 const statisticsItems = computed(() => {
-  const withdrawn = Math.ceil(getRelativeStatistics(props.statistics?.withdrawn ?? 0))
-  const funded = Math.ceil(getRelativeStatistics(props.statistics?.funded ?? 0))
-  const pending = Math.ceil(getRelativeStatistics(props.statistics?.pending ?? 0))
-  const unfunded = displayedStatisticsItems.value - withdrawn - funded - pending
-  return {
-    withdrawn,
-    funded,
-    pending,
-    unfunded,
+  const sortedStatistics: { kpi: keyof SetStatisticsDto, count: number }[] = [
+    { kpi: 'withdrawn', count: props.statistics?.withdrawn ?? 0 },
+    { kpi: 'funded', count: props.statistics?.funded ?? 0 },
+    { kpi: 'pending', count: props.statistics?.pending ?? 0 },
+    { kpi: 'unfunded', count: props.statistics?.unfunded ?? 0 },
+  ]
+  sortedStatistics.sort((a, b) => a.count - b.count)
+
+  const statisticsItems = {
+    withdrawn: 0,
+    funded: 0,
+    pending: 0,
+    unfunded: 0,
   }
+
+  let remainingBoxes = displayedStatisticsItems.value
+
+  sortedStatistics.forEach((statistic) => {
+    statisticsItems[statistic.kpi] = Math.min(getRelativeStatistics(statistic.count), remainingBoxes)
+    remainingBoxes -= statisticsItems[statistic.kpi]
+  })
+
+  return statisticsItems
 })
 
-const getRelativeStatistics = (value: number) => {
-  return value / props.set.settings.numberOfCards * displayedStatisticsItems.value
+const getRelativeStatistics = (value: number = 0) => {
+  const relativeNumber = value / props.set.settings.numberOfCards * displayedStatisticsItems.value
+  if (relativeNumber <= 0) {
+    return 0
+  }
+  if (relativeNumber <= 1) {
+    return 1
+  }
+  return Math.round(relativeNumber)
 }
 </script>

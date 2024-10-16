@@ -53,9 +53,113 @@ describe('SetsListItem', () => {
       props: { set, statistics },
     })
 
-    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(5)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(4)
     expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(3)
     expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(1)
-    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(3)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(4)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 withdrawn and 99 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 99, pending: 0, unfunded: 0 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(11)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(0)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 unfunded and 99 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 0, funded: 99, pending: 0, unfunded: 1 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(11)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(1)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 unfunded, 1 withdrawn, and 98 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 98, pending: 0, unfunded: 1 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(10)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(1)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 unfunded, 1 withdrawn, 1 pending and 97 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 97, pending: 1, unfunded: 1 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(9)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(1)
+  })
+
+  it('renders the colorized statistics boxes correctly for 49 withdrawn and 51 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 49, funded: 51, pending: 0, unfunded: 0 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(6)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(6)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(0)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 withdrawn and 99 unfunded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 0, pending: 0, unfunded: 99 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(11)
+  })
+
+  it('renders the colorized statistics boxes correctly for 1 withdrawn and 7 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 8 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 7, pending: 0, unfunded: 0 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(7)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(0)
+  })
+
+  it('renders the colorized statistics boxes correctly for 13 unfunded, 1 withdrawn, 5 pending and 84 funded cards', async () => {
+    const set = createSet({ settings: { numberOfCards: 100 } })
+    const statistics: SetStatisticsDto = { withdrawn: 1, funded: 84, pending: 5, unfunded: 13 }
+    const wrapper = mount(SetsListItem, {
+      props: { set, statistics },
+    })
+
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-withdrawn"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-funded"]').length).toBe(8)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-pending"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-statistics-unfunded"]').length).toBe(2)
   })
 })
