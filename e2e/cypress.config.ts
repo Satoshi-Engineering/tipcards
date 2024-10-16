@@ -1,6 +1,7 @@
 import { defineConfig } from 'cypress'
 import { config } from 'dotenv'
 import path from 'path'
+import postgres from 'postgres'
 
 import webpack from '@cypress/webpack-preprocessor'
 
@@ -44,7 +45,6 @@ export default defineConfig({
     supportFile: 'e2e/support/e2e.ts',
     fixturesFolder: 'e2e/support/fixtures',
     setupNodeEvents(on, config) {
-
       on('file:preprocessor', webpack({ webpackOptions }))
 
       // Mute audio for all tests
@@ -61,6 +61,35 @@ export default defineConfig({
       })
 
       setupClipboardy(on, config)
+
+      on('task', {
+        async connectToPostgres({ command, cardHash }) {
+          const DB_CREDENTIALS = {
+            host: String(process.env.POSTGRES_HOST),
+            user: String(process.env.POSTGRES_USER),
+            port: parseInt(process.env.POSTGRES_PORT || '5432'),
+            password: String(process.env.POSTGRES_PASSWORD),
+            database: String(process.env.POSTGRES_DB_NAME),
+          }
+          const sql = postgres(`postgres://${DB_CREDENTIALS.user}:${DB_CREDENTIALS.password}@${DB_CREDENTIALS.host}:${DB_CREDENTIALS.port}/${DB_CREDENTIALS.database}`)
+
+          if (command === 'setCardWithdrawnDateIntoPast') {
+            const cardVersion = await sql`
+              SELECT "lnurlW" FROM public."CardVersion" WHERE card=${cardHash};
+            `
+            const lnbitsId = cardVersion[0].lnurlW
+            await sql`
+              UPDATE public."LnurlW"
+              SET withdrawn='2024-01-01 12:00:00+00'
+              WHERE "lnbitsId"=${lnbitsId};
+            `
+          }
+
+          await sql.end()
+
+          return null
+        },
+      })
     },
   },
   env: {
