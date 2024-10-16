@@ -7,7 +7,7 @@ describe('Sets Page', () => {
     tipCardsApi.auth.login()
   })
 
-  it.skip('User should see the empty sets list', () => {
+  it('User should see the empty sets list', () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('the-layout').should('exist')
@@ -16,7 +16,7 @@ describe('Sets Page', () => {
     cy.getTestElement('sets-list-empty').should('exist')
   })
 
-  it.skip('User should access a saved set', () => {
+  it('User should access a saved set', () => {
     const randomSetName = Math.random().toString(36).substring(7)
     tipCardsApi.set.generateAndAddRandomSet()
     tipCardsApi.set.generateAndAddRandomSet(randomSetName)
