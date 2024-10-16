@@ -1,5 +1,5 @@
 <template>
-  <CenterContainer>
+  <CenterContainer data-test="what-is-bitcoin">
     <HeadlineDefault
       level="h2"
       class="mb-6"
