@@ -27,9 +27,9 @@ const mapErrorToTRpcError = (error: unknown) => {
   return new TRPCError({ message, code, cause })
 }
 
-export const validateRefreshToken = middleware(async ({ ctx, next }) => {
+export const authenticateUser = middleware(async ({ ctx, next }) => {
   try {
-    await ctx.refreshGuard.validateRefreshToken()
+    await ctx.refreshGuard.authenticateUserViaRefreshToken()
     return next({ ctx })
   } catch (error) {
     throw mapErrorToTRpcError(error)

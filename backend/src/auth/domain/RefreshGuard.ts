@@ -40,7 +40,7 @@ export default class RefreshGuard {
     this.jwtAccessTokenAudience = jwtAccessTokenAudience
   }
 
-  public async loginWithWalletLinkingKey(walletPublicKey: string) {
+  public async loginUserWithWalletLinkingKey(walletPublicKey: string) {
     let user: User
     try {
       // Deprecated Function
@@ -67,17 +67,17 @@ export default class RefreshGuard {
     this.user = user
   }
 
-  async validateRefreshToken() {
+  async authenticateUserViaRefreshToken() {
+    const refreshJwt = this.getRefreshTokenFromRequestCookies()
+    if (refreshJwt == null) {
+      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
+    }
     const host = this.getHostFromRequest()
     if (host == null ) {
       throw new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest)
     }
-    const refreshJwt = this.getRefreshTokenFromRequestCookies()
-    if (refreshJwt == null ) {
-      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
-    }
-    const payload = await this.jwtIssuer.validate(refreshJwt, host)
-    const refreshJwtPayload = AccessTokenPayload.parse(payload)
+
+    const refreshJwtPayload = await this.validateRefreshTokenAndGetPayload(refreshJwt, host)
 
     let user
     try {
@@ -123,11 +123,11 @@ export default class RefreshGuard {
     this.setRefreshTokenCookie(newRefreshToken)
   }
 
-  async createAccessToken() {
+  async createAccessTokenForUser() {
     if (this.user == null) {
       throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
     }
-    return this.privateCreateAccessToken(this.user)
+    return this.createAccessToken(this.user)
   }
 
   public async logout() {
@@ -167,6 +167,11 @@ export default class RefreshGuard {
         throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
       }
     }
+  }
+
+  private async validateRefreshTokenAndGetPayload(refreshJwt: string, host: string) {
+    const payload = await this.jwtIssuer.validate(refreshJwt, host)
+    return AccessTokenPayload.parse(payload)
   }
 
   private getHostFromRequest() {
@@ -235,7 +240,7 @@ export default class RefreshGuard {
     }
   }
 
-  private privateCreateAccessToken({ id, lnurlAuthKey, permissions }: AccessTokenParams) {
+  private createAccessToken({ id, lnurlAuthKey, permissions }: AccessTokenParams) {
     const nonce = randomUUID()
     try {
       return  this.jwtIssuer.createJwt(

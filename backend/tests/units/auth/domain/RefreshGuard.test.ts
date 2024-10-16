@@ -64,7 +64,7 @@ const setValidRefreshToken = () => {
 
 const authUserViaRefreshToken = async () => {
   setValidRefreshToken()
-  await refreshGuard.validateRefreshToken()
+  await refreshGuard.authenticateUserViaRefreshToken()
 }
 
 beforeAll(() => {
@@ -89,7 +89,7 @@ describe('RefreshGuard', () => {
     const mockNewRefreshToken = 'mockNewRefreshToken'
 
     vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
-    await refreshGuard.loginWithWalletLinkingKey(mockwalletLinkingKey)
+    await refreshGuard.loginUserWithWalletLinkingKey(mockwalletLinkingKey)
 
     expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
       JWT_AUTH_ISSUER,
@@ -124,20 +124,18 @@ describe('RefreshGuard', () => {
     )
   })
 
-  it('should fail refresh token validation due host is undefined', async () => {
-    vi.spyOn(mockRequest, 'get').mockReturnValueOnce(undefined)
-
+  it('should fail refresh token validation due json web token is missing in cookie', async () => {
     await expect(async () => {
-      await refreshGuard.validateRefreshToken()
-    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthHostMissingInRequest))
+      await refreshGuard.authenticateUserViaRefreshToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenMissing))
   })
 
-  it('should fail refresh token validation due json web token is missing in cookie', async () => {
-    vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
+  it('should fail refresh token validation due host is undefined', async () => {
+    mockRequest.headers.cookie = mockRefreshTokenCookie
 
     await expect(async () => {
-      await refreshGuard.validateRefreshToken()
-    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenMissing))
+      await refreshGuard.authenticateUserViaRefreshToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthHostMissingInRequest))
   })
 
   it('should fail refresh token validation due missing entry in database', async () => {
@@ -155,7 +153,7 @@ describe('RefreshGuard', () => {
     vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayload)
 
     await expect(async () => {
-      await refreshGuard.validateRefreshToken()
+      await refreshGuard.authenticateUserViaRefreshToken()
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenDenied))
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(`${mockRefreshToken}${tokenGargabe}`, mockHost)
   })
@@ -163,7 +161,7 @@ describe('RefreshGuard', () => {
   it('should validate refresh json web token from cookie', async () => {
     setValidRefreshToken()
 
-    await refreshGuard.validateRefreshToken()
+    await refreshGuard.authenticateUserViaRefreshToken()
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
   })
 
@@ -195,7 +193,7 @@ describe('RefreshGuard', () => {
 
   it('should fail authorization token creation due missing user', async () => {
     await expect(async () => {
-      await refreshGuard.createAccessToken()
+      await refreshGuard.createAccessTokenForUser()
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotLoaded))
   })
 
@@ -205,7 +203,7 @@ describe('RefreshGuard', () => {
     const mockAuthorizationToken = 'mockAuthorizationToken'
     vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockAuthorizationToken)
 
-    const authorizationToken = await refreshGuard.createAccessToken()
+    const authorizationToken = await refreshGuard.createAccessTokenForUser()
     expect(authorizationToken).toBe(mockAuthorizationToken)
     expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
       mockAccessTokenAudience,

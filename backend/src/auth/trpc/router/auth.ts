@@ -2,7 +2,7 @@ import z from 'zod'
 
 import { router } from '@auth/trpc/trpc.js'
 import publicProcedure from '@auth/trpc/procedures/public.js'
-import validRefreshTokenProcedure from '@auth/trpc/procedures/validRefreshToken.js'
+import authenticatedUserProcedure from '@auth/trpc/procedures/authenticatedUser.js'
 import { AccessTokenDto } from '@auth/data/trpc/AccessTokenDto.js'
 
 export const authRouter = router({
@@ -12,18 +12,18 @@ export const authRouter = router({
     .query(async ({ ctx, input }) => {
       const lnurlAuthLogin = ctx.auth.getLnurlAuthLogin()
       const linkingKey = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(input.hash)
-      await ctx.refreshGuard.loginWithWalletLinkingKey(linkingKey)
-      const accessToken = await ctx.refreshGuard.createAccessToken()
+      await ctx.refreshGuard.loginUserWithWalletLinkingKey(linkingKey)
+      const accessToken = await ctx.refreshGuard.createAccessTokenForUser()
       return {
         accessToken,
       }
     }),
 
-  refreshRefreshToken: validRefreshTokenProcedure
+  refreshRefreshToken: authenticatedUserProcedure
     .output(AccessTokenDto)
     .query(async ({ ctx }) => {
       await ctx.refreshGuard.cycleRefreshToken()
-      const accessToken = await ctx.refreshGuard.createAccessToken()
+      const accessToken = await ctx.refreshGuard.createAccessTokenForUser()
       return {
         accessToken,
       }
@@ -34,12 +34,12 @@ export const authRouter = router({
       await ctx.refreshGuard.logout()
     }),
 
-  logoutAllOtherDevices: validRefreshTokenProcedure
+  logoutAllOtherDevices: authenticatedUserProcedure
     .output(AccessTokenDto)
     .query(async ({ ctx }) => {
       await ctx.refreshGuard.cycleRefreshToken()
       await ctx.refreshGuard.logoutAllOtherDevices()
-      const accessToken = await ctx.refreshGuard.createAccessToken()
+      const accessToken = await ctx.refreshGuard.createAccessTokenForUser()
       return {
         accessToken,
       }
