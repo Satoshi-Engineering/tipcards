@@ -28,32 +28,44 @@ describe('Sets Page', () => {
     cy.getTestElement('the-layout').contains(randomSetName).should('be.visible')
   })
 
-  it('delivers 50 sets with 100 cards each', () => {
-    const numberOfSets = 50
+  it('delivers 100 sets with 100 cards each', () => {
+    const numberOfSets = 100
     const numberOfCards = 100
 
-    for (let i = 0; i < numberOfSets; i++) {
+    let t0: number, t1: number, t2: number
+
+    const sets = [...new Array(numberOfSets).keys()].map((i) => {
       const set = generateSet()
       set.settings.setName = `Set ${i.toString().padStart(3, '0')}`
       set.settings.numberOfCards = numberOfCards
-      tipCardsApi.set.addSet(set)
-      tipCardsApi.set.createInvoiceForSet(set.id, 21, set.settings.numberOfCards)
-    }
+      return set
+    })
 
-    const t0 = performance.now()
+    tipCardsApi.set.addSetsParallel(sets)
+    tipCardsApi.set.createInvoicesForSetsParallel(sets, 21)
+
+    cy.then(() => {
+      t0 = performance.now()
+    })
 
     cy.intercept('/trpc/set.getStatisticsBySetId**').as('apiSetGetStatistics')
     tipCards.gotoSetsPage()
-    cy.wait('@apiSetGetStatistics').then(() => {
 
-      cy.getTestElement('sets-list-with-data').find('a')
-        .should('have.length', numberOfSets)
+    cy.getTestElement('sets-list-with-data').find('a')
+      .should('have.length', numberOfSets)
 
-      cy.get('[data-test="sets-list-with-data"] [data-test="sets-list-item-statistics-pending"]', { timeout: 10000 })
-        .should('have.length', numberOfSets * Math.min(12, numberOfCards))
+    cy.then(() => {
+      t1 = performance.now()
+      cy.log(`Page load excl. statistics took ${t1 - t0} milliseconds.`)
+    })
 
-      const t1 = performance.now()
-      cy.log(`Page load took ${t1 - t0} milliseconds.`)
+    cy.wait('@apiSetGetStatistics', { timeout: 1000 * numberOfSets })
+
+    cy.getTestElement('sets-list-item-statistics-pending', { timeout: 500 * numberOfSets }).should('have.length', numberOfSets * Math.min(12, numberOfCards))
+
+    cy.then(() => {
+      t2 = performance.now()
+      cy.log(`Page load incl. statistics took ${t2 - t0} milliseconds.`)
     })
   })
 })

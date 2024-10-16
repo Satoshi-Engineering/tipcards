@@ -21,6 +21,8 @@ import {
   createInvoiceForSet,
   fundSet,
   addSet,
+  addSetsParallel,
+  createInvoicesForSetsParallel,
 } from '@e2e/lib/api/set'
 
 export default {
@@ -49,5 +51,7 @@ export default {
     createInvoiceForSet,
     fundSet,
     addSet,
+    addSetsParallel,
+    createInvoicesForSetsParallel,
   },
 }
