@@ -1,9 +1,9 @@
 import lnurl from 'lnurl'
 
 import {
-  LNURL_PORT, LNURL_SERVICE_ORIGIN,
-  LNBITS_ORIGIN, LNBITS_ADMIN_KEY,
-} from '@backend/constants.js'
+  LNURL_PORT,
+  LNURL_SERVICE_ORIGIN,
+} from '@auth/constants.js'
 
 export default class LnurlServer {
   static init() {
@@ -30,13 +30,6 @@ export default class LnurlServer {
       host: '0.0.0.0',
       port: LNURL_PORT,
       url: LNURL_SERVICE_ORIGIN,
-      lightning: {
-        backend: 'lnbits',
-        config: {
-          baseUrl: LNBITS_ORIGIN,
-          adminKey: LNBITS_ADMIN_KEY,
-        },
-      },
     })
   }
 }

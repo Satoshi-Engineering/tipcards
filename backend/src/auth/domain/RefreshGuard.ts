@@ -3,20 +3,17 @@ import { randomUUID } from 'crypto'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import { PermissionsEnum } from '@shared/data/auth/User.js'
+import { AccessTokenPayload } from '@shared/data/auth/index.js'
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
 import {
   getUserByLnurlAuthKeyOrCreateNew,
   getUserById,
   updateUser } from '@backend/database/deprecated/queries.js'
-
-import { AccessTokenPayload } from '@shared/data/auth/index.js'
-import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
-
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
-const REFRESH_TOKEN_EXPIRATION_TIME = '28 days'
-const ACCESS_TOKEN_EXPIRATION_TIME = '5 min'
+import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'
 
 type RefreshTokenParams = {
   id: string

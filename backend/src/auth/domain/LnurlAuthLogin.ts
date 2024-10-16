@@ -2,13 +2,12 @@ import assert from 'assert'
 import lnurl from 'lnurl'
 import { createHash } from 'crypto'
 
-import { LnurlAuthLoginDto } from '@auth/data/trpc/LnurlAuthLoginDto.js'
-
-import LoginInformer from './LoginInformer.js'
-import { type LoginEvent } from '../types/LoginEvent.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
-const DEFAULT_LOGINHASH_EXPIRATION_TIME = 1000 * 60 * 15
+import { LnurlAuthLoginDto } from '@auth/data/trpc/LnurlAuthLoginDto.js'
+import { LOGINHASH_EXPIRATION_TIME } from '@auth/constants.js'
+import { type LoginEvent } from '@auth/types/LoginEvent.js'
+import LoginInformer from '@auth/domain/LoginInformer.js'
 
 export default class LnurlAuthLogin {
   public static createHashFromSecret(secret: string): string {
@@ -24,7 +23,7 @@ export default class LnurlAuthLogin {
   constructor(
     lnurlServer: lnurl.LnurlServer,
     loginInformer: LoginInformer,
-    loginHashExpirationTime = DEFAULT_LOGINHASH_EXPIRATION_TIME,
+    loginHashExpirationTime = LOGINHASH_EXPIRATION_TIME,
   ) {
     this.lnurlServer = lnurlServer
     this.loginInformer = loginInformer

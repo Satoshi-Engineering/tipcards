@@ -4,7 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 
-import authRouter from '@auth/domain/expressRouter.js'
+import authRouter from '@backend/auth/expressRouter.js'
 
 import assets from './api/assets.js'
 import bulkWithdraw from './api/bulkWithdraw.js'

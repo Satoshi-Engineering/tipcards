@@ -1,10 +1,11 @@
 import { Server } from 'http'
 
-import { JWT_AUTH_KEY_DIRECTORY, JWT_AUTH_ISSUER } from '@backend/constants.js'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
 
+import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
 import LoginInformer from '@auth/domain/LoginInformer.js'
 import SocketIoServer from '@auth/services/SocketIoServer.js'
 import LnurlServer from '@auth/services/LnurlServer.js'

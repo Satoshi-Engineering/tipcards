@@ -4,8 +4,8 @@ import { AccessTokenPayload } from '@shared/data/auth/index.js'
 import JwtValidator from '@shared/modules/Jwt/JwtValidator.js'
 import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
 
-import { JWT_AUTH_ISSUER, JWT_AUTH_KEY_DIRECTORY } from '@backend/constants.js'
-
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
 
 let jwtValidator: JwtValidator | null = null
 

@@ -4,7 +4,7 @@ import type http from 'http'
 import corsOptions from '@backend/services/corsOptions.js'
 import {
   LNURL_AUTH_DEBUG,
-} from '@backend/constants.js'
+} from '@auth/constants.js'
 
 export default class SocketIoServer {
   static init(server: http.Server) {

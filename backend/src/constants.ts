@@ -12,10 +12,6 @@ let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
 }
-let LNURL_PORT = 4001
-if (Number(process.env.LNURL_PORT) > 0 && Number(process.env.LNURL_PORT) < 65536) {
-  LNURL_PORT = Number(process.env.LNURL_PORT)
-}
 let PROXY_PORT = 4002
 if (Number(process.env.PROXY_PORT) > 0 && Number(process.env.PROXY_PORT) < 65536) {
   PROXY_PORT = Number(process.env.PROXY_PORT)
@@ -70,8 +66,6 @@ export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || un
 
 /////
 // LNURL JWT AUTH
-const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
-
 let JWT_AUTH_ISSUER = new URL(TIPCARDS_API_ORIGIN).host
 if (typeof process.env.JWT_AUTH_ISSUER === 'string' && process.env.JWT_AUTH_ISSUER.length > 0) {
   JWT_AUTH_ISSUER = process.env.JWT_AUTH_ISSUER
@@ -92,19 +86,6 @@ if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AU
   }
 }
 
-let LNURL_SERVICE_ORIGIN: string
-try {
-  LNURL_SERVICE_ORIGIN = z.string().parse(process.env.LNURL_SERVICE_ORIGIN)
-} catch (error) {
-  console.error(ErrorCode.UnableToParseEnvVar, {
-    error,
-    constant: 'LNURL_SERVICE_ORIGIN',
-    envValue: process.env.LNURL_SERVICE_ORIGIN,
-  })
-}
-
-const LNURL_AUTH_DEBUG = process.env.LNURL_AUTH_DEBUG === '1'
-
 /////
 // NGROK
 if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
@@ -112,7 +93,6 @@ if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE
   TIPCARDS_API_ORIGIN = process.env.NGROK_OVERRIDE
   JWT_AUTH_ISSUER = new URL(process.env.NGROK_OVERRIDE).host
   JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
-  LNURL_SERVICE_ORIGIN = process.env.NGROK_OVERRIDE
 }
 
 ////
@@ -126,7 +106,6 @@ export {
   APP_NAME,
   FAILED_STARTUPS_COUNTER_DIRECTORY,
   EXPRESS_PORT,
-  LNURL_PORT,
   PROXY_PORT,
   WEB_PORT,
   NGROK_AUTH_TOKEN,
@@ -138,11 +117,8 @@ export {
   TIPCARDS_API_ORIGIN,
   CORS_WHITELIST_EXTEND,
   CROSS_ORIGIN_RESOURCES,
-  LNURL_SERVICE_ORIGIN,
-  JWT_AUTH_KEY_DIRECTORY,
   JWT_AUTH_ISSUER,
   JWT_AUTH_AUDIENCE,
-  LNURL_AUTH_DEBUG,
   DB_CREDENTIALS,
   TELEGRAM_BOT_ID,
   TELEGRAM_GROUP_ID_ERROR,

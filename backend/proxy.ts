@@ -5,10 +5,10 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import {
   EXPRESS_PORT,
-  LNURL_PORT,
   PROXY_PORT,
   WEB_PORT,
 } from '@backend/constants.js'
+import { LNURL_PORT } from '@auth/constants.js'
 
 const app = express()
 app.use('/api', proxy(`localhost:${EXPRESS_PORT}`, {
