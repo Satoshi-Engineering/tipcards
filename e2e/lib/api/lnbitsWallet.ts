@@ -1,15 +1,11 @@
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 
 import {
-  BACKEND_API_ORIGIN,
   LNBITS_ORIGIN,
   LNBITS_ADMIN_KEY,
 } from '@e2e/lib/constants'
 
-const API_INVOICE = new URL('/api/invoice', BACKEND_API_ORIGIN)
-const API_SET_INVOICE = new URL('/api/set/invoice', BACKEND_API_ORIGIN)
-
-export const payCardInvoice = (cardHash: string, invoice: string) => {
+export const payInvoice = (invoice: string) =>
   cy.request({
     url: `${LNBITS_ORIGIN}/api/v1/payments`,
     method: 'POST',
@@ -21,29 +17,6 @@ export const payCardInvoice = (cardHash: string, invoice: string) => {
       'X-Api-Key': LNBITS_ADMIN_KEY,
     },
   })
-  cy.request({
-    url: `${API_INVOICE.href}/paid/${cardHash}`,
-    method: 'POST',
-  })
-}
-
-export const paySetInvoice = (setId: string, invoice: string) => {
-  cy.request({
-    url: `${LNBITS_ORIGIN}/api/v1/payments`,
-    method: 'POST',
-    body: {
-      out: true,
-      bolt11: invoice,
-    },
-    headers: {
-      'X-Api-Key': LNBITS_ADMIN_KEY,
-    },
-  })
-  cy.request({
-    url: `${API_SET_INVOICE.href}/paid/${setId}`,
-    method: 'POST',
-  })
-}
 
 export const withdrawAllSatsFromLnurlWithdrawRequest = (lnurlWithdrawRequest: LNURLWithdrawRequest) => {
   const amount = Math.floor(lnurlWithdrawRequest.maxWithdrawable / 1000)

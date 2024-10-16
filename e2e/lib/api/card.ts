@@ -6,7 +6,7 @@ import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdraw
 
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
-import { payCardInvoice, withdrawAllSatsFromLnurlWithdrawRequest } from '@e2e/lib/api/lnbitsWallet'
+import { payInvoice, withdrawAllSatsFromLnurlWithdrawRequest } from '@e2e/lib/api/lnbitsWallet'
 
 const API_INVOICE = new URL('/api/invoice', BACKEND_API_ORIGIN)
 const API_LNURL = new URL('/api/lnurl', BACKEND_API_ORIGIN)
@@ -16,7 +16,8 @@ const API_LNURLP = new URL('/api/lnurlp', BACKEND_API_ORIGIN)
 export const fundCardWithInvoice = (cardHash: CardStatusDto['hash'], amount: number) => {
   createInvoiceForCardHash(cardHash, amount).then((response) => {
     const invoice = response.body.data
-    payCardInvoice(cardHash, invoice)
+    payInvoice(invoice)
+    callInvoicePaidHookForCard(cardHash)
   })
 }
 
@@ -28,6 +29,12 @@ export const createInvoiceForCardHash = (cardHash: CardStatusDto['hash'], amount
       amount,
       text: 'Have fun with testing!',
     },
+  })
+
+export const callInvoicePaidHookForCard = (cardHash: CardStatusDto['hash']) =>
+  cy.request({
+    url: `${API_INVOICE.href}/paid/${cardHash}`,
+    method: 'POST',
   })
 
 export const createLnurlpLinkForCardHash = (cardHash: CardStatusDto['hash']) =>
@@ -42,6 +49,11 @@ export const createSharedFundingForCardHash = (cardHash: CardStatusDto['hash']) 
     method: 'POST',
   }).then((response) => response.body.data)
 
+export const useFundedCard = (cardHash: CardStatusDto['hash']) => {
+  withdrawAllSatsFromCard(cardHash)
+  callWithdrawUsedHookForCard(cardHash)
+}
+
 export const withdrawAllSatsFromCard = (cardHash: CardStatusDto['hash']) =>
   cy.request({
     url: `${API_LNURL.href}/${cardHash}`,
@@ -49,8 +61,13 @@ export const withdrawAllSatsFromCard = (cardHash: CardStatusDto['hash']) =>
   }).then((response) => {
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)
     withdrawAllSatsFromLnurlWithdrawRequest(lnurlWithdrawRequest)
-    cy.request({
-      url: `${API_WITHDRAW.href}/used/${cardHash}`,
-      method: 'POST',
-    })
+  })
+
+// this hook is usually called by lnbits,
+// but as we do not expose the backend (inside the testing pipeline)
+// to lnbits we need to call it manually
+export const callWithdrawUsedHookForCard = (cardHash: CardStatusDto['hash']) =>
+  cy.request({
+    url: `${API_WITHDRAW.href}/used/${cardHash}`,
+    method: 'POST',
   })

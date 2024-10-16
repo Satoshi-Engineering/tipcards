@@ -13,6 +13,8 @@ import {
   createLnurlpLinkForCardHash,
   createSharedFundingForCardHash,
   withdrawAllSatsFromCard,
+  callWithdrawUsedHookForCard,
+  useFundedCard,
 } from '@e2e/lib/api/card'
 import {
   generateAndAddRandomSet,
@@ -39,6 +41,8 @@ export default {
     createLnurlpLinkForCardHash,
     createSharedFundingForCardHash,
     withdrawAllSatsFromCard,
+    callWithdrawUsedHookForCard,
+    useFundedCard,
   },
   set: {
     generateAndAddRandomSet,

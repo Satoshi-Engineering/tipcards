@@ -1,5 +1,8 @@
 <template>
-  <CenterContainer class="relative mb-6 flex flex-col items-center">
+  <CenterContainer
+    class="relative mb-6 flex flex-col items-center"
+    data-test="get-your-bitcoin"
+  >
     <HeadlineDefault level="h2">
       {{ $t('landing.sectionGetYourBitcoin.headline') }}
     </HeadlineDefault>
