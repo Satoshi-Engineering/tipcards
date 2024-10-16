@@ -20,7 +20,8 @@ import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
 const createCaller = createCallerFactory(lnurlAuthRouter)
 
-describe('TRpc Router Auth LnurlAuthLogin', () => {
+describe('TRpc Router Auth LnurlAuthLogin', async () => {
+  const mockAccessTokenAudience = 'mockAccessTokenIssuer'
   const mockRequest = {
     cookie: vi.fn(),
   } as unknown as Request
@@ -32,11 +33,13 @@ describe('TRpc Router Auth LnurlAuthLogin', () => {
   const server = new http.Server()
   LnurlServer.init()
   SocketIoServer.init(server)
-  Auth.init()
+  await Auth.init(mockAccessTokenAudience)
+  const auth = Auth.getAuth()
+  const jwtIssuer = auth.getJwtIssuer()
 
   const caller = createCaller({
-    auth: Auth.getAuth(),
-    refreshGuard: new RefreshGuard(mockRequest, mockResponse),
+    auth,
+    refreshGuard: new RefreshGuard(mockRequest, mockResponse, jwtIssuer, mockAccessTokenAudience),
   })
 
   it('should return an encoded lnurlauth with hashed auth secret', async () => {

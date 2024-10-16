@@ -1,5 +1,6 @@
 import { describe, vi, it, expect, beforeAll, beforeEach } from 'vitest'
 import { Request, Response } from 'express'
+import { randomUUID } from 'crypto'
 
 import '../../mocks/process.env.js'
 import '../../mocks/jwt.js'
@@ -9,15 +10,21 @@ import { addData, allowedRefreshTokensByHash } from '../../mocks/database/databa
 
 import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
-import { validateJwt, createRefreshToken, createAccessToken } from '@backend/services/jwt.js'
-
 import { createUser, createProfileForUser, createAllowedRefreshTokens } from '../../../drizzleData.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
-const mockWalletPublicKey = 'mockWalletPublicKey'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+
+const REFRESH_TOKEN_EXPIRATION_TIME = '28 days'
+const ACCESS_TOKEN_EXPIRATION_TIME = '5 min'
+
+const mockNonce = randomUUID()
+const mockAccessTokenAudience = 'mockAccessTokenAudience'
+const mockwalletLinkingKey = 'mockwalletLinkingKey'
 const mockUserId = 'mockUserId'
 const mockUser = createUser(mockUserId)
-mockUser.lnurlAuthKey = mockWalletPublicKey
+mockUser.lnurlAuthKey = mockwalletLinkingKey
 const mockProfile = createProfileForUser(mockUser)
 const mockAllowedRefreshTokens = createAllowedRefreshTokens(mockUser)
 const mockAllowedOtherRefreshTokens = createAllowedRefreshTokens(mockUser)
@@ -36,6 +43,10 @@ const mockResponse = {
 } as unknown as Response
 const mockHost = 'domain.com'
 let refreshGuard: RefreshGuard
+const mockJwtIssuer = {
+  createJwt: vi.fn(),
+  validate: vi.fn(),
+} as unknown as JwtIssuer
 
 // Authenticate User via Refresh Token
 const setValidRefreshToken = () => {
@@ -46,9 +57,9 @@ const setValidRefreshToken = () => {
     id: mockUserId,
     lnurlAuthKey: 'mockLnurlAuthKey',
     permissions: [],
-    nonce: 'mockNonce',
+    nonce: mockNonce,
   }
-  vi.mocked(validateJwt).mockResolvedValueOnce(mockRefreshTokenPayload)
+  vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayload)
 }
 
 const authUserViaRefreshToken = async () => {
@@ -65,7 +76,7 @@ beforeAll(() => {
 
 describe('RefreshGuard', () => {
   beforeEach(() => {
-    refreshGuard = new RefreshGuard(mockRequest, mockResponse)
+    refreshGuard = new RefreshGuard(mockRequest, mockResponse, mockJwtIssuer, mockAccessTokenAudience)
     Object.keys(allowedRefreshTokensByHash).forEach(key => {
       delete allowedRefreshTokensByHash[key]
     })
@@ -74,13 +85,21 @@ describe('RefreshGuard', () => {
     })
   })
 
-  it('should create refresh token for login with walletPublicKey ', async () => {
+  it('should create refresh token for login with walletLinkingKey ', async () => {
     const mockNewRefreshToken = 'mockNewRefreshToken'
-    vi.mocked(createRefreshToken).mockResolvedValueOnce(mockNewRefreshToken)
 
-    await refreshGuard.loginWithWalletLinkingKey(mockWalletPublicKey)
+    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
+    await refreshGuard.loginWithWalletLinkingKey(mockwalletLinkingKey)
 
-    expect(createRefreshToken).toHaveBeenCalledOnce()
+    expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
+      JWT_AUTH_ISSUER,
+      REFRESH_TOKEN_EXPIRATION_TIME,
+      expect.objectContaining({
+        id: mockUserId,
+        lnurlAuthKey: mockwalletLinkingKey,
+        nonce: expect.any(String),
+      }),
+    )
     expect(mockResponse.cookie).toHaveBeenCalledWith(
       'refresh_token',
       mockNewRefreshToken,
@@ -127,26 +146,25 @@ describe('RefreshGuard', () => {
 
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     mockRequest.headers.cookie = randomRefreshTokenCookie
-
     const mockRefreshTokenPayload = {
       id: mockUserId,
       lnurlAuthKey: 'mockLnurlAuthKey',
       permissions: [],
-      nonce: 'mockNonce',
+      nonce: mockNonce,
     }
-    vi.mocked(validateJwt).mockResolvedValueOnce(mockRefreshTokenPayload)
+    vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayload)
 
     await expect(async () => {
       await refreshGuard.validateRefreshToken()
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenDenied))
-    expect(validateJwt).toHaveBeenCalledWith(`${mockRefreshToken}${tokenGargabe}`, mockHost)
+    expect(mockJwtIssuer.validate).toHaveBeenCalledWith(`${mockRefreshToken}${tokenGargabe}`, mockHost)
   })
 
   it('should validate refresh json web token from cookie', async () => {
     setValidRefreshToken()
 
     await refreshGuard.validateRefreshToken()
-    expect(validateJwt).toHaveBeenCalledWith(mockRefreshToken, mockHost)
+    expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
   })
 
   it('should fail refresh token cycling due missing user', async () => {
@@ -159,10 +177,10 @@ describe('RefreshGuard', () => {
     await authUserViaRefreshToken()
 
     const mockNewRefreshToken = 'mockNewRefreshToken'
-    vi.mocked(createRefreshToken).mockResolvedValueOnce(mockNewRefreshToken)
+    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
 
     await refreshGuard.cycleRefreshToken()
-    expect(createRefreshToken).toHaveBeenCalledTimes(2)
+    expect(mockJwtIssuer.createJwt).toHaveBeenCalledTimes(1)
     expect(mockResponse.cookie).toHaveBeenCalledWith(
       'refresh_token',
       mockNewRefreshToken,
@@ -185,10 +203,20 @@ describe('RefreshGuard', () => {
     await authUserViaRefreshToken()
 
     const mockAuthorizationToken = 'mockAuthorizationToken'
-    vi.mocked(createAccessToken).mockResolvedValueOnce(mockAuthorizationToken)
+    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockAuthorizationToken)
 
     const authorizationToken = await refreshGuard.createAccessToken()
     expect(authorizationToken).toBe(mockAuthorizationToken)
+    expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
+      mockAccessTokenAudience,
+      ACCESS_TOKEN_EXPIRATION_TIME,
+      expect.objectContaining({
+        id: mockUserId,
+        lnurlAuthKey: mockwalletLinkingKey,
+        permissions: [],
+        nonce: expect.any(String),
+      }),
+    )
   })
 
   it('should fail to logoutAllOtherDevices due missing user', async () => {

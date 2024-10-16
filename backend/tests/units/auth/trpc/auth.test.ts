@@ -20,7 +20,8 @@ import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
 const createCaller = createCallerFactory(authRouter)
 
-describe('TRpc Router Auth', () => {
+describe('TRpc Router Auth', async () => {
+  const mockAccessTokenAudience = 'mockAccessTokenIssuer'
   const mockRequest = {
     cookie: vi.fn(),
   } as unknown as Request
@@ -32,12 +33,13 @@ describe('TRpc Router Auth', () => {
   const server = new http.Server()
   LnurlServer.init()
   SocketIoServer.init(server)
-  Auth.init()
-
-  const refreshGuard = new RefreshGuard(mockRequest, mockResponse)
+  await Auth.init(mockAccessTokenAudience)
+  const auth = Auth.getAuth()
+  const jwtIssuer = auth.getJwtIssuer()
+  const refreshGuard = new RefreshGuard(mockRequest, mockResponse, jwtIssuer, mockAccessTokenAudience)
 
   const caller = createCaller({
-    auth: Auth.getAuth(),
+    auth,
     refreshGuard,
   })
 

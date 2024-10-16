@@ -1,29 +1,49 @@
 import type { Response, Request } from 'express'
+import { randomUUID } from 'crypto'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import { PermissionsEnum } from '@shared/data/auth/User.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
 import {
   getUserByLnurlAuthKeyOrCreateNew,
   getUserById,
   updateUser } from '@backend/database/deprecated/queries.js'
-import {
-  validateJwt,
-  createRefreshToken,
-  createAccessToken,
-} from '@backend/services/jwt.js'
+
+import { AccessTokenPayload } from '@shared/data/auth/index.js'
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
+
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+
+const REFRESH_TOKEN_EXPIRATION_TIME = '28 days'
+const ACCESS_TOKEN_EXPIRATION_TIME = '5 min'
+
+type RefreshTokenParams = {
+  id: string
+  lnurlAuthKey: string
+}
+
+type AccessTokenParams = {
+  id: string
+  lnurlAuthKey: string
+  permissions: PermissionsEnum[]
+}
 
 export default class RefreshGuard {
   private request: Request
   private response: Response
   private user: User | null = null
+  private jwtIssuer: JwtIssuer
+  private jwtAccessTokenAudience: string[] | string
 
-  constructor(request: Request, response: Response) {
+  constructor(request: Request, response: Response, jwtIssuer: JwtIssuer, jwtAccessTokenAudience: string[] | string) {
     this.request = request
     this.response = response
+    this.jwtIssuer = jwtIssuer
+    this.jwtAccessTokenAudience = jwtAccessTokenAudience
   }
 
-  public async loginWithWalletLinkingKey(walletPublicKey: string){
+  public async loginWithWalletLinkingKey(walletPublicKey: string) {
     let user: User
     try {
       // Deprecated Function
@@ -33,7 +53,7 @@ export default class RefreshGuard {
       throw new ErrorWithCode('Unable to get or create user', ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey)
     }
 
-    const refreshToken = await createRefreshToken(user)
+    const refreshToken = await this.createRefreshToken(user)
     if (user.allowedRefreshTokens == null) {
       user.allowedRefreshTokens = []
     }
@@ -59,7 +79,8 @@ export default class RefreshGuard {
     if (refreshJwt == null ) {
       throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
     }
-    const refreshJwtPayload = await validateJwt(refreshJwt, host)
+    const payload = await this.jwtIssuer.validate(refreshJwt, host)
+    const refreshJwtPayload = AccessTokenPayload.parse(payload)
 
     let user
     try {
@@ -86,7 +107,7 @@ export default class RefreshGuard {
     if (previousRefreshToken == null ) {
       throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
     }
-    const newRefreshToken = await createRefreshToken(this.user)
+    const newRefreshToken = await this.createRefreshToken(this.user)
     if (this.user.allowedRefreshTokens == null) {
       this.user.allowedRefreshTokens = []
     }
@@ -109,7 +130,7 @@ export default class RefreshGuard {
     if (this.user == null) {
       throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
     }
-    return createAccessToken(this.user)
+    return this.privateCreateAccessToken(this.user)
   }
 
   public async logout() {
@@ -202,5 +223,31 @@ export default class RefreshGuard {
     })
 
     return cookies
+  }
+
+  private async createRefreshToken({ id, lnurlAuthKey }: RefreshTokenParams) {
+    const nonce = randomUUID()
+    try {
+      return  this.jwtIssuer.createJwt(
+        JWT_AUTH_ISSUER,
+        REFRESH_TOKEN_EXPIRATION_TIME,
+        { id, lnurlAuthKey, nonce },
+      )
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderRefreshTokenCreationError)
+    }
+  }
+
+  private privateCreateAccessToken({ id, lnurlAuthKey, permissions }: AccessTokenParams) {
+    const nonce = randomUUID()
+    try {
+      return  this.jwtIssuer.createJwt(
+        this.jwtAccessTokenAudience,
+        ACCESS_TOKEN_EXPIRATION_TIME,
+        { id, lnurlAuthKey, permissions, nonce },
+      )
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)
+    }
   }
 }

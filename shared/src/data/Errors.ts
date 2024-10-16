@@ -44,6 +44,9 @@ export enum ErrorCode {
   UnableToUpdateUser = 'UnableToUpdateUser',
   CardIsLockedByBulkWithdraw = 'CardIsLockedByBulkWithdraw',
 
+  AuthJwtHanderInitError = 'AuthJwtHanderInitError',
+  AuthJwtHanderRefreshTokenCreationError = 'AuthJwtHanderRefreshTokenCreationError',
+  AuthJwtHanderAccessTokenCreationError = 'AuthJwtHanderAccessTokenCreationError',
   AuthUserNotLoaded = 'AuthUserNotLoaded',
   AuthHostMissingInRequest = 'AuthHostMissingInRequest',
   LnurlAuthLoginHashInvaid = 'LnurlAuthLoginHashInvaid',

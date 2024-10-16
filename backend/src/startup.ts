@@ -6,7 +6,7 @@ import path from 'path'
 import Database from '@backend/database/Database.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import app from '@backend/app.js'
-import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY } from '@backend/constants.js'
+import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
 import Auth from './auth/domain/Auth.js'
 
@@ -40,7 +40,7 @@ const startupApplication = async () => {
   Auth.startup(server)
   console.info(' - Auth started')
 
-  Auth.init()
+  await Auth.init(JWT_AUTH_AUDIENCE)
   console.info(' - Auth initialized')
 
   let connections: Socket[] = []
