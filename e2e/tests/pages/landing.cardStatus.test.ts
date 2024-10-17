@@ -139,10 +139,7 @@ describe('Landing Page', () => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
       cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.useFundedCard(cardHash)
-      cy.task('connectToPostgres', {
-        command: 'setCardWithdrawnDateIntoPast',
-        cardHash,
-      })
+      cy.task('setCardWithdrawnDateIntoPast', cardHash)
 
       tipCards.gotoLandingPagePreview(cardHash)
 
