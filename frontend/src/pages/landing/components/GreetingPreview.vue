@@ -1,5 +1,8 @@
 <template>
-  <CenterContainer class="relative flex flex-col text-center">
+  <CenterContainer
+    class="relative flex flex-col text-center"
+    data-test="greeting-preview"
+  >
     <GreetingIcon />
     <HeadlineDefault level="h1" styling="h2">
       {{ $t('landing.introMessagePreview.headline') }}

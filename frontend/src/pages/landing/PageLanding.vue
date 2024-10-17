@@ -44,22 +44,7 @@
         class="mb-7"
       />
 
-      <CenterContainer class="my-7">
-        <ParagraphDefault class="text-center">
-          <LinkDefault
-            href="#what-is-bitcoin"
-            no-bold
-            no-underline
-            class="group"
-            data-test="link-what-is-bitcoin"
-          >
-            <IconLogoBitcoin class="inline-block w-8 h-auto align-middle me-3" />
-            <span class="underline group-hover:no-underline align-middle">
-              {{ $t('landing.sectionBitcoin.title') }}
-            </span>
-          </LinkDefault>
-        </ParagraphDefault>
-      </CenterContainer>
+      <WhatIsBitcoinCta class="my-7" />
 
       <GetYourBitcoin
         v-if="(
@@ -70,6 +55,7 @@
           )
           && lnurl != null
         )"
+        class="mb-6"
         :card-status="cardStatus"
         :lnurl="lnurl"
       />
@@ -117,8 +103,7 @@ import MoreBitcoinExplanation from './components/MoreBitcoinExplanation.vue'
 import CreateYourOwnTipCard from './components/CreateYourOwnTipCard.vue'
 import GreetingPreview from './components/GreetingPreview.vue'
 import WhatIsBitcoin from './components/WhatIsBitcoin.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
-import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
+import WhatIsBitcoinCta from './components/WhatIsBitcoinCta.vue'
 
 const {
   loading: loadingCardStatus,

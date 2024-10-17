@@ -2,6 +2,7 @@
   <CenterContainer
     id="no-wallet"
     class="relative flex flex-col items-center"
+    data-test="no-wallet"
   >
     <IconWalletArrowDown class="w-10 h-10 text-yellow" />
     <HeadlineDefault level="h2">

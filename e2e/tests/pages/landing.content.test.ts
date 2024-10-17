@@ -13,6 +13,17 @@ describe('Landing Page', () => {
     })
   })
 
+  it('should load the seo preview page', () => {
+    tipCards.gotoLandingPageSeoPreview()
+
+    cy.getTestElement('greeting-preview').should('exist')
+    cy.getTestElement('what-is-bitcoin-cta').should('exist')
+    cy.getTestElement('no-wallet').should('exist')
+    cy.getTestElement('use-your-bitcoin').should('exist')
+    cy.getTestElement('what-is-bitcoin').should('exist')
+    cy.getTestElement('create-your-own-tip-card').should('exist')
+  })
+
   it('should show scroll down to "what is bitcoin" section', () => {
     tipCards.gotoLandingPagePreview(cardHash)
     cy.getTestElement('link-what-is-bitcoin').click()

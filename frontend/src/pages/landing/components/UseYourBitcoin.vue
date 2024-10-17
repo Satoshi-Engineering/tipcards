@@ -1,5 +1,8 @@
 <template>
-  <CenterContainer class="relative">
+  <CenterContainer
+    class="relative"
+    data-test="use-your-bitcoin"
+  >
     <IconMobilePhoneQuestionmark class="mx-auto w-10 h-10 text-yellow" />
     <HeadlineDefault level="h2" class="text-center">
       {{ $t('landing.sectionUse.headline') }}
