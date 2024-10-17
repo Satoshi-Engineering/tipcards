@@ -153,7 +153,7 @@
           <label class="block">
             <input
               v-model="settings.cardsQrCodeLogo"
-              value=""
+              :value="null"
               type="radio"
             >
             {{ t('cards.settings.cardQrCodeLogo.noLogo') }}

@@ -4,7 +4,7 @@ export const Settings = z.object({
   numberOfCards: z.number(),
   cardHeadline: z.string(),
   cardCopytext: z.string(),
-  cardsQrCodeLogo: z.string(),
+  cardsQrCodeLogo: z.string().nullable(),
   setName: z.string().default(''),
   landingPage: z.string().nullable().default(null).describe('id of the landingpage'),
 })
