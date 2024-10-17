@@ -69,7 +69,7 @@ export const addSet = (set: Set) => {
 export const addSetsParallel = (sets: Set[]) => {
   tipCardsApi.auth.isLoggedIn()
 
-  cy.get('@accessToken').then(async function () {
+  cy.get('@accessToken').then({ timeout: 1000 * sets.length }, async function () {
     await Promise.all(sets.map((set) =>
       axios.request({
         url: `${API_SET.href}/${set.id}/`,
