@@ -10,7 +10,7 @@
       <input
         type="search"
         :placeholder="$t('general.search')"
-        class="flex-auto px-2 border-b border-bluegrey focus:outline-none"
+        class="flex-auto px-2 border-b bg-none border-bluegrey focus:outline-none"
         @input="$emit('textSearch', ($event.target as HTMLInputElement).value)"
       >
     </div>
