@@ -24,6 +24,7 @@
         class="mx-5 border-b last:border-0 border-white-50 group"
       >
         <SetsListItem
+          :data-set-id="set.id"
           :set="set"
           :statistics="statistics[set.id] ?? undefined"
           :no-statistics="noStatistics || statistics[set.id] === null"

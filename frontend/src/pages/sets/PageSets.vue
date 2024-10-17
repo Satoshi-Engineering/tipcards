@@ -69,9 +69,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import debounce from 'lodash.debounce'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -90,6 +91,7 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetStatisticsBySetId } from '@/modules/useSets'
 import { watch } from 'vue'
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
+import type { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -97,21 +99,38 @@ const modalLoginStore = useModalLoginStore()
 
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const { getAllSets, getStatisticsBySetId, fetchingAllSets, fetchingUserErrorMessages } = useSets()
+const { getAllSets, getStatisticsForSet, fetchingAllSets, fetchingUserErrorMessages } = useSets()
 
 const sets = ref<SetDto[]>([])
-const statistics = ref<SetStatisticsBySetId | undefined>()
+
+const statisticsWithLoadingInfo = ref<Record<SetDto['id'], { statistics: SetStatisticsDto | null, startedLoading: boolean }>>({})
+
+const statistics = computed<SetStatisticsBySetId>(() => {
+  const result: SetStatisticsBySetId = {}
+  for (const [setId, { statistics }] of Object.entries(statisticsWithLoadingInfo.value)) {
+    if (statistics === undefined) {
+      continue
+    }
+    result[setId] = statistics
+  }
+  return result
+})
+
+const debouncedUpdateSetsStatistics = debounce(updateSetStatisticsForSetsInViewport, 1000)
 
 watch(isLoggedIn, async (isLoggedIn) => {
   if (!isLoggedIn) {
     sets.value = []
-    statistics.value = undefined
+    statisticsWithLoadingInfo.value = {}
+    stopListeningForScroll()
     return
   }
 
   sets.value = await getAllSets()
 
-  statistics.value = await getStatisticsBySetId(sets.value)
+  await nextTick()
+  updateSetStatisticsForSetsInViewport()
+  startListeningForScroll()
 }, { immediate: true })
 
 const textSearch = ref<string>('')
@@ -123,4 +142,49 @@ const filteredSets = computed(() => {
   return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
 })
 
+async function updateSetStatisticsForSetsInViewport() {
+  const setsSortedByNumberOfCards = [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
+  for (const set of setsSortedByNumberOfCards) {
+    if (!setIsInViewport(set.id)) {
+      continue
+    }
+    if (statisticsWithLoadingInfo.value[set.id]?.startedLoading === true) {
+      continue
+    }
+    statisticsWithLoadingInfo.value = {
+      ...statisticsWithLoadingInfo.value,
+      [set.id]: {
+        ...statisticsWithLoadingInfo.value[set.id],
+        startedLoading: true,
+      },
+    }
+    statisticsWithLoadingInfo.value = {
+      ...statisticsWithLoadingInfo.value,
+      [set.id]: {
+        ...statisticsWithLoadingInfo.value[set.id],
+        statistics: await getStatisticsForSet(set.id),
+      },
+    }
+  }
+}
+
+function startListeningForScroll() {
+  window.addEventListener('scroll', debouncedUpdateSetsStatistics)
+  window.addEventListener('resize', debouncedUpdateSetsStatistics)
+}
+
+function stopListeningForScroll() {
+  window.removeEventListener('scroll', debouncedUpdateSetsStatistics)
+  window.removeEventListener('resize', debouncedUpdateSetsStatistics)
+}
+
+const setIsInViewport = (id: string) => {
+  const element = document.querySelector(`[data-set-id="${id}"]`)
+  if (!element) {
+    return false
+  }
+
+  const rect = element.getBoundingClientRect()
+  return rect.top < window.innerHeight && rect.bottom > 0
+}
 </script>
