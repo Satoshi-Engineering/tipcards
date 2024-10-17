@@ -1,6 +1,6 @@
 <template>
   <div class="flex space-between">
-    <div class="ms-auto flex-1 flex align-center">
+    <div class="ms-auto flex-1 flex gap-1 align-center">
       <ButtonIcon
         icon="search"
         size="small"
