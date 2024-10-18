@@ -23,7 +23,7 @@ const loadJsonIfExists = <T>(filepath: string | undefined, fallbackValue: T): T 
       return fallbackValue
     }
     return jsonData
-  } catch (error) {
+  } catch {
     return fallbackValue
   }
 }

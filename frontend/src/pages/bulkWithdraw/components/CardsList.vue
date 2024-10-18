@@ -56,7 +56,7 @@ const loadSettingsFromUrl = () => {
   const settingsEncoded = String(route.params.settings)
   try {
     Object.assign(settings, decodeCardsSetSettings(settingsEncoded))
-  } catch (e) {
+  } catch {
     // do nothing
   }
 }

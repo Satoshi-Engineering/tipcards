@@ -119,7 +119,7 @@ const isAccessTokenExpired = () => {
   try {
     const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
     return + new Date() / 1000 > payload.exp
-  } catch (error) {
+  } catch {
     return true
   }
 }

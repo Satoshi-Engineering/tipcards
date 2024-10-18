@@ -43,7 +43,7 @@ export default () => {
     }
     try {
       return router.resolve(new URL(document.referrer).pathname)
-    } catch (error) {
+    } catch {
       return home
     }
   })
@@ -53,7 +53,7 @@ export default () => {
       if (new URL(document.referrer).origin === location.origin && document.referrer !== document.location.href) {
         return true
       }
-    } catch (error) {
+    } catch {
       return false
     }
     return false

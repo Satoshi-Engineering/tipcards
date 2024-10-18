@@ -5,7 +5,7 @@ export const cardHashFromLnurl = (lnurl: string): string | null => {
   let decodedLnurl: string
   try {
     decodedLnurl = LNURL.decode(lnurl)
-  } catch (error) {
+  } catch {
     return null
   }
   [, cardHash] = decodedLnurl.toLowerCase().match(/\/api\/lnurl\/([0-9a-f]+)/) || [undefined, null]

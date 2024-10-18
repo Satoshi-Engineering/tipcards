@@ -87,7 +87,7 @@ onBeforeMount(async () => {
     profileInternal.accountName = userAccountName.value
     profileInternal.displayName = userDisplayName.value
     profileInternal.email = userEmail.value
-  } catch (error) {
+  } catch {
     // do nothing
   }
 })

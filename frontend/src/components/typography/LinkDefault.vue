@@ -37,7 +37,6 @@ defineProps({
     default: undefined,
   },
   activeClass: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     type: String,
     default: undefined,
   },

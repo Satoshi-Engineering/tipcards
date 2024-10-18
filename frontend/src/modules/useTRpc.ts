@@ -15,7 +15,7 @@ const createClient = (getValidAccessToken: () => Promise<string | null>) => crea
         let accessToken: string | null
         try {
           accessToken = await getValidAccessToken()
-        } catch (error) {
+        } catch {
           accessToken = null
         }
         return {

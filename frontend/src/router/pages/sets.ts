@@ -8,13 +8,13 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
-export interface RouteSets extends RouteRecordInfo<
+export type RouteSets = RouteRecordInfo<
   'sets',
   `${localizedRoutePrefix}/sets`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const sets = {
   name: 'sets',

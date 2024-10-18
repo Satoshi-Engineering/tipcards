@@ -16,13 +16,13 @@ export interface FundingParams extends LocalizedRouteParams {
   cardHash: string
 }
 
-export interface RouteFunding extends RouteRecordInfo<
+export type RouteFunding = RouteRecordInfo<
   'funding',
   `${localizedRoutePrefix}/funding/:cardHash`,
   FundingParamsRaw,
   FundingParams,
   AppRouteMeta
-> {}
+>
 
 export const funding = {
   name: 'funding',

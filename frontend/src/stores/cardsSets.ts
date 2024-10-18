@@ -29,7 +29,7 @@ export const decodeCardsSetSettings = (settingsEncoded: string): Settings => {
   let settingsDecoded = {}
   try {
     settingsDecoded = JSON.parse(decodeURIComponent(atob(settingsEncoded)))
-  } catch (error) {
+  } catch {
     // do nothing
   }
   return {
@@ -99,7 +99,7 @@ const saveSetToServer = async (set: Set) => {
     setTimeout(() => {
       try {
         loadSets()
-      } catch (error) {
+      } catch {
         // do nothing as nobody subscribed to this call
       }
     }, 0)
@@ -122,7 +122,7 @@ const deleteSetFromServer = async (setId: string) => {
     setTimeout(() => {
       try {
         loadSets()
-      } catch (error) {
+      } catch {
         // do nothing as nobody subscribed to this call
       }
     }, 0)
@@ -149,7 +149,7 @@ export const useCardsSetsStore = defineStore('cardsSets', () => {
     try {
       await loadSets()
       callbacks.forEach(({ resolve }) => resolve())
-    } catch (error) {
+    } catch {
       callbacks.forEach(({ reject }) => reject())
     } finally {
       callbacks.length = 0

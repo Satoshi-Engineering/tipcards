@@ -68,7 +68,7 @@ export const useProfileStore = defineStore('profile', () => {
     try {
       await queryProfileFromBackend()
       callbacks.forEach(({ resolve }) => resolve())
-    } catch (error) {
+    } catch {
       callbacks.forEach(({ reject }) => reject())
     } finally {
       callbacks.length = 0

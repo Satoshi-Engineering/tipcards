@@ -24,7 +24,7 @@ const initApiAuthInterceptors = () => {
     let accessToken: string | null
     try {
       accessToken = await getValidAccessToken()
-    } catch (error) {
+    } catch {
       return config
     }
     if (accessToken == null) {

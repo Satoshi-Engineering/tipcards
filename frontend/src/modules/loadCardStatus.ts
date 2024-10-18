@@ -109,7 +109,7 @@ export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprec
   let card: Card | null
   try {
     card = await loadCard(cardHash)
-  } catch (error) {
+  } catch {
     return {
       status: 'error',
       message: 'Unable to load the TipCard status as the server is currently not reachable. Please try again later.',

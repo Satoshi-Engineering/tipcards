@@ -267,7 +267,7 @@ onBeforeMount(() => {
   let settingsDecoded: Settings | undefined = undefined
   try {
     settingsDecoded = decodeCardsSetSettings(settingsEncoded)
-  } catch (error) {
+  } catch {
     // do nothing
   }
   Object.assign(settings, settingsDecoded)

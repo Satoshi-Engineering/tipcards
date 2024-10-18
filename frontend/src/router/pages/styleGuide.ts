@@ -7,13 +7,13 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
-export interface RouteStyleGuide extends RouteRecordInfo<
+export type RouteStyleGuide = RouteRecordInfo<
   'style-guide',
   `${localizedRoutePrefix}/style-guide`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const styleGuide = {
   name: 'style-guide',
@@ -24,13 +24,13 @@ export const styleGuide = {
   },
 }
 
-export interface RouteStyleGuideComponents extends RouteRecordInfo<
+export type RouteStyleGuideComponents = RouteRecordInfo<
   'style-guide/components',
   `${localizedRoutePrefix}/style-guide/components`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const styleGuideComponents = {
   name: 'style-guide/components',
@@ -41,13 +41,13 @@ export const styleGuideComponents = {
   },
 }
 
-export interface RouteStyleGuideForms extends RouteRecordInfo<
+export type RouteStyleGuideForms = RouteRecordInfo<
   'style-guide/forms',
   `${localizedRoutePrefix}/style-guide/forms`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const styleGuideForms = {
   name: 'style-guide/forms',
@@ -58,13 +58,13 @@ export const styleGuideForms = {
   },
 }
 
-export interface RouteStyleGuideIcons extends RouteRecordInfo<
+export type RouteStyleGuideIcons = RouteRecordInfo<
   'style-guide/icons',
   `${localizedRoutePrefix}/style-guide/icons`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const styleGuideIcons = {
   name: 'style-guide/icons',
@@ -75,13 +75,13 @@ export const styleGuideIcons = {
   },
 }
 
-export interface RouteStyleGuideTypographyAndButtons extends RouteRecordInfo<
+export type RouteStyleGuideTypographyAndButtons = RouteRecordInfo<
   'style-guide/typography-and-buttons',
   `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const styleGuideTypographyAndButtons = {
   name: 'style-guide/typography-and-buttons',

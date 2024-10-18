@@ -16,13 +16,13 @@ export interface LandingParams extends LocalizedRouteParams {
   cardHash: string
 }
 
-export interface RouteLanding extends RouteRecordInfo<
+export type RouteLanding = RouteRecordInfo<
   'landing',
   `${localizedRoutePrefix}/landing/:cardHash?`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const landing = {
   name: 'landing',

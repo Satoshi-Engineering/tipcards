@@ -8,13 +8,13 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
-export interface RouteUserAccount extends RouteRecordInfo<
+export type RouteUserAccount = RouteRecordInfo<
   'user-account',
   `${localizedRoutePrefix}/user-account`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const userAccount = {
   name: 'user-account',

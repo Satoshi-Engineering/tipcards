@@ -22,13 +22,13 @@ export interface SetFundingParams extends LocalizedRouteParams {
   settings: string
 }
 
-export interface RouteSetFunding extends RouteRecordInfo<
+export type RouteSetFunding = RouteRecordInfo<
   'set-funding',
   `${localizedRoutePrefix}/set-funding/:setId/:settings?`,
   SetFundingParamsRaw,
   SetFundingParams,
   AppRouteMeta
-> {}
+>
 
 export const setFunding = (getRouter: () => Router) => ({
   name: 'set-funding',

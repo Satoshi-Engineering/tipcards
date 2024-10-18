@@ -73,7 +73,7 @@ describe('LnBits - double spend attack - urlw extension ', () => {
           'status': 'OK',
         }))
         countSuccess++
-      } catch (error: unknown) {
+      } catch {
         countFailed++
       }
     }))

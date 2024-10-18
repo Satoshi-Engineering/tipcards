@@ -18,13 +18,13 @@ export interface BulkWithdrawParams extends LocalizedRouteParams {
   settings: string
 }
 
-export interface RouteBulkWithdraw extends RouteRecordInfo<
+export type RouteBulkWithdraw = RouteRecordInfo<
   'bulk-withdraw',
   `${localizedRoutePrefix}/bulk-withdraw/:setId/:settings?`,
   BulkWithdrawParamsRaw,
   BulkWithdrawParams,
   AppRouteMeta
-> {}
+>
 
 export const bulkWithdraw = (getRouter: () => Router) => ({
   name: 'bulk-withdraw',

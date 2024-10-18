@@ -6,12 +6,12 @@ import {
   type LocalizedRouteParams,
 } from '@/router/utils'
 
-export interface RouteHome extends RouteRecordInfo<
+export type RouteHome = RouteRecordInfo<
   'home',
   localizedRoutePrefix,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams
-> {}
+>
 
 export const home = {
   name: 'home',

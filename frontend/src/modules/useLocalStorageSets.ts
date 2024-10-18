@@ -105,7 +105,7 @@ const loadSetsFromlocalStorage = () => {
   try {
     const fromLocalStorage = JSON.parse(localStorage.getItem(SAVED_CARDS_SETS_KEY) || '[]') as SetWithEncodedSettings[]
     setsDeprecated.value = fromLocalStorage.map((set) => toSet(set))
-  } catch (error) {
+  } catch {
     // do nothing
   }
 }

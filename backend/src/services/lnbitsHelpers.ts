@@ -383,7 +383,7 @@ export const getLnurlwCreationTimestamp = async (lnbitsWithdrawId: string): Prom
       axiosOptionsWithReadHeaders,
     )
     responseData = LnbitsWithdrawLinkResponse.parse(response.data)
-  } catch (error) {
+  } catch {
     return null
   }
   return responseData.open_time

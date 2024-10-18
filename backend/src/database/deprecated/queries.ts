@@ -49,10 +49,10 @@ export const lockCardByHash = async (cardHash: string): Promise<string | null> =
       set: null,
       locked,
     }))
-  } catch (error) {
+  } catch {
     try {
       await asTransaction(async (queries) => queries.setCardLock(cardHash, locked))
-    } catch (error) {
+    } catch {
       return null
     }
   }

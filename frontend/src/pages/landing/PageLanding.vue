@@ -180,7 +180,7 @@ const loadCardStatus = async (): Promise<boolean> => {
   try {
     cardStatus.value = await card.status.query({ hash: cardHash.value })
     return true
-  } catch (error) {
+  } catch {
     userErrorMessage.value = t('landing.errors.errorLoadingCardStatus')
     return false
   } finally {

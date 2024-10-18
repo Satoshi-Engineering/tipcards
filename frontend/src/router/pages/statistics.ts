@@ -7,13 +7,13 @@ import {
   type AppRouteMeta,
 } from '@/router/utils'
 
-export interface RouteStatistics extends RouteRecordInfo<
+export type RouteStatistics = RouteRecordInfo<
   'statistics',
   `${localizedRoutePrefix}/statistics`,
   LocalizedRouteParamsRaw,
   LocalizedRouteParams,
   AppRouteMeta
-> {}
+>
 
 export const statistics = {
   name: 'statistics',

@@ -17,13 +17,13 @@ export interface CardsParams extends LocalizedRouteParams {
   settings: string
 }
 
-export interface RouteCards extends RouteRecordInfo<
+export type RouteCards = RouteRecordInfo<
   'cards',
   `${localizedRoutePrefix}/cards/:setId?/:settings?`,
   CardsParamsRaw,
   CardsParams,
   AppRouteMeta
-> {}
+>
 
 export const cards = {
   name: 'cards',
