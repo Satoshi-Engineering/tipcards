@@ -2,6 +2,7 @@
   <CenterContainer
     v-if="$te('landing.sectionMore.headline')"
     class="relative flex flex-col"
+    data-test="more-bitcoin-explanation"
   >
     <HeadlineDefault level="h2">
       {{ $t('landing.sectionMore.headline') }}

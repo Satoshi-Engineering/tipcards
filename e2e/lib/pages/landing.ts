@@ -8,9 +8,12 @@ export const gotoSeoPreview = () => {
   cy.visit(new URL(LANDING_PAGE_PATH, TIPCARDS_ORIGIN).href)
 }
 
-export const gotoPreview = (cardHash: string) => {
+export const gotoPreview = (cardHash: string, lang?: string) => {
   cy.intercept('/trpc/card.status**').as('trpcCardStatus')
-  cy.visit(new URL(`${LANDING_PAGE_PATH}/${cardHash}`, TIPCARDS_ORIGIN).href)
+  const url = lang != null
+    ? new URL(`/${lang}${LANDING_PAGE_PATH}/${cardHash}`, TIPCARDS_ORIGIN)
+    : new URL(`${LANDING_PAGE_PATH}/${cardHash}`, TIPCARDS_ORIGIN)
+  cy.visit(url.href)
   cy.wait('@trpcCardStatus')
 }
 

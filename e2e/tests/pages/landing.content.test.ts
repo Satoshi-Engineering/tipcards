@@ -59,6 +59,21 @@ describe('Landing Page', () => {
     cy.getTestElement('use-your-bitcoin').find('a').should('have.length.gte', 2)
   })
 
+  it('should show more info about bitcoin', () => {
+    tipCards.gotoLandingPagePreview(cardHash, 'de')
+
+    cy.getTestElement('more-bitcoin-explanation').should('exist')
+    cy.getTestElement('collapsible-element-content').should('have.length.gte', 2)
+    cy.getTestElement('collapsible-element-content').should('not.be.visible')
+  })
+
+  it('should open the first extra info about bitcoin', () => {
+    tipCards.gotoLandingPagePreview(cardHash, 'de')
+    cy.getTestElement('more-bitcoin-explanation').find('button').first().click()
+
+    cy.getTestElement('collapsible-element-content').should('be.visible')
+  })
+
   it('should send the user to "home"', () => {
     tipCards.gotoLandingPagePreview(cardHash)
     cy.getTestElement('create-your-own-tip-card').find('button').click()
