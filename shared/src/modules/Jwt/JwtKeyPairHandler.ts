@@ -26,7 +26,6 @@ export default class JwtKeyPairHandler {
   ) {
     const filenamePublicKeyResolved = path.resolve(this.keyPairDirectory, filenamePublicKey)
     const filenamePrivateKeyResolved = path.resolve(this.keyPairDirectory, filenamePrivateKey)
-
     if (fs.existsSync(filenamePublicKeyResolved) && fs.existsSync(filenamePrivateKeyResolved)) {
       let data = fs.readFileSync(filenamePublicKeyResolved, 'utf8')
       const publicKey = await importSPKI(data, algorithm)
