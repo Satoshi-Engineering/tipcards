@@ -2,6 +2,7 @@
 /// <reference types="cypress" />
 
 import { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import LNURL from '@shared/modules/LNURL/LNURL'
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
@@ -62,6 +63,22 @@ export const withdrawAllSatsFromCard = (cardHash: CardStatusDto['hash']) =>
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)
     withdrawAllSatsFromLnurlWithdrawRequest(lnurlWithdrawRequest)
   })
+
+export const useLnurlWithdraw = (cardHash: CardStatusDto['hash'], lnurlEncoded: string) => {
+  withdrawAllSatsFromLnurlWithdraw(lnurlEncoded)
+  callWithdrawUsedHookForCard(cardHash)
+}
+
+export const withdrawAllSatsFromLnurlWithdraw = (lnurlEncoded: string) => {
+  const lnurl = LNURL.decode(lnurlEncoded)
+  cy.request({
+    url: lnurl,
+    method: 'GET',
+  }).then((response) => {
+    const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)
+    withdrawAllSatsFromLnurlWithdrawRequest(lnurlWithdrawRequest)
+  })
+}
 
 // this hook is usually called by lnbits,
 // but as we do not expose the backend (inside the testing pipeline)

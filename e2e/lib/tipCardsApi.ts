@@ -15,6 +15,7 @@ import {
   withdrawAllSatsFromCard,
   callWithdrawUsedHookForCard,
   useFundedCard,
+  useLnurlWithdraw,
 } from '@e2e/lib/api/card'
 import {
   generateAndAddRandomSet,
@@ -45,6 +46,7 @@ export default {
     withdrawAllSatsFromCard,
     callWithdrawUsedHookForCard,
     useFundedCard,
+    useLnurlWithdraw,
   },
   set: {
     generateAndAddRandomSet,
