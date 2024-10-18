@@ -4,20 +4,13 @@ import {
   importSPKI, importPKCS8,
   exportSPKI, exportPKCS8,
   generateKeyPair,
-  type KeyLike,
 } from 'jose'
+
+import { type KeyPair } from './types/KeyPair.js'
+import { Algorithms } from './types/Algorithms.js'
 
 const DEFAULT_PUBLIC_KEY_FILENAME = 'lnurl.auth.pem.pub'
 const DEFAULT_PRIVATE_KEY_FILENAME = 'lnurl.auth.pem'
-
-export enum Algorithms {
-  RS256 = 'RS256',
-}
-
-export type KeyPair = {
-  publicKey: KeyLike
-  privateKey: KeyLike
-}
 
 export default class JwtKeyPairHandler {
   private keyPairDirectory: string

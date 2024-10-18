@@ -4,7 +4,8 @@ import {
   exportSPKI,
 } from 'jose'
 
-import { type KeyPair, Algorithms } from './JwtKeyPairHandler.js'
+import { type KeyPair } from './types/KeyPair.js'
+import { Algorithms } from './types/Algorithms.js'
 import JwtValidator from './JwtValidator.js'
 
 export default class JwtIssuer extends JwtValidator{
