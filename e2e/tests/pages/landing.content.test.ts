@@ -42,4 +42,18 @@ describe('Landing Page', () => {
       cy.wrap(lnurl).should('include', `/api/lnurl/${cardHash}`)
     })
   })
+
+  it('should show the "no wallet" section', () => {
+    tipCards.gotoLandingPagePreview(cardHash)
+
+    cy.getTestElement('no-wallet').should('exist')
+    cy.getTestElement('no-wallet').find('a').should('have.length.gte', 2)
+  })
+
+  it('should show the "use-your-bitcoin" section', () => {
+    tipCards.gotoLandingPagePreview(cardHash)
+
+    cy.getTestElement('use-your-bitcoin').should('exist')
+    cy.getTestElement('use-your-bitcoin').find('a').should('have.length.gte', 2)
+  })
 })
