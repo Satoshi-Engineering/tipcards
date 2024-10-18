@@ -3,6 +3,8 @@ import LNURL from '@shared/modules/LNURL/LNURL'
 import { generateCardHash } from '@e2e/lib/api/data/card'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
+import { urlWithOptionalTrailingSlash } from '@e2e/lib/urlHelpers'
+import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('Landing Page', () => {
   let cardHash: string
@@ -55,5 +57,15 @@ describe('Landing Page', () => {
 
     cy.getTestElement('use-your-bitcoin').should('exist')
     cy.getTestElement('use-your-bitcoin').find('a').should('have.length.gte', 2)
+  })
+
+  it('should send the user to "home"', () => {
+    tipCards.gotoLandingPagePreview(cardHash)
+    cy.getTestElement('create-your-own-tip-card').find('button').click()
+
+    cy.url().should(
+      'to.match',
+      urlWithOptionalTrailingSlash(new URL('/', TIPCARDS_ORIGIN)),
+    )
   })
 })
