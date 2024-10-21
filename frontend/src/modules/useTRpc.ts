@@ -1,15 +1,20 @@
-import { createTRPCProxyClient, httpBatchLink, TRPCClientError, type CreateTRPCProxyClient } from '@trpc/client'
+import {
+  createTRPCClient,
+  httpBatchLink,
+  TRPCClientError,
+  type CreateTRPCClient,
+} from '@trpc/client'
 import superjson from 'superjson'
 
 import type { AppRouter } from '@backend/trpc'
 
 import { BACKEND_API_ORIGIN } from '@/constants'
 
-const createClient = (getValidAccessToken: () => Promise<string | null>) => createTRPCProxyClient<AppRouter>({
-  transformer: superjson,
+const createClient = (getValidAccessToken: () => Promise<string | null>) => createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: `${BACKEND_API_ORIGIN}/trpc`,
+      transformer: superjson,
       maxURLLength: 2083,
       headers: async () => {
         let accessToken: string | null
@@ -26,7 +31,7 @@ const createClient = (getValidAccessToken: () => Promise<string | null>) => crea
   ],
 })
 
-export default (getValidAccessToken?: () => Promise<string | null>): CreateTRPCProxyClient<AppRouter> => {
+export default (getValidAccessToken?: () => Promise<string | null>): CreateTRPCClient<AppRouter> => {
   return createClient(getValidAccessToken || (async () => null))
 }
 

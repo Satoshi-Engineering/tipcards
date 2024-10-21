@@ -1,4 +1,4 @@
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
+import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
 import axios, { AxiosResponse } from 'axios'
 import { decodeJwt } from 'jose'
@@ -19,11 +19,11 @@ export default class FrontendWithAuth extends Frontend {
 
   constructor() {
     super()
-    this.trpcAuth = createTRPCProxyClient<AuthRouter>({
-      transformer: superjson,
+    this.trpcAuth = createTRPCClient<AuthRouter>({
       links: [
         httpBatchLink({
           url: `${API_ORIGIN}/auth/trpc`,
+          transformer: superjson,
           maxURLLength: 2083,
           headers: async () => {
             return {

@@ -1,15 +1,15 @@
-import { createTRPCProxyClient, httpBatchLink, TRPCClientError } from '@trpc/client'
+import { createTRPCClient, httpBatchLink, TRPCClientError } from '@trpc/client'
 import superjson from 'superjson'
 
 import type { AppRouter as AuthRouter } from '@auth/trpc'
 
 import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
-const createClient = () => createTRPCProxyClient<AuthRouter>({
-  transformer: superjson,
+const createClient = () => createTRPCClient<AuthRouter>({
   links: [
     httpBatchLink({
       url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
+      transformer: superjson,
       maxURLLength: 2083,
       headers: () => {
         return {}
