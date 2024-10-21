@@ -56,7 +56,7 @@
           </ParagraphDefault>
           <SetsList
             :sets="filteredSets"
-            :cards-info-by-set-id="cardsInfo"
+            :cards-info-by-set-id="cardsInfoBySetId"
             :fetching="fetchingAllSets"
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             class="my-7"
@@ -103,11 +103,11 @@ const { getAllSets, getCardsInfoForSet, fetchingAllSets, fetchingUserErrorMessag
 
 const sets = ref<SetDto[]>([])
 
-const cardsInfoWithLoadingStatus = ref<Record<SetDto['id'], { cardsInfo: SetCardsInfoDto | null, startedLoading: boolean }>>({})
+const cardsInfoWithLoadingStatusBySetId = ref<Record<SetDto['id'], { cardsInfo: SetCardsInfoDto | null, startedLoading: boolean }>>({})
 
-const cardsInfo = computed<SetCardsInfoBySetId>(() => {
+const cardsInfoBySetId = computed<SetCardsInfoBySetId>(() => {
   const result: SetCardsInfoBySetId = {}
-  for (const [setId, { cardsInfo }] of Object.entries(cardsInfoWithLoadingStatus.value)) {
+  for (const [setId, { cardsInfo }] of Object.entries(cardsInfoWithLoadingStatusBySetId.value)) {
     if (cardsInfo === undefined) {
       continue
     }
@@ -117,12 +117,12 @@ const cardsInfo = computed<SetCardsInfoBySetId>(() => {
 })
 
 const updateCardsInfoForSetsInViewport = async () => {
-  const setsSortedByNumberOfCards = [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
+  const setsSortedByNumberOfCards = getSetsSortedByNumberOfCardsDesc()
   for (const set of setsSortedByNumberOfCards) {
     if (!isSetInViewport(set.id)) {
       continue
     }
-    if (cardsInfoWithLoadingStatus.value[set.id]?.startedLoading === true) {
+    if (cardsInfoWithLoadingStatusBySetId.value[set.id]?.startedLoading === true) {
       continue
     }
     setStartedLoadingForSet(set.id)
@@ -149,8 +149,10 @@ const loadAllSets = async () => {
 
 const resetSetsAndCardsInfo = () => {
   sets.value = []
-  cardsInfoWithLoadingStatus.value = {}
+  cardsInfoWithLoadingStatusBySetId.value = {}
 }
+
+const getSetsSortedByNumberOfCardsDesc = () => [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
 
 watch(isLoggedIn, async (isLoggedIn) => {
   if (!isLoggedIn) {
@@ -159,7 +161,7 @@ watch(isLoggedIn, async (isLoggedIn) => {
     return
   }
 
-  loadAllSets()
+  await loadAllSets()
   await nextTick()
   updateCardsInfoForSetsInViewport()
   startListeningForScroll()
@@ -176,31 +178,28 @@ const isSetInViewport = (id: string) => {
 }
 
 const setStartedLoadingForSet = (setId: string) => {
-  cardsInfoWithLoadingStatus.value = {
-    ...cardsInfoWithLoadingStatus.value,
+  cardsInfoWithLoadingStatusBySetId.value = {
+    ...cardsInfoWithLoadingStatusBySetId.value,
     [setId]: {
-      ...cardsInfoWithLoadingStatus.value[setId],
+      ...cardsInfoWithLoadingStatusBySetId.value[setId],
       startedLoading: true,
     },
   }
 }
 
 const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) => {
-  cardsInfoWithLoadingStatus.value = {
-    ...cardsInfoWithLoadingStatus.value,
+  cardsInfoWithLoadingStatusBySetId.value = {
+    ...cardsInfoWithLoadingStatusBySetId.value,
     [setId]: {
-      ...cardsInfoWithLoadingStatus.value[setId],
+      ...cardsInfoWithLoadingStatusBySetId.value[setId],
       cardsInfo,
     },
   }
 }
 
-const textSearch = ref<string>('')
-const filteredSets = computed(() => {
-  if (!textSearch.value) {
-    return sets.value
-  }
 
-  return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
-})
+// Search
+const textSearch = ref<string>('')
+
+const filteredSets = computed(() => sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.trim().toLowerCase())))
 </script>
