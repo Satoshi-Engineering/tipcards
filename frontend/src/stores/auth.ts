@@ -86,6 +86,7 @@ const logoutAllOtherDevices = async () => {
     accessToken.value = result.accessToken
   } catch (error) {
     console.error(error)
+    throw error
   }
 }
 

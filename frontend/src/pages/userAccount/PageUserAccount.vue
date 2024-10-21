@@ -54,8 +54,8 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
-import useAuthService from '@/modules/useAuthService'
 import { useAuthStore } from '@/stores/auth'
+import { useModalLoginStore } from '@/stores/modalLogin'
 
 import ProfileForm from './ProfileForm.vue'
 
@@ -65,7 +65,8 @@ const authStore = useAuthStore()
 const { logout } = authStore
 const { isLoggedIn } = storeToRefs(authStore)
 const { t } = useI18n()
-const authService = useAuthService()
+const modalLoginStore = useModalLoginStore()
+const { showModalLogin, modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const logoutUserErrorMessages = ref<string[]>([])
 
@@ -81,9 +82,10 @@ const logoutAllOtherDevices = async () => {
   loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
-    await authService.logoutAllOtherDevices()
+    await authStore.logoutAllOtherDevices()
     loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
+    showModalLoginWithErrorMessage()
     console.error(error)
     logoutUserErrorMessages.value.push(t('userAccount.errors.unableToLogoutAllOtherDevices'))
   }
@@ -95,4 +97,11 @@ watchEffect(() => {
     router.push({ name: 'home', params: { lang: route.params.lang } })
   }
 })
+
+const showModalLoginWithErrorMessage = () => {
+  logout()
+  showModalLogin.value = true
+  modalLoginUserMessage.value = t('auth.errors.refreshTokenDefaultError')
+}
+
 </script>
