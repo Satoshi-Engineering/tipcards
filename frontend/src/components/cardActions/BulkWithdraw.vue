@@ -43,7 +43,11 @@ const router = useRouter()
 const { t } = useI18n()
 
 const bulkWithdrawHref = computed(() => {
-  if (route.name !== 'cards') {
+  if (
+    route.name !== 'cards'
+    || route.params.setId == null
+    || route.params.setId === ''
+  ) {
     return ''
   }
   return router.resolve({

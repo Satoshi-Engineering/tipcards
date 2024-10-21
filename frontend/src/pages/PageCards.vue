@@ -25,7 +25,7 @@
             {{ t('cards.status.headline') }}
           </HeadlineDefault>
           <ButtonDefault
-            variant="no-border"
+            variant="secondary"
             class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
             :disabled="reloadingStatusForCards"
             @click="reloadStatusForCards()"
@@ -238,7 +238,7 @@
             <span v-else-if="saving" class="inline-block ms-2 h-[1em] w-[1em]" />
           </ButtonWithTooltip>
           <ButtonDefault
-            variant="no-border"
+            variant="secondary"
             :disabled="deleting || !isSaved"
             :loading="deleting"
             @click="deleteCardsSet"
@@ -258,7 +258,7 @@
             {{ t('cards.actions.buttonPrint') }}
           </ButtonDefault>
           <ButtonDefault
-            variant="no-border"
+            variant="secondary"
             @click="downloadZip()"
           >
             {{ t('cards.actions.buttonDownloadPngs') }}
