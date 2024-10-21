@@ -24,7 +24,7 @@ initHtmlSeoWatchers()
 
 router.afterEach(async () => {
   if (route.params.lang != null && route.params.lang !== '') {
-    setLocale(route.params.lang)
+    await setLocale(route.params.lang)
   }
   await nextTick()
   setDocumentTitle()
