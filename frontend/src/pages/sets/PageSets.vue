@@ -56,7 +56,7 @@
           </ParagraphDefault>
           <SetsList
             :sets="filteredSets"
-            :statistics="statistics"
+            :cards-info-by-set-id="cardsInfo"
             :fetching="fetchingAllSets"
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             class="my-7"
@@ -88,10 +88,10 @@ import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorag
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets, { type SetStatisticsBySetId } from '@/modules/useSets'
+import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
 import { watch } from 'vue'
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
-import type { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto'
+import type { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -99,29 +99,65 @@ const modalLoginStore = useModalLoginStore()
 
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const { getAllSets, getStatisticsForSet, fetchingAllSets, fetchingUserErrorMessages } = useSets()
+const { getAllSets, getCardsInfoForSet, fetchingAllSets, fetchingUserErrorMessages } = useSets()
 
 const sets = ref<SetDto[]>([])
 
-const statisticsWithLoadingInfo = ref<Record<SetDto['id'], { statistics: SetStatisticsDto | null, startedLoading: boolean }>>({})
+const cardsInfoWithLoadingStatus = ref<Record<SetDto['id'], { cardsInfo: SetCardsInfoDto | null, startedLoading: boolean }>>({})
 
-const statistics = computed<SetStatisticsBySetId>(() => {
-  const result: SetStatisticsBySetId = {}
-  for (const [setId, { statistics }] of Object.entries(statisticsWithLoadingInfo.value)) {
-    if (statistics === undefined) {
+const cardsInfo = computed<SetCardsInfoBySetId>(() => {
+  const result: SetCardsInfoBySetId = {}
+  for (const [setId, { cardsInfo }] of Object.entries(cardsInfoWithLoadingStatus.value)) {
+    if (cardsInfo === undefined) {
       continue
     }
-    result[setId] = statistics
+    result[setId] = cardsInfo
   }
   return result
 })
 
-const debouncedUpdateSetsStatistics = debounce(updateSetStatisticsForSetsInViewport, 1000)
+const updateCardsInfoForSetsInViewport = async () => {
+  const setsSortedByNumberOfCards = [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
+  for (const set of setsSortedByNumberOfCards) {
+    if (!isSetInViewport(set.id)) {
+      continue
+    }
+    if (cardsInfoWithLoadingStatus.value[set.id]?.startedLoading === true) {
+      continue
+    }
+    cardsInfoWithLoadingStatus.value = {
+      ...cardsInfoWithLoadingStatus.value,
+      [set.id]: {
+        ...cardsInfoWithLoadingStatus.value[set.id],
+        startedLoading: true,
+      },
+    }
+    cardsInfoWithLoadingStatus.value = {
+      ...cardsInfoWithLoadingStatus.value,
+      [set.id]: {
+        ...cardsInfoWithLoadingStatus.value[set.id],
+        cardsInfo: await getCardsInfoForSet(set.id),
+      },
+    }
+  }
+}
+
+const debouncedUpdateCardsInfoForSetsInViewport = debounce(updateCardsInfoForSetsInViewport, 1000)
+
+const startListeningForScroll = () => {
+  window.addEventListener('scroll', debouncedUpdateCardsInfoForSetsInViewport)
+  window.addEventListener('resize', debouncedUpdateCardsInfoForSetsInViewport)
+}
+
+const stopListeningForScroll = () => {
+  window.removeEventListener('scroll', debouncedUpdateCardsInfoForSetsInViewport)
+  window.removeEventListener('resize', debouncedUpdateCardsInfoForSetsInViewport)
+}
 
 watch(isLoggedIn, async (isLoggedIn) => {
   if (!isLoggedIn) {
     sets.value = []
-    statisticsWithLoadingInfo.value = {}
+    cardsInfoWithLoadingStatus.value = {}
     stopListeningForScroll()
     return
   }
@@ -129,7 +165,7 @@ watch(isLoggedIn, async (isLoggedIn) => {
   sets.value = await getAllSets()
 
   await nextTick()
-  updateSetStatisticsForSetsInViewport()
+  updateCardsInfoForSetsInViewport()
   startListeningForScroll()
 }, { immediate: true })
 
@@ -142,43 +178,7 @@ const filteredSets = computed(() => {
   return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
 })
 
-async function updateSetStatisticsForSetsInViewport() {
-  const setsSortedByNumberOfCards = [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
-  for (const set of setsSortedByNumberOfCards) {
-    if (!setIsInViewport(set.id)) {
-      continue
-    }
-    if (statisticsWithLoadingInfo.value[set.id]?.startedLoading === true) {
-      continue
-    }
-    statisticsWithLoadingInfo.value = {
-      ...statisticsWithLoadingInfo.value,
-      [set.id]: {
-        ...statisticsWithLoadingInfo.value[set.id],
-        startedLoading: true,
-      },
-    }
-    statisticsWithLoadingInfo.value = {
-      ...statisticsWithLoadingInfo.value,
-      [set.id]: {
-        ...statisticsWithLoadingInfo.value[set.id],
-        statistics: await getStatisticsForSet(set.id),
-      },
-    }
-  }
-}
-
-function startListeningForScroll() {
-  window.addEventListener('scroll', debouncedUpdateSetsStatistics)
-  window.addEventListener('resize', debouncedUpdateSetsStatistics)
-}
-
-function stopListeningForScroll() {
-  window.removeEventListener('scroll', debouncedUpdateSetsStatistics)
-  window.removeEventListener('resize', debouncedUpdateSetsStatistics)
-}
-
-const setIsInViewport = (id: string) => {
+const isSetInViewport = (id: string) => {
   const element = document.querySelector(`[data-set-id="${id}"]`)
   if (!element) {
     return false

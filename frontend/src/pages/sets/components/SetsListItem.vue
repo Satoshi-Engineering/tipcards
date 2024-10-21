@@ -37,40 +37,40 @@
       </time>
     </div>
     <div
-      v-if="!noStatistics"
+      v-if="!noCardsInfo"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
-      data-test="sets-list-item-statistics"
+      data-test="sets-list-item-cards-info"
     >
-      <template v-if="statistics == null">
+      <template v-if="cardsInfo == null">
         <div
-          v-for="n in displayedStatisticsItems"
+          v-for="n in displayedCardsInfoItems"
           :key="n"
           class="w-full h-full bg-white-50 border-[0.7px] border-black opacity-20"
         />
       </template>
       <template v-else>
         <div
-          v-for="n in statisticsItems.withdrawn"
+          v-for="n in cardsInfoItems.withdrawn"
           :key="n"
-          data-test="sets-list-item-statistics-withdrawn"
+          data-test="sets-list-item-cards-info-withdrawn"
           class="w-full h-full bg-green"
         />
         <div
-          v-for="n in statisticsItems.funded"
+          v-for="n in cardsInfoItems.funded"
           :key="n"
-          data-test="sets-list-item-statistics-funded"
+          data-test="sets-list-item-cards-info-funded"
           class="w-full h-full bg-yellow"
         />
         <div
-          v-for="n in statisticsItems.pending"
+          v-for="n in cardsInfoItems.pending"
           :key="n"
-          data-test="sets-list-item-statistics-pending"
+          data-test="sets-list-item-cards-info-pending"
           class="w-full h-full bg-red-light"
         />
         <div
-          v-for="n in statisticsItems.unfunded"
+          v-for="n in cardsInfoItems.unfunded"
           :key="n"
-          data-test="sets-list-item-statistics-unfunded"
+          data-test="sets-list-item-cards-info-unfunded"
           class="w-full h-full bg-white border-[0.7px] border-black"
         />
       </template>
@@ -82,7 +82,7 @@
 import { computed, type PropType } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
-import type { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto'
+import type { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto'
 
 import useSets from '@/modules/useSets'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -96,46 +96,46 @@ const props = defineProps({
     type: Object as PropType<SetDto>,
     required: true,
   },
-  statistics: {
-    type: Object as PropType<SetStatisticsDto>,
+  cardsInfo: {
+    type: Object as PropType<SetCardsInfoDto>,
     default: undefined,
   },
-  noStatistics: {
+  noCardsInfo: {
     type: Boolean,
     default: false,
   },
 })
 
-const displayedStatisticsItems = computed(() => Math.min(12, props.set.settings.numberOfCards))
+const displayedCardsInfoItems = computed(() => Math.min(12, props.set.settings.numberOfCards))
 
-const statisticsItems = computed(() => {
-  const sortedStatistics: { kpi: keyof SetStatisticsDto, count: number }[] = [
-    { kpi: 'withdrawn', count: props.statistics?.withdrawn ?? 0 },
-    { kpi: 'funded', count: props.statistics?.funded ?? 0 },
-    { kpi: 'pending', count: props.statistics?.pending ?? 0 },
-    { kpi: 'unfunded', count: props.statistics?.unfunded ?? 0 },
+const cardsInfoItems = computed(() => {
+  const sortedCardsInfo: { kpi: keyof SetCardsInfoDto, count: number }[] = [
+    { kpi: 'withdrawn', count: props.cardsInfo?.withdrawn ?? 0 },
+    { kpi: 'funded', count: props.cardsInfo?.funded ?? 0 },
+    { kpi: 'pending', count: props.cardsInfo?.pending ?? 0 },
+    { kpi: 'unfunded', count: props.cardsInfo?.unfunded ?? 0 },
   ]
-  sortedStatistics.sort((a, b) => a.count - b.count)
+  sortedCardsInfo.sort((a, b) => a.count - b.count)
 
-  const statisticsItems = {
+  const cardsInfoItems = {
     withdrawn: 0,
     funded: 0,
     pending: 0,
     unfunded: 0,
   }
 
-  let remainingBoxes = displayedStatisticsItems.value
+  let remainingBoxes = displayedCardsInfoItems.value
 
-  sortedStatistics.forEach((statistic) => {
-    statisticsItems[statistic.kpi] = Math.min(getRelativeStatistics(statistic.count), remainingBoxes)
-    remainingBoxes -= statisticsItems[statistic.kpi]
+  sortedCardsInfo.forEach((cardsInfo) => {
+    cardsInfoItems[cardsInfo.kpi] = Math.min(getRelativeCardsInfo(cardsInfo.count), remainingBoxes)
+    remainingBoxes -= cardsInfoItems[cardsInfo.kpi]
   })
 
-  return statisticsItems
+  return cardsInfoItems
 })
 
-const getRelativeStatistics = (value: number = 0) => {
-  const relativeNumber = value / props.set.settings.numberOfCards * displayedStatisticsItems.value
+const getRelativeCardsInfo = (value: number = 0) => {
+  const relativeNumber = value / props.set.settings.numberOfCards * displayedCardsInfoItems.value
   if (relativeNumber <= 0) {
     return 0
   }

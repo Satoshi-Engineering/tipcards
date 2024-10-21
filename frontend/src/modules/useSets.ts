@@ -2,12 +2,12 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
-import { SetStatisticsDto } from '@shared/data/trpc/tipcards/SetStatisticsDto.js'
+import { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto.js'
 import { useAuthStore } from '@/stores/auth'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import type { SetSettingsDto } from '@shared/data/trpc/tipcards/SetSettingsDto'
 
-export type SetStatisticsBySetId = Record<SetDto['id'], SetStatisticsDto | null>
+export type SetCardsInfoBySetId = Record<SetDto['id'], SetCardsInfoDto | null>
 
 export default () => {
   /** @throws */
@@ -30,10 +30,10 @@ export default () => {
     }
   }
 
-  /** @returns null if statistics cannot be retrieved */
-  const getStatisticsForSet = async (setId: SetDto['id']): Promise<SetStatisticsDto | null> => {
+  /** @returns null if cardsInfo cannot be retrieved */
+  const getCardsInfoForSet = async (setId: SetDto['id']): Promise<SetCardsInfoDto | null> => {
     try {
-      return await set.getStatisticsBySetId.query(setId)
+      return await set.getCardsInfoBySetId.query(setId)
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
         console.error(`Error for set.getStatisticsBySetId for set ${setId}`, error)
@@ -43,18 +43,18 @@ export default () => {
   }
 
   /** @throws */
-  const getStatisticsBySetId = async (sets: SetDto[]): Promise<SetStatisticsBySetId> => {
-    fetchingStatistics.value = true
-    const statisticsWithSetId = await Promise.all(sets.map(async ({ id }) => ({
+  const getCardsInfoBySetId = async (sets: SetDto[]): Promise<SetCardsInfoBySetId> => {
+    fetchingCardsInfo.value = true
+    const cardsInfoWithSetId = await Promise.all(sets.map(async ({ id }) => ({
       setId: id,
-      statistics: await getStatisticsForSet(id),
+      cardsInfo: await getCardsInfoForSet(id),
     })))
-    fetchingStatistics.value = false
+    fetchingCardsInfo.value = false
 
-    return statisticsWithSetId.reduce((acc, { setId, statistics }) => {
-      acc[setId] = statistics
+    return cardsInfoWithSetId.reduce((acc, { setId, cardsInfo }) => {
+      acc[setId] = cardsInfo
       return acc
-    }, {} as SetStatisticsBySetId)
+    }, {} as SetCardsInfoBySetId)
   }
 
 
@@ -75,16 +75,16 @@ export default () => {
   const { getValidAccessToken } = authStore
   const { set } = useTRpc(getValidAccessToken)
   const fetchingAllSets = ref(false)
-  const fetchingStatistics = ref(false)
+  const fetchingCardsInfo = ref(false)
   const fetchingUserErrorMessages = ref<string[]>([])
 
   return {
     fetchingUserErrorMessages: computed(() => fetchingUserErrorMessages.value),
     fetchingAllSets,
-    fetchingStatistics,
+    fetchingCardsInfo,
     getAllSets,
-    getStatisticsForSet,
-    getStatisticsBySetId,
+    getCardsInfoForSet,
+    getCardsInfoBySetId,
     encodeCardsSetSettings,
   }
 }

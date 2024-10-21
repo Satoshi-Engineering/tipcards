@@ -5,7 +5,7 @@
         {{ $t('sets.setInfo') }}
       </HeadlineDefault>
       <HeadlineDefault
-        v-if="!noStatistics"
+        v-if="!noCardsInfo"
         level="h4"
         class="text-sm font-normal !my-0"
       >
@@ -26,8 +26,8 @@
         <SetsListItem
           :data-set-id="set.id"
           :set="set"
-          :statistics="statistics[set.id] ?? undefined"
-          :no-statistics="noStatistics || statistics[set.id] === null"
+          :cards-info="cardsInfoBySetId[set.id] ?? undefined"
+          :no-cards-info="noCardsInfo || cardsInfoBySetId[set.id] === null"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
         />
       </li>
@@ -45,7 +45,7 @@ import { computed, type PropType } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
 
-import type { SetStatisticsBySetId } from '@/modules/useSets'
+import type { SetCardsInfoBySetId } from '@/modules/useSets'
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -56,11 +56,11 @@ const props = defineProps({
     type: Array as PropType<SetDto[]>,
     default: () => [],
   },
-  statistics: {
-    type: Object as PropType<SetStatisticsBySetId>,
+  cardsInfoBySetId: {
+    type: Object as PropType<SetCardsInfoBySetId>,
     default: () => ({}),
   },
-  noStatistics: {
+  noCardsInfo: {
     type: Boolean,
     default: false,
   },

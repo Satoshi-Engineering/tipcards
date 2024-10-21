@@ -48,7 +48,7 @@ describe('Sets Page', () => {
       t0 = performance.now()
     })
 
-    cy.intercept('/trpc/set.getStatisticsBySetId**').as('apiSetGetStatistics')
+    cy.intercept('/trpc/set.getCardsInfoBySetId**').as('apiSetGetCardsInfo')
     tipCards.gotoSetsPage()
 
     cy.getTestElement('sets-list-with-data').find('a')
@@ -56,19 +56,19 @@ describe('Sets Page', () => {
 
     cy.then(() => {
       t1 = performance.now()
-      cy.log(`Page load excl. statistics took ${t1 - t0} milliseconds.`)
+      cy.log(`Page load excl. cardsInfo took ${t1 - t0} milliseconds.`)
     })
 
-    cy.wait('@apiSetGetStatistics', { timeout: 1000 * numberOfSets })
+    cy.wait('@apiSetGetCardsInfo', { timeout: 1000 * numberOfSets })
 
-    cy.getTestElement('sets-list-item-statistics-pending', { timeout: 1000 * numberOfSets })
+    cy.getTestElement('sets-list-item-cards-info-pending', { timeout: 1000 * numberOfSets })
       .should('have.length.at.least', Math.min(12, numberOfCards))
       .should('have.length.at.most', numberOfSets * Math.min(12, numberOfCards))
-    // adjust this with a check for the actual number of visible sets and their statistics items
+    // adjust this with a check for the actual number of visible sets and their cardsInfo items
 
     cy.then(() => {
       t2 = performance.now()
-      cy.log(`Page load incl. statistics took ${t2 - t0} milliseconds.`)
+      cy.log(`Page load incl. cardsInfo took ${t2 - t0} milliseconds.`)
     })
   })
 })
