@@ -125,20 +125,9 @@ const updateCardsInfoForSetsInViewport = async () => {
     if (cardsInfoWithLoadingStatus.value[set.id]?.startedLoading === true) {
       continue
     }
-    cardsInfoWithLoadingStatus.value = {
-      ...cardsInfoWithLoadingStatus.value,
-      [set.id]: {
-        ...cardsInfoWithLoadingStatus.value[set.id],
-        startedLoading: true,
-      },
-    }
-    cardsInfoWithLoadingStatus.value = {
-      ...cardsInfoWithLoadingStatus.value,
-      [set.id]: {
-        ...cardsInfoWithLoadingStatus.value[set.id],
-        cardsInfo: await getCardsInfoForSet(set.id),
-      },
-    }
+    setStartedLoadingForSet(set.id)
+    const cardsInfo = await getCardsInfoForSet(set.id)
+    setCardsInfoForSet(set.id, cardsInfo)
   }
 }
 
@@ -154,29 +143,27 @@ const stopListeningForScroll = () => {
   window.removeEventListener('resize', debouncedUpdateCardsInfoForSetsInViewport)
 }
 
+const loadAllSets = async () => {
+  sets.value = await getAllSets()
+}
+
+const resetSetsAndCardsInfo = () => {
+  sets.value = []
+  cardsInfoWithLoadingStatus.value = {}
+}
+
 watch(isLoggedIn, async (isLoggedIn) => {
   if (!isLoggedIn) {
-    sets.value = []
-    cardsInfoWithLoadingStatus.value = {}
+    resetSetsAndCardsInfo()
     stopListeningForScroll()
     return
   }
 
-  sets.value = await getAllSets()
-
+  loadAllSets()
   await nextTick()
   updateCardsInfoForSetsInViewport()
   startListeningForScroll()
 }, { immediate: true })
-
-const textSearch = ref<string>('')
-const filteredSets = computed(() => {
-  if (!textSearch.value) {
-    return sets.value
-  }
-
-  return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
-})
 
 const isSetInViewport = (id: string) => {
   const element = document.querySelector(`[data-set-id="${id}"]`)
@@ -187,4 +174,33 @@ const isSetInViewport = (id: string) => {
   const rect = element.getBoundingClientRect()
   return rect.top < window.innerHeight && rect.bottom > 0
 }
+
+const setStartedLoadingForSet = (setId: string) => {
+  cardsInfoWithLoadingStatus.value = {
+    ...cardsInfoWithLoadingStatus.value,
+    [setId]: {
+      ...cardsInfoWithLoadingStatus.value[setId],
+      startedLoading: true,
+    },
+  }
+}
+
+const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) => {
+  cardsInfoWithLoadingStatus.value = {
+    ...cardsInfoWithLoadingStatus.value,
+    [setId]: {
+      ...cardsInfoWithLoadingStatus.value[setId],
+      cardsInfo,
+    },
+  }
+}
+
+const textSearch = ref<string>('')
+const filteredSets = computed(() => {
+  if (!textSearch.value) {
+    return sets.value
+  }
+
+  return sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.toLowerCase()))
+})
 </script>
