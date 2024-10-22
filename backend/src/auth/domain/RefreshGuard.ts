@@ -1,5 +1,6 @@
 import type { Response, Request } from 'express'
 import { randomUUID } from 'crypto'
+import { errors as joseErrors } from 'jose'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import { PermissionsEnum } from '@shared/data/auth/User.js'
@@ -170,8 +171,16 @@ export default class RefreshGuard {
   }
 
   private async validateRefreshTokenAndGetPayload(refreshJwt: string, host: string) {
-    const payload = await this.jwtIssuer.validate(refreshJwt, host)
-    return AccessTokenPayload.parse(payload)
+    try {
+      const payload = await this.jwtIssuer.validate(refreshJwt, host)
+      return AccessTokenPayload.parse(payload)
+    } catch (error) {
+      if (error instanceof joseErrors.JWTExpired) {
+        throw new ErrorWithCode('Refresh token expired', ErrorCode.RefreshTokenExpired)
+      }
+
+      throw error
+    }
   }
 
   private getHostFromRequest() {
