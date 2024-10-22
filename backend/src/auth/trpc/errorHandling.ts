@@ -12,7 +12,7 @@ type Mutable = {
 const transformTRPCErrorAccordingToErrorWithCodeErrorCode = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
   trpcError.message = errorWithCoderError.toTrpcMessage()
 
-  if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvaid) {
+  if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvalid) {
     trpcError.code = 'UNAUTHORIZED'
   }
   if (errorWithCoderError.code === ErrorCode.RefreshTokenMissing) {

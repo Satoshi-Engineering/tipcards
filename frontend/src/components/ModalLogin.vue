@@ -51,9 +51,11 @@
 </template>
 
 <script lang="ts" setup>
+import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
-import { io, Socket } from 'socket.io-client'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
+
+import { LnurlAuthLoginStatusEnum } from '@backend/auth/data/trpc/LnurlAuthLoginDto'
 
 import { useProfileStore } from '@/stores/profile'
 import useTRpcAuth from '@/modules/useTRpcAuth'
@@ -64,7 +66,6 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 import HeadlineDefault from './typography/HeadlineDefault.vue'
 import ButtonContainer from './buttons/ButtonContainer.vue'
 
@@ -83,76 +84,60 @@ const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
-const hash = ref<string>()
 const loginFailed = ref(false)
 const missingEmail = ref(false)
-let socket: Socket
+let subscription: Unsubscribable
 
-onBeforeMount(async () => {
+const safeLogin = async (hash: string) => {
   try {
-    const trpcAuth = useTRpcAuth()
-    const response = await trpcAuth.lnurlAuth.create.query()
-    lnurl.value = response.lnurlAuth
-    hash.value = response.hash
-  } catch(error) {
-    console.error(error)
-  }
-  connectSocket()
-  fetchingLogin.value = false
-  loginFailed.value = false
-})
-const connectSocket = () => {
-  socket = io(TIPCARDS_AUTH_ORIGIN)
-  socket.on('error', () => {
+    await login(hash)
+  } catch (error) {
     loginFailed.value = true
-  })
-  socket.on('loggedIn', async () => {
-    if (hash.value == null) {
-      return
-    }
-
-    try {
-      await login(hash.value)
-    } catch (error) {
-      loginFailed.value = true
-      console.error(error)
-    }
-    modalLoginUserMessage.value = null
-
-    try {
-      await subscribe()
-      if (typeof userEmail.value != 'string' || userEmail.value.length < 1) {
-        missingEmail.value = true
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  })
-  socket.on('connect', () => {
-    socket.emit('waitForLogin', { hash: hash.value })
-  })
-}
-onBeforeUnmount(() => {
-  hash.value = undefined
-  lnurl.value = undefined
-  if (socket != null) {
-    socket.close()
-  }
-})
-
-/////
-// reconnect on tab change (connection gets lost on smartphones sometimes)
-const reconnectOnVisibilityChange = () => {
-  if (document.visibilityState !== 'visible' || socket == null || hash.value == null) {
+    console.error(error)
     return
   }
-  socket.close()
-  connectSocket()
+
+  modalLoginUserMessage.value = null
+  try {
+    await subscribe()
+    if (typeof userEmail.value != 'string' || userEmail.value.length < 1) {
+      missingEmail.value = true
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
-onBeforeMount(() => {
-  document.addEventListener('visibilitychange', reconnectOnVisibilityChange)
+
+const trpcAuth = useTRpcAuth()
+onBeforeMount(async () => {
+  subscription = trpcAuth.lnurlAuth.login.subscribe(
+    undefined,
+    {
+      onData: (lnurlAuthLoginDto) => {
+        if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.lnurlCreated) {
+          fetchingLogin.value = false
+          lnurl.value = lnurlAuthLoginDto.lnurlAuth
+          return
+        }
+
+        if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.loggedIn) {
+          safeLogin(lnurlAuthLoginDto.hash)
+        } else if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.failed) {
+          loginFailed.value = true
+        }
+
+        subscription?.unsubscribe()
+      },
+      onError: (error) => {
+        loginFailed.value = true
+        console.error('trpc.subscription.onError', error)
+      },
+    },
+  )
 })
+
 onBeforeUnmount(() => {
-  document.removeEventListener('visibilitychange', reconnectOnVisibilityChange)
+  lnurl.value = undefined
+  subscription?.unsubscribe()
 })
 </script>

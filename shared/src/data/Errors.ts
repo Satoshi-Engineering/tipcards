@@ -49,7 +49,7 @@ export enum ErrorCode {
   AuthJwtHanderAccessTokenCreationError = 'AuthJwtHanderAccessTokenCreationError',
   AuthUserNotLoaded = 'AuthUserNotLoaded',
   AuthHostMissingInRequest = 'AuthHostMissingInRequest',
-  LnurlAuthLoginHashInvaid = 'LnurlAuthLoginHashInvaid',
+  LnurlAuthLoginHashInvalid = 'LnurlAuthLoginHashInvalid',
   RefreshTokenMissing = 'RefreshTokenMissing',
   RefreshTokenInvalid = 'RefreshTokenInvalid',
   RefreshTokenExpired = 'RefreshTokenExpired',

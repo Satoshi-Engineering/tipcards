@@ -34,9 +34,6 @@ app.use('/trpc', proxy(`localhost:${EXPRESS_PORT}`, {
 app.use('/auth/trpc', proxy(`localhost:${EXPRESS_PORT}`, {
   proxyReqPathResolver: (req: express.Request) => `/auth/trpc${req.url}`,
 }))
-app.use('/socket.io', proxy(`localhost:${EXPRESS_PORT}`, {
-  proxyReqPathResolver: (req: express.Request) => `/socket.io${req.url}`,
-}))
 app.use('/lnurl', proxy(`localhost:${LNURL_PORT}`, {
   proxyReqPathResolver: (req: express.Request) => `/lnurl${req.url}`,
 }))

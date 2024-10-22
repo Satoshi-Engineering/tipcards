@@ -49,7 +49,7 @@ export default class FrontendWithAuth extends Frontend {
 
   async authCreateLnUrlAuth() {
     const response = await this.trpcAuth.lnurlAuth.create.query()
-    this.authServiceLoginHash = response.hash
+    this.authServiceLoginHash = response.hash as string
     return response
   }
 

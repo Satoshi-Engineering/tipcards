@@ -1,11 +1,10 @@
-import { describe, vi, it, expect, beforeEach } from 'vitest'
-
 import '../../mocks/process.env.js'
-import '../../../lib/mocks/lnurl.js'
-import { LnurlServerMock } from '../../../lib/mocks/lnurl.js'
+import '../../mocks/lnurl.js'
+import { LnurlServerMock } from '../../mocks/lnurl.js'
 
 import { createHash } from 'crypto'
 import lnurl from 'lnurl'
+import { describe, vi, it, expect, beforeEach } from 'vitest'
 
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import LoginInformer from '@auth/domain/LoginInformer.js'
@@ -26,9 +25,9 @@ describe('LnurlAuthLogin', () => {
 
   beforeEach(() => {
     loginInformerMock = {
-      emitLoginSuccessfull: vi.fn(),
-      addLoginHash: vi.fn(),
-      removeLoginHash: vi.fn(),
+      waitForLogin: vi.fn(),
+      emitLoginSuccessful: vi.fn(),
+      emitLoginFailed: vi.fn(),
     } as unknown as LoginInformer
 
     lnurlAuthLogin = new LnurlAuthLogin(
@@ -53,7 +52,6 @@ describe('LnurlAuthLogin', () => {
     const lnurlAuth = 'mockLnurlAuth'
     const secret = 'mockSecret'
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
-
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValueOnce({
       url: 'mockUrl',
       encoded: lnurlAuth,
@@ -64,44 +62,57 @@ describe('LnurlAuthLogin', () => {
 
     expect(result.lnurlAuth).toBe(lnurlAuth)
     expect(result.hash).toBe(hash)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
   })
 
-  it('should add a one-time login hash & walletPublicKey, after login event from lnurlserver', () => {
+  it('should send login successful event after login event from lnurlserver', () => {
     const hash = 'mockHash'
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
+    const walletLinkingKey = 'mockPublicKey'
+    const loginEvent = { key: walletLinkingKey, hash: hash }
 
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
     sendLoginEvent(loginEvent)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
+
+    expect(loginInformerMock.emitLoginSuccessful).toHaveBeenCalledWith(hash)
+  })
+
+  it('should return walletLinkingKey after successful login', () => {
+    const hash = 'mockHash'
+    const walletLinkingKey = 'mockPublicKey'
+    const loginEvent = { key: walletLinkingKey, hash: hash }
+    sendLoginEvent(loginEvent)
+
+    const result = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)
+
+    expect(result).toBe(walletLinkingKey)
+  })
+
+  it('should return wallet linking key only once', () => {
+    const hash = 'mockHash'
+    const walletLinkingKey = 'mockPublicKey'
+    const loginEvent = { key: walletLinkingKey, hash: hash }
+
+    sendLoginEvent(loginEvent)
+    lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)
+
+    expect(loginInformerMock.emitLoginSuccessful).toHaveBeenCalledWith(hash)
   })
 
   it('should expire one-time login hash', async () => {
     const hash = 'mockHash'
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
+    const walletLinkingKey = 'mockPublicKey'
+    const loginEvent = { key: walletLinkingKey, hash: hash }
 
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
     sendLoginEvent(loginEvent)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
+    await delay(loginHashExpirationTime + 1)
 
-    await delay(loginHashExpirationTime)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
+    expect(() => lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)).toThrowError()
   })
 
   it('should remove hash on create, if it exists', async () => {
     const secret = 'mockSecret'
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
+    const walletLinkingKey = 'mockPublicKey'
+    const loginEvent = { key: walletLinkingKey, hash: hash }
     sendLoginEvent(loginEvent)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
 
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValueOnce({
       url: 'mockUrl',
@@ -109,44 +120,7 @@ describe('LnurlAuthLogin', () => {
       secret: secret,
     })
     await lnurlAuthLogin.create()
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
-  })
 
-  it('should invalidate existing one time login hash', async () => {
-    const hash = 'mockHash'
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
-
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
-    sendLoginEvent(loginEvent)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(true)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(walletPublicKey)
-
-    lnurlAuthLogin.invalidateLoginHash(hash)
-    expect(lnurlAuthLogin.isOneTimeLoginHashValid(hash)).toBe(false)
-    expect(lnurlAuthLogin.getLinkingKeyFromOneTimeLoginHash(hash)).toBe(undefined)
-  })
-
-  it('should call loginInformer.addLoginHash after addling a one-time login hash', () => {
-    const hash = 'mockHash'
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
-
-    expect(loginInformerMock.addLoginHash).not.toHaveBeenCalled()
-    sendLoginEvent(loginEvent)
-    expect(loginInformerMock.addLoginHash).toHaveBeenCalledWith(hash)
-  })
-
-  it('should call loginInformer.removeLoginHash after removing a one-time login hash', () => {
-    const hash = 'mockHash'
-    const walletPublicKey = 'mockPublicKey'
-    const loginEvent = { key: walletPublicKey, hash: hash }
-    sendLoginEvent(loginEvent)
-
-    expect(loginInformerMock.removeLoginHash).not.toHaveBeenCalled()
-    lnurlAuthLogin.invalidateLoginHash(hash)
-    expect(loginInformerMock.removeLoginHash).toHaveBeenCalledWith(hash)
+    expect(() => lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)).toThrowError()
   })
 })

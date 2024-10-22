@@ -34,15 +34,12 @@ const startupApplication = async () => {
   await loadCoarsWhitelist()
   console.info(' - CORS whitelist loaded')
 
-  const server = app.listen(EXPRESS_PORT, async () => {
-    console.info(` - app running and listening on port ${EXPRESS_PORT}`)
-  })
-  Auth.startup(server)
-  console.info(' - Auth started')
-
   await Auth.init(JWT_AUTH_AUDIENCE)
   console.info(' - Auth initialized')
 
+  const server = app.listen(EXPRESS_PORT, async () => {
+    console.info(` - app running and listening on port ${EXPRESS_PORT}`)
+  })
   let connections: Socket[] = []
 
   server.on('connection', (connection: Socket) => {

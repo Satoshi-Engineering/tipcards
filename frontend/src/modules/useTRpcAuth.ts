@@ -1,4 +1,11 @@
-import { createTRPCClient, httpBatchLink, TRPCClientError } from '@trpc/client'
+import {
+  createTRPCClient,
+  splitLink,
+  httpBatchLink,
+  unstable_httpSubscriptionLink,
+  TRPCClientError,
+  type CreateTRPCClient,
+} from '@trpc/client'
 import superjson from 'superjson'
 
 import type { AppRouter as AuthRouter } from '@auth/trpc'
@@ -7,24 +14,26 @@ import { TIPCARDS_AUTH_ORIGIN } from '@/constants'
 
 const createClient = () => createTRPCClient<AuthRouter>({
   links: [
-    httpBatchLink({
-      url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
-      transformer: superjson,
-      maxURLLength: 2083,
-      headers: () => {
-        return {}
-      },
-      fetch(url, options) {
-        return fetch(url, {
+    splitLink({
+      condition: (operation) => operation.type === 'subscription',
+      true: unstable_httpSubscriptionLink({
+        url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
+        transformer: superjson,
+      }),
+      false: httpBatchLink({
+        url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
+        transformer: superjson,
+        maxURLLength: 2083,
+        fetch: (url, options) => fetch(url, {
           ...options,
           credentials: 'include',
-        })
-      },
+        }),
+      }),
     }),
   ],
 })
 
-export default () => {
+export default (): CreateTRPCClient<AuthRouter> => {
   return createClient()
 }
 

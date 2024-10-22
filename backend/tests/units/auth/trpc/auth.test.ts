@@ -1,20 +1,13 @@
-import '@backend/initEnv.js' // Info: .env needs to read before imports
+import '../../mocks/process.env.js'
+import '../../mocks/lnurl.js'
+import '../../mocks/http.js'
 
-import '../../../lib/mocks/lnurl.js'
-import '../../../lib/mocks/socketIo.js'
-import '../../../lib/mocks/http.js'
-
-import { describe, it, expect, vi } from 'vitest'
-import http from 'http'
 import { Request, Response } from 'express'
-
-import '../../../integration/lib/initAxios.js'
+import { describe, it, expect, vi } from 'vitest'
 
 import { createCallerFactory } from '@auth/trpc/trpc.js'
 import { authRouter } from '@auth/trpc/router/auth.js'
-import SocketIoServer from '@auth/services/SocketIoServer.js'
 import Auth from '@auth/domain/Auth.js'
-import LnurlServer from '@auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
@@ -30,9 +23,6 @@ describe('TRpc Router Auth', async () => {
     clearCookie: vi.fn(),
   } as unknown as Response
 
-  const server = new http.Server()
-  LnurlServer.init()
-  SocketIoServer.init(server)
   await Auth.init(mockAccessTokenAudience)
   const auth = Auth.getAuth()
   const jwtIssuer = auth.getJwtIssuer()

@@ -66,15 +66,12 @@ describe('Login Overlay', () => {
 })
 
 const openModalLogin = () => {
-  cy.intercept('/auth/trpc/lnurlAuth.create**').as('trpcLnurlAuthCreate')
-
   cy.getTestElement('the-layout').should('exist')
   cy.getTestElement('logged-in').should('not.exist')
   cy.getTestElement('the-header-main-nav-button').click()
 
   cy.getTestElement('main-nav-link-login').click()
   cy.getTestElement('modal-login').should('exist')
-  cy.wait('@trpcLnurlAuthCreate')
 }
 
 const wrapLNURLAuthFromLinkClick = () => {

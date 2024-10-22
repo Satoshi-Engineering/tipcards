@@ -1,73 +1,45 @@
 import { describe, vi, it, expect, beforeEach } from 'vitest'
 
 import '../../mocks/process.env.js'
-import '../../../lib/mocks/socketIo.js' // This line has to be an extra statement, otherwise the vi.mock will not work!
-import { MockServer } from '../../../lib/mocks/socketIo.js'
-
-import { Server, Socket } from 'socket.io'
 
 import LoginInformer from '@auth/domain/LoginInformer.js'
 
 describe('LoginInformer', () => {
-  const socketServer = new Server()
-  const mockServer = socketServer as unknown as MockServer
-
-  const acceptConnection = (): Socket => {
-    return mockServer.acceptConnection() as Socket
-  }
-
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('should add socketByHash and hashesBySocket after waitForLogin event', () => {
-    const hash = 'hash01'
-    const loginInformer = new LoginInformer(socketServer)
-    const mockSocket = acceptConnection()
-    mockSocket.emit('waitForLogin', { hash })
-    expect(loginInformer['socketsByHash'][hash]).toBe(mockSocket)
-    expect(loginInformer['hashesBySocketId'][mockSocket.id]).toBe(hash)
+  it('should resolve login', async () => {
+    const loginInformer = new LoginInformer()
+    setTimeout(() => {
+      loginInformer.emitLoginSuccessful('hash1')
+    }, 30)
+
+    const waitForLoginSpy = vi.fn((hash: string) => loginInformer.waitForLogin(hash))
+    await waitForLoginSpy('hash1')
+
+    expect(waitForLoginSpy).toHaveResolved()
   })
 
-  it('should remove socketByHash and hashesBySocket after disconnect event', () => {
-    const hash = 'hash01'
+  it('should not resolve multiple times', async () => {
+    const loginInformer = new LoginInformer()
+    setTimeout(() => {
+      loginInformer.emitLoginSuccessful('hash1')
+      loginInformer.emitLoginSuccessful('hash1')
+    }, 30)
 
-    const loginInformer = new LoginInformer(socketServer)
-    const mockSocket = acceptConnection()
-    mockSocket.emit('waitForLogin', { hash })
-    mockSocket.emit('disconnect')
-    expect(loginInformer['socketsByHash'][hash]).not.toBe(mockSocket)
-    expect(loginInformer['hashesBySocketId'][mockSocket.id]).not.toBe(hash)
+    const waitForLoginSpy = vi.fn((hash: string) => loginInformer.waitForLogin(hash))
+    await waitForLoginSpy('hash1')
+
+    expect(waitForLoginSpy).toHaveResolvedTimes(1)
   })
 
-  it('should add login hash correctly', () => {
-    const loginInformer = new LoginInformer(socketServer)
-    loginInformer.addLoginHash('hash1')
-    expect(loginInformer['loginHashes']).toContain('hash1')
-  })
+  it('should reject login', async () => {
+    const loginInformer = new LoginInformer()
+    setTimeout(() => {
+      loginInformer.emitLoginFailed('hash1')
+    }, 30)
 
-  it('should remove login hash correctly', () => {
-    const loginInformer = new LoginInformer(socketServer)
-    loginInformer.addLoginHash('hash1')
-    loginInformer.removeLoginHash('hash1')
-    expect(loginInformer['loginHashes']).not.toContain('hash1')
-  })
-
-  it('should emit loggedIn event after waitForLogin event, if loginHash exists', () => {
-    const hash = 'hash01'
-    const loginInformer = new LoginInformer(socketServer)
-    loginInformer.addLoginHash(hash)
-
-    const mockSocket = acceptConnection()
-    mockSocket.emit('waitForLogin', { hash })
-    expect(mockSocket.emit).toHaveBeenCalledWith('loggedIn')
-  })
-
-  it('should not emit loggedIn event after waitForLogin event', () => {
-    const hash = 'hash01'
-    new LoginInformer(socketServer)
-    const mockSocket = acceptConnection()
-    mockSocket.emit('waitForLogin', { hash })
-    expect(mockSocket.emit).not.toHaveBeenCalledWith('loggedIn')
+    expect(loginInformer.waitForLogin('hash1')).rejects.toThrow()
   })
 })

@@ -1,15 +1,11 @@
-import { Server } from 'http'
-
-import { JWT_AUTH_ISSUER } from '@backend/constants.js'
-
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
 
-import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
-import LoginInformer from '@auth/domain/LoginInformer.js'
-import SocketIoServer from '@auth/services/SocketIoServer.js'
-import LnurlServer from '@auth/services/LnurlServer.js'
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
+import LoginInformer from '@auth/domain/LoginInformer.js'
+import LnurlServer from '@auth/services/LnurlServer.js'
+import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 export default class Auth {
   public static async init(accessTokenAudience: string[] | string) {
@@ -17,10 +13,13 @@ export default class Auth {
       throw new Error('Auth already initialized!')
     }
 
-    const loginInformer = new LoginInformer(SocketIoServer.getServer())
+    LnurlServer.init()
+    /* eslint-disable-next-line no-console */
+    console.info(' - Auth - LnurlServer initialized')
+
     const lnurlAuthLogin = new LnurlAuthLogin(
       LnurlServer.getServer(),
-      loginInformer,
+      new LoginInformer(),
     )
 
     const keyPair = await Auth.loadKeyPairOrGenerateAndSaveKeyPairToDirectory(JWT_AUTH_KEY_DIRECTORY)
@@ -33,23 +32,43 @@ export default class Auth {
     )
   }
 
-  public static startup(server: Server) {
-    SocketIoServer.init(server)
-    /* eslint-disable-next-line no-console */
-    console.info(' - Auth - WebSocket initialized')
-
-    LnurlServer.init()
-    /* eslint-disable-next-line no-console */
-    console.info(' - Auth - LnurlServer initialized')
+  public static get instance(): Auth {
+    return Auth.getAuth()
   }
 
-  static getAuth(): Auth {
+  public static getAuth(): Auth {
     if (Auth.singleton == null) {
       throw new Error('Auth getAuth called before init!')
     }
 
     return Auth.singleton
   }
+
+  public get lnurlAuthLogin(): LnurlAuthLogin {
+    return this.getLnurlAuthLogin()
+  }
+
+  public getLnurlAuthLogin(): LnurlAuthLogin {
+    return this.lnurlAuthLoginInternal
+  }
+
+  public get jwtIssuer(): JwtIssuer {
+    return this.getJwtIssuer()
+  }
+
+  public getJwtIssuer(): JwtIssuer {
+    return this.jwtIssuerInternal
+  }
+
+  public get accessTokenAudience(): string[] | string {
+    return this.getAccessTokenAudience()
+  }
+
+  public getAccessTokenAudience(): string[] | string {
+    return this.accessTokenAudienceInternal
+  }
+
+  private static singleton: Auth
 
   private static async loadKeyPairOrGenerateAndSaveKeyPairToDirectory(keyPairDirectory: string) {
     const jwtKeyPairHandler = new JwtKeyPairHandler(keyPairDirectory)
@@ -63,27 +82,13 @@ export default class Auth {
     return keyPair
   }
 
-  private static singleton: Auth
-
-  private lnurlAuthLogin: LnurlAuthLogin
-  private jwtIssuer: JwtIssuer
-  private accessTokenAudience: string[] | string
+  private lnurlAuthLoginInternal: LnurlAuthLogin
+  private jwtIssuerInternal: JwtIssuer
+  private accessTokenAudienceInternal: string[] | string
 
   private constructor(lnurlAuthLogin: LnurlAuthLogin, jwtIssuer: JwtIssuer, accessTokenAudience: string[] | string) {
-    this.lnurlAuthLogin = lnurlAuthLogin
-    this.jwtIssuer = jwtIssuer
-    this.accessTokenAudience = accessTokenAudience
-  }
-
-  public getLnurlAuthLogin(): LnurlAuthLogin {
-    return this.lnurlAuthLogin
-  }
-
-  public getJwtIssuer(): JwtIssuer {
-    return this.jwtIssuer
-  }
-
-  public getAccessTokenAudience(): string[] | string {
-    return this.accessTokenAudience
+    this.lnurlAuthLoginInternal = lnurlAuthLogin
+    this.jwtIssuerInternal = jwtIssuer
+    this.accessTokenAudienceInternal = accessTokenAudience
   }
 }

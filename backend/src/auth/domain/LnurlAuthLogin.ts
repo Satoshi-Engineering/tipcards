@@ -4,7 +4,6 @@ import { createHash } from 'crypto'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
-import { LnurlAuthLoginDto } from '@auth/data/trpc/LnurlAuthLoginDto.js'
 import { LOGINHASH_EXPIRATION_TIME } from '@auth/constants.js'
 import { type LoginEvent } from '@auth/types/LoginEvent.js'
 import LoginInformer from '@auth/domain/LoginInformer.js'
@@ -15,11 +14,6 @@ export default class LnurlAuthLogin {
     return createHash('sha256').update(secretBuffer).digest('hex')
   }
 
-  private lnurlServer: lnurl.LnurlServer
-  private loginInformer: LoginInformer
-  private oneTimeLoginWalletLinkingKeys: Record<string, string> = {}
-  private loginHashExpirationTime: number
-
   constructor(
     lnurlServer: lnurl.LnurlServer,
     loginInformer: LoginInformer,
@@ -28,10 +22,11 @@ export default class LnurlAuthLogin {
     this.lnurlServer = lnurlServer
     this.loginInformer = loginInformer
     this.loginHashExpirationTime = loginHashExpirationTime
-    this.initSocketEvents()
+
+    this.initLnurlServer()
   }
 
-  public async create(): Promise<LnurlAuthLoginDto> {
+  public async create() {
     const { encoded: lnurlAuth, secret } = await this.lnurlServer.generateNewUrl('login')
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
     this.removeOneTimeLoginHash(hash)
@@ -42,16 +37,25 @@ export default class LnurlAuthLogin {
     }
   }
 
+  public async waitForLogin(hash: string) {
+    return this.loginInformer.waitForLogin(hash)
+  }
+
   public getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash: string): string {
     if (!this.isOneTimeLoginHashValid(hash)) {
-      throw new ErrorWithCode('(one time) login has is not valid', ErrorCode.LnurlAuthLoginHashInvaid)
+      throw new ErrorWithCode('(one time) login has is not valid', ErrorCode.LnurlAuthLoginHashInvalid)
     }
     const linkingKey = this.getLinkingKeyFromOneTimeLoginHash(hash)
-    this.invalidateLoginHash(hash)
+    this.removeOneTimeLoginHash(hash)
     return linkingKey
   }
 
-  private initSocketEvents() {
+  private lnurlServer: lnurl.LnurlServer
+  private loginInformer: LoginInformer
+  private oneTimeLoginWalletLinkingKeys: Record<string, string> = {}
+  private loginHashExpirationTime: number
+
+  private initLnurlServer() {
     this.lnurlServer.on('login', async (event: LoginEvent) => {
       // `key` - the public key as provided by the LNURL wallet app
       // `hash` - the hash of the secret for the LNURL used to login
@@ -61,29 +65,23 @@ export default class LnurlAuthLogin {
       setTimeout(() => {
         this.removeOneTimeLoginHash(hash)
       }, this.loginHashExpirationTime)
-      this.loginInformer.emitLoginSuccessfull(hash)
+      this.loginInformer.emitLoginSuccessful(hash)
     })
   }
 
   private addOneTimeLoginHash(hash: string, walletLinkingKey: string) {
     this.oneTimeLoginWalletLinkingKeys[hash] = walletLinkingKey
-    this.loginInformer.addLoginHash(hash)
   }
 
-  public invalidateLoginHash(hash: string) {
-    this.removeOneTimeLoginHash(hash)
-  }
-
-  public isOneTimeLoginHashValid(hash: string): boolean {
+  private isOneTimeLoginHashValid(hash: string): boolean {
     return hash in this.oneTimeLoginWalletLinkingKeys
-  }
-
-  public getLinkingKeyFromOneTimeLoginHash(hash: string): string {
-    return this.oneTimeLoginWalletLinkingKeys[hash]
   }
 
   private removeOneTimeLoginHash(hash: string) {
     delete this.oneTimeLoginWalletLinkingKeys[hash]
-    this.loginInformer.removeLoginHash(hash)
+  }
+
+  private getLinkingKeyFromOneTimeLoginHash(hash: string): string {
+    return this.oneTimeLoginWalletLinkingKeys[hash]
   }
 }
