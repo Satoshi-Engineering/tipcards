@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne } from 'drizzle-orm'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
@@ -13,6 +13,7 @@ import {
   AllowedRefreshTokens,
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
+  AllowedSession,
 } from '@backend/database/schema/index.js'
 import assert from 'node:assert'
 
@@ -640,5 +641,41 @@ export default class Queries {
   async deleteAllAllowedRefreshTokensForUserId(userId: User['id']): Promise<void> {
     await this.transaction.delete(AllowedRefreshTokens)
       .where(eq(AllowedRefreshTokens.user, userId))
+  }
+
+  async insertAllowedSession(allowedSession: AllowedSession): Promise<void> {
+    await this.transaction.insert(AllowedSession)
+      .values(allowedSession)
+  }
+
+  async getAllowedSessionById(sessionId: AllowedSession['sessionId']): Promise<AllowedSession | null> {
+    const result = await this.transaction.select()
+      .from(AllowedSession)
+      .where(eq(AllowedSession.sessionId, sessionId))
+
+    if (result.length === 0) {
+      return null
+    }
+
+    return result[0]
+  }
+
+  async insertOrUpdateAllowedSession(allowedSession: AllowedSession): Promise<void> {
+    await this.transaction.insert(AllowedSession)
+      .values(allowedSession)
+      .onConflictDoUpdate({
+        target: AllowedSession.sessionId,
+        set: allowedSession,
+      })
+  }
+
+  async deleteAllowedSession(allowedSession: AllowedSession): Promise<void> {
+    await this.transaction.delete(AllowedSession)
+      .where(eq(AllowedSession.sessionId, allowedSession.sessionId))
+  }
+
+  async deleteAllAllowedSessionForUserExceptOne(userId: User['id'], sessionId: AllowedSession['sessionId']): Promise<void> {
+    await this.transaction.delete(AllowedSession)
+      .where(and(eq(AllowedSession.user, userId), ne(AllowedSession.sessionId, sessionId)))
   }
 }

@@ -3,6 +3,8 @@ import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
 
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import LoginInformer from '@auth/domain/LoginInformer.js'
 import LnurlServer from '@auth/services/LnurlServer.js'

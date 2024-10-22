@@ -1,5 +1,5 @@
 {
-  "id": "d4341b23-cdba-45da-a6ab-12085b18b427",
+  "id": "7dd036d6-a332-4aa0-8f76-51af00ad1ed8",
   "prevId": "744f6685-9550-450b-95dc-4d232518409e",
   "version": "7",
   "dialect": "postgresql",
@@ -77,8 +77,8 @@
       },
       "checkConstraints": {}
     },
-    "public.AllowedSessionIds": {
-      "name": "AllowedSessionIds",
+    "public.AllowedSession": {
+      "name": "AllowedSession",
       "schema": "",
       "columns": {
         "user": {
@@ -112,9 +112,9 @@
         }
       },
       "foreignKeys": {
-        "AllowedSessionIds_user_User_id_fk": {
-          "name": "AllowedSessionIds_user_User_id_fk",
-          "tableFrom": "AllowedSessionIds",
+        "AllowedSession_user_User_id_fk": {
+          "name": "AllowedSession_user_User_id_fk",
+          "tableFrom": "AllowedSession",
           "tableTo": "User",
           "columnsFrom": [
             "user"
@@ -128,8 +128,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "AllowedSessionIds_sessionId_unique": {
-          "name": "AllowedSessionIds_sessionId_unique",
+        "AllowedSession_sessionId_unique": {
+          "name": "AllowedSession_sessionId_unique",
           "nullsNotDistinct": false,
           "columns": [
             "sessionId"

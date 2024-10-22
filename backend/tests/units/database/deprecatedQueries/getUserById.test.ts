@@ -10,7 +10,7 @@ import { getUserById } from '@backend/database/deprecated/queries.js'
 import {
   createProfileForUser,
   createUser,
-  createAllowedRefreshTokens,
+  createAllowedRefreshTokensDepricated,
   createImage, createUserCanUseImage,
   createLandingPageTypeExternal, createUserCanUseLandingPage,
 } from '../../../drizzleData.js'
@@ -96,8 +96,8 @@ describe('getUserById', () => {
   it('should return a user with allowedRefreshTokens', async () => {
     const userData = createUser()
     const profileData = createProfileForUser(userData)
-    const allowedRefreshTokenData1 = createAllowedRefreshTokens(userData)
-    const allowedRefreshTokenData2 = createAllowedRefreshTokens(userData, true)
+    const allowedRefreshTokenData1 = createAllowedRefreshTokensDepricated(userData)
+    const allowedRefreshTokenData2 = createAllowedRefreshTokensDepricated(userData, true)
 
     addData({
       users: [userData],

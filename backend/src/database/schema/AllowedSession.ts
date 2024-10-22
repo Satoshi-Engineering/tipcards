@@ -2,7 +2,7 @@ import { pgTable, index, varchar } from 'drizzle-orm/pg-core'
 
 import { User } from './User.js'
 
-export const AllowedSessionIds = pgTable('AllowedSessionIds', {
+export const AllowedSession = pgTable('AllowedSession', {
   user: varchar('user', { length: 64 }).notNull().references(() => User.id),
   sessionId: varchar('sessionId', { length: 36 }).primaryKey().unique().notNull(), // Note: random UUID
 }, (table) => {
@@ -11,4 +11,4 @@ export const AllowedSessionIds = pgTable('AllowedSessionIds', {
   }
 })
 
-export type AllowedSessionIds = typeof AllowedSessionIds.$inferSelect
+export type AllowedSession = typeof AllowedSession.$inferSelect

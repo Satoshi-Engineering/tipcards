@@ -8,7 +8,7 @@ import { addData } from '../../mocks/database/database.js'
 import {
   createUser as createDrizzleUser,
   createProfileForUser as createDrizzleProfileForUser,
-  createAllowedRefreshTokens as createDrizzleAllowedRefreshTokens,
+  createAllowedRefreshTokensDepricated as createDrizzleAllowedRefreshTokens,
 } from '../../../drizzleData.js'
 
 import {

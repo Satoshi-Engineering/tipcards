@@ -118,7 +118,7 @@ export const createUser = (id: string = randomUUID()): User => ({
 
 export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
 
-export const createAllowedRefreshTokens = (user: User, addPrevious = false) => {
+export const createAllowedRefreshTokensDepricated = (user: User, addPrevious = false) => {
   const current = hashSha256(randomUUID())
   let textForHash = user.id + current
   let previous: string | null = null

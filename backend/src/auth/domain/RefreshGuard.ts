@@ -1,25 +1,21 @@
 import type { Response, Request } from 'express'
 import { randomUUID } from 'crypto'
-import { errors as joseErrors } from 'jose'
+import { errors as joseErrors, type JWTPayload } from 'jose'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import { PermissionsEnum } from '@shared/data/auth/User.js'
 import { AccessTokenPayload } from '@shared/data/auth/index.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
-import type { User } from '@backend/database/deprecated/data/User.js'
-import {
-  getUserByLnurlAuthKeyOrCreateNew,
-  getUserById,
-  updateUser } from '@backend/database/deprecated/queries.js'
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+import User from '@backend/domain/User.js'
+import AllowedSession from '@backend/domain/AllowedSession.js'
 
 import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'
+import { RefreshTokenPayload } from '@auth/types/RefreshTokenPayload.js'
+import { deleteAllRefreshTokensInDatabase, deleteRefreshTokenInDatabase, parseJWTPayload, validateRefeshTokenInDatabase } from './allowedRefreshTokensHelperFunctions.js'
 
-type RefreshTokenParams = {
-  id: string
-  lnurlAuthKey: string
-}
+type RefreshTokenParams = Omit<RefreshTokenPayload, 'nonce'>
 
 type AccessTokenParams = {
   id: string
@@ -30,7 +26,8 @@ type AccessTokenParams = {
 export default class RefreshGuard {
   private request: Request
   private response: Response
-  private user: User | null = null
+  private userId: string | null = null
+  private sessionId: string | null = null
   private jwtIssuer: JwtIssuer
   private jwtAccessTokenAudience: string[] | string
 
@@ -42,141 +39,140 @@ export default class RefreshGuard {
   }
 
   public async loginUserWithWalletLinkingKey(walletPublicKey: string) {
-    let user: User
+    let user = null
     try {
-      // Deprecated Function
-      user = await getUserByLnurlAuthKeyOrCreateNew(walletPublicKey)
+      user = await User.fromLnurlAuthKey(walletPublicKey)
+      if (user == null) {
+        const newUser = User.newUserFromWalletLinkingKey(walletPublicKey)
+        await newUser.update({})
+        user = newUser
+      }
     } catch (error) {
-      console.error(ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey, error)
-      throw new ErrorWithCode('Unable to get or create user', ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey)
+      throw new ErrorWithCode(error, ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey)
     }
 
-    const refreshToken = await this.createRefreshToken(user)
-    if (user.allowedRefreshTokens == null) {
-      user.allowedRefreshTokens = []
-    }
-    user.allowedRefreshTokens.push([refreshToken])
+    const allowedSession = AllowedSession.createNewForUserId(user.id)
+    await allowedSession.update({})
 
-    try {
-      // Deprecated Function
-      await updateUser(user)
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
-    }
+    const refreshToken = await this.createRefreshToken({
+      userId: user.id,
+      sessionId: allowedSession.sessionId,
+    })
 
     this.setRefreshTokenCookie(refreshToken)
-    this.user = user
+    this.userId = user.id
+    this.sessionId = allowedSession.sessionId
   }
 
   async authenticateUserViaRefreshToken() {
-    const refreshJwt = this.getRefreshTokenFromRequestCookies()
-    if (refreshJwt == null) {
+    const refreshToken = this.getRefreshTokenFromRequestCookies()
+    if (refreshToken == null) {
       throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
     }
     const host = this.getHostFromRequest()
-    if (host == null ) {
+    if (host == null) {
       throw new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest)
     }
 
-    const refreshJwtPayload = await this.validateRefreshTokenAndGetPayload(refreshJwt, host)
+    const jwtPayload = await this.validateRefreshTokenAndGetPayload(refreshToken, host)
+    // thorws  joseErrors.JWTExpired
+    // TODO: remove jwtExpiredError.payload.sessionId from database
 
-    let user
-    try {
-      user = await getUserById(refreshJwtPayload.id)
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
-    }
-    if (
-      user?.allowedRefreshTokens == null
-      || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(refreshJwt))
-    ) {
-      this.clearRefreshTokenCookie()
-      throw new ErrorWithCode('Refresh token not found in allowed refresh tokens', ErrorCode.RefreshTokenDenied)
+    const jwtParseResult = RefreshTokenPayload.safeParse(jwtPayload)
+
+    // If parsing fails, check if its the deprecated format
+    if (!jwtParseResult.success) {
+      try {
+        const userId = await this.getAuthenticatedUserIdFromDeprecatedRefreshTokenFormat(jwtPayload, refreshToken)
+        const allowedSession = AllowedSession.createNewForUserId(userId)
+        await allowedSession.update({})
+        this.userId = userId
+        this.sessionId = allowedSession.sessionId
+        return
+      } catch(error) {
+        this.clearRefreshTokenCookie()
+        throw error
+      }
     }
 
-    this.user = user
+    const refreshTokenPayload = jwtParseResult.data
+    const allowedSession = AllowedSession.fromSessionId(refreshTokenPayload.sessionId)
+    if (allowedSession == null) {
+      throw new ErrorWithCode('SessionId not found', ErrorCode.RefreshTokenInvalid)
+    }
+
+    this.sessionId = refreshTokenPayload.sessionId
+    this.userId = refreshTokenPayload.userId
   }
 
   async cycleRefreshToken() {
-    if (this.user == null) {
-      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    if (this.userId == null) {
+      throw new ErrorWithCode('UserId not set', ErrorCode.AuthUserNotAuthenticated)
     }
-    const previousRefreshToken = this.getRefreshTokenFromRequestCookies()
-    if (previousRefreshToken == null ) {
-      throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
+    if (this.sessionId == null) {
+      throw new ErrorWithCode('SessionId not set', ErrorCode.AuthUserNotAuthenticated)
     }
-    const newRefreshToken = await this.createRefreshToken(this.user)
-    if (this.user.allowedRefreshTokens == null) {
-      this.user.allowedRefreshTokens = []
-    }
-    this.user.allowedRefreshTokens = this.user.allowedRefreshTokens.map((currentRefreshTokens) => {
-      if (!currentRefreshTokens.includes(previousRefreshToken)) {
-        return currentRefreshTokens
-      }
-      return [newRefreshToken, previousRefreshToken]
+
+    const newRefreshToken = await this.createRefreshToken({
+      userId: this.userId,
+      sessionId: this.sessionId,
     })
-    try {
-      // Deprecated Function
-      await updateUser(this.user)
-    } catch (error) {
-      throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
-    }
     this.setRefreshTokenCookie(newRefreshToken)
   }
 
   async createAccessTokenForUser() {
-    if (this.user == null) {
-      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    if (this.userId == null) {
+      throw new ErrorWithCode('UserId not set', ErrorCode.AuthUserNotAuthenticated)
     }
-    return this.createAccessToken(this.user)
+    if (this.sessionId == null) {
+      throw new ErrorWithCode('SessionId not set', ErrorCode.AuthUserNotAuthenticated)
+    }
+    const user = await User.fromId(this.userId)
+    if (user == null) {
+      throw new ErrorWithCode('User is authenticated, but not found in database', ErrorCode.UnknownDatabaseError)
+    }
+    return this.createAccessToken(user)
   }
 
   public async logout() {
-    const refreshToken = this.getRefreshTokenFromRequestCookies()
     this.clearRefreshTokenCookie()
-    if (refreshToken != null) {
-      try {
-        const parsedToken = Buffer.from(refreshToken.split('.')[1], 'base64')
-        const { id: userId } = JSON.parse(parsedToken.toString())
-        const user = await getUserById(userId)
-        if (user?.allowedRefreshTokens != null) {
-          user.allowedRefreshTokens = user.allowedRefreshTokens
-            .filter((currentRefreshTokens) => !currentRefreshTokens.includes(refreshToken))
-          await updateUser(user)
-        }
-      } catch (error) {
-        throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
-      }
+
+    try {
+      this.authenticateUserViaRefreshToken()
+    } catch {
+      // If user can not be authenticated, stop
+      return
     }
+
+    if (this.sessionId != null) {
+      const allowedSession = await AllowedSession.fromSessionId(this.sessionId)
+      await allowedSession?.delete()
+    }
+
+    await deleteRefreshTokenInDatabase(this.getRefreshTokenFromRequestCookies())
   }
 
   public async logoutAllOtherDevices() {
-    if (this.user == null) {
-      throw new ErrorWithCode('User not loaded', ErrorCode.AuthUserNotLoaded)
+    if (this.userId == null) {
+      throw new ErrorWithCode('UserId not set', ErrorCode.AuthUserNotAuthenticated)
+    }
+    if (this.sessionId == null) {
+      throw new ErrorWithCode('SessionId not set', ErrorCode.AuthUserNotAuthenticated)
     }
     const refreshToken = this.getRefreshTokenFromRequestCookies()
     if (refreshToken == null ) {
       throw new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing)
     }
-    if (this.user?.allowedRefreshTokens != null) {
-      this.user.allowedRefreshTokens = this.user.allowedRefreshTokens
-        .filter((currentRefreshTokens) => currentRefreshTokens.includes(refreshToken))
-      try {
-        // Deprecated Function
-        await updateUser(this.user)
-      } catch (error) {
-        throw new ErrorWithCode(error, ErrorCode.UnableToUpdateUser)
-      }
-    }
+    await deleteAllRefreshTokensInDatabase(this.userId)
+    await AllowedSession.deleteAllSessionsForUserExecptOne(this.userId, this.sessionId)
   }
 
   private async validateRefreshTokenAndGetPayload(refreshJwt: string, host: string) {
     try {
-      const payload = await this.jwtIssuer.validate(refreshJwt, host)
-      return AccessTokenPayload.parse(payload)
+      return await this.jwtIssuer.validate(refreshJwt, host)
     } catch (error) {
       if (error instanceof joseErrors.JWTExpired) {
-        throw new ErrorWithCode('Refresh token expired', ErrorCode.RefreshTokenExpired)
+        throw new ErrorWithCode(error, ErrorCode.RefreshTokenExpired)
       }
 
       throw error
@@ -236,13 +232,13 @@ export default class RefreshGuard {
     return cookies
   }
 
-  private async createRefreshToken({ id, lnurlAuthKey }: RefreshTokenParams) {
+  private async createRefreshToken({ userId, sessionId }: RefreshTokenParams) {
     const nonce = randomUUID()
     try {
-      return  this.jwtIssuer.createJwt(
+      return this.jwtIssuer.createJwt(
         JWT_AUTH_ISSUER,
         REFRESH_TOKEN_EXPIRATION_TIME,
-        { id, lnurlAuthKey, nonce },
+        { userId, sessionId, nonce },
       )
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderRefreshTokenCreationError)
@@ -252,7 +248,7 @@ export default class RefreshGuard {
   private createAccessToken({ id, lnurlAuthKey, permissions }: AccessTokenParams) {
     const nonce = randomUUID()
     try {
-      return  this.jwtIssuer.createJwt(
+      return this.jwtIssuer.createJwt(
         this.jwtAccessTokenAudience,
         ACCESS_TOKEN_EXPIRATION_TIME,
         { id, lnurlAuthKey, permissions, nonce },
@@ -260,5 +256,12 @@ export default class RefreshGuard {
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)
     }
+  }
+
+  private async getAuthenticatedUserIdFromDeprecatedRefreshTokenFormat(jwtPayload: JWTPayload, refreshToken: string) {
+    const refreshTokenPayloadDeprecated = parseJWTPayload(jwtPayload)
+    await validateRefeshTokenInDatabase(refreshTokenPayloadDeprecated.id, refreshToken)
+
+    return refreshTokenPayloadDeprecated.id
   }
 }
