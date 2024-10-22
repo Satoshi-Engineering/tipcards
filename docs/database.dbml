@@ -146,6 +146,15 @@ Table AllowedRefreshTokens [note: "every device can have up to two valid refresh
   }
 }
 
+Table AllowedSessionIds [note: "Every successful login creates a new sessionId for the user"] {
+  user     varchar(64) [ref: > User.id]
+  sessionId  varchar(36) [primary key, unique, note: "random UUID"]
+
+  indexes {
+    sessionId [name: "sessionIdIndex"]
+  }
+}
+
 Table Profile {
   user        varchar(64) [primary key, unique, ref: - User.id]
   accountName text        [note: "for support and for the user if he has more than one account"]

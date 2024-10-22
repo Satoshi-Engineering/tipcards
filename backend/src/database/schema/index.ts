@@ -1,4 +1,5 @@
 export { AllowedRefreshTokens } from './AllowedRefreshTokens.js'
+export { AllowedSessionIds } from './AllowedSessionIds.js'
 export { Card } from './Card.js'
 export { CardVersion } from './CardVersion.js'
 export { CardVersionHasInvoice } from './CardVersionHasInvoice.js'
