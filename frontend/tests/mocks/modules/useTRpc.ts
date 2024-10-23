@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 
-import type { ProfileDto } from '../../../../shared/src/data/trpc/tipcards/ProfileDto'
-import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
+import type { ProfileDto } from '@shared/data/trpc/ProfileDto'
+import type { SetDto } from '@shared/data/trpc/SetDto'
 
 export const tRpcMock = {
   profile: {

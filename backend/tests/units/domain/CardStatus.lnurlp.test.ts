@@ -13,7 +13,7 @@ import {
 
 import CardStatus from '@backend/domain/CardStatus.js'
 
-import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 const card = createCard()
 const cardVersion = createCardVersion(card)

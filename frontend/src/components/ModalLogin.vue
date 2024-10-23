@@ -55,7 +55,7 @@ import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
 import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
 
-import { LnurlAuthLoginStatusEnum } from '@backend/auth/data/trpc/LnurlAuthLoginDto'
+import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginDto'
 
 import { useProfileStore } from '@/stores/profile'
 import useTRpcAuth from '@/modules/useTRpcAuth'

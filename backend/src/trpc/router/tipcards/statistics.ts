@@ -1,5 +1,5 @@
 import { PermissionsEnum } from '@shared/data/auth/User.js'
-import { StatisticsDto } from '@shared/data/trpc/tipcards/StatisticsDto.js'
+import { StatisticsDto } from '@shared/data/trpc/StatisticsDto.js'
 
 import Statistics from '@backend/domain/Statistics.js'
 

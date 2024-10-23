@@ -34,7 +34,7 @@ import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import { CardStatusEnum, type CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import { CardStatusEnum, type CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import GreetingIcon from './GreetingIcon.vue'
 
 defineProps({

@@ -1,7 +1,7 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-import { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import LNURL from '@shared/modules/LNURL/LNURL'
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 

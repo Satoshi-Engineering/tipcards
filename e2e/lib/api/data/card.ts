@@ -1,6 +1,6 @@
 // import * as crypto from 'crypto'
 
-import { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 
 import { sha256 } from '@e2e/lib/cryptoHelpers'
 

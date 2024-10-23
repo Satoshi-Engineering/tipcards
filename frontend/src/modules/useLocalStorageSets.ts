@@ -2,7 +2,7 @@ import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, type RouteLocation } from 'vue-router'
 
 import type { Set } from '@shared/data/api/Set'
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto'
+import { SetDto } from '@shared/data/trpc/SetDto'
 
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import {

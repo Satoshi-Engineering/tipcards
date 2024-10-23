@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { BulkWithdraw } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
+import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 import Database from '@backend/database/Database.js'

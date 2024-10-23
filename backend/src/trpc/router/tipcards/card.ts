@@ -1,5 +1,5 @@
-import { Card, CardHash } from '@shared/data/trpc/tipcards/Card.js'
-import { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto.js'
+import { Card, CardHash } from '@shared/data/trpc/Card.js'
+import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
 import CardStatus from '@backend/domain/CardStatus.js'

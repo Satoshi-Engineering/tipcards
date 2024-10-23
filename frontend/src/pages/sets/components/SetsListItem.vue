@@ -81,8 +81,8 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 
-import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
-import type { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto'
+import type { SetDto } from '@shared/data/trpc/SetDto'
+import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
 import useSets from '@/modules/useSets'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

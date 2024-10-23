@@ -1,4 +1,4 @@
-import { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto.js'
+import { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
 
 import Profile from '@backend/domain/Profile.js'
 

@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 
-import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
+import type { SetDto } from '@shared/data/trpc/SetDto'
 
 import type { SetCardsInfoBySetId } from '@/modules/useSets'
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'

@@ -1,6 +1,6 @@
 import type z from 'zod'
 
-import { Card } from '@shared/data/trpc/tipcards/Card.js'
+import { Card } from '@shared/data/trpc/Card.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 
 import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'

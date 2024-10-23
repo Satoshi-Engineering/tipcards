@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { CardStatusEnum } from '@shared/data/trpc/tipcards/CardStatusDto.js'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 import Database from '@backend/database/Database.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'

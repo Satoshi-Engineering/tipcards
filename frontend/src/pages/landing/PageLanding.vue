@@ -79,7 +79,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import { CardStatusEnum, unfundedStatuses, withdrawnStatuses, type CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import { CardStatusEnum, unfundedStatuses, withdrawnStatuses, type CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'

@@ -45,7 +45,7 @@
 import { storeToRefs } from 'pinia'
 import { ref, computed, watchEffect } from 'vue'
 
-import type { StatisticsDto } from '@shared/data/trpc/tipcards/StatisticsDto'
+import type { StatisticsDto } from '@shared/data/trpc/StatisticsDto'
 import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'

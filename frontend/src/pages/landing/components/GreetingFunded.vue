@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
 
-import type { CardStatusDto } from '@shared/data/trpc/tipcards/CardStatusDto'
+import type { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'

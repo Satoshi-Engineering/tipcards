@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest'
 
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import { createSet } from '../data/set'
-import type { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto'
+import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
 describe('SetsListItem', () => {
   config.global.stubs.RouterLink = RouterLinkStub

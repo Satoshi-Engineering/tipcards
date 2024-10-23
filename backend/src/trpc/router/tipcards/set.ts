@@ -1,7 +1,7 @@
-import { Card } from '@shared/data/trpc/tipcards/Card.js'
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
-import { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto.js'
-import { SetDeprecatedId } from '@shared/data/trpc/tipcards/Set.js'
+import { Card } from '@shared/data/trpc/Card.js'
+import { SetDto } from '@shared/data/trpc/SetDto.js'
+import { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto.js'
+import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
 
 import Set from '@backend/domain/Set.js'
 import SetCollection from '@backend/domain/SetCollection.js'

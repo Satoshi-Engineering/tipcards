@@ -1,4 +1,4 @@
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
+import { SetDto } from '@shared/data/trpc/SetDto.js'
 import { User } from '@backend/database/schema/User.js'
 
 import { asTransaction } from '@backend/database/client.js'

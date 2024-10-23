@@ -1,8 +1,8 @@
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
-import { SetCardsInfoDto, SetCardsInfoCategoriesEnum } from '@shared/data/trpc/tipcards/SetCardsInfoDto.js'
+import { SetDto } from '@shared/data/trpc/SetDto.js'
+import { SetCardsInfoDto, SetCardsInfoCategoriesEnum } from '@shared/data/trpc/SetCardsInfoDto.js'
 
 import { asTransaction } from '@backend/database/client.js'
-import { CardStatusEnum, pendingStatuses, withdrawnStatuses } from '@shared/data/trpc/tipcards/CardStatusDto.js'
+import { CardStatusEnum, pendingStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto.js'
 import CardStatus from './CardStatus.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 

@@ -1,6 +1,6 @@
-import { BulkWithdrawId } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
-import { CardHash } from '@shared/data/trpc/tipcards/Card.js'
-import { SetDeprecatedId } from '@shared/data/trpc/tipcards/Set.js'
+import { BulkWithdrawId } from '@shared/data/trpc/BulkWithdraw.js'
+import { CardHash } from '@shared/data/trpc/Card.js'
+import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
 
 import {
   lockCard, safeReleaseCard,

@@ -1,11 +1,11 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto.js'
-import { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto.js'
+import { SetDto } from '@shared/data/trpc/SetDto.js'
+import { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto.js'
 import { useAuthStore } from '@/stores/auth'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
-import type { SetSettingsDto } from '@shared/data/trpc/tipcards/SetSettingsDto'
+import type { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto'
 
 export type SetCardsInfoBySetId = Record<SetDto['id'], SetCardsInfoDto | null>
 

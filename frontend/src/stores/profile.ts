@@ -1,7 +1,7 @@
 import { defineStore, storeToRefs } from 'pinia'
 import { computed, nextTick, ref, watch } from 'vue'
 
-import type { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto'
+import type { ProfileDto } from '@shared/data/trpc/ProfileDto'
 
 import i18n from '@/modules/initI18n'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'

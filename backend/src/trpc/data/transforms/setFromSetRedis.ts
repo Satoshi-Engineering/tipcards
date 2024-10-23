@@ -1,4 +1,4 @@
-import { SetDeprecated } from '@shared/data/trpc/tipcards/Set.js'
+import { SetDeprecated } from '@shared/data/trpc/Set.js'
 
 import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
 

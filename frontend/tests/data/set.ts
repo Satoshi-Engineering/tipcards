@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
 import type { Set as SetDeprecated } from '@shared/data/api/Set'
-import { SetDto } from '@shared/data/trpc/tipcards/SetDto'
+import { SetDto } from '@shared/data/trpc/SetDto'
 import { encodeCardsSetSettings } from '@/stores/cardsSets'
 
 export const createSetDeprecated = (options: Partial<SetDeprecated> = {}): SetDeprecated => {

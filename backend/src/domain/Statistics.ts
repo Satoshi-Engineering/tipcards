@@ -2,7 +2,7 @@ import axios from 'axios'
 import { DateTime } from 'luxon'
 import z from 'zod'
 
-import type { StatisticsDto, StatisticsPeriodDto } from '@shared/data/trpc/tipcards/StatisticsDto.js'
+import type { StatisticsDto, StatisticsPeriodDto } from '@shared/data/trpc/StatisticsDto.js'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
 import loadJsonIfExists from '@backend/services/loadJsonIfExists.js'

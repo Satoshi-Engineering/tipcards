@@ -1,4 +1,4 @@
-import { ProfileDto } from '@shared/data/trpc/tipcards/ProfileDto.js'
+import { ProfileDto } from '@shared/data/trpc/ProfileDto.js'
 
 import { asTransaction } from '@backend/database/client.js'
 import { Profile as ProfileSchema } from '@backend/database/schema/Profile.js'

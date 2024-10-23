@@ -90,8 +90,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
 import { watch } from 'vue'
-import type { SetDto } from '@shared/data/trpc/tipcards/SetDto'
-import type { SetCardsInfoDto } from '@shared/data/trpc/tipcards/SetCardsInfoDto'
+import type { SetDto } from '@shared/data/trpc/SetDto'
+import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())

@@ -1,5 +1,5 @@
-import { CardHash } from '@shared/data/trpc/tipcards/Card.js'
-import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/tipcards/BulkWithdraw.js'
+import { CardHash } from '@shared/data/trpc/Card.js'
+import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
 import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'

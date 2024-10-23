@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type z from 'zod'
 
 import { Type, type LandingPage } from '@shared/data/api/LandingPage'
-import type { Card } from '@shared/data/trpc/tipcards/Card'
+import type { Card } from '@shared/data/trpc/Card'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { useAuthStore } from '@/stores/auth'
