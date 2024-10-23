@@ -8,7 +8,9 @@ export const reloadPage = () => {
 
 export const gotoPage = (page: URL) => {
   cy.intercept('/auth/trpc/auth.refreshRefreshToken**').as('apiAuthRefresh')
-  cy.visit(page.href)
+  cy.visit(page.href, {
+    onBeforeLoad: switchBrowserLanguageToEnglish,
+  })
   cy.wait('@apiAuthRefresh')
 }
 
@@ -22,4 +24,9 @@ export const isLoggedOut = () => {
   cy.getCookie('refresh_token', {
     domain: TIPCARDS_AUTH_ORIGIN.hostname,
   }).should('not.exist')
+}
+
+export const switchBrowserLanguageToEnglish = (win: Cypress.AUTWindow) => {
+  Object.defineProperty(win.navigator, 'language', { value: 'en-US' })
+  Object.defineProperty(win.navigator, 'languages', { value: ['en-US'] })
 }
