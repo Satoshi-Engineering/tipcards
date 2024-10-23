@@ -3,15 +3,5 @@
     "active": true,
     "notes": "Low severity Elliptic with no fix yet.",
     "expiry": 1730152800000
-  },
-  "1100205": {
-    "active": true,
-    "notes": "High severity secp256k1 bug that allows private key extraction. No fix yet.",
-    "expiry": 1729630800000
-  },
-  "1100206": {
-    "active": true,
-    "notes": "High severity secp256k1 bug that allows private key extraction. No fix yet.",
-    "expiry": 1729630800000
   }
 }
