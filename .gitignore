@@ -16,6 +16,7 @@ dist-libs
 build
 coverage
 *.local
+ngrok.yml
 
 /cypress/videos/
 /cypress/screenshots/

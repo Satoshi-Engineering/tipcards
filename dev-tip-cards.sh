@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 kill_proc () {
   kill `descendent_pids $1`
@@ -31,7 +31,7 @@ NGROK_URL=`grep 'ngrok running on' ngrok.log |sed -e 's#ngrok running on ##'`
 
 echo "Address is: $NGROK_URL"
 
-if [[ $OSTYPE == 'darwin'* ]];
+if [[ "$OSTYPE" == 'darwin'* ]];
 then
   sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/backend/.env.local
   sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1='$NGROK_URL'#' $TIP_CARDS_DIR/frontend/.env.local
@@ -56,7 +56,7 @@ kill_proc $NGROK_PID
 kill_proc $FRONTEND_PID
 kill_proc $BACKEND_PID
 
-if [[ $OSTYPE == 'darwin'* ]];
+if [[ "$OSTYPE" == 'darwin'* ]];
 then
   sed -i '' -r -e 's#^(NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/backend/.env.local
   sed -i '' -r -e 's#^(VITE_NGROK_OVERRIDE)=(.*)#\1=#' $TIP_CARDS_DIR/frontend/.env.local

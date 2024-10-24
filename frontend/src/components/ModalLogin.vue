@@ -89,6 +89,7 @@ const missingEmail = ref(false)
 let subscription: Unsubscribable
 
 const safeLogin = async (hash: string) => {
+  fetchingLogin.value = true
   try {
     await login(hash)
   } catch (error) {
@@ -120,13 +121,13 @@ onBeforeMount(async () => {
           return
         }
 
+        subscription?.unsubscribe()
+
         if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.loggedIn) {
           safeLogin(lnurlAuthLoginDto.hash)
         } else if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.failed) {
           loginFailed.value = true
         }
-
-        subscription?.unsubscribe()
       },
       onError: (error) => {
         loginFailed.value = true

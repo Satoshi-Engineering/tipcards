@@ -6,6 +6,8 @@
     "./index.ts",
     "./shutdown.ts",
     "./startup.ts",
+    "./ngrok.ts",
+    "./proxy.ts",
     "./src/**/*.ts",
     "./tests/**/*.ts",
     "./src/types/global.d.ts",
