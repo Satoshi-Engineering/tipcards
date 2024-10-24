@@ -1,3 +1,6 @@
+import { tracked } from '@trpc/server'
+import { z } from 'zod'
+
 import {
   LnurlAuthLoginStatusEnum,
   LnurlAuthLoginDto,
@@ -25,28 +28,48 @@ export const lnurlAuthRouter = router({
     }),
 
   login: publicProcedure
+    .input(
+      z
+        .object({
+          // lastEventId is the last event id that the client has received
+          // On the first call, it will be whatever was passed in the initial setup
+          // If the client reconnects, it will be the last event id that the client received
+          lastEventId: z.string().nullish(),
+        })
+        .optional(),
+    )
     // todo: add output type definition/validation:
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(LnurlAuthLoginDto)
-    .subscription(async function* () {
-      const { lnurlAuth, hash } = await Auth.instance.lnurlAuthLogin.create()
-      yield {
-        lnurlAuth,
-        status: LnurlAuthLoginStatusEnum.enum.lnurlCreated,
-      }
+    .subscription(async function* ({ input }) {
+      const { id, lnurlAuth, hash } = await Auth.instance.lnurlAuthLogin.getOrCreate(input?.lastEventId)
 
-      try {
-        await Auth.instance.lnurlAuthLogin.waitForLogin(hash)
-        yield {
+      if (Auth.instance.lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
+        yield tracked(id, {
           lnurlAuth,
           hash,
           status: LnurlAuthLoginStatusEnum.enum.loggedIn,
-        }
+        })
+        return
+      }
+
+      yield tracked(id, {
+        lnurlAuth,
+        status: LnurlAuthLoginStatusEnum.enum.lnurlCreated,
+      })
+
+      try {
+        await Auth.instance.lnurlAuthLogin.waitForLogin(hash)
+        yield tracked(id, {
+          lnurlAuth,
+          hash,
+          status: LnurlAuthLoginStatusEnum.enum.loggedIn,
+        })
       } catch {
-        yield {
+        yield tracked(id, {
           lnurlAuth,
           status: LnurlAuthLoginStatusEnum.enum.failed,
-        }
+        })
       }
     }),
 })

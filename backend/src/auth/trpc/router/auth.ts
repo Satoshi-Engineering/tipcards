@@ -12,7 +12,7 @@ export const authRouter = router({
     .output(AccessTokenDto)
     .query(async ({ ctx, input }) => {
       const lnurlAuthLogin = ctx.auth.getLnurlAuthLogin()
-      const linkingKey = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(input.hash)
+      const linkingKey = lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(input.hash)
       await ctx.refreshGuard.loginUserWithWalletLinkingKey(linkingKey)
       const accessToken = await ctx.refreshGuard.createAccessTokenForUser()
       return {

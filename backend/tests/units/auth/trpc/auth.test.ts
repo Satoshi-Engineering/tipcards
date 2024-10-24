@@ -40,14 +40,14 @@ describe('TRpc Router Auth', async () => {
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
     const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
 
-    vi.spyOn(lnurlAuthLogin, 'getWalletLinkingKeyAfterSuccessfulOneTimeLogin').mockReturnValueOnce(walletLinkingKey)
+    vi.spyOn(lnurlAuthLogin, 'getWalletLinkingKeyOnceAfterSuccessfulAuth').mockReturnValueOnce(walletLinkingKey)
     vi.spyOn(refreshGuard, 'loginUserWithWalletLinkingKey').mockResolvedValueOnce()
     vi.spyOn(refreshGuard, 'createAccessTokenForUser').mockResolvedValueOnce(accessToken)
     const loginResult = await caller.loginWithLnurlAuthHash({
       hash,
     })
 
-    expect(lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin).toBeCalledWith(hash)
+    expect(lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth).toBeCalledWith(hash)
     expect(refreshGuard.loginUserWithWalletLinkingKey).toBeCalledWith(walletLinkingKey)
     expect(loginResult.accessToken).toBe(accessToken)
   })

@@ -13,8 +13,13 @@ import { type LoginEvent } from '@auth/types/LoginEvent.js'
 import { delay } from '@backend/services/timingUtils.js'
 
 describe('LnurlAuthLogin', () => {
-  const loginHashExpirationTime = 100
   const lnurlServer = lnurl.createServer({ host: 'mockHost', port: 'mockPort', url: 'mockUrl' })
+  const lnurlAuthId = 'c506222e47d39be202d6ecc5e74139e2a68fab7bf5b46401c03d4d3395a4876d'
+  const lnurlAuthEncoded = 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e3843n2vpkxgeryef5xajrxwtzv5erqvnyxejkxce4v5mngvfn89jnycfk8pnxzc3hvfnr2c35xc6rqvtrxqekgdryxvenjdtpxsurwdnyxkdxxr'
+  const lnurlAuthSecret = 'mockSecret'
+  const lnurlAuthHash = LnurlAuthLogin.createHashFromSecret(lnurlAuthSecret)
+  const loginHashExpirationTime = 100
+
   let loginInformerMock: LoginInformer
   let lnurlAuthLogin: LnurlAuthLogin
 
@@ -24,6 +29,12 @@ describe('LnurlAuthLogin', () => {
   }
 
   beforeEach(() => {
+    vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValueOnce({
+      url: 'mockUrl',
+      encoded: lnurlAuthEncoded,
+      secret: lnurlAuthSecret,
+    })
+
     loginInformerMock = {
       waitForLogin: vi.fn(),
       emitLoginSuccessful: vi.fn(),
@@ -49,78 +60,62 @@ describe('LnurlAuthLogin', () => {
   })
 
   it('should generate a new lnurl', async () => {
-    const lnurlAuth = 'mockLnurlAuth'
-    const secret = 'mockSecret'
-    const hash = LnurlAuthLogin.createHashFromSecret(secret)
-    vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValueOnce({
-      url: 'mockUrl',
-      encoded: lnurlAuth,
-      secret: secret,
-    })
-
     const result = await lnurlAuthLogin.create()
 
-    expect(result.lnurlAuth).toBe(lnurlAuth)
-    expect(result.hash).toBe(hash)
+    expect(result).toEqual({
+      id: lnurlAuthId,
+      lnurlAuth: lnurlAuthEncoded,
+      hash: lnurlAuthHash,
+    })
   })
 
+  // todo : add unit tests for get or create
+
+  // todo : add unit tests for createIdForLnurlAuth
+
+  // todo : add unit tests for waitForLogin
+
+  // todo : add unit tests for isOneTimeLoginHashValid
+
   it('should send login successful event after login event from lnurlserver', () => {
-    const hash = 'mockHash'
-    const walletLinkingKey = 'mockPublicKey'
-    const loginEvent = { key: walletLinkingKey, hash: hash }
+    sendLoginEvent({
+      key: 'mockPublicKey',
+      hash: lnurlAuthHash,
+    })
 
-    sendLoginEvent(loginEvent)
-
-    expect(loginInformerMock.emitLoginSuccessful).toHaveBeenCalledWith(hash)
+    expect(loginInformerMock.emitLoginSuccessful).toHaveBeenCalledWith(lnurlAuthHash)
   })
 
   it('should return walletLinkingKey after successful login', () => {
-    const hash = 'mockHash'
-    const walletLinkingKey = 'mockPublicKey'
-    const loginEvent = { key: walletLinkingKey, hash: hash }
-    sendLoginEvent(loginEvent)
+    const walletLinkingKey = 'mockWalletLinkingKey'
+    sendLoginEvent({
+      key: walletLinkingKey,
+      hash: lnurlAuthHash,
+    })
 
-    const result = lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)
+    const result = lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(lnurlAuthHash)
 
     expect(result).toBe(walletLinkingKey)
   })
 
   it('should return wallet linking key only once', () => {
-    const hash = 'mockHash'
-    const walletLinkingKey = 'mockPublicKey'
-    const loginEvent = { key: walletLinkingKey, hash: hash }
+    sendLoginEvent({
+      key: 'mockPublicKey',
+      hash: lnurlAuthHash,
+    })
+    lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(lnurlAuthHash)
 
-    sendLoginEvent(loginEvent)
-    lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)
-
-    expect(loginInformerMock.emitLoginSuccessful).toHaveBeenCalledWith(hash)
+    expect(() => lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(lnurlAuthHash)).toThrowError()
   })
 
   it('should expire one-time login hash', async () => {
-    const hash = 'mockHash'
-    const walletLinkingKey = 'mockPublicKey'
-    const loginEvent = { key: walletLinkingKey, hash: hash }
+    sendLoginEvent({
+      key: 'mockPublicKey',
+      hash: lnurlAuthHash,
+    })
 
-    sendLoginEvent(loginEvent)
     await delay(loginHashExpirationTime + 1)
 
-    expect(() => lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)).toThrowError()
-  })
-
-  it('should remove hash on create, if it exists', async () => {
-    const secret = 'mockSecret'
-    const hash = LnurlAuthLogin.createHashFromSecret(secret)
-    const walletLinkingKey = 'mockPublicKey'
-    const loginEvent = { key: walletLinkingKey, hash: hash }
-    sendLoginEvent(loginEvent)
-
-    vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValueOnce({
-      url: 'mockUrl',
-      encoded: 'mockLnurlAuth',
-      secret: secret,
-    })
-    await lnurlAuthLogin.create()
-
-    expect(() => lnurlAuthLogin.getWalletLinkingKeyAfterSuccessfulOneTimeLogin(hash)).toThrowError()
+    expect(() => lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(lnurlAuthHash)).toThrowError()
   })
 })

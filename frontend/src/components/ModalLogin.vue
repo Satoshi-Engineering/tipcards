@@ -115,17 +115,17 @@ onBeforeMount(async () => {
     undefined,
     {
       onData: (lnurlAuthLoginDto) => {
-        if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.lnurlCreated) {
+        if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.lnurlCreated) {
           fetchingLogin.value = false
-          lnurl.value = lnurlAuthLoginDto.lnurlAuth
+          lnurl.value = lnurlAuthLoginDto.data.lnurlAuth
           return
         }
 
         subscription?.unsubscribe()
 
-        if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.loggedIn) {
-          safeLogin(lnurlAuthLoginDto.hash)
-        } else if (lnurlAuthLoginDto.status === LnurlAuthLoginStatusEnum.enum.failed) {
+        if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.loggedIn) {
+          safeLogin(lnurlAuthLoginDto.data.hash)
+        } else if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.failed) {
           loginFailed.value = true
         }
       },

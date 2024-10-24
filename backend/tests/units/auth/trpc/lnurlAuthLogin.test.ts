@@ -5,6 +5,8 @@ import '../../mocks/http.js'
 import { Request, Response } from 'express'
 import { describe, it, expect, vi } from 'vitest'
 
+import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginDto.js'
+
 import { createCallerFactory } from '@auth/trpc/trpc.js'
 import { lnurlAuthRouter } from '@auth/trpc/router/lnurlAuth.js'
 import Auth from '@auth/domain/Auth.js'
@@ -34,7 +36,7 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
   })
 
   it('should return an encoded lnurlauth with hashed auth secret', async () => {
-    const lnurlAuth = 'mockLnurlAuth'
+    const lnurlAuth = 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e3843n2vpkxgeryef5xajrxwtzv5erqvnyxejkxce4v5mngvfn89jnycfk8pnxzc3hvfnr2c35xc6rqvtrxqekgdryxvenjdtpxsurwdnyxkdxxr'
     const secret = 'mockSecret'
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
     vi.spyOn(LnurlServer.getServer(), 'generateNewUrl').mockResolvedValueOnce({
@@ -45,7 +47,12 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
 
     const lnurlAuthLogin = await caller.create()
 
-    expect(lnurlAuthLogin.lnurlAuth).toBe(lnurlAuth)
-    expect(lnurlAuthLogin.hash).toBe(hash)
+    expect(lnurlAuthLogin).toEqual({
+      lnurlAuth,
+      hash,
+      status: LnurlAuthLoginStatusEnum.enum.lnurlCreated,
+    })
   })
+
+  // todo : create tests for login procedure
 })
