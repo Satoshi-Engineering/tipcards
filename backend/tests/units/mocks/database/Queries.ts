@@ -11,6 +11,7 @@ import {
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
+  AllowedSession,
 } from '@backend/database/schema/index.js'
 
 import {
@@ -30,6 +31,7 @@ import {
   usersCanUseImages,
   profilesByUserId,
   allowedRefreshTokensByHash,
+  allowedSessionsById,
 
   addSets,
   addSetSettings,
@@ -42,6 +44,7 @@ import {
   addUsersCanUseSets,
 
   removeAllowedRefreshTokensForUserId,
+  addAllowedSessions,
 } from './database.js'
 
 const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion | null> => {
@@ -208,6 +211,16 @@ export default vi.fn().mockImplementation(() => ({
   getAllAllowedRefreshTokensForUserId: async (userId: User['id']): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokensByHash)
     .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId),
 
+  getAllowedSessionById: async (sessionId: AllowedSession['sessionId']): Promise<AllowedSession | null> => allowedSessionsById[sessionId] || null,
+
+  deleteAllAllowedSessionForUserExceptOne: async (userId: User['id'], sessionId: AllowedSession['sessionId']): Promise<void> => {
+    Object.entries(allowedSessionsById).forEach(([sessionIdAsKey, session]) => {
+      if (session.user === userId && sessionIdAsKey !== sessionId) {
+        delete allowedSessionsById[sessionIdAsKey]
+      }
+    })
+  },
+
   insertCards: vi.fn(async (...cards: Card[]): Promise<void> => {
     cards.forEach((card) => {
       if (cardsByHash[card.hash] != null) {
@@ -232,6 +245,8 @@ export default vi.fn().mockImplementation(() => ({
   insertSetSettings: vi.fn(async (...setSettings: SetSettings[]): Promise<void> => addSetSettings(...setSettings)),
 
   insertUsersCanUseSets: vi.fn(async (...usersCanUseSets: UserCanUseSet[]): Promise<void> => addUsersCanUseSets(...usersCanUseSets)),
+
+  insertAllowedSession: vi.fn(async (allowedSession: AllowedSession): Promise<void> => { addAllowedSessions(allowedSession) }),
 
   insertOrUpdateCard: vi.fn(async (card: Card): Promise<void> => {
     cardsByHash[card.hash] = card
@@ -339,6 +354,8 @@ export default vi.fn().mockImplementation(() => ({
   deleteAllAllowedRefreshTokensForUserId: vi.fn(async (userId: User['id']): Promise<void> => {
     removeAllowedRefreshTokensForUserId(userId)
   }),
+
+  deleteAllowedSession: vi.fn(async (allowedSession: AllowedSession): Promise<void> => { delete allowedSessionsById[allowedSession.sessionId] }),
 
   getCardByHash: vi.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
 }))

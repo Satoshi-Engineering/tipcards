@@ -33,12 +33,12 @@ export default class AllowedSession {
     return this.allowedSession.sessionId
   }
 
-  public async update(data: Partial<AllowedSessionSchema>) {
-    this.allowedSession = {
-      ...this.allowedSession,
-      ...data,
-    }
-    await asTransaction((queries) => queries.insertOrUpdateAllowedSession(this.allowedSession))
+  public get user() {
+    return this.allowedSession.user
+  }
+
+  public async insert() {
+    await asTransaction((queries) => queries.insertAllowedSession(this.allowedSession))
   }
 
   public async delete() {

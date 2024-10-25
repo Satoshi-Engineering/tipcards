@@ -44,7 +44,7 @@ export default class RefreshGuard {
       user = await User.fromLnurlAuthKey(walletPublicKey)
       if (user == null) {
         const newUser = User.newUserFromWalletLinkingKey(walletPublicKey)
-        await newUser.update({})
+        await newUser.update()
         user = newUser
       }
     } catch (error) {
@@ -52,7 +52,7 @@ export default class RefreshGuard {
     }
 
     const allowedSession = AllowedSession.createNewForUserId(user.id)
-    await allowedSession.update({})
+    await allowedSession.insert()
 
     const refreshToken = await this.createRefreshToken({
       userId: user.id,
@@ -85,7 +85,7 @@ export default class RefreshGuard {
       try {
         const userId = await this.getAuthenticatedUserIdFromDeprecatedRefreshTokenFormat(jwtPayload, refreshToken)
         const allowedSession = AllowedSession.createNewForUserId(userId)
-        await allowedSession.update({})
+        await allowedSession.insert()
         this.userId = userId
         this.sessionId = allowedSession.sessionId
         return

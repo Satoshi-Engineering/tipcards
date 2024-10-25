@@ -53,7 +53,7 @@ export default class User {
     return this.user.created
   }
 
-  public async update(data: Partial<UserSchema>) {
+  public async update(data: Partial<UserSchema> = {}) {
     this.user = {
       ...this.user,
       ...data,

@@ -660,15 +660,6 @@ export default class Queries {
     return result[0]
   }
 
-  async insertOrUpdateAllowedSession(allowedSession: AllowedSession): Promise<void> {
-    await this.transaction.insert(AllowedSession)
-      .values(allowedSession)
-      .onConflictDoUpdate({
-        target: AllowedSession.sessionId,
-        set: allowedSession,
-      })
-  }
-
   async deleteAllowedSession(allowedSession: AllowedSession): Promise<void> {
     await this.transaction.delete(AllowedSession)
       .where(eq(AllowedSession.sessionId, allowedSession.sessionId))

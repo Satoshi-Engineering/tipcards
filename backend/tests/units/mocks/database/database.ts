@@ -8,6 +8,7 @@ import {
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
+  AllowedSession,
 } from '@backend/database/schema/index.js'
 
 export const setsById: Record<string, Set> = {}
@@ -26,6 +27,7 @@ export const images: Record<string, Image> = {}
 export const usersCanUseImages: UserCanUseImage[] = []
 export const profilesByUserId: Record<string, Profile> = {}
 export const allowedRefreshTokensByHash: Record<string, AllowedRefreshTokens> = {}
+export const allowedSessionsById: Record<string, AllowedSession> = {}
 
 export const addData = ({
   sets,
@@ -44,6 +46,7 @@ export const addData = ({
   usersCanUseImages,
   profiles,
   allowedRefreshTokens,
+  allowedSessions,
 }: {
   sets?: Set[],
   setSettings?: SetSettings[],
@@ -61,6 +64,7 @@ export const addData = ({
   usersCanUseImages?: UserCanUseImage[],
   profiles?: Profile[],
   allowedRefreshTokens?: AllowedRefreshTokens[],
+  allowedSessions?: AllowedSession[],
 }) => {
   addSets(...(sets || []))
   addSetSettings(...(setSettings || []))
@@ -78,6 +82,7 @@ export const addData = ({
   addUsersCanUseImages(...(usersCanUseImages || []))
   addProfiles(...(profiles || []))
   addAllowedRefreshTokens(...(allowedRefreshTokens || []))
+  addAllowedSessions(...(allowedSessions || []))
 }
 
 export const addSets = (...sets: Set[]) => {
@@ -136,6 +141,10 @@ export const addAllowedRefreshTokens = (...allowedRefreshTokens: AllowedRefreshT
     key: allowedRefreshToken.hash,
     item: allowedRefreshToken,
   })))
+}
+
+export const addAllowedSessions = (...allowedSessions: AllowedSession[]) => {
+  addItemsToTable(allowedSessionsById, allowedSessions.map((allowedSession) => ({ key: allowedSession.sessionId, item: allowedSession })))
 }
 
 export const removeAllowedRefreshTokensForUserId = (userId: User['id']) => {

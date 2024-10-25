@@ -11,6 +11,7 @@ import {
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
   Image, UserCanUseImage,
+  AllowedSession,
 } from '@backend/database/schema/index.js'
 import { LandingPageType } from '@backend/database/schema/enums/LandingPageType.js'
 import hashSha256 from '@backend/services/hashSha256.js'
@@ -180,4 +181,9 @@ export const createAccessTokenPayloadForUser = (user: User): AccessTokenPayload 
   lnurlAuthKey: user.lnurlAuthKey,
   permissions: AccessTokenPayload.shape.permissions.parse(user.permissions),
   nonce: randomUUID(),
+})
+
+export const createAllowedSession = (user: User): AllowedSession => ({
+  sessionId: randomUUID(),
+  user: user.id,
 })
