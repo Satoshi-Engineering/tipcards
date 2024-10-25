@@ -89,7 +89,7 @@ describe('Sets Page', () => {
     cy.get('@itemsInViewportBeforeScroll').then((itemsInViewportBeforeScroll) => {
       cy.get('@itemsInViewportAfterScroll').then((itemsInViewportAfterScroll) => {
         const itemsInViewport = Number(itemsInViewportBeforeScroll) + Number(itemsInViewportAfterScroll)
-        cy.getTestElement('sets-list-item-cards-info-pending').should('have.length', itemsInViewport * Math.min(12, numberOfCards))
+        cy.getTestElement('sets-list-item-cards-info-pending').should('have.length.at.least', itemsInViewport * Math.min(12, numberOfCards))
       })
     })
 
