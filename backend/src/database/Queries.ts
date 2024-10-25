@@ -400,6 +400,9 @@ export default class Queries {
       })
   }
 
+  /**
+   * @deprecated as it is only used by batchQueries.ts with is still used by deprecated (redis) queries
+   */
   async insertOrUpdateUser(user: User): Promise<void> {
     await this.transaction.insert(User)
       .values(user)
@@ -407,6 +410,11 @@ export default class Queries {
         target: User.id,
         set: user,
       })
+  }
+
+  async insertUser(user: User): Promise<void> {
+    await this.transaction.insert(User)
+      .values(user)
   }
 
   async insertOrUpdateUserCanUseSet(userCanUseSet: UserCanUseSet): Promise<void> {

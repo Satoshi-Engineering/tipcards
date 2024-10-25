@@ -283,6 +283,13 @@ export default vi.fn().mockImplementation(() => ({
     setSettingsBySetId[setSettings.set] = setSettings
   }),
 
+  insertUser: vi.fn(async (user: User): Promise<void> => {
+    if (usersById[user.id] != null) {
+      throw new Error(`User with id ${user.id} already exists`)
+    }
+    usersById[user.id] = user
+  }),
+
   insertOrUpdateUser: vi.fn(async (user: User): Promise<void> => {
     usersById[user.id] = user
   }),

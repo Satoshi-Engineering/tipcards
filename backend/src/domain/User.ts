@@ -53,12 +53,8 @@ export default class User {
     return this.user.created
   }
 
-  public async update(data: Partial<UserSchema> = {}) {
-    this.user = {
-      ...this.user,
-      ...data,
-    }
-    await asTransaction((queries) => queries.insertOrUpdateUser(this.user))
+  public async insert() {
+    await asTransaction((queries) => queries.insertUser(this.user))
   }
 
   private user: UserSchema

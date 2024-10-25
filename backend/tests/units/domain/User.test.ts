@@ -59,4 +59,22 @@ describe('User', () => {
       await User.fromId(userWithInvalidPermissionsDatabase.id)
     }).rejects.toThrowError(ZodError)
   })
+
+  it('should insert new User', async () => {
+    const mockNewLinkingKey = 'mockNewLinkingKey'
+    const user = User.newUserFromWalletLinkingKey(mockNewLinkingKey)
+
+    const userBeforeInsert = await User.fromId(user.id)
+    expect(userBeforeInsert).toBeNull()
+
+    await user.insert()
+
+    const userAfterInsert = await User.fromId(user.id)
+    expect(userAfterInsert).toEqual(expect.objectContaining({
+      id: user.id,
+      lnurlAuthKey: mockNewLinkingKey,
+      created: user.created,
+      permissions: user.permissions,
+    }))
+  })
 })

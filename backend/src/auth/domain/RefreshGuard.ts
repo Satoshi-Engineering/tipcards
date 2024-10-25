@@ -43,9 +43,8 @@ export default class RefreshGuard {
     try {
       user = await User.fromLnurlAuthKey(walletPublicKey)
       if (user == null) {
-        const newUser = User.newUserFromWalletLinkingKey(walletPublicKey)
-        await newUser.update()
-        user = newUser
+        user = User.newUserFromWalletLinkingKey(walletPublicKey)
+        await user.insert()
       }
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey)
