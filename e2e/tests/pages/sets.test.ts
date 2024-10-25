@@ -59,12 +59,39 @@ describe('Sets Page', () => {
       cy.log(`Page load excl. cardsInfo took ${t1 - t0} milliseconds.`)
     })
 
-    cy.wait('@apiSetGetCardsInfo', { timeout: 1000 * numberOfSets })
+    cy.wait('@apiSetGetCardsInfo')
 
-    cy.getTestElement('sets-list-item-cards-info-pending', { timeout: 1000 * numberOfSets })
-      .should('have.length.at.least', Math.min(12, numberOfCards))
-      .should('have.length.at.most', numberOfSets * Math.min(12, numberOfCards))
-    // adjust this with a check for the actual number of visible sets and their cardsInfo items
+    cy.getTestElement('sets-list-item')
+      .then(($setsListItems) => {
+        const setsListItemsInViewport = $setsListItems.get().filter((setsListItem) => elementIsInViewport(setsListItem))
+        cy.wrap(setsListItemsInViewport.length).as('itemsInViewportBeforeScroll')
+
+        cy.wrap(setsListItemsInViewport).each((setListItem: HTMLElement) => {
+          cy.wrap(setListItem).find('[data-test="sets-list-item-cards-info-pending"]').should('have.length', Math.min(12, numberOfCards))
+        })
+      })
+
+
+    cy.getTestElement('sets-list-item').eq(-3).scrollIntoView()
+
+    cy.wait('@apiSetGetCardsInfo')
+
+    cy.getTestElement('sets-list-item')
+      .then(($setsListItems) => {
+        const setsListItemsInViewport = $setsListItems.get().filter((setsListItem) => elementIsInViewport(setsListItem))
+        cy.wrap(setsListItemsInViewport.length).as('itemsInViewportAfterScroll')
+
+        cy.wrap(setsListItemsInViewport).each((setListItem: HTMLElement) => {
+          cy.wrap(setListItem).find('[data-test="sets-list-item-cards-info-pending"]').should('have.length', Math.min(12, numberOfCards))
+        })
+      })
+
+    cy.get('@itemsInViewportBeforeScroll').then((itemsInViewportBeforeScroll) => {
+      cy.get('@itemsInViewportAfterScroll').then((itemsInViewportAfterScroll) => {
+        const itemsInViewport = Number(itemsInViewportBeforeScroll) + Number(itemsInViewportAfterScroll)
+        cy.getTestElement('sets-list-item-cards-info-pending').should('have.length', itemsInViewport * Math.min(12, numberOfCards))
+      })
+    })
 
     cy.then(() => {
       t2 = performance.now()
@@ -72,3 +99,8 @@ describe('Sets Page', () => {
     })
   })
 })
+
+const elementIsInViewport = (el: HTMLElement) => {
+  const rect = el.getBoundingClientRect()
+  return rect.bottom >= 0 && rect.top <= Cypress.config('viewportHeight')
+}

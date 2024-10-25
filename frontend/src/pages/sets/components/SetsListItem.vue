@@ -2,6 +2,7 @@
   <LinkDefault
     ref="item"
     class="grid grid-cols-[1fr,4.5rem] hover:bg-grey-light"
+    data-test="sets-list-item"
     no-underline
     no-bold
     :to="{
