@@ -49,6 +49,10 @@ export default class User {
     return this.transformPermissions()
   }
 
+  get created() {
+    return this.user.created
+  }
+
   public async update(data: Partial<UserSchema>) {
     this.user = {
       ...this.user,
