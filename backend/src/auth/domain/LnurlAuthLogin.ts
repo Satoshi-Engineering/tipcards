@@ -47,11 +47,7 @@ export default class LnurlAuthLogin {
     const id = LnurlAuthLogin.createIdForLnurlAuth(lnurlAuth)
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
 
-    return {
-      id,
-      lnurlAuth,
-      hash,
-    }
+    return this.addActiveLnurl(id, lnurlAuth, hash)
   }
 
   public async waitForLogin(hash: string) {
@@ -86,12 +82,18 @@ export default class LnurlAuthLogin {
       // `hash` - the hash of the secret for the LNURL used to login
       const { key: walletLinkingKey, hash } = event
       assert(walletLinkingKey.length > 0, 'lnurlServer.on(login) - Wallet linking key is empty')
+
       this.addOneTimeLoginHash(hash, walletLinkingKey)
       setTimeout(() => {
         this.removeOneTimeLoginHash(hash)
       }, this.loginHashExpirationTime)
+
       this.loginInformer.emitLoginSuccessful(hash)
     })
+  }
+
+  private addActiveLnurl(id: string, lnurlAuth: string, hash: string) {
+    return this.activeLnurlsById[id] = { id, lnurlAuth, hash }
   }
 
   private addOneTimeLoginHash(hash: string, walletLinkingKey: string) {
@@ -100,6 +102,14 @@ export default class LnurlAuthLogin {
 
   private removeOneTimeLoginHash(hash: string) {
     delete this.oneTimeLoginWalletLinkingKeys[hash]
+    this.removeActiveLnurlByHash(hash)
+  }
+
+  private removeActiveLnurlByHash(hash: string) {
+    const id = Object.keys(this.activeLnurlsById).find((id) => this.activeLnurlsById[id].hash === hash)
+    if (id != null) {
+      delete this.activeLnurlsById[id]
+    }
   }
 
   private getLinkingKeyFromOneTimeLoginHash(hash: string): string {
