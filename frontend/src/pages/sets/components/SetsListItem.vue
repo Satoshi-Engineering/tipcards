@@ -30,10 +30,7 @@
     </div>
     <div class="col-start-1">
       <time class="text-sm" data-test="sets-list-item-date">
-        {{ $d(set.created, {
-          year: 'numeric', month: 'numeric', day: 'numeric',
-          hour: 'numeric', minute: 'numeric'
-        }) }}
+        {{ $d(set.created, dateWithTimeFormat) }}
       </time>
     </div>
     <div
@@ -88,6 +85,7 @@ import useSets from '@/modules/useSets'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
+import { dateWithTimeFormat } from '@/utils/dateFormats'
 
 const { encodeCardsSetSettings } = useSets()
 

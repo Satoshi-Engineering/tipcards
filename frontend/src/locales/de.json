@@ -307,7 +307,8 @@
     "noSavedCardsSetsMessage": "Du hast noch keine gespeicherten Sets",
     "unnamedSetNameFallback": "Unbenanntes Set",
     "setInfo": "Set-Info",
-    "noSetsMatchingFilter": "Keine Sets gefunden."
+    "noSetsMatchingFilter": "Keine Sets gefunden.",
+    "displayedSetsOfTotalSets": "{displayedSets} / {totalSets} Sets"
   },
   "cards": {
     "title": "TipCards-Set",

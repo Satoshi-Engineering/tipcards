@@ -54,6 +54,17 @@
           <ParagraphDefault>
             {{ t('sets.description') }}
           </ParagraphDefault>
+          <SetsListFilterSection
+            class="my-8"
+            @text-search="textSearch = $event"
+          />
+          <div class="text-sm">
+            {{
+              fetchingAllSets
+                ? '&nbsp;'
+                : t('sets.displayedSetsOfTotalSets', { displayedSets: filteredSets.length, totalSets: sets.length })
+            }}
+          </div>
           <SetsList
             :sets="filteredSets"
             :cards-info-by-set-id="cardsInfoBySetId"
@@ -92,6 +103,7 @@ import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
 import { watch } from 'vue'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
+import { dateWithTimeFormat } from '@/utils/dateFormats'
 
 const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -201,5 +213,10 @@ const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) =>
 // Search
 const textSearch = ref<string>('')
 
-const filteredSets = computed(() => sets.value.filter((set) => set.settings.name.toLowerCase().includes(textSearch.value.trim().toLowerCase())))
+const filteredSets = computed(() => sets.value.filter((set) => getSearchString(set).toLowerCase().includes(textSearch.value.trim().toLowerCase())))
+
+const { d } = useI18n()
+
+const getSearchString = (set: SetDto) =>
+  `${set.settings.name || t('sets.unnamedSetNameFallback')} ${d(set.created, dateWithTimeFormat)} ${set.settings.numberOfCards}`
 </script>
