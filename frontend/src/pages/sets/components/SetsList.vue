@@ -29,6 +29,7 @@
           :cards-info="cardsInfoBySetId[set.id] ?? undefined"
           :no-cards-info="noCardsInfo || cardsInfoBySetId[set.id] === null"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
+          @enter-viewport="$emit('enterViewport', set.id)"
         />
       </li>
     </ul>
@@ -73,6 +74,8 @@ const props = defineProps({
     default: undefined,
   },
 })
+
+defineEmits(['enterViewport'])
 
 const sortedSavedSets = computed(() => {
   return [...props.sets]

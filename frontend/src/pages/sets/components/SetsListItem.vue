@@ -1,5 +1,6 @@
 <template>
   <LinkDefault
+    ref="item"
     class="grid grid-cols-[1fr,4.5rem] hover:bg-grey-light"
     no-underline
     no-bold
@@ -76,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
@@ -103,6 +104,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const emit = defineEmits(['enterViewport'])
 
 const displayedCardsInfoItems = computed(() => Math.min(12, props.set.settings.numberOfCards))
 
@@ -142,4 +145,37 @@ const getRelativeCardsInfo = (value: number = 0) => {
   }
   return Math.round(relativeNumber)
 }
+
+const isInViewport = ref(false)
+
+const itemRef = useTemplateRef<InstanceType<typeof LinkDefault>>('item')
+
+const isInViewportObserver = new IntersectionObserver(async (entries) => {
+  if (entries[0].isIntersecting) {
+    isInViewport.value = true
+    return
+  }
+  isInViewport.value = false
+})
+
+onMounted(async () => {
+  isInViewportObserver.observe(itemRef.value!.$el)
+})
+
+onUnmounted(() => {
+  isInViewportObserver.disconnect()
+})
+
+const emitIfInViewportLongEnough = async () => {
+  if (!isInViewport.value) {
+    return
+  }
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  if (!isInViewport.value) {
+    return
+  }
+  emit('enterViewport')
+}
+
+watch(isInViewport, emitIfInViewportLongEnough)
 </script>

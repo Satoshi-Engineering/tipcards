@@ -36,10 +36,6 @@
         class="flex flex-col"
         data-test="logged-in"
       >
-        <SetsListFilterSection
-          class="my-8"
-          @text-search="textSearch = $event"
-        />
         <UserErrorMessages
           v-if="fetchingUserErrorMessages.length > 0"
           :user-error-messages="fetchingUserErrorMessages"
@@ -71,6 +67,7 @@
             :fetching="fetchingAllSets"
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             class="my-7"
+            @enter-viewport="loadCardsInfoForSet"
           />
         </div>
       </div>
@@ -80,10 +77,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
-import debounce from 'lodash.debounce'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -128,33 +124,6 @@ const cardsInfoBySetId = computed<SetCardsInfoBySetId>(() => {
   return result
 })
 
-const updateCardsInfoForSetsInViewport = async () => {
-  const setsSortedByNumberOfCards = getSetsSortedByNumberOfCardsDesc()
-  for (const set of setsSortedByNumberOfCards) {
-    if (!isSetInViewport(set.id)) {
-      continue
-    }
-    if (cardsInfoWithLoadingStatusBySetId.value[set.id]?.startedLoading === true) {
-      continue
-    }
-    setStartedLoadingForSet(set.id)
-    const cardsInfo = await getCardsInfoForSet(set.id)
-    setCardsInfoForSet(set.id, cardsInfo)
-  }
-}
-
-const debouncedUpdateCardsInfoForSetsInViewport = debounce(updateCardsInfoForSetsInViewport, 1000)
-
-const startListeningForScroll = () => {
-  window.addEventListener('scroll', debouncedUpdateCardsInfoForSetsInViewport)
-  window.addEventListener('resize', debouncedUpdateCardsInfoForSetsInViewport)
-}
-
-const stopListeningForScroll = () => {
-  window.removeEventListener('scroll', debouncedUpdateCardsInfoForSetsInViewport)
-  window.removeEventListener('resize', debouncedUpdateCardsInfoForSetsInViewport)
-}
-
 const loadAllSets = async () => {
   sets.value = await getAllSets()
 }
@@ -164,29 +133,22 @@ const resetSetsAndCardsInfo = () => {
   cardsInfoWithLoadingStatusBySetId.value = {}
 }
 
-const getSetsSortedByNumberOfCardsDesc = () => [...sets.value].sort((a, b) => a.settings.numberOfCards - b.settings.numberOfCards)
-
 watch(isLoggedIn, async (isLoggedIn) => {
   if (!isLoggedIn) {
     resetSetsAndCardsInfo()
-    stopListeningForScroll()
+    return
+  }
+  await loadAllSets()
+}, { immediate: true })
+
+const loadCardsInfoForSet = async (setId: string) => {
+  if (cardsInfoWithLoadingStatusBySetId.value[setId]?.startedLoading) {
     return
   }
 
-  await loadAllSets()
-  await nextTick()
-  updateCardsInfoForSetsInViewport()
-  startListeningForScroll()
-}, { immediate: true })
-
-const isSetInViewport = (id: string) => {
-  const element = document.querySelector(`[data-set-id="${id}"]`)
-  if (!element) {
-    return false
-  }
-
-  const rect = element.getBoundingClientRect()
-  return rect.top < window.innerHeight && rect.bottom > 0
+  setStartedLoadingForSet(setId)
+  const cardsInfo = await getCardsInfoForSet(setId)
+  setCardsInfoForSet(setId, cardsInfo)
 }
 
 const setStartedLoadingForSet = (setId: string) => {
