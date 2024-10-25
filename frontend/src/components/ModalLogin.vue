@@ -123,7 +123,10 @@ onBeforeMount(async () => {
 
         subscription?.unsubscribe()
 
-        if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.loggedIn) {
+        if (
+          lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.loggedIn
+          && lnurlAuthLoginDto.data.hash != null
+        ) {
           safeLogin(lnurlAuthLoginDto.data.hash)
         } else if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.failed) {
           loginFailed.value = true

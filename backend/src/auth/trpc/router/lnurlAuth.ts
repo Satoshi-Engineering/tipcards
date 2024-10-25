@@ -1,4 +1,4 @@
-import { tracked } from '@trpc/server'
+import { tracked, type TrackedEnvelope } from '@trpc/server'
 import { z } from 'zod'
 
 import {
@@ -41,11 +41,11 @@ export const lnurlAuthRouter = router({
     // todo: add output type definition/validation:
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(LnurlAuthLoginDto)
-    .subscription(async function* ({ input }) {
+    .subscription(async function* ({ input }): AsyncGenerator<TrackedEnvelope<LnurlAuthLoginDto>> {
       const { id, lnurlAuth, hash } = await Auth.instance.lnurlAuthLogin.getOrCreate(input?.lastEventId)
 
       if (Auth.instance.lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
-        yield tracked(id, {
+        yield loginResponse(id, {
           lnurlAuth,
           hash,
           status: LnurlAuthLoginStatusEnum.enum.loggedIn,
@@ -53,23 +53,26 @@ export const lnurlAuthRouter = router({
         return
       }
 
-      yield tracked(id, {
+      yield loginResponse(id, {
         lnurlAuth,
         status: LnurlAuthLoginStatusEnum.enum.lnurlCreated,
       })
 
       try {
         await Auth.instance.lnurlAuthLogin.waitForLogin(hash)
-        yield tracked(id, {
+        yield loginResponse(id, {
           lnurlAuth,
           hash,
           status: LnurlAuthLoginStatusEnum.enum.loggedIn,
         })
       } catch {
-        yield tracked(id, {
+        yield loginResponse(id, {
           lnurlAuth,
           status: LnurlAuthLoginStatusEnum.enum.failed,
         })
       }
     }),
 })
+
+// workaround until procedure.output(LnurlAuthLoginDto) is implemented
+const loginResponse = (lnurlAuthid: string, data: LnurlAuthLoginDto) => tracked(lnurlAuthid, LnurlAuthLoginDto.parse(data))
