@@ -1,6 +1,7 @@
 import '../mocks/i18n'
 import '../mocks/router'
 import '../mocks/pinia'
+import '../mocks/intersectionObserver'
 import '../mocks/modules/useTRpc'
 import { useSetsMethods } from  '../mocks/modules/useSets'
 

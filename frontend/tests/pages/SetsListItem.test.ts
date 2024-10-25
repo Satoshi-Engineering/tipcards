@@ -1,6 +1,7 @@
 import '../mocks/i18n'
 import '../mocks/router'
 import '../mocks/pinia'
+import '../mocks/intersectionObserver'
 import '../mocks/modules/useTRpc'
 
 import { mount, config, RouterLinkStub } from '@vue/test-utils'
