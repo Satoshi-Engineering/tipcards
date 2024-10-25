@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -156,7 +156,13 @@ const lnurl = computed<string | null>(() => {
 
 const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
 
-onMounted(() => loadCardStatus())
+onMounted(() => {
+  mounted = true
+  loadCardStatus()
+})
+onBeforeUnmount(() => {
+  mounted = false
+})
 
 watch(cardStatus, (newStatus, oldStatus) => {
   if (oldStatus == null && newStatus != null) {
@@ -164,7 +170,12 @@ watch(cardStatus, (newStatus, oldStatus) => {
   }
 })
 
+let mounted: boolean
 const loadCardStatus = async (): Promise<boolean> => {
+  if (!mounted) {
+    return false
+  }
+
   if (loadingCardStatus.value) {
     return false
   }
