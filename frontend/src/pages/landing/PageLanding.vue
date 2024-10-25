@@ -74,6 +74,7 @@
 </template>
 
 <script setup lang="ts">
+import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -156,13 +157,9 @@ const lnurl = computed<string | null>(() => {
 
 const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
 
-onMounted(() => {
-  mounted = true
-  loadCardStatus()
-})
-onBeforeUnmount(() => {
-  mounted = false
-})
+let subscription: Unsubscribable
+onMounted(() => loadCardStatus())
+onBeforeUnmount(() => subscription?.unsubscribe())
 
 watch(cardStatus, (newStatus, oldStatus) => {
   if (oldStatus == null && newStatus != null) {
@@ -170,34 +167,28 @@ watch(cardStatus, (newStatus, oldStatus) => {
   }
 })
 
-let mounted: boolean
-const loadCardStatus = async (): Promise<boolean> => {
-  if (!mounted) {
-    return false
-  }
-
-  if (loadingCardStatus.value) {
-    return false
-  }
-
+const loadCardStatus = () => {
   if (cardHash.value == null) {
     if (lnurl.value != null && lnurl.value !== '') {
       userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
     }
-    return false
+    return
   }
 
   loadingCardStatus.value = true
-  try {
-    cardStatus.value = await card.status.query({ hash: cardHash.value })
-    return true
-  } catch {
-    userErrorMessage.value = t('landing.errors.errorLoadingCardStatus')
-    return false
-  } finally {
-    loadingCardStatus.value = false
-    setTimeout(loadCardStatus, 10_000)
-  }
+
+  subscription = card.status.subscribe(
+    cardHash.value,
+    {
+      onData: (data) => {
+        cardStatus.value = data
+      },
+      onError: (error) => {
+        console.error(error)
+        userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
+      },
+    },
+  )
 }
 
 const afterInitialCardStatusLoadHandler = () => {
@@ -240,7 +231,6 @@ const resetBulkWithdraw = async () => {
   resettingBulkWithdraw.value = true
   try {
     await bulkWithdraw.deleteByCardHash.mutate({ hash: cardHash.value })
-    await loadCardStatus()
   } catch (error) {
     console.error(error)
     userErrorMessage.value = t('landing.bulkWithdrawResetError')

@@ -1,15 +1,16 @@
+import { on, type EventEmitter } from 'node:events'
+
 import { Card, CardHash } from '@shared/data/trpc/Card.js'
 import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
 import CardStatus from '@backend/domain/CardStatus.js'
-// todo : do not rename on import, instead change it to CardStatus and rename trpc/CardStatus to CardStatusDto
 
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
 import { handleCardLockForSingleCard } from '../../procedures/partials/handleCardLock.js'
 
-export const cardRouter = router({
+export const cardRouter = (eventEmitter: EventEmitter) => router({
   /**
    * deprecated as it still uses deprecated (redis) queries
    * @deprecated
@@ -25,10 +26,21 @@ export const cardRouter = router({
 
   status: publicProcedure
     .input(CardHash)
-    .output(CardStatusDto)
-    .query(async ({ input }) => {
+    // todo: add output type definition/validation:
+    // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
+    //.output(CardStatusDto)
+    .subscription(async function* ({ input, signal }): AsyncGenerator<CardStatusDto> {
+      // create iterator first so we do not miss events during fetch of initial data
+      const iterator = on(eventEmitter, `update:${input.hash}`, { signal })
+
       const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
-      return cardStatus.toTrpcResponse()
+      yield CardStatusDto.parse(cardStatus.toTrpcResponse())
+
+      // eslint-disable-next-line
+      for await (const _ of iterator) {
+        const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
+        yield CardStatusDto.parse(cardStatus.toTrpcResponse())
+      }
     }),
 
   landingPageViewed: publicProcedure

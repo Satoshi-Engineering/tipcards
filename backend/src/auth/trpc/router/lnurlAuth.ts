@@ -75,4 +75,4 @@ export const lnurlAuthRouter = router({
 })
 
 // workaround until procedure.output(LnurlAuthLoginDto) is implemented
-const loginResponse = (lnurlAuthid: string, data: LnurlAuthLoginDto) => tracked(lnurlAuthid, LnurlAuthLoginDto.parse(data))
+const loginResponse = (lnurlAuthId: string, data: LnurlAuthLoginDto) => tracked(lnurlAuthId, LnurlAuthLoginDto.parse(data))
