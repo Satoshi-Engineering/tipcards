@@ -42,11 +42,11 @@ export const releaseCardMiddleware = async (req: Request, res: Response, next: N
     return
   }
   if (!res.locals.lock) {
-    console.error(`releaseCard called without lockValue for cardHash ${req.params.cardHash}`, req, res.locals.lock)
+    console.error(`releaseCard called without lock for cardHash ${req.params.cardHash}`, req, res.locals.lock)
     return
   }
 
-  await safeReleaseCard(req.params.cardHash, res.locals.lock)
+  await safeReleaseCard(res.locals.lock)
 
   next()
 }

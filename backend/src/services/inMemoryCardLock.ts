@@ -28,23 +28,19 @@ export const lockCard = async (cardHash: string): Promise<Lock> => {
 }
 
 /** @throws */
-export const lockCards = async (cardHashes: string[]) => {
-  const locks = await Promise.all(cardHashes.map(async (cardHash) => ({
-    cardHash,
-    lock: await lockCard(cardHash),
-  })))
-  return locks
+export const lockCards = async (cardHashes: string[]): Promise<Lock[]> =>  {
+  return await Promise.all(cardHashes.map(async (cardHash) => await lockCard(cardHash)))
 }
 
-export const safeReleaseCard = async (cardHash: string, lock: Lock) => {
+export const safeReleaseCard = async (lock: Lock) => {
   try {
     lock.release()
   } catch (error) {
-    console.error(`Error releasing card lock for card ${cardHash} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
+    console.error(`Error releasing card lock for card ${lock.resourceId} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
   }
 }
 
-export const safeReleaseCards = async (locks: { cardHash: string, lock: Lock }[]) => {
+export const safeReleaseCards = async (locks: Lock[]) => {
   try {
     await releaseCards(locks)
   } catch (error) {
@@ -53,8 +49,8 @@ export const safeReleaseCards = async (locks: { cardHash: string, lock: Lock }[]
 }
 
 /** @throws */
-const releaseCards = async (locks: { cardHash: string, lock: Lock }[]) => {
-  await Promise.all(locks.map(async ({ cardHash, lock }) => {
-    await safeReleaseCard(cardHash, lock)
+const releaseCards = async (locks: Lock[]) => {
+  await Promise.all(locks.map(async (lock) => {
+    await safeReleaseCard(lock)
   }))
 }

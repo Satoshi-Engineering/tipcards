@@ -19,7 +19,7 @@ export const handleCardLockForSingleCard = publicProcedure
       const result = await next()
       return result
     } finally {
-      safeReleaseCard(input.hash, lock)
+      safeReleaseCard(lock)
     }
   })
 
