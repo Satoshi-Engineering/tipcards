@@ -22,7 +22,8 @@ describe('Sets Page', () => {
     const sets = generateSets(numberOfSets, numberOfCardsPerSet)
 
     tipCardsApi.set.addSetsParallel(sets)
-    cy.task('createInvoicesForSetsParallel', { sets, amountPerCard: 21 })
+    tipCardsApi.set.createInvoicesForSetsParallel(sets, 21)
+    //cy.task('createInvoicesForSetsParallel', { sets, amountPerCard: 21 })
   })
 
   beforeEach(() => {
