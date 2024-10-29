@@ -1,6 +1,8 @@
 import {
   createTRPCClient,
+  splitLink,
   httpBatchLink,
+  unstable_httpSubscriptionLink,
   TRPCClientError,
   type CreateTRPCClient,
 } from '@trpc/client'
@@ -12,21 +14,28 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 
 const createClient = (getValidAccessToken: () => Promise<string | null>) => createTRPCClient<AppRouter>({
   links: [
-    httpBatchLink({
-      url: `${BACKEND_API_ORIGIN}/trpc`,
-      transformer: superjson,
-      maxURLLength: 2083,
-      headers: async () => {
-        let accessToken: string | null
-        try {
-          accessToken = await getValidAccessToken()
-        } catch {
-          accessToken = null
-        }
-        return {
-          Authorization: accessToken || '',
-        }
-      },
+    splitLink({
+      condition: (operation) => operation.type === 'subscription',
+      true: unstable_httpSubscriptionLink({
+        url: `${BACKEND_API_ORIGIN}/trpc`,
+        transformer: superjson,
+      }),
+      false: httpBatchLink({
+        url: `${BACKEND_API_ORIGIN}/trpc`,
+        transformer: superjson,
+        maxURLLength: 2083,
+        headers: async () => {
+          let accessToken: string | null
+          try {
+            accessToken = await getValidAccessToken()
+          } catch {
+            accessToken = null
+          }
+          return {
+            Authorization: accessToken || '',
+          }
+        },
+      }),
     }),
   ],
 })

@@ -178,7 +178,7 @@ const loadCardStatus = () => {
   loadingCardStatus.value = true
 
   subscription = card.status.subscribe(
-    cardHash.value,
+    { hash: cardHash.value },
     {
       onData: (data) => {
         cardStatus.value = data
@@ -195,6 +195,8 @@ const afterInitialCardStatusLoadHandler = () => {
   if (cardHash.value == null) {
     return
   }
+  loadingCardStatus.value = false
+
   if (cardIsNotFunded.value) {
     redirectToFundingPage(cardHash.value)
   } else if (isViewedFromQrCodeScan.value) {

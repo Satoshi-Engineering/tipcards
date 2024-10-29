@@ -21,4 +21,4 @@ export default class ApplicationEventEmitter extends EventEmitter {
   private static singleton: ApplicationEventEmitter
 }
 
-export const cardUpdate = (cardHash: Card['hash']) => `card:update:${cardHash}`
+export const cardUpdateEvent = (cardHash: Card['hash']) => `card:update:${cardHash}`

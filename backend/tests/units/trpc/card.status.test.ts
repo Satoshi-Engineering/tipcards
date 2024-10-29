@@ -2,23 +2,25 @@ import { addCard } from '../mocks/domain/CardStatus.js'
 import '../mocks/process.env.js'
 import '../mocks/http.js'
 
-import EventEmitter from 'node:events'
 import { describe, it, expect, vi } from 'vitest'
 
+import ApplicationEventEmitter, { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 
 import { createCard } from '../data/Card.js'
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
-const eventEmitter = new EventEmitter
-const createCaller = createCallerFactory(cardRouter(eventEmitter))
+ApplicationEventEmitter.init()
+const applicationEventEmitter = ApplicationEventEmitter.instance
+const createCaller = createCallerFactory(cardRouter)
 
 describe('tRPC card.status route', async () => {
   const caller = createCaller({
     host: null,
     jwt: null,
     accessToken: null,
+    applicationEventEmitter,
   })
 
   it('should return the current card status', async () => {
@@ -64,7 +66,7 @@ describe('tRPC card.status route', async () => {
     const iterator = await caller.status({ hash: card.hash })
     await iterator.next()
 
-    setTimeout(() => eventEmitter.emit(`update:${card.hash}`), 1)
+    setTimeout(() => applicationEventEmitter.emit(cardUpdateEvent(card.hash)), 1)
     const result = await iterator.next()
 
     expect(result).toEqual({

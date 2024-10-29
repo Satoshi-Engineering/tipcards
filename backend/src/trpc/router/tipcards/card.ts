@@ -1,8 +1,9 @@
-import { on, type EventEmitter } from 'node:events'
+import { on } from 'node:events'
 
 import { Card, CardHash } from '@shared/data/trpc/Card.js'
 import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 
+import { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
 import CardStatus from '@backend/domain/CardStatus.js'
 
@@ -10,7 +11,7 @@ import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
 import { handleCardLockForSingleCard } from '../../procedures/partials/handleCardLock.js'
 
-export const cardRouter = (eventEmitter: EventEmitter) => router({
+export const cardRouter = router({
   /**
    * deprecated as it still uses deprecated (redis) queries
    * @deprecated
@@ -29,9 +30,17 @@ export const cardRouter = (eventEmitter: EventEmitter) => router({
     // todo: add output type definition/validation:
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(CardStatusDto)
-    .subscription(async function* ({ input, signal }): AsyncGenerator<CardStatusDto> {
+    .subscription(async function* ({
+      input,
+      signal,
+      ctx,
+    }): AsyncGenerator<CardStatusDto> {
       // create iterator first so we do not miss events during fetch of initial data
-      const iterator = on(eventEmitter, `update:${input.hash}`, { signal })
+      const iterator = on(
+        ctx.applicationEventEmitter,
+        cardUpdateEvent(input.hash),
+        { signal },
+      )
 
       const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
       yield CardStatusDto.parse(cardStatus.toTrpcResponse())
