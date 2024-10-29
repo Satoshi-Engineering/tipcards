@@ -25,3 +25,12 @@ export const generateSet = (): Set => {
     invoice: null,
   }
 }
+
+export const generateSets = (numberOfSets: number, numberOfCards: number = 8) => {
+  return [...new Array(numberOfSets).keys()].map((i) => {
+    const set = generateSet()
+    set.settings.setName = `Set ${i.toString().padStart(3, '0')}`
+    set.settings.numberOfCards = numberOfCards
+    return set
+  })
+}

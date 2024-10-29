@@ -87,7 +87,7 @@ export const createInvoicesForSetsParallel = (sets: Set[], amountPerCard = 21) =
   cy.then({ timeout: 10000 * sets.length }, async function () {
     await Promise.all(sets.map((set) =>
       axios.request({
-        url: `${API_SET.href}/invoice/${set.id}`,
+        url: `${API_SET_INVOICE.href}/${set.id}`,
         method: 'POST',
         data: {
           amountPerCard,

@@ -105,3 +105,7 @@ export const createAndWrapLNURLAuth = () => {
     cy.wrap(lnurlAuth).as('lnurlAuth')
   })
 }
+
+export const wrapLNURLAuth = (lnurlAuth: LNURLAuth) => {
+  cy.wrap(lnurlAuth).as('lnurlAuth')
+}

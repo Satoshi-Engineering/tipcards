@@ -26,7 +26,7 @@
     </HeadlineDefault>
     <div class="col-start-1 text-sm">
       <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
-      <span class="align-middle">
+      <span class="align-middle" data-test="sets-list-item-number-of-cards">
         {{ $t('general.cards', { count: set.settings.numberOfCards }) }}
       </span>
     </div>

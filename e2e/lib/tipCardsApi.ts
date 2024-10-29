@@ -5,6 +5,7 @@ import {
   refresh,
   clearAuth,
   createAndWrapLNURLAuth,
+  wrapLNURLAuth,
 } from '@e2e/lib/api/auth'
 import { startBulkWithdraw } from '@e2e/lib/api/bulkWithdraw'
 import {
@@ -34,6 +35,7 @@ export default {
     isLoggedOut,
     clearAuth,
     createAndWrapLNURLAuth,
+    wrapLNURLAuth,
   },
   bulkWithdraw: {
     startBulkWithdraw,
