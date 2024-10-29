@@ -266,24 +266,6 @@ export default class Queries {
     return result[0]
   }
 
-  async setCardLock(hash: Card['hash'], locked: string): Promise<void> {
-    await this.transaction.update(Card)
-      .set({ locked })
-      .where(and(
-        eq(Card.hash, hash),
-        isNull(Card.locked),
-      ))
-  }
-
-  async releaseCardLock(hash: Card['hash'], locked: string): Promise<void> {
-    await this.transaction.update(Card)
-      .set({ locked: null })
-      .where(and(
-        eq(Card.hash, hash),
-        eq(Card.locked, locked),
-      ))
-  }
-
   async insertCardVersions(...cardVersions: CardVersion[]): Promise<void> {
     await this.transaction.insert(CardVersion)
       .values(cardVersions)

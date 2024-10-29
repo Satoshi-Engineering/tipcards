@@ -341,27 +341,4 @@ export default vi.fn().mockImplementation(() => ({
   }),
 
   getCardByHash: vi.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
-
-  setCardLock: vi.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
-    if (cardsByHash[hash] == null) {
-      throw new Error(`Card with ${hash} does not exist`)
-    }
-    if (cardsByHash[hash].locked != null) {
-      throw new Error(`Card with hash ${hash} already locked`)
-    }
-    cardsByHash[hash].locked = lockValue
-  }),
-
-  releaseCardLock: vi.fn(async (hash: Card['hash'], lockValue: string): Promise<void> => {
-    if (cardsByHash[hash] == null) {
-      throw new Error(`Card with ${hash} does not exist`)
-    }
-    if (cardsByHash[hash].locked == null) {
-      throw new Error(`Card with hash ${hash} is not locked`)
-    }
-    if (cardsByHash[hash].locked !== lockValue) {
-      throw new Error(`Card with hash ${hash} was locked with different lockValue: Card lock: ${cardsByHash[hash].locked}, lockValue: ${lockValue}`)
-    }
-    cardsByHash[hash].locked = null
-  }),
 }))

@@ -11,7 +11,6 @@ Table Card {
   hash    varchar(64) [primary key, unique, note: "sha256 of setId + card index in hex"]
   created DateTime
   set     varchar(36) [ref: > Set.id, null]
-  locked  varchar(36) [unique, null, note: "uuid, force access to cards to be serialized"]
 }
 
 Table CardVersion {

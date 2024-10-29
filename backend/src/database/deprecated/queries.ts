@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto'
-
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
@@ -39,32 +37,6 @@ import {
 import { asTransaction } from '../client.js'
 
 // @throws tags are omitted as every database query can throw an exception!
-
-export const lockCardByHash = async (cardHash: string): Promise<string | null> => {
-  const locked = randomUUID()
-  try {
-    await asTransaction(async (queries) => queries.insertCards({
-      hash: cardHash,
-      created: new Date(),
-      set: null,
-      locked,
-    }))
-  } catch {
-    try {
-      await asTransaction(async (queries) => queries.setCardLock(cardHash, locked))
-    } catch {
-      return null
-    }
-  }
-  const card = await asTransaction(async (queries) => queries.getCardByHash(cardHash))
-  if (card?.locked != locked) {
-    return null
-  }
-  return locked
-}
-
-export const releaseCardByHash = async (cardHash: string, lockValue: string): Promise<void> =>
-  asTransaction(async (queries) => queries.releaseCardLock(cardHash, lockValue))
 
 export const getCardByHash = async (cardHash: string): Promise<CardRedis | null> => asTransaction(async (queries) => {
   const cardVersion = await queries.getLatestCardVersion(cardHash)

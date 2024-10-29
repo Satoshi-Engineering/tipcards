@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express'
 
 import { ErrorCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
-import { lockCard, releaseCards } from '@backend/services/databaseCardLock.js'
+import { lockCard, safeReleaseCard } from '@backend/services/inMemoryCardLock.js'
 
 /**
  * USAGE OF THIS MIDDLEWARE
@@ -23,8 +23,8 @@ export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Requ
   }
 
   try {
-    const lockValue = await lockCard(cardHash)
-    res.locals.lockValue = lockValue
+    const lock = await lockCard(cardHash)
+    res.locals.lockValue = lock
   } catch (error) {
     console.error(ErrorCode.UnableToLockCard, error)
     res.status(500).json(toError({
@@ -41,12 +41,12 @@ export const releaseCardMiddleware = async (req: Request, res: Response, next: N
     console.error('releaseCard called without cardHash', req)
     return
   }
-  if (!res.locals.lockValue) {
-    console.error(`releaseCard called without lockValue for cardHash ${req.params.cardHash}`, req, res.locals.lockValue)
+  if (!res.locals.lock) {
+    console.error(`releaseCard called without lockValue for cardHash ${req.params.cardHash}`, req, res.locals.lock)
     return
   }
 
-  await releaseCards([{ cardHash: req.params.cardHash, lockValue: res.locals.lockValue }])
+  await safeReleaseCard(req.params.cardHash, res.locals.lock)
 
   next()
 }

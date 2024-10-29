@@ -32,7 +32,6 @@ export const getDrizzleCardFromRedisCard = (cardRedis: CardRedis): Card => ({
   hash: cardRedis.cardHash,
   created: new Date(),
   set: null,
-  locked: null,
 })
 
 export const getDrizzleCardVersionFromRedisCard = (cardRedis: CardRedis): CardVersion => ({
