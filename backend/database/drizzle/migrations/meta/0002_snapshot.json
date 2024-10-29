@@ -1,0 +1,1025 @@
+{
+  "id": "744f6685-9550-450b-95dc-4d232518409e",
+  "prevId": "72941056-c697-47aa-8082-eefbba1ec1a2",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.AllowedRefreshTokens": {
+      "name": "AllowedRefreshTokens",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user": {
+          "name": "user",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current": {
+          "name": "current",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "previous": {
+          "name": "previous",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "userIndex": {
+          "name": "userIndex",
+          "columns": [
+            {
+              "expression": "user",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "AllowedRefreshTokens_user_User_id_fk": {
+          "name": "AllowedRefreshTokens_user_User_id_fk",
+          "tableFrom": "AllowedRefreshTokens",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "AllowedRefreshTokens_hash_unique": {
+          "name": "AllowedRefreshTokens_hash_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "hash"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.Card": {
+      "name": "Card",
+      "schema": "",
+      "columns": {
+        "hash": {
+          "name": "hash",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "set": {
+          "name": "set",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Card_set_Set_id_fk": {
+          "name": "Card_set_Set_id_fk",
+          "tableFrom": "Card",
+          "tableTo": "Set",
+          "columnsFrom": [
+            "set"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Card_hash_unique": {
+          "name": "Card_hash_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "hash"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.CardVersion": {
+      "name": "CardVersion",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "card": {
+          "name": "card",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lnurlP": {
+          "name": "lnurlP",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lnurlW": {
+          "name": "lnurlW",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "textForWithdraw": {
+          "name": "textForWithdraw",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "noteForStatusPage": {
+          "name": "noteForStatusPage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sharedFunding": {
+          "name": "sharedFunding",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "landingPageViewed": {
+          "name": "landingPageViewed",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "CardVersion_card_Card_hash_fk": {
+          "name": "CardVersion_card_Card_hash_fk",
+          "tableFrom": "CardVersion",
+          "tableTo": "Card",
+          "columnsFrom": [
+            "card"
+          ],
+          "columnsTo": [
+            "hash"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "CardVersion_lnurlP_LnurlP_lnbitsId_fk": {
+          "name": "CardVersion_lnurlP_LnurlP_lnbitsId_fk",
+          "tableFrom": "CardVersion",
+          "tableTo": "LnurlP",
+          "columnsFrom": [
+            "lnurlP"
+          ],
+          "columnsTo": [
+            "lnbitsId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "CardVersion_lnurlW_LnurlW_lnbitsId_fk": {
+          "name": "CardVersion_lnurlW_LnurlW_lnbitsId_fk",
+          "tableFrom": "CardVersion",
+          "tableTo": "LnurlW",
+          "columnsFrom": [
+            "lnurlW"
+          ],
+          "columnsTo": [
+            "lnbitsId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "CardVersion_id_unique": {
+          "name": "CardVersion_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "CardVersion_lnurlP_unique": {
+          "name": "CardVersion_lnurlP_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "lnurlP"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.CardVersionHasInvoice": {
+      "name": "CardVersionHasInvoice",
+      "schema": "",
+      "columns": {
+        "cardVersion": {
+          "name": "cardVersion",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "invoice": {
+          "name": "invoice",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "CardVersionHasInvoice_cardVersion_CardVersion_id_fk": {
+          "name": "CardVersionHasInvoice_cardVersion_CardVersion_id_fk",
+          "tableFrom": "CardVersionHasInvoice",
+          "tableTo": "CardVersion",
+          "columnsFrom": [
+            "cardVersion"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "CardVersionHasInvoice_invoice_Invoice_paymentHash_fk": {
+          "name": "CardVersionHasInvoice_invoice_Invoice_paymentHash_fk",
+          "tableFrom": "CardVersionHasInvoice",
+          "tableTo": "Invoice",
+          "columnsFrom": [
+            "invoice"
+          ],
+          "columnsTo": [
+            "paymentHash"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "CardVersionHasInvoice_cardVersion_invoice_pk": {
+          "name": "CardVersionHasInvoice_cardVersion_invoice_pk",
+          "columns": [
+            "cardVersion",
+            "invoice"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.Image": {
+      "name": "Image",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "imageType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Image_id_unique": {
+          "name": "Image_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.Invoice": {
+      "name": "Invoice",
+      "schema": "",
+      "columns": {
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paymentHash": {
+          "name": "paymentHash",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "paymentRequest": {
+          "name": "paymentRequest",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paid": {
+          "name": "paid",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "extra": {
+          "name": "extra",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Invoice_paymentHash_unique": {
+          "name": "Invoice_paymentHash_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "paymentHash"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.LandingPage": {
+      "name": "LandingPage",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "landingPageType",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "LandingPage_id_unique": {
+          "name": "LandingPage_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.LnurlP": {
+      "name": "LnurlP",
+      "schema": "",
+      "columns": {
+        "lnbitsId": {
+          "name": "lnbitsId",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "finished": {
+          "name": "finished",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "LnurlP_lnbitsId_unique": {
+          "name": "LnurlP_lnbitsId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "lnbitsId"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.LnurlW": {
+      "name": "LnurlW",
+      "schema": "",
+      "columns": {
+        "lnbitsId": {
+          "name": "lnbitsId",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "withdrawn": {
+          "name": "withdrawn",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bulkWithdrawId": {
+          "name": "bulkWithdrawId",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "LnurlW_lnbitsId_unique": {
+          "name": "LnurlW_lnbitsId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "lnbitsId"
+          ]
+        },
+        "LnurlW_bulkWithdrawId_unique": {
+          "name": "LnurlW_bulkWithdrawId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "bulkWithdrawId"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.Profile": {
+      "name": "Profile",
+      "schema": "",
+      "columns": {
+        "user": {
+          "name": "user",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "accountName": {
+          "name": "accountName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "displayName": {
+          "name": "displayName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "Profile_user_User_id_fk": {
+          "name": "Profile_user_User_id_fk",
+          "tableFrom": "Profile",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Profile_user_unique": {
+          "name": "Profile_user_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.Set": {
+      "name": "Set",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "changed": {
+          "name": "changed",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Set_id_unique": {
+          "name": "Set_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.SetSettings": {
+      "name": "SetSettings",
+      "schema": "",
+      "columns": {
+        "set": {
+          "name": "set",
+          "type": "varchar(36)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numberOfCards": {
+          "name": "numberOfCards",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardHeadline": {
+          "name": "cardHeadline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardCopytext": {
+          "name": "cardCopytext",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "landingPage": {
+          "name": "landingPage",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "SetSettings_set_Set_id_fk": {
+          "name": "SetSettings_set_Set_id_fk",
+          "tableFrom": "SetSettings",
+          "tableTo": "Set",
+          "columnsFrom": [
+            "set"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "SetSettings_image_Image_id_fk": {
+          "name": "SetSettings_image_Image_id_fk",
+          "tableFrom": "SetSettings",
+          "tableTo": "Image",
+          "columnsFrom": [
+            "image"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "SetSettings_landingPage_LandingPage_id_fk": {
+          "name": "SetSettings_landingPage_LandingPage_id_fk",
+          "tableFrom": "SetSettings",
+          "tableTo": "LandingPage",
+          "columnsFrom": [
+            "landingPage"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "SetSettings_set_unique": {
+          "name": "SetSettings_set_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "set"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.User": {
+      "name": "User",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lnurlAuthKey": {
+          "name": "lnurlAuthKey",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created": {
+          "name": "created",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "User_id_unique": {
+          "name": "User_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "checkConstraints": {}
+    },
+    "public.UserCanUseImage": {
+      "name": "UserCanUseImage",
+      "schema": "",
+      "columns": {
+        "user": {
+          "name": "user",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "canEdit": {
+          "name": "canEdit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "UserCanUseImage_user_User_id_fk": {
+          "name": "UserCanUseImage_user_User_id_fk",
+          "tableFrom": "UserCanUseImage",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "UserCanUseImage_image_Image_id_fk": {
+          "name": "UserCanUseImage_image_Image_id_fk",
+          "tableFrom": "UserCanUseImage",
+          "tableTo": "Image",
+          "columnsFrom": [
+            "image"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "UserCanUseImage_user_image_pk": {
+          "name": "UserCanUseImage_user_image_pk",
+          "columns": [
+            "user",
+            "image"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.UserCanUseLandingPage": {
+      "name": "UserCanUseLandingPage",
+      "schema": "",
+      "columns": {
+        "user": {
+          "name": "user",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "landingPage": {
+          "name": "landingPage",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "canEdit": {
+          "name": "canEdit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "UserCanUseLandingPage_user_User_id_fk": {
+          "name": "UserCanUseLandingPage_user_User_id_fk",
+          "tableFrom": "UserCanUseLandingPage",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "UserCanUseLandingPage_landingPage_LandingPage_id_fk": {
+          "name": "UserCanUseLandingPage_landingPage_LandingPage_id_fk",
+          "tableFrom": "UserCanUseLandingPage",
+          "tableTo": "LandingPage",
+          "columnsFrom": [
+            "landingPage"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "UserCanUseLandingPage_user_landingPage_pk": {
+          "name": "UserCanUseLandingPage_user_landingPage_pk",
+          "columns": [
+            "user",
+            "landingPage"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.UserCanUseSet": {
+      "name": "UserCanUseSet",
+      "schema": "",
+      "columns": {
+        "user": {
+          "name": "user",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "set": {
+          "name": "set",
+          "type": "varchar(36)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "canEdit": {
+          "name": "canEdit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "UserCanUseSet_user_User_id_fk": {
+          "name": "UserCanUseSet_user_User_id_fk",
+          "tableFrom": "UserCanUseSet",
+          "tableTo": "User",
+          "columnsFrom": [
+            "user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "UserCanUseSet_set_Set_id_fk": {
+          "name": "UserCanUseSet_set_Set_id_fk",
+          "tableFrom": "UserCanUseSet",
+          "tableTo": "Set",
+          "columnsFrom": [
+            "set"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "UserCanUseSet_user_set_pk": {
+          "name": "UserCanUseSet_user_set_pk",
+          "columns": [
+            "user",
+            "set"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "enums": {
+    "public.imageType": {
+      "name": "imageType",
+      "schema": "public",
+      "values": [
+        "svg",
+        "png"
+      ]
+    },
+    "public.landingPageType": {
+      "name": "landingPageType",
+      "schema": "public",
+      "values": [
+        "core",
+        "external"
+      ]
+    },
+    "public.permission": {
+      "name": "permission",
+      "schema": "public",
+      "values": [
+        "statistics",
+        "support"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

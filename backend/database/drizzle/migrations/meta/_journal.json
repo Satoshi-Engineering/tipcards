@@ -15,6 +15,13 @@
       "when": 1718202284266,
       "tag": "0001_skinny_terrax",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730217138865,
+      "tag": "0002_omniscient_gargoyle",
+      "breakpoints": true
     }
   ]
 }
