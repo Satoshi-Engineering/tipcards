@@ -24,7 +24,7 @@ export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Requ
 
   try {
     const lock = await lockCard(cardHash)
-    res.locals.lockValue = lock
+    res.locals.lock = lock
   } catch (error) {
     console.error(ErrorCode.UnableToLockCard, error)
     res.status(500).json(toError({
