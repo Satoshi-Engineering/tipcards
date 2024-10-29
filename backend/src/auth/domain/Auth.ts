@@ -1,11 +1,11 @@
-import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
-import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
+import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
+import JwtKeyPairHandler from '@backend/services/Jwt/JwtKeyPairHandler.js'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import LoginInformer from '@auth/domain/LoginInformer.js'
 import LnurlServer from '@auth/services/LnurlServer.js'
 import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
-import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 export default class Auth {
   public static async init(accessTokenAudience: string[] | string) {

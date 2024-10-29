@@ -12,7 +12,7 @@ import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
 import { createUser, createProfileForUser, createAllowedRefreshTokens } from '../../../drizzleData.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
-import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
+import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
 
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 

@@ -5,7 +5,7 @@ import { errors as joseErrors } from 'jose'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import { PermissionsEnum } from '@shared/data/auth/User.js'
 import { AccessTokenPayload } from '@shared/data/auth/index.js'
-import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
+import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
 
 import type { User } from '@backend/database/deprecated/data/User.js'
 import {

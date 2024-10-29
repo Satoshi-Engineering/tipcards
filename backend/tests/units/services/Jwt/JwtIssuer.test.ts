@@ -3,9 +3,9 @@ import { describe, it, expect, vi } from 'vitest'
 import { setSignedValue } from '../../mocks/jose.js'
 import * as jose from 'jose'
 
-import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
-import { Algorithms } from '@shared/modules/Jwt/types/Algorithms.js'
-import { KeyPair } from '@shared/modules/Jwt/types/KeyPair.js'
+import JwtIssuer from '../../../../../backend/src/services/Jwt/JwtIssuer.js'
+import { Algorithms } from '../../../../../backend/src/services/Jwt/types/Algorithms.js'
+import { KeyPair } from '../../../../../backend/src/services/Jwt/types/KeyPair.js'
 
 describe('JwtIssuer', () => {
   const mockPublicKey = 'mockPublicKey'
