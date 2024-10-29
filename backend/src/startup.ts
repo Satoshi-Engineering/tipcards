@@ -3,12 +3,13 @@ import fs from 'fs'
 import type { Socket } from 'net'
 import path from 'path'
 
+import Auth from '@auth/domain/Auth.js'
 import Database from '@backend/database/Database.js'
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
-import app from '@backend/app.js'
+import initApp from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
-import Auth from './auth/domain/Auth.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
@@ -36,6 +37,12 @@ const startupApplication = async () => {
 
   await Auth.init(JWT_AUTH_AUDIENCE)
   console.info(' - Auth initialized')
+
+  ApplicationEventEmitter.init()
+  console.info(' - ApplicationEventEmitter initialized')
+
+  const app = initApp()
+  console.info(' - app started')
 
   const server = app.listen(EXPRESS_PORT, async () => {
     console.info(` - app running and listening on port ${EXPRESS_PORT}`)

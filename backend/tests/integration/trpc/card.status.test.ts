@@ -5,6 +5,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 import Database from '@backend/database/Database.js'
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -13,6 +14,7 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 
+ApplicationEventEmitter.init()
 const createCaller = createCallerFactory(cardRouter)
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
@@ -22,6 +24,7 @@ const callerCards = createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
+  applicationEventEmitter: ApplicationEventEmitter.instance,
 })
 
 beforeAll(async () => {

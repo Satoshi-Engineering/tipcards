@@ -6,6 +6,8 @@ import superjson from 'superjson'
 import type { PermissionsEnum } from '@shared/data/auth/User.js'
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')
   if (typeof host === 'string') {
@@ -25,6 +27,7 @@ export type Context = {
   host: string | null,
   jwt: string | null,
   accessToken: AccessTokenPayload | null,
+  applicationEventEmitter: ApplicationEventEmitter,
 }
 export type Meta = {
   requiredPermissions: PermissionsEnum[],
@@ -34,6 +37,7 @@ export const createContext = (opts: CreateExpressContextOptions): Context => {
     host: getHostFromRequest(opts.req),
     jwt: getJwtFromAuthorizationHeader(opts.req),
     accessToken: null,
+    applicationEventEmitter: ApplicationEventEmitter.instance,
   }
 }
 

@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server'
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import Database from '@backend/database/Database.js'
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import { setRouter } from '@backend/trpc/router/tipcards/set.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -12,10 +13,12 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData, setData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 
+ApplicationEventEmitter.init()
 const callerLoggedOut = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
+  applicationEventEmitter: ApplicationEventEmitter.instance,
 })
 
 let callerLoggedIn = callerLoggedOut
@@ -39,6 +42,7 @@ beforeAll(async () => {
     host: new URL(TIPCARDS_API_ORIGIN).host,
     jwt: frontend.accessToken,
     accessToken: null,
+    applicationEventEmitter: ApplicationEventEmitter.instance,
   })
 
   await frontend.saveSet(emptySet)

@@ -10,6 +10,7 @@ import LNURL from '@shared/modules/LNURL/LNURL.js'
 import Database from '@backend/database/Database.js'
 import { bulkWithdrawRouter } from '@backend/trpc/router/tipcards/bulkWithdraw.js'
 import { setRouter } from '@backend/trpc/router/tipcards/set.js'
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import Frontend from '../lib/frontend/Frontend.js'
@@ -17,16 +18,20 @@ import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios.js'
 
+ApplicationEventEmitter.init()
+
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
+  applicationEventEmitter: ApplicationEventEmitter.instance,
 })
 
 const callerSet = setRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
+  applicationEventEmitter: ApplicationEventEmitter.instance,
 })
 
 const FE = new Frontend()
