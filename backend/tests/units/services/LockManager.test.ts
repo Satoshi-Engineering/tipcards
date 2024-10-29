@@ -1,0 +1,102 @@
+import { describe, it, expect, beforeEach } from 'vitest'
+
+import LockManager from '@backend/services/locking/LockManager.js'
+import Lock from '@backend/services/locking/Lock.js'
+
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+describe('LockManager', () => {
+  let lockManager: LockManager
+  const resourceId = 'resourceId'
+
+  beforeEach(() => {
+    lockManager = new LockManager()
+  })
+
+  it('should aquire a lock for a resource and release lock', async () => {
+    const lock = await lockManager.acquire({ resourceId })
+    expect(lock).toBeInstanceOf(Lock)
+    lock.release()
+
+    const secondAquire = await lockManager.acquire({ resourceId })
+    expect(secondAquire).toBeInstanceOf(Lock)
+  })
+
+  it('should fail, because aquire timed out', async () => {
+    const lock = await lockManager.acquire({ resourceId })
+    expect(lock).toBeInstanceOf(Lock)
+    await expect(async () => {
+      await lockManager.acquire({
+        resourceId,
+        timeout: 1,
+      })
+    }).rejects.toThrowError(Error)
+  })
+
+  it('should fail, because a resource can only be unlocked once', async () => {
+    const lock = await lockManager.acquire({ resourceId })
+    expect(lock).toBeInstanceOf(Lock)
+    lock.release()
+
+    expect(() => {
+      lock.release()
+    }).toThrowError(Error)
+  })
+
+  it('should wait for the release of a lock', async () => {
+    const lock = await lockManager.acquire({ resourceId })
+
+    setTimeout(() => {
+      lock.release()
+    }, 10)
+
+    const secondAquire = await lockManager.acquire({ resourceId })
+    expect(secondAquire).toBeInstanceOf(Lock)
+  })
+
+  it('should 10x waiting processes should resolve one by another', async () => {
+    const MULTIPLE_ACCESSES = 10
+
+    async function accessResource() {
+      const lock = await lockManager.acquire({ resourceId })
+      await wait(10)
+      lock.release()
+    }
+
+    let accessFinihed = 0
+    await Promise.all(
+      Array.from({ length: MULTIPLE_ACCESSES }, () =>
+        accessResource().then(() => {
+          accessFinihed++
+        }),
+      ),
+    )
+
+    const lastAquire = await lockManager.acquire({ resourceId })
+    expect(accessFinihed).toBe(MULTIPLE_ACCESSES)
+    expect(lastAquire).toBeInstanceOf(Lock)
+    lastAquire.release()
+  })
+
+  it('should 10x waiting processes should resolve one by another', async () => {
+    const MULTIPLE_ACCESSES = 10
+
+    async function accessResource() {
+      const lock = await lockManager.acquire({ resourceId })
+      await wait(10)
+      lock.release()
+    }
+
+    let accessFinihed = 0
+    for (let i = 0; i < MULTIPLE_ACCESSES; i++) {
+      accessResource().then(() => {
+        accessFinihed++
+      })
+    }
+
+    const lastAquire = await lockManager.acquire({ resourceId })
+    expect(accessFinihed).toBe(MULTIPLE_ACCESSES)
+    expect(lastAquire).toBeInstanceOf(Lock)
+    lastAquire.release()
+  })
+})
