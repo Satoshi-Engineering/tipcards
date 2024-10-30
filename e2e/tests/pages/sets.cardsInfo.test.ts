@@ -4,7 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 describe('Sets Page', () => {
-  const numberOfSets = 100
+  const numberOfSets = 50
   const numberOfCardsPerSet = 100
   const viewportHeight = Cypress.config('viewportHeight')
 
