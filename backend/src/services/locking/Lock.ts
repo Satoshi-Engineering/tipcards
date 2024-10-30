@@ -3,9 +3,6 @@ import { randomUUID } from 'crypto'
 import LockManager from './LockManager.js'
 
 export default class Lock {
-  private _id
-  private _resourceId
-  private lockManager
 
   constructor(lockManager: LockManager, resourceId: string) {
     this._id = randomUUID()
@@ -24,4 +21,8 @@ export default class Lock {
   get resourceId() {
     return this._resourceId
   }
+
+  private _id
+  private _resourceId
+  private lockManager
 }

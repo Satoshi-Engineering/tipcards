@@ -1,103 +1,112 @@
 import Lock from './Lock.js'
 
-type WaitingAquire = {
+type AwaitingAquire = {
   resolve: (lock: Lock) => void
   reject: (error: Error) => void
   timeoutId: NodeJS.Timeout | undefined
 }
 
 export default class LockManager {
-  private lockedResources: Map<string, boolean> = new Map()
-  private waitingAquiresForResource: Map<string, WaitingAquire[]> = new Map()
-
   async acquire({
     resourceId,
     timeout,
   } : { resourceId: string, timeout?: number }): Promise<Lock> {
-
-    if (!this.lockedResources.has(resourceId)) {
+    if (!this.lockedResourcesById.has(resourceId)) {
       return this.lock(resourceId)
     }
 
     return await new Promise((resolve, reject) => {
-      const waitingAquire: WaitingAquire = {
+      const awaitingAquire: AwaitingAquire = {
         resolve,
         reject,
         timeoutId: undefined,
       }
       if (timeout) {
-        waitingAquire.timeoutId = setTimeout(() => {
-          this.removeWaitingAquire(resourceId, waitingAquire)
+        awaitingAquire.timeoutId = setTimeout(() => {
+          this.removeWaitingAquire(resourceId, awaitingAquire)
           reject(new Error(`Timeout while waiting for lock on resource ${resourceId}`))
         }, timeout)
       }
-      this.addWaitingAquire(resourceId, waitingAquire)
+      this.addWaitingAquire(resourceId, awaitingAquire)
     })
   }
 
   release(lock: Lock) {
-    if (!this.lockedResources.has(lock.resourceId)) {
+    if (!this.lockedResourcesById.has(lock.resourceId)) {
       throw new Error(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it is not locked`)
     }
-
-    this.lockedResources.delete(lock.resourceId)
-    const waitingAquire = this.getNextWaitingAquire(lock.resourceId)
-    if (waitingAquire) {
-      const lockId = this.lock(lock.resourceId)
-      waitingAquire.resolve(lockId)
+    if (this.lockedResourcesById.get(lock.resourceId) !== lock.id) {
+      throw new Error(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it was locked by a different lock: ${this.lockedResourcesById.get(lock.resourceId)}`)
     }
+
+    this.lockedResourcesById.delete(lock.resourceId)
+
+    this.resolveNextAwaitingAquire(lock.resourceId)
   }
+
+  private lockedResourcesById: Map<string, string> = new Map()
+  private awaitingAquiresByResourceId: Map<string, AwaitingAquire[]> = new Map()
 
   private lock(resourceId: string) {
     const lock = new Lock(this, resourceId)
 
-    if (this.lockedResources.has(resourceId)) {
+    if (this.lockedResourcesById.has(resourceId)) {
       throw new Error(`Ressource ${resourceId} already locked`)
     }
 
-    this.lockedResources.set(resourceId, true)
+    this.lockedResourcesById.set(resourceId, lock.id)
     return lock
   }
 
-  private addWaitingAquire(resourceId: string, waitingAquire: WaitingAquire) {
-    let waitingAquiresForResource = this.waitingAquiresForResource.get(resourceId)
-    if (!waitingAquiresForResource) {
-      waitingAquiresForResource = []
-      this.waitingAquiresForResource.set(resourceId, waitingAquiresForResource)
+  private addWaitingAquire(resourceId: string, awaitingAquire: AwaitingAquire) {
+    let awaitingAquiresForResource = this.awaitingAquiresByResourceId.get(resourceId)
+    if (!awaitingAquiresForResource) {
+      awaitingAquiresForResource = []
+      this.awaitingAquiresByResourceId.set(resourceId, awaitingAquiresForResource)
     }
-    waitingAquiresForResource.push(waitingAquire)
+    awaitingAquiresForResource.push(awaitingAquire)
   }
 
-  private removeWaitingAquire(resourceId: string, waitingAquire: WaitingAquire) {
-    const waitingAquiresForResource = this.waitingAquiresForResource.get(resourceId)
-    if (!waitingAquiresForResource) {
+  private resolveNextAwaitingAquire(resourceId: string) {
+    const awaitingAquire = this.getNextAwaitingAquire(resourceId)
+    if (awaitingAquire == null) {
       return
     }
 
-    waitingAquiresForResource.splice(waitingAquiresForResource.indexOf(waitingAquire), 1)
-    this.stopTimeout(waitingAquire)
+    const lock = this.lock(resourceId)
+    awaitingAquire.resolve(lock)
   }
 
-  private getNextWaitingAquire(resourceId: string) {
-    const waitingAquiresForResource = this.waitingAquiresForResource.get(resourceId)
+  private removeWaitingAquire(resourceId: string, awaitingAquire: AwaitingAquire) {
+    const awaitingAquiresForResource = this.awaitingAquiresByResourceId.get(resourceId)
+    if (!awaitingAquiresForResource) {
+      return
+    }
 
-    if (!waitingAquiresForResource) {
+    awaitingAquiresForResource.splice(awaitingAquiresForResource.indexOf(awaitingAquire), 1)
+    this.stopTimeout(awaitingAquire)
+  }
+
+  private getNextAwaitingAquire(resourceId: string) {
+    const awaitingAquiresForResource = this.awaitingAquiresByResourceId.get(resourceId)
+
+    if (!awaitingAquiresForResource) {
       return undefined
     }
 
-    if (waitingAquiresForResource.length >= 1) {
-      const waitingAquire = waitingAquiresForResource.shift()
-      this.stopTimeout(waitingAquire)
-      return waitingAquire
+    if (awaitingAquiresForResource.length >= 1) {
+      const awaitingAquire = awaitingAquiresForResource.shift()
+      this.stopTimeout(awaitingAquire)
+      return awaitingAquire
     } else {
-      this.waitingAquiresForResource.delete(resourceId)
+      this.awaitingAquiresByResourceId.delete(resourceId)
       return undefined
     }
   }
 
-  private stopTimeout(waitingAquire?: WaitingAquire) {
-    if (waitingAquire && waitingAquire.timeoutId) {
-      clearTimeout(waitingAquire.timeoutId)
+  private stopTimeout(awaitingAquire?: AwaitingAquire) {
+    if (awaitingAquire && awaitingAquire.timeoutId) {
+      clearTimeout(awaitingAquire.timeoutId)
     }
   }
 }
