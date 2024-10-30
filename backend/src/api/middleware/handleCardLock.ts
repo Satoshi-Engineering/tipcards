@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 
-import { ErrorCode, type ToErrorResponse } from '@shared/data/Errors.js'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
 import { lockCard, safeReleaseCard } from '@backend/services/inMemoryCardLock.js'
 
@@ -26,10 +26,14 @@ export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Requ
     const lock = await lockCard(cardHash)
     res.locals.lock = lock
   } catch (error) {
-    console.error(ErrorCode.UnableToLockCard, error)
+    let code = ErrorCode.UnableToLockCard
+    if (error instanceof ErrorWithCode) {
+      code = error.code
+    }
+    console.error(code, error)
     res.status(500).json(toError({
       message: 'Unable to access card, please try again later.',
-      code: ErrorCode.UnableToLockCard,
+      code,
     }))
     return
   }

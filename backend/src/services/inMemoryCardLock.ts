@@ -1,3 +1,5 @@
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+
 import Lock from './locking/Lock.js'
 import LockManager from './locking/LockManager.js'
 
@@ -20,7 +22,7 @@ export const lockCard = async (cardHash: string): Promise<Lock> => {
       timeout: 9000,
     })
   } catch (error) {
-    if (error instanceof Error && error.message.includes('Timeout while waiting')) {
+    if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
       throw Error(`Cannot lock card ${cardHash} after 9 seconds of trying. It is currently locked by another process.`)
     }
     throw error
