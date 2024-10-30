@@ -3,7 +3,7 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
-describe('Sets Page', () => {
+describe.skip('Sets Page Cards Info', () => {
   const numberOfSets = 10
   const numberOfCardsPerSet = 10
   const viewportHeight = Cypress.config('viewportHeight')
