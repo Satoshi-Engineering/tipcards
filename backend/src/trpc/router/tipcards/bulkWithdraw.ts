@@ -7,6 +7,11 @@ import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
 import {
+  emitCardUpdatesForMultipleCards,
+  emitCardUpdatesForBulkWithdraw,
+  emitCardUpdatesForBulkWithdrawByCardHash,
+} from '../../procedures/partials/emitCardUpdates.js'
+import {
   handleCardLockForMultipleCards,
   handleCardLockForBulkWithdraw,
   handleCardLockForBulkWithdrawByCardHash,
@@ -25,6 +30,7 @@ export const bulkWithdrawRouter = router({
     .input(CardHash.shape.hash.array())
     .output(BulkWithdraw)
     .unstable_concat(handleCardLockForMultipleCards)
+    .unstable_concat(emitCardUpdatesForMultipleCards)
     .mutation(async ({ input }) => {
       const cards = await CardCollectionDeprecated.fromCardHashes(input)
       const bulkWithdraw = BulkWithdrawDeprecated.fromCardCollection(cards)
@@ -35,6 +41,7 @@ export const bulkWithdrawRouter = router({
   deleteById: publicProcedure
     .input(BulkWithdrawId)
     .unstable_concat(handleCardLockForBulkWithdraw)
+    .unstable_concat(emitCardUpdatesForBulkWithdraw)
     .mutation(async ({ input }) => {
       const bulkWithdraw = await BulkWithdrawDeprecated.fromId(input.id)
       await bulkWithdraw.delete()
@@ -43,6 +50,7 @@ export const bulkWithdrawRouter = router({
   deleteByCardHash: publicProcedure
     .input(CardHash)
     .unstable_concat(handleCardLockForBulkWithdrawByCardHash)
+    .unstable_concat(emitCardUpdatesForBulkWithdrawByCardHash)
     .mutation(async ({ input }) => {
       const bulkWithdraw = await BulkWithdrawDeprecated.fromCardHash(input.hash)
       await bulkWithdraw.delete()
