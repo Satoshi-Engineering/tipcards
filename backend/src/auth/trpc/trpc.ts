@@ -13,9 +13,9 @@ export type Context = {
 export type Meta = Record<string, never>
 
 export const createContext = (opts: CreateExpressContextOptions): Context => {
-  const auth = Auth.getAuth()
-  const jwtIssuer = auth.getJwtIssuer()
-  const accessTokenAudience = auth.getAccessTokenAudience()
+  const auth = Auth.instance
+  const jwtIssuer = auth.jwtIssuer
+  const accessTokenAudience = auth.accessTokenAudience
   return {
     auth,
     refreshGuard: new RefreshGuard(opts.req, opts.res, jwtIssuer, accessTokenAudience),

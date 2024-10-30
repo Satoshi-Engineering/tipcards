@@ -24,8 +24,8 @@ describe('TRpc Router Auth', async () => {
   } as unknown as Response
 
   await Auth.init(mockAccessTokenAudience)
-  const auth = Auth.getAuth()
-  const jwtIssuer = auth.getJwtIssuer()
+  const auth = Auth.instance
+  const jwtIssuer = auth.jwtIssuer
   const refreshGuard = new RefreshGuard(mockRequest, mockResponse, jwtIssuer, mockAccessTokenAudience)
 
   const caller = createCaller({
@@ -38,7 +38,7 @@ describe('TRpc Router Auth', async () => {
     const walletLinkingKey = 'walletLinkingKey'
     const secret = 'mockSecret'
     const hash = LnurlAuthLogin.createHashFromSecret(secret)
-    const lnurlAuthLogin = Auth.getAuth().getLnurlAuthLogin()
+    const lnurlAuthLogin = Auth.instance.lnurlAuthLogin
 
     vi.spyOn(lnurlAuthLogin, 'getWalletLinkingKeyOnceAfterSuccessfulAuth').mockReturnValueOnce(walletLinkingKey)
     vi.spyOn(refreshGuard, 'loginUserWithWalletLinkingKey').mockResolvedValueOnce()

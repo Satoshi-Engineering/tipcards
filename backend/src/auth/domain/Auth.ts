@@ -33,39 +33,23 @@ export default class Auth {
   }
 
   public static get instance(): Auth {
-    return Auth.getAuth()
-  }
-
-  public static getAuth(): Auth {
     if (Auth.singleton == null) {
-      throw new Error('Auth getAuth called before init!')
+      throw new Error('Auth instance accessed before init!')
     }
 
     return Auth.singleton
   }
 
   public get lnurlAuthLogin(): LnurlAuthLogin {
-    return this.getLnurlAuthLogin()
-  }
-
-  public getLnurlAuthLogin(): LnurlAuthLogin {
-    return this.lnurlAuthLoginInternal
+    return this._lnurlAuthLogin
   }
 
   public get jwtIssuer(): JwtIssuer {
-    return this.getJwtIssuer()
-  }
-
-  public getJwtIssuer(): JwtIssuer {
-    return this.jwtIssuerInternal
+    return this._jwtIssuer
   }
 
   public get accessTokenAudience(): string[] | string {
-    return this.getAccessTokenAudience()
-  }
-
-  public getAccessTokenAudience(): string[] | string {
-    return this.accessTokenAudienceInternal
+    return this._accessTokenAudience
   }
 
   private static singleton: Auth
@@ -82,13 +66,13 @@ export default class Auth {
     return keyPair
   }
 
-  private lnurlAuthLoginInternal: LnurlAuthLogin
-  private jwtIssuerInternal: JwtIssuer
-  private accessTokenAudienceInternal: string[] | string
+  private _lnurlAuthLogin: LnurlAuthLogin
+  private _jwtIssuer: JwtIssuer
+  private _accessTokenAudience: string[] | string
 
   private constructor(lnurlAuthLogin: LnurlAuthLogin, jwtIssuer: JwtIssuer, accessTokenAudience: string[] | string) {
-    this.lnurlAuthLoginInternal = lnurlAuthLogin
-    this.jwtIssuerInternal = jwtIssuer
-    this.accessTokenAudienceInternal = accessTokenAudience
+    this._lnurlAuthLogin = lnurlAuthLogin
+    this._jwtIssuer = jwtIssuer
+    this._accessTokenAudience = accessTokenAudience
   }
 }

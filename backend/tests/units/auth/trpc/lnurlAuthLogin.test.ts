@@ -30,8 +30,8 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
   } as unknown as Response
 
   await Auth.init(mockAccessTokenAudience)
-  const auth = Auth.getAuth()
-  const jwtIssuer = auth.getJwtIssuer()
+  const auth = Auth.instance
+  const jwtIssuer = auth.jwtIssuer
 
   const lnurlAuthId = 'c506222e47d39be202d6ecc5e74139e2a68fab7bf5b46401c03d4d3395a4876d'
   const lnurlAuthEncoded = 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e3843n2vpkxgeryef5xajrxwtzv5erqvnyxejkxce4v5mngvfn89jnycfk8pnxzc3hvfnr2c35xc6rqvtrxqekgdryxvenjdtpxsurwdnyxkdxxr'
