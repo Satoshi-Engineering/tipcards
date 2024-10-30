@@ -7,5 +7,4 @@ export const createCard = (): Card => ({
   hash: hashSha256(`${randomUUID}/0`),
   created: new Date(),
   set: null,
-  locked: null,
 })

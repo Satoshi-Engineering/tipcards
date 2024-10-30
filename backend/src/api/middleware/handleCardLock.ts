@@ -13,35 +13,35 @@ import CardLockManager from '@backend/domain/CardLockManager.js'
  * 4. make sure to call the next() function in the route implementation so the card gets released after the route is done
  */
 
-export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Request, res: Response, next: NextFunction) => {
-  const cardHash = req.params.cardHash
+export const lockCardMiddleware = (toError: ToErrorResponse, cardLockManager: CardLockManager) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
 
-  if (!cardHash) {
-    res.status(400).json(toError({
-      message: 'Card hash is required.',
-      code: ErrorCode.CardHashRequired,
-    }))
-    return
-  }
-
-  try {
-    const cardLockManager = CardLockManager.instance
-    const lock = await cardLockManager.lockCard(cardHash)
-    res.locals.lock = lock
-  } catch (error) {
-    let code = ErrorCode.UnableToLockCard
-    if (error instanceof ErrorWithCode) {
-      code = error.code
+    if (!cardHash) {
+      res.status(400).json(toError({
+        message: 'Card hash is required.',
+        code: ErrorCode.CardHashRequired,
+      }))
+      return
     }
-    console.error(code, error)
-    res.status(500).json(toError({
-      message: 'Unable to access card, please try again later.',
-      code,
-    }))
-    return
+
+    try {
+      const lock = await cardLockManager.lockCard(cardHash)
+      res.locals.lock = lock
+    } catch (error) {
+      let code = ErrorCode.UnableToLockCard
+      if (error instanceof ErrorWithCode) {
+        code = error.code
+      }
+      console.error(code, error)
+      res.status(500).json(toError({
+        message: 'Unable to access card, please try again later.',
+        code,
+      }))
+      return
+    }
+    next()
   }
-  next()
-}
 
 export const releaseCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.params.cardHash) {

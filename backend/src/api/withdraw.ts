@@ -7,13 +7,17 @@ import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js
 import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
 import { getCardByHash } from '@backend/database/deprecated/queries.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
-export default (applicationEventEmitter: ApplicationEventEmitter) => {
+export default (
+  applicationEventEmitter: ApplicationEventEmitter,
+  cardLockManager: CardLockManager,
+) => {
   const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
     status: 'error',
     message,
@@ -93,14 +97,14 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
 
   router.get(
     '/used/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardUsed,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
   )
   router.post(
     '/used/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardUsed,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),

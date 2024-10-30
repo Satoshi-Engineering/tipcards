@@ -6,12 +6,16 @@ import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Err
 import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
 import { getCardByHash } from '@backend/database/deprecated/queries.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
-export default (applicationEventEmitter: ApplicationEventEmitter) => {
+export default (
+  applicationEventEmitter: ApplicationEventEmitter,
+  cardLockManager: CardLockManager,
+) => {
   const router = Router()
 
   const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
@@ -108,7 +112,7 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
 
   router.get(
     '/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     routeHandler,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),

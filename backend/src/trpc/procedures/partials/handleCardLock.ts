@@ -8,17 +8,6 @@ import Lock from '@backend/services/locking/Lock.js'
 
 import { publicProcedure } from '../../trpc.js'
 
-const safeReleaseLocks = (locks: Lock | Lock[]) => {
-  const locksArray = Array.isArray(locks) ? locks : [locks]
-  locksArray.forEach(lock => {
-    try {
-      lock.release()
-    } catch (error) {
-      console.error(`Error releasing card lock for card ${lock.resourceId} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
-    }
-  })
-}
-
 export const handleCardLockForSingleCard = publicProcedure
   .input(CardHash)
   .use(async ({ input, ctx, next }) => {
@@ -81,3 +70,14 @@ export const handleCardLockForSet = publicProcedure
       safeReleaseLocks(locks)
     }
   })
+
+const safeReleaseLocks = (locks: Lock | Lock[]) => {
+  const locksArray = Array.isArray(locks) ? locks : [locks]
+  locksArray.forEach(lock => {
+    try {
+      lock.release()
+    } catch (error) {
+      console.error(`Error releasing card lock for card ${lock.resourceId} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
+    }
+  })
+}

@@ -5,6 +5,7 @@ import '../mocks/http.js'
 import { describe, it, expect, vi } from 'vitest'
 
 import ApplicationEventEmitter, { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 
@@ -13,6 +14,10 @@ import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 ApplicationEventEmitter.init()
 const applicationEventEmitter = ApplicationEventEmitter.instance
+
+CardLockManager.init({ aquireTimeout: 1000 })
+const cardLockManager = CardLockManager.instance
+
 const createCaller = createCallerFactory(cardRouter)
 
 describe('tRPC card.status route', async () => {
@@ -21,6 +26,7 @@ describe('tRPC card.status route', async () => {
     jwt: null,
     accessToken: null,
     applicationEventEmitter,
+    cardLockManager,
   })
 
   it('should return the current card status', async () => {

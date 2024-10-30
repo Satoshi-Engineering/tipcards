@@ -9,13 +9,17 @@ import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/ca
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
 import { getCardByHash, createCard, deleteCard } from '@backend/database/deprecated/queries.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { checkIfCardIsPaidAndCreateWithdrawId, checkIfCardIsUsed } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_ORIGIN, TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
-export default (applicationEventEmitter: ApplicationEventEmitter) => {
+export default (
+  applicationEventEmitter: ApplicationEventEmitter,
+  cardLockManager: CardLockManager,
+) => {
   const router = Router()
 
   const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
@@ -219,14 +223,14 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
   }
   router.get(
     '/paid/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     invoicePaid,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
   )
   router.post(
     '/paid/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     invoicePaid,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),

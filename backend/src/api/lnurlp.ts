@@ -8,6 +8,7 @@ import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/ca
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
 import { createCard, getCardByHash, updateCard } from '@backend/database/deprecated/queries.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import {
   getLnurlpForCard,
   checkIfCardLnurlpIsPaid,
@@ -18,7 +19,10 @@ import { TIPCARDS_ORIGIN } from '@backend/constants.js'
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 
-export default (applicationEventEmitter: ApplicationEventEmitter) => {
+export default (
+  applicationEventEmitter: ApplicationEventEmitter,
+  cardLockManager: CardLockManager,
+) => {
   const router = Router()
 
   const toErrorResponse: ToErrorResponse = ({ message, code }) => ({
@@ -188,14 +192,14 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
   }
   router.get(
     '/paid/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardPaid,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
   )
   router.post(
     '/paid/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardPaid,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
@@ -280,7 +284,7 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
   }
   router.post(
     '/update/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardUpdate,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
@@ -366,7 +370,7 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
   }
   router.post(
     '/finish/:cardHash',
-    lockCardMiddleware(toErrorResponse),
+    lockCardMiddleware(toErrorResponse, cardLockManager),
     cardFinish,
     releaseCardMiddleware,
     emitCardUpdateForSingleCard(applicationEventEmitter),
