@@ -37,16 +37,18 @@ export default class LockManager {
     resourceIds,
     timeout,
   }: { resourceIds: string[], timeout?: number }): Promise<Lock[]> {
-    try {
-      return await Promise.all(resourceIds.map(async (resourceId) => {
-        return await this.acquire({ resourceId, timeout })
-      }))
-    } catch (error) {
-      if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
-        throw new ErrorWithCode(`Timeout while waiting for multiple resources ${resourceIds}`, ErrorCode.LockManagerAquireTimeout)
-      }
-      throw error
+    const locks: Lock[] = []
+    await Promise.allSettled(resourceIds.map(async (resourceId) => {
+      const lock = await this.acquire({ resourceId, timeout })
+      locks.push(lock)
+    }))
+
+    if (locks.length !== resourceIds.length) {
+      locks.forEach((lock) => lock.release())
+      throw new ErrorWithCode(`Timeout while waiting for multiple resources ${resourceIds}`, ErrorCode.LockManagerAquireTimeout)
     }
+
+    return locks
   }
 
   release(lock: Lock) {

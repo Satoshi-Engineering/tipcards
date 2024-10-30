@@ -124,4 +124,60 @@ describe('LockManager', () => {
       lock.release()
     })
   })
+
+  it('should fail to aquireAll if one resource is not available', async () => {
+    const lock = await lockManager.acquire({ resourceId: 'asdf' })
+    setTimeout(() => {
+      lock.release()
+    }, 15)
+
+    await expect(async () => lockManager.acquireAll({
+      resourceIds: ['asdf', 'jklo'],
+      timeout: 10,
+    })).rejects.toThrowError(new ErrorWithCode('', ErrorCode.LockManagerAquireTimeout))
+  })
+
+  it('should aquire all locks as soon as all locks are available', async () => {
+    const lock = await lockManager.acquire({ resourceId: 'asdf' })
+    setTimeout(() => {
+      lock.release()
+    }, 5)
+
+    const locks = await lockManager.acquireAll({
+      resourceIds: ['asdf', 'jklo'],
+      timeout: 10,
+    })
+
+    expect(locks.length).toBe(2)
+    locks.forEach(lock => {
+      expect(lock).toBeInstanceOf(Lock)
+      lock.release()
+    })
+  })
+
+  it('should release all locks to be re-aquired if aquireAll fails', async () => {
+    const lock = await lockManager.acquire({ resourceId: 'asdf' })
+    setTimeout(() => {
+      lock.release()
+    }, 15)
+    try {
+      await lockManager.acquireAll({
+        resourceIds: ['asdf', 'jklo'],
+        timeout: 10,
+      })
+    } catch {
+      // this is expected, as asdf is locked
+    }
+
+    const locks = await lockManager.acquireAll({
+      resourceIds: ['asdf', 'jklo'],
+      timeout: 10,
+    })
+
+    expect(locks.length).toBe(2)
+    locks.forEach(lock => {
+      expect(lock).toBeInstanceOf(Lock)
+      lock.release()
+    })
+  })
 })
