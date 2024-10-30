@@ -36,34 +36,41 @@ afterAll(async () => {
   await Database.closeConnectionIfExists()
 })
 
-
 describe('CardStatus', () => {
   // only the basic tests, detailed tests are done via backend unit and e2e tests
 
   it('should load the status for a card that doesnt exist', async () => {
     const imaginedCardId = cardData.generateCardHash() // random card hash that doesnt exist
-    const cardStatus = await callerCards.status({ hash: imaginedCardId })
+    const cardStatusIterator = await callerCards.status({ hash: imaginedCardId })
+    const cardStatus = await cardStatusIterator.next()
 
     expect(cardStatus).toEqual({
-      hash: imaginedCardId,
-      status: CardStatusEnum.enum.unfunded,
-      amount: null,
-      created: expect.any(Date),
-      funded: null,
-      withdrawn: null,
+      done: false,
+      value: {
+        hash: imaginedCardId,
+        status: CardStatusEnum.enum.unfunded,
+        amount: null,
+        created: expect.any(Date),
+        funded: null,
+        withdrawn: null,
+      },
     })
   })
 
   it('should load a card with invoice from cardHash', async () => {
-    const cardStatus = await callerCards.status({ hash: testCard.cardHash })
+    const cardStatusIterator = await callerCards.status({ hash: testCard.cardHash })
+    const cardStatus = await cardStatusIterator.next()
 
     expect(cardStatus).toEqual({
-      hash: testCard.cardHash,
-      status: CardStatusEnum.enum.invoiceFunding,
-      amount: testCard.amount,
-      created: expect.any(Date),
-      funded: null,
-      withdrawn: null,
+      done: false,
+      value: {
+        hash: testCard.cardHash,
+        status: CardStatusEnum.enum.invoiceFunding,
+        amount: testCard.amount,
+        created: expect.any(Date),
+        funded: null,
+        withdrawn: null,
+      },
     })
   })
 })
