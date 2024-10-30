@@ -19,8 +19,6 @@ export default class CardLockManager {
     return CardLockManager.singleton
   }
 
-  private static singleton: CardLockManager
-
   async lockCard(cardHash: string): Promise<Lock> {
     try {
       return await this.lockManager.acquire({
@@ -29,7 +27,7 @@ export default class CardLockManager {
       })
     } catch (error) {
       if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
-        throw Error(`Cannot lock card ${cardHash} after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
+        throw Error(`Cannot lock card "${cardHash}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
       }
       throw error
     }
@@ -43,11 +41,13 @@ export default class CardLockManager {
       })
     } catch (error) {
       if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
-        throw Error(`Cannot lock cardHashes ${cardHashes} after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
+        throw Error(`Cannot lock cardHashes "${cardHashes.join('", "')}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
       }
       throw error
     }
   }
+
+  private static singleton: CardLockManager
 
   private lockManager = new LockManager()
   private aquireTimeout: number
