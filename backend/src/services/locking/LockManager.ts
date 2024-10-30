@@ -84,7 +84,6 @@ export default class LockManager {
     }
 
     awaitingAquiresForResource.splice(awaitingAquiresForResource.indexOf(awaitingAquire), 1)
-    this.stopTimeout(awaitingAquire)
   }
 
   private getNextAwaitingAquire(resourceId: string) {
@@ -95,7 +94,8 @@ export default class LockManager {
     }
 
     if (awaitingAquiresForResource.length >= 1) {
-      const awaitingAquire = awaitingAquiresForResource.shift()
+      const awaitingAquire = awaitingAquiresForResource[0]
+      this.removeWaitingAquire(resourceId, awaitingAquire)
       this.stopTimeout(awaitingAquire)
       return awaitingAquire
     } else {
