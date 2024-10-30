@@ -36,8 +36,7 @@ export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Requ
   next()
 }
 
-
-export const releaseCardMiddleware = async (req: Request, res: Response) => {
+export const releaseCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.params.cardHash) {
     console.error('releaseCard called without cardHash', req)
     return
@@ -46,5 +45,8 @@ export const releaseCardMiddleware = async (req: Request, res: Response) => {
     console.error(`releaseCard called without lockValue for cardHash ${req.params.cardHash}`, req, res.locals.lockValue)
     return
   }
+
   await releaseCards([{ cardHash: req.params.cardHash, lockValue: res.locals.lockValue }])
+
+  next()
 }

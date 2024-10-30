@@ -5,6 +5,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 
 import authRouter from '@auth/expressRouter.js'
+import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 
 import assets from './api/assets.js'
 import bulkWithdraw from './api/bulkWithdraw.js'
@@ -24,22 +25,24 @@ import corsOptions from './services/corsOptions.js'
 import xstAttack from './xstAttack.js'
 
 export default () => {
+  const applicationEventEmitter = ApplicationEventEmitter.instance
+
   const app = express()
   app.use(bodyParser.json())
   app.use(cors(corsOptions))
   app.use(helmet())
   app.use(xstAttack())
   app.use('/api/assets', assets)
-  app.use('/api/bulkWithdraw', bulkWithdraw)
-  app.use('/api/card', card)
+  app.use('/api/bulkWithdraw', bulkWithdraw(applicationEventEmitter))
+  app.use('/api/card', card(applicationEventEmitter))
   app.use('/api/cardLogos', cardLogos)
   app.use('/api/dummy', dummy)
-  app.use('/api/invoice', invoice)
+  app.use('/api/invoice', invoice(applicationEventEmitter))
   app.use('/api/landingPages', landingPages)
-  app.use('/api/lnurl', lnurl)
-  app.use('/api/lnurlp', lnurlp)
+  app.use('/api/lnurl', lnurl(applicationEventEmitter))
+  app.use('/api/lnurlp', lnurlp(applicationEventEmitter))
   app.use('/api/set', set)
-  app.use('/api/withdraw', withdraw)
+  app.use('/api/withdraw', withdraw(applicationEventEmitter))
   app.use(
     '/trpc',
     createExpressMiddleware({
