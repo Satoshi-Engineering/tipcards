@@ -7,6 +7,7 @@ import type { PermissionsEnum } from '@shared/data/auth/User.js'
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 
 const getHostFromRequest = (req: Request): string | null => {
   const host = req.get('host')
@@ -28,6 +29,7 @@ export type Context = {
   jwt: string | null,
   accessToken: AccessTokenPayload | null,
   applicationEventEmitter: ApplicationEventEmitter,
+  cardLockManager: CardLockManager
 }
 export type Meta = {
   requiredPermissions: PermissionsEnum[],
@@ -38,6 +40,7 @@ export const createContext = (opts: CreateExpressContextOptions): Context => {
     jwt: getJwtFromAuthorizationHeader(opts.req),
     accessToken: null,
     applicationEventEmitter: ApplicationEventEmitter.instance,
+    cardLockManager: CardLockManager.instance,
   }
 }
 

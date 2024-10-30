@@ -6,6 +6,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import Database from '@backend/database/Database.js'
 import { asTransaction } from '@backend/database/client.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { profileRouter } from '@backend/trpc/router/tipcards/profile.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -15,6 +16,7 @@ import '../lib/initAxios.js'
 import { createUser, createProfileForUser } from '../../drizzleData.js'
 
 ApplicationEventEmitter.init()
+CardLockManager.init({ aquireTimeout: 1000 })
 const createCaller = createCallerFactory(profileRouter)
 const frontend = new FrontendSimulator()
 
@@ -33,6 +35,7 @@ describe('TRpc Router Profile', () => {
     jwt: null,
     accessToken: null,
     applicationEventEmitter: ApplicationEventEmitter.instance,
+    cardLockManager: CardLockManager.instance,
   })
 
   it('should return 401 if the user is not logged in', async () => {
@@ -53,6 +56,7 @@ describe('TRpc Router Profile', () => {
       jwt: frontend.accessToken,
       accessToken: null,
       applicationEventEmitter: ApplicationEventEmitter.instance,
+      cardLockManager: CardLockManager.instance,
     })
 
     const displayName = await caller.getDisplayName()

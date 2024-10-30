@@ -7,10 +7,12 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
+
 import Database from '@backend/database/Database.js'
 import { bulkWithdrawRouter } from '@backend/trpc/router/tipcards/bulkWithdraw.js'
 import { setRouter } from '@backend/trpc/router/tipcards/set.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 import Frontend from '../lib/frontend/Frontend.js'
@@ -19,12 +21,14 @@ import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../li
 import '../lib/initAxios.js'
 
 ApplicationEventEmitter.init()
+CardLockManager.init({ aquireTimeout: 1000 })
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
   applicationEventEmitter: ApplicationEventEmitter.instance,
+  cardLockManager: CardLockManager.instance,
 })
 
 const callerSet = setRouter.createCaller({
@@ -32,6 +36,7 @@ const callerSet = setRouter.createCaller({
   jwt: null,
   accessToken: null,
   applicationEventEmitter: ApplicationEventEmitter.instance,
+  cardLockManager: CardLockManager.instance,
 })
 
 const FE = new Frontend()

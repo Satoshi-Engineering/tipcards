@@ -6,6 +6,7 @@ import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 import Database from '@backend/database/Database.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -15,6 +16,7 @@ import { cardData } from '../lib/apiData.js'
 import '../lib/initAxios.js'
 
 ApplicationEventEmitter.init()
+CardLockManager.init({ aquireTimeout: 1000 })
 const createCaller = createCallerFactory(cardRouter)
 
 const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
@@ -25,6 +27,7 @@ const callerCards = createCaller({
   jwt: null,
   accessToken: null,
   applicationEventEmitter: ApplicationEventEmitter.instance,
+  cardLockManager: CardLockManager.instance,
 })
 
 beforeAll(async () => {

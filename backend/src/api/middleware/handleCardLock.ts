@@ -2,7 +2,8 @@ import type { Request, Response, NextFunction } from 'express'
 
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
-import { lockCard, safeReleaseCard } from '@backend/services/inMemoryCardLock.js'
+import Lock from '@backend/services/locking/Lock.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 
 /**
  * USAGE OF THIS MIDDLEWARE
@@ -11,6 +12,7 @@ import { lockCard, safeReleaseCard } from '@backend/services/inMemoryCardLock.js
  * 3. use the releaseCardMiddleware after the route implementation to release the lock
  * 4. make sure to call the next() function in the route implementation so the card gets released after the route is done
  */
+
 export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Request, res: Response, next: NextFunction) => {
   const cardHash = req.params.cardHash
 
@@ -23,7 +25,8 @@ export const lockCardMiddleware = (toError: ToErrorResponse) => async (req: Requ
   }
 
   try {
-    const lock = await lockCard(cardHash)
+    const cardLockManager = CardLockManager.instance
+    const lock = await cardLockManager.lockCard(cardHash)
     res.locals.lock = lock
   } catch (error) {
     let code = ErrorCode.UnableToLockCard
@@ -50,7 +53,15 @@ export const releaseCardMiddleware = async (req: Request, res: Response, next: N
     return
   }
 
-  await safeReleaseCard(res.locals.lock)
+  safeReleaseLock(res.locals.lock)
 
   next()
+}
+
+const safeReleaseLock = (lock: Lock) => {
+  try {
+    lock.release()
+  } catch (error) {
+    console.error(`Error releasing card lock for card ${lock.resourceId} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
+  }
 }

@@ -2,74 +2,82 @@ import { BulkWithdrawId } from '@shared/data/trpc/BulkWithdraw.js'
 import { CardHash } from '@shared/data/trpc/Card.js'
 import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
 
-import {
-  lockCard, safeReleaseCard,
-  lockCards, safeReleaseCards,
-} from '@backend/services/inMemoryCardLock.js'
 import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
 import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import Lock from '@backend/services/locking/Lock.js'
 
 import { publicProcedure } from '../../trpc.js'
 
+const safeReleaseLocks = (locks: Lock | Lock[]) => {
+  const locksArray = Array.isArray(locks) ? locks : [locks]
+  locksArray.forEach(lock => {
+    try {
+      lock.release()
+    } catch (error) {
+      console.error(`Error releasing card lock for card ${lock.resourceId} with lock (id:${lock.id}, resourceId:${lock.resourceId}`, error)
+    }
+  })
+}
+
 export const handleCardLockForSingleCard = publicProcedure
   .input(CardHash)
-  .use(async ({ input, next }) => {
-    const lock = await lockCard(input.hash)
+  .use(async ({ input, ctx, next }) => {
+    const lock = await ctx.cardLockManager.lockCard(input.hash)
     try {
       const result = await next()
       return result
     } finally {
-      safeReleaseCard(lock)
+      safeReleaseLocks(lock)
     }
   })
 
 export const handleCardLockForMultipleCards = publicProcedure
   .input(CardHash.shape.hash.array())
-  .use(async ({ input, next }) => {
-    const locks = await lockCards(input)
+  .use(async ({ input, ctx, next }) => {
+    const locks = await ctx.cardLockManager.lockCards(input)
     try {
       const result = await next()
       return result
     } finally {
-      safeReleaseCards(locks)
+      safeReleaseLocks(locks)
     }
   })
 
 export const handleCardLockForBulkWithdraw = publicProcedure
   .input(BulkWithdrawId)
-  .use(async ({ input, next }) => {
+  .use(async ({ input, ctx, next }) => {
     const bulkWithdraw = await BulkWithdrawDeprecated.fromId(input.id)
-    const locks = await lockCards(bulkWithdraw.cards.cardHashes)
+    const locks = await ctx.cardLockManager.lockCards(bulkWithdraw.cards.cardHashes)
     try {
       const result = await next()
       return result
     } finally {
-      safeReleaseCards(locks)
+      safeReleaseLocks(locks)
     }
   })
 
 export const handleCardLockForBulkWithdrawByCardHash = publicProcedure
   .input(CardHash)
-  .use(async ({ input, next }) => {
+  .use(async ({ input, ctx, next }) => {
     const bulkWithdraw = await BulkWithdrawDeprecated.fromCardHash(input.hash)
-    const locks = await lockCards(bulkWithdraw.cards.cardHashes)
+    const locks = await ctx.cardLockManager.lockCards(bulkWithdraw.cards.cardHashes)
     try {
       const result = await next()
       return result
     } finally {
-      safeReleaseCards(locks)
+      safeReleaseLocks(locks)
     }
   })
 
 export const handleCardLockForSet = publicProcedure
   .input(SetDeprecatedId)
-  .use(async ({ input, next }) => {
+  .use(async ({ input, ctx, next }) => {
     const cards = await CardCollectionDeprecated.fromSetId(input.id)
-    const locks = await lockCards(cards.cardHashes)
+    const locks = await ctx.cardLockManager.lockCards(cards.cardHashes)
     try {
       const result = await next()
       return result
     } finally {
-      safeReleaseCards(locks)
+      safeReleaseLocks(locks)
     }
   })

@@ -6,6 +6,7 @@ import path from 'path'
 import Auth from '@auth/domain/Auth.js'
 import Database from '@backend/database/Database.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import initApp from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
@@ -14,6 +15,7 @@ import { shutdown } from '@backend/shutdown.js'
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
 const filenameFailedStartupsCounter = path.resolve(FAILED_STARTUPS_COUNTER_DIRECTORY, FAILED_STARTUPS_COUNTER_FILENAME)
+const CARDLOCKMANAGER_AQUIRE_TIMEOUT = 9000
 
 export const startup = async () => {
   try {
@@ -40,6 +42,9 @@ const startupApplication = async () => {
 
   ApplicationEventEmitter.init()
   console.info(' - ApplicationEventEmitter initialized')
+
+  CardLockManager.init({ aquireTimeout: CARDLOCKMANAGER_AQUIRE_TIMEOUT })
+  console.info(' - CardLockManager initialized')
 
   const app = initApp()
   console.info(' - app started')

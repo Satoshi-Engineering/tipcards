@@ -4,6 +4,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import Database from '@backend/database/Database.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
+import CardLockManager from '@backend/domain/CardLockManager.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
@@ -15,11 +16,13 @@ const testCard = cardData.generateCard(cardData.DEFAULT_AMOUNT_IN_SATS)
 const frontend = new FrontendSimulator()
 
 ApplicationEventEmitter.init()
+CardLockManager.init({ aquireTimeout: 1000 })
 const callerCards = cardRouter.createCaller({
   host: new URL(TIPCARDS_API_ORIGIN).host,
   jwt: null,
   accessToken: null,
   applicationEventEmitter: ApplicationEventEmitter.instance,
+  cardLockManager: CardLockManager.instance,
 })
 
 beforeAll(async () => {
