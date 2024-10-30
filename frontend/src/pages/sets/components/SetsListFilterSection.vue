@@ -9,6 +9,7 @@
       />
       <input
         type="search"
+        data-test="input-search"
         :placeholder="$t('general.search')"
         class="flex-auto px-2 border-b border-bluegrey focus:outline-none appearance-none bg-transparent rounded-none"
         @input="$emit('textSearch', ($event.target as HTMLInputElement).value)"

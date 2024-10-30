@@ -308,7 +308,7 @@
     "unnamedSetNameFallback": "Unbenanntes Set",
     "setInfo": "Set-Info",
     "noSetsMatchingFilter": "Keine Sets gefunden.",
-    "displayedSetsOfTotalSets": "{displayedSets} / {totalSets} Sets"
+    "displayedSetsOfTotalSets": "{displayedSets} / {totalSets} Set | {displayedSets} / {totalSets} Sets"
   },
   "cards": {
     "title": "TipCards-Set",

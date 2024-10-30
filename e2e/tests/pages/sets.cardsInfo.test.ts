@@ -5,7 +5,7 @@ import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 describe('Sets Page', () => {
   const numberOfSets = 10
-  const numberOfCardsPerSet = 100
+  const numberOfCardsPerSet = 10
   const viewportHeight = Cypress.config('viewportHeight')
 
   let lnurlAuth: LNURLAuth

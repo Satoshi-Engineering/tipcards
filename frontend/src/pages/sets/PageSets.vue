@@ -54,11 +54,11 @@
             class="my-8"
             @text-search="textSearch = $event"
           />
-          <div class="text-sm">
+          <div class="text-sm" data-test="sets-list-sets-count">
             {{
               fetchingAllSets
                 ? '&nbsp;'
-                : t('sets.displayedSetsOfTotalSets', { displayedSets: filteredSets.length, totalSets: sets.length })
+                : t('sets.displayedSetsOfTotalSets', { displayedSets: filteredSets.length, totalSets: sets.length }, sets.length)
             }}
           </div>
           <SetsList
@@ -180,5 +180,5 @@ const filteredSets = computed(() => sets.value.filter((set) => getSearchString(s
 const { d } = useI18n()
 
 const getSearchString = (set: SetDto) =>
-  `${set.settings.name || t('sets.unnamedSetNameFallback')} ${d(set.created, dateWithTimeFormat)} ${set.settings.numberOfCards}`
+  `${set.settings.name || t('sets.unnamedSetNameFallback')} ${d(set.created, dateWithTimeFormat)} ${t('general.cards', { count: set.settings.numberOfCards })} `
 </script>

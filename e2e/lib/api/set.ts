@@ -13,13 +13,6 @@ import { Set } from '@shared/data/api/Set'
 const API_SET = new URL('/api/set', BACKEND_API_ORIGIN)
 const API_SET_INVOICE = new URL('/api/set/invoice', BACKEND_API_ORIGIN)
 
-export const generateAndAddRandomSet = (name?: string) => {
-  const set = generateSet()
-  set.settings.setName = name || set.settings.setName
-
-  addSet(set)
-}
-
 export const createInvoiceForSet = (
   setId: string,
   amountPerCard = 210,
@@ -64,6 +57,13 @@ export const addSet = (set: Set) => {
       },
     })
   })
+}
+
+export const generateAndAddRandomSet = (name?: string) => {
+  const set = generateSet()
+  set.settings.setName = name || set.settings.setName
+
+  addSet(set)
 }
 
 export const addSetsParallel = (sets: Set[]) => {
