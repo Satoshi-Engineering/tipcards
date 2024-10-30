@@ -3,8 +3,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
-describe.skip('Sets Page', () => {
-  const numberOfSets = 40
+describe('Sets Page', () => {
+  const numberOfSets = 100
   const numberOfCardsPerSet = 100
   const viewportHeight = Cypress.config('viewportHeight')
 
@@ -23,7 +23,6 @@ describe.skip('Sets Page', () => {
 
     tipCardsApi.set.addSetsParallel(sets)
     tipCardsApi.set.createInvoicesForSetsParallel(sets, 21)
-    //cy.task('createInvoicesForSetsParallel', { sets, amountPerCard: 21 })
   })
 
   beforeEach(() => {
@@ -61,7 +60,7 @@ describe.skip('Sets Page', () => {
     cy.get('@itemsInViewportBeforeScroll').then((itemsInViewportBeforeScroll) => {
       cy.get('@itemsInViewportAfterScroll').then((itemsInViewportAfterScroll) => {
         const totalItemsInViewport = Math.min(Number(itemsInViewportBeforeScroll) + Number(itemsInViewportAfterScroll), numberOfSets)
-        totalNumberOfSetsWithLoadedCardsInfoShouldBeAtLeast(totalItemsInViewport, numberOfCardsPerSet)
+        totalNumberOfSetsWithLoadedCardsInfoShouldBeEqual(totalItemsInViewport, numberOfCardsPerSet)
       })
     })
   })
@@ -105,6 +104,6 @@ const setListItemsInViewportHaveCardsInfoLoaded = (numberOfCardsPerSet: number, 
     })
 }
 
-const totalNumberOfSetsWithLoadedCardsInfoShouldBeAtLeast = (expectedNumberOfSets: number, numberOfCardsPerSet: number) => {
-  cy.getTestElement('sets-list-item-cards-info-pending').should('have.length.at.least', expectedNumberOfSets * Math.min(12, numberOfCardsPerSet))
+const totalNumberOfSetsWithLoadedCardsInfoShouldBeEqual = (expectedNumberOfSets: number, numberOfCardsPerSet: number) => {
+  cy.getTestElement('sets-list-item-cards-info-pending').should('have.length', expectedNumberOfSets * Math.min(12, numberOfCardsPerSet))
 }
