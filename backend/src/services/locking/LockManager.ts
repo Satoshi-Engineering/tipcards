@@ -1,3 +1,5 @@
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+
 import Lock from './Lock.js'
 
 type AwaitingAquire = {
@@ -24,7 +26,7 @@ export default class LockManager {
       if (timeout) {
         awaitingAquire.timeoutId = setTimeout(() => {
           this.removeWaitingAquire(resourceId, awaitingAquire)
-          reject(new Error(`Timeout while waiting for lock on resource ${resourceId}`))
+          reject(new ErrorWithCode(`Timeout while waiting for lock on resource ${resourceId}`, ErrorCode.LockManagerAquireTimeout))
         }, timeout)
       }
       this.addWaitingAquire(resourceId, awaitingAquire)
@@ -33,10 +35,13 @@ export default class LockManager {
 
   release(lock: Lock) {
     if (!this.lockedResourcesById.has(lock.resourceId)) {
-      throw new Error(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it is not locked`)
+      throw new ErrorWithCode(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it is not locked`, ErrorCode.LockManagerResourceNotLocked)
     }
     if (this.lockedResourcesById.get(lock.resourceId) !== lock.id) {
-      throw new Error(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it was locked by a different lock: ${this.lockedResourcesById.get(lock.resourceId)}`)
+      throw new ErrorWithCode(
+        `Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it was locked by a different lock: ${this.lockedResourcesById.get(lock.resourceId)}`,
+        ErrorCode.LockManagerResourceLockedWithDifferentLock,
+      )
     }
 
     this.lockedResourcesById.delete(lock.resourceId)

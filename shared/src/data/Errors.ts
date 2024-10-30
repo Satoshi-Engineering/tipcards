@@ -67,6 +67,10 @@ export enum ErrorCode {
   UnableToLockCard = 'UnableToLockCard',
   CardHashRequired = 'CardHashRequired',
   WithdrawIsPending = 'WithdrawIsPending',
+
+  LockManagerAquireTimeout = 'LockManagerAquireTimeout',
+  LockManagerResourceNotLocked = 'LockManagerResourceNotLocked',
+  LockManagerResourceLockedWithDifferentLock = 'LockManagerResourceLockedWithDifferentLock',
 }
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)

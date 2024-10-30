@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest'
 
 import LockManager from '@backend/services/locking/LockManager.js'
 import Lock from '@backend/services/locking/Lock.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -30,7 +31,7 @@ describe('LockManager', () => {
         resourceId,
         timeout: 1,
       })
-    }).rejects.toThrowError(Error)
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.LockManagerAquireTimeout))
   })
 
   it('should fail, because a resource can only be unlocked once', async () => {
@@ -40,7 +41,18 @@ describe('LockManager', () => {
 
     expect(() => {
       lock.release()
-    }).toThrowError(Error)
+    }).toThrowError(new ErrorWithCode('', ErrorCode.LockManagerResourceNotLocked))
+  })
+
+  it('should fail, because a resource can only be unlocked with the same lock', async () => {
+    const lock = await lockManager.acquire({ resourceId })
+    expect(lock).toBeInstanceOf(Lock)
+
+    const culpritLock = new Lock(lockManager, resourceId)
+
+    expect(() => {
+      culpritLock.release()
+    }).toThrowError(new ErrorWithCode('', ErrorCode.LockManagerResourceLockedWithDifferentLock))
   })
 
   it('should wait for the release of a lock', async () => {
