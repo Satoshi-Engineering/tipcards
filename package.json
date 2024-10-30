@@ -32,6 +32,7 @@
     "backend-ngrok": "tsx --tsconfig ./backend/tsconfig.json ./backend/ngrok.ts",
     "e2e-dev": "cypress open -C ./e2e/cypress.config.ts",
     "e2e-live-checks": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/live-checks/**/*.test.ts'",
+    "e2e-test": "cypress run --e2e -C ./e2e/cypress.config.ts",
     "e2e-tests": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/tests/**/*.test.ts'",
     "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview http://localhost:5050 'npm run e2e-tests'",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",

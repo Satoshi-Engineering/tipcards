@@ -159,7 +159,7 @@ const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === '
 
 let subscription: Unsubscribable
 onMounted(() => loadCardStatus())
-onBeforeUnmount(() => subscription?.unsubscribe())
+onBeforeUnmount(() => cleanupSubscription())
 
 watch(cardStatus, (newStatus, oldStatus) => {
   if (oldStatus == null && newStatus != null) {
@@ -180,6 +180,9 @@ const loadCardStatus = () => {
   subscription = card.status.subscribe(
     { hash: cardHash.value },
     {
+      onStarted: () => {
+        document.body.dataset.testCardStatusSubscription = 'started'
+      },
       onData: (data) => {
         cardStatus.value = data
       },
@@ -189,6 +192,11 @@ const loadCardStatus = () => {
       },
     },
   )
+}
+
+const cleanupSubscription = () => {
+  subscription?.unsubscribe()
+  delete document.body.dataset.testCardStatusSubscription
 }
 
 const afterInitialCardStatusLoadHandler = () => {

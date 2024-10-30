@@ -12,23 +12,21 @@ export const gotoSeoPreview = () => {
 }
 
 export const gotoPreview = (cardHash: string, lang?: string) => {
-  cy.intercept('/trpc/card.status**').as('trpcCardStatus')
   const url = lang != null
     ? new URL(`/${lang}${LANDING_PAGE_PATH}/${cardHash}`, TIPCARDS_ORIGIN)
     : new URL(`${LANDING_PAGE_PATH}/${cardHash}`, TIPCARDS_ORIGIN)
   cy.visit(url.href, {
     onBeforeLoad: switchBrowserLanguageToEnglish,
   })
-  cy.wait('@trpcCardStatus')
+  cy.waitForSubscription('card-status')
 }
 
 export const goto = (cardHash: string) => {
-  cy.intercept('/trpc/card.status**').as('trpcCardStatus')
   const url = new URL(`${LANDING_PAGE_PATH}`, TIPCARDS_ORIGIN)
   const lnurl = LNURL.encode(`${TIPCARDS_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
   url.searchParams.set('lightning', lnurl)
   cy.visit(url.href, {
     onBeforeLoad: switchBrowserLanguageToEnglish,
   })
-  cy.wait('@trpcCardStatus')
+  cy.waitForSubscription('card-status')
 }

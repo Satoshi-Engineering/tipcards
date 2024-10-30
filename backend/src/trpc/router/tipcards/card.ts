@@ -31,9 +31,9 @@ export const cardRouter = router({
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(CardStatusDto)
     .subscription(async function* ({
+      ctx,
       input,
       signal,
-      ctx,
     }): AsyncGenerator<CardStatusDto> {
       // create iterator first so we do not miss events during fetch of initial data
       const iterator = on(
