@@ -6,7 +6,7 @@ import webpack from '@cypress/webpack-preprocessor'
 
 import setupClipboardy from './plugins/clipboardy.js'
 import setupDatabaseTasks from './plugins/database.js'
-import setupBackendApiCalls from './plugins/backendApiCalls.js'
+//import setupBackendApiCalls from './plugins/backendApiCalls.js'
 
 const webpackOptions = {
   resolve: {
@@ -66,7 +66,7 @@ export default defineConfig({
 
       setupDatabaseTasks(on, config)
 
-      setupBackendApiCalls(on, config)
+      // setupBackendApiCalls(on, config)
     },
   },
   env: {
