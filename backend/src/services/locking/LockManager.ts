@@ -33,6 +33,22 @@ export default class LockManager {
     })
   }
 
+  async acquireAll({
+    resourceIds,
+    timeout,
+  }: { resourceIds: string[], timeout?: number }): Promise<Lock[]> {
+    try {
+      return await Promise.all(resourceIds.map(async (resourceId) => {
+        return await this.acquire({ resourceId, timeout })
+      }))
+    } catch (error) {
+      if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
+        throw new ErrorWithCode(`Timeout while waiting for multiple resources ${resourceIds}`, ErrorCode.LockManagerAquireTimeout)
+      }
+      throw error
+    }
+  }
+
   release(lock: Lock) {
     if (!this.lockedResourcesById.has(lock.resourceId)) {
       throw new ErrorWithCode(`Release: Lock (${lock.id}) tries to unlock ${lock.resourceId}, but it is not locked`, ErrorCode.LockManagerResourceNotLocked)

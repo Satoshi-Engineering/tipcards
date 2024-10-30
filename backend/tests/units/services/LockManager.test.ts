@@ -111,4 +111,17 @@ describe('LockManager', () => {
     expect(lastAquire).toBeInstanceOf(Lock)
     lastAquire.release()
   })
+
+  it('should aquire locks for 10 resources', async () => {
+    const NUMBER_OF_RESOURCES = 10
+    const resourceIds = Array(NUMBER_OF_RESOURCES).fill(0).map((_, i) => `resourceId${i}`)
+
+    const locks = await lockManager.acquireAll({ resourceIds })
+
+    expect(locks.length).toBe(NUMBER_OF_RESOURCES)
+    locks.forEach(lock => {
+      expect(lock).toBeInstanceOf(Lock)
+      lock.release()
+    })
+  })
 })

@@ -31,7 +31,19 @@ export const lockCard = async (cardHash: string): Promise<Lock> => {
 
 /** @throws */
 export const lockCards = async (cardHashes: string[]): Promise<Lock[]> =>  {
-  return await Promise.all(cardHashes.map(async (cardHash) => await lockCard(cardHash)))
+  const lockManager = getLockManager()
+
+  try {
+    return await lockManager.acquireAll({
+      resourceIds: cardHashes,
+      timeout: 9000,
+    })
+  } catch (error) {
+    if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
+      throw Error(`Cannot lock cardHashes ${cardHashes} after 9 seconds of trying. It is currently locked by another process.`)
+    }
+    throw error
+  }
 }
 
 export const safeReleaseCard = async (lock: Lock) => {
