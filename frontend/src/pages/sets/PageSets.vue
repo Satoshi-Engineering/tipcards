@@ -175,10 +175,12 @@ const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) =>
 // Search
 const textSearch = ref<string>('')
 
-const filteredSets = computed(() => sets.value.filter((set) => getSearchString(set).toLowerCase().includes(textSearch.value.trim().toLowerCase())))
+const searchString = computed(() => textSearch.value.trim().toLowerCase())
+
+const filteredSets = computed(() => sets.value.filter((set) => getSearchableStringForSet(set).toLowerCase().includes(searchString.value)))
 
 const { d } = useI18n()
 
-const getSearchString = (set: SetDto) =>
+const getSearchableStringForSet = (set: SetDto) =>
   `${set.settings.name || t('sets.unnamedSetNameFallback')} ${d(set.created, dateWithTimeFormat)} ${t('general.cards', { count: set.settings.numberOfCards })} `
 </script>

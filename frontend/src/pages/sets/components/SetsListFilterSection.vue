@@ -1,11 +1,11 @@
 <template>
   <div class="flex space-between">
-    <div class="ms-auto flex-1 flex gap-1 align-center">
+    <label class="ms-auto flex-1 flex gap-1 align-center">
       <ButtonIcon
         icon="search"
         size="small"
         variant="yellow"
-        data-test="button-new-set"
+        element="span"
       />
       <input
         type="search"
@@ -14,7 +14,7 @@
         class="flex-auto px-2 border-b border-bluegrey focus:outline-none appearance-none bg-transparent rounded-none"
         @input="$emit('textSearch', ($event.target as HTMLInputElement).value)"
       >
-    </div>
+    </label>
   </div>
 </template>
 
