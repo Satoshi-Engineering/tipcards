@@ -19,26 +19,9 @@ const RefreshTokenPayload = z.object({
 
 type RefreshTokenPayload = z.infer<typeof RefreshTokenPayload>
 
-
-export const parseJWTPayload = (jwtPayload: JWTPayload) => {
-  return RefreshTokenPayload.parse(jwtPayload)
-}
-
-export const validateRefeshTokenInDatabase = async (userId: string, refreshToken: string) => {
-  let user
-  try {
-    user = await getUserById(userId)
-  } catch (error) {
-    throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
-  }
-  if (
-    user?.allowedRefreshTokens == null
-    || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(refreshToken))
-  ) {
-    throw new ErrorWithCode('Refresh token not found in allowed refresh tokens', ErrorCode.RefreshTokenDenied)
-  }
-}
-
+/**
+ * @deprecated as AllowedRefreshTokens are not used & issued anymore
+ */
 export const deleteAllRefreshTokensInDatabase = async (userId: string) => {
   let user
   try {
@@ -57,6 +40,9 @@ export const deleteAllRefreshTokensInDatabase = async (userId: string) => {
   }
 }
 
+/**
+ * @deprecated as AllowedRefreshTokens are not used & issued anymore
+ */
 export const deleteRefreshTokenInDatabase = async (refreshToken: string | null) => {
   if (refreshToken == null) {
     return
@@ -76,3 +62,30 @@ export const deleteRefreshTokenInDatabase = async (refreshToken: string | null) 
   }
 }
 
+/**
+ * @deprecated as AllowedRefreshTokens are not used & issued anymore
+ */
+export const getAuthenticatedUserIdFromAllowedRefreshTokenFormat = async (jwtPayload: JWTPayload, refreshToken: string) => {
+  const refreshTokenPayloadDeprecated = parseJWTPayload(jwtPayload)
+  await validateRefeshTokenInDatabase(refreshTokenPayloadDeprecated.id, refreshToken)
+  return refreshTokenPayloadDeprecated.id
+}
+
+const parseJWTPayload = (jwtPayload: JWTPayload) => {
+  return RefreshTokenPayload.parse(jwtPayload)
+}
+
+const validateRefeshTokenInDatabase = async (userId: string, refreshToken: string) => {
+  let user
+  try {
+    user = await getUserById(userId)
+  } catch (error) {
+    throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
+  }
+  if (
+    user?.allowedRefreshTokens == null
+    || !user.allowedRefreshTokens.find((currentRefreshTokens) => currentRefreshTokens.includes(refreshToken))
+  ) {
+    throw new ErrorWithCode('Refresh token not found in allowed refresh tokens', ErrorCode.RefreshTokenDenied)
+  }
+}

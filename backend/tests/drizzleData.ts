@@ -183,7 +183,9 @@ export const createAccessTokenPayloadForUser = (user: User): AccessTokenPayload 
   nonce: randomUUID(),
 })
 
+export const createSessionId = () => randomUUID()
+
 export const createAllowedSession = (user: User): AllowedSession => ({
-  sessionId: randomUUID(),
+  sessionId: createSessionId(),
   user: user.id,
 })

@@ -6,7 +6,11 @@ import '../../mocks/process.env.js'
 import '../../mocks/jwt.js'
 import '../../mocks/drizzle.js'
 import '../../mocks/database/client.js'
-import { addData, allowedRefreshTokensByHash } from '../../mocks/database/database.js'
+import {
+  addData,
+  allowedRefreshTokensByHash,
+  allowedSessionsById,
+} from '../../mocks/database/database.js'
 
 import RefreshGuard from '@auth/domain/RefreshGuard.js'
 
@@ -16,7 +20,7 @@ import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 import { uuidRegex } from '../../lib/validationUtils.js'
-import { createUser, createProfileForUser, createAllowedRefreshTokensDepricated } from '../../../drizzleData.js'
+import { createUser, createProfileForUser, createAllowedRefreshTokensDepricated, createAllowedSession, createSessionId } from '../../../drizzleData.js'
 
 const REFRESH_TOKEN_EXPIRATION_TIME = '28 days'
 const ACCESS_TOKEN_EXPIRATION_TIME = '5 min'
@@ -31,6 +35,7 @@ mockUser.lnurlAuthKey = mockwalletLinkingKey
 const mockProfile = createProfileForUser(mockUser)
 const mockAllowedRefreshTokens = createAllowedRefreshTokensDepricated(mockUser)
 const mockAllowedOtherRefreshTokens = createAllowedRefreshTokensDepricated(mockUser)
+const mockAllowedSession = createAllowedSession(mockUser)
 const mockRefreshToken = mockAllowedRefreshTokens.current
 const mockRefreshTokenCookie = `refresh_token=${mockRefreshToken}`
 const mockRequest = {
@@ -94,14 +99,20 @@ beforeAll(() => {
   addData({
     users: [mockUser],
     profiles: [mockProfile],
+    allowedSessions: [mockAllowedSession],
   })
 })
 
 describe('RefreshGuard', () => {
   beforeEach(() => {
     refreshGuard = new RefreshGuard(mockRequest, mockResponse, mockJwtIssuer, mockAccessTokenAudience)
+    // Delete all allowed Refresh Tokens
     Object.keys(allowedRefreshTokensByHash).forEach(key => {
       delete allowedRefreshTokensByHash[key]
+    })
+    // Delete all allowed Sessions
+    Object.keys(allowedSessionsById).forEach(key => {
+      delete allowedSessionsById[key]
     })
     addData({
       allowedRefreshTokens: [mockAllowedRefreshTokens, mockAllowedOtherRefreshTokens],
@@ -135,25 +146,13 @@ describe('RefreshGuard', () => {
     )
   })
 
-  it.skip('clear refresh token cookie on logout', async () => {
-    refreshGuard.logout()
-    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
-      'refresh_token',
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
-  })
-
-  it.skip('should fail refresh token validation due json web token is missing in cookie', async () => {
+  it('should fail refresh token validation due json web token is missing in cookie', async () => {
     await expect(async () => {
       await refreshGuard.authenticateUserViaRefreshToken()
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenMissing))
   })
 
-  it.skip('should fail refresh token validation due host is undefined', async () => {
+  it('should fail refresh token validation due host is undefined', async () => {
     mockRequest.headers.cookie = mockRefreshTokenCookie
 
     await expect(async () => {
@@ -161,7 +160,7 @@ describe('RefreshGuard', () => {
     }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthHostMissingInRequest))
   })
 
-  it.skip('should fail refresh token validation due missing allowedRefreshTokens in database', async () => {
+  it('should fail refresh token validation due missing allowedRefreshTokens in database', async () => {
     const tokenGargabe = 'DIFFERENT TOKEN'
     const randomRefreshTokenCookie = `${mockRefreshTokenCookie}${tokenGargabe}`
 
@@ -181,16 +180,32 @@ describe('RefreshGuard', () => {
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(`${mockRefreshToken}${tokenGargabe}`, mockHost)
   })
 
+  it('should fail refresh token validation due missing allowedSession in database', async () => {
+    const unknownSessionId = createSessionId()
+    vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
+    mockRequest.headers.cookie = mockRefreshTokenCookie
+    const mockRefreshTokenPayloadWithSession = {
+      userId: mockUserId,
+      sessionId: unknownSessionId,
+      nonce: mockNonce,
+    }
+    vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayloadWithSession)
+
+    await expect(async () => {
+      await refreshGuard.authenticateUserViaRefreshToken()
+    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenInvalid))
+    expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
+  })
+
   it.skip('should validate refresh json web token from cookie with allowedRefreshTokens format', async () => {
     setValidRefreshToken(RefreshTokenFormat.allowedRefreshTokens)
-
     await refreshGuard.authenticateUserViaRefreshToken()
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
+    expect(allowedSessionsById.length).toBe(1) // TODO: Check if one AllowedSessionId was additionally created
   })
 
   it.skip('should validate refresh json web token from cookie with allowedSession format', async () => {
     setValidRefreshToken(RefreshTokenFormat.allowedSession)
-
     await refreshGuard.authenticateUserViaRefreshToken()
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
   })
@@ -307,5 +322,44 @@ describe('RefreshGuard', () => {
     expect(allowedRefreshTokensByHash).toEqual(expect.objectContaining({
       [mockAllowedRefreshTokens.hash]: mockAllowedRefreshTokens,
     }))
+  })
+
+  it('should clear refresh token cookie on logout with no user authenticated', async () => {
+    await refreshGuard.logout()
+
+    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
+      'refresh_token',
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      },
+    )
+  })
+
+  it.skip('should delete the allowed session on logout', async () => {
+    await refreshGuard.logout()
+
+    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
+      'refresh_token',
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      },
+    )
+  })
+
+  it.skip('should delete the refresh token from allowed refresh tokens on logout', async () => {
+    await refreshGuard.logout()
+
+    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
+      'refresh_token',
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      },
+    )
   })
 })

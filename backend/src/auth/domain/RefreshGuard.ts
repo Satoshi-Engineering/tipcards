@@ -1,6 +1,6 @@
 import type { Response, Request } from 'express'
 import { randomUUID } from 'crypto'
-import { errors as joseErrors, type JWTPayload } from 'jose'
+import { errors as joseErrors } from 'jose'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import { PermissionsEnum } from '@shared/data/auth/User.js'
@@ -13,7 +13,11 @@ import AllowedSession from '@backend/domain/AllowedSession.js'
 
 import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'
 import { RefreshTokenPayload } from '@auth/types/RefreshTokenPayload.js'
-import { deleteAllRefreshTokensInDatabase, deleteRefreshTokenInDatabase, parseJWTPayload, validateRefeshTokenInDatabase } from './allowedRefreshTokensHelperFunctions.js'
+import {
+  deleteAllRefreshTokensInDatabase,
+  deleteRefreshTokenInDatabase,
+  getAuthenticatedUserIdFromAllowedRefreshTokenFormat,
+} from './allowedRefreshTokensHelperFunctions.js'
 
 type RefreshTokenParams = Omit<RefreshTokenPayload, 'nonce'>
 
@@ -24,13 +28,6 @@ type AccessTokenParams = {
 }
 
 export default class RefreshGuard {
-  private request: Request
-  private response: Response
-  private userId: string | null = null
-  private sessionId: string | null = null
-  private jwtIssuer: JwtIssuer
-  private jwtAccessTokenAudience: string[] | string
-
   constructor(request: Request, response: Response, jwtIssuer: JwtIssuer, jwtAccessTokenAudience: string[] | string) {
     this.request = request
     this.response = response
@@ -38,7 +35,7 @@ export default class RefreshGuard {
     this.jwtAccessTokenAudience = jwtAccessTokenAudience
   }
 
-  public async loginUserWithWalletLinkingKey(walletPublicKey: string) {
+  async loginUserWithWalletLinkingKey(walletPublicKey: string) {
     let user = null
     try {
       user = await User.fromLnurlAuthKey(walletPublicKey)
@@ -74,34 +71,24 @@ export default class RefreshGuard {
     }
 
     const jwtPayload = await this.validateRefreshTokenAndGetPayload(refreshToken, host)
-    // thorws  joseErrors.JWTExpired
-    // TODO: remove jwtExpiredError.payload.sessionId from database
 
     const jwtParseResult = RefreshTokenPayload.safeParse(jwtPayload)
 
-    // If parsing fails, check if its the deprecated format
-    if (!jwtParseResult.success) {
-      try {
-        const userId = await this.getAuthenticatedUserIdFromDeprecatedRefreshTokenFormat(jwtPayload, refreshToken)
-        const allowedSession = AllowedSession.createNewForUserId(userId)
-        await allowedSession.insert()
-        this.userId = userId
-        this.sessionId = allowedSession.sessionId
-        return
-      } catch(error) {
-        this.clearRefreshTokenCookie()
-        throw error
+    if (jwtParseResult.success) {
+      const refreshTokenPayload = jwtParseResult.data
+      const allowedSession = await AllowedSession.fromSessionId(refreshTokenPayload.sessionId)
+      if (allowedSession == null) {
+        throw new ErrorWithCode('SessionId not found', ErrorCode.RefreshTokenInvalid)
       }
+      this.sessionId = refreshTokenPayload.sessionId
+      this.userId = refreshTokenPayload.userId
+    } else {
+      const userId = await getAuthenticatedUserIdFromAllowedRefreshTokenFormat(jwtPayload, refreshToken)
+      const allowedSession = AllowedSession.createNewForUserId(userId)
+      await allowedSession.insert()
+      this.userId = userId
+      this.sessionId = allowedSession.sessionId
     }
-
-    const refreshTokenPayload = jwtParseResult.data
-    const allowedSession = AllowedSession.fromSessionId(refreshTokenPayload.sessionId)
-    if (allowedSession == null) {
-      throw new ErrorWithCode('SessionId not found', ErrorCode.RefreshTokenInvalid)
-    }
-
-    this.sessionId = refreshTokenPayload.sessionId
-    this.userId = refreshTokenPayload.userId
   }
 
   async cycleRefreshToken() {
@@ -133,11 +120,11 @@ export default class RefreshGuard {
     return this.createAccessToken(user)
   }
 
-  public async logout() {
+  async logout() {
     this.clearRefreshTokenCookie()
 
     try {
-      this.authenticateUserViaRefreshToken()
+      await this.authenticateUserViaRefreshToken()
     } catch {
       // If user can not be authenticated, stop
       return
@@ -151,7 +138,7 @@ export default class RefreshGuard {
     await deleteRefreshTokenInDatabase(this.getRefreshTokenFromRequestCookies())
   }
 
-  public async logoutAllOtherDevices() {
+  async logoutAllOtherDevices() {
     if (this.userId == null) {
       throw new ErrorWithCode('UserId not set', ErrorCode.AuthUserNotAuthenticated)
     }
@@ -165,6 +152,13 @@ export default class RefreshGuard {
     await deleteAllRefreshTokensInDatabase(this.userId)
     await AllowedSession.deleteAllSessionsForUserExecptOne(this.userId, this.sessionId)
   }
+
+  private request: Request
+  private response: Response
+  private userId: string | null = null
+  private sessionId: string | null = null
+  private jwtIssuer: JwtIssuer
+  private jwtAccessTokenAudience: string[] | string
 
   private async validateRefreshTokenAndGetPayload(refreshJwt: string, host: string) {
     try {
@@ -255,12 +249,5 @@ export default class RefreshGuard {
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)
     }
-  }
-
-  private async getAuthenticatedUserIdFromDeprecatedRefreshTokenFormat(jwtPayload: JWTPayload, refreshToken: string) {
-    const refreshTokenPayloadDeprecated = parseJWTPayload(jwtPayload)
-    await validateRefeshTokenInDatabase(refreshTokenPayloadDeprecated.id, refreshToken)
-
-    return refreshTokenPayloadDeprecated.id
   }
 }
