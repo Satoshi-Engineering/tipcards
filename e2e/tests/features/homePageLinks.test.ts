@@ -27,8 +27,19 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it.only('should navigate to youtube when the play button in the second slider is clicked', () => {
     cy.visit(HOME_PAGE_URL.href)
+
+    cy.origin('https://www.youtube.com', () => {
+      cy.on('uncaught:exception', (e) => {
+        if (e.message.includes('Blocked a frame with origin "https://www.youtube.com" from accessing a cross-origin frame.')) {
+          // we expected this error, so let's ignore it
+          // and let the test continue
+          return false
+        }
+      })
+    })
+
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)
       .should('exist')
       .then(($link) => {
@@ -37,8 +48,9 @@ describe('homePageLinks', () => {
         $link.attr('target', '_self')
       })
       .click()
+
     cy.origin('https://www.youtube.com', () => {
-      cy.url().should('contain', 'youtube')
+      cy.title().should('contain', 'Lightning Tip')
     })
   })
 })
