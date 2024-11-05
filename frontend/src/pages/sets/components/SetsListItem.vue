@@ -57,7 +57,7 @@ import SetCardsInfo from '@/pages/sets/components/SetCardsInfo.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
-import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
+import useSetDisplayInfo from '@/pages/sets/modules/useSetDisplayInfo'
 
 const { encodeCardsSetSettings } = useSets()
 
@@ -111,5 +111,6 @@ const emitIfInViewportLongEnough = async () => {
 
 watch(isInViewport, emitIfInViewportLongEnough)
 
+const SetDisplayInfo = useSetDisplayInfo()
 const setDisplayInfo = SetDisplayInfo.create(props.set)
 </script>

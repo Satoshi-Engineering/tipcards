@@ -3,16 +3,17 @@ import '../../mocks/provide'
 import '../../mocks/router'
 
 import { describe, it, expect } from 'vitest'
-
-import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
-import { SetDto } from '@shared/data/trpc/SetDto'
 import { defineComponent, type PropType } from 'vue'
 import { mount } from '@vue/test-utils'
+
+import { SetDto } from '@shared/data/trpc/SetDto'
+import useSetDisplayInfo from '@/pages/sets/modules/useSetDisplayInfo'
 
 describe('SetDisplayInfo', () => {
   const testComponent = defineComponent({
     props: { set: { type: Object as PropType<SetDto>, required: true } },
     setup: (props) => {
+      const SetDisplayInfo = useSetDisplayInfo()
       const setDisplayInfo = SetDisplayInfo.create(props.set)
       return { setDisplayInfo }
     },

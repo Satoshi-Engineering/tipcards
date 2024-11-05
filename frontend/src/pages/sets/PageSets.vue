@@ -95,7 +95,7 @@ import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorag
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
-import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
+import useSetDisplayInfo from '@/pages/sets/modules/useSetDisplayInfo'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
@@ -169,6 +169,8 @@ const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) =>
 }
 
 // Search
+const SetDisplayInfo = useSetDisplayInfo()
+
 const textSearch = ref<string>('')
 
 const searchString = computed(() => textSearch.value.trim().toLowerCase())
