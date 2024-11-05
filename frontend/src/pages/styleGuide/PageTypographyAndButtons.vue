@@ -210,6 +210,17 @@
         </div>
 
         <HeadlineDefault level="h3">
+          As span element
+        </HeadlineDefault>
+        <div class="flex gap-4">
+          <ButtonIcon element="span" />
+          <ButtonIcon
+            variant="yellow"
+            element="span"
+          />
+        </div>
+
+        <HeadlineDefault level="h3">
           Sizes
         </HeadlineDefault>
         <div class="flex gap-4">
@@ -292,6 +303,22 @@
           <ButtonIcon
             variant="yellow"
             icon="plus"
+            disabled
+          />
+          <ButtonIcon
+            icon="search"
+          />
+          <ButtonIcon
+            icon="search"
+            disabled
+          />
+          <ButtonIcon
+            variant="yellow"
+            icon="search"
+          />
+          <ButtonIcon
+            variant="yellow"
+            icon="search"
             disabled
           />
         </div>

@@ -2,7 +2,7 @@
   <TheLayout login-banner>
     <CenterContainer class="mb-10">
       <BackLink :to="{ name: 'home', params: { lang: $route.params.lang }}">
-        {{ t('sets.backLink') }}
+        {{ $t('sets.backLink') }}
       </BackLink>
       <div class="flex justify-between">
         <HeadlineDefault
@@ -10,7 +10,7 @@
           styling="h2"
           data-test="headline"
         >
-          {{ t('sets.title') }}
+          {{ $t('sets.title') }}
         </HeadlineDefault>
         <ButtonIcon
           icon="plus"
@@ -20,15 +20,15 @@
           data-test="button-new-set"
           :to="{ name: 'cards', params: { lang: $route.params.lang } }"
         >
-          {{ t('sets.newSet') }}
+          {{ $t('sets.newSet') }}
         </ButtonIcon>
       </div>
       <div v-if="!isLoggedIn" data-test="please-login-section">
         <ParagraphDefault>
-          {{ t('sets.loginToSeeYourSets') }}
+          {{ $t('sets.loginToSeeYourSets') }}
         </ParagraphDefault>
         <LinkDefault @click="showModalLogin = true">
-          {{ t('general.login') }}
+          {{ $t('general.login') }}
         </LinkDefault>
       </div>
       <div
@@ -44,11 +44,11 @@
           v-else-if="!fetchingAllSets && sets.length < 1"
           data-test="sets-list-empty"
         >
-          {{ t('sets.noSavedCardsSetsMessage') }}
+          {{ $t('sets.noSavedCardsSetsMessage') }}
         </ParagraphDefault>
         <div v-else data-test="sets-list-with-data">
           <ParagraphDefault>
-            {{ t('sets.description') }}
+            {{ $t('sets.description') }}
           </ParagraphDefault>
           <SetsListFilterSection
             class="my-8"
@@ -58,7 +58,7 @@
             {{
               fetchingAllSets
                 ? '&nbsp;'
-                : t('sets.displayedSetsOfTotalSets', { displayedSets: filteredSets.length, totalSets: sets.length }, sets.length)
+                : $t('sets.displayedSetsOfTotalSets', { displayedSets: filteredSets.length, totalSets: sets.length }, sets.length)
             }}
           </div>
           <SetsList
@@ -77,8 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -96,12 +95,10 @@ import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorag
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
-import { watch } from 'vue'
+import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
-import { dateWithTimeFormat } from '@/utils/dateFormats'
 
-const { t } = useI18n()
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const modalLoginStore = useModalLoginStore()
 
@@ -171,16 +168,12 @@ const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) =>
   }
 }
 
-
 // Search
 const textSearch = ref<string>('')
 
 const searchString = computed(() => textSearch.value.trim().toLowerCase())
 
-const filteredSets = computed(() => sets.value.filter((set) => getSearchableStringForSet(set).toLowerCase().includes(searchString.value)))
+const getSearchableStringForSet = (set: SetDto) => SetDisplayInfo.create(set).combinedSearchableString
 
-const { d } = useI18n()
-
-const getSearchableStringForSet = (set: SetDto) =>
-  `${set.settings.name || t('sets.unnamedSetNameFallback')} ${d(set.created, dateWithTimeFormat)} ${t('general.cards', { count: set.settings.numberOfCards })} `
+const filteredSets = computed(() => sets.value.filter((set) => getSearchableStringForSet(set).includes(searchString.value)))
 </script>

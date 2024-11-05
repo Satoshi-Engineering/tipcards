@@ -16,78 +16,48 @@
   >
     <HeadlineDefault
       level="h4"
-      class="col-start-1 col-span-2"
       data-test="sets-list-item-name"
+      class="col-start-1 col-span-2"
+      :class="{ 'italic': !set.settings.name }"
     >
       <template v-if="typeof set.settings.name === 'string' && set.settings.name !== ''">
-        {{ set.settings.name }}
+        {{ setDisplayInfo.displayName }}
       </template>
       <span v-else class="italic">{{ $t('sets.unnamedSetNameFallback') }}</span>
     </HeadlineDefault>
     <div class="col-start-1 text-sm">
       <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
       <span class="align-middle" data-test="sets-list-item-number-of-cards">
-        {{ $t('general.cards', { count: set.settings.numberOfCards }) }}
+        {{ setDisplayInfo.displayNumberOfCards }}
       </span>
     </div>
     <div class="col-start-1">
       <time class="text-sm" data-test="sets-list-item-date">
-        {{ $d(set.created, dateWithTimeFormat) }}
+        {{ setDisplayInfo.displayDate }}
       </time>
     </div>
-    <div
+    <SetCardsInfo
       v-if="!noCardsInfo"
-      class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
+      class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
       data-test="sets-list-item-cards-info"
-    >
-      <template v-if="cardsInfo == null">
-        <div
-          v-for="n in displayedCardsInfoItems"
-          :key="n"
-          class="w-full h-full bg-white-50 border-[0.7px] border-black opacity-20"
-        />
-      </template>
-      <template v-else>
-        <div
-          v-for="n in cardsInfoItems.withdrawn"
-          :key="n"
-          data-test="sets-list-item-cards-info-withdrawn"
-          class="w-full h-full bg-green"
-        />
-        <div
-          v-for="n in cardsInfoItems.funded"
-          :key="n"
-          data-test="sets-list-item-cards-info-funded"
-          class="w-full h-full bg-yellow"
-        />
-        <div
-          v-for="n in cardsInfoItems.pending"
-          :key="n"
-          data-test="sets-list-item-cards-info-pending"
-          class="w-full h-full bg-red-light"
-        />
-        <div
-          v-for="n in cardsInfoItems.unfunded"
-          :key="n"
-          data-test="sets-list-item-cards-info-unfunded"
-          class="w-full h-full bg-white border-[0.7px] border-black"
-        />
-      </template>
-    </div>
+      :cards-info="cardsInfo"
+      :number-of-cards="set.settings.numberOfCards"
+    />
   </LinkDefault>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } from 'vue'
+import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
 import useSets from '@/modules/useSets'
+import SetCardsInfo from '@/pages/sets/components/SetCardsInfo.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
-import { dateWithTimeFormat } from '@/utils/dateFormats'
+import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 
 const { encodeCardsSetSettings } = useSets()
 
@@ -107,45 +77,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['enterViewport'])
-
-const displayedCardsInfoItems = computed(() => Math.min(12, props.set.settings.numberOfCards))
-
-const cardsInfoItems = computed(() => {
-  const sortedCardsInfo: { kpi: keyof SetCardsInfoDto, count: number }[] = [
-    { kpi: 'withdrawn', count: props.cardsInfo?.withdrawn ?? 0 },
-    { kpi: 'funded', count: props.cardsInfo?.funded ?? 0 },
-    { kpi: 'pending', count: props.cardsInfo?.pending ?? 0 },
-    { kpi: 'unfunded', count: props.cardsInfo?.unfunded ?? 0 },
-  ]
-  sortedCardsInfo.sort((a, b) => a.count - b.count)
-
-  const cardsInfoItems = {
-    withdrawn: 0,
-    funded: 0,
-    pending: 0,
-    unfunded: 0,
-  }
-
-  let remainingBoxes = displayedCardsInfoItems.value
-
-  sortedCardsInfo.forEach((cardsInfo) => {
-    cardsInfoItems[cardsInfo.kpi] = Math.min(getRelativeCardsInfo(cardsInfo.count), remainingBoxes)
-    remainingBoxes -= cardsInfoItems[cardsInfo.kpi]
-  })
-
-  return cardsInfoItems
-})
-
-const getRelativeCardsInfo = (value: number = 0) => {
-  const relativeNumber = value / props.set.settings.numberOfCards * displayedCardsInfoItems.value
-  if (relativeNumber <= 0) {
-    return 0
-  }
-  if (relativeNumber <= 1) {
-    return 1
-  }
-  return Math.round(relativeNumber)
-}
 
 const isInViewport = ref(false)
 
@@ -179,4 +110,6 @@ const emitIfInViewportLongEnough = async () => {
 }
 
 watch(isInViewport, emitIfInViewportLongEnough)
+
+const setDisplayInfo = SetDisplayInfo.create(props.set)
 </script>

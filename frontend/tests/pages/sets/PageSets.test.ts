@@ -1,9 +1,9 @@
-import '../mocks/i18n'
-import '../mocks/router'
-import '../mocks/pinia'
-import '../mocks/intersectionObserver'
-import '../mocks/modules/useTRpc'
-import { useSetsMethods } from  '../mocks/modules/useSets'
+import '../../mocks/i18n'
+import '../../mocks/router'
+import '../../mocks/pinia'
+import '../../mocks/intersectionObserver'
+import '../../mocks/modules/useTRpc'
+import { useSetsMethods } from  '../../mocks/modules/useSets'
 
 import { mount, config, RouterLinkStub, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -11,7 +11,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import PageSets from '@/pages/sets/PageSets.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { useAuthStore } from '@/stores/auth'
-import { createSet } from '../data/set'
+import { createSet } from '../../data/set'
 
 config.global.stubs.TheLayout = {
   props: ['loginBanner'],
