@@ -2,11 +2,10 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 import { AccessTokenPayload } from '@shared/data/auth'
-import { ErrorCode } from '@shared/data/Errors'
+import { authErrorCodes, ErrorWithCode } from '@shared/data/Errors'
 
 import ErrorUnauthorized from '@/errors/ErrorUnauthorized'
 import useTRpcAuth, { asTRrpcClientError } from '@/modules/useTRpcAuth'
-import i18n from '@/modules/initI18n'
 
 export const useAuthStore = defineStore('auth', () => ({
   userId,
@@ -61,7 +60,6 @@ const login = async (hash: string) => {
   }
 
   fetchingAccessToken.value = true
-  const isInitialCheck = accessToken.value === undefined
   try {
     const loginResponse = await trpcAuth.auth.loginWithLnurlAuthHash.query({
       hash,
@@ -69,7 +67,7 @@ const login = async (hash: string) => {
     accessToken.value = loginResponse.accessToken
     return accessToken.value
   } catch (error) {
-    return resetAccessTokenDependingOnError(error, isInitialCheck)
+    throw resetAccessTokenDependingOnError(error)
   } finally {
     callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     callbacksAwaitingAccessToken.value = []
@@ -85,8 +83,7 @@ const logoutAllOtherDevices = async () => {
     const result = await trpcAuth.auth.logoutAllOtherDevices.query()
     accessToken.value = result.accessToken
   } catch (error) {
-    console.error(error)
-    throw error
+    throw resetAccessTokenDependingOnError(error)
   }
 }
 
@@ -153,13 +150,12 @@ const refreshAccessToken = async (): Promise<string | null> => {
  */
 const getNewAccessToken = async (): Promise<string | null> => {
   fetchingAccessToken.value = true
-  const isInitialCheck = accessToken.value === undefined
   try {
     const refreshTokenResponse = await trpcAuth.auth.refreshRefreshToken.query()
     accessToken.value = refreshTokenResponse.accessToken
     return accessToken.value || null
   } catch (error) {
-    return resetAccessTokenDependingOnError(error, isInitialCheck)
+    throw resetAccessTokenDependingOnError(error)
   } finally {
     callbacksAwaitingAccessToken.value.forEach((resolve) => resolve(accessToken.value))
     callbacksAwaitingAccessToken.value = []
@@ -171,27 +167,22 @@ const awaitNewAccessToken = () => new Promise<string | null>((resolve) => {
   callbacksAwaitingAccessToken.value.push(resolve)
 })
 
-const resetAccessTokenDependingOnError = (error: unknown, isInitialCheck: boolean) => {
+const resetAccessTokenDependingOnError = (error: unknown): never => {
   const trpcError = asTRrpcClientError(error)
+
   if (trpcError === undefined) {
-    accessToken.value = undefined
     throw error
   }
 
   if (trpcError.data?.httpStatus !== 401) {
-    accessToken.value = undefined
+    throw error
+  }
+
+  const errorWithCode = ErrorWithCode.fromTrpcMessage(trpcError.message)
+  if (!authErrorCodes.includes(errorWithCode.code)) {
     throw error
   }
 
   accessToken.value = null
-  if (trpcError.message.includes(ErrorCode.RefreshTokenExpired)) {
-    throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenExpired'))
-  }
-  if (trpcError.message.includes(ErrorCode.RefreshTokenDenied)) {
-    throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDenied'))
-  }
-  if (isInitialCheck) {
-    return null
-  }
-  throw new ErrorUnauthorized(i18n.global.t('auth.errors.refreshTokenDefaultError'))
+  throw new ErrorUnauthorized(errorWithCode.code)
 }

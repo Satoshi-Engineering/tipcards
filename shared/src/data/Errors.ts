@@ -50,10 +50,7 @@ export enum ErrorCode {
   AuthUserNotAuthenticated = 'AuthUserNotAuthenticated',
   AuthHostMissingInRequest = 'AuthHostMissingInRequest',
   LnurlAuthLoginHashInvalid = 'LnurlAuthLoginHashInvalid',
-  RefreshTokenMissing = 'RefreshTokenMissing',
-  RefreshTokenInvalid = 'RefreshTokenInvalid',
-  RefreshTokenDenied = 'RefreshTokenDenied',
-  RefreshTokenExpired = 'RefreshTokenExpired',
+
   AccessTokenMissing = 'AccessTokenMissing',
   AccessTokenInvalid = 'AccessTokenInvalid',
   AccessTokenExpired = 'AccessTokenExpired',
@@ -71,7 +68,20 @@ export enum ErrorCode {
   LockManagerAquireTimeout = 'LockManagerAquireTimeout',
   LockManagerResourceNotLocked = 'LockManagerResourceNotLocked',
   LockManagerResourceLockedWithDifferentLock = 'LockManagerResourceLockedWithDifferentLock',
+
+  // auth error codes
+  RefreshTokenMissing = 'RefreshTokenMissing',
+  RefreshTokenInvalid = 'RefreshTokenInvalid',
+  RefreshTokenExpired = 'RefreshTokenExpired',
+  RefreshTokenDenied = 'RefreshTokenDenied',
 }
+
+export const authErrorCodes = [
+  ErrorCode.RefreshTokenMissing,
+  ErrorCode.RefreshTokenInvalid,
+  ErrorCode.RefreshTokenExpired,
+  ErrorCode.RefreshTokenDenied,
+]
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
 
@@ -90,8 +100,16 @@ export type ToErrorResponse = ({ message, code }: { message: string, code?: Erro
   => ErrorResponse
 
 export class ErrorWithCode extends Error {
-  error: unknown
-  code: ErrorCode
+  static fromTrpcMessage(message: string): ErrorWithCode {
+    const [, code, error] = message.split('|')
+    return new ErrorWithCode(
+      error,
+      ErrorCodeEnum.parse(code),
+    )
+  }
+
+  readonly error: unknown
+  readonly code: ErrorCode
 
   constructor(error: unknown, code: ErrorCode) {
     super(code)

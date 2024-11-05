@@ -1,18 +1,16 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import '@/modules/polyfill.randomUUID'
 import '@/assets/css/main.css'
-import initAuth from '@/modules/initAuth'
-import initApiAuthInterceptors from '@/modules/initApiAuthInterceptors'
 import i18n from '@/modules/initI18n'
-import router from '@/router'
+import '@/modules/polyfill.randomUUID'
 import App from '@/App.vue'
 import {
   LINK_PRIVACY_POLICY, LINK_LEGAL_NOTICE,
   SUPPORT_EMAIL,
   LINK_LINKED_IN, LINK_X, LINK_INSTAGRAM,
 } from '@/constants'
+import router from '@/router'
 
 const app = createApp(App)
 app.use(i18n)
@@ -32,6 +30,3 @@ app.use(router)
 })
 
 app.mount('#app')
-
-initAuth()
-initApiAuthInterceptors()

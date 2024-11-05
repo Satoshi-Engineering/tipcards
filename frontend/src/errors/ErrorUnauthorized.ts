@@ -1,5 +1,10 @@
+import type { ErrorCode } from '@shared/data/Errors'
+
 export default class ErrorUnauthorized extends Error {
-  constructor(message?: string) {
+  readonly code: ErrorCode
+
+  constructor(code: ErrorCode, message?: string) {
     super(message)
+    this.code = code
   }
 }

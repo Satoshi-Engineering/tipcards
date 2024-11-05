@@ -3,7 +3,7 @@ import { ZodError } from 'zod'
 
 import NotFoundError from '@backend/errors/NotFoundError.js'
 
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import { ErrorCode, ErrorWithCode, authErrorCodes } from '@shared/data/Errors.js'
 
 type Mutable = {
   -readonly [key in keyof TRPCError]: TRPCError[key];
@@ -27,23 +27,9 @@ export const mapApplicationErrorToTrpcError = (trpcError: TRPCError) => {
   }
 }
 
-export const isUnauthorizedError = (errorWithCoderError: ErrorWithCode) => {
-  if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvalid) {
-    return true
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenMissing) {
-    return true
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenInvalid) {
-    return true
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenExpired) {
-    return true
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenDenied) {
-    return true
-  }
-}
+export const isUnauthorizedError = (errorWithCode: ErrorWithCode) =>
+  errorWithCode.code === ErrorCode.LnurlAuthLoginHashInvalid
+  || authErrorCodes.includes(errorWithCode.code)
 
 const transformTRPCErrorAccordingToErrorWithCodeErrorCode = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
   trpcError.message = errorWithCoderError.toTrpcMessage()

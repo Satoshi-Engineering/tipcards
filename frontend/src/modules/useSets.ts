@@ -3,7 +3,6 @@ import { useI18n } from 'vue-i18n'
 
 import { SetDto } from '@shared/data/trpc/SetDto.js'
 import { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto.js'
-import { useAuthStore } from '@/stores/auth'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import type { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto'
 
@@ -60,9 +59,7 @@ export default () => {
   }
 
   const { t } = useI18n()
-  const authStore = useAuthStore()
-  const { getValidAccessToken } = authStore
-  const { set } = useTRpc(getValidAccessToken)
+  const { set } = useTRpc()
   const fetchingAllSets = ref(false)
   const fetchingCardsInfo = ref(false)
   const fetchingUserErrorMessages = ref<string[]>([])

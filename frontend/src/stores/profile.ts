@@ -12,9 +12,8 @@ export const useProfileStore = defineStore('profile', () => {
   const { t } = i18n.global
 
   const authStore = useAuthStore()
-  const { getValidAccessToken } = authStore
   const { isLoggedIn } = storeToRefs(authStore)
-  const { profile } = useTRpc(getValidAccessToken)
+  const { profile } = useTRpc()
 
   ///// public
   const userAccountName = ref<string>()

@@ -73,7 +73,6 @@ import hashSha256 from '@/modules/hashSha256'
 import useTRpc from '@/modules/useTRpc'
 import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import useBacklink from '@/modules/useBackLink'
-import { useAuthStore } from '@/stores/auth'
 
 import BulkWithdrawQRCode from './components/BulkWithdrawQRCode.vue'
 import BulkWithdrawExists from './components/BulkWithdrawExists.vue'
@@ -87,8 +86,7 @@ import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 const route = useRoute()
 const router = useRouter()
 
-const { getValidAccessToken } = useAuthStore()
-const trpc = useTRpc(getValidAccessToken)
+const trpc = useTRpc()
 const { settings } = useSetSettingsFromUrl()
 
 const requestFailed = ref(false)

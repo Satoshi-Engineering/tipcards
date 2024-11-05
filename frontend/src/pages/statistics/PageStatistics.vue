@@ -60,10 +60,9 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 
 const authStore = useAuthStore()
 const { isLoggedIn, accessTokenPayload } = storeToRefs(authStore)
-const { getValidAccessToken } = authStore
 const { showModalLogin } = storeToRefs(useModalLoginStore())
 
-const trpc = useTRpc(getValidAccessToken)
+const trpc = useTRpc()
 
 const hasPermissions = computed(() => {
   if (accessTokenPayload.value == null) {

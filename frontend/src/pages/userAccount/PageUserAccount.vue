@@ -42,31 +42,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
+import { ref, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRouter, useRoute } from 'vue-router'
 
-import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
+import useAuth from '@/modules/useAuth'
 import { useAuthStore } from '@/stores/auth'
-import { useModalLoginStore } from '@/stores/modalLogin'
 
 import ProfileForm from './ProfileForm.vue'
 
 const router = useRouter()
 const route = useRoute()
+const auth = useAuth()
 const authStore = useAuthStore()
 const { logout } = authStore
 const { isLoggedIn } = storeToRefs(authStore)
 const { t } = useI18n()
-const modalLoginStore = useModalLoginStore()
-const { showModalLogin, modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const logoutUserErrorMessages = ref<string[]>([])
 
@@ -82,10 +81,9 @@ const logoutAllOtherDevices = async () => {
   loggingOutAllOtherDevicesSuccess.value = false
   logoutUserErrorMessages.value = []
   try {
-    await authStore.logoutAllOtherDevices()
+    await auth.logoutAllOtherDevices()
     loggingOutAllOtherDevicesSuccess.value = true
   } catch (error) {
-    showModalLoginWithErrorMessage()
     console.error(error)
     logoutUserErrorMessages.value.push(t('userAccount.errors.unableToLogoutAllOtherDevices'))
   }
@@ -97,11 +95,4 @@ watchEffect(() => {
     router.push({ name: 'home', params: { lang: route.params.lang } })
   }
 })
-
-const showModalLoginWithErrorMessage = () => {
-  logout()
-  showModalLogin.value = true
-  modalLoginUserMessage.value = t('auth.errors.refreshTokenDefaultError')
-}
-
 </script>
