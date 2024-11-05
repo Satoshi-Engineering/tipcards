@@ -1,17 +1,27 @@
+import { describe, it, expect, vi } from 'vitest'
+
 import '../../mocks/process.env.js'
 import '../../mocks/lnurl.js'
 import '../../mocks/http.js'
 
 import { Request, Response } from 'express'
-import { describe, it, expect, vi } from 'vitest'
 
 import { createCallerFactory } from '@auth/trpc/trpc.js'
 import { authRouter } from '@auth/trpc/router/auth.js'
 import Auth from '@auth/domain/Auth.js'
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import RefreshGuard from '@auth/domain/RefreshGuard.js'
+import AuthenticatedUser from '@backend/auth/domain/AuthenticatedUser.js'
 
 const createCaller = createCallerFactory(authRouter)
+
+vi.mock(import('@backend/auth/domain/allowedRefreshTokensHelperFunctions.js'), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    deleteAllRefreshTokensInDatabase: vi.fn(),
+  }
+})
 
 describe('TRpc Router Auth', async () => {
   const mockAccessTokenAudience = 'mockAccessTokenIssuer'
@@ -27,6 +37,12 @@ describe('TRpc Router Auth', async () => {
   const auth = Auth.instance
   const jwtIssuer = auth.jwtIssuer
   const refreshGuard = new RefreshGuard(mockRequest, mockResponse, jwtIssuer, mockAccessTokenAudience)
+  const authenticatedUser  = {
+    setNewRefreshTokenCookie: vi.fn(),
+    createAccessToken: vi.fn(),
+    logout: vi.fn(),
+    logoutAllOtherDevices: vi.fn(),
+  } as unknown as AuthenticatedUser
 
   const caller = createCaller({
     auth,
@@ -41,8 +57,9 @@ describe('TRpc Router Auth', async () => {
     const lnurlAuthLogin = Auth.instance.lnurlAuthLogin
 
     vi.spyOn(lnurlAuthLogin, 'getWalletLinkingKeyOnceAfterSuccessfulAuth').mockReturnValueOnce(walletLinkingKey)
-    vi.spyOn(refreshGuard, 'loginUserWithWalletLinkingKey').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAccessTokenForUser').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'loginUserWithWalletLinkingKey').mockResolvedValueOnce(authenticatedUser)
+    vi.spyOn(authenticatedUser, 'setNewRefreshTokenCookie').mockResolvedValueOnce()
+    vi.spyOn(authenticatedUser, 'createAccessToken').mockResolvedValueOnce(accessToken)
     const loginResult = await caller.loginWithLnurlAuthHash({
       hash,
     })
@@ -52,13 +69,24 @@ describe('TRpc Router Auth', async () => {
     expect(loginResult.accessToken).toBe(accessToken)
   })
 
-  it('should logout the user ', async () => {
-    vi.spyOn(refreshGuard, 'logout')
+  it('should refresh RefreshToken', async () => {
+    const accessToken = 'mockAccessToken'
+    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce(authenticatedUser)
+    vi.spyOn(authenticatedUser, 'setNewRefreshTokenCookie').mockResolvedValueOnce()
+    vi.spyOn(authenticatedUser, 'createAccessToken').mockResolvedValueOnce(accessToken)
+
+    const reponse = await caller.refreshRefreshToken()
+
+    expect(reponse.accessToken).toBe(accessToken)
+    expect(authenticatedUser.setNewRefreshTokenCookie).toHaveBeenCalled()
+    expect(authenticatedUser.createAccessToken).toHaveBeenCalled()
+  })
+
+  it('should logout the user without a authenticated user', async () => {
     vi.spyOn(mockResponse, 'clearCookie')
 
     await caller.logout()
 
-    expect(refreshGuard.logout).toHaveBeenCalled()
     expect(mockResponse.clearCookie).toHaveBeenCalledWith(
       'refresh_token',
       {
@@ -69,33 +97,31 @@ describe('TRpc Router Auth', async () => {
     )
   })
 
-  it('should refresh RefreshToken', async () => {
-    const accessToken = 'mockAccessToken'
-    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'cycleRefreshToken').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAccessTokenForUser').mockResolvedValueOnce(accessToken)
+  it('should logout the user with a authenticated user', async () => {
+    vi.spyOn(mockResponse, 'clearCookie')
+    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce(authenticatedUser)
+    vi.spyOn(authenticatedUser, 'logout').mockResolvedValueOnce()
 
-    const reponse = await caller.refreshRefreshToken()
+    await caller.logout()
 
-    expect(reponse.accessToken).toBe(accessToken)
-    expect(refreshGuard.cycleRefreshToken).toHaveBeenCalled()
-    expect(refreshGuard.createAccessTokenForUser).toHaveBeenCalled()
+    expect(authenticatedUser.logout).toHaveBeenCalled()
   })
 
   it('should logout all other devices', async () => {
     const accessToken = 'mockAccessToken'
-    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'cycleRefreshToken').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'logoutAllOtherDevices').mockResolvedValueOnce()
-    vi.spyOn(refreshGuard, 'createAccessTokenForUser').mockResolvedValueOnce(accessToken)
+    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce(authenticatedUser)
+    vi.spyOn(authenticatedUser, 'setNewRefreshTokenCookie').mockResolvedValueOnce()
+    vi.spyOn(authenticatedUser, 'logoutAllOtherDevices').mockResolvedValueOnce()
+    vi.spyOn(authenticatedUser, 'createAccessToken').mockResolvedValueOnce(accessToken)
     vi.spyOn(mockResponse, 'clearCookie')
 
-    const reponse =await caller.logoutAllOtherDevices()
-    expect(reponse.accessToken).toBe(accessToken)
+    const reponse = await caller.logoutAllOtherDevices()
 
+    expect(reponse.accessToken).toBe(accessToken)
     expect(refreshGuard.authenticateUserViaRefreshToken).toHaveBeenCalled()
-    expect(refreshGuard.cycleRefreshToken).toHaveBeenCalled()
-    expect(refreshGuard.logoutAllOtherDevices).toHaveBeenCalled()
+    expect(authenticatedUser.setNewRefreshTokenCookie).toHaveBeenCalled()
+    expect(authenticatedUser.logoutAllOtherDevices).toHaveBeenCalled()
+    expect(authenticatedUser.createAccessToken).toHaveBeenCalled()
     expect(mockResponse.clearCookie).not.toHaveBeenCalled()
   })
 })

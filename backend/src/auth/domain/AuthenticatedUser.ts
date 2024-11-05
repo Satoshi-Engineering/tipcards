@@ -1,0 +1,112 @@
+import { randomUUID } from 'crypto'
+import type { Response, Request } from 'express'
+
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
+import User from '@backend/domain/User.js'
+
+import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'
+import AllowedSession from '@backend/domain/AllowedSession.js'
+
+export default class AuthenticatedUser {
+  constructor({
+    user,
+    allowedSession,
+    request,
+    response,
+    jwtIssuer,
+    jwtAccessTokenAudience,
+  }: {
+    user: User,
+    allowedSession: AllowedSession,
+    request: Request,
+    response: Response,
+    jwtIssuer: JwtIssuer,
+    jwtAccessTokenAudience: string[] | string,
+  }) {
+    this.user = user
+    this.allowedSession = allowedSession
+    this.request = request
+    this.response = response
+    this.jwtIssuer = jwtIssuer
+    this.jwtAccessTokenAudience = jwtAccessTokenAudience
+  }
+
+  async setNewRefreshTokenCookie() {
+    const refreshToken = await this.createRefreshToken()
+    this.response.cookie('refresh_token', refreshToken, {
+      expires: new Date(+ new Date() + 1000 * 60 * 60 * 24 * 365),
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+  }
+
+  /**
+   * @throws ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)
+   */
+  async createAccessToken() {
+    const nonce = randomUUID()
+    try {
+      return this.jwtIssuer.createJwt(
+        this.jwtAccessTokenAudience,
+        ACCESS_TOKEN_EXPIRATION_TIME,
+        {
+          id: this.user.id,
+          lnurlAuthKey: this.user.lnurlAuthKey,
+          permissions: this.user.permissions,
+          nonce,
+        },
+      )
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)
+    }
+  }
+
+  async logout() {
+    this.clearRefreshTokenCookie()
+    await this.allowedSession.delete()
+  }
+
+  async logoutAllOtherDevices() {
+    await AllowedSession.deleteAllSessionsForUserExecptOne(this.user.id, this.allowedSession.sessionId)
+  }
+
+  get userId() {
+    return this.user.id
+  }
+
+  private user: User
+  private allowedSession: AllowedSession
+  private request: Request
+  private response: Response
+  private jwtIssuer: JwtIssuer
+  private jwtAccessTokenAudience: string[] | string
+
+  private async createRefreshToken() {
+    const nonce = randomUUID()
+    try {
+      return this.jwtIssuer.createJwt(
+        JWT_AUTH_ISSUER,
+        REFRESH_TOKEN_EXPIRATION_TIME,
+        {
+          userId: this.user.id,
+          sessionId: this.allowedSession.sessionId,
+          nonce,
+        },
+      )
+    } catch (error) {
+      throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderRefreshTokenCreationError)
+    }
+  }
+
+  private clearRefreshTokenCookie(): Response {
+    return this.response.clearCookie('refresh_token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+  }
+}

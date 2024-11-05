@@ -13,14 +13,12 @@ import {
   allowedSessionsById,
 } from '../../mocks/database/database.js'
 
-import RefreshGuard from '@auth/domain/RefreshGuard.js'
-
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
-import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+import RefreshGuard from '@auth/domain/RefreshGuard.js'
+import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
 
-import { uuidRegex } from '../../lib/validationUtils.js'
 import {
   createUser,
   createProfileForUser,
@@ -28,9 +26,6 @@ import {
   createAllowedSession,
   createSessionId,
 } from '../../../drizzleData.js'
-
-const REFRESH_TOKEN_EXPIRATION_TIME = '28 days'
-const ACCESS_TOKEN_EXPIRATION_TIME = '5 min'
 
 const mockNonce = randomUUID()
 const mockAccessTokenAudience = 'mockAccessTokenAudience'
@@ -97,11 +92,6 @@ const setValidRefreshToken = (format: RefreshTokenFormat) => {
   throw new Error('Refresh Token Format not implemented!')
 }
 
-const authUserViaRefreshToken = async (format: RefreshTokenFormat) => {
-  setValidRefreshToken(format)
-  await refreshGuard.authenticateUserViaRefreshToken()
-}
-
 beforeAll(() => {
   addData({
     users: [mockUser],
@@ -133,31 +123,9 @@ describe('RefreshGuard', () => {
       .rejects.toThrowError(new ErrorWithCode('', ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey))
   })
 
-  it('should create refresh token for login with walletLinkingKey ', async () => {
-    const mockNewRefreshToken = 'mockNewRefreshToken'
-
-    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
-    await refreshGuard.loginUserWithWalletLinkingKey(mockwalletLinkingKey)
-
-    expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
-      JWT_AUTH_ISSUER,
-      REFRESH_TOKEN_EXPIRATION_TIME,
-      expect.objectContaining({
-        userId: mockUserId,
-        sessionId: expect.stringMatching(uuidRegex),
-        nonce: expect.any(String),
-      }),
-    )
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'refresh_token',
-      mockNewRefreshToken,
-      {
-        expires: expect.any(Date),
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
+  it('should create authenticated user for wallet linking key ', async () => {
+    const authenticatedUser = await refreshGuard.loginUserWithWalletLinkingKey(mockwalletLinkingKey)
+    expect(authenticatedUser).toBeInstanceOf(AuthenticatedUser)
   })
 
   it('should fail refresh token validation due json web token is missing in cookie', async () => {
@@ -203,180 +171,34 @@ describe('RefreshGuard', () => {
     vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayloadWithSession)
 
     await expect(refreshGuard.authenticateUserViaRefreshToken())
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenInvalid))
+      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenDenied))
 
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
   })
 
   it('should validate refresh json web token from cookie with allowedRefreshTokens format', async () => {
+    const allowedSessionsForUserCount = getAllowedSessionForUserId(mockUserId).length
     setValidRefreshToken(RefreshTokenFormat.allowedRefreshTokens)
-    const allowedSessionsInDatabase = Object.keys(allowedSessionsById).length
 
-    await refreshGuard.authenticateUserViaRefreshToken()
+    const authenticatedUser = await refreshGuard.authenticateUserViaRefreshToken()
 
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
-    expect(Object.keys(allowedSessionsById).length).toBe(allowedSessionsInDatabase + 1)
+    expect(getAllowedSessionForUserId(authenticatedUser.userId).length).toBe(allowedSessionsForUserCount + 1)
   })
 
   it('should validate refresh json web token from cookie with allowedSession format', async () => {
+    const allowedSessionsForUserCount = getAllowedSessionForUserId(mockUserId).length
     setValidRefreshToken(RefreshTokenFormat.allowedSession)
-    const allowedSessionsInDatabase = Object.keys(allowedSessionsById).length
 
-    await refreshGuard.authenticateUserViaRefreshToken()
+    const authenticatedUser = await refreshGuard.authenticateUserViaRefreshToken()
 
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
-    expect(Object.keys(allowedSessionsById).length).toBe(allowedSessionsInDatabase)
-  })
-
-  it('should fail refresh token cycling due missing user', async () => {
-    await expect(refreshGuard.cycleRefreshToken())
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotAuthenticated))
-  })
-
-  it('should cycle refresh token with allowedRefreshTokens format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedRefreshTokens)
-
-    const mockNewRefreshToken = 'mockNewRefreshToken'
-    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
-
-    await refreshGuard.cycleRefreshToken()
-    expect(mockJwtIssuer.createJwt).toHaveBeenCalledTimes(1)
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'refresh_token',
-      mockNewRefreshToken,
-      {
-        expires: expect.any(Date),
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
-  })
-
-  it.skip('should cycle refresh token with allowedSession format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedSession)
-
-    const mockNewRefreshToken = 'mockNewRefreshToken'
-    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockNewRefreshToken)
-
-    await refreshGuard.cycleRefreshToken()
-    expect(mockJwtIssuer.createJwt).toHaveBeenCalledTimes(1)
-    expect(mockResponse.cookie).toHaveBeenCalledWith(
-      'refresh_token',
-      mockNewRefreshToken,
-      {
-        expires: expect.any(Date),
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
-  })
-
-  it.skip('should fail authorization token creation due missing user', async () => {
-    await expect(async () => {
-      await refreshGuard.createAccessTokenForUser()
-    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotAuthenticated))
-  })
-
-  it.skip('should create an new authorization token for the user with allowedRefreshTokens format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedRefreshTokens)
-
-    const mockAuthorizationToken = 'mockAuthorizationToken'
-    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockAuthorizationToken)
-
-    const authorizationToken = await refreshGuard.createAccessTokenForUser()
-    expect(authorizationToken).toBe(mockAuthorizationToken)
-    expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
-      mockAccessTokenAudience,
-      ACCESS_TOKEN_EXPIRATION_TIME,
-      expect.objectContaining({
-        id: mockUserId,
-        lnurlAuthKey: mockwalletLinkingKey,
-        permissions: [],
-        nonce: expect.stringMatching(uuidRegex),
-      }),
-    )
-  })
-
-  it.skip('should create an new authorization token for the user with allowedSession format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedSession)
-
-    const mockAuthorizationToken = 'mockAuthorizationToken'
-    vi.spyOn(mockJwtIssuer, 'createJwt').mockResolvedValueOnce(mockAuthorizationToken)
-
-    const authorizationToken = await refreshGuard.createAccessTokenForUser()
-    expect(authorizationToken).toBe(mockAuthorizationToken)
-    expect(mockJwtIssuer.createJwt).toHaveBeenCalledWith(
-      mockAccessTokenAudience,
-      ACCESS_TOKEN_EXPIRATION_TIME,
-      expect.objectContaining({
-        id: mockUserId,
-        lnurlAuthKey: mockwalletLinkingKey,
-        permissions: [],
-        nonce: expect.stringMatching(uuidRegex),
-      }),
-    )
-  })
-
-  it.skip('should fail to logoutAllOtherDevices due missing user', async () => {
-    await expect(async () => {
-      await refreshGuard.logoutAllOtherDevices()
-    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthUserNotAuthenticated))
-  })
-
-  it.skip('should logoutAllOtherDevices with with allowedRefreshTokens format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedRefreshTokens)
-    await refreshGuard.logoutAllOtherDevices()
-    expect(allowedRefreshTokensByHash).toEqual(expect.objectContaining({
-      [mockAllowedRefreshTokens.hash]: mockAllowedRefreshTokens,
-    }))
-  })
-
-  it.skip('should logoutAllOtherDevices with with allowedSession format', async () => {
-    await authUserViaRefreshToken(RefreshTokenFormat.allowedSession)
-    await refreshGuard.logoutAllOtherDevices()
-    expect(allowedRefreshTokensByHash).toEqual(expect.objectContaining({
-      [mockAllowedRefreshTokens.hash]: mockAllowedRefreshTokens,
-    }))
-  })
-
-  it('should clear refresh token cookie on logout with no user authenticated', async () => {
-    await refreshGuard.logout()
-
-    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
-      'refresh_token',
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
-  })
-
-  it.skip('should delete the allowed session on logout', async () => {
-    await refreshGuard.logout()
-
-    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
-      'refresh_token',
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
-  })
-
-  it.skip('should delete the refresh token from allowed refresh tokens on logout', async () => {
-    await refreshGuard.logout()
-
-    expect(mockResponse.clearCookie).toHaveBeenCalledWith(
-      'refresh_token',
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-      },
-    )
+    expect(getAllowedSessionForUserId(authenticatedUser.userId).length).toBe(allowedSessionsForUserCount)
   })
 })
+
+const getAllowedSessionForUserId = (userId: string) => {
+  return Object.keys(allowedSessionsById).filter((sessionId) =>
+    allowedSessionsById[sessionId].user === userId,
+  )
+}
