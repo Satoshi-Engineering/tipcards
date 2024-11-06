@@ -47,15 +47,17 @@ export default () => {
   }
 
   const handleUnauthorizedError = (error: ErrorUnauthorized, isInitialCheck = false) => {
+    if (isInitialCheck && error.code === ErrorCode.RefreshTokenMissing) {
+      return
+    }
+    showModalLogin.value = true
+
     if (error.code === ErrorCode.RefreshTokenExpired) {
       modalLoginUserMessage.value = t('auth.errors.refreshTokenExpired')
-      showModalLogin.value = true
     } else if (error.code === ErrorCode.RefreshTokenDenied) {
       modalLoginUserMessage.value = t('auth.errors.refreshTokenDenied')
-      showModalLogin.value = true
     } else {
       modalLoginUserMessage.value = t('auth.errors.refreshTokenDefaultError')
-      showModalLogin.value = !isInitialCheck
     }
   }
 
