@@ -9,23 +9,6 @@ type Mutable = {
   -readonly [key in keyof TRPCError]: TRPCError[key];
 }
 
-const transformTRPCErrorAccordingToErrorWithCodeErrorCode = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
-  trpcError.message = errorWithCoderError.toTrpcMessage()
-
-  if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvalid) {
-    trpcError.code = 'UNAUTHORIZED'
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenMissing) {
-    trpcError.code = 'UNAUTHORIZED'
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenExpired) {
-    trpcError.code = 'UNAUTHORIZED'
-  }
-  if (errorWithCoderError.code === ErrorCode.RefreshTokenDenied) {
-    trpcError.code = 'UNAUTHORIZED'
-  }
-}
-
 export const mapApplicationErrorToTrpcError = (trpcError: TRPCError) => {
   const mutableError = trpcError as Mutable
   if (trpcError.cause instanceof NotFoundError) {
@@ -41,5 +24,28 @@ export const mapApplicationErrorToTrpcError = (trpcError: TRPCError) => {
 
   if (trpcError.code === 'INTERNAL_SERVER_ERROR') {
     console.error(trpcError)
+  }
+}
+
+export const isUnauthorizedError = (errorWithCoderError: ErrorWithCode) => {
+  if (errorWithCoderError.code === ErrorCode.LnurlAuthLoginHashInvalid) {
+    return true
+  }
+  if (errorWithCoderError.code === ErrorCode.RefreshTokenMissing) {
+    return true
+  }
+  if (errorWithCoderError.code === ErrorCode.RefreshTokenExpired) {
+    return true
+  }
+  if (errorWithCoderError.code === ErrorCode.RefreshTokenDenied) {
+    return true
+  }
+}
+
+const transformTRPCErrorAccordingToErrorWithCodeErrorCode = (errorWithCoderError: ErrorWithCode, trpcError: Mutable) => {
+  trpcError.message = errorWithCoderError.toTrpcMessage()
+
+  if (isUnauthorizedError(errorWithCoderError)) {
+    trpcError.code = 'UNAUTHORIZED'
   }
 }
