@@ -19,7 +19,7 @@ export const authRouter = router({
       const lnurlAuthLogin = ctx.auth.lnurlAuthLogin
       const linkingKey = lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(input.hash)
       const authenticatedUser = await ctx.refreshGuard.loginUserWithWalletLinkingKey(linkingKey)
-      authenticatedUser.setNewRefreshTokenCookie()
+      await authenticatedUser.setNewRefreshTokenCookie()
       const accessToken = await authenticatedUser.createAccessToken()
       return {
         accessToken,
@@ -29,7 +29,7 @@ export const authRouter = router({
   refreshRefreshToken: authenticatedUserProcedure
     .output(AccessTokenDto)
     .query(async ({ ctx }) => {
-      ctx.authenticatedUser.setNewRefreshTokenCookie()
+      await ctx.authenticatedUser.setNewRefreshTokenCookie()
       const accessToken = await ctx.authenticatedUser.createAccessToken()
       return {
         accessToken,
