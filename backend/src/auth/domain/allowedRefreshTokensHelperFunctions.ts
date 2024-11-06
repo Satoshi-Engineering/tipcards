@@ -50,12 +50,16 @@ export const deleteRefreshTokenInDatabase = async (refreshToken: string | null) 
 
   try {
     const parsedToken = Buffer.from(refreshToken.split('.')[1], 'base64')
-    const { id: userId } = JSON.parse(parsedToken.toString())
-    const user = await getUserById(userId)
-    if (user?.allowedRefreshTokens != null) {
-      user.allowedRefreshTokens = user.allowedRefreshTokens
-        .filter((currentRefreshTokens) => !currentRefreshTokens.includes(refreshToken))
-      await updateUser(user)
+    const payload = JSON.parse(parsedToken.toString())
+    if ('id' in payload) {
+      const userId = payload.id
+      const user = await getUserById(userId)
+
+      if (user?.allowedRefreshTokens != null) {
+        user.allowedRefreshTokens = user.allowedRefreshTokens
+          .filter((currentRefreshTokens) => !currentRefreshTokens.includes(refreshToken))
+        await updateUser(user)
+      }
     }
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
