@@ -1,16 +1,18 @@
+
 import '../mocks/database/client.js'
-import { addData } from '../mocks/database/database.js'
+import { addData, profilesByUserId } from '../mocks/database/database.js'
 import '../mocks/axios.js'
 import '../mocks/drizzle.js'
 import '../mocks/process.env.js'
 
+import { ZodError } from 'zod'
 import { describe, it, expect, beforeAll } from 'vitest'
 
 import { PermissionsEnum } from '@shared/data/auth/User.js'
 import User from '@backend/domain/User.js'
 
 import { createUser } from '../../drizzleData.js'
-import { ZodError } from 'zod'
+import { getRandomString } from '../lib/randomUtils.js'
 
 const userDatabase = createUser()
 userDatabase.permissions = PermissionsEnum.options
@@ -61,7 +63,7 @@ describe('User', () => {
   })
 
   it('should insert new User', async () => {
-    const mockNewLinkingKey = 'mockNewLinkingKey'
+    const mockNewLinkingKey = `mockLinkingKeyNew${getRandomString(25)}`
     const user = User.newUserFromWalletLinkingKey(mockNewLinkingKey)
 
     const userBeforeInsert = await User.fromId(user.id)
@@ -76,5 +78,20 @@ describe('User', () => {
       created: user.created,
       permissions: user.permissions,
     }))
+  })
+
+  it('should insert a empty profile for a new User', async () => {
+    const mockNewLinkingKey = `mockLinkingKeyNew${getRandomString(25)}`
+    const user = User.newUserFromWalletLinkingKey(mockNewLinkingKey)
+    expect(profilesByUserId[user.id]).toBeUndefined()
+
+    await user.insert()
+
+    expect(profilesByUserId[user.id]).toStrictEqual({
+      user: user.id,
+      accountName: '',
+      displayName: '',
+      email: '',
+    })
   })
 })

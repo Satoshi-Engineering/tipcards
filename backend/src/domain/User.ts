@@ -5,6 +5,7 @@ import { PermissionsEnum } from '@shared/data/auth/User.js'
 import { asTransaction } from '@backend/database/client.js'
 import { User as UserSchema } from '@backend/database/schema/User.js'
 import hashSha256 from '@backend/services/hashSha256.js'
+import Profile from './Profile.js'
 
 export default class User {
   public static async fromLnurlAuthKey(walletLinkingKey: UserSchema['lnurlAuthKey']) {
@@ -54,7 +55,11 @@ export default class User {
   }
 
   public async insert() {
-    await asTransaction((queries) => queries.insertUser(this.user))
+    const emptyProfile = Profile.createEmptyProfile(this.user.id)
+    await asTransaction(async (queries) => {
+      await queries.insertUser(this.user)
+      return await queries.insertOrUpdateProfile(emptyProfile)
+    })
   }
 
   private user: UserSchema

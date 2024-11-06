@@ -14,12 +14,16 @@ export default class Profile {
   }
 
   public static initProfile(userId: ProfileSchema['user']) {
-    return new Profile({
+    return new Profile(Profile.createEmptyProfile(userId))
+  }
+
+  public static createEmptyProfile(userId: ProfileSchema['user']) {
+    return {
       user: userId,
       accountName: '',
       displayName: '',
       email: '',
-    })
+    }
   }
 
   /** @throws */
