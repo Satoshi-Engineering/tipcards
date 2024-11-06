@@ -115,7 +115,9 @@ const isAccessTokenExpired = () => {
   }
   try {
     const payload = JSON.parse(atob(accessToken.value.split('.')[1]))
-    return + new Date() / 1000 > payload.exp
+    const oneMinuteBeforeExpiration = payload.exp - 60
+    const nowInSeconds = + new Date() / 1000
+    return nowInSeconds > oneMinuteBeforeExpiration
   } catch {
     return true
   }
@@ -125,8 +127,8 @@ const isAccessTokenExpired = () => {
  * @throws ErrorUnauthorized
  * @throws AxiosError
  */
-const getValidAccessToken = async (forceRefresh = false): Promise<string | null> => {
-  if (!accessTokenNeedsRefresh() && !forceRefresh) {
+const getValidAccessToken = async (): Promise<string | null> => {
+  if (!accessTokenNeedsRefresh()) {
     return accessToken.value || null
   }
 

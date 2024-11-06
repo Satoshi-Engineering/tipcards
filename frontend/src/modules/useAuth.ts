@@ -15,10 +15,10 @@ export default () => {
   const { showModalLogin, modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
   const initAuth = async () => {
-    getValidAccessToken()
+    getValidAccessTokenWithUnauthorizedHandling()
   }
 
-  const getValidAccessToken = async (): Promise<string | null> => {
+  const getValidAccessTokenWithUnauthorizedHandling = async (): Promise<string | null> => {
     const isInitialCheck = isLoggedIn.value === undefined
     let accessToken: string | null = null
     try {
@@ -34,14 +34,13 @@ export default () => {
     return accessToken
   }
 
-  const logoutAllOtherDevices = async () => {
+  const logoutAllOtherDevicesWithUnauthorizedHandling = async () => {
     try {
       await authStore.logoutAllOtherDevices()
     } catch (error) {
       if (error instanceof ErrorUnauthorized) {
         handleUnauthorizedError(error)
       } else {
-        console.error(error)
         throw error
       }
     }
@@ -62,7 +61,7 @@ export default () => {
 
   return {
     initAuth,
-    getValidAccessToken,
-    logoutAllOtherDevices,
+    getValidAccessTokenWithUnauthorizedHandling,
+    logoutAllOtherDevicesWithUnauthorizedHandling,
   }
 }

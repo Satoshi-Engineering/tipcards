@@ -32,7 +32,7 @@ export const isTRpcClientAbortError = (cause: unknown) =>
 let client: CreateTRPCClient<AppRouter>
 
 const createClient = () => {
-  const { getValidAccessToken } = useAuth()
+  const { getValidAccessTokenWithUnauthorizedHandling } = useAuth()
 
   return client = createTRPCClient<AppRouter>({
     links: [
@@ -47,12 +47,7 @@ const createClient = () => {
           transformer: superjson,
           maxURLLength: 2083,
           headers: async () => {
-            let accessToken: string | null
-            try {
-              accessToken = await getValidAccessToken()
-            } catch {
-              accessToken = null
-            }
+            const accessToken = await getValidAccessTokenWithUnauthorizedHandling()
             return {
               Authorization: accessToken || '',
             }

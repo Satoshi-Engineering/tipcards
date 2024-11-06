@@ -12,14 +12,16 @@ import { nextTick, onBeforeMount } from 'vue'
 import { RouterView, useRouter, useRoute } from 'vue-router'
 
 import ModalLogin from '@/components/ModalLogin.vue'
-import initApiAuthInterceptors from '@/modules/initApiAuthInterceptors'
 import { setLocale } from '@/modules/initI18n'
 import { useSeoHelpers } from '@/modules/seoHelpers'
+import useApiAuthInterceptors from '@/modules/useApiAuthInterceptors'
 import useAuth from '@/modules/useAuth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 
+const { initAuth } = useAuth()
+const { initApiAuthInterceptors } = useApiAuthInterceptors()
+
 onBeforeMount(() => {
-  const { initAuth } = useAuth()
   initAuth()
   initApiAuthInterceptors()
 })
