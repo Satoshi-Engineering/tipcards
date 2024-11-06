@@ -79,6 +79,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -95,9 +96,9 @@ import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorag
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
-import useSetDisplayInfo from '@/pages/sets/modules/useSetDisplayInfo'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
+import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const modalLoginStore = useModalLoginStore()
@@ -169,13 +170,13 @@ const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) =>
 }
 
 // Search
-const SetDisplayInfo = useSetDisplayInfo()
-
 const textSearch = ref<string>('')
 
 const searchString = computed(() => textSearch.value.trim().toLowerCase())
 
-const getSearchableStringForSet = (set: SetDto) => SetDisplayInfo.create(set).combinedSearchableString
+const i18n = useI18n()
+
+const getSearchableStringForSet = (set: SetDto) => SetDisplayInfo.create(set, i18n).combinedSearchableString
 
 const filteredSets = computed(() => sets.value.filter((set) => getSearchableStringForSet(set).includes(searchString.value)))
 </script>

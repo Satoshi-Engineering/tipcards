@@ -48,6 +48,7 @@
 
 <script setup lang="ts">
 import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
@@ -57,7 +58,7 @@ import SetCardsInfo from '@/pages/sets/components/SetCardsInfo.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
-import useSetDisplayInfo from '@/pages/sets/modules/useSetDisplayInfo'
+import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 
 const { encodeCardsSetSettings } = useSets()
 
@@ -111,6 +112,6 @@ const emitIfInViewportLongEnough = async () => {
 
 watch(isInViewport, emitIfInViewportLongEnough)
 
-const SetDisplayInfo = useSetDisplayInfo()
-const setDisplayInfo = SetDisplayInfo.create(props.set)
+const i18n = useI18n()
+const setDisplayInfo = SetDisplayInfo.create(props.set, i18n)
 </script>
