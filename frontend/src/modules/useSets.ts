@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/auth'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import type { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto'
 
-export type SetCardsInfoBySetId = Record<SetDto['id'], SetCardsInfoDto | null>
+export type SetCardsInfoWithStatus = { cardsInfo?: SetCardsInfoDto, status: 'loading' | 'error' | 'success' }
 
 export default () => {
   /** @throws */
@@ -31,32 +31,21 @@ export default () => {
   }
 
   /** @returns null if cardsInfo cannot be retrieved */
-  const getCardsInfoForSet = async (setId: SetDto['id']): Promise<SetCardsInfoDto | null> => {
+  const getCardsInfoForSet = async (setId: SetDto['id']): Promise<SetCardsInfoWithStatus> => {
     try {
-      return await set.getCardsInfoBySetId.query(setId)
+      return {
+        cardsInfo: await set.getCardsInfoBySetId.query(setId),
+        status: 'success',
+      }
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
         console.error(`Error for set.getStatisticsBySetId for set ${setId}`, error)
       }
-      return null
+      return {
+        status: 'error',
+      }
     }
   }
-
-  /** @throws */
-  const getCardsInfoBySetId = async (sets: SetDto[]): Promise<SetCardsInfoBySetId> => {
-    fetchingCardsInfo.value = true
-    const cardsInfoWithSetId = await Promise.all(sets.map(async ({ id }) => ({
-      setId: id,
-      cardsInfo: await getCardsInfoForSet(id),
-    })))
-    fetchingCardsInfo.value = false
-
-    return cardsInfoWithSetId.reduce((acc, { setId, cardsInfo }) => {
-      acc[setId] = cardsInfo
-      return acc
-    }, {} as SetCardsInfoBySetId)
-  }
-
 
   const encodeCardsSetSettings = (setSettings: SetSettingsDto) => {
     const setSettingsConverted = {
@@ -84,7 +73,6 @@ export default () => {
     fetchingCardsInfo,
     getAllSets,
     getCardsInfoForSet,
-    getCardsInfoBySetId,
     encodeCardsSetSettings,
   }
 }

@@ -9,7 +9,7 @@
       <div
         v-for="userWarning in userWarnings"
         :key="userWarning"
-        class="bg-yellow-300 p-4 mb-1"
+        class="bg-yellow p-4 mb-1"
       >
         {{ userWarning }}
       </div>
@@ -48,7 +48,7 @@
               :sats="usedCardsTotalAmount"
             />
             <CardsSummary
-              color="yellow"
+              color="blue"
               :cards-count="fundedCards.length"
               :title="$t('cards.status.labelFunded', 2)"
               :sats="fundedCardsTotalAmount"
@@ -438,19 +438,19 @@
             </div>
             <div
               v-else-if="card.isLockedByBulkWithdraw"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-light text-red text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow-light text-yellow-dark text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
             </div>
             <div
               v-else-if="card.amount != null && card.status === 'funded'"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow-light text-yellow text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-blue-light text-blue text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ card.amount }} sats</span>
             </div>
             <div
               v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-red-light text-red text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-yellow-light text-yellow-dark text-xs break-anywhere print:hidden"
             >
               <span
                 v-if="card.status === 'lnurlp' && card.shared"

@@ -16,6 +16,7 @@ export default {
         yellow: {
           DEFAULT: '#f2cc50', // primary color
           light: '#FDF5DD',
+          dark: colors.yellow[600],
         },
         black: '#010101', // headlines, labels
         bluegrey: '#2a2c31', // default color
@@ -30,6 +31,10 @@ export default {
         white: {
           DEFAULT: '#ffffff', // white
           50: '#8a8b8b', // use on bluegrey background for subtext & dividers
+        },
+        blue: {
+          DEFAULT: '#2865eb',
+          light: '#ebf7ff',
         },
         grey: {
           light: '#f6f7f7', // backgrounds

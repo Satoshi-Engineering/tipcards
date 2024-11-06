@@ -38,7 +38,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 10 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 4, funded: 3, pending: 2, unfunded: 1 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(4)
@@ -51,7 +51,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 35, funded: 25, pending: 4, unfunded: 36 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(4)
@@ -64,7 +64,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 99, pending: 0, unfunded: 0 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)
@@ -77,7 +77,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 0, funded: 99, pending: 0, unfunded: 1 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(0)
@@ -90,7 +90,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 98, pending: 0, unfunded: 1 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)
@@ -103,7 +103,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 97, pending: 1, unfunded: 1 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)
@@ -116,7 +116,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 49, funded: 51, pending: 0, unfunded: 0 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(6)
@@ -129,7 +129,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 0, pending: 0, unfunded: 99 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)
@@ -142,7 +142,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 8 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 7, pending: 0, unfunded: 0 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)
@@ -155,7 +155,7 @@ describe('SetsListItem', () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
     const cardsInfo: SetCardsInfoDto = { withdrawn: 1, funded: 84, pending: 5, unfunded: 13 }
     const wrapper = mount(SetsListItem, {
-      props: { set, cardsInfo },
+      props: { set, cardsInfoWithStatus: { cardsInfo: cardsInfo, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-info-withdrawn"]').length).toBe(1)

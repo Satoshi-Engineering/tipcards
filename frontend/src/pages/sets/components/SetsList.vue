@@ -25,8 +25,8 @@
       >
         <SetsListItem
           :set="set"
-          :cards-info="cardsInfoBySetId[set.id] ?? undefined"
-          :no-cards-info="noCardsInfo || cardsInfoBySetId[set.id] === null"
+          :cards-info-with-status="cardsInfoBySetId[set.id]"
+          :no-cards-info="noCardsInfo"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
           @enter-viewport="$emit('enterViewport', set.id)"
         />
@@ -45,11 +45,13 @@ import { computed, type PropType } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 
-import type { SetCardsInfoBySetId } from '@/modules/useSets'
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
+import type { SetCardsInfoWithStatus } from '@/modules/useSets'
+
+export type SetCardsInfoWithStatusBySetId = Record<SetDto['id'], SetCardsInfoWithStatus>
 
 const props = defineProps({
   sets: {
@@ -57,7 +59,7 @@ const props = defineProps({
     default: () => [],
   },
   cardsInfoBySetId: {
-    type: Object as PropType<SetCardsInfoBySetId>,
+    type: Object as PropType<SetCardsInfoWithStatusBySetId>,
     default: () => ({}),
   },
   noCardsInfo: {

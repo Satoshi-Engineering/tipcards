@@ -40,7 +40,8 @@
       v-if="!noCardsInfo"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
       data-test="sets-list-item-cards-info"
-      :cards-info="cardsInfo"
+      :status="cardsInfoWithStatus?.status ?? 'loading'"
+      :cards-info="cardsInfoWithStatus?.cardsInfo"
       :number-of-cards="set.settings.numberOfCards"
     />
   </LinkDefault>
@@ -51,9 +52,7 @@ import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } fro
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
-
-import useSets from '@/modules/useSets'
+import useSets, { type SetCardsInfoWithStatus } from '@/modules/useSets'
 import SetCardsInfo from '@/pages/sets/components/SetCardsInfo.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -67,9 +66,9 @@ const props = defineProps({
     type: Object as PropType<SetDto>,
     required: true,
   },
-  cardsInfo: {
-    type: Object as PropType<SetCardsInfoDto>,
-    default: undefined,
+  cardsInfoWithStatus: {
+    type: Object as PropType<SetCardsInfoWithStatus>,
+    default: null,
   },
   noCardsInfo: {
     type: Boolean,

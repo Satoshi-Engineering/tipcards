@@ -3,12 +3,21 @@
     class="grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
     data-test="sets-list-item-cards-info"
   >
-    <template v-if="cardsInfo == null">
+    <template v-if="status === 'loading'">
       <div
         v-for="n in displayedCardsInfoItems"
         :key="n"
         class="w-full h-full bg-white-50 border-[0.7px] border-black opacity-20"
       />
+    </template>
+    <template v-if="status === 'error'">
+      <div
+        v-for="n in displayedCardsInfoItems"
+        :key="n"
+        class="w-full h-full bg-red-light text-red text-[8px] text-center leading-none"
+      >
+        ?
+      </div>
     </template>
     <template v-else>
       <div
@@ -21,13 +30,13 @@
         v-for="n in cardsInfoItems.funded"
         :key="n"
         data-test="sets-list-item-cards-info-funded"
-        class="w-full h-full bg-yellow"
+        class="w-full h-full bg-blue"
       />
       <div
         v-for="n in cardsInfoItems.pending"
         :key="n"
         data-test="sets-list-item-cards-info-pending"
-        class="w-full h-full bg-red-light"
+        class="w-full h-full bg-yellow"
       />
       <div
         v-for="n in cardsInfoItems.unfunded"
@@ -37,7 +46,7 @@
       />
     </template>
   </div>
-</template>>
+</template>
 
 <script lang="ts" setup>
 import { computed, type PropType } from 'vue'
@@ -45,6 +54,10 @@ import { computed, type PropType } from 'vue'
 import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 
 const props = defineProps({
+  status: {
+    type: String as PropType<'loading' | 'error' | 'success'>,
+    required: true,
+  },
   cardsInfo: {
     type: Object as PropType<SetCardsInfoDto>,
     required: false,

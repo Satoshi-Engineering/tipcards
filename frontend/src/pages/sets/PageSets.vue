@@ -63,7 +63,7 @@
           </div>
           <SetsList
             :sets="filteredSets"
-            :cards-info-by-set-id="cardsInfoBySetId"
+            :cards-info-by-set-id="cardsInfoWithStatusBySetId"
             :fetching="fetchingAllSets"
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             class="my-7"
@@ -89,15 +89,14 @@ import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import SetsList from '@/pages/sets/components/SetsList.vue'
+import SetsList, { type SetCardsInfoWithStatusBySetId } from '@/pages/sets/components/SetsList.vue'
 import SetsListFilterSection from '@/pages/sets/components/SetsListFilterSection.vue'
 import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets, { type SetCardsInfoBySetId } from '@/modules/useSets'
+import useSets, { type SetCardsInfoWithStatus } from '@/modules/useSets'
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import type { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
@@ -109,18 +108,7 @@ const { getAllSets, getCardsInfoForSet, fetchingAllSets, fetchingUserErrorMessag
 
 const sets = ref<SetDto[]>([])
 
-const cardsInfoWithLoadingStatusBySetId = ref<Record<SetDto['id'], { cardsInfo: SetCardsInfoDto | null, startedLoading: boolean }>>({})
-
-const cardsInfoBySetId = computed<SetCardsInfoBySetId>(() => {
-  const result: SetCardsInfoBySetId = {}
-  for (const [setId, { cardsInfo }] of Object.entries(cardsInfoWithLoadingStatusBySetId.value)) {
-    if (cardsInfo === undefined) {
-      continue
-    }
-    result[setId] = cardsInfo
-  }
-  return result
-})
+const cardsInfoWithStatusBySetId = ref<SetCardsInfoWithStatusBySetId>({})
 
 const loadAllSets = async () => {
   sets.value = await getAllSets()
@@ -128,7 +116,7 @@ const loadAllSets = async () => {
 
 const resetSetsAndCardsInfo = () => {
   sets.value = []
-  cardsInfoWithLoadingStatusBySetId.value = {}
+  cardsInfoWithStatusBySetId.value = {}
 }
 
 watch(isLoggedIn, async (isLoggedIn) => {
@@ -140,32 +128,29 @@ watch(isLoggedIn, async (isLoggedIn) => {
 }, { immediate: true })
 
 const loadCardsInfoForSet = async (setId: string) => {
-  if (cardsInfoWithLoadingStatusBySetId.value[setId]?.startedLoading) {
+  if (cardsInfoWithStatusBySetId.value[setId]?.status != null) {
     return
   }
 
-  setStartedLoadingForSet(setId)
-  const cardsInfo = await getCardsInfoForSet(setId)
-  setCardsInfoForSet(setId, cardsInfo)
+  setStatusLoadingForSet(setId)
+  const cardsInfoWithStatus = await getCardsInfoForSet(setId)
+  setLoadedCardsInfoForSet(setId, cardsInfoWithStatus)
 }
 
-const setStartedLoadingForSet = (setId: string) => {
-  cardsInfoWithLoadingStatusBySetId.value = {
-    ...cardsInfoWithLoadingStatusBySetId.value,
+const setStatusLoadingForSet = (setId: string) => {
+  cardsInfoWithStatusBySetId.value = {
+    ...cardsInfoWithStatusBySetId.value,
     [setId]: {
-      ...cardsInfoWithLoadingStatusBySetId.value[setId],
-      startedLoading: true,
+      ...cardsInfoWithStatusBySetId.value[setId],
+      status: 'loading',
     },
   }
 }
 
-const setCardsInfoForSet = (setId: string, cardsInfo: SetCardsInfoDto | null) => {
-  cardsInfoWithLoadingStatusBySetId.value = {
-    ...cardsInfoWithLoadingStatusBySetId.value,
-    [setId]: {
-      ...cardsInfoWithLoadingStatusBySetId.value[setId],
-      cardsInfo,
-    },
+const setLoadedCardsInfoForSet = (setId: string, cardsInfoWithStatus: SetCardsInfoWithStatus) => {
+  cardsInfoWithStatusBySetId.value = {
+    ...cardsInfoWithStatusBySetId.value,
+    [setId]: cardsInfoWithStatus,
   }
 }
 
