@@ -39,7 +39,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
       const id = String(payload.id)
       await sql`
-        DELETE FROM public."AllowedRefreshTokens" WHERE user=${id};
+        DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${id};
       `
 
       return id

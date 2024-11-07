@@ -7,7 +7,11 @@
       <HeadlineDefault level="h1">
         {{ $t('auth.modalLogin.headline') }}
       </HeadlineDefault>
-      <ParagraphDefault v-if="modalLoginUserMessage != null" class="mb-5 p-3 border border-red-500 text-red-500">
+      <ParagraphDefault
+        v-if="modalLoginUserMessage != null"
+        class="mb-5 p-3 border border-red-500 text-red-500"
+        data-test="modal-login-user-message"
+      >
         {{ modalLoginUserMessage }}
       </ParagraphDefault>
       <ParagraphDefault v-if="loginFailed" class="mb-4 text-red-500">

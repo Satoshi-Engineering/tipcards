@@ -15,6 +15,7 @@ const webpackOptions = {
       '.js': ['.ts', '.js'],
     },
     alias: {
+      '@backend': path.resolve(process.cwd(), '../backend/src'),
       '@shared': path.resolve(process.cwd(), '../shared/src'),
       '@e2e': path.resolve(process.cwd(), './'),
     },

@@ -10,6 +10,7 @@
       "node",
     ],
     "paths": {
+      "@backend/*": ["../backend/src/*"],
       "@shared/*": ["../shared/src/*"],
       "@e2e/*": ["./*"],
     }
