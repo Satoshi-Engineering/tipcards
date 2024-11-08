@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import crypto, { randomUUID } from 'crypto'
 import postgres from 'postgres'
 
 import JwtIssuer from '../../shared/src/modules/Jwt/JwtIssuer'
@@ -43,6 +44,43 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
       return id
     },
+
+    'db:createUser': async () => {
+      const lnurlAuthKey = randomUUID()
+      const userId = hashSha256(lnurlAuthKey)
+
+      await sql`
+        INSERT INTO public."User"(
+        id, "lnurlAuthKey", created, permissions)
+        VALUES (${userId}, ${lnurlAuthKey}, NOW(), '[]');
+      `
+      await sql`
+        INSERT INTO public."Profile"(
+        "user", "accountName", "displayName", email)
+        VALUES (${userId}, '', '', '');
+      `
+      return {
+        userId,
+        lnurlAuthKey,
+      }
+    },
+
+    'db:insertAllowedRefreshToken': async ({
+      userId,
+      refreshToken,
+    }: {
+      userId: string,
+      refreshToken: string,
+    }) => {
+      const id = hashSha256(refreshToken)
+
+      await sql`
+        INSERT INTO public."AllowedRefreshTokens"(
+          hash, "user", current, previous)
+          VALUES (${id}, ${userId}, ${refreshToken}, NULL);
+      `
+      return null
+    },
   })
 
   let sql: postgres.Sql
@@ -71,4 +109,10 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
   })
 
   return config
+}
+
+const hashSha256 = (message: string) => {
+  const messageBuffer = Buffer.from(message)
+  const hash = crypto.createHash('sha256').update(messageBuffer).digest('hex')
+  return hash
 }
