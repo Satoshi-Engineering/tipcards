@@ -51,6 +51,7 @@ export enum ErrorCode {
   AuthHostMissingInRequest = 'AuthHostMissingInRequest',
   LnurlAuthLoginHashInvalid = 'LnurlAuthLoginHashInvalid',
   RefreshTokenMissing = 'RefreshTokenMissing',
+  RefreshTokenInvalid = 'RefreshTokenInvalid',
   RefreshTokenDenied = 'RefreshTokenDenied',
   RefreshTokenExpired = 'RefreshTokenExpired',
   AccessTokenMissing = 'AccessTokenMissing',

@@ -34,6 +34,9 @@ export const isUnauthorizedError = (errorWithCoderError: ErrorWithCode) => {
   if (errorWithCoderError.code === ErrorCode.RefreshTokenMissing) {
     return true
   }
+  if (errorWithCoderError.code === ErrorCode.RefreshTokenInvalid) {
+    return true
+  }
   if (errorWithCoderError.code === ErrorCode.RefreshTokenExpired) {
     return true
   }
