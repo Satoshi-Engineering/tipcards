@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest'
 import '../../mocks/jose.js'
 import * as jose from 'jose'
 
-import JwtValidator from '../../../../../backend/src/services/Jwt/JwtValidator.js'
+import JwtValidator from '../../../../../shared/src/modules/Jwt/JwtValidator.js'
 
 describe('JwtValidator', () => {
   const mockPublicKey = 'mockPublicKey' as unknown as jose.KeyLike

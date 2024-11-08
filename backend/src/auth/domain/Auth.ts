@@ -1,5 +1,6 @@
-import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
-import JwtKeyPairHandler from '@backend/services/Jwt/JwtKeyPairHandler.js'
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
+import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
+
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'

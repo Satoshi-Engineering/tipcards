@@ -5,7 +5,7 @@ import path from 'path'
 import '../../mocks/jose.js'
 import * as jose from 'jose'
 
-import JwtKeyPairHandler from '../../../../../backend/src/services/Jwt/JwtKeyPairHandler.js'
+import JwtKeyPairHandler from '../../../../../shared/src/modules/Jwt/JwtKeyPairHandler.js'
 
 vi.mock('fs')
 vi.mock('fs', async () => {
