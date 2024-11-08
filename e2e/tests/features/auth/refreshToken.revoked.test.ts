@@ -12,8 +12,7 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
   })
 
-  // todo : wait for backend fix from fil
-  it.skip('should show modal login with generic error message', () => {
+  it('should show modal login with generic error message', () => {
     tipCardsApi.auth.login()
     cy.getCookie('refresh_token').then((cookie) => {
       cy.task<string>('generateInvalidRefreshToken', cookie.value).then((refreshToken) => {

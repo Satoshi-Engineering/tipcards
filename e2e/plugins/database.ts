@@ -37,10 +37,11 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     async logoutAllDevices(refreshToken: string) {
       const jwtIssuer = await getJwtIssuer()
       const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
-      const id = String(payload.id)
-      await sql`DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${id};`
+      const userId = String(payload.userId)
+      await sql`DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${userId};`
+      await sql`DELETE FROM public."AllowedSession" WHERE "user"=${userId};`
 
-      return id
+      return userId
     },
 
     async generateInvalidRefreshToken(refreshToken: string) {
@@ -66,7 +67,12 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       const expiredAccessToken = jwtIssuer.createJwt(
         process.env.JWT_AUTH_ISSUER,
         '70 seconds',
-        payload,
+        {
+          id: payload.userId,
+          lnurlAuthKey: '',
+          permissions: [],
+          nonce: payload.nonce,
+        },
       )
 
       return expiredAccessToken
