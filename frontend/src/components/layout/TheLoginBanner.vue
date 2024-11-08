@@ -2,6 +2,7 @@
   <section
     v-if="isLoggedIn === false"
     class="bg-[#47494f] text-sm text-white"
+    data-test="the-login-banner"
   >
     <CenterContainer class="!p-2 text-center">
       <I18nT
