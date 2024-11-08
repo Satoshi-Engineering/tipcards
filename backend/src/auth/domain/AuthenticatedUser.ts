@@ -4,11 +4,11 @@ import type { Response, Request } from 'express'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
-import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 import User from '@backend/domain/User.js'
+import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 
+import AllowedSession from '@auth/domain/AllowedSession.js'
 import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'
-import AllowedSession from '@backend/domain/AllowedSession.js'
 
 export default class AuthenticatedUser {
   constructor({

@@ -5,11 +5,11 @@ import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import User from '@backend/domain/User.js'
-import AllowedSession from '@backend/domain/AllowedSession.js'
 
 import {
   getAuthenticatedUserIdFromAllowedRefreshTokenFormat,
 } from '@auth/domain/allowedRefreshTokensHelperFunctions.js'
+import AllowedSession from '@auth/domain/AllowedSession.js'
 import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
 import { RefreshTokenPayload } from '@auth/types/RefreshTokenPayload.js'
 

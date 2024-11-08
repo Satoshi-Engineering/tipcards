@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto'
 
-import { asTransaction } from '@backend/database/client.js'
 import { AllowedSession as AllowedSessionSchema } from '@backend/database/schema/AllowedSession.js'
 import { User as UserSchema } from '@backend/database/schema/User.js'
+import { asTransaction } from '@backend/database/client.js'
 
 export default class AllowedSession {
   public static async fromSessionId(sessionId: AllowedSessionSchema['sessionId']) {

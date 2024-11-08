@@ -1,15 +1,15 @@
-import '../mocks/database/client.js'
-import { addData } from '../mocks/database/database.js'
-import '../mocks/axios.js'
-import '../mocks/drizzle.js'
-import '../mocks/process.env.js'
+import '../../mocks/database/client.js'
+import { addData } from '../../mocks/database/database.js'
+import '../../mocks/axios.js'
+import '../../mocks/drizzle.js'
+import '../../mocks/process.env.js'
 
 import { describe, it, expect, beforeAll } from 'vitest'
 
-import AllowedSession from '@backend/domain/AllowedSession.js'
+import AllowedSession from '@auth/domain/AllowedSession.js'
 
-import { createUser, createAllowedSession } from '../../drizzleData.js'
-import { uuidRegex } from '../lib/validationUtils.js'
+import { createUser, createAllowedSession } from '../../../drizzleData.js'
+import { uuidRegex } from '../../lib/validationUtils.js'
 
 const userDatabase = createUser()
 const allowedSessionDatabase = createAllowedSession(userDatabase)
