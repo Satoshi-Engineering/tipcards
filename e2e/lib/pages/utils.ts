@@ -14,6 +14,23 @@ export const gotoPage = (page: URL) => {
   cy.wait('@apiAuthRefresh')
 }
 
+export const gotoPageWithExpiredAccessToken = (page: URL) => {
+  cy.getCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  }).then((cookie) => {
+    cy.task<string>('generateExpiredAccessToken', cookie.value).then((accessToken) => {
+      cy.intercept(
+        { url: '/auth/trpc/auth.refreshRefreshToken**', times: 1 },
+        [{ result: { data: { json: { accessToken } } } } ],
+      ).as('apiAuthRefresh')
+    })
+  })
+  cy.visit(page.href, {
+    onBeforeLoad: switchBrowserLanguageToEnglish,
+  })
+  cy.wait('@apiAuthRefresh')
+}
+
 export const isLoggedIn = () => {
   cy.getCookie('refresh_token', {
     domain: TIPCARDS_AUTH_ORIGIN.hostname,

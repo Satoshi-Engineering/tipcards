@@ -109,3 +109,11 @@ export const createAndWrapLNURLAuth = () => {
 export const wrapLNURLAuth = (lnurlAuth: LNURLAuth) => {
   cy.wrap(lnurlAuth).as('lnurlAuth')
 }
+
+export const logoutAllDevices = () => {
+  cy.getCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  }).then((cookie) => {
+    cy.task<string>('logoutAllDevices', cookie.value)
+  })
+}

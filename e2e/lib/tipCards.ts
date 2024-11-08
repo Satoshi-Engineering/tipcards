@@ -1,4 +1,9 @@
 import {
+  gotoCardsPage,
+  gotoNewSetPage,
+  gotoNewSetPageWithExpiredAccessToken,
+} from './pages/cards.js'
+import {
   goto as gotoHomePage,
 } from './pages/home.js'
 import {
@@ -31,5 +36,8 @@ export default {
   gotoLandingPageSeoPreview,
   gotoLandingPage,
   gotoLandingPagePreview,
+  gotoCardsPage,
+  gotoNewSetPage,
+  gotoNewSetPageWithExpiredAccessToken,
   reloadUserAccount,
 }

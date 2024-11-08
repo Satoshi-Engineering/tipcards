@@ -55,6 +55,23 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return expiredRefreshToken
     },
 
+    async generateExpiredAccessToken(refreshToken: string) {
+      const jwtIssuer = await getJwtIssuer()
+      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
+
+      // the frontend requests a new access token,
+      // if the current one expires within the next 60 seconds.
+      // add another 10 seconds on top, so the frontend can do
+      // some requests, before it fetches a new one.
+      const expiredAccessToken = jwtIssuer.createJwt(
+        process.env.JWT_AUTH_ISSUER,
+        '70 seconds',
+        payload,
+      )
+
+      return expiredAccessToken
+    },
+
     'db:createUser': async () => {
       const lnurlAuthKey = randomUUID()
       const userId = hashSha256(lnurlAuthKey)

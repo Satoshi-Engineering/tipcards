@@ -225,6 +225,7 @@
         </ParagraphDefault>
         <ButtonContainer>
           <ButtonWithTooltip
+            data-test="save-cards-set"
             :disabled="saving || (!isLoggedIn && !hasBeenSaved && !features.includes('saveLocal'))"
             :tooltip="!saving && !isLoggedIn && !hasBeenSaved && !features.includes('saveLocal') ? t('cards.actions.buttonSaveDisabledTooltip') : undefined"
             :loading="saving"
