@@ -2,9 +2,9 @@ import { randomUUID } from 'crypto'
 import type { Response, Request } from 'express'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
-import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
 import User from '@backend/domain/User.js'
 
 import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from '@auth/constants.js'

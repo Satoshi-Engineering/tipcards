@@ -10,10 +10,11 @@ import {
   allowedSessionsById,
 } from '../../mocks/database/database.js'
 
-import JwtIssuer from '@backend/services/Jwt/JwtIssuer.js'
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
 import User from '@backend/domain/User.js'
 import AllowedSession from '@backend/domain/AllowedSession.js'
+
+import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
 import {

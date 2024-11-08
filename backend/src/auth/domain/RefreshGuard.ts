@@ -2,8 +2,6 @@ import type { Response, Request } from 'express'
 import { errors as joseErrors } from 'jose'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
-import { PermissionsEnum } from '@shared/data/auth/User.js'
-import { AccessTokenPayload } from '@shared/data/auth/index.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import User from '@backend/domain/User.js'
@@ -11,8 +9,9 @@ import AllowedSession from '@backend/domain/AllowedSession.js'
 
 import {
   getAuthenticatedUserIdFromAllowedRefreshTokenFormat,
-} from './allowedRefreshTokensHelperFunctions.js'
-import AuthenticatedUser from './AuthenticatedUser.js'
+} from '@auth/domain/allowedRefreshTokensHelperFunctions.js'
+import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
+import { RefreshTokenPayload } from '@auth/types/RefreshTokenPayload.js'
 
 export default class RefreshGuard {
   constructor(request: Request, response: Response, jwtIssuer: JwtIssuer, jwtAccessTokenAudience: string[] | string) {
