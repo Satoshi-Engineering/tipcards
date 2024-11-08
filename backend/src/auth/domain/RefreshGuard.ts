@@ -100,7 +100,9 @@ export default class RefreshGuard {
       if (error instanceof joseErrors.JWTExpired) {
         throw new ErrorWithCode(error, ErrorCode.RefreshTokenExpired)
       }
-
+      if (error instanceof joseErrors.JWTClaimValidationFailed) {
+        throw new ErrorWithCode(error, ErrorCode.RefreshTokenDenied)
+      }
       throw error
     }
   }
