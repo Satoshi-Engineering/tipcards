@@ -38,11 +38,21 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       const jwtIssuer = await getJwtIssuer()
       const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
       const id = String(payload.id)
-      await sql`
-        DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${id};
-      `
+      await sql`DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${id};`
 
       return id
+    },
+
+    async generateInvalidRefreshToken(refreshToken: string) {
+      const jwtIssuer = await getJwtIssuer()
+      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
+      const expiredRefreshToken = jwtIssuer.createJwt(
+        'invalid-audience',
+        '28 days',
+        payload,
+      )
+
+      return expiredRefreshToken
     },
 
     'db:createUser': async () => {
