@@ -4,7 +4,7 @@
       class="p-2 flex-1"
       :class="{
         'bg-green-light text-green': !loading && color === 'green',
-        'bg-yellow-light text-yellow-dark': !loading && color === 'yellow',
+        'bg-yellow-light text-yellow': !loading && color === 'yellow',
         'bg-blue-light text-blue': !loading && color === 'blue',
       }"
     >

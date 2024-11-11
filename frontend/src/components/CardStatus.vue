@@ -1,12 +1,12 @@
 <template>
   <div class="flex gap-1.5 text-sm">
     <div
-      class="w-3 h-3 mt-1 rounded-full flex-none"
+      class="w-3 h-3 mt-1 flex-none"
       :class="{
-        'bg-blue': status === 'funded' && !isLockedByBulkWithdraw,
+        'bg-yellow': status === 'funded' && !isLockedByBulkWithdraw,
         'bg-green': status === 'used',
         'bg-red': status === 'error',
-        'bg-yellow': status !== 'used'
+        'bg-white border-2 border-yellow': status !== 'used'
           && (status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw),
       }"
     />

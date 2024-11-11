@@ -30,13 +30,13 @@
         v-for="n in cardsInfoItems.funded"
         :key="n"
         data-test="sets-list-item-cards-info-funded"
-        class="w-full h-full bg-blue"
+        class="w-full h-full bg-yellow"
       />
       <div
         v-for="n in cardsInfoItems.pending"
         :key="n"
         data-test="sets-list-item-cards-info-pending"
-        class="w-full h-full bg-yellow"
+        class="w-full h-full bg-white border-[0.7px] border-yellow"
       />
       <div
         v-for="n in cardsInfoItems.unfunded"
