@@ -34,7 +34,7 @@ describe('Sets Page - Full Text Search', () => {
     sets.push(singleDateSet)
     numberOfCardsCountSet = generateSet({ numberOfCards: numberOfCardsCount })
     sets.push(numberOfCardsCountSet)
-    tipCardsApi.set.addSetsParallel(sets)
+    sets.forEach((set) => { tipCardsApi.set.addSet(set) })
   })
 
   beforeEach(() => {
