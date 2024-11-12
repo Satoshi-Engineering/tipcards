@@ -36,12 +36,12 @@
         {{ setDisplayInfo.displayDate }}
       </time>
     </div>
-    <SetCardsInfo
-      v-if="!noCardsInfo"
+    <SetCardsSummary
+      v-if="!noCardsSummary"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
-      data-test="sets-list-item-cards-info"
-      :status="cardsInfoWithStatus?.status ?? 'loading'"
-      :cards-info="cardsInfoWithStatus?.cardsInfo"
+      data-test="sets-list-item-cards-summary"
+      :loading-status="cardsSummaryWithLoadingStatus?.status ?? 'loading'"
+      :cards-summary="cardsSummaryWithLoadingStatus?.cardsSummary"
       :number-of-cards="set.settings.numberOfCards"
     />
   </LinkDefault>
@@ -52,8 +52,8 @@ import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } fro
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import useSets, { type SetCardsInfoWithStatus } from '@/modules/useSets'
-import SetCardsInfo from '@/pages/sets/components/SetCardsInfo.vue'
+import useSets, { type CardsSummaryWithLoadingStatus } from '@/modules/useSets'
+import SetCardsSummary from '@/pages/sets/components/SetCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
@@ -66,11 +66,11 @@ const props = defineProps({
     type: Object as PropType<SetDto>,
     required: true,
   },
-  cardsInfoWithStatus: {
-    type: Object as PropType<SetCardsInfoWithStatus>,
+  cardsSummaryWithLoadingStatus: {
+    type: Object as PropType<CardsSummaryWithLoadingStatus>,
     default: null,
   },
-  noCardsInfo: {
+  noCardsSummary: {
     type: Boolean,
     default: false,
   },

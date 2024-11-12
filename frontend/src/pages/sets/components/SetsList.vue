@@ -5,7 +5,7 @@
         {{ $t('sets.setInfo') }}
       </HeadlineDefault>
       <HeadlineDefault
-        v-if="!noCardsInfo"
+        v-if="!noCardsSummary"
         level="h4"
         class="text-sm font-normal !my-0"
       >
@@ -25,8 +25,8 @@
       >
         <SetsListItem
           :set="set"
-          :cards-info-with-status="cardsInfoBySetId[set.id]"
-          :no-cards-info="noCardsInfo"
+          :cards-summary-with-loading-status="cardsSummaryBySetId[set.id]"
+          :no-cards-summary="noCardsSummary"
           class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
           @enter-viewport="$emit('enterViewport', set.id)"
         />
@@ -49,20 +49,20 @@ import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import type { SetCardsInfoWithStatus } from '@/modules/useSets'
+import type { CardsSummaryWithLoadingStatus } from '@/modules/useSets'
 
-export type SetCardsInfoWithStatusBySetId = Record<SetDto['id'], SetCardsInfoWithStatus>
+export type CardsSummaryWithLoadingStatusBySetId = Record<SetDto['id'], CardsSummaryWithLoadingStatus>
 
 const props = defineProps({
   sets: {
     type: Array as PropType<SetDto[]>,
     default: () => [],
   },
-  cardsInfoBySetId: {
-    type: Object as PropType<SetCardsInfoWithStatusBySetId>,
+  cardsSummaryBySetId: {
+    type: Object as PropType<CardsSummaryWithLoadingStatusBySetId>,
     default: () => ({}),
   },
-  noCardsInfo: {
+  noCardsSummary: {
     type: Boolean,
     default: false,
   },

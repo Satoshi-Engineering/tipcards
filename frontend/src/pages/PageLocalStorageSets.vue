@@ -28,7 +28,7 @@
       <div v-else>
         <ListSets
           :sets="sets"
-          no-cards-info
+          no-cards-summary
           class="my-7"
           data-test="local-storage-sets-list"
         />

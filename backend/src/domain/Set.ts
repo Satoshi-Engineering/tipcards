@@ -1,5 +1,5 @@
 import { SetDto } from '@shared/data/trpc/SetDto.js'
-import { SetCardsInfoDto, SetCardsInfoCategoriesEnum } from '@shared/data/trpc/SetCardsInfoDto.js'
+import { CardsSummaryDto, CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto.js'
 
 import { asTransaction } from '@backend/database/client.js'
 import { CardStatusEnum, pendingStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto.js'
@@ -21,26 +21,26 @@ export default class Set {
     return new Set(setWithSettings)
   }
 
-  public async getCardsInfo(): Promise<SetCardsInfoDto> {
+  public async getCardsSummary(): Promise<CardsSummaryDto> {
     const cardHashes = this.getAllCardHashes()
     const cardStatuses = await Promise.all(
       cardHashes.map(async (hash) => await CardStatus.latestFromCardHashOrDefault(hash)),
     )
-    const cardsInfo: SetCardsInfoDto = {
-      [SetCardsInfoCategoriesEnum.enum.unfunded]: cardStatuses.filter(
+    const cardsSummary: CardsSummaryDto = {
+      [CardsSummaryCategoriesEnum.enum.unfunded]: cardStatuses.filter(
         ({ status }) => status=== CardStatusEnum.enum.unfunded,
       ).length,
-      [SetCardsInfoCategoriesEnum.enum.pending]: cardStatuses.filter(
+      [CardsSummaryCategoriesEnum.enum.pending]: cardStatuses.filter(
         ({ status }) => pendingStatuses.includes(status),
       ).length,
-      [SetCardsInfoCategoriesEnum.enum.funded]: cardStatuses.filter(
+      [CardsSummaryCategoriesEnum.enum.funded]: cardStatuses.filter(
         ({ status }) => status === CardStatusEnum.enum.funded,
       ).length,
-      [SetCardsInfoCategoriesEnum.enum.withdrawn]: cardStatuses.filter(
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: cardStatuses.filter(
         ({ status }) => withdrawnStatuses.includes(status),
       ).length,
     }
-    return cardsInfo
+    return cardsSummary
   }
 
   public getAllCardHashes(): string[] {

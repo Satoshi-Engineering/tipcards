@@ -2,11 +2,11 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { SetDto } from '@shared/data/trpc/SetDto.js'
-import { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto.js'
+import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import type { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto'
 
-export type SetCardsInfoWithStatus = { cardsInfo?: SetCardsInfoDto, status: 'loading' | 'error' | 'success' }
+export type CardsSummaryWithLoadingStatus = { cardsSummary?: CardsSummaryDto, status: 'loading' | 'error' | 'success' }
 
 export default () => {
   /** @throws */
@@ -29,11 +29,11 @@ export default () => {
     }
   }
 
-  /** @returns null if cardsInfo cannot be retrieved */
-  const getCardsInfoForSet = async (setId: SetDto['id']): Promise<SetCardsInfoWithStatus> => {
+  /** @returns null if cardsSummary cannot be retrieved */
+  const getCardsSummaryForSet = async (setId: SetDto['id']): Promise<CardsSummaryWithLoadingStatus> => {
     try {
       return {
-        cardsInfo: await set.getCardsInfoBySetId.query(setId),
+        cardsSummary: await set.getCardsSummaryBySetId.query(setId),
         status: 'success',
       }
     } catch(error) {
@@ -61,15 +61,15 @@ export default () => {
   const { t } = useI18n()
   const { set } = useTRpc()
   const fetchingAllSets = ref(false)
-  const fetchingCardsInfo = ref(false)
+  const fetchingCardsSummary = ref(false)
   const fetchingUserErrorMessages = ref<string[]>([])
 
   return {
     fetchingUserErrorMessages: computed(() => fetchingUserErrorMessages.value),
     fetchingAllSets,
-    fetchingCardsInfo,
+    fetchingCardsSummary,
     getAllSets,
-    getCardsInfoForSet,
+    getCardsSummaryForSet,
     encodeCardsSetSettings,
   }
 }

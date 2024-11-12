@@ -1,6 +1,6 @@
 import { Card } from '@shared/data/trpc/Card.js'
 import { SetDto } from '@shared/data/trpc/SetDto.js'
-import { SetCardsInfoDto } from '@shared/data/trpc/SetCardsInfoDto.js'
+import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
 
 import Set from '@backend/domain/Set.js'
@@ -21,12 +21,12 @@ export const setRouter = router({
       return setCollection.sets
     }),
 
-  getCardsInfoBySetId: loggedInProcedure
+  getCardsSummaryBySetId: loggedInProcedure
     .input(SetDto.shape.id)
-    .output(SetCardsInfoDto)
+    .output(CardsSummaryDto)
     .query(async ({ input }) => {
       const set = await Set.fromId(input)
-      return set.getCardsInfo()
+      return set.getCardsSummary()
     }),
 
   getCards: publicProcedure
