@@ -21,8 +21,8 @@ describe.skip('Sets Page Cards Info', () => {
 
     const sets = generateSets(numberOfSets, numberOfCardsPerSet)
 
-    tipCardsApi.set.addSetsParallel(sets)
-    tipCardsApi.set.createInvoicesForSetsParallel(sets, 21)
+    tipCardsApi.set.addSetsParallelWithAxios(sets)
+    tipCardsApi.set.createInvoicesForSetsParallelWithAxios(sets, 21)
   })
 
   beforeEach(() => {

@@ -45,7 +45,7 @@ export const callInvoicePaidHookForSet = (setId: string) =>
   })
 
 export const addSet = (set: Set) => {
-  tipCardsApi.auth.isLoggedIn()
+  tipCardsApi.auth.isLoggedInViaCypress()
 
   cy.get('@accessToken').then(function () {
     cy.request({
@@ -66,8 +66,8 @@ export const generateAndAddRandomSet = (name?: string) => {
   addSet(set)
 }
 
-export const addSetsParallel = (sets: Set[]) => {
-  tipCardsApi.auth.isLoggedIn()
+export const addSetsParallelWithAxios = (sets: Set[]) => {
+  tipCardsApi.auth.isLoggedInViaCypress()
 
   cy.get('@accessToken').then({ timeout: 1000 * sets.length }, async function () {
     await Promise.all(sets.map((set) =>
@@ -83,7 +83,7 @@ export const addSetsParallel = (sets: Set[]) => {
   })
 }
 
-export const createInvoicesForSetsParallel = (sets: Set[], amountPerCard = 21) => {
+export const createInvoicesForSetsParallelWithAxios = (sets: Set[], amountPerCard = 21) => {
   cy.then({ timeout: 10000 * sets.length }, async function () {
     await Promise.all(sets.map((set) =>
       axios.request({
