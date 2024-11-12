@@ -308,7 +308,8 @@
       "labelIsLockedByBulkWithdraw": "Withdraw in progress",
       "labelNote": "Note",
       "labelViewed": "Viewed by recipient",
-      "reload": "Reload"
+      "reload": "Reload",
+      "labelUnused": "Not funded"
     },
     "settings": {
       "headline": "Configuration",
@@ -385,7 +386,8 @@
       "unableToFetchProfile": "Error while loading profile data. Please retry or check your internet connection.",
       "unableToSaveProfile": "Error while saving profile data. Please retry or check your internet connection.",
       "unableToLogoutAllOtherDevices": "Error while logging out all other devices. Please retry or check your internet connection"
-    }
+    },
+    "completeProfile": "Complete your profile"
   },
   "lightningQrCode": {
     "buttonOpenInWallet": "Open in wallet",
@@ -503,5 +505,9 @@
         "3": "If you want to use TipCards using your own Lightning node, you can use our open source code and set up your own instance of Lightning TipCards."
       }
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Nice to meet you!"
   }
 }

@@ -324,6 +324,7 @@
       "labelIsLockedByBulkWithdraw": "Wird zurückgeholt",
       "labelNote": "Notiz",
       "labelViewed": "Wurde angesehen",
+      "labelUnused": "Nicht aufgeladen",
       "reload": "Aktualisieren"
     },
     "settings": {
@@ -402,7 +403,8 @@
       "unableToFetchProfile": "Profildaten konnten nicht geladen werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
       "unableToSaveProfile": "Profildaten konnten nicht gespeichert werden. Versuche es erneut oder überprüfe deine Internetverbindung.",
       "unableToLogoutAllOtherDevices": "Beim Logout deiner anderen Geräte ist ein Fehler aufgetreten. Versuche es erneut oder überprüfe deine Internetverbindung."
-    }
+    },
+    "completeProfile": "Profil vervollständigen"
   },
   "lightningQrCode": {
     "buttonOpenInWallet": "In der Wallet öffnen",
@@ -519,5 +521,9 @@
         "3": "Wenn du TipCards mit deiner eigenen Lightning-Node nutzen möchtest, kannst du unseren Open-Source-Code verwenden und deine eigene Instanz der Lightning TipCards einrichten."
       }
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Servus!"
   }
 }

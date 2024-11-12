@@ -1,53 +1,44 @@
 <template>
-  <div class="border flex flex-col">
-    <div
-      class="p-2 flex-1"
-      :class="{
-        'bg-green-light text-green': !loading && color === 'green',
-        'bg-yellow-light text-yellow': !loading && color === 'yellow',
-        'bg-blue-light text-blue': !loading && color === 'blue',
-      }"
-    >
-      <strong
-        class="text-4xl"
-        :class="{ 'opacity-0': loading }"
-      >{{ cardsCount }}</strong>
-      <div
-        class="text-sm text-black uppercase"
-        :class="{ 'opacity-0': loading }"
-      >
-        {{ title }}
-      </div>
-    </div>
-    <div class="border-t p-2">
-      <span :class="{ 'opacity-0': loading }"><strong>{{ sats }}</strong> sats</span>
-    </div>
+  <div class="grid grid-cols-3 gap-8 max-w-md mx-auto justify-between items-center">
+    <figure class="text-center">
+      <IconSummaryRedeemed class="mx-auto w-8 h-8 text-green" />
+      <figcaption class="my-2">
+        <HeadlineDefault level="h4" class="text-sm">
+          {{ $t('cards.status.labelUsed') }}
+        </HeadlineDefault>
+        <div class="text-lg font-medium">
+          20 sats
+        </div>
+      </figcaption>
+    </figure>
+    <figure class="text-center">
+      <IconSummaryCharged class="mx-auto w-8 h-8 text-yellow" />
+      <figcaption class="my-2">
+        <HeadlineDefault level="h4" class="text-sm">
+          {{ $t('cards.status.labelFunded') }}
+        </HeadlineDefault>
+        <div class="text-lg font-medium">
+          20 sats
+        </div>
+      </figcaption>
+    </figure>
+    <figure class="text-center">
+      <IconSummaryEmptyCard class="mx-auto w-8 h-8 text-grey-dark" />
+      <figcaption class="my-2">
+        <HeadlineDefault level="h4" class="text-sm">
+          {{ $t('cards.status.labelUnused') }}
+        </HeadlineDefault>
+        <div class="text-lg font-medium">
+          20 sats
+        </div>
+      </figcaption>
+    </figure>
   </div>
 </template>
+<script setup lang="ts">
+import IconSummaryCharged from './icons/IconSummaryCharged.vue'
+import IconSummaryEmptyCard from './icons/IconSummaryEmptyCard.vue'
+import IconSummaryRedeemed from './icons/IconSummaryRedeemed.vue'
 
-<script lang="ts" setup>
-import type { PropType } from 'vue'
 
-defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  color: {
-    type: String as PropType<'green' | 'yellow' | 'blue'>,
-    default: 'green',
-  },
-  cardsCount: {
-    type: Number,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  sats: {
-    type: Number,
-    default: 0,
-  },
-})
 </script>
