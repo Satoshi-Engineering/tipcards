@@ -1,6 +1,6 @@
 import { cardHashFromLnurl } from '@/modules/lnurlHelpers'
 import { loadCard, getCardStatusForCard } from '@/modules/loadCardStatus'
-import useTRpc from '@/modules/useTRpc'
+import useTRpc from '@/modules/useTRpcBase'
 import { TIPCARDS_ORIGIN } from '@/constants'
 
 const callables: CallableFunction[] = []
