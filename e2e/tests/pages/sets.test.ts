@@ -17,8 +17,8 @@ describe('Sets Page', () => {
 
   it('User should access a saved set', () => {
     const randomSetName = Math.random().toString(36).substring(7)
-    tipCardsApi.set.generateAndAddRandomSet()
-    tipCardsApi.set.generateAndAddRandomSet(randomSetName)
+    tipCardsApi.set.generateAndAddSet()
+    tipCardsApi.set.generateAndAddSet(randomSetName)
 
     tipCards.gotoSetsPage()
     cy.getTestElement('sets-list-with-data').find('a').contains(randomSetName).click()

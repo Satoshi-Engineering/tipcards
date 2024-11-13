@@ -4,17 +4,19 @@ import { Set } from '@shared/data/api/Set'
 
 export const generateSetId = () => crypto.randomUUID()
 
+export type GenerateSetOptions = {
+  name?: string,
+  userId?: string,
+  created?: number,
+  numberOfCards?: number,
+}
+
 export const generateSet = ({
   name,
   userId,
   created = Math.floor(Date.now() / 1000),
   numberOfCards = 8,
-}: {
-  name?: string,
-  userId?: string,
-  created?: number,
-  numberOfCards?: number,
-} = {}): Set => {
+}: GenerateSetOptions = {}): Set => {
   const setId = generateSetId()
 
   if (!name) {

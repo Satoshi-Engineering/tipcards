@@ -26,7 +26,7 @@ describe('Feature Logout', () => {
 
   it('should vanishes user specific data after logout', () => {
     const randomSetName = Math.random().toString(36).substring(7)
-    tipCardsApi.set.generateAndAddRandomSet(randomSetName)
+    tipCardsApi.set.generateAndAddSet(randomSetName)
     tipCards.gotoSetsPage()
 
     cy.getTestElement('logged-in').should('exist')

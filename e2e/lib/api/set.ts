@@ -3,7 +3,7 @@
 
 import axios from 'axios'
 
-import { generateSet } from '@e2e/lib/api/data/set'
+import { generateSet, GenerateSetOptions } from '@e2e/lib/api/data/set'
 import { payInvoice } from '@e2e/lib/api/lnbitsWallet'
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
@@ -59,11 +59,14 @@ export const addSet = (set: Set) => {
   })
 }
 
-export const generateAndAddRandomSet = (name?: string) => {
-  const set = generateSet()
-  set.settings.setName = name || set.settings.setName
+export const generateAndAddSet = (options?: string | GenerateSetOptions) => {
+  if (typeof options === 'string') {
+    options = { name: options }
+  }
+  const set = generateSet(options)
 
   addSet(set)
+  return set
 }
 
 export const addSetsParallelWithAxios = (sets: Set[]) => {
