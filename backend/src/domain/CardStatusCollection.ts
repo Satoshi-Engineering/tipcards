@@ -2,28 +2,19 @@ import CardStatus from './CardStatus.js'
 
 export default class CardStatusCollection {
   public static async fromCardHashes(cardHashes: string[]): Promise<CardStatusCollection> {
-    const instance = new CardStatusCollection(cardHashes)
-    await instance.loadCardStatuses()
-    return instance
+    const cardStatuses = await CardStatusCollection.loadCardStatuses(cardHashes)
+    return new CardStatusCollection(cardStatuses)
   }
 
-  public get cardStatuses(): CardStatus[] {
-    if (this.cardStatusesInternal == null) {
-      throw new Error('CardStatusCollection not loaded')
-    }
-    return this.cardStatusesInternal
+  public readonly cardStatuses: CardStatus[]
+
+  private constructor(cardStatuses: CardStatus[]) {
+    this.cardStatuses = cardStatuses
   }
 
-  private cardHashes: string[]
-  private cardStatusesInternal?: CardStatus[]
-
-  private constructor(cardHashes: string[]) {
-    this.cardHashes = cardHashes
-  }
-
-  private async loadCardStatuses() {
-    this.cardStatusesInternal = await Promise.all(
-      this.cardHashes.map(async (hash) => await CardStatus.latestFromCardHashOrDefault(hash)),
+  private static async loadCardStatuses(cardHashes: string[]): Promise<CardStatus[]> {
+    return await Promise.all(
+      cardHashes.map(async (hash) => await CardStatus.latestFromCardHashOrDefault(hash)),
     )
   }
 }

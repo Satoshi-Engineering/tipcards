@@ -1,6 +1,8 @@
 import { vi } from 'vitest'
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
+import type { SetWithSettings } from '@backend/database/data/SetWithSettings.js'
+
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -61,6 +63,10 @@ const getLnurlPById = async (lnbitsId: LnurlP['lnbitsId']): Promise<LnurlP | nul
   }
   return lnurlPsByLnbitsId[lnbitsId]
 }
+
+const getSetsByUserId = async (userId: User['id']): Promise<Set[]> => usersCanUseSets
+  .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
+  .map((userCanUseSet) => setsById[userCanUseSet.set])
 
 export default vi.fn().mockImplementation(() => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
@@ -165,9 +171,17 @@ export default vi.fn().mockImplementation(() => ({
   getAllUsersThatCanUseSetBySetId: async (setId: Set['id']): Promise<UserCanUseSet[]> => usersCanUseSets
     .filter((userCanUseSet) => userCanUseSet.set === setId),
 
-  getSetsByUserId: async (userId: User['id']): Promise<Set[]> => usersCanUseSets
-    .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
-    .map((userCanUseSet) => setsById[userCanUseSet.set]),
+  getSetsByUserId,
+
+  getSetsWithSettingsByUserId: async (userId: User['id']): Promise<SetWithSettings[]> => {
+    const sets = await getSetsByUserId(userId)
+    return Promise.all(sets.map(async (set: Set) => ({
+      ...set,
+      settings: {
+        ...setSettingsBySetId[set.id],
+      },
+    })))
+  },
 
   getLandingPage: async (landingPageId: LandingPage['id']): Promise<LandingPage | null> => landingPages[landingPageId] || null,
 

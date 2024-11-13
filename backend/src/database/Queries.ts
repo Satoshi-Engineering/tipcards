@@ -3,6 +3,7 @@ import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
+import type { SetWithSettings } from '@backend/database/data/SetWithSettings.js'
 import {
   Set, SetSettings,
   Card, CardVersion,
@@ -22,8 +23,6 @@ export type Transaction = PgTransaction<
   typeof import('@backend/database/schema/index.js'),
   ExtractTablesWithRelations<typeof import('@backend/database/schema/index.js')>
 >
-
-export type SetWithSettings = Set & { settings: SetSettings }
 
 /**
  * As all methods in this class are database queries they are async and can throw errors.
