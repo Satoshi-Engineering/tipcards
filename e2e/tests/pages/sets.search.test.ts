@@ -10,7 +10,7 @@ describe('Sets Page', () => {
   })
 
   it('displays the correct set after searching by name', () => {
-    const randomSetName = Math.random().toString(36).substring(7)
+    const randomSetName = 'Random Set Name Containing 123 !@#$%^&*() Äöü'
     tipCardsApi.set.generateAndAddRandomSet()
     tipCardsApi.set.generateAndAddRandomSet(randomSetName)
 

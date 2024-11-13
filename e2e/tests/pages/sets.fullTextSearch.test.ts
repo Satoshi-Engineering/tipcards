@@ -42,7 +42,7 @@ describe('Sets Page - Full Text Search', () => {
     tipCardsApi.auth.login(false)
   })
 
-  it.skip('should find one set', () => {
+  it('should find one set', () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('input-search').clear()
@@ -51,7 +51,7 @@ describe('Sets Page - Full Text Search', () => {
     cy.getTestElement('sets-list-item').find('[data-test=sets-list-item-name]').should('have.text', singleSetName)
   })
 
-  it.skip('should find multiple sets', () => {
+  it('should find multiple sets', () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('input-search').clear()

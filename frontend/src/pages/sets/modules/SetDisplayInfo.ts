@@ -19,7 +19,7 @@ export default class SetDisplayInfo {
     return this.i18n.t('general.cards', { count: this.set?.settings?.numberOfCards })
   }
   get combinedSearchableString() {
-    return `${this.displayName} ${this.displayDate} ${this.displayNumberOfCards}`
+    return `${this.displayName} ${this.displayDate} ${this.displayNumberOfCards}`.toLowerCase()
   }
 
   private constructor(set: SetDto, i18n: I18n) {

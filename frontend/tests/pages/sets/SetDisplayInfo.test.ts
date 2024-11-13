@@ -12,7 +12,7 @@ describe('SetDisplayInfo', () => {
     const set = SetDto.parse({
       id: 'set1-id',
       created: new Date('2012-12-12T12:12:00'),
-      settings: { name: 'set1', numberOfCards: 4 },
+      settings: { name: 'Set1 With Üpper Case L3ttärs §$', numberOfCards: 4 },
     })
 
     const setDisplayInfo = SetDisplayInfo.create(set, i18n.global)
@@ -20,6 +20,7 @@ describe('SetDisplayInfo', () => {
     expect(setDisplayInfo.displayName).toBe(set.settings.name)
     expect(setDisplayInfo.displayDate).toBe('12/12/2012, 12:12 PM')
     expect(setDisplayInfo.displayNumberOfCards).toBe('4 cards')
-    expect(setDisplayInfo.combinedSearchableString).toBe('set1 12/12/2012, 12:12 PM 4 cards')
+    expect(setDisplayInfo.combinedSearchableString).toBe('set1 with üpper case l3ttärs §$ 12/12/2012, 12:12 pm 4 cards')
+    expect(setDisplayInfo.combinedSearchableString).toStrictEqual(setDisplayInfo.combinedSearchableString.toLowerCase())
   })
 })
