@@ -9,12 +9,24 @@ export const CardsSummaryCategoriesEnum = z.enum([
 export type CardsSummaryCategoriesEnum = z.infer<typeof CardsSummaryCategoriesEnum>
 
 /**
- * model for the sets list statistics
+ * model for the cards summary (sets list, dashboard, set details)
  */
 export const CardsSummaryDto = z.object({
-  [CardsSummaryCategoriesEnum.enum.unfunded]: z.number(),
-  [CardsSummaryCategoriesEnum.enum.pending]: z.number(),
-  [CardsSummaryCategoriesEnum.enum.funded]: z.number(),
-  [CardsSummaryCategoriesEnum.enum.withdrawn]: z.number(),
+  [CardsSummaryCategoriesEnum.enum.unfunded]: z.object({
+    count: z.number(),
+    amount: z.number(),
+  }),
+  [CardsSummaryCategoriesEnum.enum.pending]: z.object({
+    count: z.number(),
+    amount: z.number(),
+  }),
+  [CardsSummaryCategoriesEnum.enum.funded]: z.object({
+    count: z.number(),
+    amount: z.number(),
+  }),
+  [CardsSummaryCategoriesEnum.enum.withdrawn]: z.object({
+    count: z.number(),
+    amount: z.number(),
+  }),
 })
 export type CardsSummaryDto = z.infer<typeof CardsSummaryDto>

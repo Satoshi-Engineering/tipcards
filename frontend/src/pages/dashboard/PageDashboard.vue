@@ -30,7 +30,18 @@
             </LinkDefault>
           </div>
         </div>
-        <CardsSummary class="my-10" />
+        <CardsSummary
+          class="my-10"
+          :cards-summary="{
+            cardsSummary: {
+              withdrawn: { amount: 210 * 20, count: 20 },
+              funded: { amount: 210 * 20, count: 20 },
+              unfunded: { amount: 210 * 20, count: 20 },
+              pending: { amount: 210 * 0, count: 0 },
+            },
+            status: 'success',
+          }"
+        />
       </CenterContainer>
     </div>
   </TheLayout>

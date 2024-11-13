@@ -36,7 +36,7 @@ describe('SetsListItem', () => {
 
   it('renders the absolute numbers of colorized cardsSummary boxes for sets with <= 12 cards', async () => {
     const set = createSet({ settings: { numberOfCards: 10 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 4, funded: 3, pending: 2, unfunded: 1 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 4, funded: 3, pending: 2, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -49,7 +49,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes by rounding up if the actual numberOfCards exceeds 12', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 35, funded: 25, pending: 4, unfunded: 36 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 35, funded: 25, pending: 4, unfunded: 36 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -62,7 +62,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 99 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 99, pending: 0, unfunded: 0 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 99, pending: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -75,7 +75,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 unfunded and 99 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 0, funded: 99, pending: 0, unfunded: 1 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 0, funded: 99, pending: 0, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -88,7 +88,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 unfunded, 1 withdrawn, and 98 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 98, pending: 0, unfunded: 1 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 98, pending: 0, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -101,7 +101,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 unfunded, 1 withdrawn, 1 pending and 97 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 97, pending: 1, unfunded: 1 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 97, pending: 1, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -114,7 +114,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 49 withdrawn and 51 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 49, funded: 51, pending: 0, unfunded: 0 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 49, funded: 51, pending: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -127,7 +127,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 99 unfunded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 0, pending: 0, unfunded: 99 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 0, pending: 0, unfunded: 99 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -140,7 +140,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 7 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 8 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 7, pending: 0, unfunded: 0 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 7, pending: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -153,7 +153,7 @@ describe('SetsListItem', () => {
 
   it('renders the colorized cardsSummary boxes correctly for 13 unfunded, 1 withdrawn, 5 pending and 84 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = { withdrawn: 1, funded: 84, pending: 5, unfunded: 13 }
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 84 , pending: 5, unfunded: 13 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
@@ -164,3 +164,14 @@ describe('SetsListItem', () => {
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(2)
   })
 })
+
+const generateCardsSummary = (
+  { withdrawn, funded, pending, unfunded }: { withdrawn: number, funded: number, pending: number, unfunded: number },
+): CardsSummaryDto => {
+  return {
+    withdrawn: { count: withdrawn, amount: 210 * withdrawn },
+    funded: { count: funded, amount: 210 * funded },
+    pending: { count: pending, amount: 210 * pending },
+    unfunded: { count: unfunded, amount: 210 * unfunded },
+  }
+}

@@ -36,9 +36,17 @@
   </div>
 </template>
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
+import type { CardsSummaryWithLoadingStatus } from '@/modules/useSets'
 import IconSummaryCharged from './icons/IconSummaryCharged.vue'
 import IconSummaryEmptyCard from './icons/IconSummaryEmptyCard.vue'
 import IconSummaryRedeemed from './icons/IconSummaryRedeemed.vue'
 
-
+defineProps({
+  cardsSummary: {
+    type: Object as PropType<CardsSummaryWithLoadingStatus>,
+    required: true,
+  },
+})
 </script>

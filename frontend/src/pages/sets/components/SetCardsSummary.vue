@@ -73,10 +73,10 @@ const displayedCardsSummaryItems = computed(() => Math.min(12, props.numberOfCar
 
 const cardsSummaryItems = computed(() => {
   const sortedCardsSummary: { kpi: keyof CardsSummaryDto, count: number }[] = [
-    { kpi: 'withdrawn', count: props.cardsSummary?.withdrawn ?? 0 },
-    { kpi: 'funded', count: props.cardsSummary?.funded ?? 0 },
-    { kpi: 'pending', count: props.cardsSummary?.pending ?? 0 },
-    { kpi: 'unfunded', count: props.cardsSummary?.unfunded ?? 0 },
+    { kpi: 'withdrawn', count: props.cardsSummary?.withdrawn.count ?? 0 },
+    { kpi: 'funded', count: props.cardsSummary?.funded.count ?? 0 },
+    { kpi: 'pending', count: props.cardsSummary?.pending.count ?? 0 },
+    { kpi: 'unfunded', count: props.cardsSummary?.unfunded.count ?? 0 },
   ]
   sortedCardsSummary.sort((a, b) => a.count - b.count)
 
