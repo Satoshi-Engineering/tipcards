@@ -27,7 +27,9 @@ export default class CardsSummary {
   }
 
   private getCountAndAmountByStatusCategory(statusCategory: CardsSummaryCategoriesEnum): { count: number, amount: number } {
-    const filteredCardStatuses = this.cardStatuses.filter(({ status }) => CardsSummary.statusMatchesStatusCategory(status, statusCategory))
+    const filteredCardStatuses = this.cardStatuses.filter(
+      ({ status }) => CardsSummary.statusMatchesStatusCategory(status, statusCategory),
+    )
     const count = filteredCardStatuses.length
     const amount = filteredCardStatuses.reduce((sum, { amount }) => sum + (amount ?? 0), 0)
     return { count, amount }

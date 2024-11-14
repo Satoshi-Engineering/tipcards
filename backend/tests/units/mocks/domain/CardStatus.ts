@@ -9,11 +9,15 @@ vi.mock('@backend/domain/CardStatus.js', () => ({
   default: MockCardStatus,
 }))
 
-export const addCard = (card: Card) => {
-  mocks[card.hash] = card
+export const addCard = (card: Card, status?: CardStatusEnum, amount?: number) => {
+  mocks[card.hash] = {
+    card,
+    status,
+    amount,
+  }
 }
 
-const mocks: Record<string, Card> = {}
+const mocks: Record<string, { card: Card, status?: CardStatusEnum, amount?: number }> = {}
 
 class MockCardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']) {
@@ -21,7 +25,7 @@ class MockCardStatus {
       return new MockCardStatus({
         id: randomUUID(),
         card: cardHash,
-        created: mocks[cardHash].created,
+        created: mocks[cardHash].card.created,
         lnurlP: null,
         lnurlW: null,
         textForWithdraw: '',
@@ -41,6 +45,14 @@ class MockCardStatus {
       sharedFunding: false,
       landingPageViewed: null,
     })
+  }
+
+  public get status(): CardStatusEnum {
+    return mocks[this.cardVersion.card].status ?? CardStatusEnum.enum.unfunded
+  }
+
+  public get amount(): number | null {
+    return mocks[this.cardVersion.card].amount ?? null
   }
 
   public toTrpcResponse(): CardStatusDto {
