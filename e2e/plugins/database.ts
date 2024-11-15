@@ -90,7 +90,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       await sql`
         INSERT INTO public."Profile"(
         "user", "accountName", "displayName", email)
-        VALUES (${userId}, '', '', '${profileEmail}');
+        VALUES (${userId}, '', '', ${profileEmail});
       `
       return {
         userId,
