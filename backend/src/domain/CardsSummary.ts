@@ -1,4 +1,4 @@
-import { CardStatusEnum, pendingStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto.js'
+import { CardStatusEnum, fundedStatuses, pendingStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto.js'
 import { CardsSummaryCategoriesEnum, CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 import CardStatus from './CardStatus.js'
 
@@ -42,7 +42,7 @@ export default class CardsSummary {
       case CardsSummaryCategoriesEnum.enum.pending:
         return pendingStatuses.includes(status)
       case CardsSummaryCategoriesEnum.enum.funded:
-        return status === CardStatusEnum.enum.funded
+        return fundedStatuses.includes(status)
       case CardsSummaryCategoriesEnum.enum.withdrawn:
         return withdrawnStatuses.includes(status)
     }

@@ -8,6 +8,7 @@ import CardStatus from '@backend/domain/CardStatus.js'
 import { createCard } from '../../drizzleData.js'
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 import { Card } from '@backend/database/schema/Card.js'
+import { CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto.js'
 
 describe('CardsSummary', () => {
   it('should create a CardsSummary from an array of CardStatuses', async () => {
@@ -25,15 +26,15 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
 
     expect(cardsSummary.getSummary()).toEqual({
-      withdrawn: { count: 2, amount: 200 },
-      funded: { count: 2, amount: 420 },
-      pending: { count: 2, amount: 200 },
-      unfunded: { count: 2, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 2, amount: 200 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 520 },
+      [CardsSummaryCategoriesEnum.enum.pending]: { count: 1, amount: 100 },
+      [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 2, amount: 0 },
     })
   })
 
   it('should count all pending statuses together as pending', async () => {
-    const cards = createCards(12)
+    const cards = createCards(10)
     addCard(cards[0], CardStatusEnum.enum.invoiceFunding, 100)
     addCard(cards[1], CardStatusEnum.enum.lnurlpFunding, 100)
     addCard(cards[2], CardStatusEnum.enum.lnurlpSharedFunding, 100)
@@ -43,18 +44,16 @@ describe('CardsSummary', () => {
     addCard(cards[6], CardStatusEnum.enum.lnurlpSharedExpiredEmpty, 100)
     addCard(cards[7], CardStatusEnum.enum.lnurlpSharedExpiredFunded, 100)
     addCard(cards[8], CardStatusEnum.enum.setInvoiceExpired, 100)
-    addCard(cards[9], CardStatusEnum.enum.withdrawPending, 100)
-    addCard(cards[10], CardStatusEnum.enum.bulkWithdrawPending, 100)
-    addCard(cards[11], CardStatusEnum.enum.isLockedByBulkWithdraw, 100)
+    addCard(cards[9], CardStatusEnum.enum.isLockedByBulkWithdraw, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
     const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
 
     expect(cardsSummary.getSummary()).toEqual({
-      withdrawn: { count: 0, amount: 0 },
-      funded: { count: 0, amount: 0 },
-      pending: { count: 12, amount: 1200 },
-      unfunded: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.pending]: { count: 10, amount: 1000 },
+      [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
     })
   })
 
@@ -68,10 +67,27 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
 
     expect(cardsSummary.getSummary()).toEqual({
-      withdrawn: { count: 3, amount: 300 },
-      funded: { count: 0, amount: 0 },
-      pending: { count: 0, amount: 0 },
-      unfunded: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 3, amount: 300 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
+    })
+  })
+
+  it('should count all funded statuses together as funded', async () => {
+    const cards = createCards(3)
+    addCard(cards[0], CardStatusEnum.enum.withdrawPending, 100)
+    addCard(cards[1], CardStatusEnum.enum.bulkWithdrawPending, 100)
+    addCard(cards[2], CardStatusEnum.enum.funded, 100)
+
+    const cardStatuses = await getCardStatusesForCards(cards)
+    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+
+    expect(cardsSummary.getSummary()).toEqual({
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 300 },
+      [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
     })
   })
 })

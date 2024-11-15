@@ -37,6 +37,12 @@ export const unfundedStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.setInvoiceExpired,
 ]
 
+export const fundedStatuses: CardStatusEnum[] = [
+  CardStatusEnum.enum.withdrawPending,
+  CardStatusEnum.enum.bulkWithdrawPending,
+  CardStatusEnum.enum.funded,
+]
+
 export const withdrawnStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.recentlyWithdrawn,
   CardStatusEnum.enum.withdrawn,
@@ -53,7 +59,5 @@ export const pendingStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
   CardStatusEnum.enum.lnurlpSharedExpiredFunded,
   CardStatusEnum.enum.setInvoiceExpired,
-  CardStatusEnum.enum.withdrawPending,
-  CardStatusEnum.enum.bulkWithdrawPending,
   CardStatusEnum.enum.isLockedByBulkWithdraw,
 ]
