@@ -78,7 +78,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return expiredAccessToken
     },
 
-    'db:createUser': async () => {
+    'db:createUser': async ({ profileEmail = '' }: { profileEmail?: string} = {}) => {
       const lnurlAuthKey = randomUUID()
       const userId = hashSha256(lnurlAuthKey)
 
@@ -90,7 +90,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       await sql`
         INSERT INTO public."Profile"(
         "user", "accountName", "displayName", email)
-        VALUES (${userId}, '', '', '');
+        VALUES (${userId}, '', '', '${profileEmail}');
       `
       return {
         userId,

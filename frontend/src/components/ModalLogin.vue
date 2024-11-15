@@ -33,7 +33,11 @@
       <ParagraphDefault v-if="isLoggedIn && missingEmail" class="mt-12 text-sm">
         {{ $t('auth.modalLogin.emailHint') }}
         <br>
-        <LinkDefault :to="{ name: 'user-account', params: { lang: $route.params.lang } }" @click="$emit('close')">
+        <LinkDefault
+          :to="{ name: 'user-account', params: { lang: $route.params.lang } }"
+          data-test="emailCta"
+          @click="$emit('close')"
+        >
           {{ $t('auth.modalLogin.emailCta') }}
         </LinkDefault>
       </ParagraphDefault>
