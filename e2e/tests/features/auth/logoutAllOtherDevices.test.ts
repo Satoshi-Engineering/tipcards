@@ -1,36 +1,44 @@
 import tipCards from '@e2e/lib/tipCards'
-import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Feature logoutAllOtherDevices', () => {
+  before(() => {
+    cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser').then(({ userId }) => {
+      cy.task<string>('db:insertAllowedSession', {
+        userId,
+      }).then((sessionId) => {
+        cy.task<string>('jwt:createRefreshToken', {
+          userId,
+          sessionId,
+        }).then((refreshToken) => {
+          cy.wrap(refreshToken).as('refreshToken1')
+        })
+      })
+
+      cy.task<string>('db:insertAllowedSession', {
+        userId,
+      }).then((sessionId) => {
+        cy.task<string>('jwt:createRefreshToken', {
+          userId,
+          sessionId,
+        }).then((refreshToken) => {
+          cy.wrap(refreshToken).as('refreshToken2')
+        })
+      })
+
+      cy.task<string>('db:insertAllowedSession', {
+        userId,
+      }).then((sessionId) => {
+        cy.task<string>('jwt:createRefreshToken', {
+          userId,
+          sessionId,
+        }).then((refreshToken) => {
+          cy.wrap(refreshToken).as('refreshToken3')
+        })
+      })
+    })
+  })
+
   it('2nd user session should still be logged in', () => {
-    cy.log('Get Refresh Token 1')
-    tipCardsApi.auth.loginViaRequests()
-    cy.getCookie('refresh_token').then((cookie) => {
-      cy.log(cookie.value)
-      cy.wrap(cookie.value).as('refreshToken1')
-    })
-    tipCardsApi.auth.clearAuth()
-    tipCardsApi.auth.isLoggedOut()
-
-    cy.log('Get Refresh Token 2')
-    tipCardsApi.auth.loginViaRequests(false)
-    cy.getCookie('refresh_token').then((cookie) => {
-      cy.log(cookie.value)
-      cy.wrap(cookie.value).as('refreshToken2')
-    })
-    tipCardsApi.auth.clearAuth()
-    tipCardsApi.auth.isLoggedOut()
-
-    cy.log('Get Refresh Token 3')
-    tipCardsApi.auth.loginViaRequests(false)
-    cy.getCookie('refresh_token').then((cookie) => {
-      cy.log(cookie.value)
-      cy.wrap(cookie.value).as('refreshToken3')
-    })
-    tipCardsApi.auth.clearAuth()
-    tipCardsApi.auth.isLoggedOut()
-    tipCards.isLoggedOut()
-
     // Refresh Token 1: Check if it's still valid
     cy.get('@refreshToken1').then(function () {
       cy.session(this.refreshToken1, () => {
@@ -39,6 +47,7 @@ describe('Feature logoutAllOtherDevices', () => {
     })
     tipCards.gotoHomePage()
     reloadPageAndCheckAuth()
+    cy.clearAllCookies()
 
     // Refresh Token 2: Logout on all other devices
     cy.get('@refreshToken2').then(function () {
@@ -54,6 +63,7 @@ describe('Feature logoutAllOtherDevices', () => {
     cy.getTestElement('user-account-button-logout-all-other-devices').click()
     cy.wait('@logoutAllOtherDevices')
     reloadPageAndCheckAuth()
+    cy.clearAllCookies()
 
     // Refresh Token 3: Check if it's logged out
     cy.get('@refreshToken3').then(function () {
