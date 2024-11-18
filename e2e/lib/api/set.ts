@@ -45,8 +45,7 @@ export const callInvoicePaidHookForSet = (setId: string) =>
   })
 
 export const addSet = (set: Set) => {
-  tipCardsApi.auth.isLoggedInViaCypress()
-
+  tipCardsApi.auth.getAccessToken()
   cy.get('@accessToken').then(function () {
     cy.request({
       url: `${API_SET.href}/${set.id}/`,
@@ -70,8 +69,7 @@ export const generateAndAddSet = (options?: string | GenerateSetOptions) => {
 }
 
 export const addSetsParallelWithAxios = (sets: Set[]) => {
-  tipCardsApi.auth.isLoggedInViaCypress()
-
+  tipCardsApi.auth.getAccessToken()
   cy.get('@accessToken').then({ timeout: 1000 * sets.length }, async function () {
     await Promise.all(sets.map((set) =>
       axios.request({

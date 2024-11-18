@@ -17,7 +17,7 @@ describe.skip('Sets Page Cards Info', () => {
       lnurlAuth = this.lnurlAuth
     })
 
-    tipCardsApi.auth.login(false)
+    tipCardsApi.auth.loginViaRequests(false)
 
     const sets = generateSets(numberOfSets, numberOfCardsPerSet)
 
@@ -27,7 +27,7 @@ describe.skip('Sets Page Cards Info', () => {
 
   beforeEach(() => {
     tipCardsApi.auth.wrapLNURLAuth(lnurlAuth)
-    tipCardsApi.auth.login(false)
+    tipCardsApi.auth.loginViaRequests(false)
   })
 
   it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, { taskTimeout: 5000 * numberOfSets }, () => {

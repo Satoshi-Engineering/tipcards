@@ -4,7 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 describe('Feature logoutAllOtherDevices', () => {
   it('2nd user session should still be logged in', () => {
     cy.log('Get Refresh Token 1')
-    tipCardsApi.auth.login()
+    tipCardsApi.auth.loginViaRequests()
     cy.getCookie('refresh_token').then((cookie) => {
       cy.log(cookie.value)
       cy.wrap(cookie.value).as('refreshToken1')
@@ -13,7 +13,7 @@ describe('Feature logoutAllOtherDevices', () => {
     tipCardsApi.auth.isLoggedOut()
 
     cy.log('Get Refresh Token 2')
-    tipCardsApi.auth.login(false)
+    tipCardsApi.auth.loginViaRequests(false)
     cy.getCookie('refresh_token').then((cookie) => {
       cy.log(cookie.value)
       cy.wrap(cookie.value).as('refreshToken2')
@@ -22,7 +22,7 @@ describe('Feature logoutAllOtherDevices', () => {
     tipCardsApi.auth.isLoggedOut()
 
     cy.log('Get Refresh Token 3')
-    tipCardsApi.auth.login(false)
+    tipCardsApi.auth.loginViaRequests(false)
     cy.getCookie('refresh_token').then((cookie) => {
       cy.log(cookie.value)
       cy.wrap(cookie.value).as('refreshToken3')

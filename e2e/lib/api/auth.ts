@@ -8,7 +8,22 @@ const API_AUTH_CREATE = new URL('/auth/trpc/lnurlAuth.create', TIPCARDS_AUTH_ORI
 const API_AUTH_LOGIN = new URL('/auth/trpc/auth.loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
-export const login = (genereateNewLNRULAuth = true) => {
+export const login = () => {
+  cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser').then(({ userId }) => {
+    cy.task<string>('db:insertAllowedSession', {
+      userId,
+    }).then((sessionId) => {
+      cy.task<string>('jwt:createRefreshToken', {
+        userId,
+        sessionId,
+      }).then((refreshToken) => {
+        cy.setCookie('refresh_token', refreshToken)
+      })
+    })
+  })
+}
+
+export const loginViaRequests = (genereateNewLNRULAuth = true) => {
   if (genereateNewLNRULAuth) {
     createAndWrapLNURLAuth()
   }
@@ -54,20 +69,13 @@ export const login = (genereateNewLNRULAuth = true) => {
   })
 }
 
-export const refresh = () => {
+export const getAccessToken = () => {
   cy.request({
     url: API_AUTH_REFRESH.href,
   }).then((response) => {
     expect(response.body).to.have.nested.property('result.data.json.accessToken')
     cy.wrap(response.body.result.data.json.accessToken).as('accessToken')
   })
-}
-
-export const isLoggedInViaCypress = () => {
-  cy.getCookie('refresh_token', {
-    domain: TIPCARDS_AUTH_ORIGIN.hostname,
-  }).should('exist')
-  cy.get('@accessToken').should('exist')
 }
 
 export const isLoggedOut = () => {

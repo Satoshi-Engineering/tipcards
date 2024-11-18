@@ -17,6 +17,7 @@ describe('Sets Page', () => {
 
   it('User should access a saved set', () => {
     const randomSetName = Math.random().toString(36).substring(7)
+    tipCardsApi.auth.getAccessToken()
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet(randomSetName)
 
