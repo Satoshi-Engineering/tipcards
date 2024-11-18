@@ -3,15 +3,17 @@ import { CardsSummaryCategoriesEnum, CardsSummaryDto } from '@shared/data/trpc/C
 import CardStatus from './CardStatus.js'
 
 export default class CardsSummary {
-  public static fromCardStatuses(cardStatuses: CardStatus[]): CardsSummary {
-    return new CardsSummary(cardStatuses)
+  public static toTRpcResponse(cardStatuses: CardStatus[]): CardsSummaryDto {
+    return new CardsSummary(cardStatuses).toTRpcResponse()
   }
 
-  public getSummary(): CardsSummaryDto {
-    const unfunded = this.getCountAndAmountByStatusCategory('unfunded')
-    const pending = this.getCountAndAmountByStatusCategory('pending')
-    const funded = this.getCountAndAmountByStatusCategory('funded')
-    const withdrawn = this.getCountAndAmountByStatusCategory('withdrawn')
+  private cardStatuses: CardStatus[]
+
+  private toTRpcResponse(): CardsSummaryDto {
+    const unfunded = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.unfunded)
+    const pending = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.pending)
+    const funded = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.funded)
+    const withdrawn = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.withdrawn)
     return {
       [CardsSummaryCategoriesEnum.enum.unfunded]: unfunded,
       [CardsSummaryCategoriesEnum.enum.pending]: pending,
@@ -19,8 +21,6 @@ export default class CardsSummary {
       [CardsSummaryCategoriesEnum.enum.withdrawn]: withdrawn,
     }
   }
-
-  private cardStatuses: CardStatus[]
 
   private constructor(cardStatuses: CardStatus[]) {
     this.cardStatuses = cardStatuses

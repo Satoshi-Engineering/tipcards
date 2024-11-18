@@ -24,7 +24,7 @@ export default class Set {
   public async getCardsSummary(): Promise<CardsSummaryDto> {
     const cardHashes = this.getAllCardHashes()
     const cardStatusCollection = await CardStatusCollection.fromCardHashes(cardHashes)
-    const cardsSummary: CardsSummaryDto = CardsSummary.fromCardStatuses(cardStatusCollection.cardStatuses).getSummary()
+    const cardsSummary: CardsSummaryDto = CardsSummary.toTRpcResponse(cardStatusCollection.cardStatuses)
     return cardsSummary
   }
 

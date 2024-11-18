@@ -23,9 +23,9 @@ describe('CardsSummary', () => {
     addCard(cards[7], CardStatusEnum.enum.unfunded, 0)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
-    expect(cardsSummary.getSummary()).toEqual({
+    expect(cardsSummary).toEqual({
       [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 2, amount: 200 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 520 },
       [CardsSummaryCategoriesEnum.enum.pending]: { count: 1, amount: 100 },
@@ -47,9 +47,9 @@ describe('CardsSummary', () => {
     addCard(cards[9], CardStatusEnum.enum.isLockedByBulkWithdraw, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
-    expect(cardsSummary.getSummary()).toEqual({
+    expect(cardsSummary).toEqual({
       [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.pending]: { count: 10, amount: 1000 },
@@ -64,9 +64,9 @@ describe('CardsSummary', () => {
     addCard(cards[2], CardStatusEnum.enum.withdrawnByBulkWithdraw, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
-    expect(cardsSummary.getSummary()).toEqual({
+    expect(cardsSummary).toEqual({
       [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 3, amount: 300 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },
@@ -81,9 +81,9 @@ describe('CardsSummary', () => {
     addCard(cards[2], CardStatusEnum.enum.funded, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
-    expect(cardsSummary.getSummary()).toEqual({
+    expect(cardsSummary).toEqual({
       [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 300 },
       [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },

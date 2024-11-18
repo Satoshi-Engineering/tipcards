@@ -6,6 +6,7 @@ import { addData } from '../mocks/database/database.js'
 
 import Set from '@backend/domain/Set.js'
 import hashSha256 from '@backend/services/hashSha256.js'
+import { defaultNumberOfCards } from '@shared/data/trpc/SetSettingsDto.js'
 
 const set = createSet()
 const setSettings = createSetSettings(set)
@@ -41,16 +42,9 @@ describe('Set', () => {
     const setWithSettings = await Set.fromId(set.id)
     const cardHashes = setWithSettings.getAllCardHashes()
 
-    expect(cardHashes).toEqual([
-      hashSha256(`${set.id}/0`),
-      hashSha256(`${set.id}/1`),
-      hashSha256(`${set.id}/2`),
-      hashSha256(`${set.id}/3`),
-      hashSha256(`${set.id}/4`),
-      hashSha256(`${set.id}/5`),
-      hashSha256(`${set.id}/6`),
-      hashSha256(`${set.id}/7`),
-    ])
+    expect(cardHashes).toEqual(
+      Array.from({ length: defaultNumberOfCards }, (_, i) => hashSha256(`${set.id}/${i}`)),
+    )
   })
 
   it('should return a CardsSummary for a set', async () => {
@@ -58,7 +52,7 @@ describe('Set', () => {
     const cardsSummary = await setWithSettings.getCardsSummary()
 
     expect(cardsSummary).toEqual({
-      unfunded: { count: 8, amount: 0 },
+      unfunded: { count: defaultNumberOfCards, amount: 0 },
       funded: { count: 0, amount: 0 },
       withdrawn: { count: 0, amount: 0 },
       pending: { count: 0, amount: 0 },
