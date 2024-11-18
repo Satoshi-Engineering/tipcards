@@ -524,6 +524,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Servus!"
+    "welcome": "Servus!",
+    "allMySets": "Alle meine Sets"
   }
 }

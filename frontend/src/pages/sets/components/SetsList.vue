@@ -17,11 +17,14 @@
         {{ message }}
       </ParagraphDefault>
     </div>
-    <ul v-if="!fetching">
+    <ul>
       <li
         v-for="set in sortedSavedSets"
         :key="set.id"
-        class="mx-5 border-b last:border-0 border-white-50 group"
+        class="mx-5 border-b border-white-50 group"
+        :class="{
+          'last:border-0': !fetching
+        }"
       >
         <SetsListItem
           :set="set"
@@ -32,7 +35,7 @@
         />
       </li>
     </ul>
-    <div v-else class="flex justify-center min-h-64">
+    <div v-if="fetching" class="flex justify-center min-h-32">
       <IconAnimatedLoadingWheel
         class="w-10 h-auto mx-auto my-10 text-white-50"
       />
@@ -49,9 +52,7 @@ import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import type { CardsSummaryWithLoadingStatus } from '@/modules/useSets'
-
-export type CardsSummaryWithLoadingStatusBySetId = Record<SetDto['id'], CardsSummaryWithLoadingStatus>
+import type { CardsSummaryWithLoadingStatusBySetId } from '@/stores/useSets'
 
 const props = defineProps({
   sets: {
@@ -68,11 +69,15 @@ const props = defineProps({
   },
   fetching: {
     type: Boolean,
-    defaut: false,
+    default: false,
   },
   message: {
     type: String,
     default: undefined,
+  },
+  sorting: {
+    type: String as PropType<'changed' | 'name'>,
+    default: 'changed',
   },
 })
 
@@ -84,16 +89,22 @@ const sortedSavedSets = computed(() => {
       ...set,
       cardsStatus: null, // Implement this later
     }))
-    .sort((setA, setB) => {
-      const nameA = setA.settings.name?.toLowerCase()
-      const nameB = setB.settings.name?.toLowerCase()
-      if (nameA == null || nameA === '') {
-        return 1
-      }
-      if (nameB == null || nameB === '') {
-        return -1
-      }
-      return nameA.localeCompare(nameB)
-    })
+    .sort(props.sorting === 'changed' ? sortByChangedDate : sortByName)
 })
+
+const sortByChangedDate = (setA: SetDto, setB: SetDto) => {
+  return +setB.changed - +setA.changed
+}
+
+const sortByName = (setA: SetDto, setB: SetDto) => {
+  const nameA = setA.settings.name?.toLowerCase()
+  const nameB = setB.settings.name?.toLowerCase()
+  if (nameA == null || nameA === '') {
+    return 1
+  }
+  if (nameB == null || nameB === '') {
+    return -1
+  }
+  return nameA.localeCompare(nameB)
+}
 </script>

@@ -38,10 +38,11 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import type { CardsSummaryWithLoadingStatus } from '@/modules/useSets'
+import type { CardsSummaryWithLoadingStatus } from '@/stores/useSets'
 import IconSummaryCharged from './icons/IconSummaryCharged.vue'
 import IconSummaryEmptyCard from './icons/IconSummaryEmptyCard.vue'
 import IconSummaryRedeemed from './icons/IconSummaryRedeemed.vue'
+import HeadlineDefault from './typography/HeadlineDefault.vue'
 
 defineProps({
   cardsSummary: {

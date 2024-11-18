@@ -508,6 +508,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Nice to meet you!"
+    "welcome": "Nice to meet you!",
+    "allMySets": "All my sets"
   }
 }

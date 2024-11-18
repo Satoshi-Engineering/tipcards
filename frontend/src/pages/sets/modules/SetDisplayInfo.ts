@@ -13,7 +13,7 @@ export default class SetDisplayInfo {
     return this.set?.settings.name || this.i18n.t('sets.unnamedSetNameFallback')
   }
   get displayDate() {
-    return this.i18n.d(this.set?.created, dateWithTimeFormat)
+    return this.i18n.d(this.set?.changed, dateWithTimeFormat)
   }
   get displayNumberOfCards() {
     return this.i18n.t('general.cards', { count: this.set?.settings?.numberOfCards })

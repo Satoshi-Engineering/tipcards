@@ -3,7 +3,7 @@
     class="grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
     data-test="sets-list-item-cards-summary"
   >
-    <template v-if="loadingStatus === 'loading'">
+    <template v-if="loadingStatus === 'loading' && cardsSummary == null">
       <div
         v-for="n in displayedCardsSummaryItems"
         :key="n"

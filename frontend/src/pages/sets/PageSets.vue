@@ -66,6 +66,7 @@
             :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
             :fetching="fetchingAllSets"
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
+            sorting="changed"
             class="my-7"
             @enter-viewport="loadCardsSummaryForSet"
           />
@@ -77,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -89,70 +90,21 @@ import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import SetsList, { type CardsSummaryWithLoadingStatusBySetId } from '@/pages/sets/components/SetsList.vue'
+import SetsList from '@/pages/sets/components/SetsList.vue'
 import SetsListFilterSection from '@/pages/sets/components/SetsListFilterSection.vue'
 import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
-import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets, { type CardsSummaryWithLoadingStatus } from '@/modules/useSets'
+import useSets from '@/stores/useSets'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
+import { useAuthStore } from '@/stores/auth'
+
+const { showModalLogin } = storeToRefs(useModalLoginStore())
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
-const modalLoginStore = useModalLoginStore()
 
-const { showModalLogin } = storeToRefs(modalLoginStore)
-
-const { getAllSets, getCardsSummaryForSet, fetchingAllSets, fetchingUserErrorMessages } = useSets()
-
-const sets = ref<SetDto[]>([])
-
-const cardsSummaryWithStatusBySetId = ref<CardsSummaryWithLoadingStatusBySetId>({})
-
-const loadAllSets = async () => {
-  sets.value = await getAllSets()
-}
-
-const resetSetsAndCardsSummary = () => {
-  sets.value = []
-  cardsSummaryWithStatusBySetId.value = {}
-}
-
-watch(isLoggedIn, async (isLoggedIn) => {
-  if (!isLoggedIn) {
-    resetSetsAndCardsSummary()
-    return
-  }
-  await loadAllSets()
-}, { immediate: true })
-
-const loadCardsSummaryForSet = async (setId: string) => {
-  if (cardsSummaryWithStatusBySetId.value[setId]?.status != null) {
-    return
-  }
-
-  setStatusLoadingForSet(setId)
-  const cardsSummaryWithStatus = await getCardsSummaryForSet(setId)
-  setLoadedCardsSummaryForSet(setId, cardsSummaryWithStatus)
-}
-
-const setStatusLoadingForSet = (setId: string) => {
-  cardsSummaryWithStatusBySetId.value = {
-    ...cardsSummaryWithStatusBySetId.value,
-    [setId]: {
-      ...cardsSummaryWithStatusBySetId.value[setId],
-      status: 'loading',
-    },
-  }
-}
-
-const setLoadedCardsSummaryForSet = (setId: string, cardsSummaryWithStatus: CardsSummaryWithLoadingStatus) => {
-  cardsSummaryWithStatusBySetId.value = {
-    ...cardsSummaryWithStatusBySetId.value,
-    [setId]: cardsSummaryWithStatus,
-  }
-}
+const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingUserErrorMessages, loadCardsSummaryForSet } = useSets()
 
 // Search
 const textSearch = ref<string>('')

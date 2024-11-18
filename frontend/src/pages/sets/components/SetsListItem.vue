@@ -52,14 +52,13 @@ import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } fro
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import useSets, { type CardsSummaryWithLoadingStatus } from '@/modules/useSets'
+import type { CardsSummaryWithLoadingStatus } from '@/stores/useSets'
+import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
 import SetCardsSummary from '@/pages/sets/components/SetCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
-
-const { encodeCardsSetSettings } = useSets()
 
 const props = defineProps({
   set: {
