@@ -7,6 +7,7 @@ import webpack from '@cypress/webpack-preprocessor'
 import setupClipboardy from './plugins/clipboardy.js'
 import setupDatabaseTasks from './plugins/database.js'
 import setupJwtTasks from './plugins/jwt.js'
+import setupLnurlTasks from './plugins/lnurl.js'
 
 const webpackOptions = {
   resolve: {
@@ -68,6 +69,8 @@ export default defineConfig({
       setupDatabaseTasks(on, config)
 
       setupJwtTasks(on, config)
+
+      setupLnurlTasks(on, config)
     },
   },
   env: {

@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { createExpressMiddleware } from '@trpc/server/adapters/express'
 
 import authIndex from '@auth/api/index.js'
-import cypress from '@auth/api/cypress.js'
 
 import { appRouter } from '@auth/trpc/index.js'
 import { createContext } from '@auth/trpc/trpc.js'
@@ -10,7 +9,6 @@ import { mapApplicationErrorToTrpcError } from '@auth/trpc/errorHandling.js'
 
 const router = Router()
 router.use('/api/', authIndex)
-router.use('/api/cypress', cypress)
 router.use(
   '/trpc',
   createExpressMiddleware({
