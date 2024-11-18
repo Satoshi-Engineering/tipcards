@@ -46,6 +46,10 @@ export default class LNURLAuth {
     return url
   }
 
+  get publicKeyAsHex() {
+    return this.signingKey.publicKeyAsHex
+  }
+
   static sign(messageAsHex: string, privateKeyAsHex: string) {
     const messageAsBuffer = Buffer.from(messageAsHex, 'hex')
     const privateKeyAsBuffer = Buffer.from(privateKeyAsHex, 'hex')

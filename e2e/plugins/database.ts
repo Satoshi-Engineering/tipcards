@@ -78,8 +78,13 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return expiredAccessToken
     },
 
-    'db:createUser': async ({ profileEmail = '' }: { profileEmail?: string} = {}) => {
-      const lnurlAuthKey = randomUUID()
+    'db:createUser': async ({
+      profileEmail = '',
+      lnurlAuthKey = randomUUID(),
+    }: {
+      profileEmail?: string,
+      lnurlAuthKey?: string,
+    } = {}) => {
       const userId = hashSha256(lnurlAuthKey)
 
       await sql`
@@ -113,6 +118,22 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
           VALUES (${id}, ${userId}, ${refreshToken}, NULL);
       `
       return null
+    },
+
+
+    'db:insertAllowedSession': async ({
+      userId,
+    }: {
+      userId: string,
+    }) => {
+      const sessionId = randomUUID()
+
+      await sql`
+        INSERT INTO public."AllowedSession"(
+	      "user", "sessionId")
+        VALUES (${userId}, ${sessionId});
+      `
+      return sessionId
     },
   })
 

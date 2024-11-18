@@ -5,30 +5,37 @@ describe('Login Overlay - Email CTA', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
     tipCardsApi.auth.createAndWrapLNURLAuth()
-
     tipCards.gotoHomePage()
   })
 
-  it('After login cta should be displayed', () => {
+  it('After login email cta should be displayed', () => {
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-login').click()
-
     wrapLNURLAuthFromLinkClick()
+    cy.intercept('/trpc/profile.getDisplayName**').as('profileGetDisplayName')
     login()
+    cy.wait('@profileGetDisplayName')
 
     cy.getTestElement('emailCta').should('exist')
   })
 
-  it.skip('After login cta should be displayed', () => {
-    cy.task('db:createUser', {
-      profileEmail: 'email@domain.com',
+  it('After login email cta should not be displayed', () => {
+    const profileEmail = 'email@domain.com'
+    cy.get('@lnurlAuth').then(function () {
+      const lnurlAuthKey = this.lnurlAuth.publicKeyAsHex
+      cy.log('lnurlAuthKey', lnurlAuthKey)
+      cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', {
+        profileEmail,
+        lnurlAuthKey,
+      })
     })
 
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-login').click()
-
     wrapLNURLAuthFromLinkClick()
+    cy.intercept('/trpc/profile.getDisplayName**').as('profileGetDisplayName')
     login()
+    cy.wait('@profileGetDisplayName')
 
     cy.getTestElement('emailCta').should('not.exist')
   })

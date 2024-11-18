@@ -28,6 +28,27 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
   })
 
   on('task', {
+    'jwt:createRefreshToken': async ({
+      expirationTime = '28d',
+      userId,
+      sessionId,
+    }: {
+      expirationTime? : string,
+      userId: string,
+      sessionId: string,
+    } ) => {
+      const nonce = randomUUID()
+      const payload = {
+        userId,
+        sessionId,
+        nonce,
+      }
+      const jwtIssuer = await getJwtIssuer()
+      return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
+    },
+  })
+
+  on('task', {
     'jwt:validateRefreshTokenFormatAllowedSessions': async ({
       refreshToken,
     }: {
