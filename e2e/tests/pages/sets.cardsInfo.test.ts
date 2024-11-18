@@ -1,23 +1,18 @@
 import { generateSets } from '@e2e/lib/api/data/set'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 describe.skip('Sets Page Cards Info', () => {
   const numberOfSets = 10
   const numberOfCardsPerSet = 10
   const viewportHeight = Cypress.config('viewportHeight')
 
-  let lnurlAuth: LNURLAuth
+  let refreshToken = ''
 
   before(() => {
-    tipCardsApi.auth.createAndWrapLNURLAuth()
-
-    cy.get('@lnurlAuth').then(function () {
-      lnurlAuth = this.lnurlAuth
+    tipCardsApi.auth.login().then((newRefreshToken) => {
+      refreshToken = newRefreshToken
     })
-
-    tipCardsApi.auth.loginViaRequests(false)
 
     const sets = generateSets(numberOfSets, numberOfCardsPerSet)
 
@@ -26,8 +21,7 @@ describe.skip('Sets Page Cards Info', () => {
   })
 
   beforeEach(() => {
-    tipCardsApi.auth.wrapLNURLAuth(lnurlAuth)
-    tipCardsApi.auth.loginViaRequests(false)
+    cy.setCookie('refresh_token', refreshToken)
   })
 
   it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, { taskTimeout: 5000 * numberOfSets }, () => {

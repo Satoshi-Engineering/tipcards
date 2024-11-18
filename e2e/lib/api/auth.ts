@@ -9,15 +9,16 @@ const API_AUTH_LOGIN = new URL('/auth/trpc/auth.loginWithLnurlAuthHash', TIPCARD
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
 export const login = () => {
-  cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser').then(({ userId }) => {
-    cy.task<string>('db:insertAllowedSession', {
+  return cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser').then(({ userId }) => {
+    return cy.task<string>('db:insertAllowedSession', {
       userId,
     }).then((sessionId) => {
-      cy.task<string>('jwt:createRefreshToken', {
+      return cy.task<string>('jwt:createRefreshToken', {
         userId,
         sessionId,
       }).then((refreshToken) => {
         cy.setCookie('refresh_token', refreshToken)
+        return cy.wrap(refreshToken)
       })
     })
   })
