@@ -8,6 +8,7 @@ export type GenerateSetOptions = {
   name?: string,
   userId?: string,
   created?: number,
+  changed?: number,
   numberOfCards?: number,
 }
 
@@ -15,6 +16,7 @@ export const generateSet = ({
   name,
   userId,
   created = Math.floor(Date.now() / 1000),
+  changed = Math.floor(Date.now() / 1000),
   numberOfCards = 8,
 }: GenerateSetOptions = {}): Set => {
   const setId = generateSetId()
@@ -33,7 +35,7 @@ export const generateSet = ({
       setName: name,
       landingPage: 'default',
     },
-    date: Math.floor(Date.now() / 1000),
+    date: changed,
     created,
     userId,
     text: '',

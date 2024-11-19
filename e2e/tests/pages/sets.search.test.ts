@@ -36,7 +36,7 @@ describe('Sets Page', () => {
   })
 
   it('displays the correct set after searching by date', () => {
-    const set1 = tipCardsApi.set.generateAndAddSet({ created: +new Date('2021-01-01') / 1000 })
+    const set1 = tipCardsApi.set.generateAndAddSet({ created: +new Date('2020-12-01') / 1000, changed: +new Date('2021-01-01') / 1000 })
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet()
 
