@@ -15,7 +15,7 @@ describe('SetsListItem', () => {
   config.global.stubs.RouterLink = RouterLinkStub
 
   it('renders a set\'s list item with correct name, date and number of cards', async () => {
-    const set = createSet({ created: new Date('2012-12-12T12:12:00'), settings: { name: 'set1', numberOfCards: 4 } })
+    const set = createSet({ created: new Date('2011-11-11T11:11:00'), changed: new Date('2012-12-12T12:12:00'), settings: { name: 'set1', numberOfCards: 4 } })
     const wrapper = mount(SetsListItem, {
       props: { set },
     })

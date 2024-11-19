@@ -20,7 +20,7 @@ export default (limit?: number) => {
   const fetchingCardsSummary = ref(false)
   const fetchingUserErrorMessages = ref<string[]>([])
 
-  const sets = computed(() => {
+  const sets = computed<SetDto[]>(() => {
     if (limit != null) {
       return setsInternal.value.slice(0, limit)
     }

@@ -3,7 +3,7 @@ import '../../mocks/router'
 import '../../mocks/pinia'
 import '../../mocks/intersectionObserver'
 import '../../mocks/modules/useTRpc'
-import { useSetsMethods } from  '../../mocks/modules/useSets'
+import { setsToReturn } from  '../../mocks/stores/useSets'
 
 import { mount, config, RouterLinkStub, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -29,7 +29,7 @@ describe('PageSets', () => {
 
   beforeEach(() => {
     authStore.isLoggedIn = false
-    useSetsMethods.getAllSets = vi.fn(async () => [])
+    setsToReturn.value = []
   })
 
   it('should show a logged out sets page', async () => {
@@ -69,7 +69,7 @@ describe('PageSets', () => {
   it('should show a list of named and nameless sets', async () => {
     authStore.isLoggedIn = true
 
-    useSetsMethods.getAllSets = vi.fn(async () => testSets)
+    setsToReturn.value = testSets
 
     const wrapper = mount(PageSets)
     await flushPromises()
@@ -86,7 +86,7 @@ describe('PageSets', () => {
   it('should display sets or the logged out section depending on loggedIn status', async () => {
     authStore.isLoggedIn = false
 
-    useSetsMethods.getAllSets = vi.fn(async () => testSets)
+    setsToReturn.value = testSets
 
     const wrapper = mount(PageSets)
     await flushPromises()

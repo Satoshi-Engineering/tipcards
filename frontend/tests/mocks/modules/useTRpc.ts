@@ -26,6 +26,9 @@ export const tRpcMock = {
     getAll: {
       query: vi.fn(async (): Promise<SetDto[]> => []),
     },
+    getLatestChanged: {
+      query: vi.fn(async (): Promise<SetDto[]> => []),
+    },
   },
 }
 
