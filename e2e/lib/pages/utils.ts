@@ -4,6 +4,7 @@ export const reloadPage = () => {
   cy.intercept('/auth/trpc/auth.refreshRefreshToken**').as('apiAuthRefresh')
   cy.reload()
   cy.wait('@apiAuthRefresh')
+  cy.getTestElement('the-layout').should('exist')
 }
 
 export const gotoPage = (page: URL) => {
@@ -12,6 +13,7 @@ export const gotoPage = (page: URL) => {
     onBeforeLoad: switchBrowserLanguageToEnglish,
   })
   cy.wait('@apiAuthRefresh')
+  cy.getTestElement('the-layout').should('exist')
 }
 
 export const gotoPageWithExpiredAccessToken = (page: URL) => {
