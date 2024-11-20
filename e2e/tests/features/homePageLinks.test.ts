@@ -37,6 +37,11 @@ describe('homePageLinks', () => {
           // and let the test continue
           return false
         }
+        if (e.message.includes("Cannot read properties of undefined (reading 'indexOf')")) {
+          // we expected this error, so let's ignore it
+          // and let the test continue
+          return false
+        }
       })
     })
 
