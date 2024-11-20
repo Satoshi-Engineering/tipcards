@@ -141,7 +141,7 @@ export default class FrontendWithAuth extends Frontend {
     if (this.accessToken === '') {
       return ''
     }
-    const accessTokenPayload = decodeJwt<{ id: string }>(this.accessToken)
-    return accessTokenPayload.id
+    const accessTokenPayload = decodeJwt<{ userId: string }>(this.accessToken)
+    return accessTokenPayload.userId
   }
 }
