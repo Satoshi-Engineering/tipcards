@@ -38,4 +38,30 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login').should('exist')
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
   })
+
+  it('should show modal login, if user logged out on another device and wants to use the log out all other devices feature', () => {
+    tipCardsApi.auth.login()
+    tipCards.gotoUserAccount()
+    tipCardsApi.auth.logoutAllDevices()
+
+    cy.getTestElement('user-account-button-logout-all-other-devices').click()
+
+    cy.getTestElement('modal-login').should('exist')
+    cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
+  })
+
+  it('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
+    tipCardsApi.auth.login()
+    tipCards.gotoUserAccount()
+    cy.getCookie('refresh_token').then((cookie) => {
+      cy.task<string>('generateInvalidRefreshToken', cookie.value).then((refreshToken) => {
+        cy.setCookie('refresh_token', refreshToken)
+      })
+    })
+
+    cy.getTestElement('user-account-button-logout-all-other-devices').click()
+
+    cy.getTestElement('modal-login').should('exist')
+    cy.getTestElement('modal-login-user-message').should('contain', 'You were logged out')
+  })
 })
