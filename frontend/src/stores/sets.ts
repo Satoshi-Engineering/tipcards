@@ -1,38 +1,41 @@
 import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { defineStore, storeToRefs } from 'pinia'
 
+import i18n from '@/modules/initI18n'
 import { SetDto } from '@shared/data/trpc/SetDto.js'
 import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
-import { storeToRefs } from 'pinia'
 
 export type CardsSummaryWithLoadingStatus = { cardsSummary?: CardsSummaryDto, status: 'loading' | 'error' | 'success' | undefined }
 export type CardsSummaryWithLoadingStatusBySetId = Record<SetDto['id'], CardsSummaryWithLoadingStatus>
 
-const setsInternal = ref<SetDto[]>([])
-const cardsSummaryWithStatusBySetId = ref<CardsSummaryWithLoadingStatusBySetId>({})
+export const useSetsStore = defineStore('sets', () => {
+  // I tried to use `useI18n` instead, but then the unit tests failed to initialize the i18n module
+  const { t } = i18n.global
 
-export default (limit?: number) => {
-  const { t } = useI18n()
   const { set } = useTRpc()
+
+  const limit = ref<number | undefined>()
+  const setsInternal = ref<SetDto[]>([])
+  const cardsSummaryWithStatusBySetId = ref<CardsSummaryWithLoadingStatusBySetId>({})
   const fetchingAllSets = ref(false)
   const fetchingCardsSummary = ref(false)
   const fetchingUserErrorMessages = ref<string[]>([])
 
   const sets = computed<SetDto[]>(() => {
-    if (limit != null) {
-      return setsInternal.value.slice(0, limit)
+    if (limit.value != null) {
+      return setsInternal.value.slice(0, limit.value)
     }
     return setsInternal.value
   })
 
   /** @throws */
-  const loadAllSets = async () => {
+  const fetchSets = async () => {
     fetchingUserErrorMessages.value.length = 0
     fetchingAllSets.value = true
     try {
-      setsInternal.value = await set.getLatestChanged.query({ limit })
+      setsInternal.value = await set.getLatestChanged.query({ limit: limit.value })
       resetCardsSummaries()
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
@@ -61,16 +64,6 @@ export default (limit?: number) => {
       }
     })
   }
-
-  const { isLoggedIn } = storeToRefs(useAuthStore())
-
-  watch(isLoggedIn, async (isLoggedIn) => {
-    if (!isLoggedIn) {
-      resetSetsAndCardsSummary()
-      return
-    }
-    await loadAllSets()
-  }, { immediate: true })
 
   const loadCardsSummaryForSet = async (setId: string) => {
     if (cardsSummaryWithStatusBySetId.value[setId]?.status != null) {
@@ -116,12 +109,26 @@ export default (limit?: number) => {
     }
   }
 
+  const { isLoggedIn } = storeToRefs(useAuthStore())
+
+  const loadSets = async () => {
+    if (!isLoggedIn) {
+      resetSetsAndCardsSummary()
+      return
+    }
+    await fetchSets()
+  }
+
+  watch(isLoggedIn, loadSets)
+
   return {
+    limit,
     fetchingUserErrorMessages,
     fetchingAllSets,
     fetchingCardsSummary,
     sets,
     cardsSummaryWithStatusBySetId,
+    loadSets,
     loadCardsSummaryForSet,
   }
-}
+})

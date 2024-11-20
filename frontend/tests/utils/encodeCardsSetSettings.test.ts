@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest'
 
-import '../mocks/i18n'
-import '../mocks/provide'
-import '../mocks/pinia'
-import '../mocks/router'
-
 import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
 
 describe('useSets', () => {

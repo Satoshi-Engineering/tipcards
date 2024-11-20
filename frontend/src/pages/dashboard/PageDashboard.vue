@@ -56,7 +56,7 @@
         :fetching="fetchingAllSets && sets.length < 3"
         :message="sets.length > 0 && sets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
         class="my-7"
-        @enter-viewport="loadCardsSummaryForSet"
+        @enter-viewport="setsStore.loadCardsSummaryForSet"
       />
       <div class="text-center">
         <LinkDefault
@@ -84,7 +84,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useProfileStore } from '@/stores/profile'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import SetsList from '../sets/components/SetsList.vue'
-import useSets from '@/stores/useSets'
+import { useSetsStore } from '@/stores/sets'
+import { onMounted } from 'vue'
 
 const profileStore = useProfileStore()
 const { userDisplayName } = storeToRefs(profileStore)
@@ -95,5 +96,11 @@ const { isLoggedIn } = storeToRefs(authStore)
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
-const { sets, fetchingAllSets, loadCardsSummaryForSet, cardsSummaryWithStatusBySetId } = useSets(3)
+const setsStore = useSetsStore()
+const { limit, sets, cardsSummaryWithStatusBySetId, fetchingAllSets } = storeToRefs(setsStore)
+limit.value = 3
+
+onMounted(() => {
+  setsStore.loadSets()
+})
 </script>

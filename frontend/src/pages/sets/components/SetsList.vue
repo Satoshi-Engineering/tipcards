@@ -52,7 +52,7 @@ import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import type { CardsSummaryWithLoadingStatusBySetId } from '@/stores/useSets'
+import type { CardsSummaryWithLoadingStatusBySetId } from '@/stores/sets'
 
 const props = defineProps({
   sets: {

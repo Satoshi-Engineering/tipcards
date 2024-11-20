@@ -68,7 +68,7 @@
             :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             sorting="changed"
             class="my-7"
-            @enter-viewport="loadCardsSummaryForSet"
+            @enter-viewport="setsStore.loadCardsSummaryForSet"
           />
         </div>
       </div>
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -95,7 +95,7 @@ import SetsListFilterSection from '@/pages/sets/components/SetsListFilterSection
 import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
 import { useModalLoginStore } from '@/stores/modalLogin'
-import useSets from '@/stores/useSets'
+import { useSetsStore } from '@/stores/sets'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 import { useAuthStore } from '@/stores/auth'
@@ -104,7 +104,13 @@ const { showModalLogin } = storeToRefs(useModalLoginStore())
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 
-const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingUserErrorMessages, loadCardsSummaryForSet } = useSets()
+const setsStore = useSetsStore()
+const { limit, sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingUserErrorMessages } = storeToRefs(setsStore)
+limit.value = undefined
+
+onMounted(() => {
+  setsStore.loadSets()
+})
 
 // Search
 const textSearch = ref<string>('')

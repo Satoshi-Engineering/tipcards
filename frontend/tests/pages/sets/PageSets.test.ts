@@ -1,16 +1,18 @@
 import '../../mocks/i18n'
 import '../../mocks/router'
-import '../../mocks/pinia'
+import testingPinia from '../../mocks/pinia'
 import '../../mocks/intersectionObserver'
 import '../../mocks/modules/useTRpc'
-import { setsToReturn } from  '../../mocks/stores/useSets'
+// import { setsToReturn } from  '../../mocks/stores/sets'
 
 import { mount, config, RouterLinkStub, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { setActivePinia } from 'pinia'
 
+import { useAuthStore } from '@/stores/auth'
+import { useSetsStore } from '@/stores/sets'
 import PageSets from '@/pages/sets/PageSets.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import { useAuthStore } from '@/stores/auth'
 import { createSet } from '../../data/set'
 
 config.global.stubs.TheLayout = {
@@ -20,7 +22,10 @@ config.global.stubs.TheLayout = {
 config.global.stubs.UserErrorMessages = { template: '<div />' }
 
 describe('PageSets', () => {
+  setActivePinia(testingPinia)
+
   const authStore = vi.mocked(useAuthStore())
+  const setsStore = vi.mocked(useSetsStore())
   const testSets = [
     createSet({ settings: { name: 'set1' } }),
     createSet({ id: 'set2' }),
@@ -29,7 +34,8 @@ describe('PageSets', () => {
 
   beforeEach(() => {
     authStore.isLoggedIn = false
-    setsToReturn.value = []
+    setsStore.sets = []
+    setsStore.loadSets = vi.fn()
   })
 
   it('should show a logged out sets page', async () => {
@@ -69,7 +75,7 @@ describe('PageSets', () => {
   it('should show a list of named and nameless sets', async () => {
     authStore.isLoggedIn = true
 
-    setsToReturn.value = testSets
+    setsStore.sets = testSets
 
     const wrapper = mount(PageSets)
     await flushPromises()
@@ -86,7 +92,7 @@ describe('PageSets', () => {
   it('should display sets or the logged out section depending on loggedIn status', async () => {
     authStore.isLoggedIn = false
 
-    setsToReturn.value = testSets
+    setsStore.sets = testSets
 
     const wrapper = mount(PageSets)
     await flushPromises()

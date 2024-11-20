@@ -52,7 +52,7 @@ import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch, comp
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import type { CardsSummaryWithLoadingStatus } from '@/stores/useSets'
+import type { CardsSummaryWithLoadingStatus } from '@/stores/sets'
 import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
 import SetCardsSummary from '@/pages/sets/components/SetCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
