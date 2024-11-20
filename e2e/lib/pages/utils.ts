@@ -20,7 +20,9 @@ export const gotoPageWithExpiredAccessToken = (page: URL) => {
   cy.getCookie('refresh_token', {
     domain: TIPCARDS_AUTH_ORIGIN.hostname,
   }).then((cookie) => {
-    cy.task<string>('generateExpiredAccessToken', cookie.value).then((accessToken) => {
+    cy.task<string>('jwt:generateExpiredAccessToken', {
+      refreshToken: cookie.value,
+    }).then((accessToken) => {
       cy.intercept(
         { url: '/auth/trpc/auth.refreshRefreshToken**', times: 1 },
         [{ result: { data: { json: { accessToken } } } } ],

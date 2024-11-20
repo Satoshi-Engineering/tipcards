@@ -5,7 +5,9 @@ describe('Expired refresh token', () => {
   it('should show modal login with session expiration message', () => {
     tipCardsApi.auth.login()
     cy.getCookie('refresh_token').then((cookie) => {
-      cy.task<string>('generateExpiredRefreshToken', cookie.value).then((refreshToken) => {
+      cy.task<string>('jwt:generateExpiredRefreshToken', {
+        refreshToken: cookie.value,
+      }).then((refreshToken) => {
         cy.setCookie('refresh_token', refreshToken)
       })
     })

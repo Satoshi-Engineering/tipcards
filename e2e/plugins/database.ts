@@ -3,8 +3,7 @@
 import crypto, { randomUUID } from 'crypto'
 import postgres from 'postgres'
 
-import JwtIssuer from '../../shared/src/modules/Jwt/JwtIssuer'
-import JwtKeyPairHandler from '../../shared/src/modules/Jwt/JwtKeyPairHandler'
+import { getJwtPayload } from '../lib/jwtHelpers'
 
 // This function is the entry point for plugins
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
@@ -22,60 +21,12 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return null
     },
 
-    async generateExpiredRefreshToken(refreshToken: string) {
-      const jwtIssuer = await getJwtIssuer()
-      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
-      const expiredRefreshToken = jwtIssuer.createJwt(
-        process.env.JWT_AUTH_ISSUER,
-        '0 seconds',
-        payload,
-      )
-
-      return expiredRefreshToken
-    },
-
-    async logoutAllDevices(refreshToken: string) {
-      const jwtIssuer = await getJwtIssuer()
-      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
-      const userId = String(payload.userId)
+    'db:logoutAllDevices': async ({ refreshToken }: { refreshToken: string }) => {
+      const payload = await getJwtPayload({ refreshToken })
+      const userId = payload.userId as string
       await sql`DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${userId};`
       await sql`DELETE FROM public."AllowedSession" WHERE "user"=${userId};`
-
       return userId
-    },
-
-    async generateInvalidRefreshToken(refreshToken: string) {
-      const jwtIssuer = await getJwtIssuer()
-      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
-      const expiredRefreshToken = jwtIssuer.createJwt(
-        'invalid-audience',
-        '28 days',
-        payload,
-      )
-
-      return expiredRefreshToken
-    },
-
-    async generateExpiredAccessToken(refreshToken: string) {
-      const jwtIssuer = await getJwtIssuer()
-      const payload = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
-
-      // the frontend requests a new access token,
-      // if the current one expires within the next 60 seconds.
-      // add another 10 seconds on top, so the frontend can do
-      // some requests, before it fetches a new one.
-      const expiredAccessToken = jwtIssuer.createJwt(
-        process.env.JWT_AUTH_ISSUER,
-        '70 seconds',
-        {
-          id: payload.userId,
-          lnurlAuthKey: '',
-          permissions: [],
-          nonce: payload.nonce,
-        },
-      )
-
-      return expiredAccessToken
     },
 
     'db:createUser': async ({
@@ -138,16 +89,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
   })
 
   let sql: postgres.Sql
-  let jwtIssuer: JwtIssuer
-
-  const getJwtIssuer = async () => {
-    if (jwtIssuer) {
-      return jwtIssuer
-    }
-    const keyPairHandler = new JwtKeyPairHandler(process.env.JWT_AUTH_KEY_DIRECTORY)
-    const keyPair = await keyPairHandler.loadKeyPairFromDirectory()
-    return jwtIssuer = new JwtIssuer(keyPair, process.env.JWT_AUTH_ISSUER)
-  }
 
   on('before:run', () => {
     const host = String(process.env.POSTGRES_HOST)

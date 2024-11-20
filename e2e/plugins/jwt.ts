@@ -2,31 +2,11 @@
 
 import { randomUUID } from 'crypto'
 
-import JwtIssuer from '../../shared/src/modules/Jwt/JwtIssuer'
-import JwtKeyPairHandler from '../../shared/src/modules/Jwt/JwtKeyPairHandler'
+import { AccessTokenPayload } from '../../shared/src/data/auth/index'
+
+import { getJwtIssuer, getJwtPayload } from '../lib/jwtHelpers'
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
-  on('task', {
-    'jwt:createRefreshTokenFormatAllowedRefreshTokens': async ({
-      expirationTime,
-      userId,
-      lnurlAuthKey,
-    }: {
-      expirationTime: string,
-      userId: string,
-      lnurlAuthKey: string,
-    } ) => {
-      const nonce = randomUUID()
-      const payload = {
-        id: userId,
-        lnurlAuthKey,
-        nonce,
-      }
-      const jwtIssuer = await getJwtIssuer()
-      return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
-    },
-  })
-
   on('task', {
     'jwt:createRefreshToken': async ({
       expirationTime = '28d',
@@ -46,16 +26,78 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       const jwtIssuer = await getJwtIssuer()
       return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
     },
-  })
 
-  on('task', {
+    'jwt:generateExpiredRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
+      const jwtIssuer = await getJwtIssuer()
+      const payload = await getJwtPayload({ refreshToken })
+      const expiredRefreshToken = jwtIssuer.createJwt(
+        process.env.JWT_AUTH_ISSUER,
+        '0 seconds',
+        payload,
+      )
+
+      return expiredRefreshToken
+    },
+
+    'jwt:generateInvalidRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
+      const jwtIssuer = await getJwtIssuer()
+      const payload = await getJwtPayload({ refreshToken })
+      const expiredRefreshToken = jwtIssuer.createJwt(
+        'invalid-audience',
+        '28 days',
+        payload,
+      )
+
+      return expiredRefreshToken
+    },
+
+    'jwt:generateExpiredAccessToken': async ({ refreshToken }: { refreshToken: string }) => {
+      const jwtIssuer = await getJwtIssuer()
+      const { userId, nonce } = await getJwtPayload({ refreshToken })
+
+      // the frontend requests a new access token,
+      // if the current one expires within the next 60 seconds.
+      // add another 10 seconds on top, so the frontend can do
+      // some requests, before it fetches a new one.
+      const payload: AccessTokenPayload = {
+        userId: userId as string,
+        permissions: [],
+        nonce: nonce as string,
+      }
+      const expiredAccessToken = jwtIssuer.createJwt(
+        process.env.JWT_AUTH_ISSUER,
+        '70 seconds',
+        payload,
+      )
+
+      return expiredAccessToken
+    },
+
+    'jwt:createRefreshTokenFormatAllowedRefreshTokens': async ({
+      expirationTime,
+      userId,
+      lnurlAuthKey,
+    }: {
+      expirationTime: string,
+      userId: string,
+      lnurlAuthKey: string,
+    } ) => {
+      const nonce = randomUUID()
+      const payload = {
+        id: userId,
+        lnurlAuthKey,
+        nonce,
+      }
+      const jwtIssuer = await getJwtIssuer()
+      return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
+    },
+
     'jwt:validateRefreshTokenFormatAllowedSessions': async ({
       refreshToken,
     }: {
       refreshToken: string,
     } ) => {
-      const jwtIssuer = await getJwtIssuer()
-      const { userId, sessionId, nonce } = await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
+      const { userId, sessionId, nonce } = await getJwtPayload({ refreshToken })
 
       if (typeof userId != 'string' && (userId as string).length <= 10) {
         return false
@@ -70,17 +112,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return true
     },
   })
-
-  let jwtIssuer: JwtIssuer
-
-  const getJwtIssuer = async () => {
-    if (jwtIssuer) {
-      return jwtIssuer
-    }
-    const keyPairHandler = new JwtKeyPairHandler(process.env.JWT_AUTH_KEY_DIRECTORY)
-    const keyPair = await keyPairHandler.loadKeyPairFromDirectory()
-    return jwtIssuer = new JwtIssuer(keyPair, process.env.JWT_AUTH_ISSUER)
-  }
 
   return config
 }
