@@ -177,8 +177,7 @@ export const createUserCanUseImage = (user: User, image: Image, canEdit = false)
 })
 
 export const createAccessTokenPayloadForUser = (user: User): AccessTokenPayload => ({
-  id: user.id,
-  lnurlAuthKey: user.lnurlAuthKey,
+  userId: user.id,
   permissions: AccessTokenPayload.shape.permissions.parse(user.permissions),
   nonce: randomUUID(),
 })

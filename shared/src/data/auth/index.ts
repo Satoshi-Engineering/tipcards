@@ -4,8 +4,7 @@ import { PermissionsEnum } from './User.js'
 import { AccessTokenResponse } from '../Response.js'
 
 export const AccessTokenPayload = z.object({
-  id: z.string(),
-  lnurlAuthKey: z.string(),
+  userId: z.string(),
   permissions: PermissionsEnum.array().default(() => []),
   nonce: z.string().uuid().describe('this makes sure every token is unique'),
 })

@@ -1,5 +1,3 @@
-import type { AccessTokenPayload } from '@shared/data/auth/index.js'
-
 import NotFoundError from '@backend/errors/NotFoundError.js'
 import type Queries from '@backend/database/Queries.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
@@ -207,21 +205,6 @@ export const getUserByLnurlAuthKeyOrCreateNew = async (lnurlAuthKey: UserRedis['
     id: userId,
     lnurlAuthKey,
     created: Math.floor(+ new Date() / 1000),
-  })
-  await createUser(user)
-  return user
-}
-
-export const initUserFromAccessTokenPayload = async (accessTokenPayload: AccessTokenPayload): Promise<UserRedis> => {
-  let user = await getUserById(accessTokenPayload.id)
-  if (user != null) {
-    return user
-  }
-  user = UserRedis.parse({
-    id: accessTokenPayload.id,
-    lnurlAuthKey: accessTokenPayload.lnurlAuthKey,
-    created: Math.floor(+ new Date() / 1000),
-    permissions: accessTokenPayload.permissions,
   })
   await createUser(user)
   return user

@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server'
 import { errors } from 'jose'
 import { ZodError } from 'zod'
 
-import { initUserFromAccessTokenPayload } from '@backend/database/deprecated/queries.js'
 import { validateJwt as validateJwtService } from '@backend/services/jwt.js'
 
 import { validateAuthContext } from './validateAuthContext.js'
@@ -29,7 +28,6 @@ const mapErrorToTRpcError = (error: unknown) => {
 export const validateJwt = validateAuthContext.unstable_pipe(async ({ ctx, next }) => {
   try {
     const accessToken = await validateJwtService(ctx.jwt, ctx.host)
-    await initUserFromAccessTokenPayload(accessToken)
     return next({
       ctx: {
         host: ctx.host,

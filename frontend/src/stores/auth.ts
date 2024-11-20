@@ -45,7 +45,7 @@ const accessTokenPayload = computed(() => {
   return null
 })
 
-const userId = computed(() => accessTokenPayload.value?.id)
+const userId = computed(() => accessTokenPayload.value?.userId)
 
 const callbacksAwaitingAccessToken = ref<CallableFunction[]>([])
 const fetchingAccessToken = ref(false)

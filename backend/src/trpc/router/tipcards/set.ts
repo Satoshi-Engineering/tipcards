@@ -18,7 +18,7 @@ export const setRouter = router({
   getAll: loggedInProcedure
     .output(SetDto.array())
     .query(async ({ ctx }) => {
-      const setCollection = await SetCollection.fromUserId(ctx.accessToken.id)
+      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
       return setCollection.sets
     }),
 
@@ -26,7 +26,7 @@ export const setRouter = router({
     .input(z.object({ limit: z.number().optional() }))
     .output(SetDto.array())
     .query(async ({ ctx, input }) => {
-      const setCollection = await SetCollection.fromUserId(ctx.accessToken.id, {
+      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId, {
         sorting: 'changed',
         sortingDirection: 'DESC',
         limit: input.limit,

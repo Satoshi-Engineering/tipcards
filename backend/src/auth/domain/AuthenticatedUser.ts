@@ -3,6 +3,7 @@ import type { Response, Request } from 'express'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
+import { AccessTokenPayload } from '@shared/data/auth/index.js'
 
 import User from '@backend/domain/User.js'
 import { JWT_AUTH_ISSUER } from '@backend/constants.js'
@@ -49,16 +50,16 @@ export default class AuthenticatedUser {
    */
   async createAccessToken() {
     const nonce = randomUUID()
+    const payload: AccessTokenPayload = {
+      userId: this.user.id,
+      permissions: this.user.permissions,
+      nonce,
+    }
     try {
       return this.jwtIssuer.createJwt(
         this.jwtAccessTokenAudience,
         ACCESS_TOKEN_EXPIRATION_TIME,
-        {
-          id: this.user.id,
-          lnurlAuthKey: this.user.lnurlAuthKey,
-          permissions: this.user.permissions,
-          nonce,
-        },
+        payload,
       )
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.AuthJwtHanderAccessTokenCreationError)

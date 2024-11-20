@@ -113,8 +113,7 @@ describe('Authenticed User', () => {
       mockAccessTokenAudience,
       ACCESS_TOKEN_EXPIRATION_TIME,
       expect.objectContaining({
-        id: user.id,
-        lnurlAuthKey: user.lnurlAuthKey,
+        userId: user.id,
         permissions: user.permissions,
         nonce: expect.stringMatching(uuidRegex),
       }),

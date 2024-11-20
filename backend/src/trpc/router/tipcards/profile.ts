@@ -9,7 +9,7 @@ export const profileRouter = router({
   get: loggedInProcedure
     .output(ProfileDto)
     .query(async ({ ctx }) => {
-      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.id)
+      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.userId)
       return profile.toTRpcResponse()
     }),
 
@@ -17,7 +17,7 @@ export const profileRouter = router({
     .input(ProfileDto.partial())
     .output(ProfileDto)
     .mutation(async ({ ctx, input }) => {
-      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.id)
+      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.userId)
       await profile.update(input)
       return profile.toTRpcResponse()
     }),
@@ -25,7 +25,7 @@ export const profileRouter = router({
   getDisplayName: loggedInProcedure
     .output(ProfileDto.shape.displayName)
     .query(async ({ ctx }) => {
-      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.id)
+      const profile = await Profile.fromUserIdOrDefault(ctx.accessToken.userId)
       return profile.toTRpcResponse().displayName
     }),
 })

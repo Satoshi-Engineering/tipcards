@@ -42,7 +42,7 @@ export default (cardLockManager: CardLockManager) => {
       })
       return
     }
-    const userId: string = accessTokenPayload.id
+    const userId: string = accessTokenPayload.userId
 
     // load set from database
     let sets: SetRedis[] | null = null
@@ -74,7 +74,7 @@ export default (cardLockManager: CardLockManager) => {
       })
       return
     }
-    const userId: string = accessTokenPayload.id
+    const userId: string = accessTokenPayload.userId
     let settings: Settings | null = null
     let created: number | null = null
     let date: number | null = null

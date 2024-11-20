@@ -22,7 +22,7 @@ router.get('/', authGuardAccessToken, async (_, res) => {
     })
     return
   }
-  const userId: string = accessTokenPayload.id
+  const userId: string = accessTokenPayload.userId
 
   // load user from database
   let user: User | null = null

@@ -4,7 +4,6 @@ import { ZodError } from 'zod'
 
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import { initUserFromAccessTokenPayload } from '@backend/database/deprecated/queries.js'
 import { validateJwt } from '@backend/services/jwt.js'
 
 /**
@@ -34,7 +33,6 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
 
   try {
     const accessToken = await validateJwt(req.headers.authorization, host)
-    await initUserFromAccessTokenPayload(accessToken)
     res.locals.accessTokenPayload = accessToken
     next()
   } catch (error) {
