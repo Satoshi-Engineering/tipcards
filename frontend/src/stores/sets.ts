@@ -112,7 +112,7 @@ export const useSetsStore = defineStore('sets', () => {
   const { isLoggedIn } = storeToRefs(useAuthStore())
 
   const loadSets = async () => {
-    if (!isLoggedIn) {
+    if (isLoggedIn.value !== true) {
       resetSetsAndCardsSummary()
       return
     }
