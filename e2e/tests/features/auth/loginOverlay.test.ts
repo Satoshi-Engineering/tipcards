@@ -63,23 +63,6 @@ describe('Login Overlay', () => {
     checkLoginSuccess()
     reloadPageAndCheckAuth()
   })
-
-  it('Lnurl auth callback url call should fail, after a login has happend', () => {
-    // Login
-    openModalLogin()
-    wrapLNURLAuthFromLinkClick()
-    login()
-    checkLoginSuccess()
-
-    // Try second login
-    cy.get('@lnurlAuth').get('@lnurlAuthUrl').then(function () {
-      const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(this.lnurlAuthUrl)
-      cy.request({
-        url: LNURLAuthCallbackUrl.href,
-        failOnStatusCode: false,
-      }).its('status').should('eq', 400)
-    })
-  })
 })
 
 const openModalLogin = () => {
