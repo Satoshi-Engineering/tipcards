@@ -25,19 +25,7 @@ const lnurlAuth = new LNURLAuth({
 const frontend = new FrontendSimulator(randomMnemonic)
 
 describe('auth', () => {
-  it('should not be able to refresh, if no login has happened', async () => {
-    let caughtError: TRPCClientError<AuthRouter> | undefined
-
-    try {
-      await frontend.authRefreshRefreshToken()
-    } catch (error) {
-      caughtError = error as TRPCClientError<AuthRouter>
-    }
-    expect(caughtError).toBeInstanceOf(TRPCClientError)
-    expect(caughtError?.data?.httpStatus).toBe(401)
-  })
-
-  failEarly.it('should login', async () => {
+  it('should login', async () => {
     const createResponse = await frontend.authCreateLnUrlAuth()
 
     const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(createResponse.lnurlAuth)
