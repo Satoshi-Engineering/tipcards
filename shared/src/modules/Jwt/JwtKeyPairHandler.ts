@@ -19,6 +19,16 @@ export default class JwtKeyPairHandler {
     this.keyPairDirectory = keyPairDirectory
   }
 
+  static async convertPublicKeyToKeyLike({
+    publicKeyAsString,
+    algorithm = Algorithms.RS256,
+  }: {
+    publicKeyAsString: string,
+    algorithm?: Algorithms,
+  }) {
+    return await importSPKI(publicKeyAsString, algorithm)
+  }
+
   async loadKeyPairFromDirectory(
     filenamePublicKey: string = DEFAULT_PUBLIC_KEY_FILENAME,
     filenamePrivateKey: string = DEFAULT_PRIVATE_KEY_FILENAME,
@@ -28,7 +38,10 @@ export default class JwtKeyPairHandler {
     const filenamePrivateKeyResolved = path.resolve(this.keyPairDirectory, filenamePrivateKey)
     if (fs.existsSync(filenamePublicKeyResolved) && fs.existsSync(filenamePrivateKeyResolved)) {
       let data = fs.readFileSync(filenamePublicKeyResolved, 'utf8')
-      const publicKey = await importSPKI(data, algorithm)
+      const publicKey = await JwtKeyPairHandler.convertPublicKeyToKeyLike({
+        publicKeyAsString: data,
+        algorithm,
+      })
       data = fs.readFileSync(filenamePrivateKeyResolved, 'utf8')
       const privateKey = await importPKCS8(data, algorithm)
 

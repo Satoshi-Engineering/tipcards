@@ -1,21 +1,25 @@
 import assert from 'assert'
+import axios from 'axios'
+import crypto from 'crypto'
 
 import { AccessTokenPayload } from '@shared/data/auth/index.js'
 import JwtValidator from '@shared/modules/Jwt/JwtValidator.js'
 import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
 
-import { JWT_AUTH_KEY_DIRECTORY } from '@auth/constants.js'
+import { EXPRESS_PORT, JWT_AUTH_ISSUER } from '@backend/constants.js'
 
-import { JWT_AUTH_ISSUER } from '@backend/constants.js'
+const PUBLIC_KEY_API = `http://localhost:${EXPRESS_PORT}/auth/api/publicKey`
 
 let jwtValidator: JwtValidator | null = null
 
 const getJwtValidator = async (): Promise<JwtValidator> => {
   if (jwtValidator == null) {
-    const jwtKeyPairHandler = new JwtKeyPairHandler(JWT_AUTH_KEY_DIRECTORY)
-    const keyPair = await jwtKeyPairHandler.loadKeyPairFromDirectory()
-    assert(keyPair != null, 'Could not load Key Pair from disk')
-    jwtValidator = new JwtValidator(keyPair.publicKey, JWT_AUTH_ISSUER)
+    const response = await axios(PUBLIC_KEY_API)
+    const publicKey = await JwtKeyPairHandler.convertPublicKeyToKeyLike({
+      publicKeyAsString: response.data.data,
+    })
+    assert(publicKey instanceof crypto.KeyObject, `Could not load publicKey from ${PUBLIC_KEY_API}`)
+    jwtValidator = new JwtValidator(publicKey, JWT_AUTH_ISSUER)
   }
   return jwtValidator
 }
