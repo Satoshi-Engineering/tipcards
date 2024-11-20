@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch } from 'vue'
+import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
@@ -111,5 +111,5 @@ const emitIfInViewportLongEnough = async () => {
 watch(isInViewport, emitIfInViewportLongEnough)
 
 const i18n = useI18n()
-const setDisplayInfo = SetDisplayInfo.create(props.set, i18n)
+const setDisplayInfo = computed(() => { return SetDisplayInfo.create(props.set, i18n) })
 </script>

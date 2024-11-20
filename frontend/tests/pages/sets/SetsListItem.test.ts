@@ -10,6 +10,7 @@ import { describe, it, expect } from 'vitest'
 import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
 import { createSet } from '../../data/set'
 import type { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto'
+import { nextTick, ref } from 'vue'
 
 describe('SetsListItem', () => {
   config.global.stubs.RouterLink = RouterLinkStub
@@ -162,6 +163,21 @@ describe('SetsListItem', () => {
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(8)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(2)
+  })
+
+  it('should update the infos if they are changed after rendering', async () => {
+    const set = ref(createSet({ settings: { name: 'Old name', numberOfCards: 10 } }))
+    const wrapper = mount(SetsListItem, {
+      props: { set: set.value },
+    })
+
+    set.value.settings.name = 'New Name'
+    set.value.settings.numberOfCards = 5
+
+    await nextTick()
+
+    expect(wrapper.find('[data-test="sets-list-item-name"]').text()).toBe('New Name')
+    expect(wrapper.find('[data-test="sets-list-item-number-of-cards"]').text()).toBe('5 cards')
   })
 })
 
