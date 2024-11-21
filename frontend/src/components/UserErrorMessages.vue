@@ -1,5 +1,8 @@
 <template>
-  <div v-if="userErrorMessages.length > 0">
+  <div
+    v-if="userErrorMessages.length > 0"
+    data-test="user-error-messages"
+  >
     <ParagraphDefault
       v-for="message in userErrorMessages"
       :key="message"

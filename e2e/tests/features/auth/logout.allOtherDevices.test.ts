@@ -1,4 +1,5 @@
 import tipCards from '@e2e/lib/tipCards'
+import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 const numberOfRefreshTokens = 4
 
@@ -33,6 +34,37 @@ describe('Feature logoutAllOtherDevices', () => {
         checkIfRefreshTokenIsInValid(i)
       }
     }
+  })
+
+  // on a 401 the user gets logged out (checkout refreshToken.revoked.test.ts)
+  // on other errors (e.g. 500), the user should not get logged out but an error message should be shown
+  it('should show an error message if an error on the backend occurs', () => {
+    tipCardsApi.auth.login()
+    tipCards.gotoUserAccount()
+    cy.intercept('/auth/trpc/auth.logoutAllOtherDevices**', {
+      statusCode: 500,
+      body: [
+        {
+          error: {
+            json: {
+              message: 'Unknown error',
+              code: -32603,
+              data: {
+                code: 'INTERNAL_SERVER_ERROR',
+                httpStatus: 500,
+                stack: 'Trpc Stack Trace',
+                path: 'auth.logoutAllOtherDevices',
+              },
+            },
+          },
+        },
+      ],
+    }).as('logoutAllOtherDevices')
+
+    cy.getTestElement('user-account-button-logout-all-other-devices').click()
+
+    cy.getTestElement('modal-login').should('not.exist')
+    cy.getTestElement('user-error-messages').should('contain', 'Error while logging out all other devices')
   })
 })
 
