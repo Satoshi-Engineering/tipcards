@@ -11,7 +11,7 @@
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
     "shared-test-units": "vitest run --config ./shared/vitest.config.ts ./shared/tests/units",
     "frontend-dev": "vite --config ./frontend/vite.config.ts",
-    "frontend-preview": "vite preview --port 5050 --config ./frontend/vite.config.ts",
+    "frontend-preview": "vite preview --host 0.0.0.0  --port 5050 --config ./frontend/vite.config.ts",
     "frontend-build": "vite build --config ./frontend/vite.config.ts",
     "frontend-typecheck": "cd frontend && vue-tsc --build --force",
     "frontend-test-unit": "vitest run --config ./frontend/vitest.config.ts",
@@ -34,7 +34,7 @@
     "e2e-live-checks": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/live-checks/**/*.test.ts'",
     "e2e-test": "cypress run --e2e -C ./e2e/cypress.config.ts",
     "e2e-tests": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/tests/**/*.test.ts'",
-    "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview http://localhost:5050 'npm run e2e-tests'",
+    "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview 5050 e2e-tests",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
     "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
     "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts"
