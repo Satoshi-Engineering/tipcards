@@ -3,7 +3,7 @@
 import fs from 'fs';
 
 // Regex to validate the commit message
-const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\([\w\-\.]+\))?(!)?: ([\w ])+(\n\n[\s\S]*)*\n(\nBREAKING(-| )CHANGE: \S[ \S]*\S)?(\nReviewed-by: \S[ \S]*\S)?\nRefs:( projects#[0-9]+)+(\n[\s\S]*)?$/;
+const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\([\w\-\.]+\))?(!)?: ([\w .,?\/\-'])+(\n\n[\s\S]*)\n(\n(BREAKING-CHANGE|BREAKING CHANGE): \S[ \S]*\S){0,1}(\nReviewed-by: \S[ \S]*\S){0,1}\nRefs:( projects#[0-9]+)+(\n[\s\S]+)?$/;
 
 // Path to the commit message file
 const commitMsgFile = process.argv[2];
@@ -17,10 +17,10 @@ if (!regex.test(commitMsg)) {
   console.error(
     `Expected format:
     
-  <type>(<scope>): <subject>
+  <type>(<scope>): <subject> (subject can contain .,?/-')
   <BLANK LINE>
   <body> (optional)
-  <BLANK LINE>
+  <BLANK LINE> (required if body is present)
   BREAKING CHANGE: <description> (optional)
   Reviewed-by: <reviewer> (optional)
   Refs: projects#<issue-number> (required)`
