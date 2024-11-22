@@ -1,5 +1,5 @@
 import { describe, vi, it, expect, beforeAll, beforeEach } from 'vitest'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 
 import '../../mocks/process.env.js'
 import '../../mocks/jwt.js'
@@ -33,13 +33,6 @@ let authenticatedUser: AuthenticatedUser
 const allowedSession = AllowedSession.createNewForUserId(user.id)
 const allowedOtherSessionsInDatabase = Array.from({ length: 10 }, () => createAllowedSession(user))
 
-const mockRequest = {
-  get: vi.fn(),
-  headers: {
-    cookie: undefined,
-    authorization: undefined,
-  },
-} as unknown as Request
 const mockResponse = {
   cookie: vi.fn(),
   clearCookie: vi.fn(),
@@ -59,7 +52,6 @@ describe('Authenticed User', () => {
     authenticatedUser = new AuthenticatedUser({
       user,
       allowedSession: allowedSession,
-      request: mockRequest,
       response: mockResponse,
       jwtIssuer: mockJwtIssuer,
       jwtAccessTokenAudience: mockAccessTokenAudience,

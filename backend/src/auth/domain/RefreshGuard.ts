@@ -142,7 +142,6 @@ export default class RefreshGuard {
     return new AuthenticatedUser({
       user,
       allowedSession,
-      request: this.request,
       response: this.response,
       jwtIssuer: this.jwtIssuer,
       jwtAccessTokenAudience: this.jwtAccessTokenAudience,

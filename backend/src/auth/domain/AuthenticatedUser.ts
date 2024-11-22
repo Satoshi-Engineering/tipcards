@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto'
-import type { Response, Request } from 'express'
+import type { Response } from 'express'
 
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
@@ -15,21 +15,18 @@ export default class AuthenticatedUser {
   constructor({
     user,
     allowedSession,
-    request,
     response,
     jwtIssuer,
     jwtAccessTokenAudience,
   }: {
     user: User,
     allowedSession: AllowedSession,
-    request: Request,
     response: Response,
     jwtIssuer: JwtIssuer,
     jwtAccessTokenAudience: string[] | string,
   }) {
     this.user = user
     this.allowedSession = allowedSession
-    this.request = request
     this.response = response
     this.jwtIssuer = jwtIssuer
     this.jwtAccessTokenAudience = jwtAccessTokenAudience
@@ -81,7 +78,6 @@ export default class AuthenticatedUser {
 
   private user: User
   private allowedSession: AllowedSession
-  private request: Request
   private response: Response
   private jwtIssuer: JwtIssuer
   private jwtAccessTokenAudience: string[] | string
