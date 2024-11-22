@@ -1,23 +1,32 @@
-#!/bin/bash
+#!/usr/bin/env node
 
-echo "Checking commit-message format..."
+import fs from 'fs';
 
-## the first arg is the path to the git commit temporary file
-TEMPORARY_FILE_PATH=$1
+// Regex to validate the commit message
+const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\([\w\-\.]+\))?(!)?: ([\w ])+(\n\n[\s\S]*)*\n(\nBREAKING(-| )CHANGE: \S[ \S]*\S)?(\nReviewed-by: \S[ \S]*\S)?\nRefs:( projects#[0-9]+)+(\n[\s\S]*)?$/;
 
-## get commit-message from the temporary file
-COMMIT_MSG=`head -n1 $TEMPORARY_FILE_PATH`
+// Path to the commit message file
+const commitMsgFile = process.argv[2];
 
-## init regex to match commit-message format
-REGEX="^\[([A-Z]+)\] .+( projects#[0-9]+)+$"
+// Read the commit message from the file
+const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim();
 
-## checking commit-message format
-if ! [[ $COMMIT_MSG =~ $REGEX ]];then
-    echo -e "Your commit-message format is not valid:\n$COMMIT_MSG\n"
-    echo -e "Valid example:\n[TASK] Example commit msg projects#123"
-    exit 1
-else
-    echo "Commit-message is valid."
-    exit 0
-fi
+// Validate the commit message against the regex
+if (!regex.test(commitMsg)) {
+  console.error(`❌ Commit message is invalid:\n\n${commitMsg}\n`);
+  console.error(
+    `Expected format:
+    
+  <type>(<scope>): <subject>
+  <BLANK LINE>
+  <body> (optional)
+  <BLANK LINE>
+  BREAKING CHANGE: <description> (optional)
+  Reviewed-by: <reviewer> (optional)
+  Refs: projects#<issue-number> (required)`
+  );
+  process.exit(1);
+}
 
+console.log('✅ Commit message is valid.');
+process.exit(0);
