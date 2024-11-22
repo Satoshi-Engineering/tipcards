@@ -1,43 +1,18 @@
-import {
-  gotoCardsPage,
-  gotoNewSetPage,
-  gotoNewSetPageWithExpiredAccessToken,
-} from './pages/cards.js'
-import {
-  goto as gotoHomePage,
-} from './pages/home.js'
-import {
-  gotoSeoPreview as gotoLandingPageSeoPreview,
-  goto as gotoLandingPage,
-  gotoPreview as gotoLandingPagePreview,
-} from './pages/landing.js'
-import { goto as gotoSetsPage } from './pages/sets'
-import {
-  goto as gotoUserAccount,
-  reload as reloadUserAccount,
-} from './pages/userAccount.js'
-import {
-  isLoggedIn,
-  isLoggedOut,
-  reloadPage,
-} from './pages/utils.js'
-import {
-  gotoPage,
-} from './pages/utils.js'
+import * as cards from './pages/cards.js'
+import * as home from './pages/home.js'
+import * as landingPage from './pages/landing.js'
+import * as sets from './pages/sets.js'
+import * as userAccount from './pages/userAccount.js'
+import * as utils from './pages/utils.js'
 
 export default {
-  isLoggedIn,
-  isLoggedOut,
-  reloadPage,
-  gotoPage,
-  gotoSetsPage,
-  gotoUserAccount,
-  gotoHomePage,
-  gotoLandingPageSeoPreview,
-  gotoLandingPage,
-  gotoLandingPagePreview,
-  gotoCardsPage,
-  gotoNewSetPage,
-  gotoNewSetPageWithExpiredAccessToken,
-  reloadUserAccount,
+  ...cards,
+  gotoHomePage: home.goto,
+  gotoLandingPageSeoPreview: landingPage.gotoSeoPreview,
+  gotoLandingPage: landingPage.goto,
+  gotoLandingPagePreview: landingPage.gotoPreview,
+  gotoSetsPage: sets.goto,
+  gotoUserAccount: userAccount.goto,
+  reloadUserAccount: userAccount.reload,
+  ...utils,
 }
