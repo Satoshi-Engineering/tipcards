@@ -7,7 +7,7 @@ import config from './commit-msg-config.json' with { type: 'json' }
 const allowedTypes = config.types.join('|')
 const allowedScopes = config.scopes.join('|')
 
-const header = `(${allowedTypes}){1}(\\((${allowedScopes})+\\))?(!)?: ([\\w .,?\\/\\-'])+`
+const header = `(${allowedTypes}){1}(\\((${allowedScopes})+\\))?(!)?: ([\\w .,?:\\/\\-'])+`
 const body = '(\\n\\n[\\s\\S]*)?'
 const breakingChange = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
 const reviewedBy = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
