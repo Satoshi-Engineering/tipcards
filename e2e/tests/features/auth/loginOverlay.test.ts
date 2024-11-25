@@ -4,8 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 describe('Login Overlay', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
-    tipCardsApi.auth.createAndWrapLNURLAuth()
-
+    tipCardsApi.auth.createNewKeysAndWrap()
     tipCards.gotoHomePage()
   })
 
@@ -24,7 +23,7 @@ describe('Login Overlay', () => {
   it('Login with click on qr code', () => {
     openModalLogin()
     wrapLNURLAuthFromLinkClick()
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     checkLoginSuccess()
     reloadPageAndCheckAuth()
   })
@@ -40,7 +39,7 @@ describe('Login Overlay', () => {
       cy.wrap(clipboardText).as('lnurlAuthUrl')
     })
 
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     checkLoginSuccess()
     reloadPageAndCheckAuth()
   })
@@ -49,7 +48,7 @@ describe('Login Overlay', () => {
     // Login
     openModalLogin()
     wrapLNURLAuthFromLinkClick()
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     checkLoginSuccess()
 
     // Logout
@@ -59,7 +58,7 @@ describe('Login Overlay', () => {
     // Second Login
     openModalLogin()
     wrapLNURLAuthFromLinkClick()
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     checkLoginSuccess()
     reloadPageAndCheckAuth()
   })
@@ -95,26 +94,6 @@ const wrapLNURLAuthFromLinkClick = () => {
     const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
     cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
   })
-}
-
-/**
- * Performs login via LNURLAuth
- *
- * This function relies on the Cypress environment variables `lnurlAuth`
- * and `lnurlAuthUrl` to perform the authentication.
- *
- * @returns {void}
- */
-const login = () => {
-  cy.intercept('/auth/trpc/auth.loginWithLnurlAuthHash**').as('trpcLoginWithLnurlAuthHash')
-
-  cy.get('@lnurlAuth').get('@lnurlAuthUrl').then(function () {
-    const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(this.lnurlAuthUrl)
-    cy.request({
-      url: LNURLAuthCallbackUrl.href,
-    }).its('status').should('eq', 200)
-  })
-  cy.wait('@trpcLoginWithLnurlAuthHash')
 }
 
 const checkLoginSuccess = () => {

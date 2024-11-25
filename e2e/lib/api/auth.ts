@@ -2,7 +2,6 @@
 /// <reference types="cypress" />
 
 import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
-import LNURLAuth from '@shared/modules/LNURL/LNURLAuth'
 
 const API_AUTH_CREATE = new URL('/auth/trpc/lnurlAuth.create', TIPCARDS_AUTH_ORIGIN)
 const API_AUTH_LOGIN = new URL('/auth/trpc/auth.loginWithLnurlAuthHash', TIPCARDS_AUTH_ORIGIN)
@@ -24,9 +23,9 @@ export const login = () => {
   })
 }
 
-export const loginViaRequests = (genereateNewLNRULAuth = true) => {
-  if (genereateNewLNRULAuth) {
-    createAndWrapLNURLAuth()
+export const loginViaRequests = (generateNewKeys = true) => {
+  if (generateNewKeys) {
+    createNewKeysAndWrap()
   }
 
   cy.request({
@@ -35,13 +34,19 @@ export const loginViaRequests = (genereateNewLNRULAuth = true) => {
     expect(response.body).to.have.nested.property('result.data.json.hash')
     expect(response.body).to.have.nested.property('result.data.json.lnurlAuth')
     const authServiceLoginHash = response.body.result.data.json.hash
-    const lnurl = response.body.result.data.json.lnurlAuth
+    const lnurlAuth = response.body.result.data.json.lnurlAuth
 
-    cy.get('@lnurlAuth').then(function () {
-      const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(lnurl)
-      cy.request({
-        url: LNURLAuthCallbackUrl.href,
-      }).its('status').should('eq', 200)
+    cy.get('@keyPair').then(function () {
+      cy.task<{ callbackUrl: string }>('lnurl:getLNURLAuthCallbackUrl', {
+        publicKeyAsHex: this.keyPair.publicKeyAsHex,
+        privateKeyAsHex: this.keyPair.privateKeyAsHex,
+        lnurlAuth,
+      }).then(({ callbackUrl }) => {
+        cy.wrap(callbackUrl).as('callbackUrl')
+        cy.request({
+          url: callbackUrl,
+        }).its('status').should('eq', 200)
+      })
     })
 
     cy.then(() => {
@@ -95,18 +100,27 @@ export const clearAuth = () => {
   }).its('status').should('eq', 401)
 }
 
-export const createAndWrapLNURLAuth = () => {
-  cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then(({ publicKeyAsHex, privateKeyAsHex }) => {
-    const lnurlAuth = new LNURLAuth({
-      publicKeyAsHex,
-      privateKeyAsHex,
-    })
-    cy.wrap(lnurlAuth).as('lnurlAuth')
+export const createNewKeysAndWrap = () => {
+  cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
+    cy.wrap(keyPair).as('keyPair')
   })
 }
 
-export const wrapLNURLAuth = (lnurlAuth: LNURLAuth) => {
-  cy.wrap(lnurlAuth).as('lnurlAuth')
+export const lnurlAuthLoginWithWrappedKeyPair = () => {
+  cy.intercept('/auth/trpc/auth.loginWithLnurlAuthHash**').as('trpcLoginWithLnurlAuthHash')
+  cy.get('@keyPair').get('@lnurlAuthUrl').then(function () {
+    cy.task<{ callbackUrl: string }>('lnurl:getLNURLAuthCallbackUrl', {
+      publicKeyAsHex: this.keyPair.publicKeyAsHex,
+      privateKeyAsHex: this.keyPair.privateKeyAsHex,
+      lnurlAuth: this.lnurlAuthUrl,
+    }).then(({ callbackUrl }) => {
+      cy.wrap(callbackUrl).as('callbackUrl')
+      cy.request({
+        url: callbackUrl,
+      }).its('status').should('eq', 200)
+    })
+  })
+  cy.wait('@trpcLoginWithLnurlAuthHash')
 }
 
 export const logoutAllDevices = () => {

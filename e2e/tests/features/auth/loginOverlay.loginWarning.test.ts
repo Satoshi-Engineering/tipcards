@@ -4,7 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 describe('Login Overlay - Email CTA', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
-    tipCardsApi.auth.createAndWrapLNURLAuth()
+    tipCardsApi.auth.createNewKeysAndWrap()
     tipCards.gotoHomePage()
   })
 
@@ -13,7 +13,7 @@ describe('Login Overlay - Email CTA', () => {
     cy.getTestElement('main-nav-link-login').click()
     wrapLNURLAuthFromLinkClick()
     cy.intercept('/trpc/profile.getDisplayName**').as('profileGetDisplayName')
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     cy.wait('@profileGetDisplayName')
 
     cy.getTestElement('emailCta').should('exist')
@@ -21,12 +21,10 @@ describe('Login Overlay - Email CTA', () => {
 
   it('After login email cta should not be displayed', () => {
     const profileEmail = 'email@domain.com'
-    cy.get('@lnurlAuth').then(function () {
-      const lnurlAuthKey = this.lnurlAuth.publicKeyAsHex
-      cy.log('lnurlAuthKey', lnurlAuthKey)
+    cy.get('@keyPair').then(function () {
       cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', {
         profileEmail,
-        lnurlAuthKey,
+        lnurlAuthKey: this.keyPair.publicKeyAsHex,
       })
     })
 
@@ -34,7 +32,7 @@ describe('Login Overlay - Email CTA', () => {
     cy.getTestElement('main-nav-link-login').click()
     wrapLNURLAuthFromLinkClick()
     cy.intercept('/trpc/profile.getDisplayName**').as('profileGetDisplayName')
-    login()
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     cy.wait('@profileGetDisplayName')
 
     cy.getTestElement('emailCta').should('not.exist')
@@ -62,24 +60,4 @@ const wrapLNURLAuthFromLinkClick = () => {
     const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
     cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
   })
-}
-
-/**
- * Performs login via LNURLAuth
- *
- * This function relies on the Cypress environment variables `lnurlAuth`
- * and `lnurlAuthUrl` to perform the authentication.
- *
- * @returns {void}
- */
-const login = () => {
-  cy.intercept('/auth/trpc/auth.loginWithLnurlAuthHash**').as('trpcLoginWithLnurlAuthHash')
-
-  cy.get('@lnurlAuth').get('@lnurlAuthUrl').then(function () {
-    const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(this.lnurlAuthUrl)
-    cy.request({
-      url: LNURLAuthCallbackUrl.href,
-    }).its('status').should('eq', 200)
-  })
-  cy.wait('@trpcLoginWithLnurlAuthHash')
 }
