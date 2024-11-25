@@ -5,7 +5,7 @@ import { gotoPage } from './utils'
 const SETS_PAGE_URL = new URL('/sets', TIPCARDS_ORIGIN)
 
 export const goto = () => {
-  cy.intercept('/trpc/set.getLatestChanged**').as('apiSet')
+  cy.intercept('/trpc/set.getAll**').as('apiSet')
   gotoPage(SETS_PAGE_URL)
 
   cy.getCookie('refresh_token', {

@@ -1,4 +1,4 @@
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 
 import i18n from '@/modules/initI18n'
@@ -16,33 +16,24 @@ export const useSetsStore = defineStore('sets', () => {
 
   const { set } = useTRpc()
 
-  const limit = ref<number | undefined>()
-  const setsInternal = ref<SetDto[]>([])
+  const sets = ref<SetDto[]>([])
   const cardsSummaryWithStatusBySetId = ref<CardsSummaryWithLoadingStatusBySetId>({})
   const fetchingAllSets = ref(false)
-  const fetchingCardsSummary = ref(false)
-  const fetchingUserErrorMessages = ref<string[]>([])
-
-  const sets = computed<SetDto[]>(() => {
-    if (limit.value != null) {
-      return setsInternal.value.slice(0, limit.value)
-    }
-    return setsInternal.value
-  })
+  const fetchingAllSetsUserErrorMessages = ref<string[]>([])
 
   /** @throws */
   const fetchSets = async () => {
-    fetchingUserErrorMessages.value.length = 0
+    fetchingAllSetsUserErrorMessages.value.length = 0
     fetchingAllSets.value = true
     try {
-      setsInternal.value = await set.getLatestChanged.query({ limit: limit.value })
+      sets.value = await set.getAll.query()
       resetCardsSummaries()
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
         console.error(error)
-        fetchingUserErrorMessages.value.push(t('stores.cardsSets.errors.unableToLoadSetsFromBackend'))
+        fetchingAllSetsUserErrorMessages.value.push(t('stores.cardsSets.errors.unableToLoadSetsFromBackend'))
         if (error instanceof Error) {
-          fetchingUserErrorMessages.value.push(error.message)
+          fetchingAllSetsUserErrorMessages.value.push(error.message)
         }
       }
       throw error
@@ -52,7 +43,7 @@ export const useSetsStore = defineStore('sets', () => {
   }
 
   const resetSetsAndCardsSummary = () => {
-    setsInternal.value = []
+    sets.value = []
     cardsSummaryWithStatusBySetId.value = {}
   }
 
@@ -122,10 +113,8 @@ export const useSetsStore = defineStore('sets', () => {
   watch(isLoggedIn, loadSets)
 
   return {
-    limit,
-    fetchingUserErrorMessages,
+    fetchingAllSetsUserErrorMessages,
     fetchingAllSets,
-    fetchingCardsSummary,
     sets,
     cardsSummaryWithStatusBySetId,
     loadSets,

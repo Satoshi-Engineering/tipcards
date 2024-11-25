@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne, asc } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne } from 'drizzle-orm'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
@@ -23,12 +23,6 @@ export type Transaction = PgTransaction<
   typeof import('@backend/database/schema/index.js'),
   ExtractTablesWithRelations<typeof import('@backend/database/schema/index.js')>
 >
-
-export type SetCollectionOptions = {
-  sorting: 'changed' | 'alphabetical' | 'created',
-  sortingDirection: 'ASC' | 'DESC',
-  limit?: number,
-}
 
 /**
  * As all methods in this class are database queries they are async and can throw errors.
@@ -492,32 +486,13 @@ export default class Queries {
     return result.map(({ Set }) => Set)
   }
 
-  async getSetsWithSettingsByUserId(userId: User['id'], { sorting, sortingDirection, limit = undefined }: SetCollectionOptions): Promise<SetWithSettings[]> {
-    const orderBy = (() => {
-      switch (sorting) {
-        case 'changed':
-          return Set.changed
-        case 'alphabetical':
-          return SetSettings.name
-        case 'created':
-          return Set.created
-      }
-    })()
-    const orderDirection = (() => {
-      switch (sortingDirection) {
-        case 'ASC':
-          return asc
-        case 'DESC':
-          return desc
-      }
-    })()
+  async getSetsWithSettingsByUserId(userId: User['id']): Promise<SetWithSettings[]> {
     const result = await this.transaction.select()
       .from(Set)
       .innerJoin(UserCanUseSet, eq(Set.id, UserCanUseSet.set))
       .innerJoin(SetSettings, eq(Set.id, SetSettings.set))
       .where(eq(UserCanUseSet.user, userId))
-      .orderBy(orderDirection(orderBy))
-      .limit(limit ?? -1)
+      .orderBy(desc(Set.changed))
     return result.map(({ Set, SetSettings }) => ({
       ...Set,
       settings: SetSettings,

@@ -27,7 +27,7 @@ describe.skip('Sets Page Cards Info', () => {
   it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, { taskTimeout: 5000 * numberOfSets }, () => {
     tipCards.gotoSetsPage()
 
-    cy.getTestElement('sets-list-with-data').find('a')
+    cy.getTestElement('sets-list-item')
       .should('have.length', numberOfSets)
   })
 

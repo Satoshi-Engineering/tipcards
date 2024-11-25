@@ -12,25 +12,12 @@ import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
 import loggedInProcedure from '../../procedures/loggedIn.js'
 import { handleCardLockForSet } from '../../procedures/partials/handleCardLock.js'
-import { z } from 'zod'
 
 export const setRouter = router({
   getAll: loggedInProcedure
     .output(SetDto.array())
     .query(async ({ ctx }) => {
       const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
-      return setCollection.sets
-    }),
-
-  getLatestChanged: loggedInProcedure
-    .input(z.object({ limit: z.number().optional() }))
-    .output(SetDto.array())
-    .query(async ({ ctx, input }) => {
-      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId, {
-        sorting: 'changed',
-        sortingDirection: 'DESC',
-        limit: input.limit,
-      })
       return setCollection.sets
     }),
 

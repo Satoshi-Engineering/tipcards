@@ -30,15 +30,14 @@ describe('Feature Logout', () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('logged-in').should('exist')
-    cy.getTestElement('sets-list-empty').should('not.exist')
-    cy.getTestElement('sets-list-with-data').find('a').contains(randomSetName).should('exist')
+    cy.getTestElement('sets-list-message-empty').should('not.exist')
+    cy.getTestElement('sets-list-item').contains(randomSetName).should('exist')
 
     logout()
-    cy.getTestElement('please-login-section').should('exist')
-    cy.getTestElement('logged-in').should('not.exist')
+    cy.getTestElement('sets-list').should('exist')
+    cy.getTestElement('sets-list-message-not-logged-in').should('exist')
     cy.getTestElement('the-layout').contains(randomSetName).should('not.exist')
-    cy.getTestElement('sets-list-with-data').should('not.exist')
-    cy.getTestElement('sets-list-empty').should('not.exist')
+    cy.getTestElement('sets-list-message-empty').should('not.exist')
   })
 })
 

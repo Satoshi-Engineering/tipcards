@@ -44,23 +44,41 @@
         />
       </CenterContainer>
     </div>
-    <CenterContainer class="py-14">
-      <HeadlineDefault
-        level="h2"
-      >
-        {{ $t('nav.sets') }}
-      </HeadlineDefault>
+    <CenterContainer class="!py-10">
+      <div class="flex items-end gap-4">
+        <HeadlineDefault
+          level="h2"
+          class="mb-0"
+        >
+          {{ $t('nav.sets') }}
+        </HeadlineDefault>
+        <div class="text-sm pb-1" data-test="sets-list-sets-count">
+          ({{
+            fetchingAllSets
+              ? '&nbsp;'
+              : $t('general.sets', { sets: sets.length }, sets.length)
+          }})
+        </div>
+      </div>
       <SetsList
-        :sets="sets"
+        :sets="sets.slice(0, 3)"
         :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
         :fetching="fetchingAllSets && sets.length < 3"
-        :message="sets.length > 0 && sets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
         class="my-7"
         @enter-viewport="setsStore.loadCardsSummaryForSet"
-      />
-      <div class="text-center">
+      >
+        <template v-if="!isLoggedIn" #message>
+          <SetsListMessageNotLoggedIn />
+        </template>
+        <template v-else-if="fetchingAllSetsUserErrorMessages.length > 0" #message>
+          <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" />
+        </template>
+        <template v-else-if="!fetchingAllSets && sets.length < 1" #message>
+          <SetsListMessageEmpty />
+        </template>
+      </SetsList>
+      <div v-if="isLoggedIn" class="text-center">
         <LinkDefault
-          v-if="isLoggedIn"
           :to="{ name: 'sets', params: { lang: $route.params.lang } }"
           no-bold
           class="text-lg"
@@ -73,6 +91,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
 
 import CardsSummary from '@/components/CardsSummary.vue'
 import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
@@ -83,9 +102,11 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useProfileStore } from '@/stores/profile'
 import { useModalLoginStore } from '@/stores/modalLogin'
-import SetsList from '../sets/components/SetsList.vue'
+import SetsList from '@/components/setsList/SetsList.vue'
 import { useSetsStore } from '@/stores/sets'
-import { onMounted } from 'vue'
+import SetsListMessageNotLoggedIn from '@/components/setsList/SetsListMessageNotLoggedIn.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
+import SetsListMessageEmpty from '@/components/setsList/SetsListMessageEmpty.vue'
 
 const profileStore = useProfileStore()
 const { userDisplayName } = storeToRefs(profileStore)
@@ -97,8 +118,7 @@ const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
 const setsStore = useSetsStore()
-const { limit, sets, cardsSummaryWithStatusBySetId, fetchingAllSets } = storeToRefs(setsStore)
-limit.value = 3
+const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
 
 onMounted(() => {
   setsStore.loadSets()

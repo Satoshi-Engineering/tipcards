@@ -48,8 +48,7 @@ describe('PageSets', () => {
     const newSetButton = wrapper.find('[data-test=button-new-set]')
     expect(newSetButton.exists()).toBe(true)
     expect(newSetButton.getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({ name: 'cards' }))
-    expect(wrapper.find('[data-test=please-login-section]').exists()).toBe(true)
-    expect(wrapper.find('[data-test=logged-in]').exists()).toBe(false)
+    expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(true)
   })
 
   it('should show a logged in sets page', async () => {
@@ -58,8 +57,8 @@ describe('PageSets', () => {
     const wrapper = mount(PageSets)
     await flushPromises()
 
-    expect(wrapper.find('[data-test=please-login-section]').exists()).toBe(false)
-    expect(wrapper.find('[data-test=logged-in]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(false)
   })
 
   it('should show an empty sets page', async () => {
@@ -68,46 +67,50 @@ describe('PageSets', () => {
     const wrapper = mount(PageSets)
     await flushPromises()
 
-    expect(wrapper.find('[data-test=sets-list-empty]').exists()).toBe(true)
-    expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(false)
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-empty]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-item]').exists()).toBe(false)
   })
 
   it('should show a list of named and nameless sets', async () => {
     authStore.isLoggedIn = true
 
-    setsStore.sets = testSets
-
     const wrapper = mount(PageSets)
     await flushPromises()
+    setsStore.sets = testSets
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[data-test=sets-list-empty]').exists()).toBe(false)
-    expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(true)
-    expect(wrapper.findAll('[data-test=sets-list-with-data] li').length).toBe(testSets.length)
-    wrapper.findAll('[data-test=sets-list-with-data] li').forEach((li) => {
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-empty]').exists()).toBe(false)
+    expect(wrapper.findAll('[data-test=sets-list-item]').length).toBe(testSets.length)
+    wrapper.findAll('[data-test=sets-list] li').forEach((li) => {
       const editSetButton = li.getComponent(LinkDefault)
       expect(editSetButton.vm.to).toEqual(expect.objectContaining({ name: 'cards' }))
     })
   })
 
-  it('should display sets or the logged out section depending on loggedIn status', async () => {
+  it('should display sets or the logged out message depending on loggedIn status', async () => {
     authStore.isLoggedIn = false
-
-    setsStore.sets = testSets
 
     const wrapper = mount(PageSets)
     await flushPromises()
-    expect(wrapper.find('[data-test=please-login-section]').exists()).toBe(true)
-    expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(false)
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(true)
 
     authStore.isLoggedIn = true
     await flushPromises()
+    setsStore.sets = testSets
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[data-test=sets-list-empty]').exists()).toBe(false)
-    expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(false)
+    expect(wrapper.findAll('[data-test=sets-list-item]').length).toBe(testSets.length)
 
     authStore.isLoggedIn = false
     await flushPromises()
-    expect(wrapper.find('[data-test=please-login-section]').exists()).toBe(true)
-    expect(wrapper.find('[data-test=sets-list-with-data]').exists()).toBe(false)
+
+    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-item]').exists()).toBe(false)
   })
 })

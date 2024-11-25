@@ -12,12 +12,10 @@
         {{ $t('general.status') }}
       </HeadlineDefault>
     </header>
-    <div v-if="message" class="px-5 py-4">
-      <ParagraphDefault>
-        {{ message }}
-      </ParagraphDefault>
+    <div v-if="$slots.message" class="px-5 py-8 min-h-44 grid place-items-center">
+      <slot name="message" />
     </div>
-    <ul>
+    <ul v-if="loggedIn">
       <li
         v-for="set in sortedSavedSets"
         :key="set.id"
@@ -48,13 +46,16 @@ import { computed, type PropType } from 'vue'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 
-import SetsListItem from '@/pages/sets/components/SetsListItem.vue'
+import SetsListItem from '@/components/setsList/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import type { CardsSummaryWithLoadingStatusBySetId } from '@/stores/sets'
 
 const props = defineProps({
+  loggedIn: {
+    type: Boolean,
+    default: true,
+  },
   sets: {
     type: Array as PropType<SetDto[]>,
     default: () => [],
@@ -70,10 +71,6 @@ const props = defineProps({
   fetching: {
     type: Boolean,
     default: false,
-  },
-  message: {
-    type: String,
-    default: undefined,
   },
   sorting: {
     type: String as PropType<'changed' | 'name'>,

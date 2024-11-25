@@ -23,34 +23,12 @@
           {{ $t('sets.newSet') }}
         </ButtonIcon>
       </div>
-      <div v-if="!isLoggedIn" data-test="please-login-section">
-        <ParagraphDefault>
-          {{ $t('sets.loginToSeeYourSets') }}
-        </ParagraphDefault>
-        <LinkDefault @click="showModalLogin = true">
-          {{ $t('general.login') }}
-        </LinkDefault>
-      </div>
-      <div
-        v-if="isLoggedIn"
-        class="flex flex-col"
-        data-test="logged-in"
-      >
-        <UserErrorMessages
-          v-if="fetchingUserErrorMessages.length > 0"
-          :user-error-messages="fetchingUserErrorMessages"
-        />
-        <ParagraphDefault
-          v-else-if="!fetchingAllSets && sets.length < 1"
-          data-test="sets-list-empty"
-        >
-          {{ $t('sets.noSavedCardsSetsMessage') }}
-        </ParagraphDefault>
-        <div v-else data-test="sets-list-with-data">
+      <div class="flex flex-col">
+        <div>
           <ParagraphDefault>
             {{ $t('sets.description') }}
           </ParagraphDefault>
-          <SetsListFilterSection
+          <SetsFilterSection
             class="my-8"
             @text-search="textSearch = $event"
           />
@@ -65,11 +43,26 @@
             :sets="filteredSets"
             :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
             :fetching="fetchingAllSets"
-            :message="sets.length > 0 && filteredSets.length === 0 ? $t('sets.noSetsMatchingFilter') : undefined"
             sorting="changed"
             class="my-7"
+            data-test="sets-list"
             @enter-viewport="setsStore.loadCardsSummaryForSet"
-          />
+          >
+            <template v-if="!isLoggedIn" #message>
+              <SetsListMessageNotLoggedIn />
+            </template>
+            <template v-else-if="fetchingAllSetsUserErrorMessages.length > 0" #message>
+              <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" />
+            </template>
+            <template v-else-if="!fetchingAllSets && sets.length < 1" #message>
+              <SetsListMessageEmpty />
+            </template>
+            <template v-else-if="sets.length > 0 && filteredSets.length === 0" #message>
+              <ParagraphDefault class="text-center">
+                {{ $t('sets.noSetsMatchingFilter') }}
+              </ParagraphDefault>
+            </template>
+          </SetsList>
         </div>
       </div>
       <SetsInLocalStorageWarning class="mt-8" />
@@ -89,24 +82,21 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
-import SetsList from '@/pages/sets/components/SetsList.vue'
-import SetsListFilterSection from '@/pages/sets/components/SetsListFilterSection.vue'
+import SetsList from '@/components/setsList/SetsList.vue'
+import SetsFilterSection from '@/pages/sets/components/SetsFilterSection.vue'
 import SetsInLocalStorageWarning from '@/pages/sets/components/SetsInLocalStorageWarning.vue'
 
-import { useModalLoginStore } from '@/stores/modalLogin'
 import { useSetsStore } from '@/stores/sets'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 import { useAuthStore } from '@/stores/auth'
-
-const { showModalLogin } = storeToRefs(useModalLoginStore())
+import SetsListMessageNotLoggedIn from '@/components/setsList/SetsListMessageNotLoggedIn.vue'
+import SetsListMessageEmpty from '@/components/setsList/SetsListMessageEmpty.vue'
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 
 const setsStore = useSetsStore()
-const { limit, sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingUserErrorMessages } = storeToRefs(setsStore)
-limit.value = undefined
+const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
 
 onMounted(() => {
   setsStore.loadSets()

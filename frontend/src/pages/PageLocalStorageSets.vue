@@ -54,7 +54,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import useLocalStorageSets from '@/modules/useLocalStorageSets'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-import ListSets from '@/pages/sets/components/SetsList.vue'
+import ListSets from '@/components/setsList/SetsList.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 

@@ -12,7 +12,7 @@ describe('Sets Page', () => {
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('please-login-section').should('not.exist')
     cy.getTestElement('logged-in').should('exist')
-    cy.getTestElement('sets-list-empty').should('exist')
+    cy.getTestElement('sets-list-message-empty').should('exist')
   })
 
   it('User should access a saved set', () => {
@@ -22,7 +22,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet(randomSetName)
 
     tipCards.gotoSetsPage()
-    cy.getTestElement('sets-list-with-data').find('a').contains(randomSetName).click()
+    cy.getTestElement('sets-list-item').contains(randomSetName).click()
 
     cy.url().should('contain', '/cards')
     cy.getTestElement('the-layout').contains(randomSetName).should('be.visible')
