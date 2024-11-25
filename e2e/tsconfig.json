@@ -5,6 +5,7 @@
     "lib": ["ES2023", "DOM"],
     "module": "Preserve",
     "moduleResolution": "Bundler",
+    "esModuleInterop": true,
     "types": [
       "cypress",
       "node",

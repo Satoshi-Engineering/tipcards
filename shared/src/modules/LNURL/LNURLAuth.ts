@@ -1,9 +1,9 @@
 // Specification LNURLAuth https://github.com/lnurl/luds/blob/luds/04.md
 
-import * as secp256k1 from 'secp256k1'
+import secp256k1 from 'secp256k1'
 import { Buffer } from 'buffer'
 
-import LNURL from '@shared/modules/LNURL/LNURL.js'
+import LNURL from './LNURL.js'
 
 export type SigningKey = {
   privateKeyAsHex: string,

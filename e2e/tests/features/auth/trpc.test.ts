@@ -15,6 +15,9 @@ describe('Feature logoutAllOtherDevices', () => {
   })
 
   it('Lnurl auth callback url call should fail, after a login has happend', () => {
+    cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
+      cy.wrap(keyPair).as('keyPair')
+    })
     tipCardsApi.auth.createAndWrapLNURLAuth()
     tipCards.gotoHomePage()
     cy.getTestElement('the-header-main-nav-button').click()
@@ -25,19 +28,24 @@ describe('Feature logoutAllOtherDevices', () => {
     })
 
     cy.intercept('/auth/trpc/auth.loginWithLnurlAuthHash**').as('trpcLoginWithLnurlAuthHash')
-    cy.get('@lnurlAuth').get('@lnurlAuthUrl').then(function () {
-      const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(this.lnurlAuthUrl)
-      cy.request({
-        url: LNURLAuthCallbackUrl.href,
-      }).its('status').should('eq', 200)
+    cy.get('@keyPair').get('@lnurlAuthUrl').then(function () {
+      cy.task<{ callbackUrl: string }>('lnurl:getLNURLAuthCallbackUrl', {
+        publicKeyAsHex: this.keyPair.publicKeyAsHex,
+        privateKeyAsHex: this.keyPair.privateKeyAsHex,
+        lnurlAuth: this.lnurlAuthUrl,
+      }).then(({ callbackUrl }) => {
+        cy.wrap(callbackUrl).as('callbackUrl')
+        cy.request({
+          url: callbackUrl,
+        }).its('status').should('eq', 200)
+      })
     })
     cy.wait('@trpcLoginWithLnurlAuthHash')
 
     // Try second login
-    cy.get('@lnurlAuth').get('@lnurlAuthUrl').then(function () {
-      const LNURLAuthCallbackUrl = this.lnurlAuth.getLNURLAuthCallbackUrl(this.lnurlAuthUrl)
+    cy.get<string>('@callbackUrl').then((callbackUrl) => {
       cy.request({
-        url: LNURLAuthCallbackUrl.href,
+        url: callbackUrl,
         failOnStatusCode: false,
       }).its('status').should('eq', 400)
     })

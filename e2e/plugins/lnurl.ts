@@ -1,18 +1,34 @@
 /// <reference types="cypress" />
 
-import HDWallet from '../../shared/src/modules/HDWallet/HDWallet.js'
+import LNURLAuth from '../../shared/src/modules/LNURL/LNURLAuth'
+
+import { createRandomKeyPair } from '../lib/lnurlHelpers'
+
+type GetLNURLAuthCallbackUrlParams =
+  | { publicKeyAsHex: string; privateKeyAsHex: string; lnurlAuth?: string }
+  | { lnurlAuth: string; publicKeyAsHex?: never; privateKeyAsHex?: never };
 
 // This function is the entry point for plugins
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
-  on('task', {
-    'lnurl:createRandomKeyPair': async (): Promise<{ publicKeyAsHex: string, privateKeyAsHex: string }> => {
-      const randomMnemonic = HDWallet.generateRandomMnemonic()
-      const hdWallet = new HDWallet(randomMnemonic)
-      const signingKey = hdWallet.getNodeAtPath(0, 0, 0)
 
+  on('task', {
+    'lnurl:createRandomKeyPair': (): { publicKeyAsHex: string, privateKeyAsHex: string } => {
+      return createRandomKeyPair()
+    },
+
+    'lnurl:getLNURLAuthCallbackUrl': async (params: GetLNURLAuthCallbackUrlParams): Promise<{ callbackUrl: string }> => {
+      let keyPair: { publicKeyAsHex: string, privateKeyAsHex: string }
+      if (params.privateKeyAsHex && params.publicKeyAsHex) {
+        keyPair = {
+          publicKeyAsHex: params.publicKeyAsHex,
+          privateKeyAsHex: params.privateKeyAsHex,
+        }
+      } else {
+        keyPair = createRandomKeyPair()
+      }
+      const lnurlAuth = new LNURLAuth(keyPair)
       return {
-        publicKeyAsHex: signingKey.getPublicKeyAsHex(),
-        privateKeyAsHex: signingKey.getPrivateKeyAsHex(),
+        callbackUrl: lnurlAuth.getLNURLAuthCallbackUrl(params.lnurlAuth).href,
       }
     },
   })
