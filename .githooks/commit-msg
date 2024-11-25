@@ -24,18 +24,23 @@ const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim()
 
 // Validate the commit message against the regex
 if (!regex.test(commitMsg)) {
-  console.error(`❌ Commit message is invalid:\n\n${commitMsg}\n`)
-  console.error(
-    `Expected format:
+  console.error(`❌ Commit message is invalid:\n\n\x1b[31m${commitMsg}\x1b[0m\n\n`)
+  console.info(
+`ℹ️  Expected format:
     
-  <type>(<scope>): <subject> (subject can contain .,?/-')
-  <BLANK LINE>
-  <body> (optional)
-  <BLANK LINE> (required if body is present)
-  BREAKING CHANGE: <description> (optional)
-  Reviewed-by: <reviewer> (optional)
-  Refs: projects#<issue-number> (required)`
-  )
+\x1b[32m<type>(<scope>): <subject>
+<BLANK LINE>
+<body> (optional)
+<BLANK LINE> (required if body is present)
+BREAKING CHANGE: <description> (optional)
+Reviewed-by: <reviewer> (optional)
+Refs: projects#<issue-number> (required)\x1b[0m
+  
+
+Allowed types: ${config.types.join(', ')}
+Allowed scopes: ${config.scopes.join(', ')}
+Subject can contain .,?/-' characters
+`)
   process.exit(1)
 }
 
