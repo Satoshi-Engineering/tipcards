@@ -1,0 +1,21 @@
+{
+  "types": [
+    "build",
+    "chore",
+    "ci",
+    "docs",
+    "feat",
+    "fix",
+    "perf",
+    "refactor",
+    "revert",
+    "style",
+    "test"
+  ],
+  "scopes": [
+    "backend",
+    "frontend",
+    "auth",
+    "e2e"
+  ]
+}

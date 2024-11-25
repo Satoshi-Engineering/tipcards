@@ -1,19 +1,30 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
+import config from './commit-msg-config.json' with { type: 'json' }
 
 // Regex to validate the commit message
-const regex = /^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test){1}(\([\w\-\.]+\))?(!)?: ([\w .,?\/\-'])+(\n\n[\s\S]*)\n(\n(BREAKING-CHANGE|BREAKING CHANGE): \S[ \S]*\S){0,1}(\nReviewed-by: \S[ \S]*\S){0,1}\nRefs:( projects#[0-9]+)+(\n[\s\S]+)?$/;
+const allowedTypes = config.types.join('|')
+const allowedScopes = config.scopes.join('|')
+
+const header = `(${allowedTypes}){1}(\\((${allowedScopes})+\\))?(!)?: ([\\w .,?\\/\\-'])+`
+const body = '(\\n\\n[\\s\\S]*)'
+const breakingChange = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
+const reviewedBy = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
+const refs = '(\\nRefs:( projects#[0-9]+)+)'
+const suffix = '(\\n[\\s\\S]+)?'
+
+const regex = new RegExp(`^${header}${body}\\n${breakingChange}${reviewedBy}${refs}${suffix}$`)
 
 // Path to the commit message file
-const commitMsgFile = process.argv[2];
+const commitMsgFile = process.argv[2]
 
 // Read the commit message from the file
-const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim();
+const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim()
 
 // Validate the commit message against the regex
 if (!regex.test(commitMsg)) {
-  console.error(`❌ Commit message is invalid:\n\n${commitMsg}\n`);
+  console.error(`❌ Commit message is invalid:\n\n${commitMsg}\n`)
   console.error(
     `Expected format:
     
@@ -24,9 +35,9 @@ if (!regex.test(commitMsg)) {
   BREAKING CHANGE: <description> (optional)
   Reviewed-by: <reviewer> (optional)
   Refs: projects#<issue-number> (required)`
-  );
-  process.exit(1);
+  )
+  process.exit(1)
 }
 
-console.log('✅ Commit message is valid.');
-process.exit(0);
+console.log('✅ Commit message is valid.')
+process.exit(0)

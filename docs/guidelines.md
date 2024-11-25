@@ -1,4 +1,4 @@
-# Guidlines
+# Guidelines
 
 - Use the git-hooks!
 - `/scripts` folder: Helper script for local development tasks
@@ -58,3 +58,13 @@ Info:
 ### Queries
 
 Do not throw errors when a query returns no rows. Instead return null. If you want a NotFoundError in the application, if a specific domain model does not exist in the database, throw the error in the respective domain logic instead.
+
+## Git
+
+### Conventional commits
+
+We are using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).  
+In addition, we enforce the following rules:
+
+- A `Refs:` footer is required and must contain a reference to an issue in our gitlab, prefixed with `projects#`.
+- You can optionally specify the [scope](https://www.conventionalcommits.org/en/v1.0.0/#commit-message-with-scope). The list of allowed scopes can be found (and extended) in the [commit-msg-config.json](/.githooks/commit-msg-config.json)
