@@ -24,6 +24,21 @@ export const CardStatusDto = z.object({
 
 export type CardStatusDto = z.infer<typeof CardStatusDto>
 
+// this status is greedy and includes all statuses that require user action,
+// even if the cardStatus would be in another category as well
+export const userActionRequired: CardStatusEnum[] = [
+  CardStatusEnum.enum.invoiceFunding,
+  CardStatusEnum.enum.lnurlpFunding,
+  CardStatusEnum.enum.lnurlpSharedFunding,
+  CardStatusEnum.enum.setInvoiceFunding,
+  CardStatusEnum.enum.invoiceExpired,
+  CardStatusEnum.enum.lnurlpExpired,
+  CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
+  CardStatusEnum.enum.lnurlpSharedExpiredFunded,
+  CardStatusEnum.enum.setInvoiceExpired,
+  CardStatusEnum.enum.isLockedByBulkWithdraw,
+]
+
 export const unfundedStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.unfunded,
   CardStatusEnum.enum.invoiceFunding,
@@ -41,23 +56,11 @@ export const fundedStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.withdrawPending,
   CardStatusEnum.enum.bulkWithdrawPending,
   CardStatusEnum.enum.funded,
+  CardStatusEnum.enum.isLockedByBulkWithdraw,
 ]
 
 export const withdrawnStatuses: CardStatusEnum[] = [
   CardStatusEnum.enum.recentlyWithdrawn,
   CardStatusEnum.enum.withdrawn,
   CardStatusEnum.enum.withdrawnByBulkWithdraw,
-]
-
-export const pendingStatuses: CardStatusEnum[] = [
-  CardStatusEnum.enum.invoiceFunding,
-  CardStatusEnum.enum.lnurlpFunding,
-  CardStatusEnum.enum.lnurlpSharedFunding,
-  CardStatusEnum.enum.setInvoiceFunding,
-  CardStatusEnum.enum.invoiceExpired,
-  CardStatusEnum.enum.lnurlpExpired,
-  CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
-  CardStatusEnum.enum.lnurlpSharedExpiredFunded,
-  CardStatusEnum.enum.setInvoiceExpired,
-  CardStatusEnum.enum.isLockedByBulkWithdraw,
 ]

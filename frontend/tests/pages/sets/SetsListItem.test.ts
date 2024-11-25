@@ -37,131 +37,131 @@ describe('SetsListItem', () => {
 
   it('renders the absolute numbers of colorized cardsSummary boxes for sets with <= 12 cards', async () => {
     const set = createSet({ settings: { numberOfCards: 10 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 4, funded: 3, pending: 2, unfunded: 1 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 4, funded: 3, userActionRequired: 2, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(4)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(3)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(2)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(2)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(1)
   })
 
   it('renders the colorized cardsSummary boxes by rounding up if the actual numberOfCards exceeds 12', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 35, funded: 25, pending: 4, unfunded: 36 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 35, funded: 25, userActionRequired: 4, unfunded: 36 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(4)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(3)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(4)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 99 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 99, pending: 0, unfunded: 0 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 99, userActionRequired: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(11)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(0)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 1 unfunded and 99 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 0, funded: 99, pending: 0, unfunded: 1 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 0, funded: 99, userActionRequired: 0, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(11)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(1)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 1 unfunded, 1 withdrawn, and 98 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 98, pending: 0, unfunded: 1 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 98, userActionRequired: 0, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(10)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(1)
   })
 
-  it('renders the colorized cardsSummary boxes correctly for 1 unfunded, 1 withdrawn, 1 pending and 97 funded cards', async () => {
+  it('renders the colorized cardsSummary boxes correctly for 1 unfunded, 1 withdrawn, 1 userActionRequired and 97 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 97, pending: 1, unfunded: 1 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 97, userActionRequired: 1, unfunded: 1 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(9)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(1)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 49 withdrawn and 51 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 49, funded: 51, pending: 0, unfunded: 0 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 49, funded: 51, userActionRequired: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(6)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(6)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(0)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 99 unfunded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 0, pending: 0, unfunded: 99 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 0, userActionRequired: 0, unfunded: 99 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(0)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(11)
   })
 
   it('renders the colorized cardsSummary boxes correctly for 1 withdrawn and 7 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 8 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 7, pending: 0, unfunded: 0 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 7, userActionRequired: 0, unfunded: 0 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(7)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(0)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(0)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(0)
   })
 
-  it('renders the colorized cardsSummary boxes correctly for 13 unfunded, 1 withdrawn, 5 pending and 84 funded cards', async () => {
+  it('renders the colorized cardsSummary boxes correctly for 13 unfunded, 1 withdrawn, 5 userActionRequired and 84 funded cards', async () => {
     const set = createSet({ settings: { numberOfCards: 100 } })
-    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 84 , pending: 5, unfunded: 13 })
+    const cardsSummary: CardsSummaryDto = generateCardsSummary({ withdrawn: 1, funded: 84 , userActionRequired: 5, unfunded: 13 })
     const wrapper = mount(SetsListItem, {
       props: { set, cardsSummaryWithLoadingStatus: { cardsSummary: cardsSummary, status: 'success' } },
     })
 
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-withdrawn"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-funded"]').length).toBe(8)
-    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-pending"]').length).toBe(1)
+    expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-userActionRequired"]').length).toBe(1)
     expect(wrapper.findAll('[data-test="sets-list-item-cards-summary-unfunded"]').length).toBe(2)
   })
 
@@ -182,12 +182,12 @@ describe('SetsListItem', () => {
 })
 
 const generateCardsSummary = (
-  { withdrawn, funded, pending, unfunded }: { withdrawn: number, funded: number, pending: number, unfunded: number },
+  { withdrawn, funded, userActionRequired, unfunded }: { withdrawn: number, funded: number, userActionRequired: number, unfunded: number },
 ): CardsSummaryDto => {
   return {
     withdrawn: { count: withdrawn, amount: 210 * withdrawn },
     funded: { count: funded, amount: 210 * funded },
-    pending: { count: pending, amount: 210 * pending },
+    userActionRequired: { count: userActionRequired, amount: 210 * userActionRequired },
     unfunded: { count: unfunded, amount: 210 * unfunded },
   }
 }

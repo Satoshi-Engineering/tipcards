@@ -1,22 +1,19 @@
 import { z } from 'zod'
 
 export const CardsSummaryCategoriesEnum = z.enum([
+  'userActionRequired', // this status is greedy and includes all statuses that require user action, even if the cardStatus would be in another category as well
   'unfunded',
-  'pending',
   'funded',
   'withdrawn',
 ])
 export type CardsSummaryCategoriesEnum = z.infer<typeof CardsSummaryCategoriesEnum>
 
-/**
- * model for the cards summary (sets list, dashboard, set details)
- */
 export const CardsSummaryDto = z.object({
-  [CardsSummaryCategoriesEnum.enum.unfunded]: z.object({
+  [CardsSummaryCategoriesEnum.enum.userActionRequired]: z.object({
     count: z.number(),
     amount: z.number(),
   }),
-  [CardsSummaryCategoriesEnum.enum.pending]: z.object({
+  [CardsSummaryCategoriesEnum.enum.unfunded]: z.object({
     count: z.number(),
     amount: z.number(),
   }),

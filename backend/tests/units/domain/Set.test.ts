@@ -7,6 +7,7 @@ import { addData } from '../mocks/database/database.js'
 import Set from '@backend/domain/Set.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 import { defaultNumberOfCards } from '@shared/data/trpc/SetSettingsDto.js'
+import { CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto.js'
 
 const set = createSet()
 const setSettings = createSetSettings(set)
@@ -52,10 +53,10 @@ describe('Set', () => {
     const cardsSummary = await setWithSettings.getCardsSummary()
 
     expect(cardsSummary).toEqual({
-      unfunded: { count: defaultNumberOfCards, amount: 0 },
-      funded: { count: 0, amount: 0 },
-      withdrawn: { count: 0, amount: 0 },
-      pending: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.unfunded]: { count: defaultNumberOfCards, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
     })
   })
 })

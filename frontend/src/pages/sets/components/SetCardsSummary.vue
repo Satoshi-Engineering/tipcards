@@ -33,9 +33,9 @@
         class="w-full h-full bg-yellow"
       />
       <div
-        v-for="n in cardsSummaryItems.pending"
+        v-for="n in cardsSummaryItems.userActionRequired"
         :key="n"
-        data-test="sets-list-item-cards-summary-pending"
+        data-test="sets-list-item-cards-summary-userActionRequired"
         class="w-full h-full bg-white border-[0.7px] border-yellow"
       />
       <div
@@ -75,7 +75,7 @@ const cardsSummaryItems = computed(() => {
   const sortedCardsSummary: { kpi: keyof CardsSummaryDto, count: number }[] = [
     { kpi: 'withdrawn', count: props.cardsSummary?.withdrawn.count ?? 0 },
     { kpi: 'funded', count: props.cardsSummary?.funded.count ?? 0 },
-    { kpi: 'pending', count: props.cardsSummary?.pending.count ?? 0 },
+    { kpi: 'userActionRequired', count: props.cardsSummary?.userActionRequired.count ?? 0 },
     { kpi: 'unfunded', count: props.cardsSummary?.unfunded.count ?? 0 },
   ]
   sortedCardsSummary.sort((a, b) => a.count - b.count)
@@ -83,7 +83,7 @@ const cardsSummaryItems = computed(() => {
   const cardsSummaryItems = {
     withdrawn: 0,
     funded: 0,
-    pending: 0,
+    userActionRequired: 0,
     unfunded: 0,
   }
 

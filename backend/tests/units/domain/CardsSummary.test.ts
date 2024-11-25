@@ -26,10 +26,10 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
     expect(cardsSummary).toEqual({
-      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 2, amount: 200 },
-      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 520 },
-      [CardsSummaryCategoriesEnum.enum.pending]: { count: 1, amount: 100 },
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 1, amount: 100 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 2, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 520 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 2, amount: 200 },
     })
   })
 
@@ -50,10 +50,10 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
     expect(cardsSummary).toEqual({
-      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
-      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
-      [CardsSummaryCategoriesEnum.enum.pending]: { count: 10, amount: 1000 },
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 10, amount: 1000 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
     })
   })
 
@@ -67,10 +67,10 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
     expect(cardsSummary).toEqual({
-      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 3, amount: 300 },
-      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
-      [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 3, amount: 300 },
     })
   })
 
@@ -84,10 +84,10 @@ describe('CardsSummary', () => {
     const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
 
     expect(cardsSummary).toEqual({
-      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
-      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 300 },
-      [CardsSummaryCategoriesEnum.enum.pending]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
+      [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 300 },
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
     })
   })
 })
