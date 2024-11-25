@@ -29,8 +29,7 @@ describe('Feature Logout', () => {
     tipCardsApi.set.generateAndAddSet(randomSetName)
     tipCards.gotoSetsPage()
 
-    cy.getTestElement('logged-in').should('exist')
-    cy.getTestElement('sets-list-message-empty').should('not.exist')
+    cy.getTestElement('sets-list-message-not-logged-in').should('not.exist')
     cy.getTestElement('sets-list-item').contains(randomSetName).should('exist')
 
     logout()

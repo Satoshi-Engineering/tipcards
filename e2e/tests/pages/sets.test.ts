@@ -10,8 +10,7 @@ describe('Sets Page', () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('the-layout').should('exist')
-    cy.getTestElement('please-login-section').should('not.exist')
-    cy.getTestElement('logged-in').should('exist')
+    cy.getTestElement('sets-list-message-not-logged-in').should('not.exist')
     cy.getTestElement('sets-list-message-empty').should('exist')
   })
 
@@ -26,5 +25,15 @@ describe('Sets Page', () => {
 
     cy.url().should('contain', '/cards')
     cy.getTestElement('the-layout').contains(randomSetName).should('be.visible')
+  })
+
+  it('User should see logged out message after logging out', () => {
+    tipCardsApi.auth.clearAuth()
+
+    tipCards.gotoSetsPage()
+
+    cy.getTestElement('the-layout').should('exist')
+    cy.getTestElement('sets-list-message-not-logged-in').should('exist')
+    cy.getTestElement('sets-list-message-empty').should('not.exist')
   })
 })
