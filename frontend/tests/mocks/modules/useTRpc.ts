@@ -2,6 +2,7 @@ import { vi } from 'vitest'
 
 import type { ProfileDto } from '@shared/data/trpc/ProfileDto'
 import type { SetDto } from '@shared/data/trpc/SetDto'
+import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto'
 
 export const tRpcMock = {
   profile: {
@@ -25,6 +26,9 @@ export const tRpcMock = {
   set: {
     getAll: {
       query: vi.fn(async (): Promise<SetDto[]> => []),
+    },
+    getCardsSummaryBySetId: {
+      query: vi.fn(async (): Promise<CardsSummaryDto> => CardsSummaryDto.parse({})),
     },
   },
 }

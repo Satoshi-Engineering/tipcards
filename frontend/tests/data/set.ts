@@ -36,7 +36,7 @@ export const createSet = (options: RecursivePartial<SetDto> = {}): SetDto => {
   const date = new Date()
   return SetDto.parse({
     id: options.id || randomUUID(),
-    changed: options.changed || date,
+    changed: options.changed || options.created || date,
     created: options.created || date,
     settings: options.settings,
   })
