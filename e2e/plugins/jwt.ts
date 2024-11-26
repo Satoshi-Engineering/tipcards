@@ -29,7 +29,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateExpiredRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const payload = await getJwtPayload({ refreshToken })
+      const payload = await getJwtPayload({ jwt: refreshToken })
       const expiredRefreshToken = jwtIssuer.createJwt(
         process.env.JWT_AUTH_ISSUER,
         '0 seconds',
@@ -41,7 +41,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateInvalidRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const payload = await getJwtPayload({ refreshToken })
+      const payload = await getJwtPayload({ jwt: refreshToken })
       const expiredRefreshToken = jwtIssuer.createJwt(
         'invalid-audience',
         '28 days',
@@ -53,7 +53,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateExpiredAccessToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const { userId, nonce } = await getJwtPayload({ refreshToken })
+      const { userId, nonce } = await getJwtPayload({ jwt: refreshToken })
 
       // the frontend requests a new access token,
       // if the current one expires within the next 60 seconds.
@@ -97,7 +97,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     }: {
       refreshToken: string,
     } ) => {
-      const { userId, sessionId, nonce } = await getJwtPayload({ refreshToken })
+      const { userId, sessionId, nonce } = await getJwtPayload({ jwt: refreshToken })
 
       if (typeof userId != 'string' && (userId as string).length <= 10) {
         return false
@@ -110,6 +110,20 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       }
 
       return true
+    },
+
+    'jwt:validateAccessToken': async ({
+      accessToken,
+    }: {
+      accessToken: string,
+    } ) => {
+      try {
+        const payload = await getJwtPayload({ jwt: accessToken })
+        AccessTokenPayload.parse(payload)
+        return true
+      } catch {
+        return false
+      }
     },
   })
 

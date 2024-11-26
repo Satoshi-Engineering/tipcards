@@ -12,7 +12,7 @@ export const getJwtIssuer = async () => {
   return jwtIssuer = new JwtIssuer(keyPair, process.env.JWT_AUTH_ISSUER)
 }
 
-export const getJwtPayload = async ({ refreshToken }: { refreshToken: string }) => {
+export const getJwtPayload = async ({ jwt }: { jwt: string }) => {
   const jwtIssuer = await getJwtIssuer()
-  return await jwtIssuer.validate(refreshToken, process.env.JWT_AUTH_ISSUER)
+  return await jwtIssuer.validate(jwt, process.env.JWT_AUTH_ISSUER)
 }
