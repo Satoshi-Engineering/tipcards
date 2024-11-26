@@ -45,7 +45,6 @@
             :fetching="fetchingAllSets"
             sorting="changed"
             class="my-7"
-            data-test="sets-list"
             @enter-viewport="setsStore.loadCardsSummaryForSet"
           >
             <template v-if="!isLoggedIn" #message>

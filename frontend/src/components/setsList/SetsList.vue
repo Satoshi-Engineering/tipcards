@@ -1,5 +1,5 @@
 <template>
-  <section class="flow-root shadow-default rounded-default">
+  <section class="flow-root shadow-default rounded-default" data-test="sets-list">
     <header class="grid grid-cols-[1fr,4.5rem] border-b border-white-50 py-4 px-5">
       <HeadlineDefault level="h4" class="text-sm font-normal !my-0">
         {{ $t('sets.setInfo') }}
