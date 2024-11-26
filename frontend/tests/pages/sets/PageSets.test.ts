@@ -141,4 +141,15 @@ describe('PageSets', () => {
 
     expect(setsStore.unsubscribeFromLoggedInChanges).toHaveBeenCalledOnce()
   })
+
+  it('displays an error message when loading sets fails', async () => {
+    authStore.isLoggedIn = true
+    setsStore.loadSets = vi.fn().mockRejectedValue(new Error('test error'))
+    setsStore.fetchingAllSetsUserErrorMessages = ['test error']
+
+    const wrapper = mount(PageSets)
+    await flushPromises()
+
+    expect(wrapper.find('[data-test=sets-list-message-error]').exists()).toBe(true)
+  })
 })

@@ -51,7 +51,7 @@
               <SetsListMessageNotLoggedIn />
             </template>
             <template v-else-if="fetchingAllSetsUserErrorMessages.length > 0" #message>
-              <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" />
+              <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" data-test="sets-list-message-error" />
             </template>
             <template v-else-if="!fetchingAllSets && sets.length < 1" #message>
               <SetsListMessageEmpty />
