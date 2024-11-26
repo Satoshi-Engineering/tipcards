@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 
@@ -99,7 +99,12 @@ const setsStore = useSetsStore()
 const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
 
 onMounted(() => {
+  setsStore.subscribeToLoggedInChanges()
   setsStore.loadSets()
+})
+
+onUnmounted(() => {
+  setsStore.unsubscribeFromLoggedInChanges()
 })
 
 // Search

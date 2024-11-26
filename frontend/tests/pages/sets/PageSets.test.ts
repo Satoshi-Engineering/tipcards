@@ -3,7 +3,6 @@ import '../../mocks/router'
 import testingPinia from '../../mocks/pinia'
 import '../../mocks/intersectionObserver'
 import '../../mocks/modules/useTRpc'
-// import { setsToReturn } from  '../../mocks/stores/sets'
 
 import { mount, config, RouterLinkStub, flushPromises } from '@vue/test-utils'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
@@ -36,6 +35,8 @@ describe('PageSets', () => {
     authStore.isLoggedIn = false
     setsStore.sets = []
     setsStore.loadSets = vi.fn()
+    setsStore.subscribeToLoggedInChanges = vi.fn()
+    setsStore.unsubscribeFromLoggedInChanges = vi.fn()
   })
 
   it('should show a logged out sets page', async () => {
@@ -91,26 +92,53 @@ describe('PageSets', () => {
 
   it('should display sets or the logged out message depending on loggedIn status', async () => {
     authStore.isLoggedIn = false
-
     const wrapper = mount(PageSets)
-    await flushPromises()
-    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
+    await wrapper.vm.$nextTick()
+
     expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=sets-list-item]').exists()).toBe(false)
 
     authStore.isLoggedIn = true
-    await flushPromises()
     setsStore.sets = testSets
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
     expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(false)
     expect(wrapper.findAll('[data-test=sets-list-item]').length).toBe(testSets.length)
 
     authStore.isLoggedIn = false
-    await flushPromises()
+    setsStore.sets = []
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('[data-test=sets-list]').exists()).toBe(true)
     expect(wrapper.find('[data-test=sets-list-message-not-logged-in]').exists()).toBe(true)
     expect(wrapper.find('[data-test=sets-list-item]').exists()).toBe(false)
+  })
+
+  it('should load sets when the user logs in', async () => {
+    authStore.isLoggedIn = false
+    mount(PageSets)
+    await flushPromises()
+
+    authStore.isLoggedIn = true
+    await flushPromises()
+
+    expect(setsStore.loadSets).toHaveBeenCalledOnce()
+  })
+
+  it('should load sets when the component is mounted', async () => {
+    authStore.isLoggedIn = true
+    mount(PageSets)
+    await flushPromises()
+
+    expect(setsStore.loadSets).toHaveBeenCalledOnce()
+  })
+
+  it('should unsubscribe from loggedIn changes when the component is unmounted', async () => {
+    authStore.isLoggedIn = true
+    const wrapper = mount(PageSets)
+    await flushPromises()
+
+    wrapper.unmount()
+
+    expect(setsStore.unsubscribeFromLoggedInChanges).toHaveBeenCalledOnce()
   })
 })

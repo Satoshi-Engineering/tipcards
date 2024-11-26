@@ -91,7 +91,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
 import CardsSummary from '@/components/CardsSummary.vue'
 import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
@@ -121,6 +121,11 @@ const setsStore = useSetsStore()
 const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
 
 onMounted(() => {
+  setsStore.subscribeToLoggedInChanges()
   setsStore.loadSets()
+})
+
+onUnmounted(() => {
+  setsStore.unsubscribeFromLoggedInChanges()
 })
 </script>
