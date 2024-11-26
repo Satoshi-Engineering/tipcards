@@ -2,12 +2,15 @@ import { on } from 'node:events'
 
 import { Card, CardHash } from '@shared/data/trpc/Card.js'
 import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
+import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 
 import { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
 import CardStatus from '@backend/domain/CardStatus.js'
+import SetCollection from '@backend/domain/SetCollection.js'
 
 import { router } from '../../trpc.js'
+import loggedInProcedure from '../../procedures/loggedIn.js'
 import publicProcedure from '../../procedures/public.js'
 import { handleCardLockForSingleCard } from '../../procedures/partials/handleCardLock.js'
 
@@ -50,6 +53,14 @@ export const cardRouter = router({
         const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
         yield CardStatusDto.parse(cardStatus.toTrpcResponse())
       }
+    }),
+
+  cardsSummary: loggedInProcedure
+    .output(CardsSummaryDto)
+    .query(async ({ ctx }) => {
+      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
+      const cardStatusCollection = await setCollection.getCardStatusCollection()
+      return cardStatusCollection.summary.toTRpcResponse()
     }),
 
   landingPageViewed: publicProcedure
