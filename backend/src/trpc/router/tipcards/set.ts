@@ -18,7 +18,7 @@ export const setRouter = router({
     .output(SetDto.array())
     .query(async ({ ctx }) => {
       const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
-      return setCollection.sets
+      return setCollection.toTRpcResponse()
     }),
 
   getCardsSummaryBySetId: loggedInProcedure
@@ -26,7 +26,8 @@ export const setRouter = router({
     .output(CardsSummaryDto)
     .query(async ({ input }) => {
       const set = await Set.fromId(input)
-      return set.getCardsSummary()
+      const cardStatusCollection = await set.getCardStatusCollection()
+      return cardStatusCollection.summary.toTRpcResponse()
     }),
 
   getCards: publicProcedure

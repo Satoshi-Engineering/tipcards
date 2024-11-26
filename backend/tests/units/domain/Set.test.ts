@@ -50,9 +50,10 @@ describe('Set', () => {
 
   it('should return a CardsSummary for a set', async () => {
     const setWithSettings = await Set.fromId(set.id)
-    const cardsSummary = await setWithSettings.getCardsSummary()
+    const cardStatusCollection = await setWithSettings.getCardStatusCollection()
+    const cardsSummaryDto = cardStatusCollection.summary.toTRpcResponse()
 
-    expect(cardsSummary).toEqual({
+    expect(cardsSummaryDto).toEqual({
       [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: defaultNumberOfCards, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },

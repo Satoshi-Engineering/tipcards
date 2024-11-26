@@ -1,10 +1,12 @@
+import assert from 'node:assert'
+
 import { SetDto } from '@shared/data/trpc/SetDto.js'
-import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 
 import { asTransaction } from '@backend/database/client.js'
+import type { SetWithSettings } from '@backend/database/data/SetWithSettings.js'
 import hashSha256 from '@backend/services/hashSha256.js'
+
 import CardStatusCollection from './CardStatusCollection.js'
-import CardsSummary from './CardsSummary.js'
 
 export default class Set {
   public static async fromId(setId: SetDto['id']): Promise<Set> {
@@ -14,18 +16,23 @@ export default class Set {
     const settings = await asTransaction(
       async (queries) => await queries.getSetSettingsBySetId(setId),
     )
-    const setWithSettings = SetDto.parse({
+    assert(set != null, `No set found for set with id ${setId}`)
+    assert(settings != null, `No settings found for set with id ${setId}`)
+    return Set.fromSetWithSettings({
       ...set,
       settings,
     })
-    return new Set(setWithSettings)
   }
 
-  public async getCardsSummary(): Promise<CardsSummaryDto> {
+  public static fromSetWithSettings(setWithSettings: SetWithSettings): Set {
+    const setDto = SetDto.parse(setWithSettings)
+    return new Set(setDto)
+  }
+
+  public async getCardStatusCollection(): Promise<CardStatusCollection> {
     const cardHashes = this.getAllCardHashes()
     const cardStatusCollection = await CardStatusCollection.fromCardHashes(cardHashes)
-    const cardsSummary: CardsSummaryDto = CardsSummary.toTRpcResponse(cardStatusCollection.cardStatuses)
-    return cardsSummary
+    return cardStatusCollection
   }
 
   public getAllCardHashes(): string[] {
@@ -34,6 +41,10 @@ export default class Set {
 
   public getCardHash(cardIndex: number): string {
     return hashSha256(`${this.set.id}/${cardIndex}`)
+  }
+
+  public toTRpcResponse(): SetDto {
+    return this.set
   }
 
   public readonly set: SetDto

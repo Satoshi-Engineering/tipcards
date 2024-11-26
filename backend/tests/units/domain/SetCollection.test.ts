@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import '../mocks/database/client.js'
-import { createSet, createSetSettings } from '../../drizzleData.js'
+import { createSet, createSetSettings, createCardForSet } from '../../drizzleData.js'
 import { addData } from '../mocks/database/database.js'
 
 import SetCollection from '@backend/domain/SetCollection.js'
@@ -40,14 +40,29 @@ describe('Set', () => {
   it('should load all sets for a user', async () => {
     const setsWithSettings = await SetCollection.fromUserId('userId')
 
-    expect(setsWithSettings.sets).toEqual([
+    expect(setsWithSettings.toTRpcResponse()).toEqual([
       getSetWithSettings(sets[0], setSettings[0]),
       getSetWithSettings(sets[1], setSettings[1]),
       getSetWithSettings(sets[2], setSettings[2]),
     ])
-    expect(setsWithSettings.sets).not.toContain(
+    expect(setsWithSettings.toTRpcResponse()).not.toContain(
       getSetWithSettings(sets[3], setSettings[3]),
     )
+  })
+
+  it('should return all cardHashes for all sets', async () => {
+    const setsWithSettings = await SetCollection.fromUserId('userId')
+    const cardHashes = setsWithSettings.getAllCardHashes()
+
+    expect(cardHashes).toEqual(expect.arrayContaining([
+      ...new Array(setSettings[0].numberOfCards).fill(0).map((_, index) => createCardForSet(sets[0], index).hash),
+      ...new Array(setSettings[1].numberOfCards).fill(0).map((_, index) => createCardForSet(sets[1], index).hash),
+      ...new Array(setSettings[2].numberOfCards).fill(0).map((_, index) => createCardForSet(sets[2], index).hash),
+    ]))
+
+    expect(cardHashes).not.toContain(expect.arrayContaining([
+      ...new Array(setSettings[3].numberOfCards).fill(0).map((_, index) => createCardForSet(sets[3], index).hash),
+    ]))
   })
 })
 

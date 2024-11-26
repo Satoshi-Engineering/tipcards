@@ -23,9 +23,10 @@ describe('CardsSummary', () => {
     addCard(cards[7], CardStatusEnum.enum.unfunded, 0)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
+    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummaryDto = cardsSummary.toTRpcResponse()
 
-    expect(cardsSummary).toEqual({
+    expect(cardsSummaryDto).toEqual({
       [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 1, amount: 100 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 2, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 520 },
@@ -47,9 +48,10 @@ describe('CardsSummary', () => {
     addCard(cards[9], CardStatusEnum.enum.isLockedByBulkWithdraw, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
+    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummaryDto = cardsSummary.toTRpcResponse()
 
-    expect(cardsSummary).toEqual({
+    expect(cardsSummaryDto).toEqual({
       [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 10, amount: 1000 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
@@ -64,9 +66,10 @@ describe('CardsSummary', () => {
     addCard(cards[2], CardStatusEnum.enum.withdrawnByBulkWithdraw, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
+    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummaryDto = cardsSummary.toTRpcResponse()
 
-    expect(cardsSummary).toEqual({
+    expect(cardsSummaryDto).toEqual({
       [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 0, amount: 0 },
@@ -81,9 +84,10 @@ describe('CardsSummary', () => {
     addCard(cards[2], CardStatusEnum.enum.funded, 100)
 
     const cardStatuses = await getCardStatusesForCards(cards)
-    const cardsSummary = CardsSummary.toTRpcResponse(cardStatuses)
+    const cardsSummary = CardsSummary.fromCardStatuses(cardStatuses)
+    const cardsSummaryDto = cardsSummary.toTRpcResponse()
 
-    expect(cardsSummary).toEqual({
+    expect(cardsSummaryDto).toEqual({
       [CardsSummaryCategoriesEnum.enum.userActionRequired]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.unfunded]: { count: 0, amount: 0 },
       [CardsSummaryCategoriesEnum.enum.funded]: { count: 3, amount: 300 },

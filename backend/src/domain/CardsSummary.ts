@@ -1,26 +1,39 @@
 import { CardStatusEnum, userActionRequired, fundedStatuses, unfundedStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto.js'
 import { CardsSummaryCategoriesEnum, CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
+
 import CardStatus from './CardStatus.js'
 
 export default class CardsSummary {
-  public static toTRpcResponse(cardStatuses: CardStatus[]): CardsSummaryDto {
-    return new CardsSummary(cardStatuses).toTRpcResponse()
+  public static fromCardStatuses(cardStatuses: CardStatus[]): CardsSummary {
+    return new CardsSummary(cardStatuses)
+  }
+
+  public toTRpcResponse(): CardsSummaryDto {
+    return {
+      [CardsSummaryCategoriesEnum.enum.userActionRequired]: this.userActionRequired,
+      [CardsSummaryCategoriesEnum.enum.unfunded]: this.unfunded,
+      [CardsSummaryCategoriesEnum.enum.funded]: this.funded,
+      [CardsSummaryCategoriesEnum.enum.withdrawn]: this.withdrawn,
+    }
+  }
+
+  public get userActionRequired(): { count: number, amount: number } {
+    return this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.userActionRequired)
+  }
+
+  public get unfunded(): { count: number, amount: number } {
+    return this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.unfunded)
+  }
+
+  public get funded(): { count: number, amount: number } {
+    return this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.funded)
+  }
+
+  public get withdrawn(): { count: number, amount: number } {
+    return this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.withdrawn)
   }
 
   private cardStatuses: CardStatus[]
-
-  private toTRpcResponse(): CardsSummaryDto {
-    const userActionRequired = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.userActionRequired)
-    const unfunded = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.unfunded)
-    const funded = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.funded)
-    const withdrawn = this.getCountAndAmountByStatusCategory(CardsSummaryCategoriesEnum.enum.withdrawn)
-    return {
-      [CardsSummaryCategoriesEnum.enum.userActionRequired]: userActionRequired,
-      [CardsSummaryCategoriesEnum.enum.unfunded]: unfunded,
-      [CardsSummaryCategoriesEnum.enum.funded]: funded,
-      [CardsSummaryCategoriesEnum.enum.withdrawn]: withdrawn,
-    }
-  }
 
   private constructor(cardStatuses: CardStatus[]) {
     this.cardStatuses = cardStatuses

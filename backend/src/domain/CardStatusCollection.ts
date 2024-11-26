@@ -1,4 +1,5 @@
 import CardStatus from './CardStatus.js'
+import CardsSummary from './CardsSummary.js'
 
 export default class CardStatusCollection {
   public static async fromCardHashes(cardHashes: string[]): Promise<CardStatusCollection> {
@@ -7,6 +8,10 @@ export default class CardStatusCollection {
   }
 
   public readonly cardStatuses: CardStatus[]
+
+  public get summary(): CardsSummary {
+    return CardsSummary.fromCardStatuses(this.cardStatuses)
+  }
 
   private constructor(cardStatuses: CardStatus[]) {
     this.cardStatuses = cardStatuses
