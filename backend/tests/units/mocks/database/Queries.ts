@@ -57,6 +57,11 @@ const getLatestCardVersion = async (cardHash: Card['hash']): Promise<CardVersion
   return cards.sort((a, b) => a.created.getTime() - b.created.getTime())[0]
 }
 
+const getLatestCardVersions = async (cardHashes: Card['hash'][]): Promise<CardVersion[]> => {
+  const cardVersions = await Promise.all(cardHashes.map(async (cardHash) => getLatestCardVersion(cardHash)))
+  return cardVersions.filter((cardVersion) => cardVersion != null)
+}
+
 const getLnurlPById = async (lnbitsId: LnurlP['lnbitsId']): Promise<LnurlP | null> => {
   if (lnurlPsByLnbitsId[lnbitsId] == null) {
     return null
@@ -80,6 +85,8 @@ export default vi.fn().mockImplementation(() => ({
   getAllCardsForSetBySetId: async (setId: Set['id']): Promise<Card[]> => Object.values(cardsByHash).filter((card) => card.set === setId),
 
   getLatestCardVersion,
+
+  getLatestCardVersions,
 
   getLnurlPFundingCardVersion: async (cardVersion: CardVersion): Promise<LnurlP | null> => {
     if (cardVersion.lnurlP == null) {

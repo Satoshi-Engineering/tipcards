@@ -19,6 +19,21 @@ export default class CardStatus {
     return CardStatus.fromCardVersionOrDefault(cardHash, cardVersion)
   }
 
+  public static fromData(data: {
+    cardVersion: CardVersion,
+    invoices?: InvoiceWithSetFundingInfo[],
+    lnurlP?: LnurlP | null,
+    lnurlW?: LnurlW | null,
+    withdrawPending?: boolean,
+  }): CardStatus {
+    const status = new CardStatus(data.cardVersion)
+    status.invoices = data.invoices ?? []
+    status.lnurlP = data.lnurlP ?? null
+    status.lnurlW = data.lnurlW ?? null
+    status.withdrawPending = data.withdrawPending ?? false
+    return status
+  }
+
   private static async fromCardVersionOrDefault(cardHash: Card['hash'], cardVersion: CardVersion | null): Promise<CardStatus> {
     if (cardVersion == null) {
       return new CardStatus({

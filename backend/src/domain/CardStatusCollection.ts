@@ -7,6 +7,10 @@ export default class CardStatusCollection {
     return new CardStatusCollection(cardStatuses)
   }
 
+  public static fromCardStatuses(cardStatuses: CardStatus[]): CardStatusCollection {
+    return new CardStatusCollection(cardStatuses)
+  }
+
   public readonly cardStatuses: CardStatus[]
 
   public get summary(): CardsSummary {

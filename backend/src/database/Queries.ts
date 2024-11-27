@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne, inArray, max } from 'drizzle-orm'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
@@ -78,6 +78,23 @@ export default class Queries {
       return null
     }
     return result[0]
+  }
+
+  async getLatestCardVersions(cardHashes: Card['hash'][]): Promise<CardVersion[]> {
+    const maxCreatedPerCard = this.transaction.$with('maxCreatedPerCard').as(
+      this.transaction.select({ card: CardVersion.card, created: max(CardVersion.created) })
+        .from(CardVersion)
+        .groupBy(CardVersion.card),
+    )
+    const result = await this.transaction.select()
+      .from(CardVersion)
+      .innerJoin(maxCreatedPerCard, and(
+        eq(CardVersion.card, maxCreatedPerCard.card),
+        eq(CardVersion.created, maxCreatedPerCard.created),
+      ))
+      .orderBy(desc(CardVersion.created))
+      .where(inArray(CardVersion.card, cardHashes))
+    return result.map(({ CardVersion }) => CardVersion)
   }
 
   async getLnurlPFundingCardVersion(cardVersion: CardVersion): Promise<LnurlP | null> {
