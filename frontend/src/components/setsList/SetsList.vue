@@ -49,7 +49,7 @@ import type { SetDto } from '@shared/data/trpc/SetDto'
 import SetsListItem from '@/components/setsList/components/SetsListItem.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import type { CardsSummaryWithLoadingStatusBySetId } from '@/stores/sets'
+import type { CardsSummaryWithLoadingStatusBySetId } from '@/data/CardsSummaryWithLoadingStatus'
 
 const props = defineProps({
   loggedIn: {

@@ -7,7 +7,12 @@
           {{ $t('cards.status.labelUsed') }}
         </HeadlineDefault>
         <div class="text-lg font-medium">
-          20 sats
+          <template v-if="cardsSummaryWithLoadingStatus.status === 'success'">
+            {{ cardsSummaryWithLoadingStatus.cardsSummary.withdrawn.amount }} sats
+          </template>
+          <tempalte v-else>
+            -
+          </tempalte>
         </div>
       </figcaption>
     </figure>
@@ -18,7 +23,12 @@
           {{ $t('cards.status.labelFunded') }}
         </HeadlineDefault>
         <div class="text-lg font-medium">
-          20 sats
+          <template v-if="cardsSummaryWithLoadingStatus.status === 'success'">
+            {{ cardsSummaryWithLoadingStatus.cardsSummary.funded.amount }} sats
+          </template>
+          <tempalte v-else>
+            -
+          </tempalte>
         </div>
       </figcaption>
     </figure>
@@ -29,23 +39,29 @@
           {{ $t('cards.status.labelUnused') }}
         </HeadlineDefault>
         <div class="text-lg font-medium">
-          20 sats
+          <template v-if="cardsSummaryWithLoadingStatus.status === 'success'">
+            {{ cardsSummaryWithLoadingStatus.cardsSummary.unfunded.count }} cards
+          </template>
+          <tempalte v-else>
+            -
+          </tempalte>
         </div>
       </figcaption>
     </figure>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
-import type { CardsSummaryWithLoadingStatus } from '@/stores/sets'
-import IconSummaryCharged from './icons/IconSummaryCharged.vue'
-import IconSummaryEmptyCard from './icons/IconSummaryEmptyCard.vue'
-import IconSummaryRedeemed from './icons/IconSummaryRedeemed.vue'
-import HeadlineDefault from './typography/HeadlineDefault.vue'
+import IconSummaryCharged from '@/components/icons/IconSummaryCharged.vue'
+import IconSummaryEmptyCard from '@/components/icons/IconSummaryEmptyCard.vue'
+import IconSummaryRedeemed from '@/components/icons/IconSummaryRedeemed.vue'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 
 defineProps({
-  cardsSummary: {
+  cardsSummaryWithLoadingStatus: {
     type: Object as PropType<CardsSummaryWithLoadingStatus>,
     required: true,
   },

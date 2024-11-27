@@ -32,15 +32,7 @@
         </div>
         <CardsSummary
           class="my-10"
-          :cards-summary="{
-            cardsSummary: {
-              withdrawn: { amount: 210 * 20, count: 20 },
-              funded: { amount: 210 * 20, count: 20 },
-              unfunded: { amount: 210 * 20, count: 20 },
-              userActionRequired: { amount: 210 * 0, count: 0 },
-            },
-            status: 'success',
-          }"
+          :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
         />
       </CenterContainer>
     </div>
@@ -91,7 +83,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 import CardsSummary from '@/components/CardsSummary.vue'
 import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
@@ -99,14 +91,16 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import { useAuthStore } from '@/stores/auth'
-import { useProfileStore } from '@/stores/profile'
-import { useModalLoginStore } from '@/stores/modalLogin'
 import SetsList from '@/components/setsList/SetsList.vue'
-import { useSetsStore } from '@/stores/sets'
 import SetsListMessageNotLoggedIn from '@/components/setsList/SetsListMessageNotLoggedIn.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import SetsListMessageEmpty from '@/components/setsList/SetsListMessageEmpty.vue'
+import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
+import useTRpc from '@/modules/useTRpc'
+import { useAuthStore } from '@/stores/auth'
+import { useModalLoginStore } from '@/stores/modalLogin'
+import { useProfileStore } from '@/stores/profile'
+import { useSetsStore } from '@/stores/sets'
 
 const profileStore = useProfileStore()
 const { userDisplayName } = storeToRefs(profileStore)
@@ -117,6 +111,21 @@ const { isLoggedIn } = storeToRefs(authStore)
 const modalLoginStore = useModalLoginStore()
 const { showModalLogin } = storeToRefs(modalLoginStore)
 
+// global card status summary
+const { card } = useTRpc()
+const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
+onMounted(async () => {
+  cardsSummaryWithLoadingStatus.value = { status: 'loading' }
+  try {
+    const cardsSummary = await card.cardsSummary.query()
+    cardsSummaryWithLoadingStatus.value = { cardsSummary, status: 'success' }
+  } catch (error) {
+    console.error(error)
+    cardsSummaryWithLoadingStatus.value = { status: 'error' }
+  }
+})
+
+// sets
 const setsStore = useSetsStore()
 const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
 

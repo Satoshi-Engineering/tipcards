@@ -40,8 +40,8 @@
       v-if="!noCardsSummary"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
       data-test="sets-list-item-cards-summary"
-      :loading-status="cardsSummaryWithLoadingStatus?.status ?? 'loading'"
-      :cards-summary="cardsSummaryWithLoadingStatus?.cardsSummary"
+      :loading-status="cardsSummaryLoadingStatus"
+      :cards-summary="cardsSummaryData"
       :number-of-cards="set.settings.numberOfCards"
     />
   </LinkDefault>
@@ -52,13 +52,14 @@ import { type PropType, useTemplateRef, onMounted, onUnmounted, ref, watch, comp
 import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
-import type { CardsSummaryWithLoadingStatus } from '@/stores/sets'
-import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
+
 import SetCardsSummary from '@/components/setsList/components/SetCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
+import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
+import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
 
 const props = defineProps({
   set: {
@@ -76,6 +77,15 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['enterViewport'])
+
+const cardsSummaryLoadingStatus = computed(() => props.cardsSummaryWithLoadingStatus?.status ?? 'loading')
+
+const cardsSummaryData = computed(() => {
+  if (props.cardsSummaryWithLoadingStatus?.status !== 'success') {
+    return undefined
+  }
+  return props.cardsSummaryWithLoadingStatus.cardsSummary
+})
 
 const isInViewport = ref(false)
 

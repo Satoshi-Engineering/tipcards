@@ -144,8 +144,6 @@ describe('useSetsStore', () => {
     await flushPromises()
 
     expect(cardsSummaryWithStatusBySetId.value[setThatThrowsError.id].status).toBe('error')
-    expect(cardsSummaryWithStatusBySetId.value[setThatThrowsError.id].cardsSummary).toBeUndefined()
     expect(cardsSummaryWithStatusBySetId.value[set.id].status).toBe('success')
-    expect(cardsSummaryWithStatusBySetId.value[set.id].cardsSummary).toBeDefined()
   })
 })

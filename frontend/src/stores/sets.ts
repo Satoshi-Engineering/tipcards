@@ -1,14 +1,12 @@
 import { ref, watch, type WatchHandle } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 
-import i18n from '@/modules/initI18n'
 import { SetDto } from '@shared/data/trpc/SetDto.js'
-import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
+
+import type { CardsSummaryWithLoadingStatus, CardsSummaryWithLoadingStatusBySetId } from '@/data/CardsSummaryWithLoadingStatus'
+import i18n from '@/modules/initI18n'
 import useTRpc, { isTRpcClientAbortError } from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
-
-export type CardsSummaryWithLoadingStatus = { cardsSummary?: CardsSummaryDto, status: 'loading' | 'error' | 'success' | undefined }
-export type CardsSummaryWithLoadingStatusBySetId = Record<SetDto['id'], CardsSummaryWithLoadingStatus>
 
 export const useSetsStore = defineStore('sets', () => {
   const sets = ref<SetDto[]>([])
