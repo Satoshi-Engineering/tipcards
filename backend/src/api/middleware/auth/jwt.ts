@@ -2,9 +2,10 @@ import type { Request, Response, NextFunction } from 'express'
 import { errors } from 'jose'
 import { ZodError } from 'zod'
 
+import { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 
-import { validateJwt } from '@backend/services/jwt.js'
+import { getJwtValidator } from '@backend/services/jwt.js'
 
 /**
  * validate access token.
@@ -32,7 +33,9 @@ export const authGuardAccessToken = async (req: Request, res: Response, next: Ne
   }
 
   try {
-    const accessToken = await validateJwt(req.headers.authorization, host)
+    const jwtValidator = getJwtValidator()
+    const payload = await jwtValidator.validate(req.headers.authorization, host)
+    const accessToken = AccessTokenPayload.parse(payload)
     res.locals.accessTokenPayload = accessToken
     next()
   } catch (error) {
