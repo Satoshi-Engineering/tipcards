@@ -4,7 +4,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
-describe('Feature logoutAllOtherDevices', () => {
+describe('Trpc Auth', () => {
   it('should not be able to refresh, if the user is logged out', () => {
     cy.request({
       url: API_AUTH_REFRESH.href,
