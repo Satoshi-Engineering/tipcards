@@ -9,7 +9,7 @@ import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
 import { profileRouter } from '@backend/trpc/router/tipcards/profile.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
+import AccessGuard from '@backend/domain/auth/AccessGuard.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import '../lib/initAxios.js'
@@ -31,9 +31,7 @@ afterAll(async () => {
 describe('TRpc Router Profile', () => {
   const profileData = createProfileForUser(createUser(frontend.userId))
   let caller = createCaller({
-    host: new URL(TIPCARDS_API_ORIGIN).host,
-    jwt: null,
-    accessToken: null,
+    accessGuard: {} as unknown as AccessGuard,
     applicationEventEmitter: ApplicationEventEmitter.instance,
     cardLockManager: CardLockManager.instance,
   })
@@ -52,9 +50,7 @@ describe('TRpc Router Profile', () => {
     await frontend.login()
     profileData.user = frontend.userId
     caller = createCaller({
-      host: new URL(TIPCARDS_API_ORIGIN).host,
-      jwt: frontend.accessToken,
-      accessToken: null,
+      accessGuard: {} as unknown as AccessGuard,
       applicationEventEmitter: ApplicationEventEmitter.instance,
       cardLockManager: CardLockManager.instance,
     })

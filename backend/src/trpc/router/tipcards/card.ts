@@ -58,7 +58,7 @@ export const cardRouter = router({
   cardsSummary: loggedInProcedure
     .output(CardsSummaryDto)
     .query(async ({ ctx }) => {
-      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
+      const setCollection = await SetCollection.fromUserId(ctx.loggedInUser.id)
       const cardStatusCollection = await setCollection.getCardStatusCollection()
       return cardStatusCollection.summary.toTRpcResponse()
     }),

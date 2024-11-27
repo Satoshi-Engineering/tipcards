@@ -8,6 +8,7 @@ import ApplicationEventEmitter, { cardUpdateEvent } from '@backend/domain/Applic
 import CardLockManager from '@backend/domain/CardLockManager.js'
 import { createCallerFactory } from '@backend/trpc/trpc.js'
 import { cardRouter } from '@backend/trpc/router/tipcards/card.js'
+import AccessGuard from '@backend/domain/auth/AccessGuard.js'
 
 import { createCard } from '../data/Card.js'
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
@@ -22,9 +23,7 @@ const createCaller = createCallerFactory(cardRouter)
 
 describe('tRPC card.status route', async () => {
   const caller = createCaller({
-    host: null,
-    jwt: null,
-    accessToken: null,
+    accessGuard: {} as unknown as AccessGuard,
     applicationEventEmitter,
     cardLockManager,
   })

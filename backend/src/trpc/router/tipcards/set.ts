@@ -17,7 +17,7 @@ export const setRouter = router({
   getAll: loggedInProcedure
     .output(SetDto.array())
     .query(async ({ ctx }) => {
-      const setCollection = await SetCollection.fromUserId(ctx.accessToken.userId)
+      const setCollection = await SetCollection.fromUserId(ctx.loggedInUser.id)
       return setCollection.toTRpcResponse()
     }),
 

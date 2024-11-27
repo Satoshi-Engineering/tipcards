@@ -13,7 +13,7 @@ import { bulkWithdrawRouter } from '@backend/trpc/router/tipcards/bulkWithdraw.j
 import { setRouter } from '@backend/trpc/router/tipcards/set.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
-import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
+import AccessGuard from '@backend/domain/auth/AccessGuard.js'
 
 import Frontend from '../lib/frontend/Frontend.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
@@ -24,17 +24,13 @@ ApplicationEventEmitter.init()
 CardLockManager.init({ aquireTimeout: 1000 })
 
 const callerBulkWithdraw = bulkWithdrawRouter.createCaller({
-  host: new URL(TIPCARDS_API_ORIGIN).host,
-  jwt: null,
-  accessToken: null,
+  accessGuard: {} as unknown as AccessGuard,
   applicationEventEmitter: ApplicationEventEmitter.instance,
   cardLockManager: CardLockManager.instance,
 })
 
 const callerSet = setRouter.createCaller({
-  host: new URL(TIPCARDS_API_ORIGIN).host,
-  jwt: null,
-  accessToken: null,
+  accessGuard: {} as unknown as AccessGuard,
   applicationEventEmitter: ApplicationEventEmitter.instance,
   cardLockManager: CardLockManager.instance,
 })
