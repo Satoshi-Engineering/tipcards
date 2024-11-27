@@ -11,6 +11,7 @@ import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
 import initApp from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
+import { initJwtValidator } from './services/jwt.js'
 
 const EXIT_CODE_FAILED_STARTUP = 129
 const FAILED_STARTUPS_COUNTER_FILENAME = 'failed.startups.counter'
@@ -45,6 +46,9 @@ const startupApplication = async () => {
 
   CardLockManager.init({ aquireTimeout: CARDLOCKMANAGER_AQUIRE_TIMEOUT })
   console.info(' - CardLockManager initialized')
+
+  initJwtValidator()
+  console.info(' - JwtValidator initialized')
 
   const app = initApp()
   console.info(' - app started')
