@@ -19,7 +19,8 @@ describe('Trpc Auth', () => {
     tipCards.gotoHomePage()
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-login').click()
-    cy.getTestElement('lightning-qr-code-image').invoke('attr', 'href').then(lnurlAuthUrlHref => {
+    cy.getTestElement('lightning-qr-code-button-open-in-wallet').should('have.attr', 'href')
+    cy.getTestElement('lightning-qr-code-button-open-in-wallet').invoke('attr', 'href').then(lnurlAuthUrlHref => {
       const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
       cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
     })
