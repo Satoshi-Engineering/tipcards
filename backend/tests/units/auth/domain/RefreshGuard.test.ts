@@ -3,7 +3,6 @@ import { Request, Response } from 'express'
 import { randomUUID } from 'crypto'
 
 import '../../mocks/process.env.js'
-import '../../mocks/jwt.js'
 import '../../mocks/drizzle.js'
 import '../../mocks/database/client.js'
 import { queries } from '../../mocks/database/client.js'

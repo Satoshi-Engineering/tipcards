@@ -2,7 +2,6 @@ import { describe, vi, it, expect, beforeAll, beforeEach } from 'vitest'
 import { Response } from 'express'
 
 import '../../mocks/process.env.js'
-import '../../mocks/jwt.js'
 import '../../mocks/drizzle.js'
 import '../../mocks/database/client.js'
 import {
