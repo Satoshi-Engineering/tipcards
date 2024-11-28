@@ -168,6 +168,54 @@ export default class Queries {
     ))
   }
 
+  async getAllInvoicesFundingCardVersionsWithSetFundingInfo(cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], InvoiceWithSetFundingInfo[]>> {
+    const cardsFundedBySingleInvoice = aliasedTable(CardVersionHasInvoice, 'cardsFundedBySingleInvoice')
+    const result = await this.transaction.select({
+      cardVersion: CardVersionHasInvoice.cardVersion,
+      amount: Invoice.amount,
+      paymentHash: Invoice.paymentHash,
+      paymentRequest: Invoice.paymentRequest,
+      created: Invoice.created,
+      paid: Invoice.paid,
+      expiresAt: Invoice.expiresAt,
+      extra: Invoice.extra,
+      cardCount: sql<number>`cast(count(${cardsFundedBySingleInvoice.cardVersion}) as int)`,
+    })
+      .from(CardVersionHasInvoice)
+      .innerJoin(Invoice, eq(CardVersionHasInvoice.invoice, Invoice.paymentHash))
+      .leftJoin(cardsFundedBySingleInvoice, eq(Invoice.paymentHash, cardsFundedBySingleInvoice.invoice))
+      .where(inArray(CardVersionHasInvoice.cardVersion, cardVersionIds))
+      .groupBy(CardVersionHasInvoice.cardVersion, Invoice.paymentHash)
+    return result.reduce<Record<CardVersion['id'], InvoiceWithSetFundingInfo[]>>((acc, {
+      cardVersion,
+      amount,
+      paymentHash,
+      paymentRequest,
+      created,
+      paid,
+      expiresAt,
+      extra,
+      cardCount,
+    }) => {
+      if (acc[cardVersion] == null) {
+        acc[cardVersion] = []
+      }
+      acc[cardVersion].push(new InvoiceWithSetFundingInfo(
+        {
+          amount,
+          paymentHash,
+          paymentRequest,
+          created,
+          paid,
+          expiresAt,
+          extra,
+        },
+        cardCount,
+      ))
+      return acc
+    }, {})
+  }
+
   async getInvoiceByPaymentHash(paymentHash: Invoice['paymentHash']): Promise<Invoice | null> {
     const result = await this.transaction.select()
       .from(Invoice)

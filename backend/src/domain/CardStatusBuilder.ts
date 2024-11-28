@@ -1,3 +1,4 @@
+import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import { Card, CardVersion } from '@backend/database/schema/index.js'
 import { asTransaction } from '@backend/database/client.js'
 
@@ -28,17 +29,19 @@ export default class CardStatusBuilder {
 
   public async build(): Promise<void> {
     await this.loadCardVersion()
+    await this.loadSatoshiMovements()
   }
 
   public getResult(): CardStatus | CardStatusCollection {
     const cardStatuses = this.cardHashes.map((cardHash) => {
-      if (!this.cardVersions[cardHash]) {
+      if (!this.cardVersionsByCardHash[cardHash]) {
         return CardStatus.fromData({
           cardVersion: { ...defaultCardVersion, card: cardHash },
         })
       }
       return CardStatus.fromData({
-        cardVersion: this.cardVersions[cardHash],
+        cardVersion: this.cardVersionsByCardHash[cardHash],
+        invoices: this.invoicesByCardHash[cardHash],
       })
     })
     if (cardStatuses.length === 1) {
@@ -47,12 +50,33 @@ export default class CardStatusBuilder {
     return CardStatusCollection.fromCardStatuses(cardStatuses)
   }
 
-  private cardVersions: Record<Card['hash'], CardVersion> = {}
+  private cardVersionsById: Record<CardVersion['id'], CardVersion> = {}
+  private cardVersionsByCardHash: Record<Card['hash'], CardVersion> = {}
+  private invoicesByCardHash: Record<Card['hash'], InvoiceWithSetFundingInfo[]> = {}
+
+  private get cardVersionIds() {
+    return Object.keys(this.cardVersionsById)
+  }
 
   private async loadCardVersion(): Promise<void> {
     const cardVersions: CardVersion[] = await asTransaction(async (queries) => queries.getLatestCardVersions(this.cardHashes))
     cardVersions.forEach((cardVersion) => {
-      this.cardVersions[cardVersion.card] = cardVersion
+      this.cardVersionsById[cardVersion.id] = cardVersion
+      this.cardVersionsByCardHash[cardVersion.card] = cardVersion
+    })
+  }
+
+  private async loadSatoshiMovements(): Promise<void> {
+    await Promise.all([
+      this.loadInvoices(),
+    ])
+  }
+
+  private async loadInvoices(): Promise<void> {
+    const invoicesByCardVersionId = await asTransaction(async (queries) => queries.getAllInvoicesFundingCardVersionsWithSetFundingInfo(this.cardVersionIds))
+    Object.entries(invoicesByCardVersionId).forEach(([cardVersionId, invoice]) => {
+      const cardVersion = this.cardVersionsById[cardVersionId]
+      this.invoicesByCardHash[cardVersion.card] = invoice
     })
   }
 }

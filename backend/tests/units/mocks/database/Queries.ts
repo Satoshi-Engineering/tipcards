@@ -73,6 +73,36 @@ const getSetsByUserId = async (userId: User['id']): Promise<Set[]> => usersCanUs
   .filter((userCanUseSet) => userCanUseSet.user === userId && setsById[userCanUseSet.set] != null)
   .map((userCanUseSet) => setsById[userCanUseSet.set])
 
+const getAllInvoicesFundingCardVersionWithSetFundingInfo = async (cardVersion: CardVersion): Promise<InvoiceWithSetFundingInfo[]> => {
+  const paymentHashes = cardVersionInvoices
+    .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
+    .map((cardVersionInvoice) => cardVersionInvoice.invoice)
+  return paymentHashes.map((paymentHash) => {
+    const cardsFundedWithThisInvoice = cardVersionInvoices
+      .filter((cardVersionInvoice) => cardVersionInvoice.invoice === paymentHash)
+      .length
+    return new InvoiceWithSetFundingInfo(invoicesByPaymentHash[paymentHash], cardsFundedWithThisInvoice)
+  })
+}
+
+const getAllInvoicesFundingCardVersionsWithSetFundingInfo = async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], InvoiceWithSetFundingInfo[]>> => {
+  const invoicesByCardVersionId: Record<CardVersion['id'], InvoiceWithSetFundingInfo[]> = {}
+  await Promise.all(cardVersionIds.map(async (cardVersionId) => {
+    invoicesByCardVersionId[cardVersionId] = await getAllInvoicesFundingCardVersionWithSetFundingInfo({
+      id: cardVersionId,
+      card: '00000000-0000-0000-0000-000000000000',
+      created: new Date(),
+      lnurlP: null,
+      lnurlW: null,
+      textForWithdraw: '',
+      noteForStatusPage: '',
+      sharedFunding: false,
+      landingPageViewed: null,
+    })
+  }))
+  return invoicesByCardVersionId
+}
+
 export default vi.fn().mockImplementation(() => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
 
@@ -104,17 +134,9 @@ export default vi.fn().mockImplementation(() => ({
     return Object.values(invoicesByPaymentHash).filter((invoice) => paymentHashes.includes(invoice.paymentHash))
   },
 
-  getAllInvoicesFundingCardVersionWithSetFundingInfo: async (cardVersion: CardVersion): Promise<InvoiceWithSetFundingInfo[]> => {
-    const paymentHashes = cardVersionInvoices
-      .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
-      .map((cardVersionInvoice) => cardVersionInvoice.invoice)
-    return paymentHashes.map((paymentHash) => {
-      const cardsFundedWithThisInvoice = cardVersionInvoices
-        .filter((cardVersionInvoice) => cardVersionInvoice.invoice === paymentHash)
-        .length
-      return new InvoiceWithSetFundingInfo(invoicesByPaymentHash[paymentHash], cardsFundedWithThisInvoice)
-    })
-  },
+  getAllInvoicesFundingCardVersionWithSetFundingInfo,
+
+  getAllInvoicesFundingCardVersionsWithSetFundingInfo,
 
   getInvoiceByPaymentHash: async (paymentHash: Invoice['paymentHash']): Promise<Invoice | null> => {
     if (invoicesByPaymentHash[paymentHash] == null) {

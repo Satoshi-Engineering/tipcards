@@ -45,4 +45,20 @@ describe('Card', () => {
       withdrawn: null,
     }))
   })
+
+  it('should load the status of a card from cardHash', async () => {
+    const builder = new CardStatusBuilder(card.hash)
+    await builder.build()
+    const status = builder.getResult()
+
+    assert(status instanceof CardStatus)
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.invoiceFunding,
+      amount: 100,
+      created: cardVersion.created,
+      funded: null,
+      withdrawn: null,
+    }))
+  })
 })
