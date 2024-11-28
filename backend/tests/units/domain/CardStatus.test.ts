@@ -10,6 +10,7 @@ import '../mocks/process.env.js'
 import {
   createCard, createCardVersion,
   createInvoice,
+  createLnurlP,
   createLnurlW,
 } from '../../drizzleData.js'
 
@@ -88,7 +89,67 @@ describe('Card', () => {
     }))
   })
 
-  it('should load the status of a funded card', async () => {
+  it('should load the status of a lnurlp funded card', async () => {
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const lnurlP = createLnurlP(cardVersion)
+    lnurlP.finished = new Date(1230980400000)
+    const { invoice, cardVersionsHaveInvoice } = createInvoice(200, cardVersion)
+    invoice.extra = JSON.stringify({ lnurlp: lnurlP.lnbitsId })
+    invoice.paid = new Date(1230980400000)
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      lnurlps: [lnurlP],
+      invoices: [invoice],
+      cardVersionInvoices: [...cardVersionsHaveInvoice],
+    })
+
+    const status = await CardStatus.latestFromCardHashOrDefault(card.hash)
+
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.funded,
+      amount: 200,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: null,
+    }))
+  })
+
+  it('should load the status of a shared funded card', async () => {
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    cardVersion.sharedFunding = true
+    const lnurlP = createLnurlP(cardVersion)
+    lnurlP.finished = new Date(1230980500000)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionsHaveInvoice1 } = createInvoice(150, cardVersion)
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionsHaveInvoice2 } = createInvoice(150, cardVersion)
+    invoice1.extra = JSON.stringify({ lnurlp: lnurlP.lnbitsId })
+    invoice1.paid = new Date(1230980400000)
+    invoice2.extra = JSON.stringify({ lnurlp: lnurlP.lnbitsId })
+    invoice2.paid = new Date(1230980400000)
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      lnurlps: [lnurlP],
+      invoices: [invoice1, invoice2],
+      cardVersionInvoices: [...cardVersionsHaveInvoice1, ...cardVersionsHaveInvoice2],
+    })
+
+    const status = await CardStatus.latestFromCardHashOrDefault(card.hash)
+
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.funded,
+      amount: 300,
+      created: cardVersion.created,
+      funded: lnurlP.finished,
+      withdrawn: null,
+    }))
+  })
+
+  it('should load the status of a funded card with existing lnurlW', async () => {
     lnurlw = createLnurlW(cardVersion)
     addData({ lnurlws: [lnurlw] })
 
