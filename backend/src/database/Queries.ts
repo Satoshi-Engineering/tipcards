@@ -81,19 +81,25 @@ export default class Queries {
   }
 
   async getLatestCardVersions(cardHashes: Card['hash'][]): Promise<CardVersion[]> {
+    const maxCreated = max(CardVersion.created).as('maxCreated')
     const maxCreatedPerCard = this.transaction.$with('maxCreatedPerCard').as(
-      this.transaction.select({ card: CardVersion.card, created: max(CardVersion.created) })
+      this.transaction.select({
+        card: CardVersion.card,
+        created: maxCreated,
+      })
         .from(CardVersion)
-        .groupBy(CardVersion.card),
+        .groupBy(CardVersion.card)
+        .where(inArray(CardVersion.card, cardHashes)),
     )
-    const result = await this.transaction.select()
+    const result = await this.transaction
+      .with(maxCreatedPerCard)
+      .select()
       .from(CardVersion)
       .innerJoin(maxCreatedPerCard, and(
         eq(CardVersion.card, maxCreatedPerCard.card),
-        eq(CardVersion.created, maxCreatedPerCard.created),
+        eq(CardVersion.created, maxCreated),
       ))
       .orderBy(desc(CardVersion.created))
-      .where(inArray(CardVersion.card, cardHashes))
     return result.map(({ CardVersion }) => CardVersion)
   }
 
