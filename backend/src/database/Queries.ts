@@ -276,6 +276,17 @@ export default class Queries {
     return result[0]
   }
 
+  async getLnurlWsWithdrawingCardVersions(cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], LnurlW>> {
+    const result = await this.transaction.select()
+      .from(LnurlW)
+      .innerJoin(CardVersion, eq(LnurlW.lnbitsId, CardVersion.lnurlW))
+      .where(inArray(CardVersion.id, cardVersionIds))
+    return result.reduce<Record<CardVersion['id'], LnurlW>>((acc, { LnurlW, CardVersion }) => {
+      acc[CardVersion.id] = LnurlW
+      return acc
+    }, {})
+  }
+
   async getAllCardVersionsWithdrawnByLnurlW(lnurlw: LnurlW): Promise<CardVersion[]> {
     const result = await this.transaction.select()
       .from(CardVersion)

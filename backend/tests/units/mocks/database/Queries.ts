@@ -185,6 +185,19 @@ export default vi.fn().mockImplementation(() => ({
     return lnurlWsByLnbitsId[cardVersion.lnurlW]
   },
 
+  getLnurlWsWithdrawingCardVersions: async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], LnurlW>> => {
+    return cardVersionIds.reduce<Record<CardVersion['id'], LnurlW>>((acc, cardVersionId) => {
+      const cardVersion = cardVersionsById[cardVersionId]
+      if (
+        cardVersion?.lnurlW != null
+        && lnurlWsByLnbitsId[cardVersion.lnurlW] != null
+      ) {
+        acc[cardVersionId] = lnurlWsByLnbitsId[cardVersion.lnurlW]
+      }
+      return acc
+    }, {})
+  },
+
   getAllCardVersionsWithdrawnByLnurlW: async (lnurlw: LnurlW): Promise<CardVersion[]> => {
     return Object.values(cardVersionsById).filter((cardVersion) => cardVersion.lnurlW === lnurlw.lnbitsId)
   },

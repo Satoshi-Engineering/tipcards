@@ -185,4 +185,22 @@ describe('Card', () => {
       withdrawn: null,
     }))
   })
+
+  it('should load the status of a recently withdrawn card', async () => {
+    lnurlw.withdrawn = new Date(Date.now() - 1000 * 60 * 4)
+
+    const builder = new CardStatusBuilder(card.hash)
+    await builder.build()
+    const status = builder.getResult()
+
+    assert(status instanceof CardStatus)
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.recentlyWithdrawn,
+      amount: 100,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: lnurlw.withdrawn,
+    }))
+  })
 })
