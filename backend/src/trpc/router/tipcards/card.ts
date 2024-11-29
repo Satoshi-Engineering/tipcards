@@ -46,11 +46,13 @@ export const cardRouter = router({
       )
 
       const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
+      await cardStatus.resolveWithdrawPending()
       yield CardStatusDto.parse(cardStatus.toTrpcResponse())
 
       // eslint-disable-next-line
       for await (const _ of iterator) {
         const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
+        await cardStatus.resolveWithdrawPending()
         yield CardStatusDto.parse(cardStatus.toTrpcResponse())
       }
     }),
