@@ -120,6 +120,17 @@ export default class Queries {
     return result[0]
   }
 
+  async getLnurlPsFundingCardVersions(cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], LnurlP>> {
+    const result = await this.transaction.select()
+      .from(LnurlP)
+      .innerJoin(CardVersion, eq(LnurlP.lnbitsId, CardVersion.lnurlP))
+      .where(inArray(CardVersion.id, cardVersionIds))
+    return result.reduce<Record<CardVersion['id'], LnurlP>>((acc, { LnurlP, CardVersion }) => {
+      acc[CardVersion.id] = LnurlP
+      return acc
+    }, {})
+  }
+
   async getAllInvoicesFundingCardVersion(cardVersion: CardVersion): Promise<Invoice[]> {
     const result = await this.transaction.select()
       .from(CardVersionHasInvoice)

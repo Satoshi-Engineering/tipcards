@@ -1,5 +1,5 @@
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
-import { Card, CardVersion } from '@backend/database/schema/index.js'
+import { Card, CardVersion, LnurlP } from '@backend/database/schema/index.js'
 import { asTransaction } from '@backend/database/client.js'
 
 import CardStatusCollection from './CardStatusCollection.js'
@@ -42,6 +42,7 @@ export default class CardStatusBuilder {
       return CardStatus.fromData({
         cardVersion: this.cardVersionsByCardHash[cardHash],
         invoices: this.invoicesByCardHash[cardHash],
+        lnurlP: this.lnurlPsByCardHash[cardHash],
       })
     })
     if (cardStatuses.length === 1) {
@@ -53,6 +54,7 @@ export default class CardStatusBuilder {
   private cardVersionsById: Record<CardVersion['id'], CardVersion> = {}
   private cardVersionsByCardHash: Record<Card['hash'], CardVersion> = {}
   private invoicesByCardHash: Record<Card['hash'], InvoiceWithSetFundingInfo[]> = {}
+  private lnurlPsByCardHash: Record<Card['hash'], LnurlP> = {}
 
   private get cardVersionIds() {
     return Object.keys(this.cardVersionsById)
@@ -69,6 +71,7 @@ export default class CardStatusBuilder {
   private async loadSatoshiMovements(): Promise<void> {
     await Promise.all([
       this.loadInvoices(),
+      this.loadLnurlP(),
     ])
   }
 
@@ -77,6 +80,14 @@ export default class CardStatusBuilder {
     Object.entries(invoicesByCardVersionId).forEach(([cardVersionId, invoice]) => {
       const cardVersion = this.cardVersionsById[cardVersionId]
       this.invoicesByCardHash[cardVersion.card] = invoice
+    })
+  }
+
+  private async loadLnurlP(): Promise<void> {
+    const lnurlPs = await asTransaction(async (queries) => queries.getLnurlPsFundingCardVersions(this.cardVersionIds))
+    Object.entries(lnurlPs).forEach(([cardVersionId, lnurlP]) => {
+      const cardVersion = this.cardVersionsById[cardVersionId]
+      this.lnurlPsByCardHash[cardVersion.card] = lnurlP
     })
   }
 }

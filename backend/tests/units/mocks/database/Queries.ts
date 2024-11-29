@@ -127,6 +127,19 @@ export default vi.fn().mockImplementation(() => ({
 
   getLnurlPById,
 
+  getLnurlPsFundingCardVersions: async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], LnurlP>> => {
+    return cardVersionIds.reduce<Record<CardVersion['id'], LnurlP>>((acc, cardVersionId) => {
+      const cardVersion = cardVersionsById[cardVersionId]
+      if (
+        cardVersion?.lnurlP != null
+        && lnurlPsByLnbitsId[cardVersion.lnurlP] != null
+      ) {
+        acc[cardVersionId] = lnurlPsByLnbitsId[cardVersion.lnurlP]
+      }
+      return acc
+    }, {})
+  },
+
   getAllInvoicesFundingCardVersion: async (cardVersion: CardVersion): Promise<Invoice[]> => {
     const paymentHashes = cardVersionInvoices
       .filter((cardVersionInvoice) => cardVersionInvoice.cardVersion === cardVersion.id)
