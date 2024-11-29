@@ -1,21 +1,48 @@
-import { describe, it, expect, beforeAll } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
-import { addCard } from '../mocks/domain/CardStatus.js'
+import { createCard } from '../../drizzleData.js'
 
 import CardStatusCollection from '@backend/domain/CardStatusCollection.js'
-import { createCard } from '../../drizzleData.js'
+import CardStatus from '@backend/domain/CardStatus.js'
 
 const cards = [createCard(), createCard()]
 
-beforeAll(() => {
-  addCard(cards[0])
-  addCard(cards[1])
-})
-
 describe('CardStatusCollection', () => {
-
   it('should load the statuses multiple cards from cardHash', async () => {
-    const statusCollection = await CardStatusCollection.fromCardHashes([cards[0].hash, cards[1].hash])
+    const statusCollection = CardStatusCollection.fromCardStatuses([
+      CardStatus.fromData({
+        cardVersion: {
+          id: '00000000-0000-0000-0000-000000000000',
+          card: cards[0].hash,
+          created: new Date(),
+          lnurlP: null,
+          lnurlW: null,
+          textForWithdraw: '',
+          noteForStatusPage: '',
+          sharedFunding: false,
+          landingPageViewed: null,
+        },
+        invoices: [],
+        lnurlP: null,
+        lnurlW: null,
+      }),
+      CardStatus.fromData({
+        cardVersion: {
+          id: '00000000-0000-0000-0000-000000000000',
+          card: cards[1].hash,
+          created: new Date(),
+          lnurlP: null,
+          lnurlW: null,
+          textForWithdraw: '',
+          noteForStatusPage: '',
+          sharedFunding: false,
+          landingPageViewed: null,
+        },
+        invoices: [],
+        lnurlP: null,
+        lnurlW: null,
+      }),
+    ])
 
     expect(statusCollection.cardStatuses).toEqual([
       expect.objectContaining({

@@ -1,4 +1,3 @@
-import assert, { AssertionError } from 'node:assert'
 import { describe, it, expect, beforeAll } from 'vitest'
 
 import '../mocks/database/client.js'
@@ -13,16 +12,13 @@ import {
   createLnurlW,
 } from '../../drizzleData.js'
 
-import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
-
-import CardStatus from '@backend/domain/CardStatus.js'
 import CardStatusBuilder from '@backend/domain/CardStatusBuilder.js'
 import { LnurlW } from '@backend/database/schema/LnurlW.js'
 
 const card = createCard()
 const cardVersion = createCardVersion(card)
 const { invoice, cardVersionsHaveInvoice } = createInvoice(100, cardVersion)
-let lnurlw: LnurlW
+let lnurlW: LnurlW
 
 beforeAll(() => {
   addData({
@@ -33,75 +29,53 @@ beforeAll(() => {
   })
 })
 
-describe('Card', () => {
+describe('CardStatusBuilder', () => {
   it('should build a default card status', async () => {
     const builder = new CardStatusBuilder('nonexistent')
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: 'nonexistent',
-      status: CardStatusEnum.enum.unfunded,
-      amount: null,
-      created: expect.any(Date),
-      funded: null,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion.card).toBe('nonexistent')
+    expect(status.invoices).toEqual([])
+    expect(status.lnurlP).toBeNull()
+    expect(status.lnurlW).toBeNull()
   })
 
-  it('should load the status of a card from cardHash', async () => {
+  it('should resolve an invoice', async () => {
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.invoiceFunding,
-      amount: 100,
-      created: cardVersion.created,
-      funded: null,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion).toEqual(cardVersion)
+    expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
+    expect(status.lnurlP).toBeNull()
+    expect(status.lnurlW).toBeNull()
   })
 
-  it('should handle an expired invoice', async () => {
-    invoice.expiresAt = new Date(0)
+  it('should resolve an invoice from a set funding', async () => {
+    const card1 = createCard()
+    const cardVersion1 = createCardVersion(card1)
+    const card2 = createCard()
+    const cardVersion2 = createCardVersion(card2)
+    const { invoice, cardVersionsHaveInvoice } = createInvoice(300, cardVersion1, cardVersion2)
+    addData({
+      cards: [card1, card2],
+      cardVersions: [cardVersion1, cardVersion2],
+      invoices: [invoice],
+      cardVersionInvoices: [...cardVersionsHaveInvoice],
+    })
 
-    const builder = new CardStatusBuilder(card.hash)
+    const builder = new CardStatusBuilder(card1.hash)
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.invoiceExpired,
-      amount: 100,
-      created: cardVersion.created,
-      funded: null,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion).toEqual(cardVersion1)
+    expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })])
+    expect(status.lnurlP).toBeNull()
+    expect(status.lnurlW).toBeNull()
   })
 
-  it('should load the status of a funded card', async () => {
-    invoice.paid = new Date(1230980400000)
-
-    const builder = new CardStatusBuilder(card.hash)
-    await builder.build()
-    const status = builder.getResult()
-
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.funded,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: null,
-    }))
-  })
-  it('should load the status of a lnurlp funded card', async () => {
+  it('should resolve a lnurlP', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
     const lnurlP = createLnurlP(cardVersion)
@@ -119,20 +93,15 @@ describe('Card', () => {
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.funded,
-      amount: 200,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion).toEqual(cardVersion)
+    expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
+    expect(status.lnurlP).toEqual(lnurlP)
+    expect(status.lnurlW).toBeNull()
   })
 
-  it('should load the status of a shared funded card', async () => {
+  it('should resolve multiple invoices from shared funding', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
     cardVersion.sharedFunding = true
@@ -154,110 +123,74 @@ describe('Card', () => {
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.funded,
-      amount: 300,
-      created: cardVersion.created,
-      funded: lnurlP.finished,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion).toEqual(cardVersion)
+    expect(status.invoices).toEqual(expect.arrayContaining([
+      expect.objectContaining({ invoice: invoice1, cardsFundedWithThisInvoice: 1 }),
+      expect.objectContaining({ invoice: invoice2, cardsFundedWithThisInvoice: 1 }),
+    ]))
+    expect(status.lnurlP).toEqual(lnurlP)
+    expect(status.lnurlW).toBeNull()
   })
 
-  it('should load the status of a funded card with existing lnurlW', async () => {
-    lnurlw = createLnurlW(cardVersion)
-    addData({ lnurlws: [lnurlw] })
+  it('should resolve a lnurlW', async () => {
+    lnurlW = createLnurlW(cardVersion)
+    addData({ lnurlws: [lnurlW] })
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getResult()
+    const status = builder.getCardStatus()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.funded,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: null,
-    }))
+    expect(status.cardVersion).toEqual(cardVersion)
+    expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
+    expect(status.lnurlP).toBeNull()
+    expect(status.lnurlW).toEqual(lnurlW)
   })
 
-  it('should load the status of a recently withdrawn card', async () => {
-    lnurlw.withdrawn = new Date(Date.now() - 1000 * 60 * 4)
-
-    const builder = new CardStatusBuilder(card.hash)
+  it('should build a collection for a single cardHash', async () => {
+    const builder = new CardStatusBuilder('nonexistent')
     await builder.build()
-    const status = builder.getResult()
+    const collection = builder.getCardStatusCollection()
 
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.recentlyWithdrawn,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: lnurlw.withdrawn,
+    expect(collection).toEqual(expect.objectContaining({
+      cardStatuses: expect.arrayContaining([
+        expect.objectContaining({
+          cardVersion: expect.objectContaining({ card: 'nonexistent' }),
+          invoices: [],
+        }),
+      ]),
     }))
   })
 
-  it('should load the status of a withdrawn card', async () => {
-    lnurlw.withdrawn = new Date(1230980400000)
-
-    const builder = new CardStatusBuilder(card.hash)
-    await builder.build()
-    const status = builder.getResult()
-
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.withdrawn,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: lnurlw.withdrawn,
-    }))
-  })
-
-  it('should load the status of a card that has been withdrawn by bulkWithdraw', async () => {
-    lnurlw.withdrawn = new Date(1230980400000)
-    lnurlw.bulkWithdrawId = 'bulkWithdrawId'
-
-    const builder = new CardStatusBuilder(card.hash)
-    await builder.build()
-    const status = builder.getResult()
-
-    assert(status instanceof CardStatus)
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.withdrawnByBulkWithdraw,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: lnurlw.withdrawn,
-    }))
-  })
-
-  it('should throw an error if a card has multiple invoices without shared funding', async () => {
-    const card = createCard()
-    const cardVersion = createCardVersion(card)
-    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionsHaveInvoice1 } = createInvoice(100, cardVersion)
-    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionsHaveInvoice2 } = createInvoice(100, cardVersion)
+  it('should build a collection for multiple cardHashes', async () => {
+    const card1 = createCard()
+    const cardVersion1 = createCardVersion(card1)
+    const card2 = createCard()
+    const cardVersion2 = createCardVersion(card2)
+    const { invoice, cardVersionsHaveInvoice } = createInvoice(300, cardVersion1, cardVersion2)
     addData({
-      cards: [card],
-      cardVersions: [cardVersion],
-      invoices: [invoice1, invoice2],
-      cardVersionInvoices: [...cardVersionsHaveInvoice1, ...cardVersionsHaveInvoice2],
+      cards: [card1, card2],
+      cardVersions: [cardVersion1, cardVersion2],
+      invoices: [invoice],
+      cardVersionInvoices: [...cardVersionsHaveInvoice],
     })
 
-    const builder = new CardStatusBuilder(card.hash)
+    const builder = new CardStatusBuilder([card1.hash, card2.hash])
     await builder.build()
-    const status = builder.getResult()
+    const collection = builder.getCardStatusCollection()
 
-    assert(status instanceof CardStatus)
-    expect(() => status.toTrpcResponse()).toThrowError(AssertionError)
+    expect(collection).toEqual(expect.objectContaining({
+      cardStatuses: expect.arrayContaining([
+        expect.objectContaining({
+          cardVersion: cardVersion1,
+          invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
+        }),
+        expect.objectContaining({
+          cardVersion: cardVersion2,
+          invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
+        }),
+      ]),
+    }))
   })
 })

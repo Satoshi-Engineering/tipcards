@@ -67,6 +67,8 @@ class MockCardStatus {
     }
   }
 
+  public async resolveWithdrawPending(): Promise<void> {}
+
   private readonly cardVersion: CardVersion
 
   private constructor(cardVersion: CardVersion) {

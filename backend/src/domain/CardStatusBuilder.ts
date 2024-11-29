@@ -2,8 +2,8 @@ import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFund
 import { Card, CardVersion, LnurlP, LnurlW } from '@backend/database/schema/index.js'
 import { asTransaction } from '@backend/database/client.js'
 
-import CardStatusCollection from './CardStatusCollection.js'
 import CardStatus from './CardStatus.js'
+import CardStatusCollection from './CardStatusCollection.js'
 
 const defaultCardVersion = {
   id: '00000000-0000-0000-0000-000000000000',
@@ -28,31 +28,20 @@ export default class CardStatusBuilder {
   }
 
   public async build(): Promise<void> {
-    await this.loadCardVersion()
+    await this.loadCardVersions()
     await this.loadSatoshiMovements()
   }
 
-  public getResult(): CardStatus | CardStatusCollection {
-    const cardStatuses = this.cardHashes.map((cardHash) => {
-      if (!this.cardVersionsByCardHash[cardHash]) {
-        return CardStatus.fromData({
-          cardVersion: { ...defaultCardVersion, card: cardHash },
-          invoices: [],
-          lnurlP: null,
-          lnurlW: null,
-        })
-      }
-      return CardStatus.fromData({
-        cardVersion: this.cardVersionsByCardHash[cardHash],
-        invoices: this.invoicesByCardHash[cardHash] ?? [],
-        lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
-        lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
-      })
-    })
-    if (cardStatuses.length === 1) {
-      return cardStatuses[0]
+  public getCardStatus(): CardStatus {
+    const cardStatuses = this.cardStatuses
+    if (cardStatuses.length !== 1) {
+      throw new Error(`CardStatusBuilder.getCardStatus() should only be called when building a single card. Was called for ${this.cardHashes.join(', ')}`)
     }
-    return CardStatusCollection.fromCardStatuses(cardStatuses)
+    return cardStatuses[0]
+  }
+
+  public getCardStatusCollection(): CardStatusCollection {
+    return CardStatusCollection.fromCardStatuses(this.cardStatuses)
   }
 
   private cardVersionsById: Record<CardVersion['id'], CardVersion> = {}
@@ -65,7 +54,7 @@ export default class CardStatusBuilder {
     return Object.keys(this.cardVersionsById)
   }
 
-  private async loadCardVersion(): Promise<void> {
+  private async loadCardVersions(): Promise<void> {
     const cardVersions: CardVersion[] = await asTransaction(async (queries) => queries.getLatestCardVersions(this.cardHashes))
     cardVersions.forEach((cardVersion) => {
       this.cardVersionsById[cardVersion.id] = cardVersion
@@ -102,6 +91,25 @@ export default class CardStatusBuilder {
     Object.entries(lnurlWs).forEach(([cardVersionId, lnurlW]) => {
       const cardVersion = this.cardVersionsById[cardVersionId]
       this.LnurlWsByCardHash[cardVersion.card] = lnurlW
+    })
+  }
+
+  private get cardStatuses(): CardStatus[] {
+    return this.cardHashes.map((cardHash) => {
+      if (!this.cardVersionsByCardHash[cardHash]) {
+        return CardStatus.fromData({
+          cardVersion: { ...defaultCardVersion, card: cardHash },
+          invoices: [],
+          lnurlP: null,
+          lnurlW: null,
+        })
+      }
+      return CardStatus.fromData({
+        cardVersion: this.cardVersionsByCardHash[cardHash],
+        invoices: this.invoicesByCardHash[cardHash] ?? [],
+        lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
+        lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
+      })
     })
   }
 }
