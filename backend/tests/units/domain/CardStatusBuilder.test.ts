@@ -1,4 +1,4 @@
-import assert from 'node:assert'
+import assert, { AssertionError } from 'node:assert'
 import { describe, it, expect, beforeAll } from 'vitest'
 
 import '../mocks/database/client.js'
@@ -202,5 +202,62 @@ describe('Card', () => {
       funded: invoice.paid,
       withdrawn: lnurlw.withdrawn,
     }))
+  })
+
+  it('should load the status of a withdrawn card', async () => {
+    lnurlw.withdrawn = new Date(1230980400000)
+
+    const builder = new CardStatusBuilder(card.hash)
+    await builder.build()
+    const status = builder.getResult()
+
+    assert(status instanceof CardStatus)
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.withdrawn,
+      amount: 100,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: lnurlw.withdrawn,
+    }))
+  })
+
+  it('should load the status of a card that has been withdrawn by bulkWithdraw', async () => {
+    lnurlw.withdrawn = new Date(1230980400000)
+    lnurlw.bulkWithdrawId = 'bulkWithdrawId'
+
+    const builder = new CardStatusBuilder(card.hash)
+    await builder.build()
+    const status = builder.getResult()
+
+    assert(status instanceof CardStatus)
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.withdrawnByBulkWithdraw,
+      amount: 100,
+      created: cardVersion.created,
+      funded: invoice.paid,
+      withdrawn: lnurlw.withdrawn,
+    }))
+  })
+
+  it('should throw an error if a card has multiple invoices without shared funding', async () => {
+    const card = createCard()
+    const cardVersion = createCardVersion(card)
+    const { invoice: invoice1, cardVersionsHaveInvoice: cardVersionsHaveInvoice1 } = createInvoice(100, cardVersion)
+    const { invoice: invoice2, cardVersionsHaveInvoice: cardVersionsHaveInvoice2 } = createInvoice(100, cardVersion)
+    addData({
+      cards: [card],
+      cardVersions: [cardVersion],
+      invoices: [invoice1, invoice2],
+      cardVersionInvoices: [...cardVersionsHaveInvoice1, ...cardVersionsHaveInvoice2],
+    })
+
+    const builder = new CardStatusBuilder(card.hash)
+    await builder.build()
+    const status = builder.getResult()
+
+    assert(status instanceof CardStatus)
+    expect(() => status.toTrpcResponse()).toThrowError(AssertionError)
   })
 })
