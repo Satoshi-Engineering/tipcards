@@ -10,57 +10,40 @@ import {
   Card, CardVersion,
   LnurlP, LnurlW,
 } from '@backend/database/schema/index.js'
-import { asTransaction } from '@backend/database/client.js'
 import { isLnbitsWithdrawLinkUsed } from '@backend/services/lnbitsHelpers.js'
+
+import CardStatusBuilder from './CardStatusBuilder.js'
 
 export default class CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<CardStatus> {
-    const cardVersion = await asTransaction(async (queries) => queries.getLatestCardVersion(cardHash))
-    return CardStatus.fromCardVersionOrDefault(cardHash, cardVersion)
+    const builder = new CardStatusBuilder(cardHash)
+    await builder.build()
+    const cardStatus = builder.getResult()
+
+    assert(cardStatus instanceof CardStatus, `Using CardStatusBuilder for ${cardHash} did not return a CardStatus`)
+    return cardStatus
   }
 
   public static fromData(data: {
     cardVersion: CardVersion,
-    invoices?: InvoiceWithSetFundingInfo[],
-    lnurlP?: LnurlP | null,
-    lnurlW?: LnurlW | null,
-    withdrawPending?: boolean,
+    invoices: InvoiceWithSetFundingInfo[],
+    lnurlP: LnurlP | null,
+    lnurlW: LnurlW | null,
   }): CardStatus {
-    const status = new CardStatus(data.cardVersion)
-    status.invoices = data.invoices ?? []
-    status.lnurlP = data.lnurlP ?? null
-    status.lnurlW = data.lnurlW ?? null
-    status.withdrawPending = data.withdrawPending ?? false
+    const status = new CardStatus(data)
     return status
   }
 
-  private static async fromCardVersionOrDefault(cardHash: Card['hash'], cardVersion: CardVersion | null): Promise<CardStatus> {
-    if (cardVersion == null) {
-      return new CardStatus({
-        id: '00000000-0000-0000-0000-000000000000',
-        card: cardHash,
-        created: new Date(),
-        lnurlP: null,
-        lnurlW: null,
-        textForWithdraw: '',
-        noteForStatusPage: '',
-        sharedFunding: false,
-        landingPageViewed: null,
-      })
+  public async resolveWithdrawPending(): Promise<void> {
+    if (this.lnurlW == null || this.lnurlW.withdrawn != null) {
+      return
     }
-    return CardStatus.fromCardVersion(cardVersion)
+
+    if (await isLnbitsWithdrawLinkUsed(this.lnurlW.lnbitsId)) {
+      this.withdrawPending = true
+    }
   }
 
-  private static async fromCardVersion(cardVersion: CardVersion): Promise<CardStatus> {
-    const status = new CardStatus(cardVersion)
-    await status.loadSatoshiMovements()
-    return status
-  }
-
-  /**
-   * @throws ZodError
-   * @throws ErrorWithCode
-   */
   public toTrpcResponse(): CardStatusDto {
     return {
       hash: this.cardVersion.card,
@@ -119,45 +102,22 @@ export default class CardStatus {
       .reduce((sum, invoice) => sum + invoice.amountPerCard, 0)
   }
 
-  private readonly cardVersion: CardVersion
-  private invoices: InvoiceWithSetFundingInfo[] = []
-  private lnurlP: LnurlP | null = null
-  private lnurlW: LnurlW | null = null
-  private withdrawPending: boolean = false
+  public readonly cardVersion: CardVersion
+  public readonly invoices: InvoiceWithSetFundingInfo[]
+  public readonly lnurlP: LnurlP | null
+  public readonly lnurlW: LnurlW | null
+  private withdrawPending: boolean | undefined
 
-  private constructor(cardVersion: CardVersion) {
-    this.cardVersion = cardVersion
-  }
-
-  private async loadSatoshiMovements(): Promise<void> {
-    await Promise.all([
-      this.loadInvoices(),
-      this.loadLnurlP(),
-      this.loadLnurlW(),
-    ])
-    await this.resolveWithdrawPending()
-  }
-
-  private async loadInvoices(): Promise<void> {
-    this.invoices = await asTransaction(async (queries) => queries.getAllInvoicesFundingCardVersionWithSetFundingInfo(this.cardVersion))
-  }
-
-  private async loadLnurlP(): Promise<void> {
-    this.lnurlP = await asTransaction(async (queries) => queries.getLnurlPFundingCardVersion(this.cardVersion))
-  }
-
-  private async loadLnurlW(): Promise<void> {
-    this.lnurlW = await asTransaction(async (queries) => queries.getLnurlWWithdrawingCardVersion(this.cardVersion))
-  }
-
-  private async resolveWithdrawPending(): Promise<void> {
-    if (this.lnurlW == null || this.lnurlW.withdrawn != null) {
-      return
-    }
-
-    if (await isLnbitsWithdrawLinkUsed(this.lnurlW.lnbitsId)) {
-      this.withdrawPending = true
-    }
+  private constructor(data: {
+    cardVersion: CardVersion,
+    invoices: InvoiceWithSetFundingInfo[],
+    lnurlP: LnurlP | null,
+    lnurlW: LnurlW | null,
+  }) {
+    this.cardVersion = data.cardVersion
+    this.invoices = data.invoices
+    this.lnurlP = data.lnurlP
+    this.lnurlW = data.lnurlW
   }
 
   private lnurlwStatus(): CardStatusEnum {

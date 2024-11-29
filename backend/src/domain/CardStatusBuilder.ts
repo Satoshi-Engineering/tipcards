@@ -37,13 +37,16 @@ export default class CardStatusBuilder {
       if (!this.cardVersionsByCardHash[cardHash]) {
         return CardStatus.fromData({
           cardVersion: { ...defaultCardVersion, card: cardHash },
+          invoices: [],
+          lnurlP: null,
+          lnurlW: null,
         })
       }
       return CardStatus.fromData({
         cardVersion: this.cardVersionsByCardHash[cardHash],
-        invoices: this.invoicesByCardHash[cardHash],
-        lnurlP: this.lnurlPsByCardHash[cardHash],
-        lnurlW: this.LnurlWsByCardHash[cardHash],
+        invoices: this.invoicesByCardHash[cardHash] ?? [],
+        lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
+        lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
       })
     })
     if (cardStatuses.length === 1) {
