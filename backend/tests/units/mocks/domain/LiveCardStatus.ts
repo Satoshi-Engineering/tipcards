@@ -5,8 +5,8 @@ import { CardStatusDto, CardStatusEnum } from '@shared/data/trpc/CardStatusDto.j
 
 import { Card, CardVersion } from '@backend/database/schema/index.js'
 
-vi.mock('@backend/domain/CardStatus.js', () => ({
-  default: MockCardStatus,
+vi.mock('@backend/domain/LiveCardStatus.js', () => ({
+  default: MockLiveCardStatus,
 }))
 
 export const addCard = (card: Card, status?: CardStatusEnum, amount?: number) => {
@@ -19,10 +19,10 @@ export const addCard = (card: Card, status?: CardStatusEnum, amount?: number) =>
 
 const mocks: Record<string, { card: Card, status?: CardStatusEnum, amount?: number }> = {}
 
-class MockCardStatus {
+class MockLiveCardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']) {
     if (mocks[cardHash]) {
-      return new MockCardStatus({
+      return new MockLiveCardStatus({
         id: randomUUID(),
         card: cardHash,
         created: mocks[cardHash].card.created,
@@ -34,7 +34,7 @@ class MockCardStatus {
         landingPageViewed: null,
       })
     }
-    return new MockCardStatus({
+    return new MockLiveCardStatus({
       id: '00000000-0000-0000-0000-000000000000',
       card: cardHash,
       created: new Date(),

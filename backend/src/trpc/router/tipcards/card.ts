@@ -6,7 +6,7 @@ import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 
 import { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
-import CardStatus from '@backend/domain/CardStatus.js'
+import LiveCardStatus from '@backend/domain/LiveCardStatus.js'
 import SetCollection from '@backend/domain/SetCollection.js'
 
 import { router } from '../../trpc.js'
@@ -45,14 +45,12 @@ export const cardRouter = router({
         { signal },
       )
 
-      const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
-      await cardStatus.resolveWithdrawPending()
+      const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
       yield CardStatusDto.parse(cardStatus.toTrpcResponse())
 
       // eslint-disable-next-line
       for await (const _ of iterator) {
-        const cardStatus = await CardStatus.latestFromCardHashOrDefault(input.hash)
-        await cardStatus.resolveWithdrawPending()
+        const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
         yield CardStatusDto.parse(cardStatus.toTrpcResponse())
       }
     }),

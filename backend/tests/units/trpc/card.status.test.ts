@@ -1,4 +1,4 @@
-import { addCard } from '../mocks/domain/CardStatus.js'
+import { addCard } from '../mocks/domain/LiveCardStatus.js'
 import '../mocks/process.env.js'
 import '../mocks/http.js'
 

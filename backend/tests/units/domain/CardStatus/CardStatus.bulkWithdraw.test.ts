@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest'
 
-import '../../mocks/database/client.js'
-import { isLnbitsWithdrawLinkUsed } from '../../mocks/services/lnbitsHelpers.js'
-import '../../mocks/axios.js'
-import '../../mocks/drizzle.js'
 import '../../mocks/process.env.js'
 import {
   createCard, createCardVersion,
@@ -35,27 +31,6 @@ describe('CardStatus', () => {
     expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
       hash: card.hash,
       status: CardStatusEnum.enum.isLockedByBulkWithdraw,
-      amount: 100,
-      created: cardVersion.created,
-      funded: invoice.paid,
-      withdrawn: null,
-    }))
-  })
-
-  it('should handle a pending bulk withdraw', async () => {
-    isLnbitsWithdrawLinkUsed.mockImplementation(async () => true)
-
-    const status = CardStatus.fromData({
-      cardVersion,
-      invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
-      lnurlP: null,
-      lnurlW,
-    })
-    await status.resolveWithdrawPending()
-
-    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
-      hash: card.hash,
-      status: CardStatusEnum.enum.bulkWithdrawPending,
       amount: 100,
       created: cardVersion.created,
       funded: invoice.paid,

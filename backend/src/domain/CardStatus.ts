@@ -10,7 +10,6 @@ import {
   Card, CardVersion,
   LnurlP, LnurlW,
 } from '@backend/database/schema/index.js'
-import { isLnbitsWithdrawLinkUsed } from '@backend/services/lnbitsHelpers.js'
 
 import CardStatusBuilder from './CardStatusBuilder.js'
 
@@ -29,16 +28,6 @@ export default class CardStatus {
   }): CardStatus {
     const status = new CardStatus(data)
     return status
-  }
-
-  public async resolveWithdrawPending(): Promise<void> {
-    if (this.lnurlW == null || this.lnurlW.withdrawn != null) {
-      return
-    }
-
-    if (await isLnbitsWithdrawLinkUsed(this.lnurlW.lnbitsId)) {
-      this.withdrawPending = true
-    }
   }
 
   public toTrpcResponse(): CardStatusDto {
@@ -103,9 +92,8 @@ export default class CardStatus {
   public readonly invoices: InvoiceWithSetFundingInfo[]
   public readonly lnurlP: LnurlP | null
   public readonly lnurlW: LnurlW | null
-  private withdrawPending: boolean | undefined
 
-  private constructor(data: {
+  protected constructor(data: {
     cardVersion: CardVersion,
     invoices: InvoiceWithSetFundingInfo[],
     lnurlP: LnurlP | null,
@@ -117,13 +105,10 @@ export default class CardStatus {
     this.lnurlW = data.lnurlW
   }
 
-  private lnurlwStatus(): CardStatusEnum {
+  protected lnurlwStatus(): CardStatusEnum {
     assert(this.lnurlW != null, 'lnurlwStatus called without lnurlW')
 
     if (this.lnurlW.bulkWithdrawId != null) {
-      if (this.withdrawPending) {
-        return CardStatusEnum.enum.bulkWithdrawPending
-      }
       if (this.lnurlW.withdrawn != null) {
         return CardStatusEnum.enum.withdrawnByBulkWithdraw
       }
@@ -137,14 +122,10 @@ export default class CardStatus {
       return CardStatusEnum.enum.withdrawn
     }
 
-    if (this.withdrawPending) {
-      return CardStatusEnum.enum.withdrawPending
-    }
-
     return CardStatusEnum.enum.funded
   }
 
-  private lnurlpStatus(): CardStatusEnum {
+  protected lnurlpStatus(): CardStatusEnum {
     assert(this.lnurlP != null, 'lnurlpStatus called without lnurlP')
 
     if (this.lnurlP.finished != null) {
@@ -168,7 +149,7 @@ export default class CardStatus {
     return CardStatusEnum.enum.lnurlpFunding
   }
 
-  private invoiceStatus(): CardStatusEnum {
+  protected invoiceStatus(): CardStatusEnum {
     if (this.invoices.length === 0) {
       return CardStatusEnum.enum.unfunded
     }
