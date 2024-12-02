@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout login-banner>
     <div class="bg-grey-light">
       <CenterContainer class="!pt-10 !pb-5">
         <div class="flex gap-9 items-start">
@@ -35,10 +35,10 @@
           class="mt-7 mb-5"
           :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
           :user-error-messages="cardsSummaryErrorMessages"
+          :preview="!isLoggedIn"
         />
         <ButtonContainer>
           <ButtonDefault
-            v-if="isLoggedIn"
             :to="{ name: 'cards' }"
             class="w-full"
           >
@@ -94,7 +94,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import CardsSummary from '@/components/cardsSummary/CardsSummary.vue'
@@ -131,7 +131,10 @@ const { showModalLogin } = storeToRefs(modalLoginStore)
 const { card } = useTRpc()
 const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
 const cardsSummaryErrorMessages = ref<string[]>([])
-onMounted(async () => {
+const loadCardsSummary = async () => {
+  if (!isLoggedIn.value) {
+    return
+  }
   cardsSummaryWithLoadingStatus.value = { status: 'loading' }
   cardsSummaryErrorMessages.value = []
   try {
@@ -142,6 +145,14 @@ onMounted(async () => {
     cardsSummaryErrorMessages.value = [t('dashboard.errors.unableToLoadCardsSummaryFromBackend')]
     cardsSummaryWithLoadingStatus.value = { status: 'error' }
   }
+}
+onMounted(loadCardsSummary)
+watch(isLoggedIn, (isLoggedIn) => {
+  if (!isLoggedIn) {
+    cardsSummaryWithLoadingStatus.value = { status: undefined }
+    cardsSummaryErrorMessages.value = []
+  }
+  loadCardsSummary()
 })
 
 // sets

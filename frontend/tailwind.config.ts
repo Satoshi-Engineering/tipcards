@@ -60,6 +60,9 @@ export default {
       borderColor: ({ theme }) => ({
         DEFAULT: theme('colors.black', 'currentColor'),
       }),
+      blur: {
+        'xs': '0.125rem',
+      },
       spacing: {
         '18': '4.5rem',
       },
