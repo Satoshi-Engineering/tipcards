@@ -29,6 +29,10 @@
         </template>
       </CardsSummaryFigure>
     </div>
+    <UserErrorMessages
+      class="mb-2"
+      :user-error-messages="userErrorMessages"
+    />
   </div>
 </template>
 
@@ -40,11 +44,16 @@ import IconSummaryEmptyCard from '@/components/icons/IconSummaryEmptyCard.vue'
 import IconSummaryRedeemed from '@/components/icons/IconSummaryRedeemed.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import CardsSummaryFigure from '@/components/cardsSummary/components/CardsSummaryFigure.vue'
+import UserErrorMessages from '../UserErrorMessages.vue'
 
 defineProps({
   cardsSummaryWithLoadingStatus: {
     type: Object as PropType<CardsSummaryWithLoadingStatus>,
     required: true,
+  },
+  userErrorMessages: {
+    type: Array as PropType<string[]>,
+    default: () => [],
   },
 })
 </script>

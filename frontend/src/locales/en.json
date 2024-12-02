@@ -514,6 +514,9 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Nice to meet you!",
-    "allMySets": "All my sets"
+    "allMySets": "All my sets",
+    "errors": {
+      "unableToLoadCardsSummaryFromBackend": "Cards summary could not be loaded."
+    }
   }
 }

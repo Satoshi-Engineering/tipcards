@@ -1,7 +1,7 @@
 <template>
   <TheLayout>
     <div class="bg-grey-light">
-      <CenterContainer class="!py-10">
+      <CenterContainer class="!pt-10 !pb-5">
         <div class="flex gap-9 items-start">
           <IconPersonCircleFilled class="w-12 h-12" />
           <div class="flex-1">
@@ -34,6 +34,7 @@
         <CardsSummary
           class="mt-7 mb-5"
           :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
+          :user-error-messages="cardsSummaryErrorMessages"
         />
         <ButtonContainer>
           <ButtonDefault
@@ -94,6 +95,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import CardsSummary from '@/components/cardsSummary/CardsSummary.vue'
 import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
@@ -114,6 +116,8 @@ import { useSetsStore } from '@/stores/sets'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 
+const { t } = useI18n()
+
 const profileStore = useProfileStore()
 const { userDisplayName } = storeToRefs(profileStore)
 
@@ -126,13 +130,16 @@ const { showModalLogin } = storeToRefs(modalLoginStore)
 // global card status summary
 const { card } = useTRpc()
 const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
+const cardsSummaryErrorMessages = ref<string[]>([])
 onMounted(async () => {
   cardsSummaryWithLoadingStatus.value = { status: 'loading' }
+  cardsSummaryErrorMessages.value = []
   try {
     const cardsSummary = await card.cardsSummary.query()
     cardsSummaryWithLoadingStatus.value = { cardsSummary, status: 'success' }
   } catch (error) {
     console.error(error)
+    cardsSummaryErrorMessages.value = [t('dashboard.errors.unableToLoadCardsSummaryFromBackend')]
     cardsSummaryWithLoadingStatus.value = { status: 'error' }
   }
 })

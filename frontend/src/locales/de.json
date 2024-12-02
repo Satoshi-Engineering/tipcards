@@ -530,6 +530,9 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Servus!",
-    "allMySets": "Alle meine Sets"
+    "allMySets": "Alle meine Sets",
+    "errors": {
+      "unableToLoadCardsSummaryFromBackend": "Karten-Übersicht konnte nicht geladen werden."
+    }
   }
 }
