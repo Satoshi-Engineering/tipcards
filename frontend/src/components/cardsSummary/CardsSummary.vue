@@ -1,5 +1,6 @@
 <template>
   <div
+    :data-test="preview ? 'cards-summary-preview' : 'cards-summary'"
     :class="{
       'opacity-50 blur-xs pointer-events-none select-none': preview,
     }"
@@ -9,6 +10,7 @@
         :headline="$t('cards.status.labelUsed')"
         :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.withdrawn.amount : undefined"
         :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.withdrawn.count : undefined"
+        data-test="cards-summary-withdrawn"
       >
         <template #icon>
           <IconSummaryRedeemed class="text-green" />
@@ -18,6 +20,7 @@
         :headline="$t('cards.status.labelFunded')"
         :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.funded.amount : undefined"
         :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.funded.count : undefined"
+        data-test="cards-summary-funded"
       >
         <template #icon>
           <IconSummaryCharged class="text-yellow" />
@@ -27,6 +30,7 @@
         :headline="$t('cards.status.labelUnused')"
         :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.unfunded.amount : undefined"
         :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.unfunded.count : undefined"
+        data-test="cards-summary-unfunded"
       >
         <template #icon>
           <IconSummaryEmptyCard class="text-grey-dark" />
@@ -35,6 +39,7 @@
     </div>
     <UserErrorMessages
       class="mb-2"
+      data-test="cards-summary-error-messages"
       :user-error-messages="userErrorMessages"
     />
   </div>
