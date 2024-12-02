@@ -9,6 +9,7 @@ const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS
 
 export const login = () => {
   return cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser').then(({ userId }) => {
+    cy.wrap(userId).as('userId')
     return cy.task<string>('db:insertAllowedSession', {
       userId,
     }).then((sessionId) => {

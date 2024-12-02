@@ -44,7 +44,7 @@ export const generateSet = ({
   }
 }
 
-export const generateSets = (numberOfSets: number, numberOfCards: number = 8) => {
+export const generateSets = (numberOfSets: number, numberOfCards: number = 8): Set[] => {
   return [...new Array(numberOfSets).keys()].map((i) => {
     const set = generateSet()
     set.settings.setName = `Set ${i.toString().padStart(3, '0')}`

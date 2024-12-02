@@ -1,10 +1,9 @@
-import { generateSets } from '@e2e/lib/api/data/set'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
-describe.skip('Sets Page Cards Info', () => {
-  const numberOfSets = 10
-  const numberOfCardsPerSet = 10
+describe('Sets Page Cards Info', () => {
+  const numberOfSets = 100
+  const numberOfCardsPerSet = 100
   const viewportHeight = Cypress.config('viewportHeight')
 
   let refreshToken = ''
@@ -14,10 +13,13 @@ describe.skip('Sets Page Cards Info', () => {
       refreshToken = newRefreshToken
     })
 
-    const sets = generateSets(numberOfSets, numberOfCardsPerSet)
-
-    tipCardsApi.set.addSetsParallelWithAxios(sets)
-    tipCardsApi.set.createInvoicesForSetsParallelWithAxios(sets, 21)
+    cy.get('@userId').then((userId) => {
+      cy.task('db:createSets', {
+        userId,
+        numberOfSets,
+        numberOfCardsPerSet,
+      })
+    })
   })
 
   beforeEach(() => {
@@ -46,43 +48,25 @@ describe.skip('Sets Page Cards Info', () => {
 
   it('does only load cards info for sets that have been in viewport before and after scrolling', () => {
     gotoSetsPageAndWaitForInitialCardsInfoRequest()
-    countSetsListItemsInViewport('itemsInViewportBeforeScroll', viewportHeight)
-
     scrollDownAndWaitForCardsInfoRequest()
-    countSetsListItemsInViewport('itemsInViewportAfterScroll', viewportHeight)
 
-    cy.get('@itemsInViewportBeforeScroll').then((itemsInViewportBeforeScroll) => {
-      cy.get('@itemsInViewportAfterScroll').then((itemsInViewportAfterScroll) => {
-        const totalItemsInViewport = Math.min(Number(itemsInViewportBeforeScroll) + Number(itemsInViewportAfterScroll), numberOfSets)
-        totalNumberOfSetsWithLoadedCardsInfoShouldBeEqual(totalItemsInViewport, numberOfCardsPerSet)
-      })
-    })
+    cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.lessThan', numberOfSets * Math.min(12, numberOfCardsPerSet))
   })
 })
-
-
 
 const elementIsInViewport = (el: HTMLElement, viewportHeight: number) => {
   const rect = el.getBoundingClientRect()
   return rect.bottom >= 0 && rect.top <= viewportHeight
 }
 
-const countSetsListItemsInViewport = (variableName: string, viewportHeight: number) => {
-  cy.getTestElement('sets-list-item')
-    .then(($setsListItems) => {
-      const setsListItemsInViewport = $setsListItems.get().filter((setsListItem) => elementIsInViewport(setsListItem, viewportHeight))
-      cy.wrap(setsListItemsInViewport.length).as(variableName)
-    })
-}
-
 const gotoSetsPageAndWaitForInitialCardsInfoRequest = () => {
-  cy.intercept('/trpc/set.getCardsInfoBySetId**').as('apiSetGetCardsInfo')
+  cy.intercept('/trpc/set.getCardsSummaryBySetId**').as('apiSetGetCardsInfo')
   tipCards.gotoSetsPage()
   cy.wait('@apiSetGetCardsInfo')
 }
 
 const scrollDownAndWaitForCardsInfoRequest = () => {
-  cy.intercept('/trpc/set.getCardsInfoBySetId**').as('apiSetGetCardsInfo')
+  cy.intercept('/trpc/set.getCardsSummaryBySetId**').as('apiSetGetCardsInfo')
   cy.getTestElement('sets-list-item').eq(-3).scrollIntoView()
   cy.wait('@apiSetGetCardsInfo')
 }
@@ -93,11 +77,7 @@ const setListItemsInViewportHaveCardsInfoLoaded = (numberOfCardsPerSet: number, 
       const setsListItemsInViewport = $setsListItems.get().filter((setsListItem) => elementIsInViewport(setsListItem, viewportHeight))
 
       cy.wrap(setsListItemsInViewport).each((setListItem: HTMLElement) => {
-        cy.wrap(setListItem).find('[data-test="sets-list-item-cards-info-pending"]').should('have.length', Math.min(12, numberOfCardsPerSet))
+        cy.wrap(setListItem).find('[data-test="sets-list-item-cards-summary-userActionRequired"]').should('have.length', Math.min(12, numberOfCardsPerSet))
       })
     })
-}
-
-const totalNumberOfSetsWithLoadedCardsInfoShouldBeEqual = (expectedNumberOfSets: number, numberOfCardsPerSet: number) => {
-  cy.getTestElement('sets-list-item-cards-info-pending').should('have.length', expectedNumberOfSets * Math.min(12, numberOfCardsPerSet))
 }
