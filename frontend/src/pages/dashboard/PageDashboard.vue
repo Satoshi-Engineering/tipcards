@@ -2,7 +2,7 @@
   <TheLayout>
     <div class="bg-grey-light">
       <CenterContainer class="!py-10">
-        <div class="flex gap-12 items-center">
+        <div class="flex gap-9 items-start">
           <IconPersonCircleFilled class="w-12 h-12" />
           <div class="flex-1">
             <HeadlineDefault
@@ -30,10 +30,20 @@
             </LinkDefault>
           </div>
         </div>
+        <hr class="my-7 border-t border-grey-dark">
         <CardsSummary
-          class="my-10"
+          class="mt-7 mb-5"
           :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
         />
+        <ButtonContainer>
+          <ButtonDefault
+            v-if="isLoggedIn"
+            :to="{ name: 'cards' }"
+            class="w-full"
+          >
+            {{ $t('home.buttonCreate') }}
+          </ButtonDefault>
+        </ButtonContainer>
       </CenterContainer>
     </div>
     <CenterContainer class="!py-10">
@@ -85,7 +95,7 @@
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, ref } from 'vue'
 
-import CardsSummary from '@/components/CardsSummary.vue'
+import CardsSummary from '@/components/cardsSummary/CardsSummary.vue'
 import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -101,6 +111,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { useProfileStore } from '@/stores/profile'
 import { useSetsStore } from '@/stores/sets'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 
 const profileStore = useProfileStore()
 const { userDisplayName } = storeToRefs(profileStore)

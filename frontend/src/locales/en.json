@@ -10,7 +10,10 @@
     "getStarted": "Get started",
     "cancel": "Cancel",
     "status": "Status",
-    "search": "Search"
+    "search": "Search",
+    "amountAndUnitBitcoin": "{amount} Bitcoin",
+    "amountAndUnitBtc": "{amount} BTC",
+    "amountAndUnitSats": "{amount} sats"
   },
   "header": {
     "mainNavLabel": "Main navigation",

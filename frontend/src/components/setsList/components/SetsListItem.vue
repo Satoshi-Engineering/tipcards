@@ -36,7 +36,7 @@
         {{ setDisplayInfo.displayDate }}
       </time>
     </div>
-    <SetCardsSummary
+    <SetsListItemCardsSummary
       v-if="!noCardsSummary"
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
       data-test="sets-list-item-cards-summary"
@@ -53,7 +53,7 @@ import { useI18n } from 'vue-i18n'
 
 import type { SetDto } from '@shared/data/trpc/SetDto'
 
-import SetCardsSummary from '@/components/setsList/components/SetCardsSummary.vue'
+import SetsListItemCardsSummary from '@/components/setsList/components/SetsListItemCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
