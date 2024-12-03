@@ -15,6 +15,13 @@
     "amountAndUnitBtc": "{amount} BTC",
     "amountAndUnitSats": "{amount} sats"
   },
+  "cardsSummary": {
+    "total": "Total",
+    "unfunded": "Unfunded",
+    "funded": "Funded",
+    "withdrawn": "Redeemed",
+    "userActionRequired": "Open tasks"
+  },
   "header": {
     "mainNavLabel": "Main navigation",
     "langNavLabel": "Language selection",

@@ -76,7 +76,7 @@ export const useSetsStore = defineStore('sets', () => {
   const fetchCardsSummaryForSet = async (setId: SetDto['id']): Promise<CardsSummaryWithLoadingStatus> => {
     try {
       return {
-        cardsSummary: await set.getCardsSummaryBySetId.query(setId),
+        cardsSummary: await set.getCardsSummaryForSetId.query(setId),
         status: 'success',
       }
     } catch(error) {
@@ -122,6 +122,7 @@ export const useSetsStore = defineStore('sets', () => {
     fetchingAllSetsUserErrorMessages,
     loadSets,
     loadCardsSummaryForSet,
+    fetchCardsSummaryForSet,
     subscribeToLoggedInChanges,
     unsubscribeFromLoggedInChanges,
   }

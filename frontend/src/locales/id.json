@@ -9,6 +9,11 @@
     "getStarted": "Mulai",
     "cancel": "Batal"
   },
+  "cardsSummary": {
+    "unfunded": "Belum Diisi",
+    "funded": "Telah Diisi",
+    "withdrawn": "Telah Ditukarkan"
+  },
   "header": {
     "mainNavLabel": "Navigasi utama",
     "langNavLabel": "Pemilihan bahasa",

@@ -9,6 +9,11 @@
     "getStarted": "התחל",
     "cancel": "ביטול"
   },
+  "cardsSummary": {
+    "unfunded": "טרם נטענו",
+    "funded": "נטענו",
+    "withdrawn": "נוצלו"
+  },
   "header": {
     "mainNavLabel": "ניווט ראשי",
     "langNavLabel": "בחירת שפה",

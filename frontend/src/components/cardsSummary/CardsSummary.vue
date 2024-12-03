@@ -27,10 +27,10 @@
         </template>
       </CardsSummaryFigure>
       <CardsSummaryFigure
-        :headline="$t('cards.status.labelUnused')"
-        :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.unfunded.amount : undefined"
-        :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.unfunded.count : undefined"
-        data-test="cards-summary-unfunded"
+        :headline="$t('cardsSummary.total')"
+        :amount="totalAmount"
+        :count="totalCount"
+        data-test="cards-summary-total"
       >
         <template #icon>
           <IconSummaryEmptyCard class="text-grey-dark" />
@@ -70,6 +70,30 @@ const props = defineProps({
   },
 })
 
+const totalAmount = computed(() => {
+  if (cardsSummaryWithLoadingStatusComputed.value.status === 'success') {
+    return (
+      cardsSummaryWithLoadingStatusComputed.value.cardsSummary.funded.amount
+      + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.withdrawn.amount
+      + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.unfunded.amount
+      // do NOT add the userActionRequired amount to the total amount because unpaid invoices would be included
+    )
+  }
+  return undefined
+})
+
+const totalCount = computed(() => {
+  if (cardsSummaryWithLoadingStatusComputed.value.status === 'success') {
+    return (
+      cardsSummaryWithLoadingStatusComputed.value.cardsSummary.funded.count
+      + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.withdrawn.count
+      + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.unfunded.count
+      + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.userActionRequired.count
+    )
+  }
+  return undefined
+})
+
 const cardsSummaryWithLoadingStatusComputed = computed(() => {
   if (!props.preview) {
     return props.cardsSummaryWithLoadingStatus
@@ -86,6 +110,10 @@ const cardsSummaryWithLoadingStatusComputed = computed(() => {
         count: 0,
       },
       unfunded: {
+        amount: 0,
+        count: 0,
+      },
+      userActionRequired: {
         amount: 0,
         count: 0,
       },

@@ -15,6 +15,13 @@
     "amountAndUnitBtc": "{amount} BTC",
     "amountAndUnitSats": "{amount} Sats"
   },
+  "cardsSummary": {
+    "total": "Insgesamt",
+    "unfunded": "Nicht aufgeladen",
+    "funded": "Aufgeladen",
+    "withdrawn": "Eingelöst",
+    "userActionRequired": "Offene Aktionen"
+  },
   "header": {
     "mainNavLabel": "Hauptnavigation",
     "langNavLabel": "Sprachnavigation",

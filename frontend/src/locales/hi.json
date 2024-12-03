@@ -9,6 +9,11 @@
     "getStarted": "शुरू करें",
     "cancel": "रद्द करें"
   },
+  "cardsSummary": {
+    "unfunded": "अनिधिक",
+    "funded": "निधिबद्ध",
+    "withdrawn": "प्रयुक्त"
+  },
   "header": {
     "mainNavLabel": "मुख्य नेविगेशन",
     "langNavLabel": "भाषा चयन",

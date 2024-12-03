@@ -29,6 +29,10 @@ export default class Set {
     return new Set(setDto)
   }
 
+  public static fromSetDto(setDto: SetDto): Set {
+    return new Set(setDto)
+  }
+
   public async getCardStatusCollection(): Promise<CardStatusCollection> {
     const cardHashes = this.getAllCardHashes()
     const cardStatusCollection = await CardStatusCollection.fromCardHashes(cardHashes)

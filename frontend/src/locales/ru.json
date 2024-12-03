@@ -9,6 +9,11 @@
     "getStarted": "Начать",
     "cancel": "Отмена"
   },
+  "cardsSummary": {
+    "unfunded": "Непополненные",
+    "funded": "Пополненные",
+    "withdrawn": "Использованные"
+  },
   "header": {
     "mainNavLabel": "Основная навигация",
     "langNavLabel": "Выбор языка",

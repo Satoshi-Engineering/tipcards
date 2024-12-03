@@ -13,74 +13,65 @@
       >
         {{ userWarning }}
       </div>
-      <div class="pb-4 mb-3">
-        <header class="text-center mb-7">
-          <IconLightningBolt class="text-yellow w-6 h-auto inline-block" />
-          <HeadlineDefault level="h1" class="mt-3">
+    </CenterContainer>
+    <div class="mb-3 bg-grey-light">
+      <CenterContainer class="!pt-10 !pb-5">
+        <div class="flex justify-between items-center">
+          <HeadlineDefault level="h2" class="!my-0">
             {{ pageTitle }}
           </HeadlineDefault>
-        </header>
-        <div class="mb-2 flex justify-between items-center">
-          <HeadlineDefault level="h2" class="!my-0">
-            {{ t('cards.status.headline') }}
-          </HeadlineDefault>
-          <ButtonDefault
-            variant="secondary"
+          <LinkDefault
+            no-bold
             class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
             :disabled="reloadingStatusForCards"
             @click="reloadStatusForCards()"
           >
             {{ t('cards.status.reload') }}
-          </ButtonDefault>
+          </LinkDefault>
         </div>
-        <ParagraphDefault
-          v-if="cardsStatusList.length == 0"
-          class="text-sm text-grey"
-        >
-          {{ t('cards.status.noCards') }}
-        </ParagraphDefault>
-        <div v-else>
-          <CardsSummaryContainer>
-            <CardsSummary
-              color="green"
-              :cards-count="usedCards.length"
-              :title="$t('cards.status.labelUsed', 2)"
-              :sats="usedCardsTotalAmount"
+        <hr class="my-5 border-t border-grey-dark">
+        <CardsSummary
+          class="mt-7 mb-5"
+          :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
+        />
+      </CenterContainer>
+    </div>
+    <CenterContainer>
+      <ParagraphDefault
+        v-if="cardsStatusList.length == 0"
+        class="text-sm text-grey"
+      >
+        {{ t('cards.status.noCards') }}
+      </ParagraphDefault>
+      <div v-else>
+        <ul class="w-full my-5">
+          <li
+            v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlLandingWithCardHash, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
+            :key="cardHash"
+            class="py-1 border-b border-grey"
+          >
+            <CardStatusComponent
+              :status="status || undefined"
+              :funded-date="fundedDate || undefined"
+              :used-date="usedDate || undefined"
+              :shared="shared"
+              :amount="amount || undefined"
+              :note="note || undefined"
+              :url="
+                status === 'setFunding'
+                  ? setFundingHref
+                  : fundedDate == null
+                    ? urlFunding
+                    : urlLandingWithCardHash
+              "
+              :viewed="viewed"
+              :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
             />
-            <CardsSummary
-              color="yellow"
-              :cards-count="fundedCards.length"
-              :title="$t('cards.status.labelFunded', 2)"
-              :sats="fundedCardsTotalAmount"
-            />
-          </CardsSummaryContainer>
-          <ul class="w-full my-5">
-            <li
-              v-for="{ status, fundedDate, usedDate, shared, amount, note, cardHash, urlLandingWithCardHash, urlFunding, viewed, isLockedByBulkWithdraw } in cardsStatusList"
-              :key="cardHash"
-              class="py-1 border-b border-grey"
-            >
-              <CardStatusComponent
-                :status="status || undefined"
-                :funded-date="fundedDate || undefined"
-                :used-date="usedDate || undefined"
-                :shared="shared"
-                :amount="amount || undefined"
-                :note="note || undefined"
-                :url="
-                  status === 'setFunding'
-                    ? setFundingHref
-                    : fundedDate == null
-                      ? urlFunding
-                      : urlLandingWithCardHash
-                "
-                :viewed="viewed"
-                :is-locked-by-bulk-withdraw="isLockedByBulkWithdraw"
-              />
-            </li>
-          </ul>
-        </div>
+          </li>
+        </ul>
       </div>
+    </CenterContainer>
+    <CenterContainer>
       <div class="py-4 mb-3">
         <HeadlineDefault level="h2">
           {{ t('cards.settings.headline') }}
@@ -510,8 +501,7 @@ import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CardStatusComponent from '@/components/CardStatus.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
-import CardsSummary from '@/components/CardsSummaryDeprecated.vue'
-import CardsSummaryContainer from '@/components/CardsSummaryDeprecatedContainer.vue'
+import CardsSummary from '@/components/cardsSummary/CardsSummary.vue'
 import IconCheckSquareFill from '@/components/icons/IconCheckSquareFill.vue'
 import IconExclamationSquare from '@/components/icons/IconExclamationSquare.vue'
 import { loadCardStatus, type CardStatusDeprecated } from '@/modules/loadCardStatus'
@@ -530,8 +520,11 @@ import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import BackLink from '@/components/BackLink.vue'
-import IconLightningBolt from '@/components/icons/IconLightningBolt.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
+import { SetDto } from '@shared/data/trpc/SetDto'
+import useTRpc from '@/modules/useTRpc'
+import { setSettingsDtoFromLegacySettings } from '@/utils/cardsSetSettings'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console
@@ -652,7 +645,7 @@ onMounted(() => {
 })
 
 // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/425
-window.addEventListener('pageshow', () => reloadStatusForCards())
+window.addEventListener('pageshow', () => debouncedReloadStatusForCards())
 
 const hasBeenSaved = computed(() => {
   return sets.value.some(({ id }) => id === setId.value)
@@ -791,7 +784,9 @@ const generateNewCardSkeleton = async (index: number) => {
 
 const set = ref<Set>()
 const reloadingStatusForCards = ref(false)
-const reloadStatusForCards = debounce(async () => {
+const reloadStatusForCards = async () => {
+  reloadingStatusForCards.value = true
+
   // load set to trigger set funding invoice check (if webhook didn't work)
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${setId.value}`)
@@ -805,7 +800,7 @@ const reloadStatusForCards = debounce(async () => {
     console.error(error)
   }
 
-  reloadingStatusForCards.value = true
+  await loadCardsSummaryForSet()
   await Promise.all(cards.value.map(async (card) => {
     // the URLs need to change in case the language was switched
     card.urlLandingWithLnurl = getLandingPageUrlWithLnurl(card.cardHash, settings.landingPage || undefined)
@@ -828,7 +823,8 @@ const reloadStatusForCards = debounce(async () => {
     card.isLockedByBulkWithdraw = !!cardData?.isLockedByBulkWithdraw
   }))
   reloadingStatusForCards.value = false
-}, 1000)
+}
+const debouncedReloadStatusForCards = debounce(reloadStatusForCards, 1000)
 
 const repopulateCards = async () => {
   if (setId.value == null) {
@@ -843,7 +839,7 @@ const repopulateCards = async () => {
     }
     cards.value[i] = await generateNewCardSkeleton(i)
   }
-  reloadStatusForCards()
+  debouncedReloadStatusForCards()
 }
 
 const downloadZip = async (format: 'png' | 'svg' = 'png') => {
@@ -876,9 +872,6 @@ const printCards = () => {
 ///////////////////////
 // STATUS
 //
-const usedCards = computed(() => cards.value.filter(({ status }) => status === 'used'))
-const usedCardsTotalAmount = computed(() => usedCards.value.reduce((total, { amount }) => total + (amount || 0), 0))
-
 const fundedCards = computed(() => cards.value.filter(({ status }) => status === 'funded'))
 const fundedCardsTotalAmount = computed(() => fundedCards.value.reduce((total, { amount }) => total + (amount || 0), 0))
 
@@ -919,6 +912,29 @@ const {
   getLandingPageUrlWithLnurl,
   getLandingPageUrlWithCardHash,
 } = useLandingPages()
+
+/////
+// Cards Summary
+const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
+const { set: setTrpcRouter } = useTRpc()
+const loadCardsSummaryForSet = async () => {
+  if (setId.value == null) {
+    return
+  }
+  cardsSummaryWithLoadingStatus.value = {
+    ...cardsSummaryWithLoadingStatus.value,
+    status: 'loading',
+  }
+  const settingsDto = setSettingsDtoFromLegacySettings(settings)
+  const cardsSummary = await setTrpcRouter.getCardsSummaryForSetDto.query(SetDto.parse({
+    id: setId.value,
+    settings: settingsDto,
+  }))
+  cardsSummaryWithLoadingStatus.value = {
+    status: 'success',
+    cardsSummary,
+  }
+}
 </script>
 
 <style>

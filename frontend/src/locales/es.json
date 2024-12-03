@@ -9,6 +9,13 @@
     "getStarted": "Comenzar",
     "cancel": "Cancelar"
   },
+  "cardsSummary": {
+    "total": "Total",
+    "unfunded": "Sin cargo",
+    "funded": "Cargadas",
+    "withdrawn": "Canjeadas",
+    "userActionRequired": "Tareas pendientes"
+  },
   "header": {
     "mainNavLabel": "Navegación principal",
     "langNavLabel": "Selección de idioma",

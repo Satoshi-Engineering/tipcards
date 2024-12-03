@@ -21,11 +21,22 @@ export const setRouter = router({
       return setCollection.toTRpcResponse()
     }),
 
-  getCardsSummaryBySetId: loggedInProcedure
+  getCardsSummaryForSetId: loggedInProcedure
     .input(SetDto.shape.id)
     .output(CardsSummaryDto)
     .query(async ({ input }) => {
       const set = await Set.fromId(input)
+      const cardStatusCollection = await set.getCardStatusCollection()
+      return cardStatusCollection.summary.toTRpcResponse()
+    }),
+
+  // SetDto contains the set's id and the numberOfCards,
+  // which are needed to calculate the card hashes
+  getCardsSummaryForSetDto: publicProcedure
+    .input(SetDto)
+    .output(CardsSummaryDto)
+    .query(async ({ input }) => {
+      const set = Set.fromSetDto(input)
       const cardStatusCollection = await set.getCardStatusCollection()
       return cardStatusCollection.summary.toTRpcResponse()
     }),

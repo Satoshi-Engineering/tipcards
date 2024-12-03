@@ -9,7 +9,7 @@
       name: 'cards',
       params: {
         setId: set.id,
-        settings: encodeCardsSetSettings(set.settings),
+        settings: encodeCardsSetSettingsFromDto(set.settings),
         lang: $route.params.lang,
       }
     }"
@@ -59,7 +59,7 @@ import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
-import encodeCardsSetSettings from '@/utils/encodeCardsSetSettings'
+import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
 
 const props = defineProps({
   set: {

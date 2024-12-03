@@ -24,7 +24,7 @@ describe('useSetsStore', () => {
   const originalQuery = tRpcMock.set.getAll.query
   const querySets = vi.fn(async () => setsResponse)
 
-  const originalQueryCardsSummary = tRpcMock.set.getCardsSummaryBySetId.query
+  const originalQueryCardsSummary = tRpcMock.set.getCardsSummaryForSetId.query
   const queryCardsSummary = vi.fn(async (setId): Promise<CardsSummaryDto> => {
     if (setId === 'setThatThrowsError') {
       throw new Error('Test error')
@@ -39,12 +39,12 @@ describe('useSetsStore', () => {
 
   beforeAll(() => {
     tRpcMock.set.getAll.query = querySets
-    tRpcMock.set.getCardsSummaryBySetId.query = queryCardsSummary
+    tRpcMock.set.getCardsSummaryForSetId.query = queryCardsSummary
   })
 
   afterAll(() => {
     tRpcMock.set.getAll.query = originalQuery
-    tRpcMock.set.getCardsSummaryBySetId.query = originalQueryCardsSummary
+    tRpcMock.set.getCardsSummaryForSetId.query = originalQueryCardsSummary
   })
 
   it('should load all sets if the user is logged in', async () => {
@@ -113,7 +113,7 @@ describe('useSetsStore', () => {
 
     await setsStore.loadCardsSummaryForSet(set.id)
 
-    expect(tRpcMock.set.getCardsSummaryBySetId.query).toHaveBeenCalledWith(set.id)
+    expect(tRpcMock.set.getCardsSummaryForSetId.query).toHaveBeenCalledWith(set.id)
   })
 
   it('should update the cards summary status when loading the cards summary for a set', async () => {
@@ -145,5 +145,22 @@ describe('useSetsStore', () => {
 
     expect(cardsSummaryWithStatusBySetId.value[setThatThrowsError.id].status).toBe('error')
     expect(cardsSummaryWithStatusBySetId.value[set.id].status).toBe('success')
+  })
+
+  it('should query the cards summary for a set and return it', async () => {
+    vi.clearAllMocks()
+    const set = createSet()
+
+    const cardsSummary = await setsStore.fetchCardsSummaryForSet(set.id)
+
+    expect(cardsSummary).toStrictEqual({
+      cardsSummary: {
+        withdrawn: { count: 0, amount: 0 },
+        funded: { count: 0, amount: 0 },
+        unfunded: { count: 0, amount: 0 },
+        userActionRequired: { count: 0, amount: 0 },
+      },
+      status: 'success',
+    })
   })
 })
