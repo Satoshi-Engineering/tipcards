@@ -14,7 +14,7 @@ import {
 
 import LiveCardStatusBuilder from '@backend/domain/LiveCardStatusBuilder.js'
 
-describe('CardStatusBuilder', () => {
+describe('LiveCardStatusBuilder', () => {
   it('should resolve a lnurlW just as a normal CardStatus', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)

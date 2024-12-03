@@ -16,7 +16,7 @@ const card = createCard()
 const cardVersion = createCardVersion(card)
 const lnurlP = createLnurlP(cardVersion)
 
-describe('Card', () => {
+describe('Card', async () => {
   it('should load the status of a card from cardHash', async () => {
     const status = CardStatus.fromData({
       cardVersion,
@@ -29,7 +29,7 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpFunding,
       amount: 0,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: null,
       withdrawn: null,
     }))
@@ -49,8 +49,31 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpExpired,
       amount: 0,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: null,
+      withdrawn: null,
+    }))
+  })
+
+  it('should load status of a card funded by lnurlp', async () => {
+    const { invoice } = createInvoice(100, cardVersion)
+    invoice.paid = new Date(1230980400000)
+    lnurlP.expiresAt = null
+    lnurlP.finished = new Date(1230980400000)
+
+    const status = CardStatus.fromData({
+      cardVersion,
+      invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
+      lnurlP,
+      lnurlW: null,
+    })
+
+    expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
+      hash: card.hash,
+      status: CardStatusEnum.enum.funded,
+      amount: 100,
+      created: lnurlP.created,
+      funded: lnurlP.finished,
       withdrawn: null,
     }))
   })
@@ -58,6 +81,7 @@ describe('Card', () => {
   it('should load the status of a card funded by shared funding', async () => {
     cardVersion.sharedFunding = true
     lnurlP.expiresAt = null
+    lnurlP.finished = null
 
     const status = CardStatus.fromData({
       cardVersion,
@@ -70,7 +94,7 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedFunding,
       amount: 0,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: null,
       withdrawn: null,
     }))
@@ -91,7 +115,7 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
       amount: 0,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: null,
       withdrawn: null,
     }))
@@ -112,7 +136,7 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedExpiredFunded,
       amount: 100,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: null,
       withdrawn: null,
     }))
@@ -139,7 +163,7 @@ describe('Card', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.funded,
       amount: 200,
-      created: cardVersion.created,
+      created: lnurlP.created,
       funded: lnurlP.finished,
       withdrawn: null,
     }))

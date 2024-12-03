@@ -30,7 +30,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.setInvoiceFunding,
       amount: 50,
-      created: setCardVersion1.created,
+      created: setInvoice.created,
       funded: null,
       withdrawn: null,
     }))
@@ -50,7 +50,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.setInvoiceExpired,
       amount: 50,
-      created: setCardVersion1.created,
+      created: setInvoice.created,
       funded: null,
       withdrawn: null,
     }))
@@ -71,7 +71,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.funded,
       amount: 50,
-      created: setCardVersion1.created,
+      created: setInvoice.created,
       funded: setInvoice.paid,
       withdrawn: null,
     }))

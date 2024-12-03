@@ -12,7 +12,7 @@ import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import LiveCardStatus from '@backend/domain/LiveCardStatus.js'
 
-describe('CardStatus', () => {
+describe('LiveCardStatus', () => {
   it('should load the status of a card from cardHash', async () => {
     const card = createCard()
     const cardVersion = createCardVersion(card)
@@ -30,7 +30,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.invoiceFunding,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: null,
       withdrawn: null,
     }))
@@ -54,7 +54,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawPending,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: null,
     }))
@@ -79,7 +79,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.bulkWithdrawPending,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: null,
     }))
@@ -104,7 +104,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawn,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: lnurlW.withdrawn,
     }))

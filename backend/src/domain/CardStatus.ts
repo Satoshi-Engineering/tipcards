@@ -2,7 +2,7 @@ import assert from 'node:assert'
 
 import {
   CardStatusEnum,
-  CardStatusDto,
+  type CardStatusDto,
 } from '@shared/data/trpc/CardStatusDto.js'
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
@@ -36,7 +36,7 @@ export default class CardStatus {
 
       status: this.status,
       amount: this.amount,
-      created: this.cardVersion.created,
+      created: this.created,
       funded: this.funded,
       withdrawn: this.lnurlW?.withdrawn ?? null,
     }
@@ -62,6 +62,12 @@ export default class CardStatus {
     }
 
     return null
+  }
+
+  public get created(): Date {
+    return this.lnurlP?.created
+      ?? this.invoices[0]?.invoice.created
+      ?? this.cardVersion.created
   }
 
   public get funded(): Date | null {

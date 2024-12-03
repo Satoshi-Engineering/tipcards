@@ -9,7 +9,7 @@ const cards = [createCard(), createCard()]
 
 describe('CardStatusCollection', () => {
   it('should load the statuses multiple cards from cardHash', async () => {
-    const statusCollection = CardStatusCollection.fromCardStatuses([
+    const statusCollection = new CardStatusCollection([
       CardStatus.fromData({
         cardVersion: {
           id: '00000000-0000-0000-0000-000000000000',

@@ -41,7 +41,7 @@ export default class CardStatusBuilder {
   }
 
   public getCardStatusCollection(): CardStatusCollection {
-    return CardStatusCollection.fromCardStatuses(this.cardStatuses)
+    return new CardStatusCollection(this.cardStatuses)
   }
 
   protected cardVersionsById: Record<CardVersion['id'], CardVersion> = {}

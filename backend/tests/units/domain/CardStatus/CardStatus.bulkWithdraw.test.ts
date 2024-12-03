@@ -32,7 +32,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.isLockedByBulkWithdraw,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: null,
     }))
@@ -52,7 +52,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawnByBulkWithdraw,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: lnurlW.withdrawn,
     }))

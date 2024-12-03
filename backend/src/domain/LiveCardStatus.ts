@@ -51,6 +51,5 @@ export default class LiveCardStatus extends CardStatus {
       return CardStatusEnum.enum.bulkWithdrawPending
     }
     return CardStatusEnum.enum.withdrawPending
-
   }
 }

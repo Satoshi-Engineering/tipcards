@@ -60,7 +60,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.invoiceFunding,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: null,
       withdrawn: null,
     }))
@@ -80,7 +80,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.invoiceExpired,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: null,
       withdrawn: null,
     }))
@@ -100,7 +100,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.funded,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: null,
     }))
@@ -120,7 +120,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.funded,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: null,
     }))
@@ -140,7 +140,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.recentlyWithdrawn,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: lnurlW.withdrawn,
     }))
@@ -160,7 +160,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawn,
       amount: 100,
-      created: cardVersion.created,
+      created: invoice.created,
       funded: invoice.paid,
       withdrawn: lnurlW.withdrawn,
     }))

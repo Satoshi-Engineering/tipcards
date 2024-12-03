@@ -238,6 +238,19 @@ export default vi.fn().mockImplementation(() => ({
     })))
   },
 
+  getSetNamesForCardVersions: async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], string>> => {
+    return cardVersionIds.reduce<Record<CardVersion['id'], string>>((acc, cardVersionId) => {
+      const cardVersion = cardVersionsById[cardVersionId]
+      const card = cardsByHash[cardVersion.card]
+      if (card.set == null) {
+        return acc
+      }
+      const setSettings = setSettingsBySetId[card.set]
+      acc[cardVersionId] = setSettings.name
+      return acc
+    }, {})
+  },
+
   getLandingPage: async (landingPageId: LandingPage['id']): Promise<LandingPage | null> => landingPages[landingPageId] || null,
 
   getUserCanUseLandingPagesByLandingPage: async (landingPage: LandingPage): Promise<UserCanUseLandingPage[]> => {
