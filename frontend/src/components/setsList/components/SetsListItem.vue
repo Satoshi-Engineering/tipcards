@@ -80,7 +80,7 @@ const emit = defineEmits(['enterViewport'])
 
 const cardsSummaryLoadingStatus = computed(() => {
   switch (props.cardsSummaryWithLoadingStatus?.status) {
-    case null:
+    case undefined:
     case 'notLoaded':
     case 'loading':
       return 'loading'
