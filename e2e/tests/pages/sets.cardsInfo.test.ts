@@ -60,13 +60,13 @@ const elementIsInViewport = (el: HTMLElement, viewportHeight: number) => {
 }
 
 const gotoSetsPageAndWaitForInitialCardsInfoRequest = () => {
-  cy.intercept('/trpc/set.getCardsSummaryBySetId**').as('apiSetGetCardsInfo')
+  cy.intercept('/trpc/set.getCardsSummaryForSetId**').as('apiSetGetCardsInfo')
   tipCards.gotoSetsPage()
   cy.wait('@apiSetGetCardsInfo')
 }
 
 const scrollDownAndWaitForCardsInfoRequest = () => {
-  cy.intercept('/trpc/set.getCardsSummaryBySetId**').as('apiSetGetCardsInfo')
+  cy.intercept('/trpc/set.getCardsSummaryForSetId**').as('apiSetGetCardsInfo')
   cy.getTestElement('sets-list-item').eq(-3).scrollIntoView()
   cy.wait('@apiSetGetCardsInfo')
 }
