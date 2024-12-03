@@ -3,6 +3,7 @@
     <CenterContainer class="print:hidden">
       <BackLink
         :to="{ name: 'sets', params: { lang: $route.params.lang } }"
+        class="!pb-2"
       >
         {{ t('sets.title') }}
       </BackLink>
@@ -14,8 +15,8 @@
         {{ userWarning }}
       </div>
     </CenterContainer>
-    <div class="mb-3 bg-grey-light">
-      <CenterContainer class="!pt-10 !pb-5">
+    <div class="mb-3 bg-grey-light print:hidden">
+      <CenterContainer class="!py-5">
         <div class="flex justify-between items-center">
           <HeadlineDefault level="h2" class="!my-0">
             {{ pageTitle }}
@@ -36,7 +37,7 @@
         />
       </CenterContainer>
     </div>
-    <CenterContainer>
+    <CenterContainer class="print:hidden">
       <ParagraphDefault
         v-if="cardsStatusList.length == 0"
         class="text-sm text-grey"
@@ -71,7 +72,7 @@
         </ul>
       </div>
     </CenterContainer>
-    <CenterContainer>
+    <CenterContainer class="print:hidden">
       <div class="py-4 mb-3">
         <HeadlineDefault level="h2">
           {{ t('cards.settings.headline') }}
@@ -311,7 +312,7 @@
           </div>
           <!-- eslint-disable vue/no-v-html -->
           <div
-            class="inline-block w-[30mm] aspect-square mx-6"
+            class="inline-block w-[30mm] aspect-square mx-6 bg-white"
             v-html="currentSetUrlQrCode"
           />
           <!-- eslint-enable vue/no-v-html -->
@@ -915,15 +916,16 @@ const {
 
 /////
 // Cards Summary
-const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
+const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: 'notLoaded' })
 const { set: setTrpcRouter } = useTRpc()
 const loadCardsSummaryForSet = async () => {
   if (setId.value == null) {
     return
   }
-  cardsSummaryWithLoadingStatus.value = {
-    ...cardsSummaryWithLoadingStatus.value,
-    status: 'loading',
+  if (cardsSummaryWithLoadingStatus.value.cardsSummary == null) {
+    cardsSummaryWithLoadingStatus.value = { status: 'loading' }
+  } else {
+    cardsSummaryWithLoadingStatus.value = { ...cardsSummaryWithLoadingStatus.value, status: 'reloading' }
   }
   const settingsDto = setSettingsDtoFromLegacySettings(settings)
   const cardsSummary = await setTrpcRouter.getCardsSummaryForSetDto.query(SetDto.parse({

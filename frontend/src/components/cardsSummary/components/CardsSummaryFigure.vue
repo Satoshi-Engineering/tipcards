@@ -7,30 +7,27 @@
       <HeadlineDefault level="h4" class="text-sm font-normal mb-0">
         {{ headline }}
       </HeadlineDefault>
-      <div class="mt-auto text-lg font-medium whitespace-nowrap">
-        <template v-if="amount != null">
-          {{ $t('general.amountAndUnitSats', { amount }) }}
-        </template>
-        <template v-else>
-          &nbsp;
-        </template>
+      <div
+        class="mt-auto text-lg font-medium whitespace-nowrap"
+        :class="{ 'text-grey-medium': amount == null }"
+      >
+        {{ $t('general.amountAndUnitSats', { amount: amountComputed }, amount ?? 10000) }}
       </div>
-      <div class="pt-2 text-sm font-medium">
-        <template v-if="count != null">
-          ({{ $t('general.cards', { count }) }})
-        </template>
-        <template v-else>
-          &nbsp;
-        </template>
+      <div
+        class="pt-2 text-sm font-medium"
+        :class="{ 'text-grey-medium': count == null }"
+      >
+        ({{ $t('general.cards', { count: countComputed }, count ?? 10000) }})
       </div>
     </figcaption>
   </figure>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 
-defineProps({
+const props = defineProps({
   headline: {
     type: String,
     required: true,
@@ -44,4 +41,7 @@ defineProps({
     default: undefined,
   },
 })
+
+const amountComputed = computed(() => props.amount ?? '…')
+const countComputed = computed(() => props.count ?? '…')
 </script>

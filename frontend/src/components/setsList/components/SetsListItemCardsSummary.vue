@@ -3,7 +3,7 @@
     class="grid grid-cols-[repeat(6,8px)] grid-rows-[repeat(2,8px)] gap-[2px]"
     data-test="sets-list-item-cards-summary"
   >
-    <template v-if="loadingStatus === 'loading' && cardsSummary == null">
+    <template v-if="loadingStatus === 'loading'">
       <div
         v-for="n in displayedCardsSummaryItems"
         :key="n"
@@ -55,7 +55,7 @@ import type { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto'
 
 const props = defineProps({
   loadingStatus: {
-    type: String as PropType<'loading' | 'error' | 'success'>,
+    type: String as PropType<'loading' | 'error' | 'showData'>,
     required: true,
   },
   cardsSummary: {

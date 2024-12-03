@@ -129,7 +129,7 @@ const { showModalLogin } = storeToRefs(modalLoginStore)
 
 // global card status summary
 const { card } = useTRpc()
-const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: undefined })
+const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: 'notLoaded' })
 const cardsSummaryErrorMessages = ref<string[]>([])
 const loadCardsSummary = async () => {
   if (!isLoggedIn.value) {
@@ -149,7 +149,7 @@ const loadCardsSummary = async () => {
 onMounted(loadCardsSummary)
 watch(isLoggedIn, (isLoggedIn) => {
   if (!isLoggedIn) {
-    cardsSummaryWithLoadingStatus.value = { status: undefined }
+    cardsSummaryWithLoadingStatus.value = { status: 'notLoaded' }
     cardsSummaryErrorMessages.value = []
   }
   loadCardsSummary()

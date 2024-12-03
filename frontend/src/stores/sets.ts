@@ -32,7 +32,11 @@ export const useSetsStore = defineStore('sets', () => {
   }
 
   const loadCardsSummaryForSet = async (setId: string) => {
-    if (cardsSummaryWithStatusBySetId.value[setId]?.status != null) {
+    if (
+      cardsSummaryWithStatusBySetId.value[setId] != null
+      && cardsSummaryWithStatusBySetId.value[setId]?.status !== 'notLoaded'
+      && cardsSummaryWithStatusBySetId.value[setId]?.status !== 'needsReload'
+    ) {
       return
     }
 
@@ -90,12 +94,15 @@ export const useSetsStore = defineStore('sets', () => {
   }
 
   const setStatusLoadingForSet = (setId: string) => {
-    cardsSummaryWithStatusBySetId.value = {
-      ...cardsSummaryWithStatusBySetId.value,
-      [setId]: {
+    if (cardsSummaryWithStatusBySetId.value[setId]?.cardsSummary != null) {
+      cardsSummaryWithStatusBySetId.value[setId] = {
         ...cardsSummaryWithStatusBySetId.value[setId],
-        status: 'loading',
-      },
+        status: 'reloading',
+      }
+      return
+    }
+    cardsSummaryWithStatusBySetId.value[setId] = {
+      status: 'loading',
     }
   }
 
@@ -108,10 +115,11 @@ export const useSetsStore = defineStore('sets', () => {
 
   const resetCardsSummaryLoadingStatuses = () => {
     Object.keys(cardsSummaryWithStatusBySetId.value).forEach((setId) => {
-      cardsSummaryWithStatusBySetId.value[setId] = {
-        ...cardsSummaryWithStatusBySetId.value[setId],
-        status: undefined,
+      if (cardsSummaryWithStatusBySetId.value[setId].cardsSummary != null) {
+        cardsSummaryWithStatusBySetId.value[setId].status = 'needsReload'
+        return
       }
+      cardsSummaryWithStatusBySetId.value[setId].status = 'notLoaded'
     })
   }
 

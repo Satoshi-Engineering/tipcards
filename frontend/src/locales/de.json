@@ -13,7 +13,7 @@
     "search": "Suche",
     "amountAndUnitBitcoin": "{amount} Bitcoin",
     "amountAndUnitBtc": "{amount} BTC",
-    "amountAndUnitSats": "{amount} Sats"
+    "amountAndUnitSats": "{amount} Sat | {amount} Sats"
   },
   "cardsSummary": {
     "total": "Insgesamt",

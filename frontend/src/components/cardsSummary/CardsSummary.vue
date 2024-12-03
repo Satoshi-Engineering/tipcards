@@ -8,8 +8,8 @@
     <div class="grid grid-cols-3 gap-8 max-w-md mx-auto justify-between items-top">
       <CardsSummaryFigure
         :headline="$t('cards.status.labelUsed')"
-        :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.withdrawn.amount : undefined"
-        :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.withdrawn.count : undefined"
+        :amount="cardsSummaryWithLoadingStatusComputed.cardsSummary?.withdrawn.amount"
+        :count="cardsSummaryWithLoadingStatusComputed.cardsSummary?.withdrawn.count"
         data-test="cards-summary-withdrawn"
       >
         <template #icon>
@@ -18,8 +18,8 @@
       </CardsSummaryFigure>
       <CardsSummaryFigure
         :headline="$t('cards.status.labelFunded')"
-        :amount="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.funded.amount : undefined"
-        :count="cardsSummaryWithLoadingStatusComputed.status === 'success' ? cardsSummaryWithLoadingStatusComputed.cardsSummary.funded.count : undefined"
+        :amount="cardsSummaryWithLoadingStatusComputed.cardsSummary?.funded.amount"
+        :count="cardsSummaryWithLoadingStatusComputed.cardsSummary?.funded.count"
         data-test="cards-summary-funded"
       >
         <template #icon>
@@ -38,7 +38,7 @@
       </CardsSummaryFigure>
     </div>
     <UserErrorMessages
-      class="mb-2"
+      class="mb-2 text-center"
       data-test="cards-summary-error-messages"
       :user-error-messages="userErrorMessages"
     />
@@ -71,7 +71,7 @@ const props = defineProps({
 })
 
 const totalAmount = computed(() => {
-  if (cardsSummaryWithLoadingStatusComputed.value.status === 'success') {
+  if (cardsSummaryWithLoadingStatusComputed.value.cardsSummary != null) {
     return (
       cardsSummaryWithLoadingStatusComputed.value.cardsSummary.funded.amount
       + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.withdrawn.amount
@@ -83,7 +83,7 @@ const totalAmount = computed(() => {
 })
 
 const totalCount = computed(() => {
-  if (cardsSummaryWithLoadingStatusComputed.value.status === 'success') {
+  if (cardsSummaryWithLoadingStatusComputed.value.cardsSummary != null) {
     return (
       cardsSummaryWithLoadingStatusComputed.value.cardsSummary.funded.count
       + cardsSummaryWithLoadingStatusComputed.value.cardsSummary.withdrawn.count

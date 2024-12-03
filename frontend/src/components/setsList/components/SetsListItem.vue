@@ -41,7 +41,7 @@
       class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
       data-test="sets-list-item-cards-summary"
       :loading-status="cardsSummaryLoadingStatus"
-      :cards-summary="cardsSummaryData"
+      :cards-summary="cardsSummaryWithLoadingStatus?.cardsSummary"
       :number-of-cards="set.settings.numberOfCards"
     />
   </LinkDefault>
@@ -78,13 +78,20 @@ const props = defineProps({
 
 const emit = defineEmits(['enterViewport'])
 
-const cardsSummaryLoadingStatus = computed(() => props.cardsSummaryWithLoadingStatus?.status ?? 'loading')
-
-const cardsSummaryData = computed(() => {
-  if (props.cardsSummaryWithLoadingStatus?.status !== 'success') {
-    return undefined
+const cardsSummaryLoadingStatus = computed(() => {
+  switch (props.cardsSummaryWithLoadingStatus?.status) {
+    case null:
+    case 'notLoaded':
+    case 'loading':
+      return 'loading'
+    case 'needsReload':
+    case 'reloading':
+    case 'success':
+      return 'showData'
+    case 'error':
+    default:
+      return 'error'
   }
-  return props.cardsSummaryWithLoadingStatus.cardsSummary
 })
 
 const isInViewport = ref(false)

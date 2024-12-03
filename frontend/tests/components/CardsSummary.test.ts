@@ -54,21 +54,21 @@ describe('CardsSummary', () => {
 
     const cardsSummary = wrapper.getComponent(CardsSummary)
     expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain(t('cardsSummary.withdrawn'))
-    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain('… cards')
     expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain(t('cardsSummary.funded'))
-    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain('… cards')
     expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain(t('cardsSummary.total'))
-    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain('… cards')
   })
 
   it('renders the preview state', async () => {
     const wrapper = mount(CardsSummary, {
       props: {
         cardsSummaryWithLoadingStatus: {
-          status: undefined,
+          status: 'notLoaded',
         },
         preview: true,
       },
@@ -96,14 +96,14 @@ describe('CardsSummary', () => {
 
     const cardsSummary = wrapper.getComponent(CardsSummary)
     expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain(t('cardsSummary.withdrawn'))
-    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-withdrawn]').text()).toContain('… cards')
     expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain(t('cardsSummary.funded'))
-    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-funded]').text()).toContain('… cards')
     expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain(t('cardsSummary.total'))
-    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).not.toContain('sats')
-    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).not.toContain('cards')
+    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain('… sats')
+    expect(cardsSummary.find('[data-test=cards-summary-total]').text()).toContain('… cards')
     expect(cardsSummary.find('[data-test=cards-summary-error-messages]').text()).toContain('An error occurred')
   })
 })
