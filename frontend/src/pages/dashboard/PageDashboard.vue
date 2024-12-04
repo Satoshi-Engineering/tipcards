@@ -56,11 +56,11 @@
           {{ $t('nav.sets') }}
         </HeadlineDefault>
         <div class="text-sm pb-1" data-test="sets-list-sets-count">
-          ({{
-            fetchingAllSets
+          {{
+            fetchingAllSets && sets.length === 0
               ? '&nbsp;'
-              : $t('general.sets', { sets: sets.length }, sets.length)
-          }})
+              : `(${$t('general.sets', { sets: sets.length }, sets.length)})`
+          }}
         </div>
       </div>
       <SetsList
@@ -104,9 +104,9 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import SetsList from '@/components/setsList/SetsList.vue'
-import SetsListMessageNotLoggedIn from '@/components/setsList/SetsListMessageNotLoggedIn.vue'
+import SetsListMessageNotLoggedIn from '@/components/setsList/components/SetsListMessageNotLoggedIn.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
-import SetsListMessageEmpty from '@/components/setsList/SetsListMessageEmpty.vue'
+import SetsListMessageEmpty from '@/components/setsList/components/SetsListMessageEmpty.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'

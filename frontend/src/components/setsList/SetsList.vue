@@ -1,44 +1,32 @@
 <template>
-  <section class="flow-root shadow-default rounded-default" data-test="sets-list">
-    <header class="grid grid-cols-[1fr,4.5rem] border-b border-white-50 py-4 px-5">
-      <HeadlineDefault level="h4" class="text-sm font-normal !my-0">
-        {{ $t('sets.setInfo') }}
-      </HeadlineDefault>
-      <HeadlineDefault
-        v-if="!noCardsSummary"
-        level="h4"
-        class="text-sm font-normal !my-0"
-      >
-        {{ $t('general.status') }}
-      </HeadlineDefault>
-    </header>
-    <div v-if="$slots.message" class="px-5 py-8 min-h-44 grid place-items-center">
+  <ItemsListWithLoading
+    :header-primary="$t('sets.setInfo')"
+    :header-secondary="noCardsSummary == false ? $t('general.status') : undefined"
+    :items="sortedSavedSets"
+    :not-logged-in="notLoggedIn"
+    :loading="fetching && sets.length < 1"
+    :reloading="fetching && sets.length > 0"
+    data-test="sets-list"
+  >
+    <template v-if="$slots.message" #message>
       <slot name="message" />
-    </div>
-    <ul v-if="loggedIn">
-      <li
-        v-for="set in sortedSavedSets"
-        :key="set.id"
-        class="mx-5 border-b border-white-50 group"
-        :class="{
-          'last:border-0': !fetching
-        }"
-      >
-        <SetsListItem
-          :set="set"
-          :cards-summary-with-loading-status="cardsSummaryBySetId[set.id]"
-          :no-cards-summary="noCardsSummary"
-          class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
-          @enter-viewport="$emit('enterViewport', set.id)"
-        />
-      </li>
-    </ul>
-    <div v-if="fetching" class="flex justify-center min-h-32">
-      <IconAnimatedLoadingWheel
-        class="w-10 h-auto mx-auto my-10 text-white-50"
+    </template>
+    <template #notLoggedInMessage>
+      <SetsListMessageNotLoggedIn />
+    </template>
+    <template #listEmptyMessage>
+      <SetsListMessageEmpty />
+    </template>
+    <template #default="{ item: set }">
+      <SetsListItem
+        :set="set"
+        :cards-summary-with-loading-status="cardsSummaryBySetId[set.id]"
+        :no-cards-summary="noCardsSummary"
+        class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
+        @enter-viewport="$emit('enterViewport', set.id)"
       />
-    </div>
-  </section>
+    </template>
+  </ItemsListWithLoading>
 </template>
 
 <script setup lang="ts">
@@ -47,14 +35,15 @@ import { computed, type PropType } from 'vue'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 
 import SetsListItem from '@/components/setsList/components/SetsListItem.vue'
-import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
-import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import type { CardsSummaryWithLoadingStatusBySetId } from '@/data/CardsSummaryWithLoadingStatus'
+import ItemsListWithLoading from '@/components/itemsList/ItemsListWithMessages.vue'
+import SetsListMessageNotLoggedIn from './components/SetsListMessageNotLoggedIn.vue'
+import SetsListMessageEmpty from './components/SetsListMessageEmpty.vue'
 
 const props = defineProps({
-  loggedIn: {
+  notLoggedIn: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   sets: {
     type: Array as PropType<SetDto[]>,
@@ -84,7 +73,6 @@ const sortedSavedSets = computed(() => {
   return [...props.sets]
     .map((set) => ({
       ...set,
-      cardsStatus: null, // Implement this later
     }))
     .sort(props.sorting === 'changed' ? sortByChangedDate : sortByName)
 })

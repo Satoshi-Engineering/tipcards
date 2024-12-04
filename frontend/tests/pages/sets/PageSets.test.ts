@@ -150,6 +150,6 @@ describe('PageSets', () => {
     const wrapper = mount(PageSets)
     await flushPromises()
 
-    expect(wrapper.find('[data-test=sets-list-message-error]').exists()).toBe(true)
+    expect(wrapper.find('[data-test=list-message-error]').exists()).toBe(true)
   })
 })

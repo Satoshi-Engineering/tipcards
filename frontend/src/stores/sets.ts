@@ -95,14 +95,20 @@ export const useSetsStore = defineStore('sets', () => {
 
   const setStatusLoadingForSet = (setId: string) => {
     if (cardsSummaryWithStatusBySetId.value[setId]?.cardsSummary != null) {
-      cardsSummaryWithStatusBySetId.value[setId] = {
-        ...cardsSummaryWithStatusBySetId.value[setId],
-        status: 'reloading',
+      cardsSummaryWithStatusBySetId.value = {
+        ...cardsSummaryWithStatusBySetId.value,
+        [setId]: {
+          ...cardsSummaryWithStatusBySetId.value[setId],
+          status: 'reloading',
+        },
       }
       return
     }
-    cardsSummaryWithStatusBySetId.value[setId] = {
-      status: 'loading',
+    cardsSummaryWithStatusBySetId.value = {
+      ...cardsSummaryWithStatusBySetId.value,
+      [setId]: {
+        status: 'loading',
+      },
     }
   }
 
@@ -114,13 +120,20 @@ export const useSetsStore = defineStore('sets', () => {
   }
 
   const resetCardsSummaryLoadingStatuses = () => {
-    Object.keys(cardsSummaryWithStatusBySetId.value).forEach((setId) => {
-      if (cardsSummaryWithStatusBySetId.value[setId].cardsSummary != null) {
-        cardsSummaryWithStatusBySetId.value[setId].status = 'needsReload'
-        return
-      }
-      cardsSummaryWithStatusBySetId.value[setId].status = 'notLoaded'
-    })
+    cardsSummaryWithStatusBySetId.value = Object.entries(cardsSummaryWithStatusBySetId.value)
+      .reduce((acc, [setId, { cardsSummary }]) => {
+        if (cardsSummary != null) {
+          acc[setId] = {
+            cardsSummary,
+            status: 'needsReload',
+          }
+          return acc
+        }
+        acc[setId] = {
+          status: 'notLoaded',
+        }
+        return acc
+      }, {} as CardsSummaryWithLoadingStatusBySetId)
   }
 
   return {

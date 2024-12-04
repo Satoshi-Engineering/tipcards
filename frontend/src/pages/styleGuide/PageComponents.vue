@@ -193,6 +193,102 @@
         </ModalDefault>
       </CenterContainer>
     </section>
+
+    <section>
+      <CenterContainer>
+        <HeadlineDefault level="h2">
+          CollapsibleElement
+        </HeadlineDefault>
+        <CollapsibleElement
+          title="Collapsible element"
+        >
+          The content of the collapsible element
+        </CollapsibleElement>
+      </CenterContainer>
+    </section>
+
+    <section>
+      <CenterContainer>
+        <HeadlineDefault level="h2">
+          ItemsListWithMessages
+        </HeadlineDefault>
+        <ParagraphDefault>If items are passed, the loading spinner will be small:</ParagraphDefault>
+        <ItemsListWithMessages
+          class="mb-5"
+          header-primary="Primary header"
+          header-secondary="Secondary header"
+          :loading="true"
+          :items="['Item 1', 'Item 2', 'Item 3']"
+        >
+          <template #default="{ item }">
+            <div class="py-4">
+              {{ item }}
+            </div>
+          </template>
+        </ItemsListWithMessages>
+
+        <ParagraphDefault>If no items are passed, the loading spinner will be large:</ParagraphDefault>
+        <ItemsListWithMessages
+          class="mb-5"
+          header-primary="Primary header"
+          header-secondary="Secondary header"
+          :loading="true"
+          :items="[]"
+        >
+          <template #default="{ item }">
+            <div class="py-4">
+              {{ item }}
+            </div>
+          </template>
+        </ItemsListWithMessages>
+
+        <ParagraphDefault>For reloading, the spinner is even smaller:</ParagraphDefault>
+        <ItemsListWithMessages
+          class="mb-5"
+          header-primary="Primary header"
+          header-secondary="Secondary header"
+          :reloading="true"
+          :items="['Item 1', 'Item 2', 'Item 3']"
+        >
+          <template #default="{ item }">
+            <div class="py-4">
+              {{ item }}
+            </div>
+          </template>
+        </ItemsListWithMessages>
+
+        <ParagraphDefault>If it's not loading and no items are passed, a message is shown (can be overwritten by a slot):</ParagraphDefault>
+        <ItemsListWithMessages
+          class="mb-5"
+          header-primary="Primary header"
+          header-secondary="Secondary header"
+          :loading="false"
+          :items="[]"
+        >
+          <template #default="{ item }">
+            <div class="py-4">
+              {{ item }}
+            </div>
+          </template>
+        </ItemsListWithMessages>
+
+        <ParagraphDefault>If not-logged-in is set, a message is shown (can be overwritten by a slot):</ParagraphDefault>
+        <ItemsListWithMessages
+          class="mb-5"
+          header-primary="Primary header"
+          header-secondary="Secondary header"
+          not-logged-in
+          :loading="false"
+          :items="[]"
+        >
+          <template #default="{ item }">
+            <div class="py-4">
+              {{ item }}
+            </div>
+          </template>
+        </ItemsListWithMessages>
+      </CenterContainer>
+    </section>
   </TheLayout>
 </template>
 
@@ -212,6 +308,8 @@ import ModalDefault from '@/components/ModalDefault.vue'
 
 import { FAQS } from '@/modules/faqs'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import CollapsibleElement from '@/components/CollapsibleElement.vue'
+import ItemsListWithMessages from '@/components/itemsList/ItemsListWithMessages.vue'
 
 const showDialogs = reactive<boolean[]>([])
 </script>

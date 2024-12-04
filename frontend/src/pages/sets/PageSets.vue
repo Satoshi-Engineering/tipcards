@@ -43,21 +43,14 @@
             :sets="filteredSets"
             :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
             :fetching="fetchingAllSets"
+            :not-logged-in="!isLoggedIn"
+            :user-error-messages="fetchingAllSetsUserErrorMessages"
             sorting="changed"
             class="my-7"
             @enter-viewport="setsStore.loadCardsSummaryForSet"
           >
-            <template v-if="!isLoggedIn" #message>
-              <SetsListMessageNotLoggedIn />
-            </template>
-            <template v-else-if="fetchingAllSetsUserErrorMessages.length > 0" #message>
-              <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" data-test="sets-list-message-error" />
-            </template>
-            <template v-else-if="!fetchingAllSets && sets.length < 1" #message>
-              <SetsListMessageEmpty />
-            </template>
-            <template v-else-if="sets.length > 0 && filteredSets.length === 0" #message>
-              <ParagraphDefault class="text-center">
+            <template v-if="sets.length > 0 && filteredSets.length === 0" #message>
+              <ParagraphDefault>
                 {{ $t('sets.noSetsMatchingFilter') }}
               </ParagraphDefault>
             </template>
@@ -78,7 +71,6 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import ButtonIcon from '@/components/buttons/ButtonIcon.vue'
 import SetsList from '@/components/setsList/SetsList.vue'
@@ -89,8 +81,6 @@ import { useSetsStore } from '@/stores/sets'
 import type { SetDto } from '@shared/data/trpc/SetDto'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 import { useAuthStore } from '@/stores/auth'
-import SetsListMessageNotLoggedIn from '@/components/setsList/SetsListMessageNotLoggedIn.vue'
-import SetsListMessageEmpty from '@/components/setsList/SetsListMessageEmpty.vue'
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 
