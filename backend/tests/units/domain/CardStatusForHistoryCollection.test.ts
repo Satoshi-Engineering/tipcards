@@ -1,17 +1,22 @@
 import { describe, it, expect } from 'vitest'
 
-import { createCard, createCardVersion } from '../../drizzleData.js'
+import {
+  createSet, createSetSettings, createCardForSet,
+  createCard, createCardVersion,
+} from '../../drizzleData.js'
 
 import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 import { CardVersion } from '@backend/database/schema/CardVersion.js'
-import CardStatusCollection from '@backend/domain/CardStatusCollection.js'
-import CardStatus from '@backend/domain/CardStatus.js'
+import CardStatusForHistoryCollection from '@backend/domain/CardStatusForHistoryCollection.js'
+import CardStatusForHistory from '@backend/domain/CardStatusForHistory.js'
 
 describe('CardStatusCollection', async () => {
+  const set = createSet()
+  const setSettings = createSetSettings(set)
   const cards = [
-    createCard(),
-    createCard(),
+    createCardForSet(set, 0),
+    createCardForSet(set, 1),
     createCard(),
   ]
   const cardVersions: CardVersion[] = []
@@ -22,18 +27,20 @@ describe('CardStatusCollection', async () => {
   cardVersions.push(createCardVersion(cards[2]))
 
   it('should load the statuses of multiple cards from cardHash', async () => {
-    const statusCollection = new CardStatusCollection([
-      CardStatus.fromData({
+    const statusCollection = new CardStatusForHistoryCollection([
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[0],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
-      CardStatus.fromData({
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
     ])
 
@@ -42,34 +49,39 @@ describe('CardStatusCollection', async () => {
         cardVersion: expect.objectContaining({
           card: cards[0].hash,
         }),
+        setName: setSettings.name,
       }),
       expect.objectContaining({
         cardVersion: expect.objectContaining({
           card: cards[1].hash,
         }),
+        setName: setSettings.name,
       }),
     ])
   })
 
   it('should return a filtered and sorted trpc response', async () => {
-    const collection = new CardStatusCollection([
-      CardStatus.fromData({
+    const collection = new CardStatusForHistoryCollection([
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[2],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: null,
       }),
-      CardStatus.fromData({
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
-      CardStatus.fromData({
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[0],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
     ])
 
@@ -85,6 +97,10 @@ describe('CardStatusCollection', async () => {
         created: cardVersions[0].created,
         funded: null,
         withdrawn: null,
+
+        landingPageViewed: null,
+        bulkWithdrawCreated: null,
+        setName: setSettings.name,
       }, {
         hash: cards[2].hash,
         status: CardStatusEnum.enum.unfunded,
@@ -92,30 +108,37 @@ describe('CardStatusCollection', async () => {
         created: cardVersions[2].created,
         funded: null,
         withdrawn: null,
+
+        landingPageViewed: null,
+        bulkWithdrawCreated: null,
+        setName: null,
       }],
       totalUnfiltered: 3,
     })
   })
 
   it('should handle pagination', async () => {
-    const collection = new CardStatusCollection([
-      CardStatus.fromData({
+    const collection = new CardStatusForHistoryCollection([
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[2],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: null,
       }),
-      CardStatus.fromData({
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
-      CardStatus.fromData({
+      CardStatusForHistory.fromData({
         cardVersion: cardVersions[0],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
+        setName: setSettings.name,
       }),
     ])
 
@@ -132,6 +155,10 @@ describe('CardStatusCollection', async () => {
         created: cardVersions[2].created,
         funded: null,
         withdrawn: null,
+
+        landingPageViewed: null,
+        bulkWithdrawCreated: null,
+        setName: null,
       }],
       pagination: {
         offset: 1,

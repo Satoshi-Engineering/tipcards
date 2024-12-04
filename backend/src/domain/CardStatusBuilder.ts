@@ -3,7 +3,6 @@ import { Card, CardVersion, LnurlP, LnurlW } from '@backend/database/schema/inde
 import { asTransaction } from '@backend/database/client.js'
 
 import CardStatus from './CardStatus.js'
-import CardStatusCollection from './CardStatusCollection.js'
 
 export const defaultCardVersion = {
   id: '00000000-0000-0000-0000-000000000000',
@@ -32,16 +31,23 @@ export default class CardStatusBuilder {
     await this.loadSatoshiMovements()
   }
 
-  public getCardStatus(): CardStatus {
-    const cardStatuses = this.cardStatuses
-    if (cardStatuses.length !== 1) {
-      throw new Error(`CardStatusBuilder.getCardStatus() should only be called when building a single card. Was called for ${this.cardHashes.join(', ')}`)
-    }
-    return cardStatuses[0]
-  }
-
-  public getCardStatusCollection(): CardStatusCollection {
-    return new CardStatusCollection(this.cardStatuses)
+  public get cardStatuses(): CardStatus[] {
+    return this.cardHashes.map((cardHash) => {
+      if (!this.cardVersionsByCardHash[cardHash]) {
+        return CardStatus.fromData({
+          cardVersion: { ...defaultCardVersion, card: cardHash },
+          invoices: [],
+          lnurlP: null,
+          lnurlW: null,
+        })
+      }
+      return CardStatus.fromData({
+        cardVersion: this.cardVersionsByCardHash[cardHash],
+        invoices: this.invoicesByCardHash[cardHash] ?? [],
+        lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
+        lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
+      })
+    })
   }
 
   protected cardVersionsById: Record<CardVersion['id'], CardVersion> = {}
@@ -91,25 +97,6 @@ export default class CardStatusBuilder {
     Object.entries(lnurlWs).forEach(([cardVersionId, lnurlW]) => {
       const cardVersion = this.cardVersionsById[cardVersionId]
       this.LnurlWsByCardHash[cardVersion.card] = lnurlW
-    })
-  }
-
-  protected get cardStatuses(): CardStatus[] {
-    return this.cardHashes.map((cardHash) => {
-      if (!this.cardVersionsByCardHash[cardHash]) {
-        return CardStatus.fromData({
-          cardVersion: { ...defaultCardVersion, card: cardHash },
-          invoices: [],
-          lnurlP: null,
-          lnurlW: null,
-        })
-      }
-      return CardStatus.fromData({
-        cardVersion: this.cardVersionsByCardHash[cardHash],
-        invoices: this.invoicesByCardHash[cardHash] ?? [],
-        lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
-        lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
-      })
     })
   }
 }

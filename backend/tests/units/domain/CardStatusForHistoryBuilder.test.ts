@@ -30,7 +30,7 @@ describe('CardStatusForHistoryBuilder', () => {
 
     const builder = new CardStatusForHistoryBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -58,7 +58,7 @@ describe('CardStatusForHistoryBuilder', () => {
 
     const builder = new CardStatusForHistoryBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -88,9 +88,8 @@ describe('CardStatusForHistoryBuilder', () => {
 
     const builder = new CardStatusForHistoryBuilder([card1.hash, card2.hash, card3.hash])
     await builder.build()
-    const collection = builder.getCardStatusCollection()
 
-    expect(collection.cardStatuses).toEqual(expect.arrayContaining([
+    expect(builder.cardStatuses).toEqual(expect.arrayContaining([
       expect.objectContaining({ cardVersion: cardVersion1, setName: setSettings.name }),
       expect.objectContaining({ cardVersion: cardVersion2, setName: setSettings.name }),
       expect.objectContaining({ cardVersion: cardVersion3, setName: setSettings.name }),

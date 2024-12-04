@@ -13,7 +13,7 @@ export default class CardStatusForHistory extends CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<CardStatusForHistory> {
     const builder = new CardStatusForHistoryBuilder(cardHash)
     await builder.build()
-    return builder.getCardStatus()
+    return builder.cardStatuses[0]
   }
 
   public static fromData(data: {

@@ -15,7 +15,7 @@ export default class LiveCardStatus extends CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<LiveCardStatus> {
     const builder = new LiveCardStatusBuilder(cardHash)
     await builder.build()
-    return builder.getCardStatus()
+    return builder.cardStatuses[0]
   }
 
   public static fromData(data: {

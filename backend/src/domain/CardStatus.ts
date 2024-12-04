@@ -17,7 +17,7 @@ export default class CardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']): Promise<CardStatus> {
     const builder = new CardStatusBuilder(cardHash)
     await builder.build()
-    return builder.getCardStatus()
+    return builder.cardStatuses[0]
   }
 
   public static fromData(data: {

@@ -33,7 +33,7 @@ describe('CardStatusBuilder', () => {
   it('should build a default card status', async () => {
     const builder = new CardStatusBuilder('nonexistent')
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion.card).toBe('nonexistent')
     expect(status.invoices).toEqual([])
@@ -44,7 +44,7 @@ describe('CardStatusBuilder', () => {
   it('should resolve an invoice', async () => {
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -67,7 +67,7 @@ describe('CardStatusBuilder', () => {
 
     const builder = new CardStatusBuilder(card1.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion1)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })])
@@ -93,7 +93,7 @@ describe('CardStatusBuilder', () => {
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -123,7 +123,7 @@ describe('CardStatusBuilder', () => {
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual(expect.arrayContaining([
@@ -140,7 +140,7 @@ describe('CardStatusBuilder', () => {
 
     const builder = new CardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -151,16 +151,13 @@ describe('CardStatusBuilder', () => {
   it('should build a collection for a single cardHash', async () => {
     const builder = new CardStatusBuilder('nonexistent')
     await builder.build()
-    const collection = builder.getCardStatusCollection()
 
-    expect(collection).toEqual(expect.objectContaining({
-      cardStatuses: expect.arrayContaining([
-        expect.objectContaining({
-          cardVersion: expect.objectContaining({ card: 'nonexistent' }),
-          invoices: [],
-        }),
-      ]),
-    }))
+    expect(builder.cardStatuses).toEqual([
+      expect.objectContaining({
+        cardVersion: expect.objectContaining({ card: 'nonexistent' }),
+        invoices: [],
+      }),
+    ])
   })
 
   it('should build a collection for multiple cardHashes', async () => {
@@ -178,19 +175,16 @@ describe('CardStatusBuilder', () => {
 
     const builder = new CardStatusBuilder([card1.hash, card2.hash])
     await builder.build()
-    const collection = builder.getCardStatusCollection()
 
-    expect(collection).toEqual(expect.objectContaining({
-      cardStatuses: expect.arrayContaining([
-        expect.objectContaining({
-          cardVersion: cardVersion1,
-          invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
-        }),
-        expect.objectContaining({
-          cardVersion: cardVersion2,
-          invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
-        }),
-      ]),
-    }))
+    expect(builder.cardStatuses).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        cardVersion: cardVersion1,
+        invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
+      }),
+      expect.objectContaining({
+        cardVersion: cardVersion2,
+        invoices: [expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 2 })],
+      }),
+    ]))
   })
 })

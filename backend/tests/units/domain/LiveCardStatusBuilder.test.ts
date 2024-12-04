@@ -30,7 +30,7 @@ describe('LiveCardStatusBuilder', () => {
 
     const builder = new LiveCardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
@@ -55,7 +55,7 @@ describe('LiveCardStatusBuilder', () => {
 
     const builder = new LiveCardStatusBuilder(card.hash)
     await builder.build()
-    const status = builder.getCardStatus()
+    const status = builder.cardStatuses[0]
 
     expect(status.cardVersion).toEqual(cardVersion)
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
