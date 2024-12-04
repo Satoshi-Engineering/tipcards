@@ -5,21 +5,22 @@
     :reloading="reloading"
     :header-primary="headerPrimary"
     :header-secondary="headerSecondary"
+    data-test="items-list"
   >
     <template v-if="$slots.message" #message>
       <slot name="message" />
     </template>
     <template v-else-if="notLoggedIn" #message>
       <slot name="notLoggedInMessage">
-        <ItemsListMessageNotLoggedIn />
+        <ItemsListMessageNotLoggedIn data-test="items-list-message-not-logged-in" />
       </slot>
     </template>
     <template v-else-if="userErrorMessages.length > 0" #message>
-      <UserErrorMessages :user-error-messages="userErrorMessages" data-test="list-message-error" />
+      <UserErrorMessages :user-error-messages="userErrorMessages" data-test="items-list-message-error" />
     </template>
-    <template v-else-if="!loading && items.length < 1" #message>
+    <template v-else-if="!loading && !reloading && items.length < 1" #message>
       <slot name="listEmptyMessage">
-        <ParagraphDefault>
+        <ParagraphDefault data-test="items-list-message-no-items">
           {{ $t('general.noItems') }}
         </ParagraphDefault>
       </slot>

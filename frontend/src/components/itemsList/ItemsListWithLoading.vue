@@ -11,10 +11,9 @@
         {{ headerPrimary }}
       </HeadlineDefault>
       <IconAnimatedLoadingWheel
-        class="w-5 h-5 text-white-50 opacity-0 transition-opacity duration-500"
-        :class="{
-          'opacity-100 pointer-events-none select-none': reloading,
-        }"
+        class="w-5 h-5 text-white-50 opacity-0 pointer-events-none select-none"
+        :class="{ 'opacity-100': reloading }"
+        data-test="items-list-reloading-icon"
       />
       <HeadlineDefault
         v-if="headerSecondary != null"
@@ -50,6 +49,7 @@
             'w-10': items.length < 1,
             'w-5': items.length > 0,
           }"
+          :data-test="items.length > 0 ? 'items-list-loading-icon--small' : 'items-list-loading-icon--large'"
         />
       </div>
     </template>

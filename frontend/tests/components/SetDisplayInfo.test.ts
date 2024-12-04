@@ -1,6 +1,6 @@
-import i18n from '../../mocks/i18n'
-import '../../mocks/provide'
-import '../../mocks/router'
+import i18n from '../mocks/i18n'
+import '../mocks/provide'
+import '../mocks/router'
 
 import { describe, it, expect } from 'vitest'
 

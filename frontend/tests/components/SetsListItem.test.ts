@@ -1,14 +1,14 @@
-import '../../mocks/i18n'
-import '../../mocks/router'
-import '../../mocks/pinia'
-import '../../mocks/intersectionObserver'
-import '../../mocks/modules/useTRpc'
+import '../mocks/i18n'
+import '../mocks/router'
+import '../mocks/pinia'
+import '../mocks/intersectionObserver'
+import '../mocks/modules/useTRpc'
 
 import { mount, config, RouterLinkStub } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 
 import SetsListItem from '@/components/setsList/components/SetsListItem.vue'
-import { createSet } from '../../data/set'
+import { createSet } from '../data/set'
 import type { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto'
 import { nextTick, ref } from 'vue'
 
