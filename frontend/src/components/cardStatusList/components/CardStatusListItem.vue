@@ -20,29 +20,42 @@
     <HeadlineDefault
       level="h4"
       data-test="sets-list-item-name"
-      class="col-start-1"
+      class="col-start-1 !my-2"
     >
       {{ cardStatus.noteForStatusPage || cardStatus.textForWithdraw }}
     </HeadlineDefault>
     <div class="col-start-1 text-sm">
       <div v-if="cardStatus.withdrawn != null">
-        {{ $t('cardsSummary.withdrawn') }}:
+        {{ $t('cardStatus.withdrawn') }}:
         <time data-test="sets-list-item-date">
           {{ $d(cardStatus.withdrawn, dateWithTimeFormat) }}
         </time>
       </div>
+      <div v-else-if="cardStatus.bulkWithdrawCreated">
+        {{ $t('cardStatus.bulkWithdrawCreated') }}:
+        <time data-test="sets-list-item-date">
+          {{ $d(cardStatus.bulkWithdrawCreated, dateWithTimeFormat) }}
+        </time>
+      </div>
+      <div v-else-if="cardStatus.landingPageViewed">
+        {{ $t('cardStatus.landingPageViewed') }}:
+        <time data-test="sets-list-item-date">
+          {{ $d(cardStatus.landingPageViewed, dateWithTimeFormat) }}
+        </time>
+      </div>
       <div v-if="cardStatus.funded != null">
-        {{ $t('cardsSummary.funded') }}:
+        {{ $t('cardStatus.funded') }}:
         <time data-test="sets-list-item-date">
           {{ $d(cardStatus.funded, dateWithTimeFormat) }}
         </time>
       </div>
-      <div v-if="cardStatus.withdrawn == null && cardStatus.funded == null">
+      <div v-else>
+        {{ $t('cardStatus.created') }}:
         <time data-test="sets-list-item-date">
           {{ $d(cardStatus.created, dateWithTimeFormat) }}
         </time>
       </div>
-      <div class="text-sm">
+      <div class="mt-0.5">
         {{ $t('general.set') }}:
         <span data-test="sets-list-item-number-of-cards">
           {{ cardStatus.setName }}

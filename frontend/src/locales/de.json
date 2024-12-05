@@ -42,7 +42,10 @@
     "withdrawnByBulkWithdraw": "Zurückgeholt",
     "withdrawPending": "Wird eingelöst",
     "recentlyWithdrawn": "Eingelöst",
-    "withdrawn": "Eingelöst"
+    "withdrawn": "Eingelöst",
+    "landingPageViewed": "Angesehen",
+    "created": "Erstellt",
+    "bulkWithdrawCreated": "Zurückholen gestartet"
   },
   "header": {
     "mainNavLabel": "Hauptnavigation",

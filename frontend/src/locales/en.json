@@ -42,7 +42,10 @@
     "withdrawnByBulkWithdraw": "Reclaimed",
     "withdrawPending": "Withdraw in progress",
     "recentlyWithdrawn": "Recently redeemed",
-    "withdrawn": "Redeemed"
+    "withdrawn": "Redeemed",
+    "landingPageViewed": "Viewed",
+    "created": "Created",
+    "bulkWithdrawCreated": "Reclaim started"
   },
   "header": {
     "mainNavLabel": "Main navigation",
