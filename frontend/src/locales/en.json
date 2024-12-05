@@ -16,7 +16,8 @@
     "amountAndUnitSats": "{amount} sat | {amount} sats",
     "noItems": "No entries available.",
     "amount": "Amount",
-    "set": "Set"
+    "set": "Set",
+    "loadMore": "Load more"
   },
   "cardsSummary": {
     "total": "Total",
@@ -556,10 +557,10 @@
     "errors": {
       "unableToLoadCardsSummaryFromBackend": "Cards summary could not be loaded."
     },
-    "history": "History",
     "fullHistory": "Full history"
   },
   "history": {
+    "title": "History",
     "cardInfo": "Card info"
   }
 }

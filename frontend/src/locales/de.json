@@ -16,7 +16,8 @@
     "amountAndUnitSats": "{amount} sat | {amount} sats",
     "noItems": "Keine Einträge vorhanden.",
     "amount": "Betrag",
-    "set": "Set"
+    "set": "Set",
+    "loadMore": "Mehr laden"
   },
   "cardsSummary": {
     "total": "Insgesamt",
@@ -574,5 +575,8 @@
     },
     "history": "History",
     "fullHistory": "gesamte History"
+  },
+  "history": {
+    "title": "History"
   }
 }

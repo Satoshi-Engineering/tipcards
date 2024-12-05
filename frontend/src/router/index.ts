@@ -6,6 +6,7 @@ import { cards, type RouteCards } from '@/router/pages/cards'
 import { dashboard, type RouteDashboard } from '@/router/pages/dashboard'
 import { faqs, type RouteFaqs } from '@/router/pages/faqs'
 import { funding, type RouteFunding } from '@/router/pages/funding'
+import { history, type RouteHistory } from './pages/history'
 import { home, type RouteHome } from '@/router/pages/home'
 import { landing, type RouteLanding } from '@/router/pages/landing'
 import { localStorageSets, type RouteLocalStorageSets } from '@/router/pages/localStorageSets'
@@ -28,6 +29,7 @@ export interface RouteNamedMap {
   dashboard: RouteDashboard,
   faqs: RouteFaqs,
   funding: RouteFunding,
+  history: RouteHistory,
   home: RouteHome,
   landing: RouteLanding,
   'local-storage-sets': RouteLocalStorageSets,
@@ -61,6 +63,7 @@ const router = createRouter({
     dashboard,
     faqs,
     funding,
+    history,
     home,
     landing,
     localStorageSets,

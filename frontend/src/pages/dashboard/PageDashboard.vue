@@ -53,15 +53,18 @@
           level="h2"
           class="mb-0"
         >
-          {{ $t('dashboard.history') }}
+          {{ $t('history.title') }}
         </HeadlineDefault>
         <CardStatusList
           :card-statuses="history.slice(0, 3)"
+          :loading="history.length < 1 && fetchingHistory"
+          :reloading="history.length > 0 && fetchingHistory"
+          :user-error-messages="fetchingHistoryUserErrorMessages"
           class="my-7"
         />
         <div v-if="isLoggedIn" class="text-center">
           <LinkDefault
-            :to="{ name: 'dashboard', params: { lang: $route.params.lang } }"
+            :to="{ name: 'history', params: { lang: $route.params.lang } }"
             no-bold
             class="text-lg"
           >
@@ -90,7 +93,7 @@
         <SetsList
           :sets="sets.slice(0, 3)"
           :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
-          :fetching="fetchingAllSets"
+          :loading="fetchingAllSets"
           :not-logged-in="!isLoggedIn"
           :user-error-messages="fetchingAllSetsUserErrorMessages"
           class="my-7"
@@ -173,7 +176,7 @@ watch(isLoggedIn, (isLoggedIn) => {
 
 // history
 const historyStore = useHistoryStore()
-const { history } = storeToRefs(historyStore)
+const { history, fetchingHistory, fetchingHistoryUserErrorMessages } = storeToRefs(historyStore)
 
 // sets
 const setsStore = useSetsStore()

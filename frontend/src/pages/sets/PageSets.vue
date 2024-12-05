@@ -1,7 +1,7 @@
 <template>
   <TheLayout login-banner>
     <CenterContainer class="mb-10">
-      <BackLink :to="{ name: 'home', params: { lang: $route.params.lang }}">
+      <BackLink :to="{ name: 'home', params: { lang: $route.params.lang }}" class="mb-5">
         {{ $t('sets.backLink') }}
       </BackLink>
       <div class="flex justify-between">
@@ -42,7 +42,7 @@
           <SetsList
             :sets="filteredSets"
             :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
-            :fetching="fetchingAllSets"
+            :loading="fetchingAllSets"
             :not-logged-in="!isLoggedIn"
             :user-error-messages="fetchingAllSetsUserErrorMessages"
             sorting="changed"

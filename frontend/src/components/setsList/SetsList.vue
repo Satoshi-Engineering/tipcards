@@ -4,8 +4,8 @@
     :header-secondary="noCardsSummary == false ? $t('general.status') : undefined"
     :items="sortedSavedSets"
     :not-logged-in="notLoggedIn"
-    :loading="fetching && sets.length < 1"
-    :reloading="fetching && sets.length > 0"
+    :loading="loading && sets.length < 1"
+    :reloading="loading && sets.length > 0"
     data-test="sets-list"
   >
     <template v-if="$slots.message" #message>
@@ -57,7 +57,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  fetching: {
+  loading: {
     type: Boolean,
     default: false,
   },

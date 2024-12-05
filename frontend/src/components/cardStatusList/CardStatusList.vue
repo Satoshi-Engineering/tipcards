@@ -3,6 +3,8 @@
     :items="cardStatuses"
     :header-primary="$t('cards.cardInfo')"
     :header-secondary="$t('general.amount')"
+    :loading="loading"
+    :reloading="reloading"
   >
     <template #default="{ item: cardStatus }">
       <CardStatusListItem
@@ -25,6 +27,14 @@ defineProps({
   cardStatuses: {
     type: Array as PropType<CardStatusForHistoryDto[]>,
     required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  reloading: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="pb-6"
-  >
+  <div>
     <LinkDefault
       v-bind="$attrs"
       :to="to"
