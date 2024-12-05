@@ -22,7 +22,7 @@ export const Set = z.object({
   text: z.string().default('').describe('this text is used if cards are funded via set-funding'),
   note: z.string().default('').describe('this note is used if cards are funded via set-funding'),
   invoice: z.object({
-    fundedCards: z.number().array().describe('list of card indices (e.g. [0, 1, 2, 5, 7])'),
+    fundedCards: z.number().array().describe('list of card indexes (e.g. [0, 1, 2, 5, 7])'),
     amount: z.number().describe('total amount'),
     payment_hash: z.string(),
     payment_request: z.string(),
