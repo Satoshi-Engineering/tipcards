@@ -431,7 +431,7 @@
             </div>
             <div
               v-else-if="card.isLockedByBulkWithdraw"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-white border-2 border-yellow text-yellow-dark text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-blueViolet-light text-blueViolet text-xs break-anywhere print:hidden"
             >
               <span class="m-auto">{{ t('cards.status.labelIsLockedByBulkWithdraw') }}</span>
             </div>
@@ -443,7 +443,7 @@
             </div>
             <div
               v-else-if="(card.status === 'invoice' || card.status === 'lnurlp' || card.status === 'setFunding')"
-              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-white border-2 border-yellow text-yellow-dark text-xs break-anywhere print:hidden"
+              class="absolute flex right-0.5 top-0.5 px-2 py-1 rounded-full bg-blueViolet-light text-blueViolet text-xs break-anywhere print:hidden"
             >
               <span
                 v-if="card.status === 'lnurlp' && card.shared"

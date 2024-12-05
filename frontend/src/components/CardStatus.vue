@@ -6,7 +6,7 @@
         'bg-yellow': status === 'funded' && !isLockedByBulkWithdraw,
         'bg-green': status === 'used',
         'bg-red': status === 'error',
-        'bg-white border-2 border-yellow': status !== 'used'
+        'bg-blueViolet': status !== 'used'
           && (status === 'lnurlp' || status === 'invoice' || status === 'setFunding' || isLockedByBulkWithdraw),
       }"
     />

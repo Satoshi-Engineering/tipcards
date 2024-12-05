@@ -49,6 +49,8 @@ export default class CardStatusForHistory extends CardStatus {
       landingPageViewed: this.cardVersion.landingPageViewed,
       bulkWithdrawCreated: this.bulkWithdrawCreated,
       setName: this.setName,
+      noteForStatusPage: this.cardVersion.noteForStatusPage,
+      textForWithdraw: this.cardVersion.textForWithdraw,
     }
   }
 

@@ -47,49 +47,66 @@
         </ButtonContainer>
       </CenterContainer>
     </div>
-    <CenterContainer class="!py-10">
-      <div class="flex items-end gap-4">
+    <section>
+      <CenterContainer class="!py-10">
         <HeadlineDefault
           level="h2"
           class="mb-0"
         >
-          {{ $t('nav.sets') }}
+          {{ $t('dashboard.history') }}
         </HeadlineDefault>
-        <div class="text-sm pb-1" data-test="sets-list-sets-count">
-          {{
-            fetchingAllSets && sets.length === 0
-              ? '&nbsp;'
-              : `(${$t('general.sets', { sets: sets.length }, sets.length)})`
-          }}
+        <CardStatusList
+          :card-statuses="history.slice(0, 3)"
+          class="my-7"
+        />
+        <div v-if="isLoggedIn" class="text-center">
+          <LinkDefault
+            :to="{ name: 'dashboard', params: { lang: $route.params.lang } }"
+            no-bold
+            class="text-lg"
+          >
+            {{ $t('dashboard.fullHistory') }}
+          </LinkDefault>
         </div>
-      </div>
-      <SetsList
-        :sets="sets.slice(0, 3)"
-        :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
-        :fetching="fetchingAllSets && sets.length < 3"
-        class="my-7"
-        @enter-viewport="setsStore.loadCardsSummaryForSet"
-      >
-        <template v-if="!isLoggedIn" #message>
-          <SetsListMessageNotLoggedIn />
-        </template>
-        <template v-else-if="fetchingAllSetsUserErrorMessages.length > 0" #message>
-          <UserErrorMessages :user-error-messages="fetchingAllSetsUserErrorMessages" />
-        </template>
-        <template v-else-if="!fetchingAllSets && sets.length < 1" #message>
-          <SetsListMessageEmpty />
-        </template>
-      </SetsList>
-      <div v-if="isLoggedIn" class="text-center">
-        <LinkDefault
-          :to="{ name: 'sets', params: { lang: $route.params.lang } }"
-          no-bold
-          class="text-lg"
-        >
-          {{ $t('dashboard.allMySets') }}
-        </LinkDefault>
-      </div>
-    </CenterContainer>
+      </CenterContainer>
+    </section>
+    <section>
+      <CenterContainer class="!py-10">
+        <header class="flex items-end gap-4">
+          <HeadlineDefault
+            level="h2"
+            class="mb-0"
+          >
+            {{ $t('nav.sets') }}
+          </HeadlineDefault>
+          <div class="text-sm pb-1" data-test="sets-list-sets-count">
+            {{
+              fetchingAllSets && sets.length === 0
+                ? '&nbsp;'
+                : `(${$t('general.sets', { sets: sets.length }, sets.length)})`
+            }}
+          </div>
+        </header>
+        <SetsList
+          :sets="sets.slice(0, 3)"
+          :cards-summary-by-set-id="cardsSummaryWithStatusBySetId"
+          :fetching="fetchingAllSets"
+          :not-logged-in="!isLoggedIn"
+          :user-error-messages="fetchingAllSetsUserErrorMessages"
+          class="my-7"
+          @enter-viewport="setsStore.loadCardsSummaryForSet"
+        />
+        <div v-if="isLoggedIn" class="text-center">
+          <LinkDefault
+            :to="{ name: 'sets', params: { lang: $route.params.lang } }"
+            no-bold
+            class="text-lg"
+          >
+            {{ $t('dashboard.allMySets') }}
+          </LinkDefault>
+        </div>
+      </CenterContainer>
+    </section>
   </TheLayout>
 </template>
 <script setup lang="ts">
@@ -104,9 +121,6 @@ import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import SetsList from '@/components/setsList/SetsList.vue'
-import SetsListMessageNotLoggedIn from '@/components/setsList/components/SetsListMessageNotLoggedIn.vue'
-import UserErrorMessages from '@/components/UserErrorMessages.vue'
-import SetsListMessageEmpty from '@/components/setsList/components/SetsListMessageEmpty.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
@@ -115,6 +129,8 @@ import { useProfileStore } from '@/stores/profile'
 import { useSetsStore } from '@/stores/sets'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import CardStatusList from '@/components/cardStatusList/CardStatusList.vue'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const { t } = useI18n()
 
@@ -155,6 +171,10 @@ watch(isLoggedIn, (isLoggedIn) => {
   loadCardsSummary()
 })
 
+// history
+const historyStore = useHistoryStore()
+const { history } = storeToRefs(historyStore)
+
 // sets
 const setsStore = useSetsStore()
 const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUserErrorMessages } = storeToRefs(setsStore)
@@ -162,9 +182,12 @@ const { sets, cardsSummaryWithStatusBySetId, fetchingAllSets, fetchingAllSetsUse
 onMounted(() => {
   setsStore.subscribeToLoggedInChanges()
   setsStore.loadSets()
+  historyStore.subscribeToLoggedInChanges(3)
+  historyStore.loadHistory(3)
 })
 
 onUnmounted(() => {
   setsStore.unsubscribeFromLoggedInChanges()
+  historyStore.unsubscribeFromLoggedInChanges()
 })
 </script>

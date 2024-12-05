@@ -36,6 +36,11 @@ export default {
           DEFAULT: '#2865eb',
           light: '#ebf7ff',
         },
+        blueViolet: {
+          DEFAULT: '#4a5b9e',
+          light: '#CCCFDB',
+        },
+
         grey: {
           light: '#f6f7f7', // backgrounds
 

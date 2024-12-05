@@ -6,6 +6,8 @@ export const CardStatusForHistoryDto = CardStatusDto.extend({
   landingPageViewed: z.date().nullable(),
   bulkWithdrawCreated: z.date().nullable(),
   setName: z.string().nullable(),
+  noteForStatusPage: z.string().nullable(),
+  textForWithdraw: z.string().nullable(),
 })
 
 export type CardStatusForHistoryDto = z.infer<typeof CardStatusForHistoryDto>

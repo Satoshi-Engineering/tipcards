@@ -36,7 +36,7 @@
         v-for="n in cardsSummaryItems.userActionRequired"
         :key="n"
         data-test="sets-list-item-cards-summary-userActionRequired"
-        class="w-full h-full bg-white border-[0.7px] border-yellow"
+        class="w-full h-full bg-blueViolet"
       />
       <div
         v-for="n in cardsSummaryItems.unfunded"

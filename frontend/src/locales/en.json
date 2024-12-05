@@ -14,7 +14,9 @@
     "amountAndUnitBitcoin": "{amount} Bitcoin",
     "amountAndUnitBtc": "{amount} BTC",
     "amountAndUnitSats": "{amount} sat | {amount} sats",
-    "noItems": "No entries available."
+    "noItems": "No entries available.",
+    "amount": "Amount",
+    "set": "Set"
   },
   "cardsSummary": {
     "total": "Total",
@@ -22,6 +24,25 @@
     "funded": "Funded",
     "withdrawn": "Redeemed",
     "userActionRequired": "Open tasks"
+  },
+  "cardStatus": {
+    "unfunded": "Unfunded",
+    "invoiceFunding": "Waiting for payment",
+    "lnurlpFunding": "Waiting for payment",
+    "lnurlpSharedFunding": "Shared funding in progress",
+    "setInvoiceFunding": "Waiting for payment",
+    "invoiceExpired": "Invoice expired",
+    "lnurlpExpired": "Payment link expired",
+    "lnurlpSharedExpiredEmpty": "Shared funding expired",
+    "lnurlpSharedExpiredFunded": "Shared funding expired",
+    "setInvoiceExpired": "Invoice expired",
+    "funded": "Funded",
+    "isLockedByBulkWithdraw": "Reclaim in progress",
+    "bulkWithdrawPending": "Reclaim in progress",
+    "withdrawnByBulkWithdraw": "Reclaimed",
+    "withdrawPending": "Withdraw in progress",
+    "recentlyWithdrawn": "Recently redeemed",
+    "withdrawn": "Redeemed"
   },
   "header": {
     "mainNavLabel": "Main navigation",
@@ -380,7 +401,8 @@
     "errors": {
       "unableToSaveSet": "Unable to save set on server.",
       "unableToDeleteSet": "Unable to delete set from server."
-    }
+    },
+    "cardInfo": "Card info"
   },
   "userAccount": {
     "title": "Your Account",
@@ -452,6 +474,11 @@
       "errors": {
         "unableToLoadFromBackend": "Unable to load account data from the server.",
         "unableToSaveToBackend": "Unable to save account data to the server."
+      }
+    },
+    "history": {
+      "errors": {
+        "unableToLoadHistoryFromBackend": "Unable to load history from the server."
       }
     }
   },
@@ -525,6 +552,11 @@
     "allMySets": "All my sets",
     "errors": {
       "unableToLoadCardsSummaryFromBackend": "Cards summary could not be loaded."
-    }
+    },
+    "history": "History",
+    "fullHistory": "Full history"
+  },
+  "history": {
+    "cardInfo": "Card info"
   }
 }

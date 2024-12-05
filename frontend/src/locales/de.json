@@ -13,8 +13,10 @@
     "search": "Suche",
     "amountAndUnitBitcoin": "{amount} Bitcoin",
     "amountAndUnitBtc": "{amount} BTC",
-    "amountAndUnitSats": "{amount} Sat | {amount} Sats",
-    "noItems": "Keine Einträge vorhanden."
+    "amountAndUnitSats": "{amount} sat | {amount} sats",
+    "noItems": "Keine Einträge vorhanden.",
+    "amount": "Betrag",
+    "set": "Set"
   },
   "cardsSummary": {
     "total": "Insgesamt",
@@ -22,6 +24,25 @@
     "funded": "Aufgeladen",
     "withdrawn": "Eingelöst",
     "userActionRequired": "Offene Aktionen"
+  },
+  "cardStatus": {
+    "unfunded": "Nicht aufgeladen",
+    "invoiceFunding": "Warte auf Bezahlung",
+    "lnurlpFunding": "Warte auf Bezahlung",
+    "lnurlpSharedFunding": "Wird gemeinsam aufgeladen",
+    "setInvoiceFunding": "Wird mit dem Set aufgeladen",
+    "invoiceExpired": "Rechnung abgelaufen",
+    "lnurlpExpired": "Aufladung abgelaufen",
+    "lnurlpSharedExpiredEmpty": "Aufladung abgelaufen",
+    "lnurlpSharedExpiredFunded": "Aufladung abgelaufen",
+    "setInvoiceExpired": "Rechnung abgelaufen",
+    "funded": "Aufgeladen",
+    "isLockedByBulkWithdraw": "Wird zurückgeholt",
+    "bulkWithdrawPending": "Wird zurückgeholt",
+    "withdrawnByBulkWithdraw": "Zurückgeholt",
+    "withdrawPending": "Wird eingelöst",
+    "recentlyWithdrawn": "Eingelöst",
+    "withdrawn": "Eingelöst"
   },
   "header": {
     "mainNavLabel": "Hauptnavigation",
@@ -397,7 +418,8 @@
     "errors": {
       "unableToSaveSet": "Das Set konnte nicht am Server gespeichert werden.",
       "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden."
-    }
+    },
+    "cardInfo": "Karten-Info"
   },
   "userAccount": {
     "title": "Dein Account",
@@ -468,6 +490,11 @@
       "errors": {
         "unableToLoadFromBackend": "Account Daten konnten nicht geladen werden.",
         "unableToSaveToBackend": "Account Daten konnten nicht gespeichert werden."
+      }
+    },
+    "history": {
+      "errors": {
+        "unableToLoadHistoryFromBackend": "History-Daten konnten nicht geladen werden."
       }
     }
   },
@@ -541,6 +568,8 @@
     "allMySets": "Alle meine Sets",
     "errors": {
       "unableToLoadCardsSummaryFromBackend": "Karten-Übersicht konnte nicht geladen werden."
-    }
+    },
+    "history": "History",
+    "fullHistory": "gesamte History"
   }
 }
