@@ -101,6 +101,9 @@ describe('CardStatusCollection', async () => {
         landingPageViewed: null,
         bulkWithdrawCreated: null,
         setName: setSettings.name,
+
+        noteForStatusPage: cardVersions[0].noteForStatusPage,
+        textForWithdraw: cardVersions[0].textForWithdraw,
       }, {
         hash: cards[2].hash,
         status: CardStatusEnum.enum.unfunded,
@@ -112,6 +115,9 @@ describe('CardStatusCollection', async () => {
         landingPageViewed: null,
         bulkWithdrawCreated: null,
         setName: null,
+
+        noteForStatusPage: cardVersions[2].noteForStatusPage,
+        textForWithdraw: cardVersions[2].textForWithdraw,
       }],
       totalUnfiltered: 3,
     })
@@ -159,6 +165,8 @@ describe('CardStatusCollection', async () => {
         landingPageViewed: null,
         bulkWithdrawCreated: null,
         setName: null,
+        noteForStatusPage: cardVersions[2].noteForStatusPage,
+        textForWithdraw: cardVersions[2].textForWithdraw,
       }],
       pagination: {
         offset: 1,
