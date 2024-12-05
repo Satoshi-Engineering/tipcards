@@ -10,6 +10,7 @@ import { history, type RouteHistory } from './pages/history'
 import { home, type RouteHome } from '@/router/pages/home'
 import { landing, type RouteLanding } from '@/router/pages/landing'
 import { localStorageSets, type RouteLocalStorageSets } from '@/router/pages/localStorageSets'
+import { notFound, type RouteNotFound } from './pages/notFound'
 import { setFunding, type RouteSetFunding } from '@/router/pages/setFunding'
 import { sets, type RouteSets } from '@/router/pages/sets'
 import { statistics, type RouteStatistics } from '@/router/pages/statistics'
@@ -33,6 +34,7 @@ export interface RouteNamedMap {
   home: RouteHome,
   landing: RouteLanding,
   'local-storage-sets': RouteLocalStorageSets,
+  'not-found': RouteNotFound,
   'set-funding': RouteSetFunding,
   sets: RouteSets,
   statistics: RouteStatistics,
@@ -67,6 +69,7 @@ const router = createRouter({
     home,
     landing,
     localStorageSets,
+    notFound,
     setFunding(() => router),
     sets,
     statistics,

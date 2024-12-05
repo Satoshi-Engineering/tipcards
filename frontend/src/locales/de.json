@@ -578,5 +578,11 @@
   },
   "history": {
     "title": "History"
+  },
+  "notFound": {
+    "title": "Seite nicht gefunden",
+    "subtitle": "Ups, diese Seite konnten wir nicht finden.",
+    "description": "Es sieht so aus, als hättest du einen fehlenden Link gefunden. Kein Problem – geh einfach zurück zur Startseite oder nutze das Menü, um weiterzumachen.",
+    "backToHome": "Zur Startseite"
   }
 }

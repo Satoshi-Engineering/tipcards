@@ -562,5 +562,11 @@
   "history": {
     "title": "History",
     "cardInfo": "Card info"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "It seems you’ve discovered a missing link. Don’t worry, you can go back to the homepage or use the menu to get back on track.",
+    "subtitle": "Oops, we couldn’t find that page.",
+    "backToHome": "Back to the homepage"
   }
 }
