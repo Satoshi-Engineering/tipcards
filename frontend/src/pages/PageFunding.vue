@@ -305,7 +305,7 @@
 <script setup lang="ts">
 import axios from 'axios'
 import debounce from 'lodash.debounce'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
@@ -356,6 +356,7 @@ const cardFundedDate = ref<number | undefined>()
 const usedDate = ref<number | undefined>()
 const viewed = ref(false)
 const setFunding = ref(false)
+const pollingTimeout = ref<NodeJS.Timeout>()
 
 const lnurl = computed(() => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
@@ -390,10 +391,16 @@ const loadLnurlData = async () => {
 
   initializing.value = false
 
-  setTimeout(loadLnurlData, 10 * 1000)
+  pollingTimeout.value = setTimeout(loadLnurlData, 10 * 1000)
 }
 
 onBeforeMount(loadLnurlData)
+
+onUnmounted(() => {
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
+})
 
 const createInvoice = async () => {
   creatingInvoice.value = true
