@@ -21,6 +21,14 @@ export const setRouter = router({
       return setCollection.toTRpcResponse()
     }),
 
+  getById: loggedInProcedure
+    .input(SetDto.shape.id)
+    .output(SetDto)
+    .query(async ({ input }) => {
+      const set = await Set.fromId(input)
+      return set.toTRpcResponse()
+    }),
+
   getCardsSummaryForSetId: loggedInProcedure
     .input(SetDto.shape.id)
     .output(CardsSummaryDto)
