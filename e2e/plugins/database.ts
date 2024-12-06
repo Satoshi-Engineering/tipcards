@@ -3,8 +3,11 @@
 import crypto, { randomUUID } from 'crypto'
 import postgres from 'postgres'
 
-import { generateSets } from '../lib/api/data/set'
 import { getJwtPayload } from '../lib/jwtHelpers'
+import {
+  create100TestSets,
+  createSetsWithSetFunding,
+} from './database/createSets'
 
 // This function is the entry point for plugins
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
@@ -87,7 +90,12 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return sessionId
     },
 
-    'db:createSets': async ({
+    'db:create100TestSets': async ({ userId }: { userId: string }) => {
+      await create100TestSets(sql, userId)
+      return null
+    },
+
+    'db:createSetsWithSetFunding': async ({
       userId,
       numberOfSets,
       numberOfCardsPerSet,
@@ -96,73 +104,13 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       numberOfSets: number,
       numberOfCardsPerSet: number,
     }) => {
-      const sets = generateSets(numberOfSets, numberOfCardsPerSet)
-
-      const setValues = sets.map((set) => ({
-        id: set.id,
-        created: new Date(),
-        changed: new Date(),
-      }))
-      await sql`INSERT INTO public."Set" ${ sql(setValues) };`
-
-      const setSettingsValues = sets.map((set) => ({
-        set: set.id,
-        name: set.settings.setName,
-        numberOfCards: set.settings.numberOfCards,
-        cardHeadline: set.settings.cardHeadline,
-        cardCopytext: set.settings.cardCopytext,
-        image: 'bitcoin',
-        landingPage: 'default',
-      }))
-      await sql`INSERT INTO public."SetSettings" ${ sql(setSettingsValues) };`
-
-      const userCanUseSetValues = sets.map((set) => ({
-        user: userId,
-        set: set.id,
-        canEdit: true,
-      }))
-      await sql`INSERT INTO public."UserCanUseSet" ${ sql(userCanUseSetValues) };`
-
-      await Promise.all(sets.map(async (set) => {
-        const cardValues = [...new Array(set.settings.numberOfCards).keys()].map((index) => ({
-          hash: hashSha256(`${set.id}/${index}`),
-          created: new Date(),
-          set: set.id,
-        }))
-        await sql`INSERT INTO public."Card" ${ sql(cardValues) };`
-
-        const cardVersionValues = cardValues.map((card) => ({
-          id: randomUUID(),
-          card: card.hash,
-          created: new Date(),
-          lnurlP: null,
-          lnurlW: null,
-          textForWithdraw: '',
-          noteForStatusPage: '',
-          sharedFunding: false,
-          landingPageViewed: null,
-        }))
-        await sql`INSERT INTO public."CardVersion" ${ sql(cardVersionValues) };`
-
-        const invoiceValues = {
-          amount: 21 * numberOfCardsPerSet,
-          paymentHash: randomUUID(),
-          paymentRequest: randomUUID(),
-          created: new Date(),
-          paid: null,
-          expiresAt: new Date(new Date().getTime() + 1000 * 60 * 5),
-          extra: '',
-        }
-        await sql`INSERT INTO public."Invoice" ${ sql(invoiceValues) };`
-
-        const cardVersionHasInvoiceValues = cardVersionValues.map((cardVersion) => ({
-          cardVersion: cardVersion.id,
-          invoice: invoiceValues.paymentHash,
-        }))
-        await sql`INSERT INTO public."CardVersionHasInvoice" ${ sql(cardVersionHasInvoiceValues) };`
-      }))
-
-      return sets.map((set) => set.id).join(', ')
+      const setIds = await createSetsWithSetFunding(
+        sql,
+        userId,
+        numberOfSets,
+        numberOfCardsPerSet,
+      )
+      return setIds.join(', ')
     },
   })
 

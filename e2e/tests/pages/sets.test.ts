@@ -35,4 +35,21 @@ describe('Sets Page', () => {
     cy.getTestElement('sets-list-message-not-logged-in').should('exist')
     cy.getTestElement('sets-list-message-empty').should('not.exist')
   })
+
+  it('loads 100 sets and lists them ordered (latest changed first)', () => {
+    tipCardsApi.auth.login()
+    cy.get('@userId').then((userId) => {
+      cy.task('db:create100TestSets', { userId })
+    })
+
+    tipCards.gotoSetsPage()
+
+    cy.getTestElement('sets-list-item').should('have.length', 100)
+    cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
+      const dates = $els.toArray().map((el) => el.textContent)
+      for (let i = 0; i < dates.length - 1; i++) {
+        expect(new Date(dates[i])).to.be.greaterThan(new Date(dates[i + 1]))
+      }
+    })
+  })
 })
