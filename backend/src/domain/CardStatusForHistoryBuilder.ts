@@ -1,4 +1,4 @@
-import { Card } from '@backend/database/schema/index.js'
+import { SetSettings, Card } from '@backend/database/schema/index.js'
 import { asTransaction } from '@backend/database/client.js'
 
 import CardStatusBuilder, { defaultCardVersion } from './CardStatusBuilder.js'
@@ -18,7 +18,7 @@ export default class CardStatusForHistoryBuilder extends CardStatusBuilder {
           invoices: [],
           lnurlP: null,
           lnurlW: null,
-          setName: null,
+          setSettings: null,
         })
       }
       return CardStatusForHistory.fromData({
@@ -26,18 +26,18 @@ export default class CardStatusForHistoryBuilder extends CardStatusBuilder {
         invoices: this.invoicesByCardHash[cardHash] ?? [],
         lnurlP: this.lnurlPsByCardHash[cardHash] ?? null,
         lnurlW: this.LnurlWsByCardHash[cardHash] ?? null,
-        setName: this.setNamesByCardHash[cardHash] ?? null,
+        setSettings: this.setSettingsByCardHash[cardHash] ?? null,
       })
     })
   }
 
-  protected setNamesByCardHash: Record<Card['hash'], string> = {}
+  protected setSettingsByCardHash: Record<Card['hash'], SetSettings> = {}
 
   protected async resolveSetNames(): Promise<void> {
-    const setNamesByCardVersionId = await asTransaction(async (queries) => queries.getSetNamesForCardVersions(this.cardVersionIds))
-    Object.entries(setNamesByCardVersionId).forEach(([cardVersionId, setName]) => {
+    const setSettingsByCardVersionId = await asTransaction(async (queries) => queries.getSetSettingsForCardVersions(this.cardVersionIds))
+    Object.entries(setSettingsByCardVersionId).forEach(([cardVersionId, setSettings]) => {
       const cardVersion = this.cardVersionsById[cardVersionId]
-      this.setNamesByCardHash[cardVersion.card] = setName
+      this.setSettingsByCardHash[cardVersion.card] = setSettings
     })
   }
 }

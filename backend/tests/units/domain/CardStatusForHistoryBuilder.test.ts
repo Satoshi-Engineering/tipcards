@@ -36,7 +36,7 @@ describe('CardStatusForHistoryBuilder', () => {
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
     expect(status.lnurlP).toBeNull()
     expect(status.lnurlW).toEqual(lnurlW)
-    expect(status.setName).toBe(null)
+    expect(status.setSettings).toBe(null)
   })
 
   it('should resolve the set name', async () => {
@@ -64,7 +64,7 @@ describe('CardStatusForHistoryBuilder', () => {
     expect(status.invoices).toEqual([expect.objectContaining({ invoice, cardsFundedWithThisInvoice: 1 })])
     expect(status.lnurlP).toBeNull()
     expect(status.lnurlW).toEqual(lnurlW)
-    expect(status.setName).toBe(setSettings.name)
+    expect(status.setSettings).toEqual(setSettings)
   })
 
   it('should resolve the set name for multiple cards', async () => {
@@ -90,9 +90,9 @@ describe('CardStatusForHistoryBuilder', () => {
     await builder.build()
 
     expect(builder.cardStatuses).toEqual(expect.arrayContaining([
-      expect.objectContaining({ cardVersion: cardVersion1, setName: setSettings.name }),
-      expect.objectContaining({ cardVersion: cardVersion2, setName: setSettings.name }),
-      expect.objectContaining({ cardVersion: cardVersion3, setName: setSettings.name }),
+      expect.objectContaining({ cardVersion: cardVersion1, setSettings }),
+      expect.objectContaining({ cardVersion: cardVersion2, setSettings }),
+      expect.objectContaining({ cardVersion: cardVersion3, setSettings }),
     ]))
   })
 })

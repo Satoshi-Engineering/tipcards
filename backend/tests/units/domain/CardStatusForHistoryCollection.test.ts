@@ -33,14 +33,14 @@ describe('CardStatusCollection', async () => {
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
       CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
     ])
 
@@ -49,13 +49,13 @@ describe('CardStatusCollection', async () => {
         cardVersion: expect.objectContaining({
           card: cards[0].hash,
         }),
-        setName: setSettings.name,
+        setSettings,
       }),
       expect.objectContaining({
         cardVersion: expect.objectContaining({
           card: cards[1].hash,
         }),
-        setName: setSettings.name,
+        setSettings,
       }),
     ])
   })
@@ -67,21 +67,21 @@ describe('CardStatusCollection', async () => {
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: null,
+        setSettings: null,
       }),
       CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
       CardStatusForHistory.fromData({
         cardVersion: cardVersions[0],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
     ])
 
@@ -100,6 +100,7 @@ describe('CardStatusCollection', async () => {
 
         landingPageViewed: null,
         bulkWithdrawCreated: null,
+        setId: setSettings.set,
         setName: setSettings.name,
 
         noteForStatusPage: cardVersions[0].noteForStatusPage,
@@ -114,6 +115,7 @@ describe('CardStatusCollection', async () => {
 
         landingPageViewed: null,
         bulkWithdrawCreated: null,
+        setId: null,
         setName: null,
 
         noteForStatusPage: cardVersions[2].noteForStatusPage,
@@ -130,21 +132,21 @@ describe('CardStatusCollection', async () => {
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: null,
+        setSettings: null,
       }),
       CardStatusForHistory.fromData({
         cardVersion: cardVersions[1],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
       CardStatusForHistory.fromData({
         cardVersion: cardVersions[0],
         invoices: [],
         lnurlP: null,
         lnurlW: null,
-        setName: setSettings.name,
+        setSettings,
       }),
     ])
 
@@ -164,7 +166,9 @@ describe('CardStatusCollection', async () => {
 
         landingPageViewed: null,
         bulkWithdrawCreated: null,
+        setId: null,
         setName: null,
+
         noteForStatusPage: cardVersions[2].noteForStatusPage,
         textForWithdraw: cardVersions[2].textForWithdraw,
       }],

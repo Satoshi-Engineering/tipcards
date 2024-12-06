@@ -238,15 +238,14 @@ export default vi.fn().mockImplementation(() => ({
     })))
   },
 
-  getSetNamesForCardVersions: async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], string>> => {
-    return cardVersionIds.reduce<Record<CardVersion['id'], string>>((acc, cardVersionId) => {
+  getSetSettingsForCardVersions: async (cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], SetSettings>> => {
+    return cardVersionIds.reduce<Record<CardVersion['id'], SetSettings>>((acc, cardVersionId) => {
       const cardVersion = cardVersionsById[cardVersionId]
       const card = cardsByHash[cardVersion.card]
       if (card.set == null) {
         return acc
       }
-      const setSettings = setSettingsBySetId[card.set]
-      acc[cardVersionId] = setSettings.name
+      acc[cardVersionId] = setSettingsBySetId[card.set]
       return acc
     }, {})
   },

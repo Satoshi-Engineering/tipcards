@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 
 import '../mocks/process.env.js'
 import {
+  createSet, createSetSettings,
   createCard, createCardVersion,
   createInvoice,
   createLnurlP,
@@ -23,7 +24,7 @@ describe('CardStatusForHistory', () => {
       invoices: [],
       lnurlP: null,
       lnurlW: null,
-      setName: null,
+      setSettings: null,
     })
 
     expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
@@ -36,11 +37,13 @@ describe('CardStatusForHistory', () => {
 
       landingPageViewed: null,
       bulkWithdrawCreated: null,
+      setId: null,
       setName: null,
     }))
   })
 
   it('should include the set name', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
 
@@ -49,7 +52,7 @@ describe('CardStatusForHistory', () => {
       invoices: [],
       lnurlP: null,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.toTrpcResponse()).toEqual(expect.objectContaining({
@@ -62,11 +65,13 @@ describe('CardStatusForHistory', () => {
 
       landingPageViewed: null,
       bulkWithdrawCreated: null,
-      setName: 'testSet',
+      setId: setSettings.set,
+      setName: setSettings.name,
     }))
   })
 
   it('should use the cardVersion created as updated flag', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
 
@@ -75,13 +80,14 @@ describe('CardStatusForHistory', () => {
       invoices: [],
       lnurlP: null,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(cardVersion.created)
   })
 
   it('should use the invoice created as updated flag', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -92,13 +98,14 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP: null,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(invoice.created)
   })
 
   it('should use the lnurlp created as updated flag', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -112,13 +119,14 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(lnurlP.created)
   })
 
   it('should use the funding as updated timestamp', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -131,7 +139,7 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP: null,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(invoice.paid)
@@ -139,6 +147,7 @@ describe('CardStatusForHistory', () => {
   })
 
   it('should use the landing page viewed as updated timestamp', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -153,13 +162,14 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP: null,
       lnurlW: null,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(cardVersion.landingPageViewed)
   })
 
   it('should use the lnurlw created as updated timestamp, if it\' a bulkwithdraw', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -177,13 +187,14 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP: null,
       lnurlW,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(lnurlW.created)
   })
 
   it('should use the lnurlw used as updated timestamp', async () => {
+    const setSettings = createSetSettings(createSet())
     const card = createCard()
     const cardVersion = createCardVersion(card)
     await new Promise(resolve => setTimeout(resolve, 1))
@@ -203,7 +214,7 @@ describe('CardStatusForHistory', () => {
       invoices: [new InvoiceWithSetFundingInfo(invoice, 1)],
       lnurlP: null,
       lnurlW,
-      setName: 'testSet',
+      setSettings,
     })
 
     expect(status.updated).toEqual(lnurlW.withdrawn)

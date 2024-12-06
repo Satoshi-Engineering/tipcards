@@ -2,6 +2,7 @@ import type { CardStatusForHistoryDto } from '@shared/data/trpc/CardStatusForHis
 
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 import {
+  SetSettings,
   Card, CardVersion,
   LnurlP, LnurlW,
 } from '@backend/database/schema/index.js'
@@ -21,12 +22,14 @@ export default class CardStatusForHistory extends CardStatus {
     invoices: InvoiceWithSetFundingInfo[],
     lnurlP: LnurlP | null,
     lnurlW: LnurlW | null,
-    setName: string | null,
+    // ATTENTION: currently the setSettings resolver only works for set funded cards, so use with caution!
+    // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1357#note_20913
+    setSettings: SetSettings | null,
   }): CardStatusForHistory {
     return new CardStatusForHistory(data)
   }
 
-  public readonly setName: string | null
+  public readonly setSettings: SetSettings | null
 
   public get updated(): Date {
     return this.lnurlW?.withdrawn
@@ -48,7 +51,8 @@ export default class CardStatusForHistory extends CardStatus {
       ...super.toTrpcResponse(),
       landingPageViewed: this.cardVersion.landingPageViewed,
       bulkWithdrawCreated: this.bulkWithdrawCreated,
-      setName: this.setName,
+      setId: this.setSettings?.set ?? null,
+      setName: this.setSettings?.name ?? null,
       noteForStatusPage: this.cardVersion.noteForStatusPage,
       textForWithdraw: this.cardVersion.textForWithdraw,
     }
@@ -59,9 +63,9 @@ export default class CardStatusForHistory extends CardStatus {
     invoices: InvoiceWithSetFundingInfo[],
     lnurlP: LnurlP | null,
     lnurlW: LnurlW | null,
-    setName: string | null,
+    setSettings: SetSettings | null,
   }) {
     super(data)
-    this.setName = data.setName
+    this.setSettings = data.setSettings
   }
 }

@@ -592,17 +592,14 @@ export default class Queries {
     }))
   }
 
-  async getSetNamesForCardVersions(cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], string>> {
-    const result = await this.transaction.select({
-      cardVersion: CardVersion.id,
-      setName: SetSettings.name,
-    })
+  async getSetSettingsForCardVersions(cardVersionIds: CardVersion['id'][]): Promise<Record<CardVersion['id'], SetSettings>> {
+    const result = await this.transaction.select()
       .from(CardVersion)
       .innerJoin(Card, eq(CardVersion.card, Card.hash))
       .innerJoin(SetSettings, eq(Card.set, SetSettings.set))
       .where(inArray(CardVersion.id, cardVersionIds))
-    return result.reduce<Record<CardVersion['id'], string>>((acc, { cardVersion, setName }) => {
-      acc[cardVersion] = setName
+    return result.reduce<Record<CardVersion['id'], SetSettings>>((acc, { CardVersion, SetSettings }) => {
+      acc[CardVersion.id] = SetSettings
       return acc
     }, {})
   }
