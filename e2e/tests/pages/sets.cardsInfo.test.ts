@@ -14,7 +14,7 @@ describe('Sets Page Cards Info', () => {
     })
 
     cy.get('@userId').then((userId) => {
-      cy.task('db:createSets', {
+      cy.task('db:createSetsWithSetFunding', {
         userId,
         numberOfSets,
         numberOfCardsPerSet,
