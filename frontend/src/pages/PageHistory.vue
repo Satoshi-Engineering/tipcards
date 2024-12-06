@@ -9,6 +9,13 @@
       <HeadlineDefault level="h1">
         {{ $t('history.title') }}
       </HeadlineDefault>
+      <div class="text-sm" data-test="card-status-list-cards-count">
+        {{
+          fetchingHistory || historyTotal == null || historyTotal === 0
+            ? '&nbsp;'
+            : $t('general.cards', { count: historyTotal }, historyTotal)
+        }}
+      </div>
       <CardStatusList
         :card-statuses="history"
         :loading="fetchingHistory"

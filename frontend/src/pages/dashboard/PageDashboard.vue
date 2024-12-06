@@ -49,12 +49,21 @@
     </div>
     <section>
       <CenterContainer class="!py-10">
-        <HeadlineDefault
-          level="h2"
-          class="mb-0"
-        >
-          {{ $t('history.title') }}
-        </HeadlineDefault>
+        <header class="flex items-end gap-4">
+          <HeadlineDefault
+            level="h2"
+            class="mb-0"
+          >
+            {{ $t('history.title') }}
+          </HeadlineDefault>
+          <div class="text-sm pb-1 italic" data-test="card-status-list-cards-count">
+            {{
+              fetchingHistory && historyTotal === 0 || historyTotal == null
+                ? '&nbsp;'
+                : `(${$t('general.cards', { count: historyTotal }, historyTotal)})`
+            }}
+          </div>
+        </header>
         <CardStatusList
           :card-statuses="history.slice(0, 3)"
           :loading="history.length < 1 && fetchingHistory"
@@ -82,7 +91,7 @@
           >
             {{ $t('nav.sets') }}
           </HeadlineDefault>
-          <div class="text-sm pb-1" data-test="sets-list-sets-count">
+          <div class="text-sm pb-1 italic" data-test="sets-list-sets-count">
             {{
               fetchingAllSets && sets.length === 0
                 ? '&nbsp;'
@@ -176,7 +185,7 @@ watch(isLoggedIn, (isLoggedIn) => {
 
 // history
 const historyStore = useHistoryStore()
-const { history, fetchingHistory, fetchingHistoryUserErrorMessages } = storeToRefs(historyStore)
+const { history, historyTotal, fetchingHistory, fetchingHistoryUserErrorMessages } = storeToRefs(historyStore)
 
 // sets
 const setsStore = useSetsStore()

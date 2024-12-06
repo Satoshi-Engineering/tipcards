@@ -2,7 +2,7 @@
   <LinkDefault
     ref="item"
     class="grid grid-cols-[1fr,auto] grid-rows-[repeat(3,auto)] hover:bg-grey-light"
-    data-test="sets-list-item"
+    data-test="card-status-list-item"
     no-underline
     no-bold
     :to="{

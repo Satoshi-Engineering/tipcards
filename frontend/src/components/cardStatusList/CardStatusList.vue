@@ -5,6 +5,7 @@
     :header-secondary="$t('general.amount')"
     :loading="loading"
     :reloading="reloading"
+    data-test="card-status-list"
   >
     <template #default="{ item: cardStatus }">
       <CardStatusListItem
