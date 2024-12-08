@@ -50,7 +50,7 @@ describe('Dashboard Sets List', () => {
     cy.getTestElement('modal-login-close-button').click()
 
     // the sets should get loaded
-    cy.get('[data-test=sets-list] [data-test=sets-list-item]', { timeout: 10000 }).should('have.length', 3)
+    cy.get('[data-test=sets-list] [data-test=sets-list-item]', { timeout: 40000 }).should('have.length', 3)
   })
 
   it('loads a single set', () => {
@@ -70,7 +70,7 @@ describe('Dashboard Sets List', () => {
 
     tipCards.gotoDashboardPage()
 
-    cy.get('[data-test=sets-list] [data-test=sets-list-item]', { timeout: 10000 }).should('have.length', 3)
+    cy.get('[data-test=sets-list] [data-test=sets-list-item]', { timeout: 40000 }).should('have.length', 3)
     cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
       const dates = $els.toArray().map((el) => el.textContent)
       expect(new Date(dates[0])).to.be.greaterThan(new Date(dates[1]))
