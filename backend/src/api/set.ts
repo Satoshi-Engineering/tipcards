@@ -5,6 +5,7 @@ import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
 import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
+import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
 import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
 import {
   getSetById, getSetsByUserId,
@@ -283,6 +284,34 @@ router.post('/invoice/:setId', async (req, res) => {
         code: ErrorCode.SetInvoiceAlreadyExists,
       })
     }
+    return
+  }
+
+  // check if any of the cards already has an invoice or lnurlp
+  const cards: CardRedis[] = []
+  try {
+    await Promise.all(cardIndices.map(async (index) => {
+      const cardHash = hashSha256(`${req.params.setId}/${index}`)
+      const cardRedis = await getCardByHash(cardHash)
+      if (cardRedis != null) {
+        cards.push(cardRedis)
+      }
+    }))
+  } catch (error) {
+    console.error(ErrorCode.UnknownDatabaseError, error)
+    res.status(500).json({
+      status: 'error',
+      message: 'An unexpected error occured. Please try again later or contact an admin.',
+      code: ErrorCode.UnknownDatabaseError,
+    })
+    return
+  }
+  if (cards.some((card) => card.invoice != null || card.lnurlp != null)) {
+    res.status(400).json({
+      status: 'error',
+      message: 'One or more cards already have an invoice or lnurlp.',
+      code: ErrorCode.CardAlreadyHasInvoice,
+    })
     return
   }
 

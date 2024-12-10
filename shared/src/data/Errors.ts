@@ -43,6 +43,7 @@ export enum ErrorCode {
   UnableToGetOrCreateUserByLnurlAuthKey = 'UnableToGetOrCreateUserByLnurlAuthKey',
   UnableToUpdateUser = 'UnableToUpdateUser',
   CardIsLockedByBulkWithdraw = 'CardIsLockedByBulkWithdraw',
+  CardAlreadyHasInvoice = 'CardAlreadyHasInvoice',
 
   AuthJwtHanderInitError = 'AuthJwtHanderInitError',
   AuthJwtHanderRefreshTokenCreationError = 'AuthJwtHanderRefreshTokenCreationError',
