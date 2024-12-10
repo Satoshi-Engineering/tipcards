@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
 import Lock from '@backend/services/locking/Lock.js'
+import hashSha256 from '@backend/services/hashSha256.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
 
 /**
@@ -54,6 +55,53 @@ export const releaseCardMiddleware = async (req: Request, res: Response, next: N
   }
 
   safeReleaseLock(res.locals.lock)
+
+  next()
+}
+
+export const lockSetCardsMiddleware = (toError: ToErrorResponse, cardLockManager: CardLockManager) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    const setId: string = req.params.setId
+    const cardIndices: number[] = req.body.cardIndices
+    const cardHashes = cardIndices.map((index) => hashSha256(`${setId}/${index}`))
+
+    if (!cardHashes) {
+      res.status(400).json(toError({
+        message: 'Card hashes are required.',
+        code: ErrorCode.CardHashRequired,
+      }))
+      return
+    }
+
+    try {
+      const locks = await cardLockManager.lockCards(cardHashes)
+      res.locals.locks = locks
+    } catch (error) {
+      let code = ErrorCode.UnableToLockCards
+      if (error instanceof ErrorWithCode) {
+        code = error.code
+      }
+      console.error(code, error)
+      res.status(500).json(toError({
+        message: 'Unable to access cards, please try again later.',
+        code,
+      }))
+      return
+    }
+    next()
+  }
+
+export const releaseSetCardsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.setId) {
+    console.error('releaseSetCards called without setId', req)
+    return
+  }
+  if (!res.locals.locks) {
+    console.error(`releaseSetCards called without locks for setId ${req.params.setId}`, req, res.locals.locks)
+    return
+  }
+
+  res.locals.locks.forEach(safeReleaseLock)
 
   next()
 }

@@ -43,7 +43,7 @@ export default () => {
   app.use('/api/landingPages', landingPages)
   app.use('/api/lnurl', lnurl(applicationEventEmitter, cardLockManager))
   app.use('/api/lnurlp', lnurlp(applicationEventEmitter, cardLockManager))
-  app.use('/api/set', set)
+  app.use('/api/set', set(cardLockManager))
   app.use('/api/withdraw', withdraw(applicationEventEmitter, cardLockManager))
   app.use(
     '/trpc',

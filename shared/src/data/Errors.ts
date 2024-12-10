@@ -63,6 +63,7 @@ export enum ErrorCode {
   ZodErrorParsingSetByKey = 'ZodErrorParsingSetByKey',
   ZodErrorParsingBulkWithdrawByKey = 'ZodErrorParsingBulkWithdrawByKey',
   UnableToLockCard = 'UnableToLockCard',
+  UnableToLockCards = 'UnableToLockCards',
   CardHashRequired = 'CardHashRequired',
   WithdrawIsPending = 'WithdrawIsPending',
 
