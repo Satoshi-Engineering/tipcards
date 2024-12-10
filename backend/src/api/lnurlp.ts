@@ -105,6 +105,12 @@ export default (
       }))
       return
     }
+    if (card.setFunding != null) {
+      res.status(400).json(toErrorResponse({
+        message: 'Card funding is already in progress (via set-funding).',
+      }))
+      return
+    }
 
     // create + return lnurlp for unfunded card
     try {
