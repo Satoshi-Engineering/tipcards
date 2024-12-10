@@ -28,7 +28,7 @@ export default (
     code,
   })
 
-  router.post('/create/:cardHash', async (req, res) => {
+  router.post('/create/:cardHash', lockCardMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
     // amount in sats
     let amount: number | undefined = undefined
     let text = ''
@@ -44,6 +44,7 @@ export default (
       res.status(400).json(toErrorResponse({
         message: 'Invalid amount, has to be between 210 and 2,100,000 sats.',
       }))
+      next()
       return
     }
 
@@ -60,6 +61,7 @@ export default (
         message: 'An unexpected error occured. Please try again later or contact an admin.',
         code: ErrorCode.UnknownDatabaseError,
       }))
+      next()
       return
     }
     if (card?.invoice != null) {
@@ -77,12 +79,21 @@ export default (
           message: `Card already exists with different amount: ${card.invoice.amount}.`,
         }))
       }
+      next()
       return
     }
     if (card?.lnurlp?.paid != null) {
       res.status(400).json(toErrorResponse({
         message: 'Card is already funded.',
       }))
+      next()
+      return
+    }
+    if (card?.setFunding != null) {
+      res.status(400).json(toErrorResponse({
+        message: 'A set-invoice for this card already exists.',
+      }))
+      next()
       return
     }
 
@@ -110,6 +121,7 @@ export default (
         message: 'Unable to create invoice at lnbits.',
         code: ErrorCode.UnableToCreateLnbitsInvoice,
       }))
+      next()
       return
     }
 
@@ -139,13 +151,15 @@ export default (
         message: 'An unexpected error occured. Please try again later or contact an admin.',
         code: ErrorCode.UnknownDatabaseError,
       }))
+      next()
       return
     }
     res.json({
       status: 'success',
       data: payment_request,
     })
-  })
+    next()
+  }, releaseCardMiddleware)
 
   const invoicePaid = async (req: Request, res: Response, next: NextFunction) => {
     // 1. check if card exists

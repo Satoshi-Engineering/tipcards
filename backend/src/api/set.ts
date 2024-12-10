@@ -3,7 +3,7 @@ import { Router, type Request, type Response } from 'express'
 
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
-import { ErrorCode, ErrorWithCode, ToErrorResponse } from '@shared/data/Errors.js'
+import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 
 import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
 import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
