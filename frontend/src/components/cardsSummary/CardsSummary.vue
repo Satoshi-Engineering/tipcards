@@ -37,6 +37,17 @@
         </template>
       </CardsSummaryFigure>
     </div>
+    <div
+      v-if="userActionRequiredCount > 0"
+      class="mt-5 flex flex-col content-end"
+    >
+      <LinkDefault
+        href="#open-tasks"
+        class="text-right text-blueViolet font-normal"
+      >
+        {{ $t('dashboard.openTasks.linkText', userActionRequiredCount) }}
+      </LinkDefault>
+    </div>
     <UserErrorMessages
       class="mb-2 text-center"
       data-test="cards-summary-error-messages"
@@ -53,7 +64,8 @@ import IconSummaryEmptyCard from '@/components/icons/IconSummaryEmptyCard.vue'
 import IconSummaryRedeemed from '@/components/icons/IconSummaryRedeemed.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import CardsSummaryFigure from '@/components/cardsSummary/components/CardsSummaryFigure.vue'
-import UserErrorMessages from '../UserErrorMessages.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
+import UserErrorMessages from '@/components/UserErrorMessages.vue'
 
 const props = defineProps({
   cardsSummaryWithLoadingStatus: {
@@ -69,6 +81,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const userActionRequiredCount = computed(() => props.cardsSummaryWithLoadingStatus.cardsSummary?.userActionRequired.count || 0)
 
 const totalAmount = computed(() => {
   if (cardsSummaryWithLoadingStatusComputed.value.cardsSummary != null) {

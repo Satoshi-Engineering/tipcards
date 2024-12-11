@@ -563,7 +563,10 @@
     "errors": {
       "unableToLoadCardsSummaryFromBackend": "Cards summary could not be loaded."
     },
-    "fullHistory": "Full history"
+    "fullHistory": "Full history",
+    "openTasks": {
+      "linkText": "{count} card with open tasks | {count} cards with open tasks"
+    }
   },
   "history": {
     "title": "History",

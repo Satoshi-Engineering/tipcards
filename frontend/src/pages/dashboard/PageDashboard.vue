@@ -120,6 +120,7 @@
         </div>
       </CenterContainer>
     </section>
+    <OpenTasks />
   </TheLayout>
 </template>
 <script setup lang="ts">
@@ -144,6 +145,8 @@ import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import CardStatusList from '@/components/cardStatusList/CardStatusList.vue'
 import { useHistoryStore } from '@/stores/historyStore'
+
+import OpenTasks from './OpenTasks.vue'
 
 const { t } = useI18n()
 

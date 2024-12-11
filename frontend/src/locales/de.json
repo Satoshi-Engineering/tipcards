@@ -574,7 +574,10 @@
       "unableToLoadCardsSummaryFromBackend": "Karten-Übersicht konnte nicht geladen werden."
     },
     "history": "History",
-    "fullHistory": "gesamte History"
+    "fullHistory": "gesamte History",
+    "openTasks": {
+      "linkText": "{count} Karte mit offenen Aktionen | {count} Karten mit offenen Aktionen"
+    }
   },
   "history": {
     "title": "History"
