@@ -24,6 +24,7 @@
               v-else
               no-bold
               class="text-lg"
+              data-test="dashboard-login-link"
               @click="showModalLogin = true"
             >
               {{ $t('general.login') }}

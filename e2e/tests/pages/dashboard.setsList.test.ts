@@ -32,7 +32,6 @@ describe('Dashboard Sets List', () => {
     cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
       cy.wrap(keyPair).as('keyPair')
       cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', { lnurlAuthKey: keyPair.publicKeyAsHex }).then(({ userId }) => {
-        cy.log('userId', userId)
         cy.task('db:create100TestSets', { userId })
       })
     })
