@@ -23,6 +23,10 @@ export default class SetCollection {
     return cardStatusCollection
   }
 
+  public get cardHashes(): Card['hash'][] {
+    return this.getAllCardHashes()
+  }
+
   public getAllCardHashes(): Card['hash'][] {
     return this.sets.reduce<Card['hash'][]>((cardHashes, set) => [
       ...cardHashes,

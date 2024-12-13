@@ -782,4 +782,41 @@ export default class Queries {
     await this.transaction.delete(AllowedSession)
       .where(and(eq(AllowedSession.user, userId), ne(AllowedSession.sessionId, sessionId)))
   }
+
+  async getSetWithSettingsByLnurlW(lnbitsId: LnurlW['lnbitsId'][]): Promise<Record<LnurlW['lnbitsId'], SetWithSettings>> {
+    const values = await this.transaction.select()
+      .from(LnurlW)
+      .innerJoin(CardVersion, eq(LnurlW.lnbitsId, CardVersion.lnurlW))
+      .innerJoin(Card, eq(CardVersion.card, Card.hash))
+      .innerJoin(Set, eq(Card.set, Set.id))
+      .innerJoin(SetSettings, eq(Card.set, SetSettings.set))
+      .where(inArray(LnurlW.lnbitsId, lnbitsId))
+      .groupBy(LnurlW.lnbitsId)
+    return values.reduce<Record<LnurlW['lnbitsId'], SetWithSettings>>((acc, { Set, SetSettings, LnurlW }) => ({
+      ...acc,
+      [LnurlW.lnbitsId]: {
+        ...Set,
+        settings: SetSettings,
+      },
+    }), {})
+  }
+
+  async getSetWithSettingsBySetFundingPaymentHash(paymentHash: Invoice['paymentHash'][]): Promise<Record<Invoice['paymentHash'], SetWithSettings>> {
+    const values = await this.transaction.select()
+      .from(Invoice)
+      .innerJoin(CardVersionHasInvoice, eq(Invoice.paymentHash, CardVersionHasInvoice.invoice))
+      .innerJoin(CardVersion, eq(CardVersionHasInvoice.cardVersion, CardVersion.id))
+      .innerJoin(Card, eq(CardVersion.card, Card.hash))
+      .innerJoin(Set, eq(Card.set, Set.id))
+      .innerJoin(SetSettings, eq(Card.set, SetSettings.set))
+      .where(inArray(Invoice.paymentHash, paymentHash))
+      .groupBy(Invoice.paymentHash)
+    return values.reduce<Record<Invoice['paymentHash'], SetWithSettings>>((acc, { Set, SetSettings, Invoice }) => ({
+      ...acc,
+      [Invoice.paymentHash]: {
+        ...Set,
+        settings: SetSettings,
+      },
+    }), {})
+  }
 }

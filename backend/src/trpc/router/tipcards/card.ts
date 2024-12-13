@@ -5,12 +5,14 @@ import { Card, CardHash } from '@shared/data/trpc/Card.js'
 import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 import { CardStatusForHistoryDto } from '@shared/data/trpc/CardStatusForHistoryDto.js'
 import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
+import { OpenTaskDto } from '@shared/data/trpc/OpenTaskDto.js'
 
 import { cardUpdateEvent } from '@backend/domain/ApplicationEventEmitter.js'
 import CardDeprecated from '@backend/domain/CardDeprecated.js'
 import CardStatusForHistoryCollection from '@backend/domain/CardStatusForHistoryCollection.js'
 import LiveCardStatus from '@backend/domain/LiveCardStatus.js'
 import SetCollection from '@backend/domain/SetCollection.js'
+import OpenTaskCollection from '@backend/domain/OpenTaskCollection.js'
 
 import { router } from '../../trpc.js'
 import loggedInProcedure from '../../procedures/loggedIn.js'
@@ -91,6 +93,14 @@ export const cardRouter = router({
       }
 
       return cardStatusCollection.toTrpcResponse()
+    }),
+
+  openTasks: loggedInProcedure
+    .output(OpenTaskDto.array())
+    .query(async ({ ctx }) => {
+      const openTasksCollection = await OpenTaskCollection.fromUserId(ctx.loggedInUser.id)
+      return openTasksCollection.toTrpcResponse()
+
     }),
 
   landingPageViewed: publicProcedure
