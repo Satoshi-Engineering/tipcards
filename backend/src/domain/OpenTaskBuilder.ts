@@ -8,7 +8,7 @@ import { asTransaction } from '@backend/database/client.js'
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
 
 import CardStatusCollection from './CardStatusCollection.js'
-import IOpenTask from './IOpenTask.js'
+import type IOpenTask from './IOpenTask.js'
 import SetCollection from './SetCollection.js'
 import { OpenCardTask } from './OpenCardTask.js'
 import { OpenBulkwithdrawTask } from './OpenBulkWithdrawTask.js'

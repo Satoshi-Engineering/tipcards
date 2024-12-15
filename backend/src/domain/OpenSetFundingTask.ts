@@ -3,9 +3,9 @@ import { OpenSetTaskDto, OpenTaskType } from '@shared/data/trpc/OpenTaskDto.js'
 import { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto.js'
 
 import { Set, SetSettings } from '@backend/database/schema/index.js'
-
-import IOpenTask from './IOpenTask.js'
 import InvoiceWithSetFundingInfo from '@backend/database/data/InvoiceWithSetFundingInfo.js'
+
+import type IOpenTask from './IOpenTask.js'
 
 export class OpenSetFundingTask implements IOpenTask {
   public static fromData(data: {

@@ -70,7 +70,9 @@
             no-underline
             no-bold
             :to="{
-              name: 'set-funding',
+              name: openTask.cardStatus === CardStatusEnum.enum.isLockedByBulkWithdraw
+                ? 'bulk-withdraw'
+                : 'set-funding',
               params: {
                 setId: openTask.setId,
                 settings: encodeCardsSetSettingsFromDto(openTask.setSettings),
@@ -125,21 +127,22 @@
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
 
-import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto'
 import { OpenTaskType, type OpenTaskDto } from '@shared/data/trpc/OpenTaskDto'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ItemsListWithMessages from '@/components/itemsList/ItemsListWithMessages.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import hashSha256 from '@/modules/hashSha256'
-import { useAuthStore } from '@/stores/auth'
-import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
 import CardStatusPill from '@/components/cardStatusList/components/CardStatusPill.vue'
+import { useAuthStore } from '@/stores/auth'
+import useTRpc from '@/modules/useTRpc'
+import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
 import { dateWithTimeFormat } from '@/utils/dateFormats'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto'
 
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
+const { card } = useTRpc()
 
 type OpenTasksWithLoadingStatus
   = { status: 'loading' | 'error' | 'notLoaded', openTasks?: undefined }
@@ -158,56 +161,10 @@ const loadOpenTasks = async () => {
   openTasksWithLoadingStatus.value = { status: 'loading' }
   openTasksErrorMessages.value = []
   try {
-    // todo : fetch open tasks
+    const openTasks = await card.openTasks.query()
     openTasksWithLoadingStatus.value = {
       status: 'success',
-      openTasks: [{
-        type: OpenTaskType.enum.cardAction,
-        cardStatus: CardStatusEnum.enum.invoiceFunding,
-        cardHash: await hashSha256('invoiceFunding'),
-        noteForStatusPage: 'noteForStatusPage',
-        textForWithdraw: 'textForWithdraw',
-        created: new Date(),
-        sats: 2_100,
-      }, {
-        type: OpenTaskType.enum.cardAction,
-        cardStatus: CardStatusEnum.enum.lnurlpFunding,
-        cardHash: await hashSha256('lnurlpFunding'),
-        noteForStatusPage: null,
-        textForWithdraw: 'textForWithdraw',
-        created: new Date(),
-        sats: 0,
-      }, {
-        type: OpenTaskType.enum.setAction,
-        cardStatus: CardStatusEnum.enum.setInvoiceFunding,
-        setId: 'setInvoiceFunding',
-        setSettings: {
-          name: 'setInvoiceFunding',
-          numberOfCards: 3,
-          cardHeadline: 'cardHeadline',
-          cardCopytext: 'cardCopytext',
-          image: 'bitcoin',
-          landingPage: 'default',
-        },
-        created: new Date(),
-        cardCount: 3,
-        sats: 3 * 2_100,
-      }, {
-        type: OpenTaskType.enum.setAction,
-        cardStatus: CardStatusEnum.enum.isLockedByBulkWithdraw,
-        setId: 'isLockedByBulkWithdraw',
-        setSettings: {
-          name: 'isLockedByBulkWithdraw',
-          numberOfCards: 3,
-          cardHeadline: 'cardHeadline',
-          cardCopytext: 'cardCopytext',
-          image: 'bitcoin',
-          landingPage: 'default',
-        },
-        created: new Date(),
-        cardCount: 5,
-        sats: 5 * 2_100,
-      }],
+      openTasks,
     }
   } catch (error) {
     console.error(error)

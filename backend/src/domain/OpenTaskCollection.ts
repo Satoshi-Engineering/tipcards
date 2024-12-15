@@ -1,7 +1,7 @@
 import { OpenTaskDto } from '@shared/data/trpc/OpenTaskDto.js'
 
 import Collection from './Collection.js'
-import IOpenTask from './IOpenTask.js'
+import type IOpenTask from './IOpenTask.js'
 import OpenTaskBuilder from './OpenTaskBuilder.js'
 
 export default class OpenTaskCollection extends Collection<IOpenTask> {

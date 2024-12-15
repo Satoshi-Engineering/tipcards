@@ -5,7 +5,7 @@ import { SetSettingsDto } from '@shared/data/trpc/SetSettingsDto.js'
 import { LnurlW, Set, SetSettings } from '@backend/database/schema/index.js'
 import CardVersionWithInvoices from '@backend/database/data/CardVersionWithInvoices.js'
 
-import IOpenTask from './IOpenTask.js'
+import type IOpenTask from './IOpenTask.js'
 
 export class OpenBulkwithdrawTask implements IOpenTask {
   public static fromData(data: {

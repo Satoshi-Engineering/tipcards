@@ -1,4 +1,4 @@
-import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne, inArray, max } from 'drizzle-orm'
+import { and, eq, isNull, desc, isNotNull, type ExtractTablesWithRelations, aliasedTable, sql, ne, inArray, max, getTableColumns } from 'drizzle-orm'
 import type { PgTransaction } from 'drizzle-orm/pg-core'
 import type { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js'
 
@@ -784,25 +784,33 @@ export default class Queries {
   }
 
   async getSetWithSettingsByLnurlW(lnbitsId: LnurlW['lnbitsId'][]): Promise<Record<LnurlW['lnbitsId'], SetWithSettings>> {
-    const values = await this.transaction.select()
+    const values = await this.transaction.select({
+      lnbitsId: LnurlW.lnbitsId,
+      set: getTableColumns(Set),
+      settings: getTableColumns(SetSettings),
+    })
       .from(LnurlW)
       .innerJoin(CardVersion, eq(LnurlW.lnbitsId, CardVersion.lnurlW))
       .innerJoin(Card, eq(CardVersion.card, Card.hash))
       .innerJoin(Set, eq(Card.set, Set.id))
       .innerJoin(SetSettings, eq(Card.set, SetSettings.set))
       .where(inArray(LnurlW.lnbitsId, lnbitsId))
-      .groupBy(LnurlW.lnbitsId)
-    return values.reduce<Record<LnurlW['lnbitsId'], SetWithSettings>>((acc, { Set, SetSettings, LnurlW }) => ({
+      .groupBy(LnurlW.lnbitsId, Set.id, SetSettings.set)
+    return values.reduce<Record<LnurlW['lnbitsId'], SetWithSettings>>((acc, { lnbitsId, set, settings }) => ({
       ...acc,
-      [LnurlW.lnbitsId]: {
-        ...Set,
-        settings: SetSettings,
+      [lnbitsId]: {
+        ...set,
+        settings,
       },
     }), {})
   }
 
   async getSetWithSettingsBySetFundingPaymentHash(paymentHash: Invoice['paymentHash'][]): Promise<Record<Invoice['paymentHash'], SetWithSettings>> {
-    const values = await this.transaction.select()
+    const values = await this.transaction.select({
+      paymentHash: Invoice.paymentHash,
+      set: getTableColumns(Set),
+      settings: getTableColumns(SetSettings),
+    })
       .from(Invoice)
       .innerJoin(CardVersionHasInvoice, eq(Invoice.paymentHash, CardVersionHasInvoice.invoice))
       .innerJoin(CardVersion, eq(CardVersionHasInvoice.cardVersion, CardVersion.id))
@@ -810,12 +818,12 @@ export default class Queries {
       .innerJoin(Set, eq(Card.set, Set.id))
       .innerJoin(SetSettings, eq(Card.set, SetSettings.set))
       .where(inArray(Invoice.paymentHash, paymentHash))
-      .groupBy(Invoice.paymentHash)
-    return values.reduce<Record<Invoice['paymentHash'], SetWithSettings>>((acc, { Set, SetSettings, Invoice }) => ({
+      .groupBy(Invoice.paymentHash, Set.id, SetSettings.set)
+    return values.reduce<Record<Invoice['paymentHash'], SetWithSettings>>((acc, { paymentHash, set, settings }) => ({
       ...acc,
-      [Invoice.paymentHash]: {
-        ...Set,
-        settings: SetSettings,
+      [paymentHash]: {
+        ...set,
+        settings,
       },
     }), {})
   }

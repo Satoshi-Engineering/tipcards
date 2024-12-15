@@ -1,9 +1,9 @@
 import { OpenCardTaskDto, OpenTaskType } from '@shared/data/trpc/OpenTaskDto.js'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
 
 import { CardVersion, Invoice, LnurlP } from '@backend/database/schema/index.js'
 
-import IOpenTask from './IOpenTask.js'
-import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
+import type IOpenTask from './IOpenTask.js'
 
 export class OpenCardTask implements IOpenTask {
   public static fromData(data: {
