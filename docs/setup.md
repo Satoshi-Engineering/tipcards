@@ -3,6 +3,7 @@
 - 2 gb ram
 - not a big demand on the CPU
 - debian bullseye or later recommended
+- http2 is mandatory
 
 # Install dependencies
 
@@ -122,6 +123,7 @@ npm run frontend-build
 ```
 
 6. Configure nginx
+
 ```bash
 sudo rm /etc/nginx/sites-enabled/default
 sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
@@ -132,6 +134,12 @@ sudo chown -R www-data:www-data /var/www/tip-cards
 # e.g. if you installed the TipCards project directly as root then it probably cannot access /root/tip-cards
 sudo ln -s /etc/nginx/sites-available/tip-cards /etc/nginx/sites-enabled/tip-cards
 sudo /etc/init.d/nginx reload
+```
+
+- If you are using ssl, add the http2 directive to your nginx config
+
+```bash
+listen 443 ssl http2;
 ```
 
 7. Add ssl certificate
