@@ -37,7 +37,8 @@
     "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview 5050 e2e-tests",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
     "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
-    "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts"
+    "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts",
+    "changelog-print-current": "npx changelogen --from $(git describe --tags --abbrev=0) --to HEAD"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -111,6 +112,7 @@
     "better-npm-audit": "^3.11.0",
     "bip32": "^4.0.0",
     "bip39": "^3.1.0",
+    "changelogen": "^0.5.7",
     "clipboardy": "^4.0.0",
     "cypress": "^13.15.1",
     "drizzle-kit": "^0.27.1",
