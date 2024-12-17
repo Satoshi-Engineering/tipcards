@@ -36,7 +36,7 @@
     "lnurlpExpired": "Payment link expired",
     "lnurlpSharedExpiredEmpty": "Shared funding expired",
     "lnurlpSharedExpiredFunded": "Shared funding expired",
-    "setInvoiceExpired": "Invoice expired",
+    "setInvoiceExpired": "Set invoice expired",
     "funded": "Funded",
     "isLockedByBulkWithdraw": "Reclaim in progress",
     "bulkWithdrawPending": "Reclaim in progress",
@@ -565,7 +565,12 @@
     },
     "fullHistory": "Full history",
     "openTasks": {
-      "linkText": "{count} card with open tasks | {count} cards with open tasks"
+      "cardCount": "{count} card with open tasks | {count} cards with open tasks",
+      "title": "Open tasks",
+      "headerPrimary": "Task",
+      "errors": {
+        "unableToLoadOpenTasksFromBackend": "Unable to load open tasks."
+      }
     }
   },
   "history": {

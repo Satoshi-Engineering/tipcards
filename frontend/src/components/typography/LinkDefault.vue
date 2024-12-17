@@ -11,6 +11,7 @@
       'no-underline hover:underline': invertUnderline,
       'no-underline': noUnderline,
     }"
+    :element="element"
     class="cursor-pointer break-anywhere"
   >
     <slot />
@@ -55,6 +56,10 @@ defineProps({
   noUnderline: {
     type: Boolean,
     default: false,
+  },
+  element: {
+    type: String as PropType<'span' | 'div' | undefined>,
+    default: undefined,
   },
 })
 </script>

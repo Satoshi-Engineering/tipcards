@@ -25,6 +25,12 @@
   >
     <slot />
   </span>
+  <div
+    v-else-if="element === 'div'"
+    :class="cssClasses"
+  >
+    <slot />
+  </div>
   <button
     v-else
     class="[text-align:inherit] appearance-none"
@@ -57,7 +63,7 @@ const props = defineProps({
     default: false,
   },
   element: {
-    type: String as PropType<'span' | undefined>,
+    type: String as PropType<'span' | 'div' | undefined>,
     default: undefined,
   },
   activeClass: {

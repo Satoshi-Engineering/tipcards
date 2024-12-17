@@ -11,8 +11,8 @@ import { setActivePinia } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useSetsStore } from '@/stores/sets'
 import PageSets from '@/pages/sets/PageSets.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { createSet } from '../../data/set'
+import ButtonLinkSkeleton from '@/components/buttons/components/ButtonLinkSkeleton.vue'
 
 config.global.stubs.TheLayout = {
   props: ['loginBanner'],
@@ -85,7 +85,7 @@ describe('PageSets', () => {
     expect(wrapper.find('[data-test=sets-list-message-empty]').exists()).toBe(false)
     expect(wrapper.findAll('[data-test=sets-list-item]').length).toBe(testSets.length)
     wrapper.findAll('[data-test=sets-list] li').forEach((li) => {
-      const editSetButton = li.getComponent(LinkDefault)
+      const editSetButton = li.getComponent(ButtonLinkSkeleton)
       expect(editSetButton.vm.to).toEqual(expect.objectContaining({ name: 'cards' }))
     })
   })

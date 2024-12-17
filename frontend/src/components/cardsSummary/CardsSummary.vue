@@ -39,13 +39,14 @@
     </div>
     <div
       v-if="userActionRequiredCount > 0"
-      class="mt-5 flex flex-col content-end"
+      class="mt-5 flex flex-col content-end text-sm"
     >
       <LinkDefault
-        href="#open-tasks"
+        :href="openTasksHref"
+        :element="openTasksHref != null ? undefined : 'span'"
         class="text-right text-blueViolet font-normal"
       >
-        {{ $t('dashboard.openTasks.linkText', userActionRequiredCount) }}
+        {{ $t('dashboard.openTasks.cardCount', userActionRequiredCount) }}
       </LinkDefault>
     </div>
     <UserErrorMessages
@@ -79,6 +80,10 @@ const props = defineProps({
   preview: {
     type: Boolean,
     default: false,
+  },
+  openTasksHref: {
+    type: String,
+    default: undefined,
   },
 })
 

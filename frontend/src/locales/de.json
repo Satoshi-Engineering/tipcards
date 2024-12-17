@@ -36,7 +36,7 @@
     "lnurlpExpired": "Aufladung abgelaufen",
     "lnurlpSharedExpiredEmpty": "Aufladung abgelaufen",
     "lnurlpSharedExpiredFunded": "Aufladung abgelaufen",
-    "setInvoiceExpired": "Rechnung abgelaufen",
+    "setInvoiceExpired": "Set-Rechnung abgelaufen",
     "funded": "Aufgeladen",
     "isLockedByBulkWithdraw": "Wird zurückgeholt",
     "bulkWithdrawPending": "Wird zurückgeholt",
@@ -574,9 +574,14 @@
       "unableToLoadCardsSummaryFromBackend": "Karten-Übersicht konnte nicht geladen werden."
     },
     "history": "History",
-    "fullHistory": "gesamte History",
+    "fullHistory": "Gesamte History",
     "openTasks": {
-      "linkText": "{count} Karte mit offenen Aktionen | {count} Karten mit offenen Aktionen"
+      "cardCount": "{count} Karte mit offenen Aktionen | {count} Karten mit offenen Aktionen",
+      "title": "Offene Aktionen",
+      "headerPrimary": "Aktion",
+      "errors": {
+        "unableToLoadOpenTasksFromBackend": "Offene Aktionen konnten nicht geladen werden."
+      }
     }
   },
   "history": {

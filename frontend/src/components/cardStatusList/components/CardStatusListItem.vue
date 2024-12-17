@@ -1,18 +1,8 @@
 <template>
-  <div
-    class="grid grid-cols-[1fr,auto] grid-rows-[repeat(3,auto)]"
+  <ItemsListItem
     data-test="card-status-list-item"
   >
-    <CardStatusPill
-      :status="cardStatus.status"
-      class="col-start-1 place-self-start -ms-0.5"
-    />
-
-    <HeadlineDefault
-      level="h4"
-      data-test="card-status-list-item-name"
-      class="col-start-1 !my-2"
-    >
+    <template #preHeadline>
       <LinkDefault
         invert-underline
         no-bold
@@ -24,11 +14,29 @@
           }
         }"
       >
+        <CardStatusPill
+          :status="cardStatus.status"
+          class="-ms-0.5"
+        />
+      </LinkDefault>
+    </template>
+    <template #headline>
+      <LinkDefault
+        invert-underline
+        no-bold
+        data-test="card-status-list-item-name"
+        :to="{
+          name: 'landing',
+          params: {
+            cardHash: cardStatus.hash,
+            lang: $route.params.lang,
+          }
+        }"
+      >
         {{ cardStatus.noteForStatusPage || cardStatus.textForWithdraw }}
       </LinkDefault>
-    </HeadlineDefault>
-
-    <div class="col-start-1 text-sm">
+    </template>
+    <template #default>
       <div v-if="cardStatus.withdrawn != null">
         {{ $t('cardStatus.withdrawn') }}:
         <time data-test="card-status-list-item-date-withdrawn">
@@ -72,17 +80,19 @@
             }
           }"
         >
-          {{ cardStatus.setName === '' ? $t('sets.unnamedSetNameFallback') : cardStatus.setName }}
+          <template v-if="cardStatus.setName != null && cardStatus.setName !== ''">
+            {{ cardStatus.setName }}
+          </template>
+          <span v-else class="italic">
+            {{ $t('sets.unnamedSetNameFallback') }}
+          </span>
         </LinkDefault>
       </div>
-    </div>
-    <div
-      v-if="cardStatus.amount != null"
-      class="-col-end-1 -row-end-1 mb-1 place-self-end text-sm font-bold"
-    >
-      {{ $t('general.amountAndUnitSats', { amount: cardStatus.amount }, cardStatus.amount) }}
-    </div>
-  </div>
+    </template>
+    <template #bottomEnd>
+      {{ $t('general.amountAndUnitSats', { amount: cardStatus.amount }, cardStatus.amount || 0) }}
+    </template>
+  </ItemsListItem>
 </template>
 
 <script setup lang="ts">
@@ -93,9 +103,9 @@ import { CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto'
 import { getCardsSummaryStatusCategoryForCardStatus } from '@shared/modules/statusCategoryHelpers'
 
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import { dateWithTimeFormat } from '@/utils/dateFormats'
 import CardStatusPill from './CardStatusPill.vue'
+import ItemsListItem from '@/components/itemsList/ItemsListItem.vue'
 
 const props = defineProps({
   cardStatus: {

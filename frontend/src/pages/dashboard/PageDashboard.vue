@@ -1,53 +1,8 @@
 <template>
   <TheLayout login-banner>
-    <div class="bg-grey-light">
-      <CenterContainer class="!pt-10 !pb-5">
-        <div class="flex gap-9 items-start">
-          <IconPersonCircleFilled class="w-12 h-12" />
-          <div class="flex-1">
-            <HeadlineDefault
-              level="h2"
-              styling="h3"
-              class="mb-1"
-            >
-              {{ $t('dashboard.welcome') }}
-            </HeadlineDefault>
-            <LinkDefault
-              v-if="isLoggedIn"
-              :to="{ name: 'user-account' }"
-              no-bold
-              class="text-lg"
-            >
-              {{ userDisplayName || $t('userAccount.completeProfile') }}
-            </LinkDefault>
-            <LinkDefault
-              v-else
-              no-bold
-              class="text-lg"
-              data-test="dashboard-login-link"
-              @click="showModalLogin = true"
-            >
-              {{ $t('general.login') }}
-            </LinkDefault>
-          </div>
-        </div>
-        <hr class="my-7 border-t border-grey-dark">
-        <CardsSummary
-          class="mt-7 mb-5"
-          :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
-          :user-error-messages="cardsSummaryErrorMessages"
-          :preview="!isLoggedIn"
-        />
-        <ButtonContainer>
-          <ButtonDefault
-            :to="{ name: 'cards' }"
-            class="w-full"
-          >
-            {{ $t('home.buttonCreate') }}
-          </ButtonDefault>
-        </ButtonContainer>
-      </CenterContainer>
-    </div>
+    <GlobalSummary
+      open-tasks-href="#open-tasks"
+    />
     <section>
       <CenterContainer class="!py-10">
         <header class="flex items-end gap-4">
@@ -120,72 +75,29 @@
         </div>
       </CenterContainer>
     </section>
-    <OpenTasks />
+    <OpenTasks id="open-tasks" />
   </TheLayout>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { onMounted, onUnmounted } from 'vue'
 
-import CardsSummary from '@/components/cardsSummary/CardsSummary.vue'
-import IconPersonCircleFilled from '@/components/icons/IconPersonCircleFilled.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useSetsStore } from '@/stores/sets'
+import { useHistoryStore } from '@/stores/historyStore'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+
 import SetsList from '@/components/setsList/SetsList.vue'
-import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
-import useTRpc from '@/modules/useTRpc'
-import { useAuthStore } from '@/stores/auth'
-import { useModalLoginStore } from '@/stores/modalLogin'
-import { useProfileStore } from '@/stores/profile'
-import { useSetsStore } from '@/stores/sets'
-import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import CardStatusList from '@/components/cardStatusList/CardStatusList.vue'
-import { useHistoryStore } from '@/stores/historyStore'
 
-import OpenTasks from './OpenTasks.vue'
-
-const { t } = useI18n()
-
-const profileStore = useProfileStore()
-const { userDisplayName } = storeToRefs(profileStore)
+import GlobalSummary from '@/pages/dashboard/components/GlobalSummary.vue'
+import OpenTasks from '@/pages/dashboard/components/OpenTasks.vue'
 
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
-
-const modalLoginStore = useModalLoginStore()
-const { showModalLogin } = storeToRefs(modalLoginStore)
-
-// global card status summary
-const { card } = useTRpc()
-const cardsSummaryWithLoadingStatus = ref<CardsSummaryWithLoadingStatus>({ status: 'notLoaded' })
-const cardsSummaryErrorMessages = ref<string[]>([])
-const loadCardsSummary = async () => {
-  if (!isLoggedIn.value) {
-    return
-  }
-  cardsSummaryWithLoadingStatus.value = { status: 'loading' }
-  cardsSummaryErrorMessages.value = []
-  try {
-    const cardsSummary = await card.cardsSummary.query()
-    cardsSummaryWithLoadingStatus.value = { cardsSummary, status: 'success' }
-  } catch (error) {
-    console.error(error)
-    cardsSummaryErrorMessages.value = [t('dashboard.errors.unableToLoadCardsSummaryFromBackend')]
-    cardsSummaryWithLoadingStatus.value = { status: 'error' }
-  }
-}
-onMounted(loadCardsSummary)
-watch(isLoggedIn, (isLoggedIn) => {
-  if (!isLoggedIn) {
-    cardsSummaryWithLoadingStatus.value = { status: 'notLoaded' }
-    cardsSummaryErrorMessages.value = []
-  }
-  loadCardsSummary()
-})
 
 // history
 const historyStore = useHistoryStore()

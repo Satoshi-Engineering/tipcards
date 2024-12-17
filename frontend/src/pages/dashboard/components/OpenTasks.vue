@@ -1,38 +1,32 @@
 <template>
-  <section id="open-tasks">
+  <section data-test="open-tasks">
     <CenterContainer class="!py-10">
       <header class="flex items-end gap-4">
         <HeadlineDefault
           level="h2"
           class="mb-0"
         >
-          todo : Offene Aktionen
+          {{ $t('dashboard.openTasks.title') }}
         </HeadlineDefault>
         <div class="text-sm pb-1 italic" data-test="open-tasks-count">
           {{
             openTasksWithLoadingStatus.status !== 'success'
               ? '&nbsp;'
-              : `todo : (${openTasksWithLoadingStatus.openTasks.length} offene Aktion(en))`
+              : `(${$t('dashboard.openTasks.cardCount', { count: cardCount })})`
           }}
         </div>
       </header>
       <ItemsListWithMessages
         class="my-7"
-        header-primary="todo : Beschreibung"
-        header-secondary="todo : Betrag"
-        :items="openTasks.slice(0, 3)"
+        :header-primary="$t('dashboard.openTasks.headerPrimary')"
+        :header-secondary="$t('general.amount')"
+        :items="openTasks"
         :loading="openTasksWithLoadingStatus.status === 'loading'"
         data-test="open-tasks-list"
       >
         <template #default="{ item: openTask }">
-          <LinkDefault
+          <ItemsListItem
             v-if="openTask.type === OpenTaskType.enum.cardAction"
-            class="
-              -mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default
-              grid grid-cols-[1fr,auto] grid-rows-[repeat(3,auto)] hover:bg-grey-light
-            "
-            no-underline
-            no-bold
             :to="{
               name: 'funding',
               params: {
@@ -41,34 +35,29 @@
               }
             }"
           >
-            <CardStatusPill
-              class="col-start-1 place-self-start -ms-0.5"
-              :status="openTask.cardStatus"
-            />
-            <HeadlineDefault
-              level="h4"
-              class="col-start-1 !my-2"
-            >
+            <template #preHeadline>
+              <CardStatusPill
+                class="-ms-0.5"
+                :status="openTask.cardStatus"
+              />
+            </template>
+            <template #headline>
               {{ openTask.noteForStatusPage || openTask.textForWithdraw }}
-            </HeadlineDefault>
-            <div class="col-start-1 text-sm">
-              {{ $t('cardStatus.created') }}:
-              <time>
-                {{ $d(openTask.created, dateWithTimeFormat) }}
-              </time>
-            </div>
-            <div class="-col-end-1 -row-end-1 mb-1 place-self-end text-sm font-bold">
+            </template>
+            <template #default>
+              <div>
+                {{ $t('cardStatus.created') }}:
+                <time>
+                  {{ $d(openTask.created, dateWithTimeFormat) }}
+                </time>
+              </div>
+            </template>
+            <template #bottomEnd>
               {{ $t('general.amountAndUnitSats', { amount: openTask.sats }, openTask.sats) }}
-            </div>
-          </LinkDefault>
-          <LinkDefault
+            </template>
+          </ItemsListItem>
+          <ItemsListItem
             v-else-if="openTask.type === OpenTaskType.enum.setAction"
-            class="
-              -mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default
-              grid grid-cols-[1fr,auto] grid-rows-[repeat(4,auto)] hover:bg-grey-light
-            "
-            no-underline
-            no-bold
             :to="{
               name: openTask.cardStatus === CardStatusEnum.enum.isLockedByBulkWithdraw
                 ? 'bulk-withdraw'
@@ -80,65 +69,59 @@
               }
             }"
           >
-            <span
-              class="
-                col-start-1 place-self-start -ms-0.5
-                inline-flex px-3 py-0.5 font-bold text-xs rounded-full
-                bg-blueViolet-light text-blueViolet
-              "
-            >
-              todo : {{ openTask.cardStatus }}
-            </span>
-            <HeadlineDefault
-              level="h4"
-              class="col-start-1 !my-2"
-            >
-              {{ openTask.setSettings.name }}
-            </HeadlineDefault>
-            <div class="col-start-1 text-sm">
-              {{ `${openTask.cardCount} Karten` }}
-            </div>
-            <div class="col-start-1 text-sm">
-              {{ $t('cardStatus.created') }}:
-              <time>
-                {{ $d(openTask.created, dateWithTimeFormat) }}
-              </time>
-            </div>
-            <div class="-col-end-1 -row-end-1 mb-1 place-self-end text-sm font-bold">
+            <template #preHeadline>
+              <CardStatusPill
+                :status="openTask.cardStatus"
+              />
+            </template>
+            <template #headline>
+              <template v-if="openTask.setSettings.name != null && openTask.setSettings.name !== ''">
+                {{ openTask.setSettings.name }}
+              </template>
+              <span v-else class="italic">
+                {{ $t('sets.unnamedSetNameFallback') }}
+              </span>
+            </template>
+            <template #default>
+              <div>
+                {{ `${openTask.cardCount} Karten` }}
+              </div>
+              <div>
+                {{ $t('cardStatus.created') }}:
+                <time>
+                  {{ $d(openTask.created, dateWithTimeFormat) }}
+                </time>
+              </div>
+            </template>
+            <template #bottomEnd>
               {{ $t('general.amountAndUnitSats', { amount: openTask.sats }, openTask.sats) }}
-            </div>
-          </LinkDefault>
+            </template>
+          </ItemsListItem>
         </template>
       </ItemsListWithMessages>
-      <div v-if="isLoggedIn && openTasks.length > 3" class="text-center">
-        <LinkDefault
-          href="#"
-          no-bold
-          class="text-lg"
-        >
-          todo : Link to all open tasks
-        </LinkDefault>
-      </div>
     </CenterContainer>
   </section>
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia'
 
 import { OpenTaskType, type OpenTaskDto } from '@shared/data/trpc/OpenTaskDto'
+import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto'
 
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import ItemsListWithMessages from '@/components/itemsList/ItemsListWithMessages.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
 import CardStatusPill from '@/components/cardStatusList/components/CardStatusPill.vue'
 import { useAuthStore } from '@/stores/auth'
 import useTRpc from '@/modules/useTRpc'
 import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
 import { dateWithTimeFormat } from '@/utils/dateFormats'
-import { CardStatusEnum } from '@shared/data/trpc/CardStatusDto'
+import ItemsListItem from '@/components/itemsList/ItemsListItem.vue'
+
+const { t } = useI18n({ useScope: 'global' })
 
 const authStore = useAuthStore()
 const { isLoggedIn } = storeToRefs(authStore)
@@ -153,6 +136,7 @@ const openTasksErrorMessages = ref<string[]>([])
 const openTasks = computed<OpenTaskDto[]>(() => openTasksWithLoadingStatus.value.status === 'success'
   ? openTasksWithLoadingStatus.value.openTasks
   : [])
+const cardCount = computed(() => openTasks.value.reduce((sum, openTask) => sum + (openTask.type === OpenTaskType.enum.setAction ? openTask.cardCount : 1), 0))
 
 const loadOpenTasks = async () => {
   if (!isLoggedIn.value) {
@@ -168,7 +152,7 @@ const loadOpenTasks = async () => {
     }
   } catch (error) {
     console.error(error)
-    openTasksErrorMessages.value = ['todo : add error message']
+    openTasksErrorMessages.value = [t('dashboard.openTasks.errors.unableToLoadOpenTasksFromBackend')]
     openTasksWithLoadingStatus.value = { status: 'error' }
   }
 }

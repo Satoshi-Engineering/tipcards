@@ -1,10 +1,7 @@
 <template>
-  <LinkDefault
+  <ItemsListItem
     ref="item"
-    class="grid grid-cols-[1fr,4.5rem] hover:bg-grey-light"
     data-test="sets-list-item"
-    no-underline
-    no-bold
     :to="{
       name: 'cards',
       params: {
@@ -14,37 +11,41 @@
       }
     }"
   >
-    <HeadlineDefault
-      level="h4"
-      data-test="sets-list-item-name"
-      class="col-start-1 col-span-2"
-      :class="{ 'italic': !set.settings.name }"
-    >
-      <template v-if="typeof set.settings.name === 'string' && set.settings.name !== ''">
+    <template #headline>
+      <span v-if="typeof set.settings.name === 'string' && set.settings.name !== ''" data-test="sets-list-item-name">
         {{ setDisplayInfo.displayName }}
-      </template>
-      <span v-else class="italic">{{ $t('sets.unnamedSetNameFallback') }}</span>
-    </HeadlineDefault>
-    <div class="col-start-1 text-sm">
-      <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
-      <span class="align-middle" data-test="sets-list-item-number-of-cards">
-        {{ setDisplayInfo.displayNumberOfCards }}
       </span>
-    </div>
-    <div class="col-start-1">
-      <time class="text-sm" data-test="sets-list-item-date">
-        {{ setDisplayInfo.displayDate }}
-      </time>
-    </div>
-    <SetsListItemCardsSummary
-      v-if="!noCardsSummary"
-      class="col-start-2 row-start-2 row-span-2 mb-1 place-self-end"
-      data-test="sets-list-item-cards-summary"
-      :loading-status="cardsSummaryLoadingStatus"
-      :cards-summary="cardsSummaryWithLoadingStatus?.cardsSummary"
-      :number-of-cards="set.settings.numberOfCards"
-    />
-  </LinkDefault>
+      <span
+        v-else
+        class="italic"
+        data-test="sets-list-item-name"
+      >
+        {{ $t('sets.unnamedSetNameFallback') }}
+      </span>
+    </template>
+    <template #default>
+      <div>
+        <IconTipCardSet class="inline-block align-middle me-2 w-auto h-5 text-yellow" />
+        <span class="align-middle" data-test="sets-list-item-number-of-cards">
+          {{ setDisplayInfo.displayNumberOfCards }}
+        </span>
+      </div>
+      <div class="mt-1">
+        <time class="text-sm" data-test="sets-list-item-date">
+          {{ setDisplayInfo.displayDate }}
+        </time>
+      </div>
+    </template>
+    <template #bottomEnd>
+      <SetsListItemCardsSummary
+        v-if="!noCardsSummary"
+        data-test="sets-list-item-cards-summary"
+        :loading-status="cardsSummaryLoadingStatus"
+        :cards-summary="cardsSummaryWithLoadingStatus?.cardsSummary"
+        :number-of-cards="set.settings.numberOfCards"
+      />
+    </template>
+  </ItemsListItem>
 </template>
 
 <script setup lang="ts">
@@ -55,11 +56,11 @@ import type { SetDto } from '@shared/data/trpc/SetDto'
 
 import SetsListItemCardsSummary from '@/components/setsList/components/SetsListItemCardsSummary.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import SetDisplayInfo from '@/pages/sets/modules/SetDisplayInfo'
 import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
+import ItemsListItem from '@/components/itemsList/ItemsListItem.vue'
 
 const props = defineProps({
   set: {
