@@ -42,6 +42,7 @@ const startupApplication = async () => {
   console.info(' - Auth initialized')
 
   ApplicationEventEmitter.init()
+  ApplicationEventEmitter.instance.setMaxListeners(100)
   console.info(' - ApplicationEventEmitter initialized')
 
   CardLockManager.init({ aquireTimeout: CARDLOCKMANAGER_AQUIRE_TIMEOUT })
