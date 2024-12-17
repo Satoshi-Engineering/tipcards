@@ -38,7 +38,8 @@
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
     "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
     "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts",
-    "changelog-print-current": "npx changelogen --from $(git describe --tags --abbrev=0) --to HEAD"
+    "changelog-print-current": "npx changelogen --from $(git describe --tags --abbrev=0) --to HEAD",
+    "bump-version": "./scripts/bump-version/bump-version.sh"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
