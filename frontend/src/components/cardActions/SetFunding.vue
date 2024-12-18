@@ -11,7 +11,7 @@
     </div>
     <ButtonContainer>
       <ButtonWithTooltip
-        :href="setFundingHref"
+        :href="buttonHref"
         :disabled="buttonDisabled"
         :tooltip="buttonDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
       >
@@ -24,6 +24,7 @@
 <script lang="ts" setup>
 import { computed, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 import type { Set } from '@shared/data/api/Set'
 
@@ -45,8 +46,18 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const router = useRouter()
 
 const { setFundingHref, setFundingDisabled } = useSetFunding()
+
+const buttonHref = computed(() => {
+  if (props.cards.length > 1) {
+    return setFundingHref.value
+  } else if (props.cards.length === 1) {
+    return router.resolve({ name: 'funding', params: { cardHash: props.cards[0].cardHash } }).href
+  }
+  return ''
+})
 
 const buttonDisabled = computed(() => setFundingDisabled(props.cards, props.set))
 </script>
