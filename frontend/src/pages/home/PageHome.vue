@@ -17,11 +17,11 @@
           {{ $t('home.buttonCreate') }}
         </ButtonDefault>
         <ButtonDefault
-          :to="{ name: 'sets', params: { lang: $route.params.lang } }"
+          :to="{ name: 'dashboard', params: { lang: $route.params.lang } }"
           variant="secondary"
-          data-test="button-sets"
+          data-test="button-dashboard"
         >
-          {{ $t('home.buttonSets') }}
+          {{ $t('home.buttonDashboard') }}
         </ButtonDefault>
       </template>
       <template #image>

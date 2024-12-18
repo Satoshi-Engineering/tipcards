@@ -9,10 +9,10 @@ describe('homePageLinks', () => {
     cy.url().should('contain', 'cards')
   })
 
-  it('should navigate to the sets page when the sets button is clicked', () => {
+  it('should navigate to the dashboard page when the dashboard button is clicked', () => {
     cy.visit(HOME_PAGE_URL.href)
-    cy.get('[data-test="hero-section"] [data-test="button-sets"]').should('exist').click()
-    cy.url().should('contain', '/sets')
+    cy.get('[data-test="hero-section"] [data-test="button-dashboard"]').should('exist').click()
+    cy.url().should('contain', '/dashboard')
   })
 
   it('should render the two expected sliders', () => {

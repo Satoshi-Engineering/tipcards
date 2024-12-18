@@ -59,6 +59,8 @@
   "nav": {
     "index": "Home",
     "cards": "Create a set",
+    "dashboard": "Dashboard",
+    "history": "History",
     "landing": "Landing page",
     "about": "About",
     "privacyPolicy": "Privacy Policy",
@@ -282,7 +284,7 @@
     "headline": "The easiest way to tip with Bitcoin",
     "intro": "Simply print out TipCards, top up Sats and make someone happy.",
     "buttonCreate": "Create your TipCards set",
-    "buttonSets": "Saved TipCards sets",
+    "buttonDashboard": "View Dashboard",
     "quote": "It's easy to stick to old habits. But breaking old patterns {em}",
     "quoteEm": "pays off.",
     "howItWorksHeadline": "How it works",

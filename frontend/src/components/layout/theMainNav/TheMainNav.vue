@@ -17,11 +17,29 @@
         </li>
         <li>
           <MainNavItem
+            :to="{ name: 'dashboard', params: { lang: $route.params.lang } }"
+            :label="$t('nav.dashboard')"
+            @click="$emit('itemSelected')"
+          >
+            <IconMicrosoft />
+          </MainNavItem>
+        </li>
+        <li>
+          <MainNavItem
             :to="{ name: 'sets', params: { lang: $route.params.lang } }"
             :label="$t('nav.sets')"
             @click="$emit('itemSelected')"
           >
             <IconBookmarkFill />
+          </MainNavItem>
+        </li>
+        <li>
+          <MainNavItem
+            :to="{ name: 'history', params: { lang: $route.params.lang } }"
+            :label="$t('nav.history')"
+            @click="$emit('itemSelected')"
+          >
+            <IconClockFill />
           </MainNavItem>
         </li>
         <li>
@@ -130,6 +148,8 @@ import IconLightbulbFill from '@/components/icons/IconLightbulbFill.vue'
 import IconPersonCircle from '@/components/icons/IconPersonCircle.vue'
 import IconBarChartFill from '@/components/icons/IconBarChartFill.vue'
 import { useProfileStore } from '@/stores/profile'
+import IconMicrosoft from '@/components/icons/IconMicrosoft.vue'
+import IconClockFill from '@/components/icons/IconClockFill.vue'
 
 defineEmits(['itemSelected'])
 

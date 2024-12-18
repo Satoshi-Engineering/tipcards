@@ -59,6 +59,8 @@
   "nav": {
     "index": "Home",
     "cards": "Set erstellen",
+    "dashboard": "Dashboard",
+    "history": "History",
     "landing": "Landing page",
     "about": "Über",
     "privacyPolicy": "Datenschutz",
@@ -298,7 +300,7 @@
     "headline": "Die einfachste Art, mit Bitcoin Trinkgeld zu geben",
     "intro": "Einfach TipCards ausdrucken, Sats aufladen und jemandem eine Freude machen.",
     "buttonCreate": "Erstelle dein TipCards-Set",
-    "buttonSets": "Gespeicherte TipCards-Sets",
+    "buttonDashboard": "Zum Dashboard",
     "quote": "Es ist leicht, bei alten Gewohnheiten zu bleiben. Alte Muster aufzubrechen {em}",
     "quoteEm": "zahlt sich aber aus.",
     "howItWorksHeadline": "Und so funktioniert's",

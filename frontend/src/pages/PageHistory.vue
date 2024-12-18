@@ -47,17 +47,18 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
+const itemsPerPage = 50
 
 const historyStore = useHistoryStore()
 const { history, historyTotal, fetchingHistory, fetchingHistoryUserErrorMessages } = storeToRefs(historyStore)
 
 const loadMore = () => {
-  historyStore.loadHistoryNextPage(10)
+  historyStore.loadHistoryNextPage(itemsPerPage)
 }
 
 onMounted(() => {
-  historyStore.subscribeToLoggedInChanges(10)
-  historyStore.loadHistory(10)
+  historyStore.subscribeToLoggedInChanges(itemsPerPage)
+  historyStore.loadHistory(itemsPerPage)
 })
 
 onUnmounted(() => {
