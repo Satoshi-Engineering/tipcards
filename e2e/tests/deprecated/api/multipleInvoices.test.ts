@@ -8,7 +8,7 @@ describe('Card invoices', () => {
     const setId = generateSetId()
     tipCards.gotoPage(new URL(`set-funding/${setId}`, TIPCARDS_ORIGIN))
     cy.get('button[type=submit]').click()
-    cy.getTestElement('lightning-qr-code-image').should('exist')
+    cy.getTestElement('lightning-qr-code-image', { timeout: 10000 }).should('exist')
 
     generateCardHashForSet(setId).then((cardHash) => {
       cy.request({

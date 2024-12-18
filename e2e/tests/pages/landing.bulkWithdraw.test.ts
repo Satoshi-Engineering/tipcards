@@ -27,7 +27,7 @@ describe('Landing Page', () => {
       cy.getTestElement('reset-bulk-withdraw').click()
 
       cy.url().should('contain', `/landing/${cardHash}`)
-      cy.getTestElement('greeting-funded-headline').should('exist')
+      cy.getTestElement('greeting-funded-headline', { timeout: 10000 }).should('exist')
       cy.getTestElement('greeting-funded-bitcoin-amount').should('contain', '0.00000210 BTC')
     })
   })

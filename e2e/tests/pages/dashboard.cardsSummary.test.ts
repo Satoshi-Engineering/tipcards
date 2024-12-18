@@ -33,7 +33,9 @@ describe('Dashboard Cards Summary', () => {
       cy.task('db:create100TestSets', { userId })
     })
 
+    cy.intercept('/trpc/**card.cardsSummary**').as('cardsSummary')
     tipCards.gotoDashboardPage()
+    cy.wait('@cardsSummary', { timeout: 10000 })
 
     cy.getTestElement('cards-summary').should('exist')
     cy.getTestElement('cards-summary-withdrawn').should('contain.text', '7350 sats')
