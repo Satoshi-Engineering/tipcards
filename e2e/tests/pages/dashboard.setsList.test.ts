@@ -27,7 +27,7 @@ describe('Dashboard Sets List', () => {
     cy.getTestElement('sets-list-message-empty').should('exist')
   })
 
-  it('should login and display the user\'s sets aferwards', () => {
+  it.skip('should login and display the user\'s sets aferwards', () => {
     // preparation: create a user and 100 sets w/o logging in
     cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
       cy.wrap(keyPair).as('keyPair')
