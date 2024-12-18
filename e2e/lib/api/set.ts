@@ -1,8 +1,6 @@
 // load the global Cypress types
 /// <reference types="cypress" />
 
-import axios from 'axios'
-
 import { generateSet, GenerateSetOptions } from '@e2e/lib/api/data/set'
 import { payInvoice } from '@e2e/lib/api/lnbitsWallet'
 import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
@@ -66,36 +64,4 @@ export const generateAndAddSet = (options?: string | GenerateSetOptions) => {
 
   addSet(set)
   return set
-}
-
-export const addSetsParallelWithAxios = (sets: Set[]) => {
-  tipCardsApi.auth.getAccessToken()
-  cy.get('@accessToken').then({ timeout: 1000 * sets.length }, async function () {
-    await Promise.all(sets.map((set) =>
-      axios.request({
-        url: `${API_SET.href}/${set.id}/`,
-        method: 'POST',
-        data: set,
-        headers: {
-          Authorization: this.accessToken,
-        },
-      }),
-    ))
-  })
-}
-
-export const createInvoicesForSetsParallelWithAxios = (sets: Set[], amountPerCard = 21) => {
-  cy.then({ timeout: 10000 * sets.length }, async function () {
-    await Promise.all(sets.map((set) =>
-      axios.request({
-        url: `${API_SET.href}/invoice/${set.id}`,
-        method: 'POST',
-        data: {
-          amountPerCard,
-          cardIndices: [...new Array(set.settings.numberOfCards).keys()],
-        },
-      }),
-    ))
-  })
-  cy.log(`${sets.length} invoices created`)
 }

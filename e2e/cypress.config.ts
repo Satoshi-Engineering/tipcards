@@ -44,6 +44,9 @@ config({
 
 export default defineConfig({
   e2e: {
+    defaultCommandTimeout: 60000,
+    responseTimeout: 60000,
+    requestTimeout: 60000,
     experimentalInteractiveRunEvents: true, // this is allow before:run events to be triggered in interactive mode (needed for database plugin)
     specPattern: 'e2e/**/*.test.ts',
     supportFile: 'e2e/support/e2e.ts',

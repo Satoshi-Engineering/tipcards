@@ -26,7 +26,7 @@ describe('Sets Page Cards Info', () => {
     cy.setCookie('refresh_token', refreshToken)
   })
 
-  it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, { taskTimeout: 5000 * numberOfSets }, () => {
+  it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, () => {
     tipCards.gotoSetsPage()
 
     cy.getTestElement('sets-list-item')
