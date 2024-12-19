@@ -41,9 +41,9 @@ export default class OpenTaskBuilder {
   }
 
   private cardStatusCollection: CardStatusCollection = new CardStatusCollection([])
-  private openCardTasks: IOpenTask[] = []
-  private openBulkwithdrawTasks: IOpenTask[] = []
-  private openSetFundingTasks: IOpenTask[] = []
+  private openCardTasks: OpenCardTask[] = []
+  private openBulkwithdrawTasks: OpenBulkwithdrawTask[] = []
+  private openSetFundingTasks: OpenSetFundingTask[] = []
 
   private async buildOpenCardTasks(): Promise<void> {
     this.openCardTasks = this.cardStatusCollection.data
