@@ -348,7 +348,7 @@
                       ? card.urlFunding
                       : card.urlLandingWithCardHash
                 "
-                :data-lnurl="card.status !== 'setFunding' && card.fundedDate != null ? card.urlLandingWithLnurl : undefined"
+                :data-lnurl="card.urlLandingWithLnurl"
               >
                 <div
                   class="absolute top-7 bottom-7 left-3 w-auto h-auto aspect-square"
