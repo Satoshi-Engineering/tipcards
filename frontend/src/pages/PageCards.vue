@@ -34,13 +34,15 @@
         <CardsSummary
           class="mt-7 mb-5"
           :cards-summary-with-loading-status="cardsSummaryWithLoadingStatus"
+          open-tasks-href="#card-status-list"
         />
       </CenterContainer>
     </div>
-    <CenterContainer class="print:hidden">
+    <CenterContainer id="card-status-list" class="print:hidden">
       <ParagraphDefault
         v-if="cardsStatusList.length == 0"
-        class="text-sm text-grey"
+        :class="{ 'opacity-0': !initialLoadStatusForCardsDone }"
+        class="text-sm text-grey transition-opacity"
       >
         {{ t('cards.status.noCards') }}
       </ParagraphDefault>
@@ -785,6 +787,7 @@ const generateNewCardSkeleton = async (index: number) => {
 
 const set = ref<Set>()
 const reloadingStatusForCards = ref(false)
+const initialLoadStatusForCardsDone = ref(false)
 const reloadStatusForCards = async () => {
   reloadingStatusForCards.value = true
 
@@ -824,6 +827,7 @@ const reloadStatusForCards = async () => {
     card.isLockedByBulkWithdraw = !!cardData?.isLockedByBulkWithdraw
   }))
   reloadingStatusForCards.value = false
+  initialLoadStatusForCardsDone.value = true
 }
 const debouncedReloadStatusForCards = debounce(reloadStatusForCards, 1000)
 
