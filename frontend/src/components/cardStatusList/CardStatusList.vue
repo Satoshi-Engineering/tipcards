@@ -5,6 +5,7 @@
     :header-secondary="$t('general.amount')"
     :loading="loading"
     :reloading="reloading"
+    :not-logged-in="notLoggedIn"
     data-test="card-status-list"
   >
     <template #default="{ item: cardStatus }">
@@ -12,6 +13,9 @@
         class="-mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default"
         :card-status="cardStatus"
       />
+    </template>
+    <template #notLoggedInMessage>
+      <CardStatusListMessageNotLoggedIn />
     </template>
   </ItemsListWithMessages>
 </template>
@@ -23,6 +27,7 @@ import type { CardStatusForHistoryDto } from '@shared/data/trpc/CardStatusForHis
 
 import ItemsListWithMessages from '@/components/itemsList/ItemsListWithMessages.vue'
 import CardStatusListItem from './components/CardStatusListItem.vue'
+import CardStatusListMessageNotLoggedIn from './components/CardStatusListMessageNotLoggedIn.vue'
 
 defineProps({
   cardStatuses: {
@@ -34,6 +39,10 @@ defineProps({
     default: false,
   },
   reloading: {
+    type: Boolean,
+    default: false,
+  },
+  notLoggedIn: {
     type: Boolean,
     default: false,
   },

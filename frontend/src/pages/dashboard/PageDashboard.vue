@@ -25,6 +25,7 @@
           :loading="history.length < 1 && fetchingHistory"
           :reloading="history.length > 0 && fetchingHistory"
           :user-error-messages="fetchingHistoryUserErrorMessages"
+          :not-logged-in="!isLoggedIn"
           class="my-7"
         />
         <div v-if="isLoggedIn" class="text-center">

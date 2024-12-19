@@ -1,5 +1,8 @@
 <template>
-  <section data-test="open-tasks">
+  <section
+    v-if="openTasks.length > 0"
+    data-test="open-tasks"
+  >
     <CenterContainer class="!py-10">
       <header class="flex items-end gap-4">
         <HeadlineDefault
@@ -22,6 +25,7 @@
         :header-secondary="$t('general.amount')"
         :items="sortedOpenTasks"
         :loading="openTasksWithLoadingStatus.status === 'loading'"
+        :not-logged-in="!isLoggedIn"
         data-test="open-tasks-list"
       >
         <template #default="{ item: openTask }">

@@ -48,6 +48,10 @@
     "created": "Erstellt",
     "bulkWithdrawCreated": "Zurückholen gestartet"
   },
+  "cardStatusList": {
+    "loginToSeeYourCards": "{loginLink}, um eine Liste deiner TipCards mit ihrem Status zu sehen.",
+    "loginToSeeYourCardsLoginLink": "Melde dich an"
+  },
   "header": {
     "mainNavLabel": "Hauptnavigation",
     "langNavLabel": "Sprachnavigation",

@@ -48,6 +48,10 @@
     "created": "Created",
     "bulkWithdrawCreated": "Reclaim started"
   },
+  "cardStatusList": {
+    "loginToSeeYourCards": "{loginLink} to see a list of your TipCards and their status.",
+    "loginToSeeYourCardsLoginLink": "Log in"
+  },
   "header": {
     "mainNavLabel": "Main navigation",
     "langNavLabel": "Language selection",

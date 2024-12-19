@@ -20,6 +20,7 @@
         :card-statuses="history"
         :loading="fetchingHistory"
         :user-error-messages="fetchingHistoryUserErrorMessages"
+        :not-logged-in="!isLoggedIn"
         class="my-7"
       />
       <div v-if="history.length < (historyTotal ?? 0)" class="text-center">
@@ -39,6 +40,7 @@
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted } from 'vue'
 
+import { useAuthStore } from '@/stores/auth'
 import CardStatusList from '@/components/cardStatusList/CardStatusList.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
@@ -46,6 +48,8 @@ import { useHistoryStore } from '@/stores/historyStore'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
+
+const { isLoggedIn } = useAuthStore()
 
 const itemsPerPage = 50
 
