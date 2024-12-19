@@ -53,7 +53,7 @@
             <template #default>
               <div>
                 {{ $t('cardStatus.created') }}:
-                <time>
+                <time data-test="open-card-task-created">
                   {{ $d(openTask.created, dateWithTimeFormat) }}
                 </time>
               </div>
@@ -100,7 +100,7 @@
               </div>
               <div>
                 {{ $t('cardStatus.created') }}:
-                <time>
+                <time data-test="open-card-task-created">
                   {{ $d(openTask.created, dateWithTimeFormat) }}
                 </time>
               </div>

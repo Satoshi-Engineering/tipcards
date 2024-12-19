@@ -7,6 +7,8 @@ import postgres from 'postgres'
 
 import { getJwtPayload } from '../lib/jwtHelpers'
 import {
+  createSet005,
+  createSet007,
   create100TestSets,
   createSetsWithSetFunding,
 } from './database/createSets'
@@ -97,6 +99,16 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return sets
     },
 
+    'db:createSet5': async ({ userId }: { userId: string }): Promise<SetDto> => {
+      const set = await createSet005(sql, userId)
+      return set
+    },
+
+    'db:createSet7': async ({ userId }: { userId: string }): Promise<SetDto> => {
+      const set = await createSet007(sql, userId)
+      return set
+    },
+
     'db:createSetsWithSetFunding': async ({
       userId,
       numberOfSets,
@@ -105,14 +117,14 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       userId: string,
       numberOfSets: number,
       numberOfCardsPerSet: number,
-    }) => {
-      const setIds = await createSetsWithSetFunding(
+    }): Promise<SetDto[]> => {
+      const sets = await createSetsWithSetFunding(
         sql,
         userId,
         numberOfSets,
         numberOfCardsPerSet,
       )
-      return setIds.join(', ')
+      return sets
     },
   })
 

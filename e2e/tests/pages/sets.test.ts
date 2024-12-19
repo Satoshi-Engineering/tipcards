@@ -48,7 +48,7 @@ describe('Sets Page', () => {
     cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
       const dates = $els.toArray().map((el) => el.textContent)
       for (let i = 0; i < dates.length - 1; i++) {
-        expect(new Date(dates[i])).to.be.greaterThan(new Date(dates[i + 1]))
+        cy.wrap(new Date(dates[i])).should('not.be.lessThan', new Date(dates[i + 1]))
       }
     })
   })

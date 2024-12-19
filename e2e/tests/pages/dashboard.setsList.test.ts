@@ -72,8 +72,8 @@ describe('Dashboard Sets List', () => {
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 3)
     cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
       const dates = $els.toArray().map((el) => el.textContent)
-      expect(new Date(dates[0])).to.be.greaterThan(new Date(dates[1]))
-      expect(new Date(dates[1])).to.be.greaterThan(new Date(dates[2]))
+      cy.wrap(new Date(dates[0])).should('not.be.lessThan', new Date(dates[1]))
+      cy.wrap(new Date(dates[1])).should('not.be.lessThan', new Date(dates[2]))
     })
   })
 })
