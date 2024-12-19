@@ -31,6 +31,8 @@
         <template #default="{ item: openTask }">
           <ItemsListItem
             v-if="openTask.type === OpenTaskType.enum.cardAction"
+            data-test="open-card-task"
+            :data-test-card-hash="openTask.cardHash"
             :to="{
               name: 'funding',
               params: {
@@ -62,6 +64,12 @@
           </ItemsListItem>
           <ItemsListItem
             v-else-if="openTask.type === OpenTaskType.enum.setAction"
+            :data-test="
+              openTask.cardStatus === CardStatusEnum.enum.isLockedByBulkWithdraw
+                ? 'open-bulk-withdraw-task'
+                : 'open-set-funding-task'
+            "
+            :data-test-set-id="openTask.setId"
             :to="{
               name: openTask.cardStatus === CardStatusEnum.enum.isLockedByBulkWithdraw
                 ? 'bulk-withdraw'

@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+import type { SetDto } from '@shared/data/trpc/SetDto'
+
 import crypto, { randomUUID } from 'crypto'
 import postgres from 'postgres'
 
@@ -90,9 +92,9 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return sessionId
     },
 
-    'db:create100TestSets': async ({ userId }: { userId: string }) => {
-      await create100TestSets(sql, userId)
-      return null
+    'db:create100TestSets': async ({ userId }: { userId: string }): Promise<SetDto[]> => {
+      const sets = await create100TestSets(sql, userId)
+      return sets
     },
 
     'db:createSetsWithSetFunding': async ({

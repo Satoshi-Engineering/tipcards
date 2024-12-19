@@ -1,76 +1,85 @@
+import type { SetDto } from '@shared/data/trpc/SetDto'
+
 import { createHash, randomUUID } from 'crypto'
 import type { Sql } from 'postgres'
 
-import type { Set, CardVersion, Invoice } from '../../../backend/src/database/schema/index'
+import type { CardVersion, Invoice } from '../../../backend/src/database/schema/index'
 
-export const create100TestSets = async (sql: Sql, userId: string) => {
-  await createSet001(sql, userId)
-  await createSet002(sql, userId)
-  await createSet003(sql, userId)
-  await createSet004(sql, userId)
-  await createSet005(sql, userId)
-  await createSet006(sql, userId)
-  await createSetsWithSetFunding(sql, userId, 94, 100)
+export const create100TestSets = async (sql: Sql, userId: string): Promise<SetDto[]> => {
+  const set1 = await createSet001(sql, userId)
+  const set2 = await createSet002(sql, userId)
+  const set3 = await createSet003(sql, userId)
+  const set4 = await createSet004(sql, userId)
+  const set5 = await createSet005(sql, userId)
+  const set6 = await createSet006(sql, userId)
+  const setsWithSetFunding = await createSetsWithSetFunding(sql, userId, 94, 100)
+  return [set1, set2, set3, set4, set5, set6, ...setsWithSetFunding]
 }
 
 // funded by invoice: 1 card
-export const createSet001 = async (sql: Sql, userId: string) => {
+export const createSet001 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 001', 1)
   await createInvoiceFundedCards(sql, set, [1])
+  return set
 }
 
 // unfunded: 1 card
 // lnurlp funding: 1 card
 // funded by invoice: 1 card
 // withdrawn: 1 card
-export const createSet002 = async (sql: Sql, userId: string) => {
+export const createSet002 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 002', 4)
   await createWithdrawnCards(sql, set, [1])
   await createInvoiceFundedCards(sql, set, [2])
   await createCardWithLnurlp(sql, set, 3)
+  return set
 }
 
 // unfunded: 3 card
 // lnurlp funding: 1 card
 // funded by invoice: 5 card
 // withdrawn: 3 card
-export const createSet003 = async (sql: Sql, userId: string) => {
+export const createSet003 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 003', 12)
   await createWithdrawnCards(sql, set, [1, 4, 12])
   await createInvoiceFundedCards(sql, set, [2, 3, 5, 6, 11])
   await createCardWithLnurlp(sql, set, 7)
+  return set
 }
 
 // unfunded: 4 card
 // lnurlp funding: 1 card
 // funded by invoice: 5 card
 // withdrawn: 3 card
-export const createSet004 = async (sql: Sql, userId: string) => {
+export const createSet004 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 004', 13)
   await createWithdrawnCards(sql, set, [1, 4, 12])
   await createInvoiceFundedCards(sql, set, [2, 3, 5, 6, 11])
   await createCardWithLnurlp(sql, set, 7)
+  return set
 }
 
 // locked by bulkwithdraw: 30
 // withdrawn: 19 card
-export const createSet005 = async (sql: Sql, userId: string) => {
+export const createSet005 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 005', 49)
   const indexes = [...Array(50).keys()]
   await createWithdrawnCards(sql, set, indexes.slice(1, 20))
   await createCardsLockedByBulkWithdraw(sql, set, indexes.slice(20, 50))
+  return set
 }
 
 // unfunded: 5 card
 // invoice funding: 4 card
 // funded by invoice: 80 card
 // withdrawn: 10 card
-export const createSet006 = async (sql: Sql, userId: string) => {
+export const createSet006 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 006', 99)
   const indexes = [...Array(100).keys()]
   await createWithdrawnCards(sql, set, indexes.slice(1, 11))
   await createInvoiceFundedCards(sql, set, indexes.slice(11, 91))
   await createCardsWithInvoice(sql, set, indexes.slice(91, 95))
+  return set
 }
 
 export const createSetsWithSetFunding = async (
@@ -78,7 +87,7 @@ export const createSetsWithSetFunding = async (
   userId: string,
   numberOfSets: number,
   numberOfCardsPerSet: number,
-): Promise<Set[]> => {
+): Promise<SetDto[]> => {
   const setValues = [...Array(numberOfSets).keys()].map(() => {
     const created = createRandomTimestampLastYear()
     return {
@@ -146,7 +155,10 @@ export const createSetsWithSetFunding = async (
     await sql`INSERT INTO public."CardVersionHasInvoice" ${ sql(cardVersionHasInvoiceValues) };`
   }))
 
-  return setValues
+  return setValues.map((set, index) => ({
+    ...set,
+    settings: setSettingValues[index],
+  }))
 }
 
 const createSet = async (
@@ -154,7 +166,7 @@ const createSet = async (
   userId: string,
   name: string,
   numberOfCards: number,
-): Promise<Set> => {
+): Promise<SetDto> => {
   const created = createRandomTimestampLastYear()
   const set = {
     id: randomUUID(),
@@ -181,12 +193,15 @@ const createSet = async (
   }
   await sql`INSERT INTO public."UserCanUseSet" ${ sql(userCanUseSet) };`
 
-  return set
+  return {
+    ...set,
+    settings: setSettings,
+  }
 }
 
 const createWithdrawnCards = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   indexes: number[],
 ) => {
   const { cardVersions, invoice } = await createInvoiceFundedCards(sql, set, indexes)
@@ -211,7 +226,7 @@ const createWithdrawnCards = async (
 
 const createCardsLockedByBulkWithdraw = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   indexes: number[],
 ) => {
   const { cardVersions, invoice } = await createInvoiceFundedCards(sql, set, indexes)
@@ -232,7 +247,7 @@ const createCardsLockedByBulkWithdraw = async (
 
 const createInvoiceFundedCards = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   indexes: number[],
 ): Promise<{ cardVersions: CardVersion[], invoice: Invoice }> => {
   const cardVersions = await createUnfundedCards(sql, set, indexes)
@@ -264,7 +279,7 @@ const createInvoiceFundedCards = async (
 
 const createCardWithLnurlp = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   index: number,
 ) => {
   const [cardVersion] = await createUnfundedCards(sql, set, [index])
@@ -284,7 +299,7 @@ const createCardWithLnurlp = async (
 
 const createCardsWithInvoice = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   indexes: number[],
 ) => {
   const cardVersions = await createUnfundedCards(sql, set, indexes)
@@ -319,7 +334,7 @@ const createCardsWithInvoice = async (
 
 const createUnfundedCards = async (
   sql: Sql,
-  set: Set,
+  set: SetDto,
   indexes: number[],
 ): Promise<CardVersion[]> => {
   const cardValues = indexes.map((index) => ({
