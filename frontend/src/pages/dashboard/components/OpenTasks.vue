@@ -20,7 +20,7 @@
         class="my-7"
         :header-primary="$t('dashboard.openTasks.headerPrimary')"
         :header-secondary="$t('general.amount')"
-        :items="openTasks"
+        :items="sortedOpenTasks"
         :loading="openTasksWithLoadingStatus.status === 'loading'"
         data-test="open-tasks-list"
       >
@@ -136,6 +136,7 @@ const openTasksErrorMessages = ref<string[]>([])
 const openTasks = computed<OpenTaskDto[]>(() => openTasksWithLoadingStatus.value.status === 'success'
   ? openTasksWithLoadingStatus.value.openTasks
   : [])
+const sortedOpenTasks = computed(() => [...openTasks.value].sort((a, b) => +b.created - +a.created))
 const cardCount = computed(() => openTasks.value.reduce((sum, openTask) => sum + (openTask.type === OpenTaskType.enum.setAction ? openTask.cardCount : 1), 0))
 
 const loadOpenTasks = async () => {
