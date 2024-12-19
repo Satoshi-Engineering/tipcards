@@ -103,6 +103,7 @@
             <ButtonWithTooltip
               type="submit"
               variant="outline"
+              data-test="set-funding-reset-invoice"
               :disabled="funded"
               :tooltip="funded ? t('setFunding.resetDisabledTooltip') : undefined"
               @click="resetInvoice"

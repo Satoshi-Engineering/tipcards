@@ -29,11 +29,26 @@ describe('OpenTasks', () => {
   })
 
   it('should load the open tasks on login', () => {
-    // todo : create sets
+    // preparation: create a user and a set w/o logging in
+    cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
+      cy.wrap(keyPair).as('keyPair')
+      cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', { lnurlAuthKey: keyPair.publicKeyAsHex }).then(({ userId }) => {
+        cy.task('db:createSet5', { userId })
+      })
+    })
+    tipCards.gotoDashboardPage()
 
-    // todo : login
+    // log in via ui
+    cy.getTestElement('login-banner-login').click()
+    cy.getTestElement('lightning-qr-code-image').then(($el) => {
+      const lnurlAuthUrl = $el.attr('href').substring(10)
+      cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
+    })
+    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
+    cy.getTestElement('modal-login-close-button').click()
 
-    // todo : check if the open tasks are loaded
+    // the tasks should get loaded
+    cy.getTestElement('open-tasks').should('exist')
   })
 
   it('should show all todos for the 100 test sets', () => {
@@ -185,5 +200,28 @@ describe('OpenTasks', () => {
 
       cy.url().should('contain', `/bulk-withdraw/${this.set.id}`)
     })
+  })
+
+  it('it should remove the remove the task if its resolved', () => {
+    tipCardsApi.auth.login()
+    cy.get('@userId').then((userId) => {
+      cy.task<SetDto[]>('db:createSetsWithSetFunding', {
+        userId,
+        numberOfSets: 1,
+        numberOfCardsPerSet: 8,
+      }).then((sets) => {
+        cy.wrap(sets).as('sets')
+      })
+    })
+    tipCards.gotoDashboardPage()
+    cy.get('@sets').then(function () {
+      const setId = this.sets[0].id
+      cy.get(`[data-test-set-id="${setId}"]`).click()
+    })
+
+    cy.get('button[data-test=set-funding-reset-invoice]').click()
+    tipCards.gotoDashboardPage()
+
+    cy.getTestElement('open-tasks').should('not.exist')
   })
 })
