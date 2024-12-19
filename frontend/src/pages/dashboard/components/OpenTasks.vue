@@ -12,7 +12,7 @@
           {{
             openTasksWithLoadingStatus.status !== 'success'
               ? '&nbsp;'
-              : `(${$t('dashboard.openTasks.cardCount', { count: cardCount })})`
+              : `(${$t('dashboard.openTasks.cardCount', { count: cardCount }, cardCount)})`
           }}
         </div>
       </header>
@@ -84,7 +84,7 @@
             </template>
             <template #default>
               <div>
-                {{ `${openTask.cardCount} Karten` }}
+                {{ $t('general.cards', {count: openTask.cardCount }, openTask.cardCount) }}
               </div>
               <div>
                 {{ $t('cardStatus.created') }}:
