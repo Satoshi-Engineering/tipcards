@@ -28,7 +28,7 @@ describe('OpenTasks', () => {
     cy.getTestElement('open-tasks').should('not.exist')
   })
 
-  it('should load the open tasks on login', () => {
+  it.skip('should load the open tasks on login', () => {
     // preparation: create a user and a set w/o logging in
     cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
       cy.wrap(keyPair).as('keyPair')

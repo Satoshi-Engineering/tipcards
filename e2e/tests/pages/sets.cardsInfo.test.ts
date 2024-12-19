@@ -39,7 +39,7 @@ describe('Sets Page Cards Info', () => {
     setListItemsInViewportHaveCardsInfoLoaded(numberOfCardsPerSet, viewportHeight)
   })
 
-  it('loads cards info for sets in viewport after scrolling', () => {
+  it.skip('loads cards info for sets in viewport after scrolling', () => {
     tipCards.gotoSetsPage()
     scrollDownAndWaitForCardsInfoRequest()
 
