@@ -3,7 +3,7 @@ import type { SetDto } from '@shared/data/trpc/SetDto'
 import { createHash, randomUUID } from 'crypto'
 import type { Sql } from 'postgres'
 
-import type { CardVersion, Invoice } from '../../../backend/src/database/schema/index'
+import type { CardVersion, Invoice, LnurlP } from '../../../backend/src/database/schema/index'
 
 export const create100TestSets = async (sql: Sql, userId: string): Promise<SetDto[]> => {
   const set1 = await createSet001(sql, userId)
@@ -12,14 +12,15 @@ export const create100TestSets = async (sql: Sql, userId: string): Promise<SetDt
   const set4 = await createSet004(sql, userId)
   const set5 = await createSet005(sql, userId)
   const set6 = await createSet006(sql, userId)
-  const setsWithSetFunding = await createSetsWithSetFunding(sql, userId, 94, 100)
-  return [set1, set2, set3, set4, set5, set6, ...setsWithSetFunding]
+  const set7 = await createSet007(sql, userId)
+  const setsWithSetFunding = await createSetsWithSetFunding(sql, userId, 93, 100)
+  return [set1, set2, set3, set4, set5, set6, set7, ...setsWithSetFunding]
 }
 
 // funded by invoice: 1 card
 export const createSet001 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 001', 1)
-  await createInvoiceFundedCards(sql, set, [1])
+  await createCardsFundedByInvoice(sql, set, [1])
   return set
 }
 
@@ -30,7 +31,7 @@ export const createSet001 = async (sql: Sql, userId: string): Promise<SetDto> =>
 export const createSet002 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 002', 4)
   await createWithdrawnCards(sql, set, [1])
-  await createInvoiceFundedCards(sql, set, [2])
+  await createCardsFundedByInvoice(sql, set, [2])
   await createCardWithLnurlp(sql, set, 3)
   return set
 }
@@ -42,7 +43,7 @@ export const createSet002 = async (sql: Sql, userId: string): Promise<SetDto> =>
 export const createSet003 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 003', 12)
   await createWithdrawnCards(sql, set, [1, 4, 12])
-  await createInvoiceFundedCards(sql, set, [2, 3, 5, 6, 11])
+  await createCardsFundedByInvoice(sql, set, [2, 3, 5, 6, 11])
   await createCardWithLnurlp(sql, set, 7)
   return set
 }
@@ -54,7 +55,7 @@ export const createSet003 = async (sql: Sql, userId: string): Promise<SetDto> =>
 export const createSet004 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 004', 13)
   await createWithdrawnCards(sql, set, [1, 4, 12])
-  await createInvoiceFundedCards(sql, set, [2, 3, 5, 6, 11])
+  await createCardsFundedByInvoice(sql, set, [2, 3, 5, 6, 11])
   await createCardWithLnurlp(sql, set, 7)
   return set
 }
@@ -70,15 +71,30 @@ export const createSet005 = async (sql: Sql, userId: string): Promise<SetDto> =>
 }
 
 // unfunded: 5 card
-// invoice funding: 4 card
-// funded by invoice: 80 card
+// unfunded with invoice: 2 cards
+// funded by invoice: 2 cards
+// bulk funded: 80 card
 // withdrawn: 10 card
 export const createSet006 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 006', 99)
   const indexes = [...Array(100).keys()]
   await createWithdrawnCards(sql, set, indexes.slice(1, 11))
-  await createInvoiceFundedCards(sql, set, indexes.slice(11, 91))
-  await createCardsWithInvoice(sql, set, indexes.slice(91, 95))
+  await createCardsFundedByBulkFunding(sql, set, indexes.slice(11, 91))
+  await createCardsFundedByInvoice(sql, set, indexes.slice(91, 93))
+  await createUnfundedCardsWithInvoice(sql, set, indexes.slice(94, 95))
+  return set
+}
+
+// unfunded with invoice: 1 card
+// unfunded with expired invoice: 1 card
+// shared funding with no sats: 1 card
+// shared funding partially funded: 1 card
+export const createSet007 = async (sql: Sql, userId: string): Promise<SetDto> => {
+  const set = await createSet(sql, userId, 'Set 007', 99)
+  await createUnfundedCardsWithInvoice(sql, set, [0])
+  await createCardsWithExpiredInvoice(sql, set, [1])
+  await createCardWithSharedFunding(sql, set, 2)
+  await createCardWithSharedFundingPartiallyFunded(sql, set, 3)
   return set
 }
 
@@ -204,7 +220,7 @@ const createWithdrawnCards = async (
   set: SetDto,
   indexes: number[],
 ) => {
-  const { cardVersions, invoice } = await createInvoiceFundedCards(sql, set, indexes)
+  const { cardVersions, invoice } = await createCardsFundedByBulkFunding(sql, set, indexes)
 
   const lnurlWs = cardVersions.map(() => {
     const created = createRandomTimestampBetweenDateAndNow(invoice.created)
@@ -229,7 +245,7 @@ const createCardsLockedByBulkWithdraw = async (
   set: SetDto,
   indexes: number[],
 ) => {
-  const { cardVersions, invoice } = await createInvoiceFundedCards(sql, set, indexes)
+  const { cardVersions, invoice } = await createCardsFundedByBulkFunding(sql, set, indexes)
   const created = createRandomTimestampBetweenDateAndNow(invoice.created)
 
   const lnurlW = {
@@ -245,7 +261,7 @@ const createCardsLockedByBulkWithdraw = async (
   await sql`UPDATE public."CardVersion" SET "lnurlW" = ${ lnurlW.lnbitsId } WHERE id IN ${ sql(cardVersionIds) };`
 }
 
-const createInvoiceFundedCards = async (
+const createCardsFundedByBulkFunding = async (
   sql: Sql,
   set: SetDto,
   indexes: number[],
@@ -285,10 +301,10 @@ const createCardWithLnurlp = async (
   const [cardVersion] = await createUnfundedCards(sql, set, [index])
   const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
 
-  const lnurlP = {
+  const lnurlP: LnurlP = {
     lnbitsId: randomUUID(),
     created,
-    expiresAt: new Date(created.getTime() + 1000 * 60 * 5),
+    expiresAt: null,
     finished: null,
   }
   await sql`INSERT INTO public."LnurlP" ${ sql(lnurlP) };`
@@ -297,7 +313,125 @@ const createCardWithLnurlp = async (
   await sql`UPDATE public."CardVersion" SET "lnurlP" = ${ lnurlP.lnbitsId } WHERE id = ${ cardVersionId };`
 }
 
-const createCardsWithInvoice = async (
+const createCardWithSharedFunding = async (
+  sql: Sql,
+  set: SetDto,
+  index: number,
+) => {
+  const cardVersion = await createUnfundedCardForSharedFunding(sql, set, index)
+  const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
+
+  const lnurlP: LnurlP = {
+    lnbitsId: randomUUID(),
+    created,
+    expiresAt: null,
+    finished: null,
+  }
+  await sql`INSERT INTO public."LnurlP" ${ sql(lnurlP) };`
+
+  const cardVersionId = cardVersion.id
+  await sql`UPDATE public."CardVersion" SET "lnurlP" = ${ lnurlP.lnbitsId } WHERE id = ${ cardVersionId };`
+
+  return cardVersion
+}
+
+const createCardWithSharedFundingPartiallyFunded = async (
+  sql: Sql,
+  set: SetDto,
+  index: number,
+) => {
+  const cardVersion = await createCardWithSharedFunding(sql, set, index)
+  const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
+
+  const invoice = {
+    amount: 210,
+    paymentHash: randomUUID(),
+    paymentRequest: randomUUID(),
+    created,
+    paid: created,
+    expiresAt: new Date(created.getTime() + 1000 * 60 * 5),
+    extra: '',
+  }
+  const cardVersionHasInvoice = {
+    cardVersion: cardVersion.id,
+    invoice: invoice.paymentHash,
+  }
+
+  await sql`INSERT INTO public."Invoice" ${ sql(invoice) };`
+  await sql`INSERT INTO public."CardVersionHasInvoice" ${ sql(cardVersionHasInvoice) };`
+}
+
+const createUnfundedCardsWithInvoice = async (
+  sql: Sql,
+  set: SetDto,
+  indexes: number[],
+) => {
+  const cardVersions = await createUnfundedCards(sql, set, indexes)
+
+  const values = cardVersions.map((cardVersion) => {
+    const created = new Date()
+    const invoice = {
+      amount: 210,
+      paymentHash: randomUUID(),
+      paymentRequest: randomUUID(),
+      created,
+      paid: null,
+      expiresAt: new Date(created.getTime() + 1000 * 60 * 5),
+      extra: '',
+    }
+    const cardVersionHasInvoice = {
+      cardVersion: cardVersion.id,
+      invoice: invoice.paymentHash,
+    }
+    return {
+      invoice,
+      cardVersionHasInvoice,
+    }
+  })
+
+  const invoiceValues = values.map((value) => value.invoice)
+  await sql`INSERT INTO public."Invoice" ${ sql(invoiceValues) };`
+
+  const cardVersionHasInvoiceValues = values.map((value) => value.cardVersionHasInvoice)
+  await sql`INSERT INTO public."CardVersionHasInvoice" ${ sql(cardVersionHasInvoiceValues) };`
+}
+
+const createCardsWithExpiredInvoice = async (
+  sql: Sql,
+  set: SetDto,
+  indexes: number[],
+) => {
+  const cardVersions = await createUnfundedCards(sql, set, indexes)
+
+  const values = cardVersions.map((cardVersion) => {
+    const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
+    const invoice = {
+      amount: 210,
+      paymentHash: randomUUID(),
+      paymentRequest: randomUUID(),
+      created,
+      paid: null,
+      expiresAt: created,
+      extra: '',
+    }
+    const cardVersionHasInvoice = {
+      cardVersion: cardVersion.id,
+      invoice: invoice.paymentHash,
+    }
+    return {
+      invoice,
+      cardVersionHasInvoice,
+    }
+  })
+
+  const invoiceValues = values.map((value) => value.invoice)
+  await sql`INSERT INTO public."Invoice" ${ sql(invoiceValues) };`
+
+  const cardVersionHasInvoiceValues = values.map((value) => value.cardVersionHasInvoice)
+  await sql`INSERT INTO public."CardVersionHasInvoice" ${ sql(cardVersionHasInvoiceValues) };`
+}
+
+const createCardsFundedByInvoice = async (
   sql: Sql,
   set: SetDto,
   indexes: number[],
@@ -358,6 +492,34 @@ const createUnfundedCards = async (
   await sql`INSERT INTO public."CardVersion" ${ sql(cardVersionValues) };`
 
   return cardVersionValues
+}
+
+const createUnfundedCardForSharedFunding = async (
+  sql: Sql,
+  set: SetDto,
+  index: number,
+): Promise<CardVersion> => {
+  const card = {
+    hash: hashSha256(`${set.id}/${index}`),
+    created: createRandomTimestampBetweenDateAndNow(set.created),
+    set: set.id,
+  }
+  await sql`INSERT INTO public."Card" ${ sql(card) };`
+
+  const cardVersion = {
+    id: randomUUID(),
+    card: card.hash,
+    created: card.created,
+    lnurlP: null,
+    lnurlW: null,
+    textForWithdraw: '',
+    noteForStatusPage: '',
+    sharedFunding: true,
+    landingPageViewed: null,
+  }
+  await sql`INSERT INTO public."CardVersion" ${ sql(cardVersion) };`
+
+  return cardVersion
 }
 
 const hashSha256 = (message: string) => {

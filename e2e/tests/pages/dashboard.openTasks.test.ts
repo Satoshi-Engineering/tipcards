@@ -48,23 +48,32 @@ describe('OpenTasks', () => {
 
     tipCards.gotoDashboardPage()
 
-    cy.getTestElement('open-tasks').should('contain.text', '9432 cards with open tasks')
+    cy.getTestElement('open-tasks').should('contain.text', '9337 cards with open tasks')
     cy.getTestElement('open-tasks-list').should('exist')
-    cy.get('[data-test=open-tasks-list] li').should('have.length', 98)
+    cy.get('[data-test=open-tasks-list] li').should('have.length', 102)
     cy.get('@sets').then(function () {
       const set5 = this.sets.find((set: SetDto) => set.settings.name === 'Set 005')
       cy.get(`[data-test-set-id="${set5.id}"]`)
         .should('exist')
-        .should('contain.text', 'Set 005')
         .should('contain.text', 'Reclaim in progress')
+        .should('contain.text', 'Set 005')
+        .should('contain.text', '29 cards')
         .should('contain.text', '6090 sats')
 
       const set40 = this.sets.find((set: SetDto) => set.settings.name === 'BulkSet 040')
       cy.get(`[data-test-set-id="${set40.id}"]`)
         .should('exist')
-        .should('contain.text', 'BulkSet 040')
         .should('contain.text', 'Set invoice expired')
+        .should('contain.text', 'BulkSet 040')
+        .should('contain.text', '100 cards')
         .should('contain.text', '2100 sats')
+
+      // todo : check a single card for:
+      // - invoice
+      // - expired invoice
+      // - lnurlp
+      // - shared funding (0 sats)
+      // - shared funding (some sats)
     })
   })
 })
