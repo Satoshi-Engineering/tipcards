@@ -80,4 +80,16 @@ describe('Dashboard Sets List', () => {
       cy.wrap(new Date(dates[1])).should('not.be.lessThan', new Date(dates[2]))
     })
   })
+
+  it('only shows 3 sets on the dashboard, even if it loaded all on the sets page before', () => {
+    tipCardsApi.auth.login()
+    cy.get('@userId').then((userId) => {
+      cy.task('db:create100TestSets', { userId })
+    })
+    tipCards.gotoSetsPage()
+
+    tipCards.gotoDashboardPage()
+
+    cy.getTestElement('sets-list-item').should('have.length', 3)
+  })
 })
