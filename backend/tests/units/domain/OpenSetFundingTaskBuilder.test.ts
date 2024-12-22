@@ -41,7 +41,7 @@ describe('OpenSetFundingTaskBuilder', () => {
       lnurlW: null,
     })
     const cardStatus2 = CardStatus.fromData({
-      cardVersion: cardVersion1,
+      cardVersion: cardVersion2,
       invoices: [new InvoiceWithSetFundingInfo(invoice, 2)],
       lnurlP: null,
       lnurlW: null,
@@ -52,6 +52,7 @@ describe('OpenSetFundingTaskBuilder', () => {
     await builder.build()
     const openTask = builder.openTasks[0]
 
+    expect(builder.openTasks.length).toEqual(1)
     expect(openTask.set).toEqual(set)
     expect(openTask.setSettings).toEqual(setSettings)
     expect(openTask.invoice).toEqual(new InvoiceWithSetFundingInfo(invoice, 2))
