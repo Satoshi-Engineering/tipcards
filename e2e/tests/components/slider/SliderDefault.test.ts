@@ -25,24 +25,30 @@ const pointerMoveLeft = (deltaX: number) => ({
 })
 
 describe('SliderDefault', () => {
-  it('renders the slider and swipes to the second slide', () => {
+  it('renders the slider', () => {
     cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
     cy.get('[data-test="slider-default"]').first().as('slider')
     cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
     cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')
     cy.get('@slider').find('[data-test="slide-default"]').eq(2).as('slide3')
 
-    // renders the slider
     cy.get('@slide1')
       .should('be.visible')
       .should('contain', 'Slide 1')
     cy.get('@slide2').should('not.be.visible')
     cy.get('@slide3').should('not.be.visible')
+  })
 
-    // swipes to the second slide
+  it('swipes to the second slide', () => {
+    cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
+    cy.get('[data-test="slider-default"]').first().as('slider')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(2).as('slide3')
+
+    // swipe to the second slide
     cy.get('@slider').then(($slider) => {
       const width = $slider.width()
-      cy.log(`Width: ${width}`)
       cy.get('@slider').find('ul')
         .trigger('pointerdown', pointerDownEvent)
         .trigger('pointermove', pointerMoveLeft(Math.round(width * 0.3)))
@@ -50,13 +56,23 @@ describe('SliderDefault', () => {
         .trigger('pointerup', { force: true, pointerId: 1 })
     })
     cy.wait(500)
+
     cy.get('@slide1').should('not.be.visible')
     cy.get('@slide2').should('be.visible')
     cy.get('@slide3').should('not.be.visible')
+  })
 
-    // navigates to third slide using pagination
+  it('navigates to third slide using pagination', () => {
+    cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
+    cy.get('[data-test="slider-default"]').first().as('slider')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')
+    cy.get('@slider').find('[data-test="slide-default"]').eq(2).as('slide3')
+
+    // navigate to third slide using pagination
     cy.get('[data-test="slider-default-pagination"] button').eq(2).click()
     cy.wait(500)
+
     cy.get('@slide1').should('not.be.visible')
     cy.get('@slide2').should('not.be.visible')
     cy.get('@slide3').should('be.visible')
