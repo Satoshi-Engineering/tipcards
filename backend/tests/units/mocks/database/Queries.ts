@@ -302,6 +302,29 @@ export default vi.fn().mockImplementation(() => ({
     })
   },
 
+  getSetWithSettingsBySetFundingPaymentHash: async (paymentHashes: Invoice['paymentHash'][]): Promise<Record<Invoice['paymentHash'], SetWithSettings>> => {
+    return paymentHashes.reduce<Record<Invoice['paymentHash'], SetWithSettings>>((acc, paymentHash) => {
+      const cardVersionInvoice = cardVersionInvoices.find((cardVersionInvoice) => cardVersionInvoice.invoice === paymentHash)
+      if (cardVersionInvoice == null) {
+        return acc
+      }
+      const cardVersion = cardVersionsById[cardVersionInvoice.cardVersion]
+      const card = cardsByHash[cardVersion.card]
+      if (card.set == null) {
+        return acc
+      }
+      const set = setsById[card.set]
+      const settings = setSettingsBySetId[card.set]
+      return {
+        ...acc,
+        [paymentHash]: {
+          ...set,
+          settings,
+        },
+      }
+    }, {})
+  },
+
   insertCards: vi.fn(async (...cards: Card[]): Promise<void> => {
     cards.forEach((card) => {
       if (cardsByHash[card.hash] != null) {

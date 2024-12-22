@@ -4,7 +4,7 @@ import CardStatusCollection from './CardStatusCollection.js'
 import { OpenCardTask } from './OpenCardTask.js'
 import CardStatus from './CardStatus.js'
 
-export default class OpenTaskBuilder {
+export default class OpenCardTaskBuilder {
   public readonly cardStatusCollection: CardStatusCollection
 
   public constructor(cardStatusCollection: CardStatusCollection) {
@@ -12,16 +12,16 @@ export default class OpenTaskBuilder {
   }
 
   public async build(): Promise<void> {
-    this._openCardTasks = this.cardStatusWithOpenTasks.map(this.openCardTaskFromCardStatus)
+    this.openCardTasks = this.cardStatusesWithOpenTasks.map((cardStatus) => this.openCardTaskFromCardStatus(cardStatus))
   }
 
   public get openTasks(): OpenCardTask[] {
-    return [...this._openCardTasks]
+    return [...this.openCardTasks]
   }
 
-  private _openCardTasks: OpenCardTask[] = []
+  private openCardTasks: OpenCardTask[] = []
 
-  private get cardStatusWithOpenTasks(): CardStatus[] {
+  private get cardStatusesWithOpenTasks(): CardStatus[] {
     return this.cardStatusCollection.data
       .filter((cardStatus) => ([
         CardStatusEnum.enum.invoiceFunding,

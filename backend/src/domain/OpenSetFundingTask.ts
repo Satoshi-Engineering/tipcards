@@ -24,7 +24,7 @@ export class OpenSetFundingTask implements IOpenTask {
     return {
       type: OpenTaskType.enum.setAction,
       created: this.created,
-      sats: this.invoice.invoice.amount,
+      sats: this.sats,
       cardStatus: this.cardStatus,
       setId: this.set.id,
       setSettings: SetSettingsDto.parse(this.setSettings),
@@ -34,6 +34,10 @@ export class OpenSetFundingTask implements IOpenTask {
 
   public get created(): Date {
     return this.invoice.invoice.created
+  }
+
+  public get sats(): number {
+    return this.invoice.invoice.amount
   }
 
   public get cardStatus() {
