@@ -2,7 +2,17 @@
 
 _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
-[![MIT License Badge](docs/img/license-badge.svg)](LICENSE)
+<p>
+  <a href="https://github.com/Satoshi-Engineering/tipcards/">
+    <img src="https://img.shields.io/github/package-json/v/Satoshi-Engineering/tipcards?color=6B3D91" alt="Version">
+  </a>
+  <a href="https://github.com/thespielplatz/foss-tsp-tools/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Satoshi-Engineering/tipcards?color=6B3D91" alt="Licence">
+  </a>
+  <a href="https://github.com/thespielplatz/nuxt-auth/stargazers">
+    <img src="https://img.shields.io/github/stars/Satoshi-Engineering/tipcards.svg?style=flat&color=6B3D91" alt="Stars">
+  </a>
+</p>
 
 ![TipCards Preview](docs/img/TipCardsHeader.png)
 
