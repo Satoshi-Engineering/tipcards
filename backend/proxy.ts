@@ -1,5 +1,6 @@
-import proxy from 'express-http-proxy'
-import express from 'express'
+import http from 'http'
+import httpProxy from 'http-proxy'
+import HttpProxyRules from 'http-proxy-rules'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
@@ -10,36 +11,32 @@ import {
 } from '@backend/constants.js'
 import { LNURL_PORT } from '@auth/constants.js'
 
-const app = express()
-app.use('/api', proxy(`localhost:${EXPRESS_PORT}`, {
-  proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-    const host = srcReq.get('host')
-    if (typeof host === 'string' && proxyReqOpts.headers != null) {
-      proxyReqOpts.headers.host = host
-    }
-    return proxyReqOpts
+const proxyRules = new HttpProxyRules({
+  rules: {
+    '/api(.*)': `http://localhost:${EXPRESS_PORT}/api/$1`,
+    '/trpc(.*)': `http://localhost:${EXPRESS_PORT}/trpc/$1`,
+    '/auth/trpc(.*)': `http://localhost:${EXPRESS_PORT}/auth/trpc/$1`,
+    '/lnurl(.*)': `http://localhost:${LNURL_PORT}/lnurl/$1`,
+    '/(.*)': `http://localhost:${WEB_PORT}/$1`,
   },
-  proxyReqPathResolver: (req: express.Request) => `/api${req.url}`,
-}))
-app.use('/trpc', proxy(`localhost:${EXPRESS_PORT}`, {
-  proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-    const host = srcReq.get('host')
-    if (typeof host === 'string' && proxyReqOpts.headers != null) {
-      proxyReqOpts.headers.host = host
-    }
-    return proxyReqOpts
-  },
-  proxyReqPathResolver: (req: express.Request) => `/trpc${req.url}`,
-}))
-app.use('/auth/trpc', proxy(`localhost:${EXPRESS_PORT}`, {
-  proxyReqPathResolver: (req: express.Request) => `/auth/trpc${req.url}`,
-}))
-app.use('/lnurl', proxy(`localhost:${LNURL_PORT}`, {
-  proxyReqPathResolver: (req: express.Request) => `/lnurl${req.url}`,
-}))
-app.use('/', proxy(`localhost:${WEB_PORT}`))
-
-app.listen(PROXY_PORT, () => {
-  /* eslint-disable */
-  console.info(`proxy running on ${PROXY_PORT}`)
 })
+
+const proxy = httpProxy.createProxy()
+
+http
+  .createServer((req, res)  => {
+    const target = proxyRules.match(req)
+    if (target == null) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
+      res.end('The request url and path did not match any of the listed rules!')
+      return
+    }
+    return proxy.web(req, res, {
+      target: target,
+    })
+  })
+  .listen(PROXY_PORT)
+  .on('listening', () => {
+    /* eslint-disable-next-line no-console */
+    console.info(`proxy running on ${PROXY_PORT}`)
+  })
