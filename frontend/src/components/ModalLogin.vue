@@ -92,15 +92,24 @@ const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
+const hash = ref<string>()
 const loginFailed = ref(false)
 const missingEmail = ref(false)
 let subscription: Unsubscribable
 
-const safeLogin = async (hash: string) => {
-  fetchingLogin.value = true
+const safeLogin = async (hash: string, silent: boolean = false) => {
+  if (isLoggedIn.value || fetchingLogin.value) {
+    return
+  }
+  if (!silent) {
+    fetchingLogin.value = true
+  }
   try {
     await login(hash)
   } catch (error) {
+    if (silent) {
+      return
+    }
     loginFailed.value = true
     console.error(error)
     return
@@ -118,7 +127,8 @@ const safeLogin = async (hash: string) => {
 }
 
 const trpcAuth = useTRpcAuth()
-onBeforeMount(async () => {
+
+const subscribeToLogin = async () => {
   subscription = trpcAuth.lnurlAuth.login.subscribe(
     undefined,
     {
@@ -126,6 +136,7 @@ onBeforeMount(async () => {
         if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.lnurlCreated) {
           fetchingLogin.value = false
           lnurl.value = lnurlAuthLoginDto.data.lnurlAuth
+          hash.value = lnurlAuthLoginDto.data.hash
           return
         }
 
@@ -146,10 +157,24 @@ onBeforeMount(async () => {
       },
     },
   )
+}
+
+const onVisibilityChange = () => {
+  if (document.visibilityState !== 'visible' || hash.value == null) {
+    return
+  }
+  safeLogin(hash.value, true)
+}
+
+onBeforeMount(() => {
+  subscribeToLogin()
+  window.addEventListener('visibilitychange', onVisibilityChange)
 })
 
 onBeforeUnmount(() => {
   lnurl.value = undefined
+  hash.value = undefined
   subscription?.unsubscribe()
+  window.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>

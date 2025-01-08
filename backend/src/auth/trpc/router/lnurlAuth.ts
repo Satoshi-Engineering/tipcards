@@ -55,6 +55,7 @@ export const lnurlAuthRouter = router({
 
       yield loginResponse(id, {
         lnurlAuth,
+        hash,
         status: LnurlAuthLoginStatusEnum.enum.lnurlCreated,
       })
 

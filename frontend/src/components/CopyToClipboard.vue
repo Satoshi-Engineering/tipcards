@@ -54,6 +54,10 @@ const copyToClipboard = async (text: string) => {
     alert(props.error)
     return
   }
+  if (!navigator.clipboard) {
+    prompt('Clipboard API not available due to missing https.\nThis is the text you attempted to copy:', text)
+    return
+  }
   await navigator.clipboard.writeText(text)
   recentlyCopied.value = true
   await new Promise(resolve => setTimeout(resolve, 4000))
