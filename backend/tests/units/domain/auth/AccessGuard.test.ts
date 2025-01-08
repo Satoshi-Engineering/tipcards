@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest'
 import { Request } from 'express'
-import { TRPCError } from '@trpc/server'
 import { randomUUID } from 'crypto'
 
 import '../../mocks/process.env.js'
@@ -56,13 +55,13 @@ beforeEach(() => {
 describe('AccessGuard', () => {
   it('should fail due missing host', async () => {
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrowError(new TRPCError({ code: 'INTERNAL_SERVER_ERROR' }))
+      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AuthHostMissingInRequest))
   })
 
   it('should fail due missing authorization header', async () => {
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrowError(new TRPCError({ code: 'UNAUTHORIZED' }))
+      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AccessTokenMissing))
   })
 
   it('should fail due jwt is garbage', async () => {
@@ -70,7 +69,7 @@ describe('AccessGuard', () => {
     vi.spyOn(mockJwtValidator, 'validate').mockRejectedValueOnce(new Error())
     mockRequest.headers.authorization = 'accesstoken garbage'
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrow(new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid authorization token.' }))
+      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AccessTokenInvalid))
   })
 
   it('should fail due access token payload is not in the correct format', async () => {
@@ -78,7 +77,7 @@ describe('AccessGuard', () => {
     vi.spyOn(mockJwtValidator, 'validate').mockResolvedValueOnce({})
     mockRequest.headers.authorization = mockAccessToken
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrow(new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'JWT payload parsing failed.' }))
+      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.ZodErrorParsingAccessTokenPayload))
   })
 
   it('should fail due missing permission', async () => {
@@ -89,7 +88,7 @@ describe('AccessGuard', () => {
     await expect(accessGuard.authenticateUserViaAccessToken({
       requiredPermissions: [permission],
     }))
-      .rejects.toThrow(new TRPCError({ code: 'FORBIDDEN', message: `Missing permissions: ${permission}` }))
+      .rejects.toThrow(new ErrorWithCode(`Missing permissions: ${permission}`, ErrorCode.PermissionDenied))
   })
 
   it('should succeed permission check', async () => {

@@ -1,6 +1,5 @@
 import { type Request } from 'express'
 import { errors, type JWTPayload } from 'jose'
-import { TRPCError } from '@trpc/server'
 
 import JwtValidator from '@shared/modules/Jwt/JwtValidator.js'
 import { AccessTokenPayload } from '@shared/data/auth/index.js'
@@ -47,7 +46,7 @@ export default class AccessGuard {
   private getHost() {
     const host = this.request.get('host')
     if (!(typeof host === 'string')) {
-      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
+      throw new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest)
     }
     return host
   }
@@ -55,7 +54,7 @@ export default class AccessGuard {
   private getAuthorizationHeader() {
     const authorization = this.request.headers.authorization
     if (!(typeof authorization === 'string')) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
+      throw new ErrorWithCode(`Authorization in header missing or not a string (${typeof authorization})`, ErrorCode.AccessTokenMissing)
     }
     return authorization
   }
@@ -71,15 +70,9 @@ export default class AccessGuard {
       return await this.jwtValidator.validate(jwt, host)
     } catch (error) {
       if (error instanceof errors.JWTExpired) {
-        throw new TRPCError({
-          message: 'Authorization expired.',
-          code: 'UNAUTHORIZED',
-        })
+        throw new ErrorWithCode(error, ErrorCode.AccessTokenExpired)
       }
-      throw new TRPCError({
-        message: 'Invalid authorization token.',
-        code: 'UNAUTHORIZED',
-      })
+      throw new ErrorWithCode(error, ErrorCode.AccessTokenInvalid)
     }
   }
 
@@ -87,10 +80,7 @@ export default class AccessGuard {
     try {
       return AccessTokenPayload.parse(payload)
     } catch {
-      throw new TRPCError({
-        message: 'JWT payload parsing failed.',
-        code: 'INTERNAL_SERVER_ERROR',
-      })
+      throw new ErrorWithCode('JWT payload parsing failed.', ErrorCode.ZodErrorParsingAccessTokenPayload)
     }
   }
 
@@ -103,7 +93,7 @@ export default class AccessGuard {
   }) {
     requiredPermissions.forEach((permission) => {
       if (!accessToken.permissions.includes(permission)) {
-        throw new TRPCError({ message: `Missing permissions: ${permission}`, code: 'FORBIDDEN' })
+        throw new ErrorWithCode( `Missing permissions: ${permission}`, ErrorCode.PermissionDenied)
       }
     })
   }

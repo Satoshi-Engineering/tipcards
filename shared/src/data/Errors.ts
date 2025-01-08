@@ -52,10 +52,6 @@ export enum ErrorCode {
   AuthHostMissingInRequest = 'AuthHostMissingInRequest',
   LnurlAuthLoginHashInvalid = 'LnurlAuthLoginHashInvalid',
 
-  AccessTokenMissing = 'AccessTokenMissing',
-  AccessTokenInvalid = 'AccessTokenInvalid',
-  AccessTokenExpired = 'AccessTokenExpired',
-
   ZodErrorParsingUserByKey = 'ZodErrorParsingUserByKey',
   ZodErrorParsingUserByLnurlAuthKey = 'ZodErrorParsingUserByLnurlAuthKey',
   ZodErrorParsingAccessTokenPayload = 'ZodErrorParsingAccessTokenPayload',
@@ -76,6 +72,11 @@ export enum ErrorCode {
   RefreshTokenInvalid = 'RefreshTokenInvalid',
   RefreshTokenExpired = 'RefreshTokenExpired',
   RefreshTokenDenied = 'RefreshTokenDenied',
+
+  AccessTokenExpired = 'AccessTokenExpired',
+  AccessTokenInvalid = 'AccessTokenInvalid',
+  AccessTokenMissing = 'AccessTokenMissing',
+  PermissionDenied = 'PermissionDenied',
 }
 
 export const authErrorCodes = [
@@ -83,6 +84,10 @@ export const authErrorCodes = [
   ErrorCode.RefreshTokenInvalid,
   ErrorCode.RefreshTokenExpired,
   ErrorCode.RefreshTokenDenied,
+
+  ErrorCode.AccessTokenExpired,
+  ErrorCode.AccessTokenInvalid,
+  ErrorCode.AccessTokenMissing,
 ]
 
 export const ErrorCodeEnum = z.nativeEnum(ErrorCode)
