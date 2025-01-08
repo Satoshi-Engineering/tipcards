@@ -78,7 +78,7 @@ export default class AccessGuard {
       }
       throw new TRPCError({
         message: 'Invalid authorization token.',
-        code: 'INTERNAL_SERVER_ERROR',
+        code: 'UNAUTHORIZED',
       })
     }
   }
