@@ -12,6 +12,7 @@ describe('Sets List with sets data', () => {
     tipCards.gotoSetsPage()
     makeSureTestDataIsFetchedAndRendered()
     changeTestSetData()
+    tipCardsApi.delayNextTrpcResponse()
 
     // action
     cy.get('a[data-test=back-link-to-dashboard]').click()
@@ -32,6 +33,7 @@ describe('Sets List with sets data', () => {
     tipCards.gotoDashboardPage()
     makeSureTestDataIsFetchedAndRendered()
     changeTestSetData()
+    tipCardsApi.delayNextTrpcResponse()
 
     // action
     cy.get('a[data-test=link-to-all-my-sets]').click()
