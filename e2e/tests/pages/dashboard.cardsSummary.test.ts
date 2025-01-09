@@ -39,7 +39,7 @@ describe('Dashboard Cards Summary', () => {
 
     cy.getTestElement('cards-summary').should('exist')
     cy.getTestElement('cards-summary-withdrawn').should('contain.text', '7350 sats')
-    cy.getTestElement('cards-summary-funded').should('contain.text', '19530 sats')
-    cy.getTestElement('cards-summary-total').should('contain.text', '26880 sats')
+    cy.getTestElement('cards-summary-funded').should('contain.text', '19740 sats')
+    cy.getTestElement('cards-summary-total').should('contain.text', '27090 sats')
   })
 })
