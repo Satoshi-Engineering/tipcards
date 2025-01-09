@@ -20,7 +20,7 @@ export const create100TestSets = async (sql: Sql, userId: string): Promise<SetDt
 // funded by invoice: 1 card
 export const createSet001 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 001', 1)
-  await createCardsFundedByInvoice(sql, set, [1])
+  await createCardsFundedByInvoice(sql, set, [0])
   return set
 }
 

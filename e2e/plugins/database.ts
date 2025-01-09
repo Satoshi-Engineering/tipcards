@@ -7,6 +7,7 @@ import postgres from 'postgres'
 
 import { getJwtPayload } from '../lib/jwtHelpers'
 import {
+  createSet001,
   createSet005,
   createSet007,
   create100TestSets,
@@ -99,6 +100,11 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return sets
     },
 
+    'db:createSet1': async ({ userId }: { userId: string }): Promise<SetDto> => {
+      const set = await createSet001(sql, userId)
+      return set
+    },
+
     'db:createSet5': async ({ userId }: { userId: string }): Promise<SetDto> => {
       const set = await createSet005(sql, userId)
       return set
@@ -144,6 +150,20 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         SET changed = ${new Date()}
         WHERE id = ${setId};
       `
+      return null
+    },
+
+    'db:setFundedCardToWithdrawn': async (cardHash: string): Promise<null> => {
+      const lnurlW = {
+        lnbitsId: randomUUID(),
+        created: new Date(),
+        expiresAt: new Date(),
+        withdrawn: new Date(),
+        bulkWithdrawId: null,
+      }
+      await sql`INSERT INTO public."LnurlW" ${ sql(lnurlW) };`
+      await sql`UPDATE public."CardVersion" SET "lnurlW" = ${ lnurlW.lnbitsId } WHERE card = ${ cardHash };`
+
       return null
     },
   })
