@@ -48,7 +48,6 @@ describe('Sets Page', () => {
       .should('contain', set1.settings.setName)
   })
 
-
   it('displays the correct number of sets for a collection containing multiple sets', () => {
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet()
