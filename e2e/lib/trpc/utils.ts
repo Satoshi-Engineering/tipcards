@@ -6,5 +6,5 @@ export const delayNextTrpcResponse = (delay = 1_000) => {
     request.on('response', (response) => {
       response.setDelay(delay)
     })
-  })
+  }).as('delayedRequest')
 }
