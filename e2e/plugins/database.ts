@@ -126,6 +126,26 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       )
       return sets
     },
+
+    'db:updateSetName': async ({
+      setId,
+      name,
+    }: {
+      setId: string,
+      name: string,
+    }): Promise<null> => {
+      await sql`
+        UPDATE public."SetSettings"
+        SET name = ${name}
+        WHERE set = ${setId};
+      `
+      await sql`
+        UPDATE public."Set"
+        SET changed = ${new Date()}
+        WHERE id = ${setId};
+      `
+      return null
+    },
   })
 
   let sql: postgres.Sql

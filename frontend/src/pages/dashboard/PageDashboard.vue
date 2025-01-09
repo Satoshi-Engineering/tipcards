@@ -70,6 +70,7 @@
             :to="{ name: 'sets', params: { lang: $route.params.lang } }"
             no-bold
             class="text-lg"
+            data-test="link-to-all-my-sets"
           >
             {{ $t('dashboard.allMySets') }}
           </LinkDefault>

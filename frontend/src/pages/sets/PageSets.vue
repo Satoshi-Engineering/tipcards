@@ -1,7 +1,11 @@
 <template>
   <TheLayout login-banner>
     <CenterContainer class="mb-10">
-      <BackLink :to="{ name: 'dashboard', params: { lang: $route.params.lang }}" class="mb-5">
+      <BackLink
+        :to="{ name: 'dashboard', params: { lang: $route.params.lang }}"
+        class="mb-5"
+        data-test="back-link-to-dashboard"
+      >
         {{ $t('dashboard.title') }}
       </BackLink>
       <div class="flex justify-between">
