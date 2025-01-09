@@ -95,7 +95,7 @@ const lnurl = ref<string>()
 const hash = ref<string>()
 const loginFailed = ref(false)
 const missingEmail = ref(false)
-let subscription: Unsubscribable
+const subscription = ref<Unsubscribable>()
 
 const safeLogin = async (hash: string, silent: boolean = false) => {
   if (isLoggedIn.value || fetchingLogin.value) {
@@ -129,7 +129,7 @@ const safeLogin = async (hash: string, silent: boolean = false) => {
 const trpcAuth = useTRpcAuth()
 
 const subscribeToLogin = async () => {
-  subscription = trpcAuth.lnurlAuth.login.subscribe(
+  subscription.value = trpcAuth.lnurlAuth.login.subscribe(
     undefined,
     {
       onData: (lnurlAuthLoginDto) => {
@@ -140,7 +140,7 @@ const subscribeToLogin = async () => {
           return
         }
 
-        subscription?.unsubscribe()
+        subscription.value?.unsubscribe()
 
         if (
           lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.loggedIn
@@ -163,6 +163,7 @@ const onVisibilityChange = () => {
   if (document.visibilityState !== 'visible' || hash.value == null) {
     return
   }
+  subscription.value?.unsubscribe()
   safeLogin(hash.value, true)
 }
 
@@ -174,7 +175,7 @@ onBeforeMount(() => {
 onBeforeUnmount(() => {
   lnurl.value = undefined
   hash.value = undefined
-  subscription?.unsubscribe()
+  subscription.value?.unsubscribe()
   window.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>
