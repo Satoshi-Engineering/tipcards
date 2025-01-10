@@ -26,7 +26,7 @@
     </template>
 
     <template v-if="$slots.message" #beforeList>
-      <div v-if="$slots.message" class="px-5 py-8 min-h-44 grid place-items-center text-center">
+      <div class="px-5 py-8 min-h-44 grid place-items-center text-center">
         <slot name="message" />
       </div>
     </template>

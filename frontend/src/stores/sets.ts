@@ -19,8 +19,8 @@ export const useSetsStore = defineStore('sets', () => {
       clearSetsAndCardsSummary()
       return
     }
-    await fetchSets()
     resetCardsSummaryLoadingStatuses()
+    await fetchSets()
   }
 
   const subscribeToLoggedInChanges = () => {

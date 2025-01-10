@@ -30,7 +30,7 @@ describe('Sets List with sets data', () => {
     cy.get('[data-test=items-list-reloading-icon]').should('not.be.visible')
   })
 
-  it.skip('should update a cards summary checkbox on the sets page', () => {
+  it('should update a cards summary checkbox on the sets page', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
