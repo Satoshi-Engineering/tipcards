@@ -6,7 +6,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('OpenTasks', () => {
   it('should not render if logged out', () => {
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('not.exist')
   })
@@ -14,7 +14,7 @@ describe('OpenTasks', () => {
   it('should not render if the user is logged in and there are no todos', () => {
     tipCardsApi.auth.login()
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('not.exist')
   })
@@ -23,7 +23,7 @@ describe('OpenTasks', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('not.exist')
   })
@@ -36,7 +36,7 @@ describe('OpenTasks', () => {
         cy.task('db:createSet5', { userId })
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     // log in via ui
     cy.getTestElement('login-banner-login').click()
@@ -59,7 +59,7 @@ describe('OpenTasks', () => {
       })
     })
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('contain.text', '9337 cards with open tasks')
     cy.getTestElement('open-tasks-list').should('exist')
@@ -136,7 +136,7 @@ describe('OpenTasks', () => {
       })
     })
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-card-task-created').then(($els) => {
       const dates = $els.toArray().map((el) => el.textContent)
@@ -153,7 +153,7 @@ describe('OpenTasks', () => {
         cy.wrap(set).as('set')
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.get('@set').then(function () {
       const set7 = this.set
@@ -176,7 +176,7 @@ describe('OpenTasks', () => {
         cy.wrap(sets).as('sets')
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.get('@sets').then(function () {
       const setId = this.sets[0].id
@@ -193,7 +193,7 @@ describe('OpenTasks', () => {
         cy.wrap(set).as('set')
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.get('@set').then(function () {
       cy.get(`[data-test-set-id="${this.set.id}"]`).click()
@@ -213,14 +213,14 @@ describe('OpenTasks', () => {
         cy.wrap(sets).as('sets')
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
     cy.get('@sets').then(function () {
       const setId = this.sets[0].id
       cy.get(`[data-test-set-id="${setId}"]`).click()
     })
 
     cy.get('button[data-test=set-funding-reset-invoice]').click()
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('not.exist')
   })

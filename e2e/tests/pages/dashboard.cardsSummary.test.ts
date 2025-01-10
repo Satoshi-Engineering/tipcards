@@ -3,13 +3,13 @@ import tipCards from '@e2e/lib/tipCards'
 
 describe('Dashboard Cards Summary', () => {
   it('should show the preview if the user is logged out', () => {
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('cards-summary-preview').should('exist')
   })
 
   it('should open the modal login', () => {
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('dashboard-login-link').click()
 
@@ -19,7 +19,7 @@ describe('Dashboard Cards Summary', () => {
   it('should show zeros if the user has no sets', () => {
     tipCardsApi.auth.login()
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('cards-summary').should('exist')
     cy.getTestElement('cards-summary-withdrawn').should('contain.text', '0 sats')
@@ -34,7 +34,7 @@ describe('Dashboard Cards Summary', () => {
     })
 
     cy.intercept('/trpc/**card.cardsSummary**').as('cardsSummary')
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
     cy.wait('@cardsSummary')
 
     cy.getTestElement('cards-summary').should('exist')

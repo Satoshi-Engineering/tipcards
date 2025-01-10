@@ -2,7 +2,7 @@ import tipCards from '@e2e/lib/tipCards'
 
 describe('Landing Page', () => {
   it('checks all wallet pages', () => {
-    tipCards.gotoLandingPageSeoPreview()
+    tipCards.landing.gotoSeoPreview()
 
     cy.getTestElement('no-wallet').find('a').each(($a) => {
       const href = $a.attr('href')
@@ -11,7 +11,7 @@ describe('Landing Page', () => {
   })
 
   it('checks all stores', () => {
-    tipCards.gotoLandingPageSeoPreview()
+    tipCards.landing.gotoSeoPreview()
 
     cy.getTestElement('use-your-bitcoin').find('a').each(($a) => {
       const href = $a.attr('href')

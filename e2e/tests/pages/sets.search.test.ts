@@ -11,7 +11,7 @@ describe('Sets Page', () => {
     const set1 = tipCardsApi.set.generateAndAddSet('Name of the Set 1')
     const set2 = tipCardsApi.set.generateAndAddSet('Random Set Name Containing 123 !@#$%^&*() Äöüß')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('NaME conTAINIng 123 !@#$%^&')
 
     cy.getTestElement('sets-list-item')
@@ -25,7 +25,7 @@ describe('Sets Page', () => {
     const set2 = tipCardsApi.set.generateAndAddSet({ numberOfCards: 89 })
     const set3 = tipCardsApi.set.generateAndAddSet({ numberOfCards: 89 })
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('89 cards')
 
     cy.getTestElement('sets-list-item')
@@ -40,7 +40,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('01/01/2021')
 
     cy.getTestElement('sets-list-item')
@@ -53,7 +53,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('sets-list-sets-count').should('contain', '3 / 3 sets')
   })
@@ -63,7 +63,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet('Similar Set 2')
     tipCardsApi.set.generateAndAddSet('Different Set 3')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('similar')
 
     cy.getTestElement('sets-list-sets-count').should('contain', '2 / 3 sets')
@@ -74,7 +74,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet('existent2')
     tipCardsApi.set.generateAndAddSet('existent3')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('non-existent')
 
     cy.getTestElement('sets-list-sets-count').should('contain', '0 / 3 sets')
@@ -85,7 +85,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet('existent2')
     tipCardsApi.set.generateAndAddSet('existent3')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('existent1')
 
     cy.getTestElement('sets-list-sets-count').should('contain', '1 / 3 sets')
@@ -94,7 +94,7 @@ describe('Sets Page', () => {
   it('displays the singular of the sets count translation for a collection containing one set', () => {
     tipCardsApi.set.generateAndAddSet('Random Set Name')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('sets-list-sets-count').should('contain', '1 / 1 set')
   })
@@ -102,7 +102,7 @@ describe('Sets Page', () => {
   it('displays the singular of the sets count translation when 0 sets remain filtered from a collection containing one set', () => {
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('non-existent')
 
     cy.getTestElement('sets-list-sets-count').should('contain', '0 / 1 set')
@@ -112,7 +112,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet('existent1')
     tipCardsApi.set.generateAndAddSet('existent2')
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('input-search').type('non-existent')
 
     cy.getTestElement('sets-list-sets-count').should('contain', '0 / 2 sets')

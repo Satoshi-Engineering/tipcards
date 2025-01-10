@@ -9,7 +9,7 @@ describe('Landing Page', () => {
       cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.withdrawAllSatsFromCard(cardHash)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.getTestElement('get-your-bitcoin').should('exist')
       cy.getTestElement('greeting-recently-withdrawn').should('not.exist')
@@ -22,7 +22,7 @@ describe('Landing Page', () => {
       cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.useFundedCard(cardHash)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.getTestElement('greeting-recently-withdrawn').should('exist')
     })
@@ -35,7 +35,7 @@ describe('Landing Page', () => {
       tipCardsApi.card.useFundedCard(cardHash)
       cy.task('setCardWithdrawnDateIntoPast', cardHash)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.getTestElement('greeting-withdrawn').should('exist')
     })
@@ -45,7 +45,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
-      tipCards.gotoLandingPage(cardHash)
+      tipCards.landing.goto(cardHash)
       cy.getTestElement('lightning-qr-code-button-open-in-wallet').then(($button) => {
         const lnurlEncoded = $button.attr('href').split('lightning:')[1]
         tipCardsApi.card.useLnurlWithdraw(cardHash, lnurlEncoded)

@@ -41,7 +41,7 @@ describe('TheHeader', () => {
   })
 
   it('opening the login modal via button in login banner should close the lang nav', () => {
-    tipCards.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
+    tipCards.utils.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
     cy.get('header [data-test=the-header-lang-button]').first().click()
@@ -51,7 +51,7 @@ describe('TheHeader', () => {
   })
 
   it('opening the login modal via button in login banner should close the main nav', () => {
-    tipCards.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
+    tipCards.utils.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
     cy.get('header [data-test=the-header-main-nav-button]').first().click()

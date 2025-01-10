@@ -27,7 +27,7 @@ describe('Sets Page Cards Info', () => {
   })
 
   it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, () => {
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('sets-list-item')
       .should('have.length', numberOfSets)
@@ -40,7 +40,7 @@ describe('Sets Page Cards Info', () => {
   })
 
   it.skip('loads cards info for sets in viewport after scrolling', () => {
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     scrollDownAndWaitForCardsInfoRequest()
 
     setListItemsInViewportHaveCardsInfoLoaded(numberOfCardsPerSet, viewportHeight)
@@ -61,7 +61,7 @@ const elementIsInViewport = (el: HTMLElement, viewportHeight: number) => {
 
 const gotoSetsPageAndWaitForInitialCardsInfoRequest = () => {
   cy.intercept('/trpc/set.getCardsSummaryForSetId**').as('apiSetGetCardsInfo')
-  tipCards.gotoSetsPage()
+  tipCards.sets.goto()
   cy.wait('@apiSetGetCardsInfo')
 }
 

@@ -10,7 +10,7 @@ describe('Landing Page', () => {
     generateCardHashForSet(setId).then((cardHash) => {
       tipCardsApi.bulkWithdraw.startBulkWithdraw(cardHash)
 
-      tipCards.gotoLandingPage(cardHash)
+      tipCards.landing.goto(cardHash)
 
       cy.url().should('contain', `/landing/${cardHash}`)
       cy.getTestElement('greeting-is-locked-by-bulk-withdraw').should('exist')
@@ -23,7 +23,7 @@ describe('Landing Page', () => {
     generateCardHashForSet(setId).then((cardHash) => {
       tipCardsApi.bulkWithdraw.startBulkWithdraw(cardHash)
 
-      tipCards.gotoLandingPage(cardHash)
+      tipCards.landing.goto(cardHash)
       cy.getTestElement('reset-bulk-withdraw').click()
 
       cy.url().should('contain', `/landing/${cardHash}`)

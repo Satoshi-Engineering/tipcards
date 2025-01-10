@@ -11,7 +11,7 @@ describe('profileData', () => {
   })
 
   it('user navigates to account page and enters their data', () => {
-    tipCards.gotoUserAccount()
+    tipCards.userAccount.goto()
 
     cy.getTestElement('profile-form-account-name').find('input').type(`{selectAll}${profile.accountName}`)
     cy.getTestElement('profile-form-display-name').find('input').type(`{selectAll}${profile.displayName}`)
@@ -21,7 +21,7 @@ describe('profileData', () => {
 
     cy.getTestElement('the-main-nav-logged-in').should('contain', profile.displayName)
 
-    tipCards.reloadUserAccount()
+    tipCards.userAccount.reload()
 
     cy.getTestElement('profile-form-account-name').find('input').should('have.value', profile.accountName)
     cy.getTestElement('profile-form-display-name').find('input').should('have.value', profile.displayName)

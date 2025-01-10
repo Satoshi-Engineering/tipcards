@@ -10,7 +10,7 @@ describe('Dashboard Sets List', () => {
       cy.task('db:create100TestSets', { userId })
     })
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 3)
     cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
@@ -25,9 +25,9 @@ describe('Dashboard Sets List', () => {
     cy.get('@userId').then((userId) => {
       cy.task('db:create100TestSets', { userId })
     })
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.getTestElement('sets-list-item').should('have.length', 3)
   })

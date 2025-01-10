@@ -21,7 +21,7 @@ describe('Feature logoutAllOtherDevices', () => {
     createUserAndWrapRefreshTokens({ numberOfRefreshTokens })
 
     setRefreshToken(activeRefreshTokenIndex)
-    tipCards.gotoUserAccount()
+    tipCards.userAccount.goto()
     cy.intercept('/auth/trpc/auth.logoutAllOtherDevices**').as('logoutAllOtherDevices')
     cy.getTestElement('user-account-button-logout-all-other-devices').click()
     cy.wait('@logoutAllOtherDevices')
@@ -40,7 +40,7 @@ describe('Feature logoutAllOtherDevices', () => {
   // on other errors (e.g. 500), the user should not get logged out but an error message should be shown
   it('should show an error message if an error on the backend occurs', () => {
     tipCardsApi.auth.login()
-    tipCards.gotoUserAccount()
+    tipCards.userAccount.goto()
     cy.intercept('/auth/trpc/auth.logoutAllOtherDevices**', {
       statusCode: 500,
       body: [
@@ -99,12 +99,12 @@ const setRefreshToken = (refreshTokenIndex: number) => {
 
 const checkIfRefreshTokenIsValid = (refreshTokenIndex: number) => {
   setRefreshToken(refreshTokenIndex)
-  tipCards.gotoHomePage()
-  tipCards.isLoggedIn()
+  tipCards.home.goto()
+  tipCards.utils.isLoggedIn()
 }
 
 const checkIfRefreshTokenIsInValid = (refreshTokenIndex: number) => {
   setRefreshToken(refreshTokenIndex)
-  tipCards.gotoHomePage()
-  tipCards.isLoggedOut()
+  tipCards.home.goto()
+  tipCards.utils.isLoggedOut()
 }

@@ -7,7 +7,7 @@ describe('Landing Page', () => {
   it('should redirect to the funding page, if the card does not exist', () => {
     generateCardHash().then((cardHash) => {
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
     })
@@ -17,7 +17,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createInvoiceForCardHash(cardHash, 210)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
       cy.getTestElement('funding-invoice').should('contain', '210 sats')
@@ -28,7 +28,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createLnurlpLinkForCardHash(cardHash)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
       cy.getTestElement('funding-lnurlp').should('exist')
@@ -39,7 +39,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createSharedFundingForCardHash(cardHash)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
       cy.getTestElement('funding-shared').should('exist')
@@ -51,7 +51,7 @@ describe('Landing Page', () => {
     tipCardsApi.set.createInvoiceForSet(setId)
     generateCardHashForSet(setId).then((cardHash) => {
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.url().should('contain', `/funding/${cardHash}`)
       cy.getTestElement('funding-set').should('exist')

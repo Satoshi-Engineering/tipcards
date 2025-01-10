@@ -6,7 +6,7 @@ describe('Revoked/denied refresh doken', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.logoutAllDevices()
 
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
 
     cy.getTestElement('modal-login').should('exist')
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
@@ -15,11 +15,11 @@ describe('Revoked/denied refresh doken', () => {
   it('should show nothing if the user is logged out', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.logoutAllDevices()
-    tipCards.gotoHomePage() // after this the user is logged out and the refresh token cookie should be cleared
+    tipCards.home.goto() // after this the user is logged out and the refresh token cookie should be cleared
 
     cy.reload()
 
-    tipCards.isLoggedOut()
+    tipCards.utils.isLoggedOut()
     cy.getTestElement('modal-login').should('not.exist')
   })
 
@@ -33,7 +33,7 @@ describe('Revoked/denied refresh doken', () => {
       })
     })
 
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
 
     cy.getTestElement('modal-login').should('exist')
     cy.getTestElement('modal-login-user-message').should('contain', 'You were logged out')
@@ -41,7 +41,7 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login, if user logged out on another device while using application', () => {
     tipCardsApi.auth.login()
-    tipCards.gotoNewSetPageWithExpiredAccessToken()
+    tipCards.cards.gotoNewSetPageWithExpiredAccessToken()
     // make sure the access token is expired
     cy.wait(10_000)
     tipCardsApi.auth.logoutAllDevices()
@@ -54,7 +54,7 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login, if user logged out on another device and wants to use the log out all other devices feature', () => {
     tipCardsApi.auth.login()
-    tipCards.gotoUserAccount()
+    tipCards.userAccount.goto()
     tipCardsApi.auth.logoutAllDevices()
 
     cy.getTestElement('user-account-button-logout-all-other-devices').click()
@@ -65,7 +65,7 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
     tipCardsApi.auth.login()
-    tipCards.gotoUserAccount()
+    tipCards.userAccount.goto()
     cy.getCookie('refresh_token').then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
         refreshToken: cookie.value,

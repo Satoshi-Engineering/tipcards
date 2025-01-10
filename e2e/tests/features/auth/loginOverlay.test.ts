@@ -5,7 +5,7 @@ describe('Login Overlay', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
     tipCardsApi.auth.createNewKeysAndWrap()
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
   })
 
   it('check if user is logged out', () => {
@@ -103,6 +103,6 @@ const checkLoginSuccess = () => {
 }
 
 const reloadPageAndCheckAuth = () => {
-  tipCards.reloadPage()
-  tipCards.isLoggedIn()
+  tipCards.utils.reloadPage()
+  tipCards.utils.isLoggedIn()
 }

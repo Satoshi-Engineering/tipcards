@@ -3,7 +3,7 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Refresh token', () => {
   it('should do nothing if none exists', () => {
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('modal-login').should('not.exist')
     cy.getTestElement('the-login-banner').should('exist')
@@ -12,7 +12,7 @@ describe('Refresh token', () => {
   it('should do nothing if logged in', () => {
     tipCardsApi.auth.login()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('modal-login').should('not.exist')
     cy.getTestElement('the-login-banner').should('not.exist')

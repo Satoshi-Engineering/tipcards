@@ -9,10 +9,10 @@ describe('Sets List with sets data', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     makeSureTestDataIsFetchedAndRendered()
     changeTestSetData()
-    tipCardsApi.delayNextTrpcResponse()
+    tipCardsApi.utils.delayNextTrpcResponse()
 
     // action
     cy.get('a[data-test=back-link-to-dashboard]').click()
@@ -34,11 +34,11 @@ describe('Sets List with sets data', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
     cy.get('[data-test=sets-list]').scrollIntoView()
     makeSureTestDataIsFetchedAndRendered()
     changeTestSetData()
-    tipCardsApi.delayNextTrpcResponse()
+    tipCardsApi.utils.delayNextTrpcResponse()
 
     // action
     cy.get('a[data-test=link-to-all-my-sets]').click()

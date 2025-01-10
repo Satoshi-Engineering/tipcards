@@ -16,7 +16,7 @@ describe('Sets List with sets data', () => {
         })
       })
     })
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     // log in via ui
     cy.get('[data-test=sets-list-message-not-logged-in] button').click()
@@ -35,7 +35,7 @@ describe('Sets List with sets data', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoDashboardPage()
+    tipCards.dashboard.goto()
 
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 1)
   })
@@ -44,7 +44,7 @@ describe('Sets List with sets data', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 1)
   })

@@ -7,7 +7,7 @@ describe('Feature Logout', () => {
   })
 
   it('User should should get logged out', () => {
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
 
     cy.getTestElement('the-layout').should('exist')
     logout()
@@ -17,7 +17,7 @@ describe('Feature Logout', () => {
     tipCardsApi.auth.isLoggedOut()
 
     // Check if the user is logged out, after go to home page
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-logout').should('not.exist')
@@ -27,7 +27,7 @@ describe('Feature Logout', () => {
   it('should vanishes user specific data after logout', () => {
     const randomSetName = Math.random().toString(36).substring(7)
     tipCardsApi.set.generateAndAddSet(randomSetName)
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('sets-list-message-not-logged-in').should('not.exist')
     cy.getTestElement('sets-list-item').contains(randomSetName).should('exist')

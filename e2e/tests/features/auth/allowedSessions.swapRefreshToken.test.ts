@@ -16,7 +16,7 @@ describe('AllowedRefreshToken and AllowedSession', () => {
       })
     })
 
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
 
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('the-header-main-nav-button').click()

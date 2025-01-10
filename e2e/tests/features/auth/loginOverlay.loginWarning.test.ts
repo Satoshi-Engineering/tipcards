@@ -5,7 +5,7 @@ describe('Login Overlay - Email CTA', () => {
   beforeEach(() => {
     tipCardsApi.auth.clearAuth()
     tipCardsApi.auth.createNewKeysAndWrap()
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
   })
 
   it('After login email cta should be displayed', () => {

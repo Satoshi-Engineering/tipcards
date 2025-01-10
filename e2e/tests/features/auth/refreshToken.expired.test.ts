@@ -12,7 +12,7 @@ describe('Expired refresh token', () => {
       })
     })
 
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
 
     cy.getTestElement('modal-login').should('exist')
     cy.getTestElement('modal-login-user-message').should('contain', 'Your login expired')

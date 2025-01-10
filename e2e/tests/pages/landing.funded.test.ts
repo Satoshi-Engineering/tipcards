@@ -7,7 +7,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
-      tipCards.gotoLandingPagePreview(cardHash)
+      tipCards.landing.gotoPreview(cardHash)
 
       cy.getTestElement('greeting-funded-headline').should('exist')
       cy.getTestElement('greeting-funded-bitcoin-amount').should('contain', '0.00000210 BTC')
@@ -18,7 +18,7 @@ describe('Landing Page', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
-      tipCards.gotoLandingPage(cardHash)
+      tipCards.landing.goto(cardHash)
 
       cy.url().should('contain', `/landing/${cardHash}`)
       cy.getTestElement('greeting-funded-headline').should('exist')

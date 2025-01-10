@@ -16,7 +16,7 @@ describe('Trpc Auth', () => {
 
   it('Lnurl auth callback url call should fail, after a login has happend', () => {
     tipCardsApi.auth.createNewKeysAndWrap()
-    tipCards.gotoHomePage()
+    tipCards.home.goto()
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-login').click()
     cy.getTestElement('lightning-qr-code-button-open-in-wallet').should('have.attr', 'href')

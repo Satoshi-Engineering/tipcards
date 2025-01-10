@@ -7,7 +7,7 @@ describe('Sets Page', () => {
   })
 
   it('User should see the empty sets list', () => {
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('sets-list-message-not-logged-in').should('not.exist')
@@ -19,7 +19,7 @@ describe('Sets Page', () => {
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet(randomSetName)
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
     cy.getTestElement('sets-list-item').contains(randomSetName).click()
 
     cy.url().should('contain', '/cards')
@@ -29,7 +29,7 @@ describe('Sets Page', () => {
   it('User should see logged out message after logging out', () => {
     tipCardsApi.auth.clearAuth()
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('sets-list-message-not-logged-in').should('exist')
@@ -42,7 +42,7 @@ describe('Sets Page', () => {
       cy.task('db:create100TestSets', { userId })
     })
 
-    tipCards.gotoSetsPage()
+    tipCards.sets.goto()
 
     cy.getTestElement('sets-list-item').should('have.length', 100)
     cy.get('[data-test=sets-list] [data-test=sets-list-item-date]').then(($els) => {
