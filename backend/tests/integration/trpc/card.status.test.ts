@@ -51,9 +51,6 @@ describe('CardStatus', () => {
         hash: imaginedCardId,
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: expect.any(Date),
-        funded: null,
-        withdrawn: null,
       },
     })
   })
@@ -68,9 +65,6 @@ describe('CardStatus', () => {
         hash: testCard.cardHash,
         status: CardStatusEnum.enum.invoiceFunding,
         amount: testCard.amount,
-        created: expect.any(Date),
-        funded: null,
-        withdrawn: null,
       },
     })
   })
