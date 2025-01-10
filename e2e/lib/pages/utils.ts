@@ -51,3 +51,8 @@ export const switchBrowserLanguageToEnglish = (win: Cypress.AUTWindow) => {
   Object.defineProperty(win.navigator, 'language', { value: 'en-US' })
   Object.defineProperty(win.navigator, 'languages', { value: ['en-US'] })
 }
+
+export const logoutViaMainNav = () => {
+  cy.get('button[data-test=the-header-main-nav-button]').click()
+  cy.get('button[data-test=main-nav-link-logout]').click()
+}
