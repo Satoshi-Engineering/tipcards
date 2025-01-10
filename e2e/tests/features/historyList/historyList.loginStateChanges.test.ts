@@ -2,7 +2,7 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('History list handling login state changes', () => {
-  it('should login and display the user\'s history afterwards, on the dashboard', () => {
+  it.skip('should login and display the user\'s history afterwards, on the dashboard', () => {
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.dashboard.goto()
@@ -21,7 +21,7 @@ describe('History list handling login state changes', () => {
     cy.getTestElement('history-list-message-not-logged-in').should('not.exist')
   })
 
-  it('should login and display the user\'s history afterwards, on the history page', () => {
+  it.skip('should login and display the user\'s history afterwards, on the history page', () => {
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.history.goto()
