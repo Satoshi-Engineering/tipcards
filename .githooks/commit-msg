@@ -4,19 +4,14 @@ import fs from 'fs'
 import config from './commit-msg-config.json' with { type: 'json' }
 
 // Regex to validate the commit message
-const allowedTypes = config.types.join('|')
-const allowedScopes = config.scopes.join('|')
-const allowedSubjectCharacters = '[\\w .,?:\\/\\-\'()&]'
-const allowedSubjectCharactersAsString = '.,?/-()&\''
+const allowedSubjectCharacters = '[\\w .,?:\\/\\-\'()&]' // allowedSubjectCharacters as RegEx string
+const allowedSubjectCharactersAsString = '.,?/-()&\''    // allowedSubjectCharacters as printable string
 
-const header = `(${allowedTypes}){1}(\\((${allowedScopes})+\\))?(!)?: (${allowedSubjectCharacters})+`
-const body = '(\\n\\n[\\s\\S]*)?'
-const breakingChange = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
-const reviewedBy = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
-const refs = '(\\nRefs:( projects#[0-9]+)+)'
-const suffix = '(\\n[\\s\\S]+)?'
-
-const regex = new RegExp(`^${header}${body}\\n${breakingChange}${reviewedBy}${refs}${suffix}$`)
+const body = '(\\n[\\s\\S]+\\n)?'
+const breakingChangeFooter = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
+const reviewedByFooter = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
+const refFooter = '(\\nRefs:( projects#[0-9]+,?)+)'
+const footers = '(\\n[\\s\\S]+)?'
 
 // Path to the commit message file
 const commitMsgFile = process.argv[2]
@@ -24,32 +19,38 @@ const commitMsgFile = process.argv[2]
 // Read the commit message from the file
 const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim()
 
-// Test the Header
-const headerRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)\n(?<rest>[\s\S]*)$/
-const headerMatch = commitMsg.match(headerRegex)
+const messageFormatRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)\n(?<bodyAndFooters>[\s\S]*)$/
+const bodyAndFootersRegex = new RegExp(`^${body}${breakingChangeFooter}${reviewedByFooter}${refFooter}${footers}$`)
 
-if (!config.types.includes(headerMatch.groups.type)) {
-  console.error(`❌ Invalid type: ${headerMatch.groups.type}`)
+// Split the message in to parts
+const messageMatch = commitMsg.match(messageFormatRegex)
+
+// Header - Type
+if (!config.types.includes(messageMatch.groups.type)) {
+  console.error(`❌ Invalid type: ${messageMatch.groups.type}`)
   console.info(`ℹ️  Allowed types: ${config.types.join(', ')}`)
   process.exit(1)
 }
 
-if (headerMatch.groups.scope !== undefined && !config.scopes.includes(headerMatch.groups.scope)) {
-  console.error(`❌ Invalid scope: ${headerMatch.groups.scope}`)
+// Header - Scope (optional)
+if (messageMatch.groups.scope !== undefined && !config.scopes.includes(messageMatch.groups.scope)) {
+  console.error(`❌ Invalid scope: ${messageMatch.groups.scope}`)
   console.info(`ℹ️  Allowed scopes (optional): ${config.scopes.join(', ')}`)
   process.exit(1)
 }
 
+// Header - Subject - allowed characters
 const regexAllowedSubjectCharacters = new RegExp(`^${allowedSubjectCharacters}+$`)
-if (!regexAllowedSubjectCharacters.test(headerMatch.groups.subject)) {
-  console.error(`❌ Invalid subject: ${headerMatch.groups.subject}`)
+if (!regexAllowedSubjectCharacters.test(messageMatch.groups.subject)) {
+  console.error(`❌ Invalid subject: ${messageMatch.groups.subject}`)
   console.info(`ℹ️  Subject can contain ${allowedSubjectCharactersAsString} characters`)
   process.exit(1)
 }
 
-// Validate the commit message against the regex
-if (!regex.test(commitMsg)) {
-  console.error(`❌ Commit message is invalid:\n\n\x1b[31m${commitMsg}\x1b[0m\n\n`)
+console.log(messageMatch.groups)
+// Body and footers
+if (!bodyAndFootersRegex.test(messageMatch.groups.bodyAndFooters)) {
+  console.error(`❌ Body and/or footers are invalid:\n\n\x1b[31m${messageMatch.groups.bodyAndFooters}\x1b[0m\n\n`)
   console.info(
 `ℹ️  Expected format:
     
@@ -59,13 +60,7 @@ if (!regex.test(commitMsg)) {
 <BLANK LINE> (required if body is present)
 BREAKING CHANGE: <description> (optional)
 Reviewed-by: <reviewer> (optional)
-Refs: projects#<issue-number> (rℹ️equired)\x1b[0m
-  
-
-Allowed types: ${config.types.join(', ')}
-Allowed scopes: ${config.scopes.join(', ')}
-Subject can contain ${allowedSubjectCharactersAsString} characters
-`)
+Refs: projects#<issue-number> (required)\x1b[0m`)
   process.exit(1)
 }
 
