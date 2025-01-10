@@ -67,4 +67,19 @@ describe('History list handling login state changes', () => {
     cy.getTestElement('history-list-message-not-logged-in').should('exist')
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 0)
   })
+
+  it('should clear the data on logout, on the dashboard, even if the data loading takes longer', () => {
+    tipCardsApi.auth.login()
+    tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
+    tipCardsApi.utils.delayNextTrpcResponse()
+    tipCards.dashboard.goto()
+
+    // logout via ui
+    tipCards.utils.logoutViaMainNav()
+
+    // the history should get loaded
+    cy.getTestElement('history-list-message-not-logged-in').should('exist')
+    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('not.exist')
+    cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 0)
+  })
 })

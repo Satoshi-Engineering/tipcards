@@ -159,6 +159,9 @@ const loadOpenTasks = async () => {
   openTasksErrorMessages.value = []
   try {
     const openTasks = await card.openTasks.query()
+    if (!isLoggedIn.value) {
+      return
+    }
     openTasksWithLoadingStatus.value = {
       status: 'success',
       openTasks,

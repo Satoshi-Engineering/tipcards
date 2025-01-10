@@ -61,7 +61,10 @@ export const useSetsStore = defineStore('sets', () => {
     fetchingAllSetsUserErrorMessages.value.length = 0
     fetchingAllSets.value = true
     try {
-      sets.value = await set.getAll.query()
+      const fetchedSets = await set.getAll.query()
+      if (isLoggedIn.value === true) {
+        sets.value = fetchedSets
+      }
     } catch(error) {
       if (!isTRpcClientAbortError(error)) {
         console.error(error)
@@ -113,6 +116,9 @@ export const useSetsStore = defineStore('sets', () => {
   }
 
   const setLoadedCardsSummaryForSet = (setId: string, cardsSummaryWithStatus: CardsSummaryWithLoadingStatus) => {
+    if (isLoggedIn.value !== true) {
+      return
+    }
     cardsSummaryWithStatusBySetId.value = {
       ...cardsSummaryWithStatusBySetId.value,
       [setId]: cardsSummaryWithStatus,

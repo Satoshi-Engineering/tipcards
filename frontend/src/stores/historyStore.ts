@@ -19,12 +19,18 @@ export const useHistoryStore = defineStore('history', () => {
       return
     }
     const { data, pagination } = await fetchHistory({ limit: limit, offset: 0 })
+    if (isLoggedIn.value !== true) {
+      return
+    }
     history.value = data
     historyTotal.value = pagination?.total
   }
 
   const loadHistoryNextPage = async (limit: number = 10) => {
     const { data, pagination } = await fetchHistory({ limit: limit, offset: history.value.length })
+    if (isLoggedIn.value !== true) {
+      return
+    }
     history.value = [
       ...history.value,
       ...data,
