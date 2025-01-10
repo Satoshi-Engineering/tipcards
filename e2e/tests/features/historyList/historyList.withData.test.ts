@@ -1,7 +1,7 @@
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
-describe('History list without data', () => {
+describe('History list loading (sorted) data', () => {
   it('should load and display 3 card statuses (sorted) on the dashboard page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.create100TestSetsForCurrentUserId()

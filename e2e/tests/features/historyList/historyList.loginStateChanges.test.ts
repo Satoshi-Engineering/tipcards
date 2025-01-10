@@ -1,7 +1,7 @@
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
-describe('History list without data', () => {
+describe('History list handling login state changes', () => {
   it('should login and display the user\'s history afterwards, on the dashboard', () => {
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
