@@ -47,7 +47,6 @@ if (!regexAllowedSubjectCharacters.test(messageMatch.groups.subject)) {
   process.exit(1)
 }
 
-console.log(messageMatch.groups)
 // Body and footers
 if (!bodyAndFootersRegex.test(messageMatch.groups.bodyAndFooters)) {
   console.error(`❌ Body and/or footers are invalid:\n\n\x1b[31m${messageMatch.groups.bodyAndFooters}\x1b[0m\n\n`)
