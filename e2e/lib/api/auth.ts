@@ -133,3 +133,12 @@ export const logoutAllDevices = () => {
     })
   })
 }
+
+export const createUserWithoutLogin = () => {
+  cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
+    cy.wrap(keyPair).as('keyPair')
+    cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', { lnurlAuthKey: keyPair.publicKeyAsHex }).then(({ userId }) => {
+      cy.wrap(userId).as('userId')
+    })
+  })
+}

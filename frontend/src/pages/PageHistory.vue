@@ -49,7 +49,8 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLink from '@/components/BackLink.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
-const { isLoggedIn } = useAuthStore()
+const authStore = useAuthStore()
+const { isLoggedIn } = storeToRefs(authStore)
 
 const itemsPerPage = 50
 

@@ -65,3 +65,18 @@ export const generateAndAddSet = (options?: string | GenerateSetOptions) => {
   addSet(set)
   return set
 }
+
+export const createSetsWithSetFundingForCurrentUserId = ({ numberOfSets, numberOfCardsPerSet } = {
+  numberOfSets: 1,
+  numberOfCardsPerSet: 8,
+}) => {
+  cy.get('@userId').then((userId) => {
+    cy.task('db:createSetsWithSetFunding', {
+      userId,
+      numberOfSets,
+      numberOfCardsPerSet,
+    }).then((sets) => {
+      cy.wrap(sets).as('sets')
+    })
+  })
+}
