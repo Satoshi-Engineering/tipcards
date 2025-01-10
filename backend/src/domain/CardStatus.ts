@@ -36,9 +36,6 @@ export default class CardStatus {
 
       status: this.status,
       amount: this.amount,
-      created: this.created,
-      funded: this.funded,
-      withdrawn: this.lnurlW?.withdrawn ?? null,
     }
   }
 

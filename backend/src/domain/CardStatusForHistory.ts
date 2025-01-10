@@ -49,12 +49,18 @@ export default class CardStatusForHistory extends CardStatus {
   public toTrpcResponse(): CardStatusForHistoryDto {
     return {
       ...super.toTrpcResponse(),
-      landingPageViewed: this.cardVersion.landingPageViewed,
-      bulkWithdrawCreated: this.bulkWithdrawCreated,
+
       setId: this.setSettings?.set ?? null,
       setName: this.setSettings?.name ?? null,
+
+      created: this.created,
+      funded: this.funded,
+      withdrawn: this.lnurlW?.withdrawn ?? null,
+
       noteForStatusPage: this.cardVersion.noteForStatusPage,
       textForWithdraw: this.cardVersion.textForWithdraw,
+      landingPageViewed: this.cardVersion.landingPageViewed,
+      bulkWithdrawCreated: this.bulkWithdrawCreated,
     }
   }
 

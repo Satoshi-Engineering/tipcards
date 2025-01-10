@@ -82,16 +82,10 @@ describe('CardStatusCollection', async () => {
         hash: cards[0].hash,
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: cardVersions[0].created,
-        funded: null,
-        withdrawn: null,
       }, {
         hash: cards[2].hash,
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: cardVersions[2].created,
-        funded: null,
-        withdrawn: null,
       }],
       totalUnfiltered: 3,
     })
@@ -129,9 +123,6 @@ describe('CardStatusCollection', async () => {
         hash: cards[2].hash,
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: cardVersions[2].created,
-        funded: null,
-        withdrawn: null,
       }],
       pagination: {
         offset: 1,

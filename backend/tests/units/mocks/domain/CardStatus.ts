@@ -58,12 +58,8 @@ class MockCardStatus {
   public toTrpcResponse(): CardStatusDto {
     return {
       hash: this.cardVersion.card,
-
       status: CardStatusEnum.enum.unfunded,
       amount: null,
-      created: this.cardVersion.created,
-      funded: null,
-      withdrawn: null,
     }
   }
 

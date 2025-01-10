@@ -17,9 +17,6 @@ export const CardStatusDto = z.object({
   // calculated fields
   status: CardStatusEnum,
   amount: z.number().nullable().default(null),
-  created: z.date().default(() => new Date()),
-  funded: z.date().nullable().default(null),
-  withdrawn: z.date().nullable().default(null),
 })
 
 export type CardStatusDto = z.infer<typeof CardStatusDto>

@@ -30,9 +30,6 @@ describe('LiveCardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.invoiceFunding,
       amount: 100,
-      created: invoice.created,
-      funded: null,
-      withdrawn: null,
     }))
   })
 
@@ -54,9 +51,6 @@ describe('LiveCardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawPending,
       amount: 100,
-      created: invoice.created,
-      funded: invoice.paid,
-      withdrawn: null,
     }))
   })
 
@@ -79,9 +73,6 @@ describe('LiveCardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.bulkWithdrawPending,
       amount: 100,
-      created: invoice.created,
-      funded: invoice.paid,
-      withdrawn: null,
     }))
   })
 
@@ -104,9 +95,6 @@ describe('LiveCardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawn,
       amount: 100,
-      created: invoice.created,
-      funded: invoice.paid,
-      withdrawn: lnurlW.withdrawn,
     }))
   })
 })

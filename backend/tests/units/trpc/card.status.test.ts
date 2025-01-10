@@ -42,9 +42,6 @@ describe('tRPC card.status route', async () => {
 
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: card.created,
-        funded: null,
-        withdrawn: null,
       },
     })
   })
@@ -81,9 +78,6 @@ describe('tRPC card.status route', async () => {
 
         status: CardStatusEnum.enum.unfunded,
         amount: null,
-        created: card.created,
-        funded: null,
-        withdrawn: null,
       },
     })
   })
