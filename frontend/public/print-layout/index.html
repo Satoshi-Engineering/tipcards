@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paper-css/0.4.1/paper.css">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body id="theBody" class="A4">
+  <div class="no-print" style="position: fixed; top: 60px; left: 29px; border: 0; width: 250px;">
+    <h2>Print Layout</h2>
+    <div>
+      <p>
+        Issues: projects#1450
+      </p>
+    </div>
+    <div>
+      <strong>Number of cards</strong>
+      <input type="number" id="numberOfCards" value="3" style="font-weight: bold;">
+    </div>
+  </div>
+
+  <div id="pagesContainer">
+  </div>
+
+  <script type="text/javascript" src="libs/qrcode.min.js"></script>
+  <script src="script.js"></script>
+  </body>
+</html>
