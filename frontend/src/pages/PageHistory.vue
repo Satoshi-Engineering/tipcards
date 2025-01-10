@@ -28,6 +28,7 @@
         <LinkDefault
           no-bold
           class="text-lg"
+          data-test="history-load-more-button"
           @click="loadMore"
         >
           {{ $t('general.loadMore') }}
