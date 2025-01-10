@@ -33,6 +33,7 @@
             :to="{ name: 'history', params: { lang: $route.params.lang } }"
             no-bold
             class="text-lg"
+            data-test="link-to-full-history"
           >
             {{ $t('dashboard.fullHistory') }}
           </LinkDefault>

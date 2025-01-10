@@ -3,6 +3,7 @@
     <CenterContainer>
       <BackLink
         :to="{ name: 'dashboard' }"
+        data-test="back-link-to-dashboard"
       >
         {{ $t('dashboard.title') }}
       </BackLink>

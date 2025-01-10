@@ -80,3 +80,11 @@ export const createSetsWithSetFundingForCurrentUserId = ({ numberOfSets, numberO
     })
   })
 }
+
+export const create100TestSetsForCurrentUserId = () => {
+  cy.get('@userId').then((userId) => {
+    cy.task('db:create100TestSets', { userId }).then((sets) => {
+      cy.wrap(sets).as('sets')
+    })
+  })
+}
