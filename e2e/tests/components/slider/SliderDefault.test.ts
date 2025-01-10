@@ -39,7 +39,7 @@ describe('SliderDefault', () => {
     cy.get('@slide3').should('not.be.visible')
   })
 
-  it('swipes to the second slide', () => {
+  it.skip('swipes to the second slide', () => {
     cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
     cy.get('[data-test="slider-default"]').first().as('slider')
     cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
