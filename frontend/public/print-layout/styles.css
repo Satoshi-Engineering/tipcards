@@ -31,11 +31,11 @@ html {
   height: 55mm;
   box-sizing: border-box;
   border: 1px solid #000;
-  background: #f0f0f0;
   display: flex;
   font-family: "Noto Sans", serif;
   font-optical-sizing: auto;
   position: relative;
+  overflow: hidden;
 }
 
 .stackContainer {

@@ -60,12 +60,18 @@ const createFrontpageContent = (card) => {
   const img = document.createElement('img')
   img.src = 'img/bitcoin.svg'
   img.alt = 'Bitcoin Logo'
-  img.style.width = '35mm'
+
+  img.style.width = '40mm'
   card.appendChild(img)
 }
 
 const createBackpageContent = (card) => {
-  const offsetSecondColumn = 50
+  const img = document.createElement('img')
+  img.className = 'stackItem'
+  img.src = 'img/back.png'
+  img.style.height = '55mm'
+  //img.style.width = '85mm'
+  card.appendChild(img)
 
   card.className += ' stackContainer'
   const qrCodeElement = document.createElement('div')
@@ -79,34 +85,6 @@ const createBackpageContent = (card) => {
   qrCodeElement.style.left = '3mm'
   qrCodeElement.style.top = '3mm'
   card.appendChild(qrCodeElement)
-
-  const valid = document.createElement('div')
-  valid.className = 'stackItem validText'
-  valid.innerText = 'Satoshis gülitg bis: 15.02.2025'
-  valid.style.left = '3mm'
-  valid.style.top = '47mm'
-  card.appendChild(valid)
-
-  const headline = document.createElement('div')
-  headline.className = 'stackItem headlineText'
-  headline.innerText = 'Hallo!'
-  headline.style.left = `${offsetSecondColumn}mm`
-  headline.style.top = '3mm'
-  card.appendChild(headline)
-
-  const text1 = document.createElement('div')
-  text1.className = 'stackItem defaultText'
-  text1.innerText = 'Wir freuen uns dich auf einem unserer Bitcoin-Meetups begrüßen zu dürfen!'
-  text1.style.left = `${offsetSecondColumn}mm`
-  text1.style.top = '10mm'
-  card.appendChild(text1)
-
-  const text2 = document.createElement('div')
-  text2.className = 'stackItem defaultText'
-  text2.innerText = 'Hier erhältst du deine ersten Satoshis.'
-  text2.style.left = `${offsetSecondColumn}mm`
-  text2.style.top = '17mm'
-  card.appendChild(text2)
 }
 
 const createCard = (page) => {
