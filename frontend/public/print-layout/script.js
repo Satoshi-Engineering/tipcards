@@ -25,13 +25,19 @@ const updatePage = () => {
   clearPages()
 
   const numberOfCards = numberOfCardsElement.value
+  // GET QR CODES
+  const qrCodes = Array.from({ length: numberOfCards }, (_, i) => `${TEMPLATE_QRCODE_LINK}${i}`)
   const numberOfPages = Math.ceil(numberOfCards / cardsPerPage)
 
   for (let i = 0; i < numberOfPages; i++) {
+    const startIndex = i * cardsPerPage
+    const endIndex = Math.min(startIndex + cardsPerPage, numberOfCards)
+    const pageQrCodes = qrCodes.slice(startIndex, endIndex)
+
     const numberOfCardsOnPage = Math.min(cardsPerPage, numberOfCards - i * cardsPerPage)
     const frontPage = createFrontpage(numberOfCardsOnPage)
     createCropMarks(frontPage)
-    const backPage = createBackpage(numberOfCardsOnPage)
+    const backPage = createBackpage(pageQrCodes)
     createCropMarks(backPage)
   }
 }
@@ -50,7 +56,8 @@ const createFrontpage = (numberOfCards) => {
   return page
 }
 
-const createBackpage = (numberOfCards) => {
+const createBackpage = (qrCodes) => {
+  const numberOfCards = qrCodes.length
   const page = createPage()
   for (let i = 0; i < numberOfCards; i++) {
     // On the backside, if the number of cards is odd, we need to add an empty card to push it to the right side
@@ -58,7 +65,7 @@ const createBackpage = (numberOfCards) => {
       createCard(page)
     }
     const card = createCard(page)
-    createBackpageContent(card)
+    createBackpageContent(card, qrCodes[i])
   }
   return page
 }
@@ -118,7 +125,7 @@ const createFrontpageContent = (card) => {
   card.appendChild(img)
 }
 
-const createBackpageContent = (card) => {
+const createBackpageContent = (card, qrCodeLink) => {
   const img = document.createElement('img')
   img.className = 'absolute top-0 left-0'
   img.src = 'img/back.png'
@@ -131,7 +138,7 @@ const createBackpageContent = (card) => {
   qrCodeElement.className = 'absolute top-0 left-0'
   // eslint-disable-next-line no-undef
   new QRCode(qrCodeElement, {
-    text: TEMPLATE_QRCODE_LINK,
+    text: qrCodeLink,
     width: qrCodeSize,
     height: qrCodeSize,
     //colorLight: '#990000',
