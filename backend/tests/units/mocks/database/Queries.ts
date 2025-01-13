@@ -9,7 +9,6 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   User, Profile,
-  AllowedRefreshTokens,
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
@@ -32,7 +31,6 @@ import {
   images,
   usersCanUseImages,
   profilesByUserId,
-  allowedRefreshTokensByHash,
   allowedSessionsById,
 
   addSets,
@@ -45,7 +43,6 @@ import {
   addLnurlWs,
   addUsersCanUseSets,
 
-  removeAllowedRefreshTokensForUserId,
   addAllowedSessions,
 } from './database.js'
 
@@ -286,12 +283,6 @@ export default vi.fn().mockImplementation(() => ({
 
   getProfileByUserId: async (userId: User['id']): Promise<Profile | null> => profilesByUserId[userId] || null,
 
-  getAllAllowedRefreshTokensForUser: async (user: User): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokensByHash)
-    .filter((allowedRefreshTokens) => allowedRefreshTokens.user === user.id),
-
-  getAllAllowedRefreshTokensForUserId: async (userId: User['id']): Promise<AllowedRefreshTokens[]> => Object.values(allowedRefreshTokensByHash)
-    .filter((allowedRefreshTokens) => allowedRefreshTokens.user === userId),
-
   getAllowedSessionById: async (sessionId: AllowedSession['sessionId']): Promise<AllowedSession | null> => allowedSessionsById[sessionId] || null,
 
   deleteAllAllowedSessionForUserExceptOne: async (userId: User['id'], sessionId: AllowedSession['sessionId']): Promise<void> => {
@@ -431,10 +422,6 @@ export default vi.fn().mockImplementation(() => ({
     profilesByUserId[profile.user] = profile
   }),
 
-  insertOrUpdateAllowedRefreshTokens: vi.fn(async (allowedRefreshTokens: AllowedRefreshTokens): Promise<void> => {
-    allowedRefreshTokensByHash[allowedRefreshTokens.hash] = allowedRefreshTokens
-  }),
-
   updateCard: vi.fn(async (card: Card): Promise<void> => {
     cardsByHash[card.hash] = card
   }),
@@ -482,10 +469,6 @@ export default vi.fn().mockImplementation(() => ({
     if (index >= 0) {
       usersCanUseSets.splice(index, 1)
     }
-  }),
-
-  deleteAllAllowedRefreshTokensForUserId: vi.fn(async (userId: User['id']): Promise<void> => {
-    removeAllowedRefreshTokensForUserId(userId)
   }),
 
   deleteAllowedSession: vi.fn(async (allowedSession: AllowedSession): Promise<void> => { delete allowedSessionsById[allowedSession.sessionId] }),

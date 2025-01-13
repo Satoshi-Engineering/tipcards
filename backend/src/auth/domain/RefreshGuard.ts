@@ -6,9 +6,6 @@ import JwtIssuer from '@shared/modules/Jwt/JwtIssuer.js'
 
 import User from '@backend/domain/User.js'
 
-import {
-  getAuthenticatedUserIdFromAllowedRefreshTokenFormat,
-} from '@auth/domain/allowedRefreshTokensHelperFunctions.js'
 import AllowedSession from '@auth/domain/AllowedSession.js'
 import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
 import { RefreshTokenPayload } from '@auth/types/RefreshTokenPayload.js'
@@ -52,20 +49,18 @@ export default class RefreshGuard {
     const jwtPayload = await this.validateRefreshTokenAndGetPayload(refreshToken, host)
     const jwtParseResult = RefreshTokenPayload.safeParse(jwtPayload)
 
-    let userId
-    let allowedSession
+    let userId: string
+    let allowedSession: AllowedSession | null
 
     if (jwtParseResult.success) {
       const refreshTokenPayload = jwtParseResult.data
       userId = refreshTokenPayload.userId
       allowedSession = await AllowedSession.fromSessionId(refreshTokenPayload.sessionId)
       if (allowedSession == null) {
-        throw new ErrorWithCode('SessionId not found', ErrorCode.RefreshTokenDenied)
+        throw new ErrorWithCode('SessionId not found in database', ErrorCode.RefreshTokenDenied)
       }
     } else {
-      userId = await getAuthenticatedUserIdFromAllowedRefreshTokenFormat(jwtPayload, refreshToken)
-      allowedSession = AllowedSession.createNewForUserId(userId)
-      await allowedSession.insert()
+      throw new ErrorWithCode('Failed to parse RefreshTokenPayload', ErrorCode.RefreshTokenDenied)
     }
 
     const user = await User.fromId(userId)

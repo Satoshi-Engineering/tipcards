@@ -6,7 +6,6 @@ import type {
   User,
   UserCanUseSet,
   Profile,
-  AllowedRefreshTokens,
 } from '@backend/database/schema/index.js'
 import type Queries from '@backend/database/Queries.js'
 
@@ -22,7 +21,6 @@ export type DataObjects = {
   users?: User[],
   profiles?: Profile[],
   usersCanUseSets?: UserCanUseSet[],
-  allowedRefreshTokens?: AllowedRefreshTokens[],
 }
 
 /** @throws */
@@ -96,9 +94,6 @@ export const insertOrUpdateDataObjects = async (queries: Queries, data: DataObje
   }
   if (data.profiles != null) {
     await Promise.all(data.profiles.map((profile) => queries.insertOrUpdateProfile(profile)))
-  }
-  if (data.allowedRefreshTokens != null) {
-    await Promise.all(data.allowedRefreshTokens.map((allowedRefreshTokens) => queries.insertOrUpdateAllowedRefreshTokens(allowedRefreshTokens)))
   }
 }
 

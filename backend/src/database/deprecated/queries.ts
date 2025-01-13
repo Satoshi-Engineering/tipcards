@@ -233,6 +233,5 @@ export const createUser = async (user: UserRedis): Promise<void> => asTransactio
 
 export const updateUser = async (user: UserRedis): Promise<void> => asTransaction(async (queries) => {
   const drizzleData = await getDrizzleDataObjectsForRedisUser(user)
-  await queries.deleteAllAllowedRefreshTokensForUserId(user.id)
   await insertOrUpdateDataObjects(queries, drizzleData)
 })

@@ -73,26 +73,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       return expiredAccessToken
     },
 
-    'jwt:createRefreshTokenFormatAllowedRefreshTokens': async ({
-      expirationTime,
-      userId,
-      lnurlAuthKey,
-    }: {
-      expirationTime: string,
-      userId: string,
-      lnurlAuthKey: string,
-    } ) => {
-      const nonce = randomUUID()
-      const payload = {
-        id: userId,
-        lnurlAuthKey,
-        nonce,
-      }
-      const jwtIssuer = await getJwtIssuer()
-      return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
-    },
-
-    'jwt:validateRefreshTokenFormatAllowedSessions': async ({
+    'jwt:validateRefreshToken': async ({
       refreshToken,
     }: {
       refreshToken: string,

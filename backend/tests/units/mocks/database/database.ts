@@ -4,7 +4,6 @@ import {
   Invoice, CardVersionHasInvoice,
   LnurlP, LnurlW,
   User, Profile,
-  AllowedRefreshTokens,
   UserCanUseSet,
   Image, UserCanUseImage,
   LandingPage, UserCanUseLandingPage,
@@ -26,7 +25,6 @@ export const userCanUseLandingPages: Record<string, UserCanUseLandingPage> = {}
 export const images: Record<string, Image> = {}
 export const usersCanUseImages: UserCanUseImage[] = []
 export const profilesByUserId: Record<string, Profile> = {}
-export const allowedRefreshTokensByHash: Record<string, AllowedRefreshTokens> = {}
 export const allowedSessionsById: Record<string, AllowedSession> = {}
 
 export const addData = ({
@@ -45,7 +43,6 @@ export const addData = ({
   images,
   usersCanUseImages,
   profiles,
-  allowedRefreshTokens,
   allowedSessions,
 }: {
   sets?: Set[],
@@ -63,7 +60,6 @@ export const addData = ({
   images?: Image[],
   usersCanUseImages?: UserCanUseImage[],
   profiles?: Profile[],
-  allowedRefreshTokens?: AllowedRefreshTokens[],
   allowedSessions?: AllowedSession[],
 }) => {
   addSets(...(sets || []))
@@ -81,7 +77,6 @@ export const addData = ({
   addImages(...(images || []))
   addUsersCanUseImages(...(usersCanUseImages || []))
   addProfiles(...(profiles || []))
-  addAllowedRefreshTokens(...(allowedRefreshTokens || []))
   addAllowedSessions(...(allowedSessions || []))
 }
 
@@ -136,24 +131,11 @@ export const addProfiles = (...newProfiles: Profile[]) => {
     item: profile,
   })))
 }
-export const addAllowedRefreshTokens = (...allowedRefreshTokens: AllowedRefreshTokens[]) => {
-  addItemsToTable(allowedRefreshTokensByHash, allowedRefreshTokens.map((allowedRefreshToken) => ({
-    key: allowedRefreshToken.hash,
-    item: allowedRefreshToken,
-  })))
-}
 
 export const addAllowedSessions = (...allowedSessions: AllowedSession[]) => {
   addItemsToTable(allowedSessionsById, allowedSessions.map((allowedSession) => ({ key: allowedSession.sessionId, item: allowedSession })))
 }
 
-export const removeAllowedRefreshTokensForUserId = (userId: User['id']) => {
-  Object.entries(allowedRefreshTokensByHash).forEach(([hash, { user }]) => {
-    if (user === userId) {
-      delete allowedRefreshTokensByHash[hash]
-    }
-  })
-}
 
 const addItemsToTable = <I>(table: Record<string, I>, items: { key: string, item: I }[]) => {
   items.forEach((item) => addItemToTable(table, item))

@@ -10,7 +10,6 @@ import { getUserById } from '@backend/database/deprecated/queries.js'
 import {
   createProfileForUser,
   createUser,
-  createAllowedRefreshTokensDepricated,
   createImage, createUserCanUseImage,
   createLandingPageTypeExternal, createUserCanUseLandingPage,
 } from '../../../drizzleData.js'
@@ -84,38 +83,6 @@ describe('getUserById', () => {
       availableCardsLogos: expect.arrayContaining([imageData1.id, imageData2.id]),
       availableLandingPages: expect.arrayContaining([landingPageData.id]),
       allowedRefreshTokens: null,
-      profile: {
-        displayName: profileData.displayName,
-        accountName: profileData.accountName,
-        email: profileData.email,
-      },
-      permissions: [],
-    }))
-  })
-
-  it('should return a user with allowedRefreshTokens', async () => {
-    const userData = createUser()
-    const profileData = createProfileForUser(userData)
-    const allowedRefreshTokenData1 = createAllowedRefreshTokensDepricated(userData)
-    const allowedRefreshTokenData2 = createAllowedRefreshTokensDepricated(userData, true)
-
-    addData({
-      users: [userData],
-      profiles: [profileData],
-      allowedRefreshTokens: [allowedRefreshTokenData1, allowedRefreshTokenData2],
-    })
-
-    const userResutlt = await getUserById(userData.id)
-    expect(userResutlt).toEqual(expect.objectContaining({
-      id: userData.id,
-      created: dateToUnixTimestamp(userData.created),
-      lnurlAuthKey: userData.lnurlAuthKey,
-      availableCardsLogos: null,
-      availableLandingPages: null,
-      allowedRefreshTokens: expect.arrayContaining([
-        [allowedRefreshTokenData1.current],
-        [allowedRefreshTokenData2.current, allowedRefreshTokenData2.previous],
-      ]),
       profile: {
         displayName: profileData.displayName,
         accountName: profileData.accountName,

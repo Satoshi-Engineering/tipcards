@@ -135,17 +135,6 @@ Table UserCanUseLandingPage {
   }
 }
 
-Table AllowedRefreshTokens [note: "every device can have up to two valid refresh tokens. when creating a third via refreshing set current to previous and new value to current"] {
-  hash     varchar(64) [primary key, unique, note: "sha256 of user + current + previous"]
-  user     varchar(64) [ref: > User.id]
-  current  text        [note: "jwt refresh token"]
-  previous text        [null, default: null, note: "jwt refresh token"]
-
-  indexes {
-    user [name: "userIndex"]
-  }
-}
-
 Table AllowedSession [note: "Every successful login creates a new session for the user"] {
   user     varchar(64) [ref: > User.id]
   sessionId  varchar(36) [primary key, unique, note: "random UUID"]

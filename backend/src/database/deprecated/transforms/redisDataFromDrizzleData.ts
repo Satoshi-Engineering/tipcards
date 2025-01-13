@@ -169,7 +169,6 @@ export const redisUserFromDrizzleUser = async (queries: Queries, user: User): Pr
 
   const availableCardsLogos = await getAvailableCardLogosForRedisUserByUserId(queries, user.id)
   const availableLandingPages = await getAvailableLandingPagesForRedisUserByUserId(queries, user.id)
-  const allowedRefreshTokens = await getAllowedRefreshTokensForRedisUserByUserId(queries, user.id)
 
   return {
     id: user.id,
@@ -177,7 +176,7 @@ export const redisUserFromDrizzleUser = async (queries: Queries, user: User): Pr
     created: dateToUnixTimestamp(user.created),
     availableCardsLogos,
     availableLandingPages,
-    allowedRefreshTokens,
+    allowedRefreshTokens: null,
     profile: redisProfileFromDrizzleProfile(profile),
     permissions: UserRedis.shape.permissions.parse(user.permissions),
   }
@@ -201,15 +200,4 @@ export const getAvailableLandingPagesForRedisUserByUserId = async (queries: Quer
     return null
   }
   return availableLandingPages
-}
-
-export const getAllowedRefreshTokensForRedisUserByUserId = async (queries: Queries, userId: User['id']): Promise<UserRedis['allowedRefreshTokens']> => {
-  const allowedRefreshTokens = await queries.getAllAllowedRefreshTokensForUserId(userId)
-  if (allowedRefreshTokens.length === 0) {
-    return null
-  }
-  return allowedRefreshTokens.reduce((total, allowedRefreshTokens) => [
-    ...total,
-    allowedRefreshTokens.previous != null ? [allowedRefreshTokens.current, allowedRefreshTokens.previous] : [allowedRefreshTokens.current],
-  ], [] as string[][])
 }

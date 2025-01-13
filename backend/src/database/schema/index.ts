@@ -1,4 +1,3 @@
-export { AllowedRefreshTokens } from './AllowedRefreshTokens.js'
 export { AllowedSession } from './AllowedSession.js'
 export { Card } from './Card.js'
 export { CardVersion } from './CardVersion.js'

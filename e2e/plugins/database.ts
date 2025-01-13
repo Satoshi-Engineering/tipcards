@@ -34,7 +34,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     'db:logoutAllDevices': async ({ refreshToken }: { refreshToken: string }) => {
       const payload = await getJwtPayload({ jwt: refreshToken })
       const userId = payload.userId as string
-      await sql`DELETE FROM public."AllowedRefreshTokens" WHERE "user"=${userId};`
       await sql`DELETE FROM public."AllowedSession" WHERE "user"=${userId};`
       return userId
     },
@@ -62,23 +61,6 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         userId,
         lnurlAuthKey,
       }
-    },
-
-    'db:insertAllowedRefreshToken': async ({
-      userId,
-      refreshToken,
-    }: {
-      userId: string,
-      refreshToken: string,
-    }) => {
-      const id = hashSha256(refreshToken)
-
-      await sql`
-        INSERT INTO public."AllowedRefreshTokens"(
-          hash, "user", current, previous)
-          VALUES (${id}, ${userId}, ${refreshToken}, NULL);
-      `
-      return null
     },
 
     'db:insertAllowedSession': async ({

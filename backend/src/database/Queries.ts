@@ -11,7 +11,6 @@ import {
   LnurlP, LnurlW,
   Image, UserCanUseImage,
   User, Profile,
-  AllowedRefreshTokens,
   UserCanUseSet,
   LandingPage, UserCanUseLandingPage,
   AllowedSession,
@@ -730,30 +729,6 @@ export default class Queries {
         target: Profile.user,
         set: profile,
       })
-  }
-
-  getAllAllowedRefreshTokensForUser(user: User): Promise<AllowedRefreshTokens[]> {
-    return this.getAllAllowedRefreshTokensForUserId(user.id)
-  }
-
-  async getAllAllowedRefreshTokensForUserId(userId: User['id']): Promise<AllowedRefreshTokens[]> {
-    return this.transaction.select()
-      .from(AllowedRefreshTokens)
-      .where(eq(AllowedRefreshTokens.user, userId))
-  }
-
-  async insertOrUpdateAllowedRefreshTokens(allowedRefreshTokens: AllowedRefreshTokens): Promise<void> {
-    await this.transaction.insert(AllowedRefreshTokens)
-      .values(allowedRefreshTokens)
-      .onConflictDoUpdate({
-        target: AllowedRefreshTokens.hash,
-        set: allowedRefreshTokens,
-      })
-  }
-
-  async deleteAllAllowedRefreshTokensForUserId(userId: User['id']): Promise<void> {
-    await this.transaction.delete(AllowedRefreshTokens)
-      .where(eq(AllowedRefreshTokens.user, userId))
   }
 
   async insertAllowedSession(allowedSession: AllowedSession): Promise<void> {

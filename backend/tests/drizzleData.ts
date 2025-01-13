@@ -119,22 +119,6 @@ export const createUser = (id: string = randomUUID()): User => ({
 
 export const createUsers = (count: number): User[] => Array(count).fill('').map(() => createUser())
 
-export const createAllowedRefreshTokensDepricated = (user: User, addPrevious = false) => {
-  const current = hashSha256(randomUUID())
-  let textForHash = user.id + current
-  let previous: string | null = null
-  if (addPrevious) {
-    previous = hashSha256(randomUUID())
-    textForHash += previous
-  }
-  return {
-    hash: hashSha256(textForHash),
-    user: user.id,
-    current,
-    previous,
-  }
-}
-
 export const createProfileForUser = (user: User): Profile => ({
   user: user.id,
   accountName: createRandomTextData('Profile.accountName'),

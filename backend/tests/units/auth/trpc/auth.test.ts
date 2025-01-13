@@ -12,21 +12,8 @@ import Auth from '@auth/domain/Auth.js'
 import LnurlAuthLogin from '@auth/domain/LnurlAuthLogin.js'
 import RefreshGuard from '@auth/domain/RefreshGuard.js'
 import AuthenticatedUser from '@auth/domain/AuthenticatedUser.js'
-import {
-  deleteRefreshTokenInDatabase,
-  deleteAllRefreshTokensInDatabase,
-} from '@auth/domain/allowedRefreshTokensHelperFunctions.js'
 
 const createCaller = createCallerFactory(authRouter)
-
-vi.mock(import('@auth/domain/allowedRefreshTokensHelperFunctions.js'), async (importOriginal) => {
-  const actual = await importOriginal()
-  return {
-    ...actual,
-    deleteAllRefreshTokensInDatabase: vi.fn(),
-    deleteRefreshTokenInDatabase: vi.fn(),
-  }
-})
 
 describe('TRpc Router Auth', async () => {
   const mockAccessTokenAudience = 'mockAccessTokenIssuer'
@@ -116,16 +103,6 @@ describe('TRpc Router Auth', async () => {
     expect(authenticatedUser.logout).toHaveBeenCalled()
   })
 
-  it('should call deleteRefreshTokenInDatabase on logout', async () => {
-    const mockRefreshToken = 'mockRefreshToken'
-    vi.spyOn(refreshGuard, 'getRefreshTokenFromRequestCookies').mockReturnValueOnce(mockRefreshToken)
-
-    await caller.logout()
-
-    expect(refreshGuard.getRefreshTokenFromRequestCookies).toHaveBeenCalledOnce()
-    expect(deleteRefreshTokenInDatabase).toHaveBeenCalledWith(mockRefreshToken)
-  })
-
   it('should logout all other devices', async () => {
     const accessToken = 'mockAccessToken'
     vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce(authenticatedUser)
@@ -142,18 +119,5 @@ describe('TRpc Router Auth', async () => {
     expect(authenticatedUser.logoutAllOtherDevices).toHaveBeenCalled()
     expect(authenticatedUser.createAccessToken).toHaveBeenCalled()
     expect(mockResponse.clearCookie).not.toHaveBeenCalled()
-  })
-
-  it('should call deleteAllRefreshTokensInDatabase on logout all other devices', async () => {
-    const accessToken = 'mockAccessToken'
-    vi.spyOn(refreshGuard, 'authenticateUserViaRefreshToken').mockResolvedValueOnce(authenticatedUser)
-    vi.spyOn(authenticatedUser, 'setNewRefreshTokenCookie').mockResolvedValueOnce()
-    vi.spyOn(authenticatedUser, 'logoutAllOtherDevices').mockResolvedValueOnce()
-    vi.spyOn(authenticatedUser, 'createAccessToken').mockResolvedValueOnce(accessToken)
-    vi.spyOn(mockResponse, 'clearCookie')
-
-    await caller.logoutAllOtherDevices()
-
-    expect(deleteAllRefreshTokensInDatabase).toHaveBeenCalledWith(authenticatedUser.userId)
   })
 })

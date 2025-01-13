@@ -6,11 +6,6 @@ import { router } from '@auth/trpc/trpc.js'
 import publicProcedure from '@auth/trpc/procedures/public.js'
 import authenticatedUserProcedure from '@auth/trpc/procedures/authenticatedUser.js'
 
-import {
-  deleteAllRefreshTokensInDatabase,
-  deleteRefreshTokenInDatabase,
-} from '@backend/auth/domain/allowedRefreshTokensHelperFunctions.js'
-
 export const authRouter = router({
   loginWithLnurlAuthHash: publicProcedure
     .input(z.object({ hash: z.string() }))
@@ -45,9 +40,6 @@ export const authRouter = router({
         // Fails silently, because user does not have to be authenticated to logout
         ctx.refreshGuard.clearRefreshTokenCookie()
       }
-
-      const refreshTokenInCookie = ctx.refreshGuard.getRefreshTokenFromRequestCookies()
-      await deleteRefreshTokenInDatabase(refreshTokenInCookie)
     }),
 
   logoutAllOtherDevices: authenticatedUserProcedure
@@ -55,7 +47,6 @@ export const authRouter = router({
     .query(async ({ ctx }) => {
       await ctx.authenticatedUser.setNewRefreshTokenCookie()
       await ctx.authenticatedUser.logoutAllOtherDevices()
-      await deleteAllRefreshTokensInDatabase(ctx.authenticatedUser.userId)
       const accessToken = await ctx.authenticatedUser.createAccessToken()
       return {
         accessToken,
