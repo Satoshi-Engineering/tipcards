@@ -1,9 +1,14 @@
 const TEMPLATE_QRCODE_LINK = 'https://adsasdasd.io/funding/f428575507b59fa559fbc999999e1a673234716b76213255e05da47b8e153d0742'
 
-const cardWith = 85
+const cardWidth = 85
 const cardHeight = 55
-const pageWith = 210
+const pageWidth = 210
 const pageHeight = 297
+const cardsPerRow = Math.floor(pageHeight / cardHeight)
+const cardsPerColumn = Math.floor(pageWidth / cardWidth)
+const cardsPerPage = cardsPerRow * cardsPerColumn
+const cropMarkLength = 5
+const cropMarkPadding = 3
 
 const pages = []
 
@@ -14,15 +19,14 @@ const updatePage = () => {
   clearPages()
 
   const numberOfCards = numberOfCardsElement.value
-  const cardsPerRow = Math.floor(pageWith / cardWith)
-  const cardsPerColumn = Math.floor(pageHeight / cardHeight)
-  const cardsPerPage = cardsPerRow * cardsPerColumn
   const numberOfPages = Math.ceil(numberOfCards / cardsPerPage)
 
   for (let i = 0; i < numberOfPages; i++) {
     const numberOfCardsOnPage = Math.min(cardsPerPage, numberOfCards - i * cardsPerPage)
-    createFrontpage(numberOfCardsOnPage)
-    createBackpage(numberOfCardsOnPage)
+    const frontPage = createFrontpage(numberOfCardsOnPage)
+    createCropMarks(frontPage)
+    const backPage = createBackpage(numberOfCardsOnPage)
+    createCropMarks(backPage)
   }
 }
 
@@ -37,6 +41,7 @@ const createFrontpage = (numberOfCards) => {
     const card = createCard(page)
     createFrontpageContent(card)
   }
+  return page
 }
 
 const createBackpage = (numberOfCards) => {
@@ -45,6 +50,7 @@ const createBackpage = (numberOfCards) => {
     const card = createCard(page)
     createBackpageContent(card)
   }
+  return page
 }
 
 const createPage = () => {
@@ -53,6 +59,43 @@ const createPage = () => {
   pagesContainer.appendChild(div)
   pages.push(div)
   return div
+}
+
+const createCropMarks = (page) => {
+  let offsetY = (pageHeight - cardsPerRow * cardHeight) / 2
+  let offsetX = (pageWidth - cardsPerColumn * cardWidth) / 2
+
+  for (let i = 0, y = offsetY; i <= cardsPerRow; i++, y += cardHeight) {
+    // Crop Mark Left
+    createCropMark(page, offsetX - cropMarkLength - cropMarkPadding, y, 'horizontal')
+    // Crop Mark Right
+    createCropMark(page, pageWidth - offsetX + cropMarkPadding, y, 'horizontal')
+  }
+
+  for (let i = 0, x = offsetX; i <= cardsPerColumn; i++, x += cardWidth) {
+    // Crop Mark Top
+    createCropMark(page, x, offsetY - cropMarkLength - cropMarkPadding, 'vertical')
+    // Crop Mark Bottom
+    createCropMark(page, x, pageHeight - offsetY + cropMarkPadding, 'vertical')
+  }
+}
+
+const createCropMark = (page, x, y, orientation) => {
+  const markLeft = document.createElement('div')
+  markLeft.className = 'absolute'
+  markLeft.style.left = `${x}mm`
+  markLeft.style.top = `${y}mm`
+  if (orientation === 'horizontal') {
+    markLeft.className += ' border-t'
+    markLeft.style.width = `${cropMarkLength}mm`
+    markLeft.style.height = '0mm'
+  }
+  if (orientation === 'vertical') {
+    markLeft.className += ' border-l'
+    markLeft.style.width = '0mm'
+    markLeft.style.height = `${cropMarkLength}mm`
+  }
+  page.appendChild(markLeft)
 }
 
 const createFrontpageContent = (card) => {
@@ -67,15 +110,15 @@ const createFrontpageContent = (card) => {
 
 const createBackpageContent = (card) => {
   const img = document.createElement('img')
-  img.className = 'stackItem'
+  img.className = 'absolute top-0 left-0'
   img.src = 'img/back.png'
   img.style.height = '55mm'
   //img.style.width = '85mm'
   card.appendChild(img)
 
-  card.className += ' stackContainer'
+  card.className += ' relative'
   const qrCodeElement = document.createElement('div')
-  qrCodeElement.className = 'stackItem'
+  qrCodeElement.className = 'absolute top-0 left-0'
   // eslint-disable-next-line no-undef
   new QRCode(qrCodeElement, {
     text: TEMPLATE_QRCODE_LINK,

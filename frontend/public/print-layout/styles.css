@@ -24,6 +24,7 @@ html {
   grid-template-columns: repeat(2, 85mm);
   grid-template-rows: repeat(5, 55mm);
   width: fit-content;
+  position: relative;
 }
 
 .card {
@@ -38,13 +39,19 @@ html {
   overflow: hidden;
 }
 
-.stackContainer {
+.relative {
   position: relative;
 }
 
-.stackItem {
+.absolute {
   position: absolute;
+}
+
+.top-0 {
   top: 0;
+}
+
+.left-0 {
   left: 0;  
 }
 
@@ -67,4 +74,12 @@ html {
 
 .defaultText {
   font-size: 5pt;
+}
+
+.border-t {
+  border-top: 1px solid #000;
+}
+
+.border-l {
+  border-left: 1px solid #000;
 }
