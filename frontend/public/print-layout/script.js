@@ -47,6 +47,10 @@ const createFrontpage = (numberOfCards) => {
 const createBackpage = (numberOfCards) => {
   const page = createPage()
   for (let i = 0; i < numberOfCards; i++) {
+    // On the backside, if the number of cards is odd, we need to add an empty card to push it to the right side
+    if (numberOfCards %2 === 1 && i === numberOfCards - 1) {
+      createCard(page)
+    }
     const card = createCard(page)
     createBackpageContent(card)
   }
