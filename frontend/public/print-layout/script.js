@@ -1,14 +1,20 @@
 const TEMPLATE_QRCODE_LINK = 'https://adsasdasd.io/funding/f428575507b59fa559fbc999999e1a673234716b76213255e05da47b8e153d0742'
 
+// All values in mm
 const cardWidth = 85
 const cardHeight = 55
 const pageWidth = 210
 const pageHeight = 297
+const cropMarkLength = 5
+const cropMarkPadding = 3
+const qrCodeX = 4.7
+const qrCodeY = 5.4
+// Value in Px
+const qrCodeSize = 168
+
 const cardsPerRow = Math.floor(pageHeight / cardHeight)
 const cardsPerColumn = Math.floor(pageWidth / cardWidth)
 const cardsPerPage = cardsPerRow * cardsPerColumn
-const cropMarkLength = 5
-const cropMarkPadding = 3
 
 const pages = []
 
@@ -126,11 +132,12 @@ const createBackpageContent = (card) => {
   // eslint-disable-next-line no-undef
   new QRCode(qrCodeElement, {
     text: TEMPLATE_QRCODE_LINK,
-    width: 165,
-    height: 165,
+    width: qrCodeSize,
+    height: qrCodeSize,
+    //colorLight: '#990000',
   })
-  qrCodeElement.style.left = '3mm'
-  qrCodeElement.style.top = '3mm'
+  qrCodeElement.style.left = `${qrCodeX}mm`
+  qrCodeElement.style.top = `${qrCodeY}mm`
   card.appendChild(qrCodeElement)
 }
 
