@@ -7,10 +7,10 @@ const pageWidth = 210
 const pageHeight = 297
 const cropMarkLength = 5
 const cropMarkPadding = 3
-const qrCodeX = 4.7
+const qrCodeX = 4.3
 const qrCodeY = 5.4
 // Value in Px
-const qrCodeSize = 168
+const qrCodeSize = 167
 
 const cardsPerRow = Math.floor(pageHeight / cardHeight)
 const cardsPerColumn = Math.floor(pageWidth / cardWidth)
