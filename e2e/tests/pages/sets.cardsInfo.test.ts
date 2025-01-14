@@ -33,16 +33,24 @@ describe('Sets Page Cards Info', () => {
       .should('have.length', numberOfSets)
   })
 
-  it('loads cards info for sets in viewport', () => {
+  it('loads only cards info for sets in viewport', () => {
     gotoSetsPageAndWaitForInitialCardsInfoRequest()
 
+    cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.at.least', 4 * Math.min(12, numberOfCardsPerSet))
     setListItemsInViewportHaveCardsInfoLoaded(numberOfCardsPerSet, viewportHeight)
+
+    // items outside of the viewport should not have loaded cards info
+    cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.at.most', 4 * Math.min(12, numberOfCardsPerSet))
   })
 
-  it.skip('loads cards info for sets in viewport after scrolling', () => {
-    tipCards.sets.goto()
+  it('loads cards info for sets in viewport after scrolling', () => {
+    gotoSetsPageAndWaitForInitialCardsInfoRequest()
+
     scrollDownAndWaitForCardsInfoRequest()
 
+    // make sure the userActionRequired checkboxes are rendered before checking items in viewport,
+    // as the setListItemsInViewportHaveCardsInfoLoaded loop is written in a way that it will fail if the checkboxes are not rendered before the function is called
+    cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.at.least', 7 * Math.min(12, numberOfCardsPerSet))
     setListItemsInViewportHaveCardsInfoLoaded(numberOfCardsPerSet, viewportHeight)
   })
 
