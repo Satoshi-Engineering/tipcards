@@ -27,22 +27,12 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it.skip('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it('should navigate to youtube when the play button in the second slider is clicked', () => {
     cy.visit(HOME_PAGE_URL.href)
 
+    // we don't care about error on youtube
     cy.origin('https://www.youtube.com', () => {
-      cy.on('uncaught:exception', (e) => {
-        if (e.message.includes('Blocked a frame with origin "https://www.youtube.com" from accessing a cross-origin frame.')) {
-          // we expected this error, so let's ignore it
-          // and let the test continue
-          return false
-        }
-        if (e.message.includes("Cannot read properties of undefined (reading 'indexOf')")) {
-          // we expected this error, so let's ignore it
-          // and let the test continue
-          return false
-        }
-      })
+      cy.on('uncaught:exception', () => false) // this makes sure the test won't fail
     })
 
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)
