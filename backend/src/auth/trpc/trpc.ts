@@ -23,6 +23,15 @@ export const createContext = (opts: CreateExpressContextOptions): Context => {
 }
 
 const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
+  sse: {
+    client: {
+      reconnectAfterInactivityMs: 1_000,
+    },
+    ping: {
+      enabled: true,
+      intervalMs: 500,
+    },
+  },
   transformer: superjson,
   defaultMeta: {
   },
