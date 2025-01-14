@@ -15,24 +15,21 @@ describe('Login Overlay', () => {
   })
 
   it('Close ModalLogin with close button', () => {
-    openModalLogin()
+    tipCards.auth.openModalLoginFromMainNav()
     cy.getTestElement('modal-login-close-button').click()
     cy.getTestElement('modal-login').should('not.exist')
   })
 
   it('Login with click on qr code', () => {
-    openModalLogin()
+    tipCards.auth.openModalLoginFromMainNav()
     wrapLNURLAuthFromLinkClick()
     tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
-    checkLoginSuccess()
+    tipCards.auth.closeModalLoginAfterSuccessfulLogin()
     reloadPageAndCheckAuth()
   })
 
   it('Login with lnurl from clipboard', () => {
-    openModalLogin()
-    cy.addListener('copy', (event) => {
-      cy.log(event)
-    })
+    tipCards.auth.openModalLoginFromMainNav()
 
     cy.getTestElement('lnurlauth-qrcode-copy-2-clipboard').click()
     cy.task<string>('getClipboard').then((clipboardText) => {
@@ -40,38 +37,23 @@ describe('Login Overlay', () => {
     })
 
     tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
-    checkLoginSuccess()
+    tipCards.auth.closeModalLoginAfterSuccessfulLogin()
     reloadPageAndCheckAuth()
   })
 
   it('Should login, after a login and logout has happend without reloading or revisiting the page', () => {
     // Login
-    openModalLogin()
-    wrapLNURLAuthFromLinkClick()
-    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
-    checkLoginSuccess()
+    tipCards.auth.loginViaMainNav()
 
     // Logout
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-logout').click()
 
     // Second Login
-    openModalLogin()
-    wrapLNURLAuthFromLinkClick()
-    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
-    checkLoginSuccess()
+    tipCards.auth.loginViaMainNav()
     reloadPageAndCheckAuth()
   })
 })
-
-const openModalLogin = () => {
-  cy.getTestElement('the-layout').should('exist')
-  cy.getTestElement('logged-in').should('not.exist')
-  cy.getTestElement('the-header-main-nav-button').click()
-
-  cy.getTestElement('main-nav-link-login').click()
-  cy.getTestElement('modal-login').should('exist')
-}
 
 const wrapLNURLAuthFromLinkClick = () => {
   cy.getTestElement('lightning-qr-code-image')
@@ -82,8 +64,8 @@ const wrapLNURLAuthFromLinkClick = () => {
   // Attention: You should not use variables! Please refactor if you have an idea!
   let lnurlAuthUrlHref = ''
   cy.get('a[href^="lightning:"]').then(($link) => {
-    $link.on('click', (e) => {
-      e.preventDefault()
+    $link.on('click', (event) => {
+      event.preventDefault()
       lnurlAuthUrlHref = $link.attr('href')
     })
   })
@@ -94,12 +76,6 @@ const wrapLNURLAuthFromLinkClick = () => {
     const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
     cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
   })
-}
-
-const checkLoginSuccess = () => {
-  cy.getTestElement('lightning-qr-code-image-success').should('exist')
-  cy.getTestElement('modal-login-close-button').click()
-  cy.getTestElement('modal-login').should('not.exist')
 }
 
 const reloadPageAndCheckAuth = () => {

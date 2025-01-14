@@ -28,24 +28,15 @@ describe('OpenTasks', () => {
     cy.getTestElement('open-tasks').should('not.exist')
   })
 
-  it.skip('should load the open tasks on login', () => {
+  it('should load the open tasks on login', () => {
     // preparation: create a user and a set w/o logging in
-    cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
-      cy.wrap(keyPair).as('keyPair')
-      cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', { lnurlAuthKey: keyPair.publicKeyAsHex }).then(({ userId }) => {
-        cy.task('db:createSet5', { userId })
-      })
-    })
+    tipCardsApi.auth.createUserWithoutLogin()
+    tipCardsApi.set.createSet(5)
     tipCards.dashboard.goto()
 
     // log in via ui
     cy.getTestElement('login-banner-login').click()
-    cy.getTestElement('lightning-qr-code-image').then(($el) => {
-      const lnurlAuthUrl = $el.attr('href').substring(10)
-      cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
-    })
-    tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
-    cy.getTestElement('modal-login-close-button').click()
+    tipCards.auth.loginViaModalLogin()
 
     // the tasks should get loaded
     cy.getTestElement('open-tasks').should('exist')

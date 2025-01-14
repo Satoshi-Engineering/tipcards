@@ -88,3 +88,9 @@ export const create100TestSetsForCurrentUserId = () => {
     })
   })
 }
+
+export const createSet = (setNumber: number) => {
+  cy.get<string>('@userId').then((userId) => {
+    cy.task(`db:createSet${setNumber}`, { userId })
+  })
+}
