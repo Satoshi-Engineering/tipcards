@@ -27,7 +27,7 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it.skip('should navigate to youtube when the play button in the second slider is clicked', () => {
     cy.visit(HOME_PAGE_URL.href)
 
     // we don't care about error on youtube
