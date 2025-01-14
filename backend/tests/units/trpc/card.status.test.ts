@@ -31,9 +31,9 @@ describe('tRPC card.status route', async () => {
   it('should return the current card status', async () => {
     const card = createCard()
     addCard(card)
-    const iterator = await caller.status({ hash: card.hash })
+    const iterable = await caller.status({ hash: card.hash })
 
-    const result = await iterator.next()
+    const result = await iterable[Symbol.asyncIterator]().next()
 
     expect(result).toEqual({
       done: false,
@@ -49,11 +49,11 @@ describe('tRPC card.status route', async () => {
   it('should not return a second time if no update occurred', async () => {
     const card = createCard()
     addCard(card)
-    const iterator = await caller.status({ hash: card.hash })
-    await iterator.next()
+    const iterable = await caller.status({ hash: card.hash })
+    await iterable[Symbol.asyncIterator]().next()
 
     const awaitNext = async () => {
-      await iterator.next()
+      await iterable[Symbol.asyncIterator]().next()
     }
     const nextSpy = vi.fn(awaitNext)
     nextSpy()
@@ -65,11 +65,11 @@ describe('tRPC card.status route', async () => {
   it('should return the current card status after an update', async () => {
     const card = createCard()
     addCard(card)
-    const iterator = await caller.status({ hash: card.hash })
-    await iterator.next()
+    const iterable = await caller.status({ hash: card.hash })
+    await iterable[Symbol.asyncIterator]().next()
 
     setTimeout(() => applicationEventEmitter.emit(cardUpdateEvent(card.hash)), 1)
-    const result = await iterator.next()
+    const result = await iterable[Symbol.asyncIterator]().next()
 
     expect(result).toEqual({
       done: false,

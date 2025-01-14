@@ -32,14 +32,8 @@ export default class LnurlAuthLogin {
     this.initLnurlServer()
   }
 
-  public async getOrCreate(id?: string | null): Promise<{ id: string; lnurlAuth: string; hash: string }> {
-    if (
-      id != null
-      && this.activeLnurlsById[id] != null
-    ) {
-      return this.activeLnurlsById[id]
-    }
-    return this.create()
+  public async get(id: string): Promise<{ id: string; lnurlAuth: string; hash: string }> {
+    return this.activeLnurlsById[id]
   }
 
   public async create(): Promise<{ id: string; lnurlAuth: string; hash: string }> {

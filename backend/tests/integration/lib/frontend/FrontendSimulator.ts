@@ -27,6 +27,9 @@ export default class FrontendSimulator extends FrontendWithAuth {
       privateKeyAsHex: this.signingKey.getPrivateKeyAsHex(),
     })
     const response = await this.authCreateLnUrlAuth()
+    if (response.status !== 'lnurlCreated') {
+      throw new Error('Failed to create lnurlAuth')
+    }
     const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(response.lnurlAuth)
     await axios.get(callbackUrl.toString())
     await this.authLoginWithLnurlAuthHash()

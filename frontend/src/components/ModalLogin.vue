@@ -61,9 +61,9 @@
 <script lang="ts" setup>
 import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, onBeforeUnmount, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginDto'
+import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginStatusEnum'
 
 import { useProfileStore } from '@/stores/profile'
 import useTRpcAuth from '@/modules/useTRpcAuth'
@@ -92,24 +92,17 @@ const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
+const id = ref<string>()
 const hash = ref<string>()
 const loginFailed = ref(false)
 const missingEmail = ref(false)
 const subscription = ref<Unsubscribable>()
 
-const safeLogin = async (hash: string, silent: boolean = false) => {
-  if (isLoggedIn.value || fetchingLogin.value) {
-    return
-  }
-  if (!silent) {
-    fetchingLogin.value = true
-  }
+const safeLogin = async (hash: string) => {
+  fetchingLogin.value = true
   try {
     await login(hash)
   } catch (error) {
-    if (silent) {
-      return
-    }
     loginFailed.value = true
     console.error(error)
     return
@@ -128,25 +121,36 @@ const safeLogin = async (hash: string, silent: boolean = false) => {
 
 const trpcAuth = useTRpcAuth()
 
+const createLnurl = async () => {
+  fetchingLogin.value = true
+  const lnurlAuth = await trpcAuth.lnurlAuth.create.query()
+  lnurl.value = lnurlAuth.lnurlAuth
+  hash.value = lnurlAuth.hash
+  id.value = lnurlAuth.id
+  fetchingLogin.value = false
+}
+
 const subscribeToLogin = async () => {
+  if (isLoggedIn.value || fetchingLogin.value) {
+    return
+  }
+  if (id.value == null) {
+    loginFailed.value = true
+    console.error('subscribeToLogin: id is null')
+    return
+  }
   subscription.value = trpcAuth.lnurlAuth.login.subscribe(
-    undefined,
+    {
+      lastEventId: id.value,
+    },
     {
       onData: (lnurlAuthLoginDto) => {
-        if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.lnurlCreated) {
-          fetchingLogin.value = false
-          lnurl.value = lnurlAuthLoginDto.data.lnurlAuth
-          hash.value = lnurlAuthLoginDto.data.hash
-          return
-        }
-
         subscription.value?.unsubscribe()
-
         if (
           lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.loggedIn
-          && lnurlAuthLoginDto.data.hash != null
+          && hash.value != null
         ) {
-          safeLogin(lnurlAuthLoginDto.data.hash)
+          safeLogin(hash.value)
         } else if (lnurlAuthLoginDto.data.status === LnurlAuthLoginStatusEnum.enum.failed) {
           loginFailed.value = true
         }
@@ -159,23 +163,15 @@ const subscribeToLogin = async () => {
   )
 }
 
-const onVisibilityChange = () => {
-  if (document.visibilityState !== 'visible' || hash.value == null) {
-    return
-  }
-  subscription.value?.unsubscribe()
-  safeLogin(hash.value, true)
-}
-
-onBeforeMount(() => {
-  subscribeToLogin()
-  window.addEventListener('visibilitychange', onVisibilityChange)
+onMounted(async () => {
+  await createLnurl()
+  await subscribeToLogin()
 })
 
 onBeforeUnmount(() => {
   lnurl.value = undefined
   hash.value = undefined
+  id.value = undefined
   subscription.value?.unsubscribe()
-  window.removeEventListener('visibilitychange', onVisibilityChange)
 })
 </script>

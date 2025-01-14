@@ -79,25 +79,15 @@ describe('LnurlAuthLogin', () => {
     })
   })
 
-  it('should generate a new lnurl if no id is provided', async () => {
-    const result = await lnurlAuthLogin.getOrCreate()
-
-    expect(result).toEqual({
-      id: lnurlAuthId,
-      lnurlAuth: lnurlAuthEncoded,
-      hash: lnurlAuthHash,
-    })
-  })
-
   it('should return different values on multiple calls', async () => {
-    const result1 = await lnurlAuthLogin.getOrCreate()
+    const result1 = await lnurlAuthLogin.create()
 
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValue({
       url: 'mockUrl',
       encoded: 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e384jx2dfhv5enjd33x5crwdenxdnrjdnzxpnxgdfh893rxd3k8pjnyd3cvs6kxvecv3snwv3n8q6nzd3k8qmkvdmxx5unvwf4xejnve3np7qj83',
       secret: randomUUID(),
     })
-    const result2 = await lnurlAuthLogin.getOrCreate()
+    const result2 = await lnurlAuthLogin.create()
 
     expect(result1.id).not.toBe(result2.id)
     expect(result1.lnurlAuth).not.toBe(result2.lnurlAuth)
@@ -105,20 +95,20 @@ describe('LnurlAuthLogin', () => {
   })
 
   it('should return the previously created lnurlAuth if id is provided', async () => {
-    const result1 = await lnurlAuthLogin.getOrCreate()
+    const result1 = await lnurlAuthLogin.create()
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValue({
       url: 'mockUrl',
       encoded: 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e384jx2dfhv5enjd33x5crwdenxdnrjdnzxpnxgdfh893rxd3k8pjnyd3cvs6kxvecv3snwv3n8q6nzd3k8qmkvdmxx5unvwf4xejnve3np7qj83',
       secret: randomUUID(),
     })
 
-    const result2 = await lnurlAuthLogin.getOrCreate(result1.id)
+    const result2 = await lnurlAuthLogin.get(result1.id)
 
     expect(result2).toEqual(result1)
   })
 
   it('should return the previously created lnurlAuth if id even after login event', async () => {
-    const result1 = await lnurlAuthLogin.getOrCreate()
+    const result1 = await lnurlAuthLogin.create()
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValue({
       url: 'mockUrl',
       encoded: 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e384jx2dfhv5enjd33x5crwdenxdnrjdnzxpnxgdfh893rxd3k8pjnyd3cvs6kxvecv3snwv3n8q6nzd3k8qmkvdmxx5unvwf4xejnve3np7qj83',
@@ -129,13 +119,13 @@ describe('LnurlAuthLogin', () => {
       hash: lnurlAuthHash,
     })
 
-    const result2 = await lnurlAuthLogin.getOrCreate(result1.id)
+    const result2 = await lnurlAuthLogin.get(result1.id)
 
     expect(result2).toEqual(result1)
   })
 
-  it('should return a new lnurl auth after the login hash was used to retrieve the linkingKey', async () => {
-    const result1 = await lnurlAuthLogin.getOrCreate()
+  it('should not return the lnurlAuth after the login hash was used to retrieve the linkingKey', async () => {
+    const result1 = await lnurlAuthLogin.create()
     vi.spyOn(lnurlServer, 'generateNewUrl').mockResolvedValue({
       url: 'mockUrl',
       encoded: 'lnurl1dp68gup69uhkcmmrv9kxsmmnwsargvpsxyhkcmn4wfkr7arpvu7kcmm8d9hzv6e384jx2dfhv5enjd33x5crwdenxdnrjdnzxpnxgdfh893rxd3k8pjnyd3cvs6kxvecv3snwv3n8q6nzd3k8qmkvdmxx5unvwf4xejnve3np7qj83',
@@ -147,11 +137,9 @@ describe('LnurlAuthLogin', () => {
     })
 
     lnurlAuthLogin.getWalletLinkingKeyOnceAfterSuccessfulAuth(result1.hash)
-    const result2 = await lnurlAuthLogin.getOrCreate(result1.id)
+    const result2 = await lnurlAuthLogin.get(result1.id)
 
-    expect(result1.id).not.toBe(result2.id)
-    expect(result1.lnurlAuth).not.toBe(result2.lnurlAuth)
-    expect(result1.hash).not.toBe(result2.hash)
+    expect(result2).toBeUndefined()
   })
 
   it('should subscribe to login informer', () => {
