@@ -192,7 +192,8 @@
         "aprycotMedia": "Bitcoin books, media and more",
         "copiaro": "Hardware Wallets & HODL tools",
         "lightningnetworkstores": "Find out what else you could do online",
-        "coinpages": "Find stores that accept bitcoin"
+        "coinpages": "Find stores that accept bitcoin",
+        "btcmap": "Easily find places to spend sats anywhere on the planet"
       },
       "createYourOwnTipCardsHeadline": "Create your own TipCards",
       "createYourOwnTipCardsText": "Would you like to give your friends or colleagues a few Sats (1 Sat = 0.00000001 Bitcoin) or tip someone in Bitcoin? Click on the following button and configure your personal TipCards.",

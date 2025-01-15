@@ -192,7 +192,8 @@
         "aprycotMedia": "Bücher, Medien & mehr zum Thema Bitcoin",
         "copiaro": "Hardware Wallets & HODL-Werkzeuge",
         "lightningnetworkstores": "Finde heraus, was du online machen kannst",
-        "coinpages": "Such nach Geschäften, die Bitcoin akzeptieren"
+        "coinpages": "Such nach Geschäften, die Bitcoin akzeptieren",
+        "btcmap": "Entdecke weltweit Orte, an denen du Sats ausgeben kannst"
       },
       "createYourOwnTipCardsHeadline": "Erstelle eigene TipCards ⚡",
       "createYourOwnTipCardsText": "Möchtest du deinen Freundinnen oder Bekannten ein paar Sats (1 Sat = 0,00000001 Bitcoin) schenken oder jemandem Trinkgeld in Form von Bitcoin geben? Klick auf den folgenden Button und konfiguriere deine persönlichen TipCards.",
@@ -205,8 +206,14 @@
         "linkLabel": "Bitcoin verstehen",
         "linkHref": "https://bitcoinverstehen.info/"
       },
-      "1": {
-        "title": "Noch ein weiterer Tipp",
+      "2": {
+        "title": "Coinfinity Bitcoin Blinks",
+        "text": "Die Bitcoin Blinks sollen dabei helfen, Bitcoin und Geld für dich und deine Liebsten einfacher verständlich zu machen.",
+        "linkLabel": "Bitcoin Blinks",
+        "linkHref": "https://coinfinity.co/bitcoin-blinks/"
+      },
+      "3": {
+        "title": "Aprycot Mediathek",
         "text": "<strong>Aprycot Media</strong> ist ein deutscher Verlag, der sich auf Bitcoin-Literatur spezialisiert hat. Hier findest du von Büchern über Blog-Posts bis hin zu einer umfangreichen Linksammlung alles was du brauchst um Bitcoin besser zu begreifen.",
         "linkLabel": "Aprycot Mediathek",
         "linkHref": "https://aprycot.media/thek/"

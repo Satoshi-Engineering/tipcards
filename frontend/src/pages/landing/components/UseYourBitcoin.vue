@@ -17,6 +17,24 @@
       <li>
         <ButtonIconCard
           icon-class="w-[70px] h-[50px] flex-none p-1"
+          href="https://btcmap.org/map"
+        >
+          <template #default>
+            <IconLogoBtcMap />
+          </template>
+          <template #description>
+            <HeadlineDefault level="h4" class="!mt-1 !mb-0">
+              btcmap.org
+            </HeadlineDefault>
+            <ParagraphDefault class="!m-0 text-sm">
+              {{ $t('landing.sectionUse.examples.btcmap') }}
+            </ParagraphDefault>
+          </template>
+        </ButtonIconCard>
+      </li>
+      <li>
+        <ButtonIconCard
+          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://satoshistore.io/"
         >
           <template #default>
@@ -78,24 +96,6 @@
       <li>
         <ButtonIconCard
           icon-class="w-[70px] h-[50px] flex-none p-1"
-          href="https://lightningnetworkstores.com/"
-        >
-          <template #default>
-            <IconLogoLightningNetworkStores />
-          </template>
-          <template #description>
-            <HeadlineDefault level="h4" class="!mt-1 !mb-0">
-              lightningnetworkstores.com
-            </HeadlineDefault>
-            <ParagraphDefault class="!m-0 text-sm">
-              {{ $t('landing.sectionUse.examples.lightningnetworkstores') }}
-            </ParagraphDefault>
-          </template>
-        </ButtonIconCard>
-      </li>
-      <li>
-        <ButtonIconCard
-          icon-class="w-[70px] h-[50px] flex-none p-1"
           href="https://coinpages.io/"
         >
           <template #default>
@@ -125,8 +125,8 @@ import logoSatoshiStore from '@/assets/images/logo_satoshistoreio_300x.png'
 import logoSatoshiStore2x from '@/assets/images/logo_satoshistoreio_300x@2x.png'
 import ButtonIconCard from '@/components/buttons/ButtonIconCard.vue'
 import IconLogoAprycotMedia from '@/components/icons/IconLogoAprycotMedia.vue'
-import IconLogoLightningNetworkStores from '@/components/icons/IconLogoLightningNetworkStores.vue'
 import IconMobilePhoneQuestionmark from '@/components/icons/IconMobilePhoneQuestionmark.vue'
+import IconLogoBtcMap from '@/components/icons/IconLogoBtcMap.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
