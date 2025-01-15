@@ -39,7 +39,7 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it.only('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it('should navigate to youtube when the play button in the second slider is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)
