@@ -361,6 +361,10 @@ const pollingTimeout = ref<NodeJS.Timeout>()
 const lnurl = computed(() => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
+
   const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))
 
   cardStatus.value = status || undefined
@@ -394,12 +398,23 @@ const loadLnurlData = async () => {
   pollingTimeout.value = setTimeout(loadLnurlData, 10 * 1000)
 }
 
-onBeforeMount(loadLnurlData)
+const onVisibilityChange = () => {
+  if (document.visibilityState !== 'visible') {
+    return
+  }
+  loadLnurlData()
+}
+
+onBeforeMount(() => {
+  loadLnurlData()
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
 
 onUnmounted(() => {
   if (pollingTimeout.value != null) {
     clearTimeout(pollingTimeout.value)
   }
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 
 const createInvoice = async () => {

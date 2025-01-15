@@ -38,6 +38,7 @@ export const loadCard = async (cardHash: string): Promise<Card> => {
           'Pragma': 'no-cache',
           'Expires': '0',
         },
+        timeout: 3000,
       },
     )
     return response.data.data as Card
