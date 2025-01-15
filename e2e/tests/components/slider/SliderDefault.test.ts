@@ -1,4 +1,4 @@
-import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
+import tipCards from '@e2e/lib/tipCards'
 
 const x = 1000
 
@@ -26,7 +26,7 @@ const pointerMoveLeft = (deltaX: number) => ({
 
 describe('SliderDefault', () => {
   it('renders the slider', () => {
-    cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
+    tipCards.styleGuide.gotoComponents()
     cy.get('[data-test="slider-default"]').first().as('slider')
     cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
     cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')
@@ -39,8 +39,10 @@ describe('SliderDefault', () => {
     cy.get('@slide3').should('not.be.visible')
   })
 
-  it.skip('swipes to the second slide', () => {
-    cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
+  it('swipes to the second slide', () => {
+    tipCards.styleGuide.gotoComponents()
+    // make sure everything is rendered before assigning aliases
+    cy.get('[data-test="slider-default"]:first [data-test="slide-default"]').should('have.length', 3)
     cy.get('[data-test="slider-default"]').first().as('slider')
     cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
     cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')
@@ -63,7 +65,7 @@ describe('SliderDefault', () => {
   })
 
   it('navigates to third slide using pagination', () => {
-    cy.visit(new URL('/style-guide/components', TIPCARDS_ORIGIN).href)
+    tipCards.styleGuide.gotoComponents()
     cy.get('[data-test="slider-default"]').first().as('slider')
     cy.get('@slider').find('[data-test="slide-default"]').eq(0).as('slide1')
     cy.get('@slider').find('[data-test="slide-default"]').eq(1).as('slide2')

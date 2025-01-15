@@ -5,6 +5,7 @@ import * as history from './pages/history.js'
 import * as home from './pages/home.js'
 import * as landing from './pages/landing.js'
 import * as sets from './pages/sets.js'
+import * as styleGuide from './pages/styleGuide.js'
 import * as userAccount from './pages/userAccount.js'
 import * as utils from './pages/utils.js'
 
@@ -16,6 +17,7 @@ export default {
   home,
   landing,
   sets,
+  styleGuide,
   userAccount,
   utils,
 }
