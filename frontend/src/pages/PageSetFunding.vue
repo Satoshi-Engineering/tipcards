@@ -190,7 +190,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
-import { onBeforeMount, ref, reactive, computed } from 'vue'
+import { onBeforeMount, ref, reactive, computed, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -228,6 +228,7 @@ const userErrorMessage = ref<string>()
 const set = ref<Set>()
 const cardIndicesNotUnfunded = ref<number[]>([])
 const creatingInvoice = ref(false)
+const pollingTimeout = ref<NodeJS.Timeout>()
 
 const funded = computed(() => set.value?.invoice?.paid != null)
 const invoice = computed(() => set.value?.invoice?.payment_request)
@@ -235,6 +236,10 @@ const invoiceAmount = computed(() => set.value?.invoice?.amount)
 const invoiceExpired = computed(() => !!set.value?.invoice?.expired)
 
 const loadSetData = async () => {
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
+
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${route.params.setId}`)
     if (response.data.status === 'success' && response.data.data != null) {
@@ -260,7 +265,14 @@ const loadSetData = async () => {
   }
   initializing.value = false
 
-  setTimeout(loadSetData, 10 * 1000)
+  pollingTimeout.value = setTimeout(loadSetData, 10 * 1000)
+}
+
+const onVisibilityChange = () => {
+  if (document.visibilityState !== 'visible') {
+    return
+  }
+  loadSetData()
 }
 
 onBeforeMount(() => {
@@ -274,6 +286,14 @@ onBeforeMount(() => {
   Object.assign(settings, settingsDecoded)
 
   loadSetData()
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+
+onBeforeUnmount(() => {
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
+  document.removeEventListener('visibilitychange', onVisibilityChange)
 })
 
 const numberOfCardsToFund = computed<number>(() => {
