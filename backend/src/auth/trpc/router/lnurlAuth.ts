@@ -1,10 +1,9 @@
 import { z } from 'zod'
+import { tracked, type TrackedEnvelope } from '@trpc/server'
 
 import { router } from '@auth/trpc/trpc.js'
 import publicProcedure from '@auth/trpc/procedures/public.js'
 import Auth from '@auth/domain/Auth.js'
-import assert from 'node:assert'
-import { tracked, type TrackedEnvelope } from '@trpc/server'
 import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginStatusEnum.js'
 import { LnurlAuthLoginDto } from '@shared/auth/data/trpc/LnurlAuthLoginDto.js'
 import { LnurlAuthLoginStatusDto } from '@shared/auth/data/trpc/LnurlAuthLoginStatusDto.js'
@@ -33,17 +32,19 @@ export const lnurlAuthRouter = router({
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(LnurlAuthLoginDto)
     .subscription(async function* ({ input }): AsyncGenerator<TrackedEnvelope<LnurlAuthLoginStatusDto>> {
-      const { id, hash, lnurlAuth } = await Auth.instance.lnurlAuthLogin.get(input.lastEventId)
+      const lnurlAuthLogin = await Auth.instance.lnurlAuthLogin.get(input.lastEventId)
 
-      if (lnurlAuth == null) {
+      if (lnurlAuthLogin == null) {
         yield loginResponse({
-          id,
+          id: input.lastEventId,
           status: LnurlAuthLoginStatusEnum.enum.failed,
         })
         return
       }
 
-      if (lnurlAuth != null && Auth.instance.lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
+      const { id, hash } = lnurlAuthLogin
+
+      if (Auth.instance.lnurlAuthLogin.isOneTimeLoginHashValid(hash)) {
         yield loginResponse({
           id,
           status: LnurlAuthLoginStatusEnum.enum.loggedIn,
@@ -53,7 +54,6 @@ export const lnurlAuthRouter = router({
 
       try {
         await Auth.instance.lnurlAuthLogin.waitForLogin(hash)
-        assert(lnurlAuth != null)
         yield loginResponse({
           id,
           status: LnurlAuthLoginStatusEnum.enum.loggedIn,

@@ -32,7 +32,7 @@ export default class LnurlAuthLogin {
     this.initLnurlServer()
   }
 
-  public async get(id: string): Promise<{ id: string; lnurlAuth: string; hash: string }> {
+  public async get(id: string): Promise<{ id: string; lnurlAuth: string; hash: string } | undefined> {
     return this.activeLnurlsById[id]
   }
 

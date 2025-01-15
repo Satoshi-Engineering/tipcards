@@ -107,6 +107,7 @@ const safeLogin = async (hash: string) => {
     console.error(error)
     return
   }
+  fetchingLogin.value = false
 
   modalLoginUserMessage.value = null
   try {
@@ -123,11 +124,17 @@ const trpcAuth = useTRpcAuth()
 
 const createLnurl = async () => {
   fetchingLogin.value = true
-  const lnurlAuth = await trpcAuth.lnurlAuth.create.query()
-  lnurl.value = lnurlAuth.lnurlAuth
-  hash.value = lnurlAuth.hash
-  id.value = lnurlAuth.id
-  fetchingLogin.value = false
+  try {
+    const lnurlAuth = await trpcAuth.lnurlAuth.create.query()
+    lnurl.value = lnurlAuth.lnurlAuth
+    hash.value = lnurlAuth.hash
+    id.value = lnurlAuth.id
+  } catch (error) {
+    loginFailed.value = true
+    console.error(error)
+  } finally {
+    fetchingLogin.value = false
+  }
 }
 
 const subscribeToLogin = async () => {

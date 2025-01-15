@@ -36,7 +36,7 @@ const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
     },
     ping: {
       enabled: true,
-      intervalMs: 5_00,
+      intervalMs: 500,
     },
   },
   transformer: superjson,
