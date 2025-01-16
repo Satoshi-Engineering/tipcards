@@ -66,7 +66,7 @@ describe('TRpc Router Set', () => {
     const randomSet = createSet()
     let caughtError: TRPCError | undefined
     try {
-      await caller.getCards({ id: randomSet.id })
+      await caller.getCardsDeprecated({ id: randomSet.id })
     } catch (error) {
       caughtError = error as TRPCError
     }
@@ -76,14 +76,14 @@ describe('TRpc Router Set', () => {
   it('returns no cards for an empty set', async () => {
     vi.spyOn(cardLockManager, 'lockCards').mockResolvedValueOnce([])
 
-    const cards = await caller.getCards({ id: emptySet.id })
+    const cards = await caller.getCardsDeprecated({ id: emptySet.id })
     expect(cards.length).toBe(0)
   })
 
   it('returns all cards for a set', async () => {
     vi.spyOn(cardLockManager, 'lockCards').mockResolvedValueOnce([])
 
-    const cards = await caller.getCards({ id: setWithCards.id })
+    const cards = await caller.getCardsDeprecated({ id: setWithCards.id })
     expect(cards.length).toBe(2)
     expect(cards).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -96,7 +96,7 @@ describe('TRpc Router Set', () => {
   })
 
   it.skip('returns all cards for a set funding set', async () => {
-    const cards = await caller.getCards({ id: setWithSetFunding.id })
+    const cards = await caller.getCardsDeprecated({ id: setWithSetFunding.id })
     expect(cards.length).toBe(4)
   })
 

@@ -13,8 +13,11 @@
         :user-error-messages="userErrorMessages"
       />
       <HeadlineDefault v-if="set" level="h1">
-        {{ setNameWithFallback }}
+        {{ displayName }}
       </HeadlineDefault>
+      <div v-for="card in cardStatuses" :key="card.hash">
+        {{ getLandingPageUrlWithLnurl(card.hash, set?.settings.landingPage ?? undefined) }}, {{ card.status }}, {{ card.amount }}
+      </div>
     </CenterContainer>
   </TheLayout>
 </template>
@@ -33,6 +36,7 @@ import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import BackLink from '@/components/BackLink.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
+import useLandingPages from '@/modules/useLandingPages'
 
 const props = defineProps({
   setId: {
@@ -43,12 +47,13 @@ const props = defineProps({
 
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const { setDocumentTitle } = useSeoHelpers()
-const { set, loading, userErrorMessages, displayName: setNameWithFallback } = useSet(props.setId)
+const { set, loading, userErrorMessages, displayName, cardStatuses } = useSet(props.setId)
+const { getLandingPageUrlWithLnurl } = useLandingPages()
 
 watch(set, () => {
   if (set.value == null) {
     return
   }
-  setDocumentTitle(setNameWithFallback.value)
+  setDocumentTitle(displayName.value)
 })
 </script>

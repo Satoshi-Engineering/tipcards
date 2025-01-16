@@ -131,7 +131,7 @@ const checkIfLnurlwExistsInLnbits = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfCardsAreLocked = async () => {
-  const cardsLocked = await callerSet.getCards({ id: SET_ID })
+  const cardsLocked = await callerSet.getCardsDeprecated({ id: SET_ID })
   expect(cardsLocked).toEqual(expect.arrayContaining([
     expect.objectContaining({
       hash: CARD_HASH_FUNDED_0,
@@ -167,7 +167,7 @@ const checkIfLnurlwIsRemoved = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfCardsAreReleased = async () => {
-  const cardsReleased = await callerSet.getCards({ id: SET_ID })
+  const cardsReleased = await callerSet.getCardsDeprecated({ id: SET_ID })
   expect(cardsReleased).toEqual(expect.arrayContaining([
     expect.objectContaining({
       hash: CARD_HASH_FUNDED_0,
@@ -214,7 +214,7 @@ const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfCardsAreWithdrawn = async () => {
-  const cards = await callerSet.getCards({ id: SET_ID })
+  const cards = await callerSet.getCardsDeprecated({ id: SET_ID })
   expect(cards).toEqual(expect.arrayContaining([
     expect.objectContaining({
       hash: CARD_HASH_FUNDED_0,

@@ -2,6 +2,7 @@ import { Card } from '@shared/data/trpc/Card.js'
 import { SetDto } from '@shared/data/trpc/SetDto.js'
 import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
 import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
+import { CardStatusDto } from '@shared/data/trpc/CardStatusDto.js'
 
 import Set from '@backend/domain/Set.js'
 import SetCollection from '@backend/domain/SetCollection.js'
@@ -49,7 +50,16 @@ export const setRouter = router({
       return cardStatusCollection.summary.toTRpcResponse()
     }),
 
-  getCards: publicProcedure
+  getCardStatusesForSetId: loggedInProcedure
+    .input(SetDto.shape.id)
+    .output(CardStatusDto.array())
+    .query(async ({ input }) => {
+      const set = await Set.fromId(input)
+      const cardStatusCollection = await set.getCardStatusCollection()
+      return cardStatusCollection.toTrpcResponse().data
+    }),
+
+  getCardsDeprecated: publicProcedure
     .input(SetDeprecatedId)
     .output(Card.array())
     .unstable_concat(handleCardLockForSet)
