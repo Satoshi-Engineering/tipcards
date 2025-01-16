@@ -8,7 +8,7 @@
     "
   >
     <section class="relative order-1 xs:order-2">
-      <CenterContainer class="flex items-center gap-4">
+      <CenterContainer class="flex items-center gap-4" :full-width="fullWidth">
         <RouterLink
           :to="{ name: 'home', params: { lang: $route.params.lang } }"
           :title="$t('nav.index')"
@@ -79,6 +79,10 @@ import IconLogo from '@/components/icons/IconLogo.vue'
 
 defineProps({
   loginBanner: {
+    type: Boolean,
+    default: false,
+  },
+  fullWidth: {
     type: Boolean,
     default: false,
   },

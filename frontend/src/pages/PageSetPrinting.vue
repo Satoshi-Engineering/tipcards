@@ -1,6 +1,7 @@
 <template>
-  <TheLayout>
-    <CenterContainer>
+  <TheLayout full-width>
+    <CenterContainer full-width>
+      <BackLink :to="{ name: 'set', params: { setId, lang: $route.params.lang } }" />
       <div v-if="!isLoggedIn" class="my-20">
         <ItemsListMessageNotLoggedIn />
       </div>
@@ -11,6 +12,9 @@
         v-if="userErrorMessages.length > 0"
         :user-error-messages="userErrorMessages"
       />
+      <HeadlineDefault v-if="set" level="h1">
+        {{ setNameWithFallback }}
+      </HeadlineDefault>
     </CenterContainer>
   </TheLayout>
 </template>
@@ -18,16 +22,17 @@
 <script setup lang="ts">
 import { watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
 
 import { useAuthStore } from '@/stores/auth'
-import { encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
+import { useSet } from '@/modules/useSet'
+import { useSeoHelpers } from '@/modules/seoHelpers'
 import TheLayout from '@/components/layout/TheLayout.vue'
-import CenterContainer from '@/components/layout/CenterContainer.vue'
+import ItemsListMessageNotLoggedIn from '@/components/itemsList/components/ItemsListMessageNotLoggedIn.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
-import ItemsListMessageNotLoggedIn from '@/components/itemsList/components/ItemsListMessageNotLoggedIn.vue'
-import { useSet } from '@/modules/useSet'
+import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
+import BackLink from '@/components/BackLink.vue'
+import CenterContainer from '@/components/layout/CenterContainer.vue'
 
 const props = defineProps({
   setId: {
@@ -36,25 +41,14 @@ const props = defineProps({
   },
 })
 
-const router = useRouter()
 const { isLoggedIn } = storeToRefs(useAuthStore())
+const { setDocumentTitle } = useSeoHelpers()
+const { set, loading, userErrorMessages, displayName: setNameWithFallback } = useSet(props.setId)
 
-const { set, loading, userErrorMessages } = useSet(props.setId)
-
-const redirectToCardsPage = async () => {
+watch(set, () => {
   if (set.value == null) {
     return
   }
-  const encodedSettings = encodeCardsSetSettingsFromDto(set.value.settings)
-  router.replace({
-    name: 'cards',
-    params: {
-      setId: props.setId,
-      settings: encodedSettings,
-      lang: router.currentRoute.value.params.lang,
-    },
-  })
-}
-
-watch(set, redirectToCardsPage)
+  setDocumentTitle(setNameWithFallback.value)
+})
 </script>

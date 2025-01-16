@@ -8,6 +8,7 @@
         id="the-header"
         class="print:hidden"
         :login-banner="loginBanner"
+        :full-width="fullWidth"
       />
     </slot>
     <div class="flex-1 overflow-x-hidden">
@@ -45,6 +46,10 @@ defineProps({
     type: Array as PropType<Faq[]>,
     default: undefined,
     validator: (value: Faq[]) => value.length <= 3,
+  },
+  fullWidth: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>
