@@ -1,9 +1,9 @@
 <template>
   <div
-    class="w-full mx-auto px-5 py-3"
+    class="w-full mx-auto px-5 py-3 print:p-0"
     :class="{
-      'max-w-xl': !fullWidth,
-      'max-w-screen-2xl': fullWidth,
+      'max-w-xl print:max-w-none': !fullWidth,
+      'max-w-screen-2xl print:max-w-none': fullWidth,
     }"
   >
     <slot />

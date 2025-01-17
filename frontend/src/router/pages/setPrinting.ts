@@ -26,7 +26,7 @@ export type RouteSetPrinting = RouteRecordInfo<
 export const setPrinting = {
   name: 'set-printing',
   path: `${localizedRoutePrefix}/set-printing/:setId`,
-  component: () => import('@/pages/PageSetPrinting.vue'),
+  component: () => import('@/pages/setPrinting/PageSetPrinting.vue'),
   props: true,
   meta: {
     title: () => false, // title will be set in the page component

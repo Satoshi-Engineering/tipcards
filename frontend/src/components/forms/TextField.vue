@@ -11,6 +11,7 @@
     </small>
     <input
       v-model="model"
+      v-bind="$attrs"
       class="w-full my-1 px-3 py-2 border border-[#c4c4c4] rounded-lg focus:outline-none"
       :type="type"
     >
@@ -19,10 +20,6 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-
-const model = defineModel({
-  type: String,
-})
 
 defineProps({
   label: {
@@ -34,8 +31,12 @@ defineProps({
     default: undefined,
   },
   type: {
-    type: String as PropType<'email' | 'text' | 'password'>,
+    type: String as PropType<'email' | 'text' | 'password' | 'number' | 'file'>,
     default: 'text',
   },
+})
+
+const model = defineModel({
+  type: [String, Number] as PropType<string | number>,
 })
 </script>
