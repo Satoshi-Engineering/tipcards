@@ -1,5 +1,9 @@
 <template>
   <div class="relative">
+    <div class="absolute top-0 bottom-0 start-0 end-0 overflow-hidden">
+      <slot />
+    </div>
+
     <div
       v-if="$slots.default != null && borders && !isBackside"
       class="absolute top-0 bottom-0 start-0 end-0 border-[0.5px] border-black opacity-[0.07] pointer-events-none select-none"
@@ -20,8 +24,6 @@
 
     <div v-if="cropMarks && isInFirstColumn" class="absolute border-t-[0.5px] opacity-50 w-5 -start-7 bottom-0" />
     <div v-if="cropMarks && isInLastColumn" class="absolute border-t-[0.5px] opacity-50 w-5 -end-7 bottom-0" />
-
-    <slot />
   </div>
 </template>
 

@@ -17,73 +17,75 @@
       </HeadlineDefault>
     </CenterContainer>
     <CenterContainer full-width class="lg:flex justify-between gap-3">
-      <aside class="print:hidden max-w-md min-w-56 flex-1 lg:max-w-sm">
+      <aside class="print:hidden min-w-56 flex-1 lg:max-w-sm">
         <div class="text-sm mb-5">
           All sizes in mm.
         </div>
-        <div>
-          <strong>Card</strong>
-          <div class="flex gap-3">
-            <TextField
-              v-model="cardWidth"
-              label="Width"
-              type="number"
-              min="0"
-              :max="pageWidth - minPaddingHorizontal * 2"
-              step="1"
-              class="w-full"
-            />
-            <TextField
-              v-model="cardHeight"
-              label="Height"
-              type="number"
-              min="0"
-              :max="pageHeight - minPaddingVertical * 2"
-              step="1"
-              class="w-full"
-            />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-7 lg:gap-3">
+          <div>
+            <strong>Card</strong>
+            <div class="flex gap-3">
+              <TextField
+                v-model="cardWidth"
+                label="Width"
+                type="number"
+                min="0"
+                :max="pageWidth - minPaddingHorizontal * 2"
+                step="1"
+                class="w-full"
+              />
+              <TextField
+                v-model="cardHeight"
+                label="Height"
+                type="number"
+                min="0"
+                :max="pageHeight - minPaddingVertical * 2"
+                step="1"
+                class="w-full"
+              />
+            </div>
           </div>
-        </div>
-        <div>
-          <strong>Page</strong>
-          <div class="flex gap-3">
-            <TextField
-              v-model="pageWidth"
-              label="Width"
-              type="number"
-              min="0"
-              step="1"
-              class="w-full"
-            />
-            <TextField
-              v-model="pageHeight"
-              label="Height"
-              type="number"
-              min="0"
-              step="1"
-              class="w-full"
-            />
+          <div>
+            <strong>Page</strong>
+            <div class="flex gap-3">
+              <TextField
+                v-model="pageWidth"
+                label="Width"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full"
+              />
+              <TextField
+                v-model="pageHeight"
+                label="Height"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full"
+              />
+            </div>
           </div>
-        </div>
-        <div>
-          <strong>Minimum print margins</strong>
-          <div class="flex gap-3">
-            <TextField
-              v-model="minPaddingHorizontal"
-              label="Horizontal"
-              type="number"
-              min="0"
-              step="1"
-              class="w-full"
-            />
-            <TextField
-              v-model="minPaddingVertical"
-              label="Vertical"
-              type="number"
-              min="0"
-              step="1"
-              class="w-full"
-            />
+          <div>
+            <strong>Minimum print margins</strong>
+            <div class="flex gap-3">
+              <TextField
+                v-model="minPaddingHorizontal"
+                label="Horizontal"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full"
+              />
+              <TextField
+                v-model="minPaddingVertical"
+                label="Vertical"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full"
+              />
+            </div>
           </div>
           <div>
             <strong>QR code</strong>
@@ -116,26 +118,26 @@
           </div>
           <div>
             <strong>Images</strong>
-            <div class="flex flex-col gap-3">
-              <ImageDropZone
-                v-model="frontSideImage"
-                label="Drop front side image here"
-              />
-              <ImageDropZone
-                v-model="backSideImage"
-                label="Drop back side image here"
-              />
-            </div>
+            <ImageDropZone
+              v-model="frontSideImage"
+              label="Drop front side image here"
+              class="mb-2"
+            />
+            <ImageDropZone
+              v-model="backSideImage"
+              label="Drop back side image here"
+              class="mb-2"
+            />
           </div>
-          <div class="my-5">
+          <div>
             <strong>Print settings</strong>
-            <label class="flex gap-3">
-              <input v-model="printBorders" type="checkbox">
-              Print borders
-            </label>
             <label class="flex gap-3">
               <input v-model="printCropMarks" type="checkbox">
               Print crop marks
+            </label>
+            <label class="flex gap-3">
+              <input v-model="printBorders" type="checkbox">
+              Print borders
             </label>
             <label class="flex gap-3">
               <input v-model="printText" type="checkbox">
@@ -146,6 +148,8 @@
               Double-sided printing
             </label>
           </div>
+        </div>
+        <div class="my-5">
           <LinkDefault
             variant="secondary"
             type="button"
