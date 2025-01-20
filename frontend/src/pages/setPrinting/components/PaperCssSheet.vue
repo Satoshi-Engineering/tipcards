@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 const props = defineProps({
   width: {
     type: Number,
@@ -22,7 +22,10 @@ const props = defineProps({
 
 const additionalStyleElement = ref<HTMLStyleElement>()
 
-onMounted(() => {
+watch(() => props.width, () => {
+  if (additionalStyleElement.value != null) {
+    document.head.removeChild(additionalStyleElement.value)
+  }
   additionalStyleElement.value = document.createElement('style')
   additionalStyleElement.value.textContent = `@media print { body { width: ${props.width}mm } }`
   document.head.appendChild(additionalStyleElement.value)

@@ -28,7 +28,7 @@ const defaultPrintSettings: PrintSettings = {
   name: 'Default settings',
   doubleSidedPrinting: false,
   pageWidth: 210,
-  pageHeight: 297,
+  pageHeight: 296,
   minPrintMarginHorizontal: 10,
   minPrintMarginVertical: 10,
   cardWidth: 85,
@@ -57,7 +57,7 @@ const avery45x45: PrintSettings = {
   qrCodeX: 2,
   qrCodeY: 2,
   minPrintMarginHorizontal: 7,
-  minPrintMarginVertical: 26,
+  minPrintMarginVertical: 25,
   printCropMarks: false,
   printText: false,
 }

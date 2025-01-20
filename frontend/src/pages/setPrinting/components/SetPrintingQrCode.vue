@@ -52,7 +52,7 @@ const props = defineProps({
     required: true,
   },
   selectedCardLogo: {
-    type: Object as PropType<ImageMeta | 'bitcoin' | 'lightning' | undefined>,
+    type: [Object, String] as PropType<ImageMeta | 'bitcoin' | 'lightning' | undefined>,
     default: undefined,
   },
 })
