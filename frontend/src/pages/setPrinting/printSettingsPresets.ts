@@ -1,4 +1,24 @@
-import type { PrintSettings } from './PageSetPrinting.vue'
+export type PrintSettings = {
+  name: string
+  link?: string
+  doubleSidedPrinting: boolean
+  pageWidth: number
+  pageHeight: number
+  minPrintMarginHorizontal: number
+  minPrintMarginVertical: number
+  cardWidth: number
+  cardHeight: number
+  cardGapHorizontal: number
+  cardGapVertical: number
+  qrCodeSize: number
+  qrCodeX: number
+  qrCodeY: number
+  frontSideImage: string | undefined
+  backSideImage: string | undefined
+  printBorders: boolean
+  printText: boolean
+  printCropMarks: boolean
+}
 
 const defaultPrintSettings: PrintSettings = {
   name: 'Default settings',
@@ -12,7 +32,7 @@ const defaultPrintSettings: PrintSettings = {
   cardGapHorizontal: 0,
   cardGapVertical: 0,
   qrCodeSize: 41,
-  qrCodeX: 4,
+  qrCodeX: 3,
   qrCodeY: 6,
   frontSideImage: undefined,
   backSideImage: undefined,
@@ -50,7 +70,7 @@ const avery80x50: PrintSettings = {
   qrCodeX: 5,
   qrCodeY: 5,
   minPrintMarginHorizontal: 17,
-  minPrintMarginVertical: 10,
+  minPrintMarginVertical: 13,
   printCropMarks: false,
   printText: true,
 }

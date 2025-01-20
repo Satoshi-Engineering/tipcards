@@ -72,7 +72,7 @@
         </div>
       </div>
       <div>
-        <strong>Print margins</strong>
+        <strong>Minimum print margins</strong>
         <div class="flex gap-3">
           <TextField
             v-model="printSettings.minPrintMarginHorizontal"
@@ -185,10 +185,9 @@
 <script setup lang="ts">
 import { reactive, watch, type PropType } from 'vue'
 
+import printSettingsPresets, { type PrintSettings } from '../printSettingsPresets'
 import TextField from '@/components/forms/TextField.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
-import type { PrintSettings } from '../PageSetPrinting.vue'
-import printSettingsPresets from '../printSettingsPresets'
 import ImageDropZone from './ImageDropZone.vue'
 
 const props = defineProps({
@@ -208,6 +207,9 @@ const setPrintSettings = (settings: PrintSettings) => {
 }
 
 watch(() => printSettings, () => {
+  if (printSettings.backSideImage != null) {
+    printSettings.doubleSidedPrinting = true
+  }
   emit('update:modelValue', { ...printSettings })
 }, { deep: true })
 </script>

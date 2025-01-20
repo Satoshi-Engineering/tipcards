@@ -14,7 +14,7 @@
     <LinkDefault
       variant="secondary"
       :disabled="modelValue == null"
-      @click.stop="emit('update:modelValue', undefined)"
+      @click.stop="clear"
     >
       Clear image
     </LinkDefault>
@@ -22,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { watch, useTemplateRef } from 'vue'
 import { useDropZone, useFileDialog } from '@vueuse/core'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     default: 'Drop image here',
@@ -39,8 +39,14 @@ defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+watch(() => props.modelValue, () => {
+  if (props.modelValue == null) {
+    reset()
+  }
+})
+
 const onFile = (files: File[] | null) => {
-  if (files == null) {
+  if (files == null || files.length === 0) {
     return
   }
   const reader = new FileReader()
@@ -53,7 +59,7 @@ const onFile = (files: File[] | null) => {
   reader.readAsDataURL(files[0])
 }
 
-const { onChange, open: openFileDialog } = useFileDialog({
+const { onChange, open: openFileDialog, reset } = useFileDialog({
   accept: 'image/*', // Set to accept only image files
   directory: false, // Select directories instead of files if set true
   multiple: false, // Select multiple files if set true
@@ -70,4 +76,9 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
   // whether to prevent default behavior for unhandled events
   preventDefaultForUnhandled: true,
 })
+
+const clear = () => {
+  reset()
+  emit('update:modelValue', undefined)
+}
 </script>

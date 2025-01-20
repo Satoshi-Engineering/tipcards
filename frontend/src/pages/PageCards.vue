@@ -326,7 +326,7 @@
           <div
             v-for="card in cardsFilter === '' ? cards : cards.filter(card => card.status === cardsFilter)"
             :key="card.urlLandingWithLnurl"
-            class="relative break-inside-avoid w-[90mm] h-[55mm] float-left group"
+            class="relative break-inside-avoid w-[85mm] h-[55mm] float-left group"
           >
             <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
             <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
@@ -396,7 +396,7 @@
                 </div>
               </a>
               <section
-                class="absolute left-1/2 ml-2 mr-4 top-0 bottom-2 flex items-center"
+                class="absolute left-[44mm] ml-3 mr-4 top-0 bottom-2 flex items-center"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
                 :dir="currentTextDirection"
               >

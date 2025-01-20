@@ -37,7 +37,10 @@ onUnmounted(() => {
 </script>
 
 <style>
-@page { margin: 0 }
+@page {
+  margin: 0;
+}
+
 .sheet {
   overflow: hidden;
   position: relative;

@@ -65,7 +65,7 @@
                 />
                 <div
                   v-if="printSettings.printText && set != null"
-                  class="absolute top-0 bottom-0 mx-3 flex items-center"
+                  class="absolute top-0 bottom-0 ms-3 me-4 flex items-center"
                   :style="{ insetInlineStart: `${printSettings.qrCodeX + printSettings.qrCodeSize}mm` }"
                 >
                   <article>
@@ -139,6 +139,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useSet } from '@/modules/useSet'
 import { useSeoHelpers } from '@/modules/seoHelpers'
+import printSettingsPresets, { type PrintSettings } from './printSettingsPresets'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import ItemsListMessageNotLoggedIn from '@/components/itemsList/components/ItemsListMessageNotLoggedIn.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
@@ -155,31 +156,8 @@ import sanitizeI18n from '@/modules/sanitizeI18n'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
 import SetPrintingConfigForm from './components/SetPrintingConfigForm.vue'
-import printSettingsPresets from './printSettingsPresets'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
-
-export type PrintSettings = {
-  name: string
-  link?: string
-  doubleSidedPrinting: boolean
-  pageWidth: number
-  pageHeight: number
-  minPrintMarginHorizontal: number
-  minPrintMarginVertical: number
-  cardWidth: number
-  cardHeight: number
-  cardGapHorizontal: number
-  cardGapVertical: number
-  qrCodeSize: number
-  qrCodeX: number
-  qrCodeY: number
-  frontSideImage: string | undefined
-  backSideImage: string | undefined
-  printBorders: boolean
-  printText: boolean
-  printCropMarks: boolean
-}
 
 const props = defineProps({
   setId: {
