@@ -62,6 +62,7 @@
                   class="absolute"
                   :style="{ width: `${printSettings.qrCodeSize}mm`, height: `${printSettings.qrCodeSize}mm`, top: `${printSettings.qrCodeY}mm`, insetInlineStart: `${printSettings.qrCodeX}mm` }"
                   :text="getLandingPageUrlWithLnurl(page[indexOnPage].hash, set?.settings.landingPage ?? undefined)"
+                  :selected-card-logo="selectedCardLogo"
                 />
                 <div
                   v-if="printSettings.printText && set != null"
@@ -158,6 +159,7 @@ import IconLogo from '@/components/icons/IconLogo.vue'
 import SetPrintingConfigForm from './components/SetPrintingConfigForm.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import useCardLogos from '@/modules/useCardLogos'
 
 const props = defineProps({
   setId: {
@@ -195,21 +197,7 @@ const paddingVertical = computed(() => (printSettings.value.pageHeight - effecti
 
 const cardsPerPage = computed(() => cardsPerRow.value * cardsPerColumn.value)
 
-const pages = computed<CardStatusDto[][]>(() => {
-  const pages: CardStatusDto[][] = []
-  let currentPage: CardStatusDto[] = []
-  for (const card of cardStatuses.value) {
-    currentPage.push(card)
-    if (currentPage.length === cardsPerPage.value) {
-      pages.push(currentPage)
-      currentPage = []
-    }
-  }
-  if (currentPage.length > 0) {
-    pages.push(currentPage)
-  }
-  return pages
-})
+const pages = computed<CardStatusDto[][]>(() => splitCardsIntoPages(cardStatuses.value, cardsPerPage.value))
 
 const printPage = () => {
   window.print()
@@ -248,4 +236,28 @@ const loadPrintSettings = () => {
     console.error('Failed to load print settings:', error)
   }
 }
+
+const splitCardsIntoPages = (cards: CardStatusDto[], cardsPerPage: number): CardStatusDto[][] =>
+  cards.reduce<CardStatusDto[][]>((pages, card) => {
+    const lastPage = pages[pages.length - 1]
+
+    if (lastPage == null || lastPage.length === cardsPerPage) {
+      pages.push([card])
+    } else {
+      lastPage.push(card)
+    }
+
+    return pages
+  }, [])
+
+const { availableCardLogosById } = useCardLogos()
+const selectedCardLogo = computed(() => {
+  if (set.value == null || set.value.settings.image == null) {
+    return undefined
+  }
+  if (set.value.settings.image === 'bitcoin' || set.value.settings.image === 'lightning') {
+    return set.value.settings.image
+  }
+  return availableCardLogosById.value[set.value.settings.image]
+})
 </script>

@@ -498,7 +498,6 @@ import debounce from 'lodash.debounce'
 import isEqual from 'lodash.isequal'
 
 import type { Set } from '@shared/data/api/Set'
-import type { Image as ImageMeta } from '@shared/data/api/Image'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -537,6 +536,7 @@ import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadi
 import { SetDto } from '@shared/data/trpc/SetDto'
 import useTRpc from '@/modules/useTRpc'
 import { setSettingsDtoFromLegacySettings } from '@/utils/cardsSetSettings'
+import useCardLogos from '@/modules/useCardLogos'
 
 // this is just for debugging purposes,
 // as it enables saving the current set to localStorage via the browser console
@@ -652,7 +652,6 @@ const initializeCards = async () => {
 watch([setId, settings], initializeCards)
 
 onMounted(() => {
-  loadAvailableCardLogos()
   initializeCards()
 })
 
@@ -688,18 +687,7 @@ const showSaveWarning = computed(() => {
 
 const { setFundingHref } = useSetFunding()
 
-const availableCardLogos = ref<ImageMeta[]>([])
-const loadAvailableCardLogos = async () => {
-  if (!isLoggedIn.value) {
-    return
-  }
-  const response = await axios.get(`${BACKEND_API_ORIGIN}/api/cardLogos/`)
-  availableCardLogos.value = response.data.data
-}
-const availableCardLogosById = computed<Record<string, ImageMeta>>(() => availableCardLogos.value.reduce((byId, image) => ({
-  ...byId,
-  [image.id]: image,
-}), {}))
+const { availableCardLogos, availableCardLogosById } = useCardLogos()
 
 const selectedCardLogo = computed(() => {
   if (
@@ -825,6 +813,7 @@ const reloadStatusForCards = async () => {
       userErrorMessage.value = message || 'Unknown error for LNURL.'
       return
     }
+    userErrorMessage.value = undefined
     card.status = status
     card.shared = shared || false
     card.amount = amount || null

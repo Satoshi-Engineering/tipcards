@@ -9,14 +9,14 @@
     <g v-html="qrCodeSvg" />
     <!-- eslint-enable vue/no-v-html -->
     <IconLogoBitcoin
-      v-if="predefinedIcon === 'bitcoin'"
+      v-if="selectedCardLogo === 'bitcoin'"
       :width="0.26 * 256"
       :height="0.26 * 256"
       :x="0.37 * 256"
       :y="0.37 * 256"
     />
     <IconLogoLightning
-      v-else-if="predefinedIcon === 'lightning'"
+      v-else-if="selectedCardLogo === 'lightning'"
       :width="0.26 * 256"
       :height="0.26 * 256"
       :x="0.37 * 256"
@@ -42,6 +42,7 @@
 import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 import IconLogoLightning from '@/components/icons/IconLogoLightning.vue'
 import { BACKEND_API_ORIGIN } from '@/constants'
+import type { Image as ImageMeta } from '@shared/data/api/Image'
 import QRCode from 'qrcode-svg'
 import { computed, type PropType } from 'vue'
 
@@ -50,12 +51,8 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  predefinedIcon: {
-    type: String as PropType<'bitcoin' | 'lightning'>,
-    default: undefined,
-  },
   selectedCardLogo: {
-    type: Object as PropType<{ id: string; type: string }>,
+    type: Object as PropType<ImageMeta | 'bitcoin' | 'lightning' | undefined>,
     default: undefined,
   },
 })
