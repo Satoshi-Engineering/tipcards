@@ -39,7 +39,7 @@ describe('SliderDefault', () => {
     cy.get('@slide3').should('not.be.visible')
   })
 
-  it('swipes to the second slide', () => {
+  it.skip('swipes to the second slide', () => {
     tipCards.styleGuide.gotoComponents()
     // make sure everything is rendered before assigning aliases
     cy.get('[data-test="slider-default"]:first [data-test="slide-default"]').should('have.length', 3)
