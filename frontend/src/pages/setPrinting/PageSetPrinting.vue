@@ -16,8 +16,11 @@
         {{ displayName }}
       </HeadlineDefault>
     </CenterContainer>
-    <CenterContainer full-width class="lg:flex gap-10">
-      <aside class="print:hidden w-1/6">
+    <CenterContainer full-width class="lg:flex justify-between gap-3">
+      <aside class="print:hidden max-w-md min-w-56 flex-1 lg:max-w-sm">
+        <div class="text-sm mb-5">
+          All sizes in mm.
+        </div>
         <div>
           <strong>Card</strong>
           <div class="flex gap-3">
@@ -131,6 +134,10 @@
               Print borders
             </label>
             <label class="flex gap-3">
+              <input v-model="printCropMarks" type="checkbox">
+              Print crop marks
+            </label>
+            <label class="flex gap-3">
               <input v-model="printText" type="checkbox">
               Print text
             </label>
@@ -139,18 +146,16 @@
               Double-sided printing
             </label>
           </div>
-          <ButtonContainer>
-            <ButtonDefault
-              variant="secondary"
-              type="button"
-              @click="setDefaultValues"
-            >
-              Reset
-            </ButtonDefault>
-          </ButtonContainer>
+          <LinkDefault
+            variant="secondary"
+            type="button"
+            @click="setDefaultValues"
+          >
+            Reset
+          </LinkDefault>
         </div>
       </aside>
-      <div>
+      <div class="overflow-x-auto px-3 -mx-3">
         <template
           v-for="(page, pageIndex) in pages"
           :key="pageIndex"
@@ -169,6 +174,7 @@
               :cards-per-row="cardsPerRow"
               :cards-per-page="cardsPerPage"
               :borders="printBorders"
+              :crop-marks="printCropMarks"
               class="break-anywhere"
             >
               <template v-if="page[indexOnPage] != null" #default>
@@ -223,7 +229,8 @@
               :index-on-page="indexOnPage"
               :cards-per-row="cardsPerRow"
               :cards-per-page="cardsPerPage"
-              :borders="printBorders"
+              :borders="false"
+              :crop-marks="false"
               is-backside
               class="break-anywhere"
             >
@@ -267,13 +274,12 @@ import PaperCssSheet from './components/PaperCssSheet.vue'
 import type { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import SetPrintingCard from './components/SetPrintingCard.vue'
 import TextField from '@/components/forms/TextField.vue'
-import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
-import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import SetPrintingQrCode from './components/SetPrintingQrCode.vue'
 import ImageDropZone from './components/ImageDropZone.vue'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
+import LinkDefault from '@/components/typography/LinkDefault.vue'
 
 const props = defineProps({
   setId: {
@@ -314,6 +320,7 @@ const backSideImage = ref<string>()
 
 const printBorders = ref(false)
 const printText = ref(true)
+const printCropMarks = ref(true)
 
 const setDefaultValues = () => {
   doubleSidedPrinting.value = false
@@ -330,6 +337,7 @@ const setDefaultValues = () => {
   backSideImage.value = undefined
   printBorders.value = false
   printText.value = true
+  printCropMarks.value = true
 }
 
 setDefaultValues()

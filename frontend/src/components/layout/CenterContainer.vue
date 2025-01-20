@@ -3,7 +3,7 @@
     class="w-full mx-auto px-5 py-3 print:p-0"
     :class="{
       'max-w-xl print:max-w-none': !fullWidth,
-      'max-w-screen-2xl print:max-w-none': fullWidth,
+      'max-w-screen-xl print:max-w-none': fullWidth,
     }"
   >
     <slot />

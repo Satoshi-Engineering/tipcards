@@ -39,7 +39,6 @@ onUnmounted(() => {
 <style>
 @page { margin: 0 }
 .sheet {
-  margin: 0;
   overflow: hidden;
   position: relative;
   page-break-after: always;
@@ -50,7 +49,15 @@ onUnmounted(() => {
   .sheet {
     background: white;
     box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
-    margin: 5mm auto;
+    margin-top: 5mm;
+    margin-bottom: 5mm;
+  }
+}
+
+@media print {
+  .sheet {
+    margin: 0;
+    box-shadow: none;
   }
 }
 </style>
