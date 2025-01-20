@@ -1,201 +1,72 @@
 <template>
   <TheLayout full-width>
-    <CenterContainer full-width class="print:hidden">
-      <BackLink :to="{ name: 'set', params: { setId, lang: $route.params.lang } }" />
-      <div v-if="!isLoggedIn" class="my-20">
-        <ItemsListMessageNotLoggedIn />
-      </div>
-      <div v-else-if="loading" class="my-20 grid place-items-center">
-        <IconAnimatedLoadingWheel class="w-10 h-10" />
-      </div>
-      <UserErrorMessages
-        v-if="userErrorMessages.length > 0"
-        :user-error-messages="userErrorMessages"
-      />
-      <HeadlineDefault v-if="set" level="h1">
-        {{ displayName }}
-      </HeadlineDefault>
-    </CenterContainer>
     <CenterContainer full-width class="lg:flex justify-between gap-3">
       <aside class="print:hidden min-w-56 flex-1 lg:max-w-sm">
-        <div class="text-sm mb-5">
-          All sizes in mm.
+        <BackLink :to="{ name: 'set', params: { setId, lang: $route.params.lang } }" />
+        <div v-if="!isLoggedIn" class="my-20">
+          <ItemsListMessageNotLoggedIn />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-7 lg:gap-3">
-          <div>
-            <strong>Card</strong>
-            <div class="flex gap-3">
-              <TextField
-                v-model="cardWidth"
-                label="Width"
-                type="number"
-                min="0"
-                :max="pageWidth - minPaddingHorizontal * 2"
-                step="1"
-                class="w-full"
-              />
-              <TextField
-                v-model="cardHeight"
-                label="Height"
-                type="number"
-                min="0"
-                :max="pageHeight - minPaddingVertical * 2"
-                step="1"
-                class="w-full"
-              />
-            </div>
-          </div>
-          <div>
-            <strong>Page</strong>
-            <div class="flex gap-3">
-              <TextField
-                v-model="pageWidth"
-                label="Width"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-              <TextField
-                v-model="pageHeight"
-                label="Height"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-            </div>
-          </div>
-          <div>
-            <strong>Minimum print margins</strong>
-            <div class="flex gap-3">
-              <TextField
-                v-model="minPaddingHorizontal"
-                label="Horizontal"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-              <TextField
-                v-model="minPaddingVertical"
-                label="Vertical"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-            </div>
-          </div>
-          <div>
-            <strong>QR code</strong>
-            <div class="flex gap-3">
-              <TextField
-                v-model="qrCodeSize"
-                label="Size"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-              <TextField
-                v-model="qrCodeX"
-                label="X"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-              <TextField
-                v-model="qrCodeY"
-                label="Y"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full"
-              />
-            </div>
-          </div>
-          <div>
-            <strong>Images</strong>
-            <ImageDropZone
-              v-model="frontSideImage"
-              label="Drop front side image here"
-              class="mb-2"
-            />
-            <ImageDropZone
-              v-model="backSideImage"
-              label="Drop back side image here"
-              class="mb-2"
-            />
-          </div>
-          <div>
-            <strong>Print settings</strong>
-            <label class="flex gap-3">
-              <input v-model="printCropMarks" type="checkbox">
-              Print crop marks
-            </label>
-            <label class="flex gap-3">
-              <input v-model="printBorders" type="checkbox">
-              Print borders
-            </label>
-            <label class="flex gap-3">
-              <input v-model="printText" type="checkbox">
-              Print text
-            </label>
-            <label class="flex gap-3">
-              <input v-model="doubleSidedPrinting" type="checkbox">
-              Double-sided printing
-            </label>
-          </div>
+        <div v-else-if="loading" class="my-20 grid place-items-center">
+          <IconAnimatedLoadingWheel class="w-10 h-10" />
         </div>
-        <div class="my-5">
-          <LinkDefault
-            variant="secondary"
-            type="button"
-            @click="setDefaultValues"
-          >
-            Reset
-          </LinkDefault>
-        </div>
+        <UserErrorMessages
+          v-if="userErrorMessages.length > 0"
+          :user-error-messages="userErrorMessages"
+        />
+        <HeadlineDefault v-if="set" level="h1">
+          {{ displayName }}
+        </HeadlineDefault>
+        <SetPrintingConfigForm
+          v-model="printSettings"
+        />
+        <ButtonContainer>
+          <ButtonDefault @click="printPage">
+            Print
+          </ButtonDefault>
+        </ButtonContainer>
+        <ParagraphDefault>
+          Please print with a scale of 100% and without margins.
+        </ParagraphDefault>
       </aside>
-      <div class="overflow-x-auto px-3 -mx-3">
+      <div class="overflow-x-auto px-3 py-3 -mx-3 -my-3 print:overflow-x-visible print:px-0 print:py-0 print:mx-0 print:my-0">
         <template
           v-for="(page, pageIndex) in pages"
           :key="pageIndex"
         >
           <PaperCssSheet
-            :width="pageWidth"
-            :height="pageHeight"
+            :width="printSettings.pageWidth"
+            :height="printSettings.pageHeight"
             class="flex flex-wrap content-start"
-            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm` }"
+            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm`, rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
           >
             <SetPrintingCard
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
               :key="`page-${pageIndex}_card-${indexOnPage}`"
-              :style="{ width: `${cardWidth}mm`, height: `${cardHeight}mm` }"
+              :style="{ width: `${printSettings.cardWidth}mm`, height: `${printSettings.cardHeight}mm` }"
               :index-on-page="indexOnPage"
               :cards-per-row="cardsPerRow"
               :cards-per-page="cardsPerPage"
-              :borders="printBorders"
-              :crop-marks="printCropMarks"
+              :card-gap-horizontal="printSettings.cardGapHorizontal"
+              :card-gap-vertical="printSettings.cardGapVertical"
+              :borders="printSettings.printBorders"
+              :crop-marks="printSettings.printCropMarks"
               class="break-anywhere"
             >
               <template v-if="page[indexOnPage] != null" #default>
                 <img
-                  v-if="frontSideImage"
-                  :src="frontSideImage"
-                  class="absolute w-full h-full object-fit object-center"
+                  v-if="printSettings.frontSideImage"
+                  :src="printSettings.frontSideImage"
+                  class="absolute w-full h-full object-contain object-center"
                 >
                 <SetPrintingQrCode
                   class="absolute"
-                  :style="{ width: `${qrCodeSize}mm`, height: `${qrCodeSize}mm`, top: `${qrCodeY}mm`, insetInlineStart: `${qrCodeX}mm` }"
+                  :style="{ width: `${printSettings.qrCodeSize}mm`, height: `${printSettings.qrCodeSize}mm`, top: `${printSettings.qrCodeY}mm`, insetInlineStart: `${printSettings.qrCodeX}mm` }"
                   :text="getLandingPageUrlWithLnurl(page[indexOnPage].hash, set?.settings.landingPage ?? undefined)"
                 />
                 <div
-                  v-if="printText && set != null"
+                  v-if="printSettings.printText && set != null"
                   class="absolute top-0 bottom-0 mx-3 flex items-center"
-                  :style="{ insetInlineStart: `${qrCodeX + qrCodeSize}mm` }"
+                  :style="{ insetInlineStart: `${printSettings.qrCodeX + printSettings.qrCodeSize}mm` }"
                 >
                   <article>
                     <HeadlineDefault
@@ -220,19 +91,21 @@
           </PaperCssSheet>
 
           <PaperCssSheet
-            v-if="doubleSidedPrinting"
-            :width="pageWidth"
-            :height="pageHeight"
+            v-if="printSettings.doubleSidedPrinting"
+            :width="printSettings.pageWidth"
+            :height="printSettings.pageHeight"
             class="flex flex-wrap flex-row-reverse content-start"
-            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm` }"
+            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm`, rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
           >
             <SetPrintingCard
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
               :key="`page-${pageIndex}_card-${indexOnPage}`"
-              :style="{ width: `${cardWidth}mm`, height: `${cardHeight}mm` }"
+              :style="{ width: `${printSettings.cardWidth}mm`, height: `${printSettings.cardHeight}mm` }"
               :index-on-page="indexOnPage"
               :cards-per-row="cardsPerRow"
               :cards-per-page="cardsPerPage"
+              :card-gap-horizontal="printSettings.cardGapHorizontal"
+              :card-gap-vertical="printSettings.cardGapVertical"
               :borders="false"
               :crop-marks="false"
               is-backside
@@ -241,8 +114,8 @@
               <template v-if="page[indexOnPage] != null" #default>
                 <div class="w-full h-full grid place-items-center relative overflow-hidden">
                   <img
-                    v-if="backSideImage"
-                    :src="backSideImage"
+                    v-if="printSettings.backSideImage"
+                    :src="printSettings.backSideImage"
                     class="absolute w-full h-full object-contain object-center"
                   >
                   <IconLogo
@@ -277,13 +150,36 @@ import useLandingPages from '@/modules/useLandingPages'
 import PaperCssSheet from './components/PaperCssSheet.vue'
 import type { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import SetPrintingCard from './components/SetPrintingCard.vue'
-import TextField from '@/components/forms/TextField.vue'
 import SetPrintingQrCode from './components/SetPrintingQrCode.vue'
-import ImageDropZone from './components/ImageDropZone.vue'
 import sanitizeI18n from '@/modules/sanitizeI18n'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
 import IconLogo from '@/components/icons/IconLogo.vue'
-import LinkDefault from '@/components/typography/LinkDefault.vue'
+import SetPrintingConfigForm from './components/SetPrintingConfigForm.vue'
+import printSettingsPresets from './printSettingsPresets'
+import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+
+export type PrintSettings = {
+  name: string
+  link?: string
+  doubleSidedPrinting: boolean
+  pageWidth: number
+  pageHeight: number
+  minPrintMarginHorizontal: number
+  minPrintMarginVertical: number
+  cardWidth: number
+  cardHeight: number
+  cardGapHorizontal: number
+  cardGapVertical: number
+  qrCodeSize: number
+  qrCodeX: number
+  qrCodeY: number
+  frontSideImage: string | undefined
+  backSideImage: string | undefined
+  printBorders: boolean
+  printText: boolean
+  printCropMarks: boolean
+}
 
 const props = defineProps({
   setId: {
@@ -304,53 +200,19 @@ watch(set, () => {
   setDocumentTitle(displayName.value)
 })
 
-const doubleSidedPrinting = ref(false)
+const printSettings = ref<PrintSettings>(printSettingsPresets[0])
 
-const pageWidth = ref(0)
-const pageHeight = ref(0)
+const usablePageWidth = computed(() => printSettings.value.pageWidth - 2 * printSettings.value.minPrintMarginHorizontal)
+const usablePageHeight = computed(() => printSettings.value.pageHeight - 2 * printSettings.value.minPrintMarginVertical)
 
-const minPaddingHorizontal = ref(0)
-const minPaddingVertical = ref(0)
+const effectiveCardWidth = computed(() => printSettings.value.cardWidth + printSettings.value.cardGapHorizontal)
+const effectiveCardHeight = computed(() => printSettings.value.cardHeight + printSettings.value.cardGapVertical)
 
-const cardWidth = ref(0)
-const cardHeight = ref(0)
+const cardsPerRow = computed(() => Math.floor((usablePageWidth.value + printSettings.value.cardGapHorizontal) / effectiveCardWidth.value))
+const cardsPerColumn = computed(() => Math.floor((usablePageHeight.value + printSettings.value.cardGapVertical) / effectiveCardHeight.value))
 
-const qrCodeSize = ref(0)
-const qrCodeX = ref(0)
-const qrCodeY = ref(0)
-
-const frontSideImage = ref<string>()
-const backSideImage = ref<string>()
-
-const printBorders = ref(false)
-const printText = ref(true)
-const printCropMarks = ref(true)
-
-const setDefaultValues = () => {
-  doubleSidedPrinting.value = false
-  pageWidth.value = 211
-  pageHeight.value = 297
-  minPaddingHorizontal.value = 10
-  minPaddingVertical.value = 10
-  cardWidth.value = 85
-  cardHeight.value = 55
-  qrCodeSize.value = 39
-  qrCodeX.value = 4
-  qrCodeY.value = (cardHeight.value - qrCodeSize.value) / 2
-  frontSideImage.value = undefined
-  backSideImage.value = undefined
-  printBorders.value = false
-  printText.value = true
-  printCropMarks.value = true
-}
-
-setDefaultValues()
-
-const cardsPerRow = computed(() => Math.floor((pageWidth.value - 2 * minPaddingHorizontal.value) / cardWidth.value))
-const cardsPerColumn = computed(() => Math.floor((pageHeight.value - 2 * minPaddingVertical.value) / cardHeight.value))
-
-const paddingHorizontal = computed(() => (pageWidth.value - cardWidth.value * cardsPerRow.value) / 2)
-const paddingVertical = computed(() => (pageHeight.value - cardHeight.value * cardsPerColumn.value) / 2)
+const paddingHorizontal = computed(() => (printSettings.value.pageWidth - effectiveCardWidth.value * cardsPerRow.value + printSettings.value.cardGapHorizontal) / 2)
+const paddingVertical = computed(() => (printSettings.value.pageHeight - effectiveCardHeight.value * cardsPerColumn.value + printSettings.value.cardGapVertical) / 2)
 
 const cardsPerPage = computed(() => cardsPerRow.value * cardsPerColumn.value)
 
@@ -369,4 +231,8 @@ const pages = computed<CardStatusDto[][]>(() => {
   }
   return pages
 })
+
+const printPage = () => {
+  window.print()
+}
 </script>

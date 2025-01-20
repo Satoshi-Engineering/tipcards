@@ -49,14 +49,13 @@ onUnmounted(() => {
   .sheet {
     background: white;
     box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
-    margin-top: 5mm;
     margin-bottom: 5mm;
   }
 }
 
 @media print {
   .sheet {
-    margin: 0;
+    margin: 0 !important;
     box-shadow: none;
   }
 }
