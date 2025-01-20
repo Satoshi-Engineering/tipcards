@@ -139,7 +139,7 @@ import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { useSet } from '@/modules/useSet'
 import { useSeoHelpers } from '@/modules/seoHelpers'
-import printSettingsPresets, { type PrintSettings } from './printSettingsPresets'
+import printSettingsPresets, { PrintSettings } from './printSettingsPresets'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import ItemsListMessageNotLoggedIn from '@/components/itemsList/components/ItemsListMessageNotLoggedIn.vue'
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
@@ -171,11 +171,12 @@ const { setDocumentTitle } = useSeoHelpers()
 const { set, loading, userErrorMessages, displayName, cardStatuses } = useSet(props.setId)
 const { getLandingPageUrlWithLnurl } = useLandingPages()
 
-watch(set, () => {
-  if (set.value == null) {
+watch(set, (newVal) => {
+  if (newVal == null) {
     return
   }
   setDocumentTitle(displayName.value)
+  loadPrintSettings()
 })
 
 const printSettings = ref<PrintSettings>(printSettingsPresets[0])
@@ -212,5 +213,50 @@ const pages = computed<CardStatusDto[][]>(() => {
 
 const printPage = () => {
   window.print()
+}
+
+watch(printSettings, () => {
+  if (set.value == null) {
+    return
+  }
+  storePrintSettingsForSet()
+  storeLatestPrintSettings()
+}, { deep: true })
+
+const storePrintSettingsForSet = () => {
+  if (set.value == null) {
+    return
+  }
+  localStorage.setItem(`printSettings-${set.value.id}`, JSON.stringify(printSettings.value))
+}
+
+const storeLatestPrintSettings = () => {
+  localStorage.setItem('printSettings-latest', JSON.stringify(printSettings.value))
+}
+
+const loadPrintSettings = () => {
+  let storedPrintSettings = loadPrintSettingsForSet()
+  if (storedPrintSettings == null) {
+    storedPrintSettings = loadLatestPrintSettings()
+  }
+  if (storedPrintSettings == null) {
+    return
+  }
+  try {
+    printSettings.value = PrintSettings.parse(JSON.parse(storedPrintSettings))
+  } catch (error) {
+    console.error('Failed to load print settings:', error)
+  }
+}
+
+const loadPrintSettingsForSet = () => {
+  if (set.value == null) {
+    return
+  }
+  return localStorage.getItem(`printSettings-${set.value.id}`)
+}
+
+const loadLatestPrintSettings = () => {
+  return localStorage.getItem('printSettings-latest')
 }
 </script>

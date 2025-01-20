@@ -201,10 +201,13 @@ const printSettings = reactive<PrintSettings>({ ...props.modelValue })
 
 const emit = defineEmits(['update:modelValue'])
 
-
 const setPrintSettings = (settings: PrintSettings) => {
   Object.assign(printSettings, settings)
 }
+
+watch(() => props.modelValue, () => {
+  setPrintSettings(props.modelValue)
+}, { deep: true })
 
 watch(() => printSettings, () => {
   if (printSettings.backSideImage != null) {

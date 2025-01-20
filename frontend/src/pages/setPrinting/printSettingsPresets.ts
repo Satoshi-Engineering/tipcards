@@ -1,24 +1,28 @@
-export type PrintSettings = {
-  name: string
-  link?: string
-  doubleSidedPrinting: boolean
-  pageWidth: number
-  pageHeight: number
-  minPrintMarginHorizontal: number
-  minPrintMarginVertical: number
-  cardWidth: number
-  cardHeight: number
-  cardGapHorizontal: number
-  cardGapVertical: number
-  qrCodeSize: number
-  qrCodeX: number
-  qrCodeY: number
-  frontSideImage: string | undefined
-  backSideImage: string | undefined
-  printBorders: boolean
-  printText: boolean
-  printCropMarks: boolean
-}
+import { z } from 'zod'
+
+export const PrintSettings = z.object({
+  name: z.string(),
+  link: z.string().url().optional(),
+  doubleSidedPrinting: z.boolean(),
+  pageWidth: z.number().positive(),
+  pageHeight: z.number().positive(),
+  minPrintMarginHorizontal: z.number().nonnegative(),
+  minPrintMarginVertical: z.number().nonnegative(),
+  cardWidth: z.number().positive(),
+  cardHeight: z.number().positive(),
+  cardGapHorizontal: z.number().nonnegative(),
+  cardGapVertical: z.number().nonnegative(),
+  qrCodeSize: z.number().positive(),
+  qrCodeX: z.number().nonnegative(),
+  qrCodeY: z.number().nonnegative(),
+  frontSideImage: z.string().optional(),
+  backSideImage: z.string().optional(),
+  printBorders: z.boolean(),
+  printText: z.boolean(),
+  printCropMarks: z.boolean(),
+})
+
+export type PrintSettings = z.infer<typeof PrintSettings>;
 
 const defaultPrintSettings: PrintSettings = {
   name: 'Default settings',
@@ -33,7 +37,7 @@ const defaultPrintSettings: PrintSettings = {
   cardGapVertical: 0,
   qrCodeSize: 41,
   qrCodeX: 3,
-  qrCodeY: 6,
+  qrCodeY: 7,
   frontSideImage: undefined,
   backSideImage: undefined,
   printBorders: false,
