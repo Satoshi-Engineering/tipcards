@@ -26,6 +26,8 @@ import ButtonDefaultIcon from '@/components/buttons/components/ButtonDefaultIcon
 
 import ButtonLinkSkeleton from './components/ButtonLinkSkeleton.vue'
 
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'no-border'
+
 const props = defineProps({
   to: {
     type: [String, Object] as PropType<RouteLocationRaw>,
@@ -40,7 +42,7 @@ const props = defineProps({
     default: undefined,
   },
   variant: {
-    type: String as PropType<'primary' | 'secondary' | 'outline' | 'no-border'>,
+    type: String as PropType<ButtonVariant>,
     default: 'primary',
     validator: (value) => {
       if (

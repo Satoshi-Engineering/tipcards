@@ -235,10 +235,10 @@ const storeLatestPrintSettings = () => {
 }
 
 const loadPrintSettings = () => {
-  let storedPrintSettings = loadPrintSettingsForSet()
-  if (storedPrintSettings == null) {
-    storedPrintSettings = loadLatestPrintSettings()
+  if (set.value == null) {
+    return
   }
+  const storedPrintSettings = localStorage.getItem(`printSettings-${set.value.id}`)
   if (storedPrintSettings == null) {
     return
   }
@@ -247,16 +247,5 @@ const loadPrintSettings = () => {
   } catch (error) {
     console.error('Failed to load print settings:', error)
   }
-}
-
-const loadPrintSettingsForSet = () => {
-  if (set.value == null) {
-    return
-  }
-  return localStorage.getItem(`printSettings-${set.value.id}`)
-}
-
-const loadLatestPrintSettings = () => {
-  return localStorage.getItem('printSettings-latest')
 }
 </script>

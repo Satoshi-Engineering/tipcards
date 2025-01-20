@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import TooltipDefault from './TooltipDefault.vue'
-import ButtonDefault from './buttons/ButtonDefault.vue'
+import ButtonDefault, { type ButtonVariant } from './buttons/ButtonDefault.vue'
 
 defineProps({
   href: {
@@ -31,7 +31,7 @@ defineProps({
     default: undefined,
   },
   variant: {
-    type: String as PropType<'outline' | 'no-border' | undefined>,
+    type: String as PropType<ButtonVariant>,
     default: undefined,
   },
   disabled: {

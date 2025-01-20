@@ -98,12 +98,12 @@
           <ImageDropZone
             v-model="printSettings.frontSideImage"
             label="Drop front side image here"
-            class="w-full"
+            class="w-full mb-2"
           />
           <ImageDropZone
             v-model="printSettings.backSideImage"
             label="Drop back side image here"
-            class="w-full"
+            class="w-full mb-2"
           />
         </div>
       </div>

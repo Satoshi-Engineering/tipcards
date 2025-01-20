@@ -258,6 +258,15 @@
           >
             {{ t('cards.actions.buttonDownloadPngs') }}
           </ButtonDefault>
+          <ButtonWithTooltip
+            v-if="setId != null"
+            variant="secondary"
+            :disabled="!isSaved || saving || deleting"
+            :tooltip="!isSaved ? 'This feature only works for saved sets.' : undefined"
+            :to="{ name: 'set-printing', params: { lang: $route.params.lang, setId: setId } }"
+          >
+            Improved printing (beta version)
+          </ButtonWithTooltip>
         </ButtonContainer>
       </div>
       <SetFunding
