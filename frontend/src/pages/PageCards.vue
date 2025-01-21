@@ -405,7 +405,7 @@
                 </div>
               </a>
               <section
-                class="absolute left-[44mm] ml-3 mr-4 top-0 bottom-2 flex items-center"
+                class="absolute left-[44mm] mx-2.5 top-0 bottom-2 flex items-center"
                 :class="{ 'opacity-50 blur-sm': card.status === 'used' || card.isLockedByBulkWithdraw }"
                 :dir="currentTextDirection"
               >

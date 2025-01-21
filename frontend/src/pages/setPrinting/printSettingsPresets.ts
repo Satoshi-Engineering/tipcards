@@ -3,7 +3,6 @@ import { z } from 'zod'
 export const PrintSettings = z.object({
   name: z.string(),
   link: z.string().url().optional(),
-  doubleSidedPrinting: z.boolean(),
   pageWidth: z.number().positive(),
   pageHeight: z.number().positive(),
   minPrintMarginHorizontal: z.number().nonnegative(),
@@ -17,6 +16,8 @@ export const PrintSettings = z.object({
   qrCodeY: z.number().nonnegative(),
   frontSideImage: z.string().optional(),
   backSideImage: z.string().optional(),
+  doubleSidedPrinting: z.boolean(),
+  backSidesOnly: z.boolean(),
   printBorders: z.boolean(),
   printText: z.boolean(),
   printCropMarks: z.boolean(),
@@ -26,9 +27,8 @@ export type PrintSettings = z.infer<typeof PrintSettings>;
 
 const defaultPrintSettings: PrintSettings = {
   name: 'Default settings',
-  doubleSidedPrinting: false,
   pageWidth: 210,
-  pageHeight: 296,
+  pageHeight: 296, // A4 minus one pixel, to prevent some browsers from adding extra pages
   minPrintMarginHorizontal: 10,
   minPrintMarginVertical: 10,
   cardWidth: 85,
@@ -40,6 +40,8 @@ const defaultPrintSettings: PrintSettings = {
   qrCodeY: 7,
   frontSideImage: undefined,
   backSideImage: undefined,
+  doubleSidedPrinting: false,
+  backSidesOnly: false,
   printBorders: false,
   printText: true,
   printCropMarks: true,

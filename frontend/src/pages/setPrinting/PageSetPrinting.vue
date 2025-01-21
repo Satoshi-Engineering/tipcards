@@ -28,12 +28,13 @@
           Please print with a scale of 100% and without margins.
         </ParagraphDefault>
       </aside>
-      <div class="overflow-x-auto px-3 py-3 -mx-3 -my-3 print:overflow-x-visible print:px-0 print:py-0 print:mx-0 print:my-0">
+      <div class="overflow-x-auto px-5 py-3 -mx-5 my-3 lg:-my-3 print:overflow-x-visible print:!p-0 print:!m-0">
         <template
           v-for="(page, pageIndex) in pages"
           :key="pageIndex"
         >
           <PaperCssSheet
+            v-if="!printSettings.backSidesOnly"
             :width="printSettings.pageWidth"
             :height="printSettings.pageHeight"
             class="flex flex-wrap content-start"
@@ -66,7 +67,7 @@
                 />
                 <div
                   v-if="printSettings.printText && set != null"
-                  class="absolute top-0 bottom-0 ms-3 me-4 flex items-center"
+                  class="absolute top-0 bottom-0 mx-2.5 flex items-center"
                   :style="{ insetInlineStart: `${printSettings.qrCodeX + printSettings.qrCodeSize}mm` }"
                 >
                   <article>
@@ -92,7 +93,7 @@
           </PaperCssSheet>
 
           <PaperCssSheet
-            v-if="printSettings.doubleSidedPrinting"
+            v-if="printSettings.doubleSidedPrinting || printSettings.backSidesOnly"
             :width="printSettings.pageWidth"
             :height="printSettings.pageHeight"
             class="flex flex-wrap flex-row-reverse content-start"

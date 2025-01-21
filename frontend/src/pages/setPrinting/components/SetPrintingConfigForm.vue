@@ -151,8 +151,20 @@
           Print text
         </label>
         <label class="flex gap-3">
-          <input v-model="printSettings.doubleSidedPrinting" type="checkbox">
+          <input
+            v-model="printSettings.doubleSidedPrinting"
+            type="checkbox"
+            @update:model-value="() => printSettings.backSidesOnly = false"
+          >
           Double-sided printing
+        </label>
+        <label class="flex gap-3">
+          <input
+            v-model="printSettings.backSidesOnly"
+            type="checkbox"
+            @update:model-value="() => printSettings.doubleSidedPrinting = false"
+          >
+          Print back sides only
         </label>
       </div>
     </div>
@@ -210,9 +222,12 @@ watch(() => props.modelValue, () => {
 }, { deep: true })
 
 watch(() => printSettings, () => {
-  if (printSettings.backSideImage != null) {
-    printSettings.doubleSidedPrinting = true
-  }
   emit('update:modelValue', { ...printSettings })
 }, { deep: true })
+
+watch(() => printSettings.backSideImage, () => {
+  if (printSettings.backSideImage != null && !printSettings.backSidesOnly) {
+    printSettings.doubleSidedPrinting = true
+  }
+})
 </script>
