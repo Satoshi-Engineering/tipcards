@@ -21,6 +21,7 @@ export const PrintSettings = z.object({
   printBorders: z.boolean(),
   printText: z.boolean(),
   printCropMarks: z.boolean(),
+  printSetInfo: z.boolean(),
 })
 
 export type PrintSettings = z.infer<typeof PrintSettings>;
@@ -45,6 +46,7 @@ const defaultPrintSettings: PrintSettings = {
   printBorders: false,
   printText: true,
   printCropMarks: true,
+  printSetInfo: true,
 }
 
 const avery45x45: PrintSettings = {

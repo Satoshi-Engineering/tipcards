@@ -39,12 +39,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed, type PropType } from 'vue'
+import QRCode from 'qrcode-svg'
+
+import type { SelectedCardLogo } from '@/modules/useCardLogos'
+import { BACKEND_API_ORIGIN } from '@/constants'
 import IconLogoBitcoin from '@/components/icons/IconLogoBitcoin.vue'
 import IconLogoLightning from '@/components/icons/IconLogoLightning.vue'
-import { BACKEND_API_ORIGIN } from '@/constants'
-import type { Image as ImageMeta } from '@shared/data/api/Image'
-import QRCode from 'qrcode-svg'
-import { computed, type PropType } from 'vue'
 
 const props = defineProps({
   text: {
@@ -52,7 +53,7 @@ const props = defineProps({
     required: true,
   },
   selectedCardLogo: {
-    type: [Object, String] as PropType<ImageMeta | 'bitcoin' | 'lightning' | undefined>,
+    type: [Object, String] as PropType<SelectedCardLogo>,
     default: undefined,
   },
 })

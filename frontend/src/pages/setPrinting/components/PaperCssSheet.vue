@@ -1,7 +1,12 @@
 <template>
   <div
     class="sheet"
-    :style="{ width: `${props.width}mm`, height: `${props.height}mm` }"
+    :style="{
+      width: `${props.width}mm`,
+      height: `${props.height}mm`,
+      paddingBlock: `${paddingVertical}mm`,
+      paddingInline: `${paddingHorizontal}mm`,
+    }"
   >
     <slot />
   </div>
@@ -15,6 +20,14 @@ const props = defineProps({
     required: true,
   },
   height: {
+    type: Number,
+    required: true,
+  },
+  paddingVertical: {
+    type: Number,
+    required: true,
+  },
+  paddingHorizontal: {
     type: Number,
     required: true,
   },

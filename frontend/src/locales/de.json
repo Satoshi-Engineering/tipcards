@@ -361,6 +361,12 @@
     "noSetsMatchingFilter": "Keine Sets gefunden.",
     "displayedSetsOfTotalSets": "{displayedSets} / {totalSets} Set | {displayedSets} / {totalSets} Sets"
   },
+  "set": {
+    "title": "Set",
+    "errors": {
+      "unableToLoadSetFromBackend": "Das Set konnte nicht geladen werden."
+    }
+  },
   "cards": {
     "title": "TipCards-Set",
     "status": {

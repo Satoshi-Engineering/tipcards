@@ -1,18 +1,30 @@
 <template>
   <TheLayout full-width>
-    <CenterContainer full-width class="lg:flex justify-between gap-3">
+    <CenterContainer full-width class="print:hidden">
+      <BackLink :to="{ name: 'set', params: { setId, lang: $route.params.lang } }" />
+    </CenterContainer>
+    <CenterContainer
+      v-if="!isLoggedIn || loading || set == null || userErrorMessages.length > 0"
+      full-width
+      class="print:hidden flex flex-col items-center"
+    >
+      <div v-if="!isLoggedIn" class="my-20">
+        <ItemsListMessageNotLoggedIn />
+      </div>
+      <div v-else-if="loading" class="my-20 grid place-items-center">
+        <IconAnimatedLoadingWheel class="w-10 h-10" />
+      </div>
+      <UserErrorMessages
+        v-if="userErrorMessages.length > 0"
+        :user-error-messages="userErrorMessages"
+      />
+    </CenterContainer>
+    <CenterContainer
+      v-else
+      full-width
+      class="lg:flex justify-between gap-3"
+    >
       <aside class="print:hidden min-w-56 flex-1 lg:max-w-sm">
-        <BackLink :to="{ name: 'set', params: { setId, lang: $route.params.lang } }" />
-        <div v-if="!isLoggedIn" class="my-20">
-          <ItemsListMessageNotLoggedIn />
-        </div>
-        <div v-else-if="loading" class="my-20 grid place-items-center">
-          <IconAnimatedLoadingWheel class="w-10 h-10" />
-        </div>
-        <UserErrorMessages
-          v-if="userErrorMessages.length > 0"
-          :user-error-messages="userErrorMessages"
-        />
         <HeadlineDefault v-if="set" level="h1">
           {{ displayName }}
         </HeadlineDefault>
@@ -37,96 +49,111 @@
             v-if="!printSettings.backSidesOnly"
             :width="printSettings.pageWidth"
             :height="printSettings.pageHeight"
+            :padding-horizontal="paddingHorizontal"
+            :padding-vertical="paddingVertical"
             class="flex flex-wrap content-start"
-            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm`, rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
+            :style="{ rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
           >
-            <SetPrintingCard
+            <SetInfoHeader
+              v-if="printSettings.printSetInfo"
+              :set-id="setId"
+              :page-index="pageIndex"
+              :total-pages="pages.length"
+              :padding-horizontal="paddingHorizontal"
+            />
+            <template
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
               :key="`page-${pageIndex}_card-${indexOnPage}`"
-              :style="{ width: `${printSettings.cardWidth}mm`, height: `${printSettings.cardHeight}mm` }"
-              :index-on-page="indexOnPage"
-              :cards-per-row="cardsPerRow"
-              :cards-per-page="cardsPerPage"
-              :card-gap-horizontal="printSettings.cardGapHorizontal"
-              :card-gap-vertical="printSettings.cardGapVertical"
-              :borders="printSettings.printBorders"
-              :crop-marks="printSettings.printCropMarks"
-              class="break-anywhere"
             >
-              <template v-if="page[indexOnPage] != null" #default>
-                <img
-                  v-if="printSettings.frontSideImage"
-                  :src="printSettings.frontSideImage"
-                  class="absolute w-full h-full object-contain object-center"
-                >
-                <SetPrintingQrCode
-                  class="absolute"
-                  :style="{ width: `${printSettings.qrCodeSize}mm`, height: `${printSettings.qrCodeSize}mm`, top: `${printSettings.qrCodeY}mm`, insetInlineStart: `${printSettings.qrCodeX}mm` }"
-                  :text="getLandingPageUrlWithLnurl(page[indexOnPage].hash, set?.settings.landingPage ?? undefined)"
-                  :selected-card-logo="selectedCardLogo"
-                />
-                <div
-                  v-if="printSettings.printText && set != null"
-                  class="absolute top-0 bottom-0 mx-2.5 flex items-center"
-                  :style="{ insetInlineStart: `${printSettings.qrCodeX + printSettings.qrCodeSize}mm` }"
-                >
-                  <article>
-                    <HeadlineDefault
-                      v-if="set.settings.cardHeadline !== ''"
-                      level="h1"
-                      styling="h4"
-                      class="mb-1"
-                    >
-                      {{ set.settings.cardHeadline }}
-                    </HeadlineDefault>
-                    <!-- eslint-disable vue/no-v-html vue/no-v-text-v-html-on-component -->
-                    <ParagraphDefault
-                      v-if="set.settings.cardCopytext !== ''"
-                      class="text-sm leading-tight"
-                      v-html="sanitizeI18n(set?.settings.cardCopytext)"
-                    />
-                    <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
-                  </article>
-                </div>
-              </template>
-            </SetPrintingCard>
+              <CardFront
+                v-if="page[indexOnPage] != null"
+                :width="printSettings.cardWidth"
+                :height="printSettings.cardHeight"
+
+                :borders="printSettings.printBorders"
+                :crop-marks="printSettings.printCropMarks"
+                :index-on-page="indexOnPage"
+                :cards-per-row="cardsPerRow"
+                :cards-per-page="cardsPerPage"
+                :card-gap-horizontal="printSettings.cardGapHorizontal"
+                :card-gap-vertical="printSettings.cardGapVertical"
+
+                :qr-code-size="printSettings.qrCodeSize"
+                :qr-code-x="printSettings.qrCodeX"
+                :qr-code-y="printSettings.qrCodeY"
+                :show-text="printSettings.printText"
+                :front-side-image="printSettings.frontSideImage"
+
+                :landing-page-url="getLandingPageUrlWithLnurl(page[indexOnPage].hash, set?.settings.landingPage ?? undefined)"
+                :headline="set?.settings.cardHeadline"
+                :copytext="set?.settings.cardCopytext"
+                :selected-card-logo="getSelectedCardLogo(set?.settings.image)"
+              />
+              <SetPrintingCard
+                v-else
+                :width="printSettings.cardWidth"
+                :height="printSettings.cardHeight"
+                :index-on-page="indexOnPage"
+                :cards-per-row="cardsPerRow"
+                :cards-per-page="cardsPerPage"
+                :card-gap-horizontal="printSettings.cardGapHorizontal"
+                :card-gap-vertical="printSettings.cardGapVertical"
+                :borders="false"
+                :crop-marks="printSettings.printCropMarks"
+              />
+            </template>
           </PaperCssSheet>
 
           <PaperCssSheet
             v-if="printSettings.doubleSidedPrinting || printSettings.backSidesOnly"
             :width="printSettings.pageWidth"
             :height="printSettings.pageHeight"
+            :padding-horizontal="paddingHorizontal"
+            :padding-vertical="paddingVertical"
             class="flex flex-wrap flex-row-reverse content-start"
-            :style="{ paddingBlock: `${paddingVertical}mm`, paddingInline: `${paddingHorizontal}mm`, rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
+            :style="{ rowGap: `${printSettings.cardGapVertical}mm`, columnGap: `${printSettings.cardGapHorizontal}mm` }"
           >
-            <SetPrintingCard
+            <SetInfoHeader
+              v-if="printSettings.printSetInfo"
+              is-back-side
+              :set-id="setId"
+              :page-index="pageIndex"
+              :total-pages="pages.length"
+              :padding-horizontal="paddingHorizontal"
+            />
+            <template
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
               :key="`page-${pageIndex}_card-${indexOnPage}`"
-              :style="{ width: `${printSettings.cardWidth}mm`, height: `${printSettings.cardHeight}mm` }"
-              :index-on-page="indexOnPage"
-              :cards-per-row="cardsPerRow"
-              :cards-per-page="cardsPerPage"
-              :card-gap-horizontal="printSettings.cardGapHorizontal"
-              :card-gap-vertical="printSettings.cardGapVertical"
-              :borders="false"
-              :crop-marks="false"
-              is-backside
-              class="break-anywhere"
             >
-              <template v-if="page[indexOnPage] != null" #default>
-                <div class="w-full h-full grid place-items-center relative overflow-hidden">
-                  <img
-                    v-if="printSettings.backSideImage"
-                    :src="printSettings.backSideImage"
-                    class="absolute w-full h-full object-contain object-center"
-                  >
-                  <IconLogo
-                    v-else
-                    class="w-2/5 h-2/5"
-                  />
-                </div>
-              </template>
-            </SetPrintingCard>
+              <CardBack
+                v-if="page[indexOnPage] != null"
+                :width="printSettings.cardWidth"
+                :height="printSettings.cardHeight"
+
+                :borders="printSettings.backSidesOnly && printSettings.printBorders"
+                :crop-marks="printSettings.backSidesOnly && printSettings.printCropMarks"
+                :index-on-page="indexOnPage"
+                :cards-per-row="cardsPerRow"
+                :cards-per-page="cardsPerPage"
+                :card-gap-horizontal="printSettings.cardGapHorizontal"
+                :card-gap-vertical="printSettings.cardGapVertical"
+
+                :back-side-image="printSettings.backSideImage"
+              />
+              <SetPrintingCard
+                v-else
+                :width="printSettings.cardWidth"
+                :height="printSettings.cardHeight"
+                :index-on-page="indexOnPage"
+                :cards-per-row="cardsPerRow"
+                :cards-per-page="cardsPerPage"
+                :card-gap-horizontal="printSettings.cardGapHorizontal"
+                :card-gap-vertical="printSettings.cardGapVertical"
+                :borders="false"
+                :crop-marks="printSettings.backSidesOnly && printSettings.printCropMarks"
+                is-backside
+              />
+            </template>
           </PaperCssSheet>
         </template>
       </div>
@@ -149,18 +176,18 @@ import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import BackLink from '@/components/BackLink.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
-import useLandingPages from '@/modules/useLandingPages'
 import PaperCssSheet from './components/PaperCssSheet.vue'
 import type { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
 import SetPrintingCard from './components/SetPrintingCard.vue'
-import SetPrintingQrCode from './components/SetPrintingQrCode.vue'
-import sanitizeI18n from '@/modules/sanitizeI18n'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import IconLogo from '@/components/icons/IconLogo.vue'
 import SetPrintingConfigForm from './components/SetPrintingConfigForm.vue'
 import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import useCardLogos from '@/modules/useCardLogos'
+import CardFront from './components/CardFront.vue'
+import CardBack from './components/CardBack.vue'
+import SetInfoHeader from './components/SetInfoHeader.vue'
+import useLandingPages from '@/modules/useLandingPages'
 
 const props = defineProps({
   setId: {
@@ -172,6 +199,7 @@ const props = defineProps({
 const { isLoggedIn } = storeToRefs(useAuthStore())
 const { setDocumentTitle } = useSeoHelpers()
 const { set, loading, userErrorMessages, displayName, cardStatuses } = useSet(props.setId)
+const { getSelectedCardLogo } = useCardLogos()
 const { getLandingPageUrlWithLnurl } = useLandingPages()
 
 watch(set, (newVal) => {
@@ -192,13 +220,25 @@ const effectiveCardHeight = computed(() => printSettings.value.cardHeight + prin
 
 const cardsPerRow = computed(() => Math.floor((usablePageWidth.value + printSettings.value.cardGapHorizontal) / effectiveCardWidth.value))
 const cardsPerColumn = computed(() => Math.floor((usablePageHeight.value + printSettings.value.cardGapVertical) / effectiveCardHeight.value))
+const cardsPerPage = computed(() => cardsPerRow.value * cardsPerColumn.value)
 
 const paddingHorizontal = computed(() => (printSettings.value.pageWidth - effectiveCardWidth.value * cardsPerRow.value + printSettings.value.cardGapHorizontal) / 2)
 const paddingVertical = computed(() => (printSettings.value.pageHeight - effectiveCardHeight.value * cardsPerColumn.value + printSettings.value.cardGapVertical) / 2)
 
-const cardsPerPage = computed(() => cardsPerRow.value * cardsPerColumn.value)
-
 const pages = computed<CardStatusDto[][]>(() => splitCardsIntoPages(cardStatuses.value, cardsPerPage.value))
+
+const splitCardsIntoPages = (cards: CardStatusDto[], cardsPerPage: number): CardStatusDto[][] =>
+  cards.reduce<CardStatusDto[][]>((pages, card) => {
+    const lastPage = pages[pages.length - 1]
+
+    if (lastPage == null || lastPage.length === cardsPerPage) {
+      pages.push([card])
+    } else {
+      lastPage.push(card)
+    }
+
+    return pages
+  }, [[]])
 
 const printPage = () => {
   window.print()
@@ -209,7 +249,6 @@ watch(printSettings, () => {
     return
   }
   storePrintSettingsForSet()
-  storeLatestPrintSettings()
 }, { deep: true })
 
 const storePrintSettingsForSet = () => {
@@ -217,10 +256,6 @@ const storePrintSettingsForSet = () => {
     return
   }
   localStorage.setItem(`printSettings-${set.value.id}`, JSON.stringify(printSettings.value))
-}
-
-const storeLatestPrintSettings = () => {
-  localStorage.setItem('printSettings-latest', JSON.stringify(printSettings.value))
 }
 
 const loadPrintSettings = () => {
@@ -237,28 +272,4 @@ const loadPrintSettings = () => {
     console.error('Failed to load print settings:', error)
   }
 }
-
-const splitCardsIntoPages = (cards: CardStatusDto[], cardsPerPage: number): CardStatusDto[][] =>
-  cards.reduce<CardStatusDto[][]>((pages, card) => {
-    const lastPage = pages[pages.length - 1]
-
-    if (lastPage == null || lastPage.length === cardsPerPage) {
-      pages.push([card])
-    } else {
-      lastPage.push(card)
-    }
-
-    return pages
-  }, [])
-
-const { availableCardLogosById } = useCardLogos()
-const selectedCardLogo = computed(() => {
-  if (set.value == null || set.value.settings.image == null) {
-    return undefined
-  }
-  if (set.value.settings.image === 'bitcoin' || set.value.settings.image === 'lightning') {
-    return set.value.settings.image
-  }
-  return availableCardLogosById.value[set.value.settings.image]
-})
 </script>

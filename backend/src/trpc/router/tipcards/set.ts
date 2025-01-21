@@ -22,7 +22,7 @@ export const setRouter = router({
       return setCollection.toTRpcResponse()
     }),
 
-  getById: loggedInProcedure
+  getById: publicProcedure
     .input(SetDto.shape.id)
     .output(SetDto)
     .query(async ({ input }) => {
@@ -50,7 +50,7 @@ export const setRouter = router({
       return cardStatusCollection.summary.toTRpcResponse()
     }),
 
-  getCardStatusesForSetId: loggedInProcedure
+  getCardStatusesForSetId: publicProcedure
     .input(SetDto.shape.id)
     .output(CardStatusDto.array())
     .query(async ({ input }) => {

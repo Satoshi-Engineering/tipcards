@@ -1,6 +1,7 @@
 <template>
   <TheLayout>
     <CenterContainer>
+      <BackLink :to="{ name: 'sets', params: { lang: $route.params.lang } }" class="mb-5 " />
       <div v-if="!isLoggedIn" class="my-20">
         <ItemsListMessageNotLoggedIn />
       </div>
@@ -28,6 +29,7 @@ import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWhee
 import UserErrorMessages from '@/components/UserErrorMessages.vue'
 import ItemsListMessageNotLoggedIn from '@/components/itemsList/components/ItemsListMessageNotLoggedIn.vue'
 import { useSet } from '@/modules/useSet'
+import BackLink from '@/components/BackLink.vue'
 
 const props = defineProps({
   setId: {

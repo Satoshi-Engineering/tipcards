@@ -1,14 +1,15 @@
 <template>
-  <div class="relative">
+  <div class="relative" :style="{ width: `${width}mm`, height: `${height}mm` }">
     <div class="absolute top-0 bottom-0 start-0 end-0">
       <slot />
     </div>
 
     <div
-      v-if="$slots.default != null && borders"
+      v-if="borders"
       class="absolute top-0 bottom-0 start-0 end-0 border-[0.5px] border-black opacity-[0.07] pointer-events-none select-none"
       :class="{
-        'border-l-0': !isInFirstColumn && cardGapHorizontal === 0,
+        'border-l-0': !isInFirstColumn && cardGapHorizontal === 0 && !isBackside,
+        'border-r-0': !isInLastColumn && cardGapHorizontal === 0 && isBackside,
         'border-t-0': !isInFirstRow && cardGapVertical === 0,
       }"
     />
@@ -31,6 +32,14 @@
 import { computed } from 'vue'
 
 const props = defineProps({
+  width: {
+    type: Number,
+    required: true,
+  },
+  height: {
+    type: Number,
+    required: true,
+  },
   cardsPerRow: {
     type: Number,
     required: true,

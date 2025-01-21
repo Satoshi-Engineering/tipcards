@@ -139,6 +139,13 @@
       <div>
         <strong>Print settings</strong>
         <label class="flex gap-3">
+          <input
+            v-model="printSettings.printSetInfo"
+            type="checkbox"
+          >
+          Print set ID and page number
+        </label>
+        <label class="flex gap-3">
           <input v-model="printSettings.printCropMarks" type="checkbox">
           Print crop marks
         </label>
