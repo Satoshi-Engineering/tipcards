@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Card } from '@shared/data/trpc/Card'
@@ -225,16 +225,21 @@ const isBulkWithdrawPossible = computed(() =>
   && usableCards.value.length > 0,
 )
 
+const pollingTimeout = ref<NodeJS.Timeout>()
+
 /** @throws */
 const create = async () => {
   bulkWithdraw.value = await trpc.bulkWithdraw.createForCards.mutate(usableCards.value.map((card) => card.hash))
   await loadCards()
-  setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
+  pollingTimeout.value = setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
 }
 
 const pollBulkWithdrawAndCardsStatus = async () => {
   if (bulkWithdraw.value == null) {
     return
+  }
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
   }
   try {
     bulkWithdraw.value = await trpc.bulkWithdraw.getById.query(bulkWithdraw.value.id)
@@ -242,7 +247,25 @@ const pollBulkWithdrawAndCardsStatus = async () => {
   } catch (error: unknown) {
     console.error(error)
   } finally {
-    setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
+    pollingTimeout.value = setTimeout(pollBulkWithdrawAndCardsStatus, 5000)
   }
 }
+
+const onVisibilityChange = () => {
+  if (document.visibilityState !== 'visible') {
+    return
+  }
+  pollBulkWithdrawAndCardsStatus()
+}
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibilityChange)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('visibilitychange', onVisibilityChange)
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
+})
 </script>

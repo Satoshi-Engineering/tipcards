@@ -236,10 +236,6 @@ const invoiceAmount = computed(() => set.value?.invoice?.amount)
 const invoiceExpired = computed(() => !!set.value?.invoice?.expired)
 
 const loadSetData = async () => {
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
-  }
-
   try {
     const response = await axios.get(`${BACKEND_API_ORIGIN}/api/set/${route.params.setId}`)
     if (response.data.status === 'success' && response.data.data != null) {
@@ -265,6 +261,9 @@ const loadSetData = async () => {
   }
   initializing.value = false
 
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
   pollingTimeout.value = setTimeout(loadSetData, 10 * 1000)
 }
 

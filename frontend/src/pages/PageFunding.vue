@@ -361,10 +361,6 @@ const pollingTimeout = ref<NodeJS.Timeout>()
 const lnurl = computed(() => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
 const loadLnurlData = async () => {
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
-  }
-
   const { status, fundedDate, card } = await loadCardStatus(String(route.params.cardHash))
 
   cardStatus.value = status || undefined
@@ -395,6 +391,9 @@ const loadLnurlData = async () => {
 
   initializing.value = false
 
+  if (pollingTimeout.value != null) {
+    clearTimeout(pollingTimeout.value)
+  }
   pollingTimeout.value = setTimeout(loadLnurlData, 10 * 1000)
 }
 
