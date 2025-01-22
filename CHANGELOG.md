@@ -1,6 +1,122 @@
 # Changelog
 
 
+## v0.4.11...v0.4.12
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.11...v0.4.12)
+
+### 🚀 Enhancements
+
+- **backend:** Replace express proxy with http-proxy package (b65bddc4)
+- **e2e:** Add e2e tests for reloading/updating setsList data (833eb04b)
+- **e2e:** Add e2e test for reloading/updating card status data for setsList (76c70bce)
+- **e2e:** Delay trpc responses to make sure the reloading animation is visible for testing (6a1831fb)
+- **e2e:** Add first e2e tests for history list (da5a92c2)
+- **e2e:** Add more history list tests (9fd14007)
+- **e2e:** Add logout test for history list (7ca92f99)
+- **e2e:** Add e2e tests for history list with data (89693af9)
+- **e2e:** Add test for refreshing updated data in history list (62792637)
+- **e2e:** Add tests for loading additional history (3e8d2908)
+- Improve recommendations on landing page (99b9a3da)
+- Add set-printing route and page stub (5088f552)
+- Load data that is needed for print page (ad487d50)
+- First draft of set-printing (7adf0f62)
+- Improve print borders and tweak the layout (674c3cf1)
+- Improve mobile layout (30d8b012)
+- Add optional gaps and presets for 2 avery zweckform sticker sheets (7088ebbe)
+- Harmonize new print layout with cards page (fbfd7837)
+- Store printSettings in localStorage (2a933230)
+- Add link from cards page to set-printing (65d88a06)
+- Display the qr code logo on the new printing page (78d4f97d)
+- Backsides only printing (e01a8674)
+- Add set id to printed sheets and make set printing data available for sets not owned by the current user (e4716364)
+- Reduce size of qr codes on avery45x45 preset (a2fae3cd)
+
+### 🩹 Fixes
+
+- Show loggedOut message on cardsStatusList and hide OpenTasks if there are none (d2ed3d9f)
+- Add lnurl to data attribute also for unfunded cards (19839567)
+- Always make a login attempt when the window's visibilitystate changes to visible (43cd0407)
+- **e2e:** Update cardsSummary data after fixing test data (ab854869)
+- Store unsubscribable in ref i/o a simple variable to allow reactivity (f493aebe)
+- **e2e:** SetsList.changeCardStatus scroll to sets list to trigger cardsSummary loading (74c5ab0e)
+- **backend:** Remove timestamps from CardStatusDto in integration tests (c8f75051)
+- **frontend:** Set cards summary loading statuses earlier (29403cda)
+- Remove dev console.log (0d8b6380)
+- **frontend:** Do not save set/card data if user logged out while fetching (5a82eaf8)
+- With an odd number of cards, move last card on the backside to the right (628f9d08)
+- Enable ping and reduce timeout to make reconnect on iOS Safari faster (62a81ea7)
+- **e2e:** Disable occasionally failing youtube test (a0d5df57)
+- **e2e:** Remove the only from development (a278c37a)
+- On the funding page restart cardStatus polling on visibilitychange (e3622a30)
+- On the set funding page restart cardStatus polling on visibilitychange (55c1ec6d)
+- Adjust A4 page height according to paper.css (d505ec20)
+
+### 💅 Refactors
+
+- **backend:** OpenTaskBuilder use class types for lists if i/o interface (399bde85)
+- **e2e:** Cypress database plugin createSets task also create cards with unpaid invoices and shared funding (3d42a2c0)
+- **e2e:** Reduce sets for a dashboard setsList test (1b3b935b)
+- **e2e:** Skip tests that fail in the pipeline (8669fd8c)
+- **backend:** Add OpenCardTaskBuilder, split from OpenTaskBuilder (154233e4)
+- **backend:** Split OpenSetFundingTaskBuilder from OpenTaskBuilder (608bf826)
+- **backend:** Split OpenBulkWithdrawTaskBuilder from OpenTaskBuilder (3515dba8)
+- **backend:** OpenTaskBuilder use the split sub-builder (7c885b57)
+- **backend:** Clean code OpenBulkWithdrawTaskBuilder (00e3edc2)
+- **e2e:** Split slider test into 3 tests (d402bc65)
+- **backend:** TRPC Error Handling (e0c1ce31)
+- **e2e:** Move generic setsList tests from pages/dashboard.setsList to features/setsList/ (22ea4880)
+- Remove timestamps from CardStatusDto (4dc7998f)
+- Change full validation to just validate body and footers (3b25e0cb)
+- **e2e:** Build tipcards library into a kind of collection similar to tipcardsApi (b57e3c30)
+- **e2e:** Move login via ui into tipcards lib and use it in multiple tests (2ea29a39)
+- **e2e:** Ignore all errors on youtube.com when navigating there (32a0ebfe)
+- **e2e:** Make sure all cards summary checkboxes are rendered before checking the viewport elements (b45dabe0)
+- Separate the create route from the login subscription (c8f4b7a1)
+- **e2e:** Apply youtube error handling earlier (0838b155)
+- **e2e:** Be more conservative in slider tests, to make sure everything is rendered before doing the action (60699fd2)
+- Clean up, fix null checks and add error handling for login flow (54f9d553)
+
+### 📖 Documentation
+
+- Update and add badges (b35ae7a5)
+
+### 🏡 Chore
+
+- **backend:** Change error code to UNAUTHORIZED, if accessToken is empty-string or invalid (36354fa5)
+- Adjust git commit message check (c8925f7f)
+- Update packages except pinia (c3dbf4b6)
+- **e2e:** Skip slider test that fails randomly (78a63949)
+- **e2e:** Skip randomly failing tests (6ede5919)
+- Add print-layout WIP (0fe8342f)
+- Add background image to backside (002c051d)
+- Add crop marks (b70777aa)
+- Change background image and adjust qr code (4fed9dcc)
+- Use different qr code for every card (f22c4c93)
+- **backend:** Remove deprecated AllowedRefreshTokens (bbe0b3d0)
+- Adjust background image & qr code (91fac157)
+- **e2e:** Skip SliderDefault swipe test (bd1fc06c)
+- **release:** V0.4.12 (dfc27e50)
+
+### ✅ Tests
+
+- **e2e:** Add e2e tests for open tasks list on dashboard (651872ac)
+- **e2e:** Add more e2e tests for open tasks list on dashboard (627fa317)
+- **e2e:** Add more e2e tests for open tasks list on dashboard (4b4135f9)
+- **backend:** Add openTasks trpc route unit test (0fa8ed0e)
+- **backend:** Add unit test for OpenBulkWithdrawTask (15f2a5f7)
+- **backend:** Add unit test for OpenSetFundingTask (73d52b9b)
+- **backend:** Add unit tests for OpenCardTask (ad281621)
+- **backend:** Add unit tests for OpenTaskCollection (f2a5a5d2)
+- **backend:** Add more unit tests to OpenCardTaskBuilder (88ea46ae)
+- **e2e:** Dashboard sets list only display 3 sets (e2d456e3)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+- Philipp Horwath <fil@satoshiengineering.com>
+
 ## v0.4.10...v0.4.11
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.10...v0.4.11)
