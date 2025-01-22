@@ -39,7 +39,18 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it('should contain a link to the youtube video in the second slider\'s play button', () => {
+    tipCards.home.goto()
+
+    cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(0)
+      .should('exist')
+      .then(($link) => {
+        expect($link).to.have.attr('target', '_blank')
+        expect($link).attr('href').to.contain('https://www.youtube.com')
+      })
+  })
+
+  it.skip('should navigate to youtube when the play button in the second slider is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)
