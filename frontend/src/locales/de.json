@@ -611,5 +611,88 @@
     "subtitle": "Ups, diese Seite konnten wir nicht finden.",
     "description": "Es sieht so aus, als hättest du einen fehlenden Link gefunden. Kein Problem – geh einfach zurück zur Startseite oder nutze das Menü, um weiterzumachen.",
     "backToHome": "Zur Startseite"
+  },
+  "privacyPolicy": {
+    "title": "Datenschutzhinweise",
+    "section1": {
+      "title": "1. Verantwortlicher",
+      "description": "Verantwortlich für die Datenverarbeitung ist:"
+    },
+    "section2": {
+      "title": "2. Datenverarbeitung bei Nutzung der Plattform",
+      "subsection1": {
+        "title": "2.1 Zugang zur Plattform",
+        "item1": "IP-Adresse",
+        "item2": "Datum und Uhrzeit des Zugriffs",
+        "item3": "Verwendeter Browsertyp und -version",
+        "item4": "Betriebssystem",
+        "item5": "Referrer-URL (zuvor besuchte Seite)",
+        "description": "Diese Daten werden ausschließlich für technische Zwecke und zur Sicherstellung der Stabilität und Sicherheit der Plattform verarbeitet."
+      },
+      "subsection2": {
+        "title": "2.2 Registrierung und Login",
+        "item1": "Accountname (frei wählbarer Benutzername)",
+        "item2": "Anzeigename (optional, z. B. ein öffentlich sichtbarer Name)",
+        "item3": "E-Mail-Adresse (optional, zur Kommunikation und Passwortwiederherstellung)",
+        "description": "Zur Nutzung bestimmter Funktionen der Plattform ist eine Registrierung erforderlich. Die Anmeldung erfolgt über LNURL-auth."
+      }
+    },
+    "section3": {
+      "title": "3. Zweck und Rechtsgrundlage der Verarbeitung",
+      "subsection1": {
+        "title": "Die erhobenen Daten werden zu folgenden Zwecken verarbeitet:",
+        "item1": "Bereitstellung und Verwaltung Ihres Nutzerkontos",
+        "item2": "Sicherstellung der Funktionalität der Plattform",
+        "item3": "Verbesserung der Nutzererfahrung",
+        "item4": "Erfüllung gesetzlicher Verpflichtungen"
+      },
+      "legalBasis": "Art. 6 Abs. 1 lit. a DSGVO (Einwilligung), Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung), Art. 6 Abs. 1 lit. c DSGVO (rechtliche Verpflichtung), Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse)"
+    },
+    "section4": {
+      "title": "4. Weitergabe von Daten",
+      "description": "Eine Weitergabe Ihrer personenbezogenen Daten an Dritte erfolgt nur, wenn dies für die Bereitstellung der Plattform notwendig ist, Sie ausdrücklich eingewilligt haben oder wir gesetzlich dazu verpflichtet sind."
+    },
+    "section5": {
+      "title": "5. Speicherdauer",
+      "description": "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die genannten Zwecke erforderlich ist oder gesetzliche Aufbewahrungsfristen dies vorsehen. Nach Ablauf dieser Fristen werden die Daten gelöscht."
+    },
+    "section6": {
+      "title": "6. Ihre Rechte",
+      "item1": "Auskunft über Ihre verarbeiteten personenbezogenen Daten zu verlangen (Art. 15 DSGVO).",
+      "item2": "Unrichtige Daten berichtigen zu lassen (Art. 16 DSGVO).",
+      "item3": "Die Löschung Ihrer Daten zu verlangen (Art. 17 DSGVO).",
+      "item4": "Die Einschränkung der Verarbeitung zu verlangen (Art. 18 DSGVO).",
+      "item5": "Der Verarbeitung zu widersprechen (Art. 21 DSGVO).",
+      "item6": "Datenübertragbarkeit zu verlangen (Art. 20 DSGVO).",
+      "description": "Für die Ausübung Ihrer Rechte kontaktieren Sie uns bitte über die oben angegebenen Kontaktdaten."
+    },
+    "section7": {
+      "title": "7. Cookies und Analysetools",
+      "subsection1": {
+        "title": "7.1 Was sind Cookies?",
+        "description": "Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden, wenn Sie unsere Website besuchen. Sie enthalten Informationen, die eine Wiedererkennung Ihres Browsers möglich machen und bestimmte Funktionen der Website gewährleisten."
+      },
+      "subsection2": {
+        "title": "7.2 Arten von Cookies",
+        "item1": "Notwendige Cookies: Diese Cookies sind erforderlich, um die Grundfunktionen der Plattform sicherzustellen.",
+        "item2": "Funktionale Cookies: Diese Cookies verbessern die Benutzererfahrung, z. B. durch Speichern von Einstellungen.",
+        "item3": "Analytische Cookies: Diese Cookies helfen uns, die Nutzung der Plattform zu analysieren und zu verbessern."
+      },
+      "subsection3": {
+        "title": "7.3 Cookie-Einstellungen",
+        "description": "Sie können Ihre Cookie-Einstellungen jederzeit in Ihrem Browser anpassen und bereits gesetzte Cookies löschen. Bitte beachten Sie, dass die Deaktivierung bestimmter Cookies die Funktionalität der Plattform einschränken kann."
+      }
+    },
+    "section8": {
+      "title": "8. Änderungen dieser Datenschutzrichtlinie",
+      "description": "Wir behalten uns das Recht vor, diese Datenschutzrichtlinie anzupassen, um sie an geänderte rechtliche oder technische Bedingungen anzupassen. Die aktuelle Version ist jederzeit auf unserer Website abrufbar."
+    },
+    "section9": {
+      "title": "9. Kontakt",
+      "contact": "Bei Fragen zur Verarbeitung Ihrer Daten oder zur Wahrnehmung Ihrer Rechte wenden Sie sich bitte an:"
+    },
+    "footer": {
+      "thanks": "Vielen Dank, dass Sie Lightning TipCards nutzen."
+    }
   }
 }

@@ -24,6 +24,7 @@ import {
   styleGuideTypographyAndButtons, type RouteStyleGuideTypographyAndButtons,
 } from '@/router/pages/styleGuide'
 import { userAccount, type RouteUserAccount } from '@/router/pages/userAccount'
+import { privacyPolicy, type RoutePrivacyPolicy } from './pages/privacyPolicy'
 
 export interface RouteNamedMap {
   about: RouteAbout,
@@ -37,6 +38,7 @@ export interface RouteNamedMap {
   landing: RouteLanding,
   'local-storage-sets': RouteLocalStorageSets,
   'not-found': RouteNotFound,
+  'privacy-policy': RoutePrivacyPolicy,
   set: RouteSet,
   'set-funding': RouteSetFunding,
   'set-printing': RouteSetPrinting,
@@ -74,6 +76,7 @@ const router = createRouter({
     landing,
     localStorageSets,
     notFound,
+    privacyPolicy,
     set,
     setFunding(() => router),
     setPrinting,

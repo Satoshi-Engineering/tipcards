@@ -5,6 +5,7 @@
         <LinkDefault
           no-bold
           invert-underline
+          data-test="footer-link-about"
           :to="{ name: 'about', params: { lang: $route.params.lang } }"
         >
           {{ $t('nav.about') }}
@@ -12,20 +13,18 @@
         <LinkDefault
           no-bold
           invert-underline
+          data-test="footer-link-landing"
           :to="{ name: 'landing', params: { lang: $route.params.lang } }"
         >
           {{ $t('nav.landing') }}
         </LinkDefault>
       </div>
-      <div
-        v-if="linkPrivacyPolicy != null || linkLegalNotice != null"
-        class="flex gap-8 mt-6"
-      >
+      <div class="flex gap-8 mt-6">
         <LinkDefault
-          v-if="linkPrivacyPolicy != null"
           no-bold
           invert-underline
-          :href="linkPrivacyPolicy"
+          data-test="footer-link-privacy-policy"
+          :to="{ name: 'privacy-policy', params: { lang: $route.params.lang } }"
         >
           {{ $t('nav.privacyPolicy') }}
         </LinkDefault>
@@ -34,6 +33,7 @@
           no-bold
           invert-underline
           :href="linkLegalNotice"
+          data-test="footer-link-legal-notice"
         >
           {{ $t('nav.legalNotice') }}
         </LinkDefault>
@@ -102,7 +102,6 @@ import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
 import IconLogoX from '@/components/icons/IconLogoX.vue'
 
-const linkPrivacyPolicy = inject<string | undefined>('linkPrivacyPolicy')
 const linkLegalNotice = inject<string | undefined>('linkLegalNotice')
 const supportEmail = inject<string | undefined>('supportEmail')
 const linkLinkedIn = inject<string | undefined>('linkLinkedIn')

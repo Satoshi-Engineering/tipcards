@@ -586,8 +586,91 @@
   },
   "notFound": {
     "title": "Page not found",
-    "description": "It seems you’ve discovered a missing link. Don’t worry, you can go back to the homepage or use the menu to get back on track.",
-    "subtitle": "Oops, we couldn’t find that page.",
+    "description": "It seems you've discovered a missing link. Don't worry, you can go back to the homepage or use the menu to get back on track.",
+    "subtitle": "Oops, we couldn't find that page.",
     "backToHome": "Back to the homepage"
+  },
+  "privacyPolicy": {
+    "title": "Privacy Policy",
+    "section1": {
+      "title": "1. Responsible Party",
+      "description": "The responsible party for data processing is:"
+    },
+    "section2": {
+      "title": "2. Data Processing When Using the Platform",
+      "subsection1": {
+        "title": "2.1 Access to the Platform",
+        "item1": "IP address",
+        "item2": "Date and time of access",
+        "item3": "Browser type and version used",
+        "item4": "Operating system",
+        "item5": "Referrer URL (previously visited page)",
+        "description": "These data are processed exclusively for technical purposes and to ensure the stability and security of the platform."
+      },
+      "subsection2": {
+        "title": "2.2 Registration and Login",
+        "item1": "Account name (freely selectable username)",
+        "item2": "Display name (optional, e.g., a publicly visible name)",
+        "item3": "Email address (optional, for communication and password recovery)",
+        "description": "Registration is required to use certain features of the platform. Login is facilitated through LNURL-auth."
+      }
+    },
+    "section3": {
+      "title": "3. Purpose and Legal Basis of Processing",
+      "subsection1": {
+        "title": "The collected data are processed for the following purposes:",
+        "item1": "Providing and managing your user account",
+        "item2": "Ensuring platform functionality",
+        "item3": "Improving user experience",
+        "item4": "Fulfilling legal obligations"
+      },
+      "legalBasis": "Art. 6(1)(a) GDPR (consent), Art. 6(1)(b) GDPR (contract performance), Art. 6(1)(c) GDPR (legal obligation), Art. 6(1)(f) GDPR (legitimate interest)"
+    },
+    "section4": {
+      "title": "4. Data Disclosure",
+      "description": "Your personal data will only be disclosed to third parties if necessary for providing the platform, you have expressly consented, or we are legally required to do so."
+    },
+    "section5": {
+      "title": "5. Data Retention Period",
+      "description": "Personal data is only stored as long as necessary for the stated purposes or as required by legal retention periods. After these periods expire, the data will be deleted."
+    },
+    "section6": {
+      "title": "6. Your Rights",
+      "item1": "The right to request information about your processed personal data (Art. 15 GDPR).",
+      "item2": "The right to have incorrect data corrected (Art. 16 GDPR).",
+      "item3": "The right to request the deletion of your data (Art. 17 GDPR).",
+      "item4": "The right to restrict data processing (Art. 18 GDPR).",
+      "item5": "The right to object to processing (Art. 21 GDPR).",
+      "item6": "The right to data portability (Art. 20 GDPR).",
+      "description": "To exercise your rights, please contact us using the contact details provided above."
+    },
+    "section7": {
+      "title": "7. Cookies and Analytics Tools",
+      "subsection1": {
+        "title": "7.1 What Are Cookies?",
+        "description": "Cookies are small text files stored on your device when you visit our website. They contain information that allows your browser to be recognized and ensures certain functionalities of the website."
+      },
+      "subsection2": {
+        "title": "7.2 Types of Cookies",
+        "item1": "Necessary cookies: These cookies are required to ensure the basic functionality of the platform.",
+        "item2": "Functional cookies: These cookies improve the user experience, e.g., by saving settings.",
+        "item3": "Analytical cookies: These cookies help us analyze and improve platform usage."
+      },
+      "subsection3": {
+        "title": "7.3 Cookie Settings",
+        "description": "You can adjust your cookie settings in your browser at any time and delete cookies that have already been set. Please note that disabling certain cookies may limit the platform's functionality."
+      }
+    },
+    "section8": {
+      "title": "8. Changes to This Privacy Policy",
+      "description": "We reserve the right to adapt this privacy policy to comply with legal or technical changes. The current version is always available on our website."
+    },
+    "section9": {
+      "title": "9. Contact",
+      "contact": "If you have questions about the processing of your data or wish to exercise your rights, please contact:"
+    },
+    "footer": {
+      "thanks": "Thank you for using Lightning TipCards."
+    }
   }
 }

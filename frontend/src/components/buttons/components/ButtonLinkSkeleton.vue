@@ -17,7 +17,9 @@
     :class="cssClasses"
     :tabindex="disabled ? -1 : undefined"
   >
-    <slot />
+    <slot>
+      {{ href.startsWith('mailto:') ? href.replace('mailto:', '') : undefined }}
+    </slot>
   </a>
   <span
     v-else-if="element === 'span'"

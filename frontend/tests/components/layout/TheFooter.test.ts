@@ -13,8 +13,8 @@ import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 describe('TheFooter', () => {
   it('renders the footer', async () => {
     const wrapper = mount(TheFooter)
-    expect(wrapper.getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({ name: 'about' }))
-    expect(wrapper.find(`a[href="${config.global.provide.linkPrivacyPolicy}"`).exists()).toBe(true)
+    expect(wrapper.findComponent<typeof RouterLinkStub>('[data-test="footer-link-about"]').vm.to).toEqual(expect.objectContaining({ name: 'about' }))
+    expect(wrapper.getComponent<typeof RouterLinkStub>('[data-test="footer-link-privacy-policy"]').vm.to).toEqual(expect.objectContaining({ name: 'privacy-policy' }))
     expect(wrapper.find(`a[href="${config.global.provide.linkLegalNotice}"`).exists()).toBe(true)
     expect(wrapper.getComponent(IconLogoLinkedIn)).toBeDefined()
     expect(wrapper.getComponent(IconLogoX)).toBeDefined()
@@ -35,7 +35,7 @@ describe('TheFooter', () => {
       },
     })
     expect(wrapper.getComponent(RouterLinkStub).vm.to).toEqual(expect.objectContaining({ name: 'about' }))
-    expect(wrapper.find(`a[href="${config.global.provide.linkPrivacyPolicy}"`).exists()).toBe(false)
+    expect(wrapper.getComponent<typeof RouterLinkStub>('[data-test="footer-link-privacy-policy"]').vm.to).toEqual(expect.objectContaining({ name: 'privacy-policy' }))
     expect(wrapper.find(`a[href="${config.global.provide.linkLegalNotice}"`).exists()).toBe(false)
     expect(() => wrapper.getComponent(IconLogoLinkedIn)).toThrowError()
     expect(() => wrapper.getComponent(IconLogoX)).toThrowError()

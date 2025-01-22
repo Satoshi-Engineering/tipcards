@@ -23,7 +23,9 @@ export const CANONICAL_URL_ORIGIN = import.meta.env.VITE_CANONICAL_URL_ORIGIN ||
 export const DEFAULT_DOCUMENT_TITLE = import.meta.env.VITE_DEFAULT_DOCUMENT_TITLE || 'Lightning TipCards'
 export const LNBITS_ORIGIN = import.meta.env.VITE_LNBITS_ORIGIN || 'https://legend.lnbits.com'
 
-export const LINK_PRIVACY_POLICY = import.meta.env.VITE_LINK_PRIVACY_POLICY || undefined
+export const PRIVACY_POLICY_CONTACT_NAME = import.meta.env.VITE_PRIVACY_POLICY_CONTACT_NAME || undefined
+export const PRIVACY_POLICY_CONTACT_EMAIL = import.meta.env.VITE_PRIVACY_POLICY_CONTACT_EMAIL || undefined
+
 export const LINK_LEGAL_NOTICE = import.meta.env.VITE_LINK_LEGAL_NOTICE || undefined
 export const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL || undefined
 export const LINK_LINKED_IN = import.meta.env.VITE_LINK_LINKED_IN || undefined
