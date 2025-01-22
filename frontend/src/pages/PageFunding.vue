@@ -391,9 +391,6 @@ const loadLnurlData = async () => {
 
   initializing.value = false
 
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
-  }
   pollingTimeout.value = setTimeout(loadLnurlData, 10 * 1000)
 }
 

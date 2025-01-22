@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Card } from '@shared/data/trpc/Card'
@@ -238,9 +238,6 @@ const pollBulkWithdrawAndCardsStatus = async () => {
   if (bulkWithdraw.value == null) {
     return
   }
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
-  }
   try {
     bulkWithdraw.value = await trpc.bulkWithdraw.getById.query(bulkWithdraw.value.id)
     await loadCards()
@@ -262,7 +259,7 @@ onMounted(() => {
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
   if (pollingTimeout.value != null) {
     clearTimeout(pollingTimeout.value)

@@ -261,9 +261,6 @@ const loadSetData = async () => {
   }
   initializing.value = false
 
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
-  }
   pollingTimeout.value = setTimeout(loadSetData, 10 * 1000)
 }
 
