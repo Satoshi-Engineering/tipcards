@@ -8,6 +8,8 @@
       'bg-green-200': modelValue != null,
     }"
     @click="openFileDialog()"
+    @keyup.enter="openFileDialog()"
+    @keyup.space="openFileDialog()"
   >
     {{ label }}
     <br>
