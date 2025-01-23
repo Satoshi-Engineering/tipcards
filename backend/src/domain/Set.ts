@@ -7,6 +7,8 @@ import type { SetWithSettings } from '@backend/database/data/SetWithSettings.js'
 import hashSha256 from '@backend/services/hashSha256.js'
 
 import CardStatusCollection from './CardStatusCollection.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 
 export default class Set {
   public static async fromId(setId: SetDto['id']): Promise<Set> {
@@ -16,8 +18,8 @@ export default class Set {
     const settings = await asTransaction(
       async (queries) => await queries.getSetSettingsBySetId(setId),
     )
-    assert(set != null, `No set found for set with id ${setId}`)
-    assert(settings != null, `No settings found for set with id ${setId}`)
+    assert(set != null, new NotFoundError(`No set found for id ${setId}`))
+    assert(settings != null, new ErrorWithCode(`No settings found for set with id ${setId}`, ErrorCode.SetSettingsNotFound))
     return Set.fromSetWithSettings({
       ...set,
       settings,

@@ -21,6 +21,7 @@ export enum ErrorCode {
   UnableToGetLnbitsPaymentRequests = 'UnableToGetLnbitsPaymentRequests',
   UnableToRemoveLnurlpLink = 'UnableToRemoveLnurlpLink',
   SetNotFound = 'SetNotFound',
+  SetSettingsNotFound = 'SetSettingsNotFound',
   UnknownErrorWhileCheckingSetInvoiceStatus = 'UnknownErrorWhileCheckingSetInvoiceStatus',
   CannotDeleteFundedSet = 'CannotDeleteFundedSet',
   CardNeedsSetFunding = 'CardNeedsSetFunding',
