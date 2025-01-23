@@ -13,3 +13,9 @@ Allow: /funding/$
 
 Disallow: /cards/
 Allow: /cards/$
+
+Disallow: /funding/
+Disallow: /set-funding/
+Disallow: /set-printing/
+Disallow: /bulk-withdraw/
+Disallow: /card/
