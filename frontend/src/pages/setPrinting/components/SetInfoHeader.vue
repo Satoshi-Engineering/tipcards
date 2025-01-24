@@ -1,7 +1,7 @@
 <template>
   <header
-    class="absolute top-5 px-1 flex justify-between text-sm text-grey"
-    :style="{ insetInline: `${paddingHorizontal}mm` }"
+    class="absolute px-1 flex justify-between text-sm text-grey"
+    :style="{ insetInline: `${paddingHorizontal}mm`, top: `max(${paddingVertical / 2 - 2}mm, 5mm)` }"
   >
     <div>
       Set-ID: {{ setId }}
@@ -31,6 +31,10 @@ defineProps({
     required: true,
   },
   paddingHorizontal: {
+    type: Number,
+    required: true,
+  },
+  paddingVertical: {
     type: Number,
     required: true,
   },

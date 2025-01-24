@@ -60,6 +60,7 @@
               :page-index="pageIndex"
               :total-pages="pages.length"
               :padding-horizontal="paddingHorizontal"
+              :padding-vertical="paddingVertical"
             />
             <template
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
@@ -120,6 +121,7 @@
               :page-index="pageIndex"
               :total-pages="pages.length"
               :padding-horizontal="paddingHorizontal"
+              :padding-vertical="paddingVertical"
             />
             <template
               v-for="indexOnPage in Array.from({ length: cardsPerPage }).fill(0).map((_, i) => i)"
