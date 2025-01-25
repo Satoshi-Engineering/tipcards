@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Router, type Request, type Response, type NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card.js'
@@ -56,18 +58,27 @@ export default (
 
     // create + return lnurlp for unfunded card
     if (card == null) {
-      try {
-        const data = await getLnurlpForNewCard(cardHash)
-        res.json(data)
-      } catch (error) {
-        console.error(ErrorCode.UnableToCreateLnurlP, error)
-        res.status(500).json(toErrorResponse({
-          message: 'Unable to create LNURL-P at lnbits.',
-          code: ErrorCode.UnableToCreateLnurlP,
-        }))
-      }
+
+      // TODO: remove this when exploit is fixed
+      res.status(500).json(toErrorResponse({
+        message: 'Service temporarily not available.',
+        code: ErrorCode.UnableToCreateLnurlP,
+      }))
       next()
       return
+
+      // try {
+      //   const data = await getLnurlpForNewCard(cardHash)
+      //   res.json(data)
+      // } catch (error) {
+      //   console.error(ErrorCode.UnableToCreateLnurlP, error)
+      //   res.status(500).json(toErrorResponse({
+      //     message: 'Unable to create LNURL-P at lnbits.',
+      //     code: ErrorCode.UnableToCreateLnurlP,
+      //   }))
+      // }
+      // next()
+      // return
     }
 
     // check if card is locked by bulkWithdraw

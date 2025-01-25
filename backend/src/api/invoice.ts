@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import axios from 'axios'
 import { Router, type Request, type Response, type NextFunction } from 'express'
 
@@ -29,136 +31,144 @@ export default (
   })
 
   router.post('/create/:cardHash', lockCardMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
-    // amount in sats
-    let amount: number | undefined = undefined
-    let text = ''
-    let note = ''
-    try {
-      amount = req.body.amount
-      text = req.body.text || ''
-      note = req.body.note || ''
-    } catch (error) {
-      console.error(error)
-    }
-    if (amount == null || amount < 200 || amount > 2200000) {
-      res.status(400).json(toErrorResponse({
-        message: 'Invalid amount, has to be between 210 and 2,100,000 sats.',
-      }))
-      next()
-      return
-    }
 
-    // check if card/invoice already exists
-    let card: CardApi | null = null
-    try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
-      if (cardRedis != null) {
-        card = cardApiFromCardRedis(cardRedis)
-      }
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json(toErrorResponse({
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      }))
-      next()
-      return
-    }
-    if (card?.invoice != null) {
-      if (card.invoice.paid) {
-        res.status(400).json(toErrorResponse({
-          message: 'Card is already funded.',
-        }))
-      } else if (card.invoice.amount === amount) {
-        res.json({
-          status: 'success',
-          data: card.invoice.payment_request,
-        })
-      } else {
-        res.status(400).json(toErrorResponse({
-          message: `Card already exists with different amount: ${card.invoice.amount}.`,
-        }))
-      }
-      next()
-      return
-    }
-    if (card?.lnurlp?.paid != null) {
-      res.status(400).json(toErrorResponse({
-        message: 'Card is already funded.',
-      }))
-      next()
-      return
-    }
-    if (card?.setFunding != null) {
-      res.status(400).json(toErrorResponse({
-        message: 'A set-invoice for this card already exists.',
-      }))
-      next()
-      return
-    }
-
-    // create invoice in lnbits
-    let payment_hash: string | undefined = undefined
-    let payment_request: string | undefined = undefined
-    try {
-      const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
-        out: false,
-        amount,
-        memo: 'Fund your Lightning TipCard',
-        webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${req.params.cardHash}`,
-      }, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      ;({ payment_hash, payment_request } = response.data)
-    } catch (error) {
-      console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
-    }
-    if (payment_hash == null || payment_request == null) {
-      res.status(500).json(toErrorResponse({
-        message: 'Unable to create invoice at lnbits.',
-        code: ErrorCode.UnableToCreateLnbitsInvoice,
-      }))
-      next()
-      return
-    }
-
-    // persist data
-    try {
-      await createCard({
-        cardHash: req.params.cardHash,
-        text,
-        note,
-        invoice: {
-          amount,
-          payment_hash,
-          payment_request,
-          created: Math.round(+ new Date() / 1000),
-          paid: null,
-        },
-        lnurlp: null,
-        setFunding: null,
-        lnbitsWithdrawId: null,
-        landingPageViewed: null,
-        isLockedByBulkWithdraw: false,
-        used: null,
-      })
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json(toErrorResponse({
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      }))
-      next()
-      return
-    }
-    res.json({
-      status: 'success',
-      data: payment_request,
-    })
+    // TODO: remove this when exploit is fixed
+    res.status(500).json(toErrorResponse({
+      message: 'Service temporarily not available.',
+      code: ErrorCode.UnableToCreateLnbitsInvoice,
+    }))
     next()
+
+    // // amount in sats
+    // let amount: number | undefined = undefined
+    // let text = ''
+    // let note = ''
+    // try {
+    //   amount = req.body.amount
+    //   text = req.body.text || ''
+    //   note = req.body.note || ''
+    // } catch (error) {
+    //   console.error(error)
+    // }
+    // if (amount == null || amount < 200 || amount > 2200000) {
+    //   res.status(400).json(toErrorResponse({
+    //     message: 'Invalid amount, has to be between 210 and 2,100,000 sats.',
+    //   }))
+    //   next()
+    //   return
+    // }
+
+    // // check if card/invoice already exists
+    // let card: CardApi | null = null
+    // try {
+    //   const cardRedis = await getCardByHash(req.params.cardHash)
+    //   if (cardRedis != null) {
+    //     card = cardApiFromCardRedis(cardRedis)
+    //   }
+    // } catch (error) {
+    //   console.error(ErrorCode.UnknownDatabaseError, error)
+    //   res.status(500).json(toErrorResponse({
+    //     message: 'An unexpected error occured. Please try again later or contact an admin.',
+    //     code: ErrorCode.UnknownDatabaseError,
+    //   }))
+    //   next()
+    //   return
+    // }
+    // if (card?.invoice != null) {
+    //   if (card.invoice.paid) {
+    //     res.status(400).json(toErrorResponse({
+    //       message: 'Card is already funded.',
+    //     }))
+    //   } else if (card.invoice.amount === amount) {
+    //     res.json({
+    //       status: 'success',
+    //       data: card.invoice.payment_request,
+    //     })
+    //   } else {
+    //     res.status(400).json(toErrorResponse({
+    //       message: `Card already exists with different amount: ${card.invoice.amount}.`,
+    //     }))
+    //   }
+    //   next()
+    //   return
+    // }
+    // if (card?.lnurlp?.paid != null) {
+    //   res.status(400).json(toErrorResponse({
+    //     message: 'Card is already funded.',
+    //   }))
+    //   next()
+    //   return
+    // }
+    // if (card?.setFunding != null) {
+    //   res.status(400).json(toErrorResponse({
+    //     message: 'A set-invoice for this card already exists.',
+    //   }))
+    //   next()
+    //   return
+    // }
+
+    // // create invoice in lnbits
+    // let payment_hash: string | undefined = undefined
+    // let payment_request: string | undefined = undefined
+    // try {
+    //   const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
+    //     out: false,
+    //     amount,
+    //     memo: 'Fund your Lightning TipCard',
+    //     webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${req.params.cardHash}`,
+    //   }, {
+    //     headers: {
+    //       'Content-type': 'application/json',
+    //       'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+    //     },
+    //   })
+    //   ;({ payment_hash, payment_request } = response.data)
+    // } catch (error) {
+    //   console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
+    // }
+    // if (payment_hash == null || payment_request == null) {
+    //   res.status(500).json(toErrorResponse({
+    //     message: 'Unable to create invoice at lnbits.',
+    //     code: ErrorCode.UnableToCreateLnbitsInvoice,
+    //   }))
+    //   next()
+    //   return
+    // }
+
+    // // persist data
+    // try {
+    //   await createCard({
+    //     cardHash: req.params.cardHash,
+    //     text,
+    //     note,
+    //     invoice: {
+    //       amount,
+    //       payment_hash,
+    //       payment_request,
+    //       created: Math.round(+ new Date() / 1000),
+    //       paid: null,
+    //     },
+    //     lnurlp: null,
+    //     setFunding: null,
+    //     lnbitsWithdrawId: null,
+    //     landingPageViewed: null,
+    //     isLockedByBulkWithdraw: false,
+    //     used: null,
+    //   })
+    // } catch (error) {
+    //   console.error(ErrorCode.UnknownDatabaseError, error)
+    //   res.status(500).json(toErrorResponse({
+    //     message: 'An unexpected error occured. Please try again later or contact an admin.',
+    //     code: ErrorCode.UnknownDatabaseError,
+    //   }))
+    //   next()
+    //   return
+    // }
+    // res.json({
+    //   status: 'success',
+    //   data: payment_request,
+    // })
+    // next()
   }, releaseCardMiddleware)
 
   const invoicePaid = async (req: Request, res: Response, next: NextFunction) => {

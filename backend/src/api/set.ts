@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import axios from 'axios'
 import { Router, type Request, type Response } from 'express'
 
@@ -236,199 +238,205 @@ export default (cardLockManager: CardLockManager) => {
   })
 
   router.post('/invoice/:setId', lockSetCardsMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
-    // amount in sats
-    let amountPerCard: number | undefined = undefined
-    let text = ''
-    let note = ''
-    let cardIndices: number[] = []
-    try {
-      amountPerCard = req.body.amountPerCard
-      cardIndices = req.body.cardIndices
-      text = req.body.text || ''
-      note = req.body.note || ''
-    } catch (error) {
-      console.error(error)
-    }
-    if (amountPerCard == null || amountPerCard < 20 || amountPerCard > 2200000) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Invalid amountPerCard, has to be between 21 and 2,100,000 sats.',
-        code: ErrorCode.InvalidInput,
-      })
-      next()
-      return
-    }
-    if (cardIndices.length < 1) {
-      res.status(400).json({
-        status: 'error',
-        message: 'Invalid input, cardIndices missing.',
-        code: ErrorCode.InvalidInput,
-      })
-      next()
-      return
-    }
-
-    // check if set/invoice already exists
-    let set: SetRedis | null = null
-    try {
-      set = await getSetById(req.params.setId)
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      })
-      next()
-      return
-    }
-    if (set?.invoice != null) {
-      if (set.invoice.paid != null) {
-        res.status(400).json({
-          status: 'error',
-          message: 'Set is already funded.',
-          code: ErrorCode.SetAlreadyFunded,
-        })
-      } else {
-        res.status(400).json({
-          status: 'error',
-          message: 'Set invoice already exists.',
-          code: ErrorCode.SetInvoiceAlreadyExists,
-        })
-      }
-      next()
-      return
-    }
-
-    // check if any of the cards already has an invoice or lnurlp
-    const cards: CardRedis[] = []
-    try {
-      await Promise.all(cardIndices.map(async (index) => {
-        const cardHash = hashSha256(`${req.params.setId}/${index}`)
-        const cardRedis = await getCardByHash(cardHash)
-        if (cardRedis != null) {
-          cards.push(cardRedis)
-        }
-      }))
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      })
-      next()
-      return
-    }
-    if (cards.some((card) => card.invoice != null || card.lnurlp != null)) {
-      res.status(400).json({
-        status: 'error',
-        message: 'One or more cards already have an invoice or lnurlp.',
-        code: ErrorCode.CardAlreadyHasInvoice,
-      })
-      next()
-      return
-    }
-
-    // create invoice in lnbits
-    const amount = amountPerCard * cardIndices.length
-    let payment_hash: string | undefined = undefined
-    let payment_request: string | undefined = undefined
-    try {
-      const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
-        out: false,
-        amount,
-        memo: `Fund ${cardIndices.length} Lightning TipCards`,
-        webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
-      }, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      ;({ payment_hash, payment_request } = response.data)
-    } catch (error) {
-      console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
-    }
-    if (payment_hash == null || payment_request == null) {
-      res.status(500).json({
-        status: 'error',
-        message: 'Unable to create invoice at lnbits.',
-        code: ErrorCode.UnableToCreateLnbitsInvoice,
-      })
-      next()
-      return
-    }
-
-    // check if a new set has to be created
-    let insertNewSet = false
-    if (set == null) {
-      insertNewSet = true
-      set = {
-        id: req.params.setId,
-        created: Math.floor(+ new Date() / 1000),
-        date: Math.floor(+ new Date() / 1000),
-        text: '',
-        note: '',
-        invoice: null,
-        settings: null,
-        userId: null,
-      }
-    }
-    set.date = Math.floor(+ new Date() / 1000)
-    set.text = text
-    set.note = note
-    set.invoice = {
-      fundedCards: cardIndices,
-      amount,
-      payment_hash,
-      payment_request,
-      created: Math.round(+ new Date() / 1000),
-      paid: null,
-      expired: false,
-    }
-
-    // persist data
-    try {
-      await Promise.all(cardIndices.map(async (index) => {
-        const cardHash = hashSha256(`${req.params.setId}/${index}`)
-        await createCard({
-          cardHash,
-          text,
-          note,
-          setFunding: {
-            amount: typeof amountPerCard === 'number' ? amountPerCard : 0,
-            created: Math.round(+ new Date() / 1000),
-            paid: null,
-          },
-          invoice: null,
-          lnurlp: null,
-          lnbitsWithdrawId: null,
-          used: null,
-          landingPageViewed: null,
-          isLockedByBulkWithdraw: false,
-        })
-      }))
-      if (insertNewSet) {
-        await createSet(set)
-      } else {
-        await updateSet(set)
-      }
-    } catch (error) {
-      console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json({
-        status: 'error',
-        message: 'An unexpected error occured. Please try again later or contact an admin.',
-        code: ErrorCode.UnknownDatabaseError,
-      })
-      next()
-      return
-    }
-    res.json({
-      status: 'success',
-      data: SetApi.parse(set),
-    })
+    res.status(500).json(toErrorResponse({
+      message: 'Service temporarily not available.',
+      code: ErrorCode.UnableToCreateLnbitsInvoice,
+    }))
     next()
+
+    // // amount in sats
+    // let amountPerCard: number | undefined = undefined
+    // let text = ''
+    // let note = ''
+    // let cardIndices: number[] = []
+    // try {
+    //   amountPerCard = req.body.amountPerCard
+    //   cardIndices = req.body.cardIndices
+    //   text = req.body.text || ''
+    //   note = req.body.note || ''
+    // } catch (error) {
+    //   console.error(error)
+    // }
+    // if (amountPerCard == null || amountPerCard < 20 || amountPerCard > 2200000) {
+    //   res.status(400).json({
+    //     status: 'error',
+    //     message: 'Invalid amountPerCard, has to be between 21 and 2,100,000 sats.',
+    //     code: ErrorCode.InvalidInput,
+    //   })
+    //   next()
+    //   return
+    // }
+    // if (cardIndices.length < 1) {
+    //   res.status(400).json({
+    //     status: 'error',
+    //     message: 'Invalid input, cardIndices missing.',
+    //     code: ErrorCode.InvalidInput,
+    //   })
+    //   next()
+    //   return
+    // }
+
+    // // check if set/invoice already exists
+    // let set: SetRedis | null = null
+    // try {
+    //   set = await getSetById(req.params.setId)
+    // } catch (error) {
+    //   console.error(ErrorCode.UnknownDatabaseError, error)
+    //   res.status(500).json({
+    //     status: 'error',
+    //     message: 'An unexpected error occured. Please try again later or contact an admin.',
+    //     code: ErrorCode.UnknownDatabaseError,
+    //   })
+    //   next()
+    //   return
+    // }
+    // if (set?.invoice != null) {
+    //   if (set.invoice.paid != null) {
+    //     res.status(400).json({
+    //       status: 'error',
+    //       message: 'Set is already funded.',
+    //       code: ErrorCode.SetAlreadyFunded,
+    //     })
+    //   } else {
+    //     res.status(400).json({
+    //       status: 'error',
+    //       message: 'Set invoice already exists.',
+    //       code: ErrorCode.SetInvoiceAlreadyExists,
+    //     })
+    //   }
+    //   next()
+    //   return
+    // }
+
+    // // check if any of the cards already has an invoice or lnurlp
+    // const cards: CardRedis[] = []
+    // try {
+    //   await Promise.all(cardIndices.map(async (index) => {
+    //     const cardHash = hashSha256(`${req.params.setId}/${index}`)
+    //     const cardRedis = await getCardByHash(cardHash)
+    //     if (cardRedis != null) {
+    //       cards.push(cardRedis)
+    //     }
+    //   }))
+    // } catch (error) {
+    //   console.error(ErrorCode.UnknownDatabaseError, error)
+    //   res.status(500).json({
+    //     status: 'error',
+    //     message: 'An unexpected error occured. Please try again later or contact an admin.',
+    //     code: ErrorCode.UnknownDatabaseError,
+    //   })
+    //   next()
+    //   return
+    // }
+    // if (cards.some((card) => card.invoice != null || card.lnurlp != null)) {
+    //   res.status(400).json({
+    //     status: 'error',
+    //     message: 'One or more cards already have an invoice or lnurlp.',
+    //     code: ErrorCode.CardAlreadyHasInvoice,
+    //   })
+    //   next()
+    //   return
+    // }
+
+    // // create invoice in lnbits
+    // const amount = amountPerCard * cardIndices.length
+    // let payment_hash: string | undefined = undefined
+    // let payment_request: string | undefined = undefined
+    // try {
+    //   const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
+    //     out: false,
+    //     amount,
+    //     memo: `Fund ${cardIndices.length} Lightning TipCards`,
+    //     webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
+    //   }, {
+    //     headers: {
+    //       'Content-type': 'application/json',
+    //       'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+    //     },
+    //   })
+    //   ;({ payment_hash, payment_request } = response.data)
+    // } catch (error) {
+    //   console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
+    // }
+    // if (payment_hash == null || payment_request == null) {
+    //   res.status(500).json({
+    //     status: 'error',
+    //     message: 'Unable to create invoice at lnbits.',
+    //     code: ErrorCode.UnableToCreateLnbitsInvoice,
+    //   })
+    //   next()
+    //   return
+    // }
+
+    // // check if a new set has to be created
+    // let insertNewSet = false
+    // if (set == null) {
+    //   insertNewSet = true
+    //   set = {
+    //     id: req.params.setId,
+    //     created: Math.floor(+ new Date() / 1000),
+    //     date: Math.floor(+ new Date() / 1000),
+    //     text: '',
+    //     note: '',
+    //     invoice: null,
+    //     settings: null,
+    //     userId: null,
+    //   }
+    // }
+    // set.date = Math.floor(+ new Date() / 1000)
+    // set.text = text
+    // set.note = note
+    // set.invoice = {
+    //   fundedCards: cardIndices,
+    //   amount,
+    //   payment_hash,
+    //   payment_request,
+    //   created: Math.round(+ new Date() / 1000),
+    //   paid: null,
+    //   expired: false,
+    // }
+
+    // // persist data
+    // try {
+    //   await Promise.all(cardIndices.map(async (index) => {
+    //     const cardHash = hashSha256(`${req.params.setId}/${index}`)
+    //     await createCard({
+    //       cardHash,
+    //       text,
+    //       note,
+    //       setFunding: {
+    //         amount: typeof amountPerCard === 'number' ? amountPerCard : 0,
+    //         created: Math.round(+ new Date() / 1000),
+    //         paid: null,
+    //       },
+    //       invoice: null,
+    //       lnurlp: null,
+    //       lnbitsWithdrawId: null,
+    //       used: null,
+    //       landingPageViewed: null,
+    //       isLockedByBulkWithdraw: false,
+    //     })
+    //   }))
+    //   if (insertNewSet) {
+    //     await createSet(set)
+    //   } else {
+    //     await updateSet(set)
+    //   }
+    // } catch (error) {
+    //   console.error(ErrorCode.UnknownDatabaseError, error)
+    //   res.status(500).json({
+    //     status: 'error',
+    //     message: 'An unexpected error occured. Please try again later or contact an admin.',
+    //     code: ErrorCode.UnknownDatabaseError,
+    //   })
+    //   next()
+    //   return
+    // }
+    // res.json({
+    //   status: 'success',
+    //   data: SetApi.parse(set),
+    // })
+    // next()
   }, releaseSetCardsMiddleware)
 
   const deleteSetRoute = async (req: Request, res: Response, invoiceOnly = false) => {
