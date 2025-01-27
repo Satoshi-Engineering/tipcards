@@ -61,8 +61,8 @@ defineProps({
     required: true,
   },
   backSideImage: {
-    type: String,
-    default: '',
+    type: [String, null],
+    default: null,
   },
   borders: {
     type: Boolean,

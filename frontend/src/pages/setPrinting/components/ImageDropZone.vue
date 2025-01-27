@@ -34,8 +34,8 @@ const props = defineProps({
     default: 'Drop image here',
   },
   modelValue: {
-    type: String,
-    default: undefined,
+    type: [String, null],
+    default: null,
   },
 })
 

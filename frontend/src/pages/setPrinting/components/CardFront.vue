@@ -99,8 +99,8 @@ defineProps({
     required: true,
   },
   frontSideImage: {
-    type: String,
-    default: undefined,
+    type: [String, null],
+    default: null,
   },
   showText: {
     type: Boolean,
