@@ -40,7 +40,6 @@ describe('Web client', () => {
 
   it('navigates to satoshiengineering.com', () => {
     cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
-    cy.log('url start', cy.url().toString())
     cy.get('footer a').last()
       .invoke('attr', 'target', '_self')
       .click()

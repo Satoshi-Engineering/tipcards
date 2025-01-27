@@ -1,7 +1,7 @@
 import tipCards from '@e2e/lib/tipCards'
 
 describe('homePageLinks', () => {
-  beforeEach(() => {
+  before(() => {
     // we don't care about errors on youtube
     cy.origin('https://www.youtube.com', () => {
       cy.on('uncaught:exception', () => false) // this makes sure the test won't fail
@@ -50,7 +50,7 @@ describe('homePageLinks', () => {
       })
   })
 
-  it.skip('should navigate to youtube when the play button in the second slider is clicked', () => {
+  it('should navigate to youtube when the play button in the second slider is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)

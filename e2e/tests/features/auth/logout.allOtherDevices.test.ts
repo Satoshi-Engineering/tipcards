@@ -27,7 +27,6 @@ describe('Feature logoutAllOtherDevices', () => {
     cy.wait('@logoutAllOtherDevices')
 
     for (let i = 0; i < numberOfRefreshTokens; i++) {
-      cy.log('Step', i)
       if (i === activeRefreshTokenIndex) {
         checkIfRefreshTokenIsValid(i)
       } else {
