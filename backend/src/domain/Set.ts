@@ -1,14 +1,14 @@
 import assert from 'node:assert'
 
 import { SetDto } from '@shared/data/trpc/SetDto.js'
+import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
 
 import { asTransaction } from '@backend/database/client.js'
 import type { SetWithSettings } from '@backend/database/data/SetWithSettings.js'
 import hashSha256 from '@backend/services/hashSha256.js'
+import NotFoundError from '@backend/errors/NotFoundError.js'
 
 import CardStatusCollection from './CardStatusCollection.js'
-import { ErrorCode, ErrorWithCode } from '@shared/data/Errors.js'
-import NotFoundError from '@backend/errors/NotFoundError.js'
 
 export default class Set {
   public static async fromId(setId: SetDto['id']): Promise<Set> {
