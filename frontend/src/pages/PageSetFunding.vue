@@ -168,14 +168,10 @@
             <div class="flex flex-col items-center mt-4">
               <ButtonDefault
                 type="submit"
-                :disabled="creatingInvoice || true"
+                :disabled="creatingInvoice"
               >
                 {{ t('setFunding.form.button') }}
               </ButtonDefault>
-              <ParagraphDefault class="text-yellow-dark my-5">
-                ⚠️ We've found a pesky bug and temporarily disabled card funding. <strong>But no worries—withdrawing your sats is fully functional and your funds are safe!</strong><br>
-                Thanks for your patience while we fix this. We'll be back to full speed soon!
-              </ParagraphDefault>
             </div>
           </form>
         </div>

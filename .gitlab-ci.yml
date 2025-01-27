@@ -35,6 +35,7 @@ stages:
   - install
   - setup
   - quality-check
+  - integration-and-e2e
   - build
   - deploy
   - live-check
@@ -45,6 +46,7 @@ include:
   - 'gitlab-ci/install.yml'
   - 'gitlab-ci/setup.yml'
   - 'gitlab-ci/quality-check.yml'
+  - 'gitlab-ci/integration-and-e2e.yml'
   - 'gitlab-ci/build.yml'
   - 'gitlab-ci/deploy.yml'
   - 'gitlab-ci/live-check.yml'
