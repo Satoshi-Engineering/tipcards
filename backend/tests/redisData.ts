@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto'
 import type z from 'zod'
 
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
+
 import { BulkWithdraw } from '@backend/database/deprecated/data/BulkWithdraw.js'
 import { Card } from '@backend/database/deprecated/data/Card.js'
 import { Set } from '@backend/database/deprecated/data/Set.js'
@@ -28,6 +30,7 @@ const Invoice = Card.shape.invoice.removeDefault().unwrap()
 type Invoice = z.infer<typeof Invoice>
 export const createInvoice = (amount: number): Invoice => ({
   amount,
+  feeAmount: caluclateFeeForCard(amount),
   payment_hash: hashSha256(randomUUID()),
   payment_request: hashSha256(randomUUID()),
   created: Math.round(+ new Date() / 1000),
@@ -39,6 +42,7 @@ type LnurlP = z.infer<typeof LnurlP>
 export const createLnurlP = (): LnurlP => ({
   shared: false,
   amount: null,
+  feeAmount: null,
   payment_hash: null,
   id: hashSha256(randomUUID()),
   created: Math.round(+ new Date() / 1000),
@@ -49,6 +53,7 @@ const SetFunding = Card.shape.setFunding.removeDefault().unwrap()
 type SetFunding = z.infer<typeof SetFunding>
 export const createSetFunding = (amount: number): SetFunding => ({
   amount,
+  feeAmount: caluclateFeeForCard(amount),
   created: Math.round(+ new Date() / 1000),
   paid: null,
 })
@@ -80,6 +85,7 @@ type FundedCards = z.infer<typeof FundedCards>
 export const createSetInvoice = (fundedCards: FundedCards, amount: number, paid: null | number = null): Set['invoice'] => ({
   fundedCards,
   amount,
+  feeAmount: caluclateFeeForCard(amount),
   payment_hash: hashSha256(randomUUID()),
   payment_request: hashSha256(randomUUID()),
   created: Math.round(+ new Date() / 1000),

@@ -32,6 +32,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.isLockedByBulkWithdraw,
       amount: 100,
+      feeAmount: 1,
     }))
   })
 
@@ -49,6 +50,7 @@ describe('CardStatus', () => {
       hash: card.hash,
       status: CardStatusEnum.enum.withdrawnByBulkWithdraw,
       amount: 100,
+      feeAmount: 1,
     }))
   })
 })

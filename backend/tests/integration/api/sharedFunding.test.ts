@@ -3,6 +3,8 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
+
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
@@ -45,6 +47,7 @@ describe('sharedFunding', () => {
         lnurlp: expect.objectContaining({
           shared: true,
           amount: null,
+          feeAmount: null,
           payment_hash: null,
           id: expect.any(String),
           created: expect.any(Number),
@@ -80,6 +83,7 @@ describe('sharedFunding', () => {
         lnurlp: expect.objectContaining({
           shared: true,
           amount: null,
+          feeAmount: null,
           payment_hash: null,
           id: expect.any(String),
           created: expect.any(Number),
@@ -97,6 +101,9 @@ describe('sharedFunding', () => {
   })
 
   it('should show the first funding', async () => {
+    const expectedFeeAmount = caluclateFeeForCard(AMOUNT_PER_FUNDING)
+    const expectedAmount = AMOUNT_PER_FUNDING - expectedFeeAmount
+
     const { data } = await frontend.loadCard(cardHash)
     expect(data).toEqual(expect.objectContaining({
       status: 'success',
@@ -111,7 +118,8 @@ describe('sharedFunding', () => {
         used: null,
         lnurlp: expect.objectContaining({
           shared: true,
-          amount: AMOUNT_PER_FUNDING,
+          amount: expectedAmount,
+          feeAmount: expectedFeeAmount,
           payment_hash: expect.arrayContaining([expect.any(String)]),
           id: expect.any(String),
           created: expect.any(Number),
@@ -134,6 +142,9 @@ describe('sharedFunding', () => {
   })
 
   it('should show the fully funded card', async () => {
+    const expectedFeeAmount = caluclateFeeForCard(AMOUNT_PER_FUNDING) * 3
+    const expectedAmount = AMOUNT_PER_FUNDING * 3 - expectedFeeAmount
+
     const { data } = await frontend.loadCard(cardHash)
     expect(data).toEqual(expect.objectContaining({
       status: 'success',
@@ -148,7 +159,8 @@ describe('sharedFunding', () => {
         used: null,
         lnurlp: expect.objectContaining({
           shared: true,
-          amount: AMOUNT_PER_FUNDING * 3,
+          amount: expectedAmount,
+          feeAmount: expectedFeeAmount,
           payment_hash: expect.arrayContaining([expect.any(String), expect.any(String), expect.any(String)]),
           id: expect.any(String),
           created: expect.any(Number),

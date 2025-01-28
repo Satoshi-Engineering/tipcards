@@ -142,6 +142,7 @@ export default class Queries {
     const cardsFundedBySingleInvoice = aliasedTable(CardVersionHasInvoice, 'cardsFundedBySingleInvoice')
     const result = await this.transaction.select({
       amount: Invoice.amount,
+      feeAmount: Invoice.feeAmount,
       paymentHash: Invoice.paymentHash,
       paymentRequest: Invoice.paymentRequest,
       created: Invoice.created,
@@ -157,6 +158,7 @@ export default class Queries {
       .groupBy(Invoice.paymentHash)
     return result.map(({
       amount,
+      feeAmount,
       paymentHash,
       paymentRequest,
       created,
@@ -167,6 +169,7 @@ export default class Queries {
     }) => new InvoiceWithSetFundingInfo(
       {
         amount,
+        feeAmount,
         paymentHash,
         paymentRequest,
         created,
@@ -183,6 +186,7 @@ export default class Queries {
     const result = await this.transaction.select({
       cardVersion: CardVersionHasInvoice.cardVersion,
       amount: Invoice.amount,
+      feeAmount: Invoice.feeAmount,
       paymentHash: Invoice.paymentHash,
       paymentRequest: Invoice.paymentRequest,
       created: Invoice.created,
@@ -199,6 +203,7 @@ export default class Queries {
     return result.reduce<Record<CardVersion['id'], InvoiceWithSetFundingInfo[]>>((acc, {
       cardVersion,
       amount,
+      feeAmount,
       paymentHash,
       paymentRequest,
       created,
@@ -213,6 +218,7 @@ export default class Queries {
       acc[cardVersion].push(new InvoiceWithSetFundingInfo(
         {
           amount,
+          feeAmount,
           paymentHash,
           paymentRequest,
           created,

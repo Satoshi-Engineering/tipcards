@@ -33,6 +33,7 @@ describe('updateCard.bulkWithdraw', () => {
     cardRedis.setFunding = {
       created: dateToUnixTimestamp(invoice.created),
       amount: 250,
+      feeAmount: 3,
       paid: dateOrNullToUnixTimestamp(invoice.paid),
     }
     cardRedis.isLockedByBulkWithdraw = true

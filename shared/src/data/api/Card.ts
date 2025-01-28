@@ -6,6 +6,7 @@ export const Card = z.object({
   note: z.string().default('').describe('shown on status page of card (info for person who funded the card)'),
   invoice: z.object({
     amount: z.number(),
+    feeAmount: z.number(),
     payment_hash: z.string(),
     payment_request: z.string(),
     created: z.number().describe('unix timestamp'),
@@ -15,6 +16,7 @@ export const Card = z.object({
   lnurlp: z.object({
     shared: z.boolean().default(false),
     amount: z.number().nullable(),
+    feeAmount: z.number().nullable(),
     payment_hash: z.string().array().nullable(),
     id: z.union([z.number(), z.string()]),
     created: z.number().describe('unix timestamp'),
@@ -23,6 +25,7 @@ export const Card = z.object({
   }).nullable().default(null).describe('gets created if the user scans an unfunded card with a wallet'),
   setFunding: z.object({
     amount: z.number(),
+    feeAmount: z.number(),
     created: z.number().describe('unix timestamp'),
     paid: z.number().nullable().describe('unix timestamp'),
     expired: z.boolean().default(false),

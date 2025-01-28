@@ -58,6 +58,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp.id = lnurlp.lnbitsId
     cardRedis.lnurlp.shared = true
     cardRedis.lnurlp.amount = 100
+    cardRedis.lnurlp.feeAmount = 1
     const payment_hash = hashSha256(randomUUID())
     cardRedis.lnurlp.payment_hash = [payment_hash]
     await updateCard(cardRedis)
@@ -75,6 +76,7 @@ describe('updateCard', () => {
     // test a second payment
     const payment_hash2 = hashSha256(randomUUID())
     cardRedis.lnurlp.amount += 200
+    cardRedis.lnurlp.feeAmount += 2
     cardRedis.lnurlp.payment_hash = [payment_hash, payment_hash2]
     await updateCard(cardRedis)
 
@@ -92,6 +94,7 @@ describe('updateCard', () => {
     }))
     expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 100,
+      feeAmount: 1,
       paymentHash: payment_hash,
       paymentRequest: expect.any(String),
       created: expect.any(Date),
@@ -105,6 +108,7 @@ describe('updateCard', () => {
     }))
     expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 200,
+      feeAmount: 2,
       paymentHash: payment_hash2,
       paymentRequest: expect.any(String),
       created: expect.any(Date),
@@ -146,6 +150,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp.id = lnurlp.lnbitsId
     cardRedis.lnurlp.shared = true
     cardRedis.lnurlp.amount = 300
+    cardRedis.lnurlp.feeAmount = 3
     cardRedis.lnurlp.payment_hash = [invoice.paymentHash, invoice2.paymentHash]
     cardRedis.lnurlp.paid = Math.round(+ new Date() / 1000)
     await updateCard(cardRedis)

@@ -17,6 +17,10 @@ export default class InvoiceWithSetFundingInfo {
     return Math.floor(this.invoice.amount / this.cardsFundedWithThisInvoice)
   }
 
+  public get feeAmountPerCard(): number {
+    return Math.floor(this.invoice.feeAmount / this.cardsFundedWithThisInvoice)
+  }
+
   public get isPaid(): boolean {
     return this.invoice.paid != null
   }

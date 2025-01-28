@@ -51,6 +51,7 @@ describe('CardStatus', () => {
         hash: imaginedCardId,
         status: CardStatusEnum.enum.unfunded,
         amount: null,
+        feeAmount: null,
       },
     })
   })
@@ -65,6 +66,7 @@ describe('CardStatus', () => {
         hash: testCard.cardHash,
         status: CardStatusEnum.enum.invoiceFunding,
         amount: testCard.amount,
+        feeAmount: testCard.feeAmount,
       },
     })
   })

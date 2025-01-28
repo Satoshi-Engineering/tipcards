@@ -41,7 +41,9 @@ export class SchemaCreator {
     if (field.pk === true) { line += '.primaryKey()' }
     if (field.unique === true) { line += '.unique()' }
     if (field.not_null === undefined || field.not_null === true) { line += '.notNull()' }
-    if (field.dbdefault !== undefined) { line += getDefault(field.dbdefault) }
+    if (field.dbdefault !== undefined) {
+      line += getDefault(field.dbdefault)
+    }
     line += getReferences(this.schema, tableName, field.name)
 
     return line
@@ -124,7 +126,7 @@ export class SchemaCreator {
     return fileData
   }
 
-  createFieldsSection(table:DBMLTable) {
+  createFieldsSection(table: DBMLTable) {
     const drizzleName = translateDrizzleObjectName(table.name)
     const tableName = translateSQLTableName(table.name)
 

@@ -30,6 +30,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.setInvoiceFunding,
       amount: 50,
+      feeAmount: 1,
     }))
   })
 
@@ -47,6 +48,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.setInvoiceExpired,
       amount: 50,
+      feeAmount: 1,
     }))
   })
 
@@ -65,6 +67,7 @@ describe('Card', () => {
       hash: setCard1.hash,
       status: CardStatusEnum.enum.funded,
       amount: 50,
+      feeAmount: 1,
     }))
   })
 })

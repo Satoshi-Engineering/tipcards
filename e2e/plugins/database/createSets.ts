@@ -155,6 +155,7 @@ export const createSetsWithSetFunding = async (
 
     const invoiceValues = {
       amount: 21 * numberOfCardsPerSet,
+      feeAmount: numberOfCardsPerSet,
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created: set.created,
@@ -272,6 +273,7 @@ const createCardsFundedByBulkFunding = async (
 
   const invoice = {
     amount: 210 * indexes.length,
+    feeAmount: 2 * indexes.length,
     paymentHash: randomUUID(),
     paymentRequest: randomUUID(),
     created,
@@ -345,6 +347,7 @@ const createCardWithSharedFundingPartiallyFunded = async (
 
   const invoice = {
     amount: 210,
+    feeAmount: 2,
     paymentHash: randomUUID(),
     paymentRequest: randomUUID(),
     created,
@@ -372,6 +375,7 @@ const createUnfundedCardsWithInvoice = async (
     const created = new Date()
     const invoice = {
       amount: 210,
+      feeAmount: 2,
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,
@@ -407,6 +411,7 @@ const createCardsWithExpiredInvoice = async (
     const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
     const invoice = {
       amount: 210,
+      feeAmount: 2,
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,
@@ -442,6 +447,7 @@ const createCardsFundedByInvoice = async (
     const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
     const invoice = {
       amount: 210,
+      feeAmount: 2,
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,

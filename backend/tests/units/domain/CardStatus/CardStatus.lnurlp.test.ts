@@ -29,6 +29,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpFunding,
       amount: 0,
+      feeAmount: 0,
     }))
   })
 
@@ -46,6 +47,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpExpired,
       amount: 0,
+      feeAmount: 0,
     }))
   })
 
@@ -66,6 +68,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.funded,
       amount: 100,
+      feeAmount: 1,
     }))
   })
 
@@ -85,6 +88,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedFunding,
       amount: 0,
+      feeAmount: 0,
     }))
   })
 
@@ -103,6 +107,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
       amount: 0,
+      feeAmount: 0,
     }))
   })
 
@@ -121,6 +126,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.lnurlpSharedExpiredFunded,
       amount: 100,
+      feeAmount: 1,
     }))
   })
 
@@ -145,6 +151,7 @@ describe('Card', async () => {
       hash: card.hash,
       status: CardStatusEnum.enum.funded,
       amount: 200,
+      feeAmount: 2,
     }))
   })
 })

@@ -4,6 +4,7 @@ import { Router, type Request, type Response } from 'express'
 import type { AccessTokenPayload } from '@shared/data/auth/index.js'
 import { Set as SetApi, type Settings } from '@shared/data/api/Set.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
 import type { Set as SetRedis } from '@backend/database/deprecated/data/Set.js'
@@ -268,6 +269,9 @@ export default (cardLockManager: CardLockManager) => {
       return
     }
 
+    // calculate fee
+    const feeAmountPerCard = caluclateFeeForCard(amountPerCard)
+
     // check if set/invoice already exists
     let set: SetRedis | null = null
     try {
@@ -332,12 +336,14 @@ export default (cardLockManager: CardLockManager) => {
 
     // create invoice in lnbits
     const amount = amountPerCard * cardIndices.length
+    const feeAmount = feeAmountPerCard * cardIndices.length
+    const totalAmount = amount + feeAmount
     let payment_hash: string | undefined = undefined
     let payment_request: string | undefined = undefined
     try {
       const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
         out: false,
-        amount,
+        amount: totalAmount,
         memo: `Fund ${cardIndices.length} Lightning TipCards`,
         webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
       }, {
@@ -381,6 +387,7 @@ export default (cardLockManager: CardLockManager) => {
     set.invoice = {
       fundedCards: cardIndices,
       amount,
+      feeAmount,
       payment_hash,
       payment_request,
       created: Math.round(+ new Date() / 1000),
@@ -397,7 +404,8 @@ export default (cardLockManager: CardLockManager) => {
           text,
           note,
           setFunding: {
-            amount: typeof amountPerCard === 'number' ? amountPerCard : 0,
+            amount: amountPerCard,
+            feeAmount: feeAmountPerCard,
             created: Math.round(+ new Date() / 1000),
             paid: null,
           },

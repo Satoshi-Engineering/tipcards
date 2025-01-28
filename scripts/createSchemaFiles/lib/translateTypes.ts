@@ -8,9 +8,16 @@ export function parseEnums(schema: DBMLSchema) {
   })
 }
 
-export function getDefault(dbdefault: {type:string, value:string}) {
-  if (dbdefault.type === 'boolean' && dbdefault.value === 'null') { return '' }
-  if (dbdefault.type === 'boolean') { return `.default(${dbdefault.value})` }
+export function getDefault(dbdefault: { type: string, value: string }) {
+  if (dbdefault.type === 'boolean' && dbdefault.value === 'null') {
+    return ''
+  }
+  if (dbdefault.type === 'boolean') {
+    return `.default(${dbdefault.value})`
+  }
+  if (dbdefault.type === 'number') {
+    return `.default(${dbdefault.value})`
+  }
 
   throw new Error(`Default value for type:${dbdefault.type} Not Implemented!`)
 }

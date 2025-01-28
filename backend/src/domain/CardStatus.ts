@@ -36,6 +36,7 @@ export default class CardStatus {
 
       status: this.status,
       amount: this.amount,
+      feeAmount: this.feeAmount,
     }
   }
 
@@ -56,6 +57,18 @@ export default class CardStatus {
 
     if (this.isLnurlpFunding) {
       return this.paidAmount
+    }
+
+    return null
+  }
+
+  public get feeAmount(): number | null {
+    if (this.isInvoiceFunding) {
+      return this.invoices[0].feeAmountPerCard
+    }
+
+    if (this.isLnurlpFunding) {
+      return this.paidFeeAmount
     }
 
     return null
@@ -89,6 +102,12 @@ export default class CardStatus {
     return this.invoices
       .filter((invoice) => invoice.isPaid)
       .reduce((sum, invoice) => sum + invoice.amountPerCard, 0)
+  }
+
+  public get paidFeeAmount(): number {
+    return this.invoices
+      .filter((invoice) => invoice.isPaid)
+      .reduce((sum, invoice) => sum + invoice.feeAmountPerCard, 0)
   }
 
   public readonly cardVersion: CardVersion

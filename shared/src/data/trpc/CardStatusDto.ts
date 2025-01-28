@@ -17,6 +17,7 @@ export const CardStatusDto = z.object({
   // calculated fields
   status: CardStatusEnum,
   amount: z.number().nullable().default(null),
+  feeAmount: z.number().nullable().default(null),
 })
 
 export type CardStatusDto = z.infer<typeof CardStatusDto>

@@ -4,6 +4,7 @@ import z from 'zod'
 import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card.js'
 import { getPaidAmount } from '@shared/data/api/cardHelpers.js'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import type { Set } from '@backend/database/deprecated/data/Set.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
@@ -181,6 +182,7 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
 
   // 3. check if a payment request was paid
   let amount = card.lnurlp?.amount != null ? card.lnurlp.amount : 0
+  let feeAmount = card.lnurlp?.feeAmount != null ? card.lnurlp.feeAmount : 0
   const payment_hash: string[] = card.lnurlp?.payment_hash != null ? card.lnurlp.payment_hash : []
   while (paymentRequests.length > 0) {
     const paymentRequest = paymentRequests.shift()
@@ -200,7 +202,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
           amountForPayment = Math.abs(response.data.details.amount)
         }
 
-        amount += Math.round(amountForPayment / 1000)
+        const paidAmount = Math.round(amountForPayment / 1000)
+        const paidFeeAmount = caluclateFeeForCard(paidAmount)
+        amount += paidAmount- paidFeeAmount
+        feeAmount += paidFeeAmount
         payment_hash.push(response.data.details.payment_hash)
       }
     } catch (error) {
@@ -209,6 +214,7 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
   }
   if (amount > 0) {
     card.lnurlp.amount = amount
+    card.lnurlp.feeAmount = feeAmount
     card.lnurlp.payment_hash = payment_hash
 
     if (!card.lnurlp.shared || closeShared) {
@@ -539,6 +545,7 @@ export const getLnurlpForCard = async (card: CardApi, shared: undefined | boolea
     card.lnurlp = {
       shared: typeof shared === 'boolean' ? shared : false,
       amount: null,
+      feeAmount: null,
       payment_hash: null,
       id,
       created: Math.round(+ new Date() / 1000),

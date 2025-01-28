@@ -151,6 +151,7 @@ const getInvoiceForRedisSet = (setRedis: SetRedis): Invoice | null => {
   return ({
     created: new Date(),
     amount: setRedis.invoice.amount,
+    feeAmount: setRedis.invoice.feeAmount,
     paid: unixTimestampOrNullToDate(setRedis.invoice.paid),
     expiresAt: new Date(+ new Date() + 10 * 60 * 1000),
     paymentHash: setRedis.invoice.payment_hash,

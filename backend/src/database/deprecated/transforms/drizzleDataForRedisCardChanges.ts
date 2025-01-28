@@ -1,4 +1,4 @@
-import type { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/schema/index.js'
+import { CardVersion, CardVersionHasInvoice, Invoice, LnurlP, LnurlW } from '@backend/database/schema/index.js'
 import type { DataObjects } from '@backend/database/batchQueries.js'
 import type Queries from '@backend/database/Queries.js'
 import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
@@ -52,12 +52,17 @@ const getDrizzleInvoicesFromRedisLnurlP = async (queries: Queries, lnurlPRedis: 
   invoices: Invoice[],
   cardVersionInvoices: CardVersionHasInvoice[],
 }> => {
-  if (lnurlPRedis?.amount == null || lnurlPRedis?.payment_hash == null) {
+  if (
+    lnurlPRedis?.amount == null
+    || lnurlPRedis?.feeAmount == null
+    || lnurlPRedis?.payment_hash == null
+  ) {
     return { invoices: [], cardVersionInvoices: [] }
   }
   const { invoices } = await getExistingDrizzleInvoicesForPaymentHashes(queries, lnurlPRedis.payment_hash, cardVersion)
   return getNewDrizzleInvoicesForRedisLnurlP(
     lnurlPRedis.amount,
+    lnurlPRedis.feeAmount,
     lnurlPRedis.payment_hash,
     cardVersion,
     invoices,
@@ -86,6 +91,7 @@ const getExistingDrizzleInvoicesForPaymentHashes = async (queries: Queries, paym
 
 const getNewDrizzleInvoicesForRedisLnurlP = (
   targetAmount: Invoice['amount'],
+  targetFeeAmount: Invoice['feeAmount'],
   targetPaymentHashes: Invoice['paymentHash'][],
   cardVersion: CardVersion,
   existingInvoices: Invoice[],
@@ -102,10 +108,13 @@ const getNewDrizzleInvoicesForRedisLnurlP = (
   }
 
   const amountMissing = targetAmount - existingInvoices.reduce((total, invoice) => total + invoice.amount, 0)
+  const feeAmountMissing = targetFeeAmount - existingInvoices.reduce((total, invoice) => total + invoice.feeAmount, 0)
   const amountPerNewInvoice = Math.round(amountMissing / missingPaymentHashes.length)
+  const feeAmountPerNewInvoice = Math.round(feeAmountMissing / missingPaymentHashes.length)
   return {
     invoices: missingPaymentHashes.map((paymentHash) => ({
       amount: amountPerNewInvoice,
+      feeAmount: feeAmountPerNewInvoice,
       paymentHash,
       paymentRequest: '',
       created: new Date(),

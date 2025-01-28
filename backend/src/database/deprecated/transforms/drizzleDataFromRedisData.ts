@@ -117,6 +117,7 @@ export const getDrizzleInvoiceFromRedisInvoice = (invoiceRedis: CardRedis['invoi
   return {
     invoice: {
       amount: invoiceRedis.amount,
+      feeAmount: invoiceRedis.feeAmount,
       paymentHash: invoiceRedis.payment_hash,
       paymentRequest: invoiceRedis.payment_request,
       created: unixTimestampToDate(invoiceRedis.created),

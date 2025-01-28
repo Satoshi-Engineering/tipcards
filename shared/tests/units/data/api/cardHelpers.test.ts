@@ -20,6 +20,7 @@ const cardWithPaidInvoice = {
   ...card,
   invoice: {
     amount: 5607,
+    feeAmount: 56,
     payment_hash: 'someHash',
     payment_request: 'someRequest',
     created: 398639786,
@@ -33,6 +34,7 @@ const cardWithPaidLnurlP = {
   lnurlp: {
     shared: false,
     amount: 3254357,
+    feeAmount: 32544,
     payment_hash: ['someHash'],
     id: 'someId',
     created: 87456,
@@ -45,6 +47,7 @@ const cardWithPaidSetFunding = {
   ...card,
   setFunding: {
     amount: 378962,
+    feeAmount: 3790,
     created: 298646,
     paid: 3978645986,
     expired: false,

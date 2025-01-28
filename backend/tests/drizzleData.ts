@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 
 import { AccessTokenPayload } from '@shared/data/auth/index.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import {
   Set, SetSettings,
@@ -67,8 +68,11 @@ export const createInvoice = (amount: number, ...cardVersions: CardVersion[]): {
   invoice: Invoice,
   cardVersionsHaveInvoice: CardVersionHasInvoice[],
 } => {
+  const amountPerCard = Math.floor(amount / cardVersions.length)
+  const feeAmountPerCard = caluclateFeeForCard(amountPerCard)
   const invoice = {
     amount,
+    feeAmount: feeAmountPerCard * cardVersions.length,
     paymentHash: hashSha256(randomUUID()),
     paymentRequest: hashSha256(randomUUID()),
     created: new Date(),

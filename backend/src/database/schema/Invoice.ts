@@ -2,6 +2,7 @@ import { pgTable, integer, varchar, text, timestamp } from 'drizzle-orm/pg-core'
 
 export const Invoice = pgTable('Invoice', {
   amount: integer('amount').notNull(),
+  feeAmount: integer('feeAmount').notNull().default(0),
   paymentHash: varchar('paymentHash', { length: 64 }).primaryKey().unique().notNull(), // Note: sha256 of payment preimage in hex
   paymentRequest: text('paymentRequest').notNull(),
   created: timestamp('created', { mode: 'date', withTimezone: true }).notNull(),

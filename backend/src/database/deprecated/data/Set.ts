@@ -24,6 +24,7 @@ export const Set = z.object({
   invoice: z.object({
     fundedCards: z.number().array().describe('list of card indexes (e.g. [0, 1, 2, 5, 7])'),
     amount: z.number().describe('total amount'),
+    feeAmount: z.number().describe('total fee amount'),
     payment_hash: z.string(),
     payment_request: z.string(),
     created: z.number().describe('unix timestamp'),

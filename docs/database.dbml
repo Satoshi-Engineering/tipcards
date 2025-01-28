@@ -27,6 +27,7 @@ Table CardVersion {
 
 Table Invoice {
   amount         integer
+  feeAmount      integer     [default: 0]
   paymentHash    varchar(64) [primary key, unique, note: "sha256 of payment preimage in hex"]
   paymentRequest text
   created        DateTime

@@ -53,6 +53,7 @@ describe('updateCard', () => {
     cardRedis.lnurlp = createRedisLnurlP()
     cardRedis.lnurlp.id = lnurlp.lnbitsId
     cardRedis.lnurlp.amount = 100
+    cardRedis.lnurlp.feeAmount = 1
     const payment_hash = hashSha256(randomUUID())
     cardRedis.lnurlp.payment_hash = [payment_hash]
     cardRedis.lnurlp.paid = Math.round(+ new Date() / 1000)
@@ -71,6 +72,7 @@ describe('updateCard', () => {
     }))
     expect(queries.insertOrUpdateInvoice).toHaveBeenCalledWith(expect.objectContaining({
       amount: 100,
+      feeAmount: 1,
       paymentHash: payment_hash,
       paymentRequest: expect.any(String),
       created: expect.any(Date),

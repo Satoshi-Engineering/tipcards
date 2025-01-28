@@ -49,6 +49,12 @@ export const getRedisLnurlPForDrizzleCardVersion = async (queries: Queries, card
       }
       return total + current.amount
     }, null),
+    feeAmount: invoices.reduce((total: number | null, current) => {
+      if (total == null) {
+        return current.feeAmount
+      }
+      return total + current.feeAmount
+    }, null),
     payment_hash: invoices.reduce((total: Invoice['paymentHash'][] | null, current) => {
       if (total == null) {
         return [current.paymentHash]
@@ -93,6 +99,7 @@ export const getRedisInvoiceForDrizzleInvoice = (invoice: Invoice, cards: CardVe
   }
   return {
     amount: invoice.amount,
+    feeAmount: invoice.feeAmount,
     payment_hash: invoice.paymentHash,
     payment_request: invoice.paymentRequest,
     created: dateToUnixTimestamp(invoice.created),
@@ -106,6 +113,7 @@ export const getRedisSetFundingForDrizzleInvoice = (invoice: Invoice, cards: Car
   }
   return {
     amount: Math.round(invoice.amount / cards.length),
+    feeAmount: Math.round(invoice.feeAmount / cards.length),
     created: dateToUnixTimestamp(invoice.created),
     paid: dateOrNullToUnixTimestamp(invoice.paid),
   }

@@ -1,0 +1,1 @@
+ALTER TABLE "Invoice" ADD COLUMN "feeAmount" integer DEFAULT 0 NOT NULL;

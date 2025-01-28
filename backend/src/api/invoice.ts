@@ -4,6 +4,7 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import type { Card as CardApi } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
@@ -47,6 +48,10 @@ export default (
       next()
       return
     }
+
+    // calculate fee
+    const feeAmount = caluclateFeeForCard(amount)
+    const totalAmount = amount + feeAmount
 
     // check if card/invoice already exists
     let card: CardApi | null = null
@@ -103,7 +108,7 @@ export default (
     try {
       const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments`, {
         out: false,
-        amount,
+        amount: totalAmount,
         memo: 'Fund your Lightning TipCard',
         webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${req.params.cardHash}`,
       }, {
@@ -133,6 +138,7 @@ export default (
         note,
         invoice: {
           amount,
+          feeAmount,
           payment_hash,
           payment_request,
           created: Math.round(+ new Date() / 1000),

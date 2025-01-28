@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { vi } from 'vitest'
 
 import { CardStatusDto, CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import { Card, CardVersion } from '@backend/database/schema/index.js'
 
@@ -14,10 +15,11 @@ export const addCard = (card: Card, status?: CardStatusEnum, amount?: number) =>
     card,
     status,
     amount,
+    feeAmount: amount != null ? caluclateFeeForCard(amount): undefined,
   }
 }
 
-const mocks: Record<string, { card: Card, status?: CardStatusEnum, amount?: number }> = {}
+const mocks: Record<string, { card: Card, status?: CardStatusEnum, amount?: number, feeAmount?: number }> = {}
 
 class MockCardStatus {
   public static async latestFromCardHashOrDefault(cardHash: Card['hash']) {
@@ -55,11 +57,16 @@ class MockCardStatus {
     return mocks[this.cardVersion.card].amount ?? null
   }
 
+  public get feeAmount(): number | null {
+    return mocks[this.cardVersion.card].feeAmount ?? null
+  }
+
   public toTrpcResponse(): CardStatusDto {
     return {
       hash: this.cardVersion.card,
       status: CardStatusEnum.enum.unfunded,
-      amount: null,
+      amount: this.amount,
+      feeAmount: this.feeAmount,
     }
   }
 

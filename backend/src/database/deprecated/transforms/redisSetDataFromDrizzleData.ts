@@ -83,6 +83,7 @@ const getRedisInvoiceForDrizzleInvoice = async (
   return {
     fundedCards,
     amount: invoice.amount,
+    feeAmount: invoice.feeAmount,
     payment_hash: invoice.paymentHash,
     payment_request: invoice.paymentRequest,
     created: dateToUnixTimestamp(invoice.created),
