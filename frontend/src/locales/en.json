@@ -17,7 +17,9 @@
     "noItems": "No entries available.",
     "amount": "Amount",
     "set": "Set",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "fee": "Fee",
+    "totalIncludingFee": "Total incl. fee"
   },
   "cardsSummary": {
     "total": "Total",
@@ -223,7 +225,10 @@
       "textHint": "Will be displayed in the recipient's wallet",
       "notePlaceholder": "Notes / handed out to",
       "noteHint": "Will be displayed on the status section of your TipCards set",
-      "button": "Fund card"
+      "button": "Fund card",
+      "labelText": "Message",
+      "textPlaceholder": "Message in the recipient's wallet",
+      "feeInfo": "The {fee}% fee covers outbound routing and infrastructure costs"
     },
     "invoiceText": "Fund your TipCard with {amount} sats:",
     "invoiceExpired": "The lightning invoice for this card has expired. Please reset the TipCard to continue.",

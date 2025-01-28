@@ -15,7 +15,7 @@
     v-if="!disabled && (content != null || $slots.content != null)"
     ref="tooltip"
     role="tooltip"
-    class="tooltip absolute z-50 bg-grey-light max-w-[min(24rem,calc(100vw-(100vw-100%)-16px))] border border-grey p-3 rounded-default opacity-0 transition-opacity pointer-events-none text-sm"
+    class="tooltip absolute z-50 bg-white max-w-[min(24rem,calc(100vw-(100vw-100%)-16px))] border border-grey-medium p-3 shadow-default opacity-0 transition-opacity pointer-events-none text-sm"
     :class="{ 'opacity-100 pointer-events-auto': show }"
     :data-popper-placement="placement"
     @focusin="showTooltip"
@@ -30,7 +30,7 @@
         absolute w-3 h-3 bg-inherit invisible
         before:absolute before:w-3 before:h-3 before:bg-inherit
         before:visible before:rotate-45
-        before:border before:border-grey
+        before:border before:border-grey-medium
       "
       data-popper-arrow
     />

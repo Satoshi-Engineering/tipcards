@@ -1,6 +1,6 @@
 <template>
-  <label class="block mb-4 last:mb-0">
-    <span class="block mb-1 font-lato text-black">
+  <label class="block mb-4 last:mb-0" :class="$attrs.class">
+    <span class="block mb-1 font-lato text-black font-bold">
       {{ label }}
     </span>
     <small
@@ -10,16 +10,17 @@
       {{ description }}
     </small>
     <input
-      v-model="model"
-      v-bind="$attrs"
-      class="w-full my-1 px-3 py-2 border border-[#c4c4c4] rounded-lg focus:outline-none"
+      v-model="modelValue"
+      v-bind="filteredAttrs"
+      :class="$attrs.inputClass"
+      class="w-full my-1 px-3 py-3 border border-[#c4c4c4] focus:border-black rounded-lg focus:outline-none"
       :type="type"
     >
   </label>
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import { computed, useAttrs, type PropType } from 'vue'
 
 defineProps({
   label: {
@@ -36,7 +37,14 @@ defineProps({
   },
 })
 
-const model = defineModel({
+const modelValue = defineModel({
   type: [String, Number] as PropType<string | number>,
+})
+
+const attrs = useAttrs()
+const filteredAttrs = computed(() => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { class: _classAttr, inputClass: _inputClassAttr, ...rest } = attrs
+  return rest
 })
 </script>

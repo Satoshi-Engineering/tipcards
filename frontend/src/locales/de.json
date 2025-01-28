@@ -17,7 +17,9 @@
     "noItems": "Keine Einträge vorhanden.",
     "amount": "Betrag",
     "set": "Set",
-    "loadMore": "Mehr laden"
+    "loadMore": "Mehr laden",
+    "fee": "Gebühr",
+    "totalIncludingFee": "Summe inkl. Gebühr"
   },
   "cardsSummary": {
     "total": "Insgesamt",
@@ -245,7 +247,10 @@
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
       "noteHint": "Wird im Statusbereich der TipCards Übersichtsseite angezeigt",
-      "button": "Jetzt aufladen"
+      "button": "Jetzt aufladen",
+      "labelText": "Nachricht",
+      "textPlaceholder": "Nachricht in der Wallet des Empfängers",
+      "feeInfo": "Die {fee}%-Gebühr deckt die Kosten für ausgehendes Routing und Infrastruktur"
     },
     "invoiceText": "Lade {amount} Sats auf deine TipCard:",
     "invoiceExpired": "Die Rechnung für diese Karte ist bereits abgelaufen. Setze die TipCard zurück um fortzufahren.",
@@ -277,7 +282,7 @@
     "form": {
       "amountLabel": "Betrag pro Karte",
       "smallAmountWarning": "Warnung: Kleine Beträge pro Karte können für die Empfänger zu Problemen beim Abholen ihrer Sats führen. Wir empfehlen ein Minimum von 210 sats pro Karte.",
-      "totalAmountLabel": "Summe",
+      "totalAmountLabel": "Gesamtbetrag",
       "textHint": "Wird in der Wallet des Empfängers angezeigt",
       "notePlaceholder": "Notizen / ausgegeben an",
       "noteHint": "Wird im Statusbereich der TipCards Übersichtsseite angezeigt",

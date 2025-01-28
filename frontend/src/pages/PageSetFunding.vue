@@ -125,55 +125,91 @@
               </template>
             </I18nT>
           </ParagraphDefault>
-          <form @submit.prevent="createInvoice">
-            <label class="block mb-2">
-              <span class="block">
-                {{ t('setFunding.form.amountLabel') }}:
-              </span>
+          <div class="max-w-sm mx-auto mb-8 p-5 shadow-default rounded-default ">
+            <form @submit.prevent="createInvoice">
+              <HeadlineDefault
+                level="h2"
+                class="mb-4"
+              >
+                {{ settings.setName || $t('index.unnamedSetNameFallback') }}
+              </HeadlineDefault>
+              <ParagraphDefault class="mb-4">
+                <IconTipCardSet class="inline-block w-6 h-6 me-2 text-yellow" /> {{ $t('general.cards', numberOfCardsToFund) }}
+              </ParagraphDefault>
               <SatsAmountSelector
+                class="my-4"
+                :label="t('setFunding.form.amountLabel')"
                 :amount-sats="amountPerCard"
-                :rate-btc-eur="rateBtcEur"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
                 :min="21"
                 :max="2100000"
                 :disabled="creatingInvoice"
-                @update="amountPerCard = $event"
+                :fee="0.01"
+                @update:amount-sats="amountPerCard = $event"
+                @update:selected-currency="selectedCurrency = $event"
               />
-              <small v-if="amountPerCard < 210" class="block leading-tight mt-1 mb-3 text-sm text-btcorange-effect">
+              <small v-if="amountPerCard < 210" class="block leading-tight mb-3 text-sm text-yellow-dark">
                 {{ t('setFunding.form.smallAmountWarning') }}
               </small>
-            </label>
-            <div class="block leading-tight my-3">
-              {{ t('setFunding.form.totalAmountLabel') }}:
-              <strong>{{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}</strong>
-            </div>
-            <label class="block mb-2">
-              <input
+              <AmountDisplay
+                :amount-sats="amountTotal"
+                :fee="fee"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+                :label="$t('setFunding.form.totalAmountLabel')"
+              />
+              <AmountDisplay
+                :amount-sats="fee != null ? caluclateFeeForCard(amountTotal) : undefined"
+                :fee="fee"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+              >
+                <template #label>
+                  {{ $t('general.fee') }}
+                  <TooltipDefault
+                    v-if="fee != null"
+                    class="ms-1"
+                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                  >
+                    <IconInfoCircle class="w-4 text-yellow" />
+                  </TooltipDefault>
+                </template>
+              </AmountDisplay>
+              <AmountDisplay
+                strong
+                :amount-sats="amountTotal + (fee != null ? caluclateFeeForCard(amountTotal) : 0)"
+                :fee="fee"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+                :label="$t('general.totalIncludingFee')"
+              />
+              <hr class="my-8">
+              <TextField
                 v-model="text"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
+                :label="$t('funding.form.textPlaceholder')"
+                :placeholder="$t('funding.form.textPlaceholder')"
+                class="w-full my-4"
+                fiat-currency="EUR"
                 :disabled="creatingInvoice"
-              >
-              <small class="block">({{ t('setFunding.form.textHint') }})</small>
-            </label>
-            <label class="block mb-2">
-              <input
+              />
+              <TextField
                 v-model="note"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :placeholder="t('setFunding.form.notePlaceholder')"
+                :label="$t('cards.status.labelNote')"
+                :placeholder="$t('setFunding.form.notePlaceholder')"
+                class="w-full my-4"
                 :disabled="creatingInvoice"
-              >
-              <small class="block">({{ t('setFunding.form.noteHint') }})</small>
-            </label>
-            <div class="flex flex-col items-center mt-4">
-              <ButtonDefault
-                type="submit"
-                :disabled="creatingInvoice"
-              >
-                {{ t('setFunding.form.button') }}
-              </ButtonDefault>
-            </div>
-          </form>
+              />
+              <div class="flex flex-col items-center mt-4">
+                <ButtonDefault
+                  type="submit"
+                  :disabled="creatingInvoice"
+                >
+                  {{ t('funding.form.button') }}
+                </ButtonDefault>
+              </div>
+            </form>
+          </div>
         </div>
         <div
           v-if="userErrorMessage != null"
@@ -212,11 +248,20 @@ import hashSha256 from '@/modules/hashSha256'
 import { getDefaultSettings, decodeCardsSetSettings } from '@/stores/cardsSets'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
+import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
+import type { SelectedCurrency } from '@/modules/useAmountConversion'
+import TextField from '@/components/forms/TextField.vue'
+import AmountDisplay from '@/components/AmountDisplay.vue'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
+import TooltipDefault from '@/components/TooltipDefault.vue'
+import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
+const fee = ref<number | null>(0.01)
+const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const settings = reactive(getDefaultSettings())
 const amountPerCard = ref(2100)

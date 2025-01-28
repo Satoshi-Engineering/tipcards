@@ -228,37 +228,65 @@
             </ButtonWithTooltip>
           </div>
         </div>
-        <div v-else>
+        <div
+          v-else
+          class="w-full max-w-sm mx-auto rounded-default shadow-default p-5 bg-white"
+        >
           <form @submit.prevent="createInvoice">
-            <label class="block mb-2">
-              <SatsAmountSelector
-                :amount-sats="amount"
-                :rate-btc-eur="rateBtcEur"
-                :min="210"
-                :max="2100000"
-                :disabled="creatingInvoice"
-                @update="amount = $event"
-              />
-            </label>
-            <label class="block mb-2">
-              <input
-                v-model="text"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :disabled="creatingInvoice"
-              >
-              <small class="block">({{ t('funding.form.textHint') }})</small>
-            </label>
-            <label class="block mb-2">
-              <input
-                v-model="note"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :placeholder="t('funding.form.notePlaceholder')"
-                :disabled="creatingInvoice"
-              >
-              <small class="block">({{ t('funding.form.noteHint') }})</small>
-            </label>
+            <SatsAmountSelector
+              :amount-sats="amount"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :min="210"
+              :max="2100000"
+              :disabled="creatingInvoice"
+              :fee="fee"
+              fiat-currency="EUR"
+              class="mt-4 mb-2"
+              @update:amount-sats="amount = $event"
+              @update:selected-currency="selectedCurrency = $event"
+            />
+            <AmountDisplay
+              :amount-sats="fee != null ? caluclateFeeForCard(amount) : undefined"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+            >
+              <template #label>
+                {{ $t('general.fee') }}
+                <TooltipDefault
+                  v-if="fee != null"
+                  class="ms-1"
+                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                >
+                  <IconInfoCircle class="w-4 text-yellow" />
+                </TooltipDefault>
+              </template>
+            </AmountDisplay>
+            <AmountDisplay
+              strong
+              :amount-sats="amount + (fee != null ? caluclateFeeForCard(amount) : 0)"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :label="$t('general.totalIncludingFee')"
+            />
+            <hr class="my-8">
+            <TextField
+              v-model="text"
+              :label="$t('funding.form.textPlaceholder')"
+              :placeholder="$t('funding.form.textPlaceholder')"
+              class="w-full my-4"
+              fiat-currency="EUR"
+              :disabled="creatingInvoice"
+            />
+            <TextField
+              v-model="note"
+              :label="$t('cards.status.labelNote')"
+              :placeholder="$t('setFunding.form.notePlaceholder')"
+              class="w-full my-4"
+              :disabled="creatingInvoice"
+            />
             <div class="flex flex-col items-center mt-4">
               <ButtonDefault
                 type="submit"
@@ -269,7 +297,7 @@
             </div>
           </form>
         </div>
-        <div v-if="userErrorMessage != null">
+        <div v-if="userErrorMessage != null" class="max-w-sm mx-auto mt-8">
           <ParagraphDefault class="text-red-500" dir="ltr">
             {{ userErrorMessage }}
           </ParagraphDefault>
@@ -290,14 +318,16 @@
           />
         </div>
       </div>
-      <LinkDefault
-        v-if="!initializing && invoice == null && !shared && !funded && !setFunding"
-        class="mt-12"
-        :disabled="creatingInvoice"
-        @click.prevent="makeShared"
-      >
-        {{ t('funding.shared.buttonMakeShared') }}
-      </LinkDefault>
+      <div class="text-center">
+        <LinkDefault
+          v-if="!initializing && invoice == null && !shared && !funded && !setFunding"
+          class="mt-12"
+          :disabled="creatingInvoice"
+          @click.prevent="makeShared"
+        >
+          {{ t('funding.shared.buttonMakeShared') }}
+        </LinkDefault>
+      </div>
     </CenterContainer>
   </TheLayout>
 </template>
@@ -329,12 +359,20 @@ import { BACKEND_API_ORIGIN } from '@/constants'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
+import TextField from '@/components/forms/TextField.vue'
+import type { SelectedCurrency } from '@/modules/useAmountConversion'
+import AmountDisplay from '@/components/AmountDisplay.vue'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
+import TooltipDefault from '@/components/TooltipDefault.vue'
+import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 
 const DEFAULT_AMOUNT = 2100
 
 const { t } = useI18n()
 const route = useRoute()
 
+const fee = ref<number | undefined>(0.01)
+const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const lnurlp = ref(false)
 const amount = ref(DEFAULT_AMOUNT)
@@ -484,7 +522,7 @@ const makeShared = async () => {
     console.error(error)
   }
   if (shared.value !== true) {
-    userErrorMessage.value = 'Unable to make share funding.'
+    userErrorMessage.value = 'Unable to activate shared funding.'
   }
 
   creatingInvoice.value = false
