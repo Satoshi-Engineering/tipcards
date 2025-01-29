@@ -119,7 +119,7 @@ export default () => {
     return path.href
   }
 
-  const cardDynamicLnurl = (cardHash: CardHash) => LNURL.encode(`${TIPCARDS_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
+  const cardDynamicLnurl = (cardHash: CardHash) => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 
   return {
     landingPages,
