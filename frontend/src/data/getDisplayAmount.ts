@@ -11,3 +11,21 @@ export const cardStatusesUnpaidInvoices: CardStatusEnum[] = [
   CardStatusEnum.enum.lnurlpSharedExpiredFunded,
   CardStatusEnum.enum.setInvoiceExpired,
 ]
+
+export default ({
+  cardStatus,
+  amount,
+  feeAmount,
+}: {
+  cardStatus?: CardStatusEnum
+  amount?: number
+  feeAmount?: number
+}): number | undefined => {
+  if (cardStatus == null || amount == null || feeAmount == null) {
+    return undefined
+  }
+  if (cardStatusesUnpaidInvoices.includes(cardStatus)) {
+    return amount + feeAmount
+  }
+  return amount
+}

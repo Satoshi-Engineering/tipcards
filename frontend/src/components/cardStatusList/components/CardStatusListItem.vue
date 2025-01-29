@@ -102,7 +102,7 @@ import type { CardStatusForHistoryDto } from '@shared/data/trpc/CardStatusForHis
 import { CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto'
 import { getCardsSummaryStatusCategoryForCardStatus } from '@shared/modules/statusCategoryHelpers'
 
-import { cardStatusesUnpaidInvoices } from '@/data/cardStatusesUnpaidInvoices'
+import getDisplayAmount from '@/data/getDisplayAmount'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { dateWithTimeFormat } from '@/utils/dateFormats'
 import CardStatusPill from './CardStatusPill.vue'
@@ -119,13 +119,9 @@ const isCategoryUserActionRequired = computed(() =>
   getCardsSummaryStatusCategoryForCardStatus(props.cardStatus.status) === CardsSummaryCategoriesEnum.enum.userActionRequired,
 )
 
-const amountToDisplay = computed(() => {
-  if (props.cardStatus.status == null || props.cardStatus.amount == null || props.cardStatus.feeAmount == null) {
-    return undefined
-  }
-  if (cardStatusesUnpaidInvoices.includes(props.cardStatus.status)) {
-    return props.cardStatus.amount + props.cardStatus.feeAmount
-  }
-  return props.cardStatus.amount
-})
+const amountToDisplay = computed(() => getDisplayAmount({
+  cardStatus: props.cardStatus.status,
+  amount: props.cardStatus.amount ?? undefined,
+  feeAmount: props.cardStatus.feeAmount ?? undefined,
+}))
 </script>
