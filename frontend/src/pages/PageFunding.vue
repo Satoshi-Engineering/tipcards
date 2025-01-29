@@ -98,6 +98,54 @@
               </template>
             </I18nT>
           </ParagraphDefault>
+          <div class="my-8 max-w-sm mx-auto">
+            <ParagraphDefault class="text-sm text-center">
+              {{ t('funding.shared.currentAmount') }}
+            </ParagraphDefault>
+            <AmountDisplayFinalSum
+              :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
+              :amount-sats="amount"
+              :rate-btc-fiat="rateBtcEur"
+            />
+          </div>
+          <CollapsibleElement
+            :title="$t('general.details')"
+            level="h4"
+            class="max-w-sm mx-auto"
+          >
+            <AmountDisplayForCalculation
+              :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :label="$t('funding.shared.fundedAmount')"
+            />
+            <AmountDisplayForCalculation
+              :amount-sats="lnurlpFeeAmount"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+            >
+              <template #label>
+                {{ $t('general.fee') }}
+                <TooltipDefault
+                  v-if="fee != null"
+                  class="ms-1"
+                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                >
+                  <IconInfoCircle class="w-4 text-yellow" />
+                </TooltipDefault>
+              </template>
+            </AmountDisplayForCalculation>
+            <AmountDisplayForCalculation
+              :amount-sats="amount"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :label="$t('funding.shared.amountOnCard')"
+              strong
+            />
+          </CollapsibleElement>
           <div class="mb-12">
             <LightningQrCode
               class="my-7"
@@ -109,69 +157,63 @@
               {{ amount > 0 ? t('funding.lnurlpFundedExpired') : t('funding.lnurlpExpired') }}
             </p>
           </div>
-          <ParagraphDefault v-if="funded">
-            <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
-              <template #amountAndUnit>
-                <strong class="inline-block">
-                  {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
-                </strong>
-              </template>
-            </I18nT>
-          </ParagraphDefault>
-          <ParagraphDefault v-else-if="amount === 0">
-            {{ t('funding.shared.textEmpty') }}
-          </ParagraphDefault>
-          <ParagraphDefault v-else>
-            <I18nT keypath="funding.shared.textPartiallyFunded">
-              <template #amountAndUnit>
-                <strong class="inline-block">
-                  {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
-                </strong>
-              </template>
-            </I18nT>
-          </ParagraphDefault>
-          <div v-if="!funded">
-            <label class="block mb-2">
-              <input
-                v-model="text"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :disabled="creatingInvoice"
-                @input="updateText"
+          <div v-if="!funded" class="mb-4 max-w-sm mx-auto px-5">
+            <TextField
+              v-model="text"
+              :label="$t('funding.form.textPlaceholder')"
+              :placeholder="$t('funding.form.textPlaceholder')"
+              class="w-full my-4"
+              fiat-currency="EUR"
+              :disabled="creatingInvoice"
+              @update:model-value="updateText"
+            />
+            <TextField
+              v-model="note"
+              :label="$t('cards.status.labelNote')"
+              :placeholder="$t('setFunding.form.notePlaceholder')"
+              class="w-full my-4"
+              :disabled="creatingInvoice"
+              @update:model-value="updateNote"
+            />
+            <ParagraphDefault v-if="funded" class="text-sm">
+              <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
+                <template #amountAndUnit>
+                  <strong class="inline-block">
+                    {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                  </strong>
+                </template>
+              </I18nT>
+            </ParagraphDefault>
+            <ParagraphDefault v-else-if="amount === 0" class="text-sm">
+              {{ t('funding.shared.textEmpty') }}
+            </ParagraphDefault>
+            <ParagraphDefault v-else class="text-sm">
+              <I18nT keypath="funding.shared.textPartiallyFunded">
+                <template #amountAndUnit>
+                  <strong class="inline-block">
+                    {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
+                  </strong>
+                </template>
+              </I18nT>
+            </ParagraphDefault>
+            <ButtonContainer>
+              <ButtonWithTooltip
+                type="submit"
+                :disabled="amount === 0 || finishingShared || funded"
+                :tooltip="amount === 0 ? t('funding.shared.finishDisabledTooltip') : undefined"
+                @click="finishShared"
               >
-              <small class="block">({{ t('funding.form.textHint') }})</small>
-            </label>
-            <label class="block mb-2">
-              <input
-                v-model="note"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :placeholder="t('funding.form.notePlaceholder')"
-                :disabled="creatingInvoice"
-                @input="updateNote"
+                {{ t('funding.shared.buttonFinish') }}
+              </ButtonWithTooltip>
+              <ButtonWithTooltip
+                variant="outline"
+                :disabled="amount > 0 || finishingShared || funded"
+                :tooltip="amount > 0 ? t('funding.resetDisabledTooltip') : undefined"
+                @click="resetInvoice"
               >
-              <small class="block">({{ t('funding.form.noteHint') }})</small>
-            </label>
-          </div>
-          <div
-            class="flex flex-col items-center mt-4"
-          >
-            <ButtonWithTooltip
-              variant="outline"
-              :disabled="amount > 0 || finishingShared || funded"
-              :tooltip="amount > 0 ? t('funding.resetDisabledTooltip') : undefined"
-              @click="resetInvoice"
-            >
-              {{ t('funding.resetInvoice') }}
-            </ButtonWithTooltip>
-            <ButtonWithTooltip
-              type="submit"
-              :disabled="amount === 0 || finishingShared || funded"
-              :tooltip="amount === 0 ? t('funding.shared.finishDisabledTooltip') : undefined"
-              @click="finishShared"
-            >
-              {{ t('funding.shared.buttonFinish') }}
-            </ButtonWithTooltip>
+                {{ t('funding.resetInvoice') }}
+              </ButtonWithTooltip>
+            </ButtonContainer>
           </div>
         </div>
         <div v-else-if="lnurlp" data-test="funding-lnurlp">
@@ -191,6 +233,54 @@
               </template>
             </I18nT>
           </ParagraphDefault>
+          <div class="my-8 max-w-sm mx-auto">
+            <ParagraphDefault class="text-sm text-center">
+              {{ t('funding.lnurlp.currentAmount') }}
+            </ParagraphDefault>
+            <AmountDisplayFinalSum
+              :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
+              :amount-sats="amount"
+              :rate-btc-fiat="rateBtcEur"
+            />
+          </div>
+          <CollapsibleElement
+            :title="$t('general.details')"
+            level="h4"
+            class="max-w-sm mx-auto"
+          >
+            <AmountDisplayForCalculation
+              :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :label="$t('funding.lnurlp.fundedAmount')"
+            />
+            <AmountDisplayForCalculation
+              :amount-sats="lnurlpFeeAmount"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+            >
+              <template #label>
+                {{ $t('general.fee') }}
+                <TooltipDefault
+                  v-if="fee != null"
+                  class="ms-1"
+                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                >
+                  <IconInfoCircle class="w-4 text-yellow" />
+                </TooltipDefault>
+              </template>
+            </AmountDisplayForCalculation>
+            <AmountDisplayForCalculation
+              :amount-sats="amount"
+              :fee="fee"
+              :selected-currency="selectedCurrency"
+              :rate-btc-fiat="rateBtcEur"
+              :label="$t('funding.lnurlp.amountOnCard')"
+              strong
+            />
+          </CollapsibleElement>
           <LightningQrCode
             class="my-7"
             :value="lnurl"
@@ -200,28 +290,24 @@
           <p v-if="lnurlpExpired" class="mb-4">
             {{ t('funding.lnurlpExpired') }}
           </p>
-          <div class="mb-4">
-            <label class="block mb-2">
-              <input
-                v-model="text"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :disabled="funded"
-                @input="updateText"
-              >
-              <small class="block">({{ t('funding.form.textHint') }})</small>
-            </label>
-            <label class="block mb-2">
-              <input
-                v-model="note"
-                type="text"
-                class="w-full border my-1 px-3 py-2 focus:outline-none"
-                :placeholder="t('funding.form.notePlaceholder')"
-                :disabled="funded"
-                @input="updateNote"
-              >
-              <small class="block">({{ t('funding.form.noteHint') }})</small>
-            </label>
+          <div class="mb-4 max-w-sm mx-auto px-5">
+            <TextField
+              v-model="text"
+              :label="$t('funding.form.textPlaceholder')"
+              :placeholder="$t('funding.form.textPlaceholder')"
+              class="w-full my-4"
+              fiat-currency="EUR"
+              :disabled="creatingInvoice || funded"
+              @update:model-value="updateText"
+            />
+            <TextField
+              v-model="note"
+              :label="$t('cards.status.labelNote')"
+              :placeholder="$t('setFunding.form.notePlaceholder')"
+              class="w-full my-4"
+              :disabled="creatingInvoice || funded"
+              @update:model-value="updateNote"
+            />
           </div>
           <div class="flex justify-center">
             <ButtonWithTooltip
@@ -252,7 +338,7 @@
               @update:amount-sats="amount = $event"
               @update:selected-currency="selectedCurrency = $event"
             />
-            <AmountDisplay
+            <AmountDisplayForCalculation
               :amount-sats="fee != null ? caluclateFeeForCard(amount) : undefined"
               :fee="fee"
               :selected-currency="selectedCurrency"
@@ -268,8 +354,8 @@
                   <IconInfoCircle class="w-4 text-yellow" />
                 </TooltipDefault>
               </template>
-            </AmountDisplay>
-            <AmountDisplay
+            </AmountDisplayForCalculation>
+            <AmountDisplayForCalculation
               strong
               :amount-sats="amount + (fee != null ? caluclateFeeForCard(amount) : 0)"
               :fee="fee"
@@ -367,11 +453,13 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import TextField from '@/components/forms/TextField.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
-import AmountDisplay from '@/components/AmountDisplayForCalculation.vue'
+import AmountDisplayForCalculation from '@/components/AmountDisplayForCalculation.vue'
 import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
+import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
+import CollapsibleElement from '@/components/CollapsibleElement.vue'
 
 const DEFAULT_AMOUNT = 2100
 
@@ -395,6 +483,7 @@ const funded = ref(false)
 const creatingInvoice = ref(false)
 const shared = ref(false)
 const finishingShared = ref(false)
+const lnurlpFeeAmount = ref<number>()
 const lnurlpExpired = ref(false)
 const cardStatus = ref<string | undefined>()
 const cardFundedDate = ref<number | undefined>()
@@ -430,6 +519,7 @@ const loadLnurlData = async () => {
   setFunding.value = card?.setFunding != null
   if (typeof card?.lnurlp?.amount === 'number') {
     amount.value = card.lnurlp.amount
+    lnurlpFeeAmount.value = card.lnurlp.feeAmount ?? 0
   } else if (card?.lnurlp?.shared) {
     amount.value = 0
   } else if (typeof card?.setFunding?.amount === 'number') {

@@ -19,7 +19,8 @@
     "set": "Set",
     "loadMore": "Mehr laden",
     "fee": "Gebühr",
-    "totalIncludingFee": "Summe inkl. Gebühr"
+    "totalIncludingFee": "Summe inkl. Gebühr",
+    "details": "Details"
   },
   "cardsSummary": {
     "total": "Insgesamt",
@@ -250,7 +251,7 @@
       "button": "Jetzt aufladen",
       "labelText": "Nachricht",
       "textPlaceholder": "Nachricht in der Wallet des Empfängers",
-      "feeInfo": "Die {fee}%-Gebühr deckt die Kosten für ausgehendes Routing und Infrastruktur"
+      "feeInfo": "Die {fee}%-Gebühr (aufgerundet) deckt die Kosten für ausgehendes Routing und Infrastruktur."
     },
     "invoiceText": "Lade {amount} Sats auf deine TipCard:",
     "payInvoice": "Bitte bezahle folgenden Betrag:",
@@ -258,17 +259,21 @@
     "resetInvoice": "TipCard zurücksetzen",
     "resetDisabledTooltip": "Diese TipCard wurde bereits mit Sats aufgeladen.",
     "lnurlp": {
+      "currentAmount": "Dieser Betrag wurde auf die TipCard aufgeladen:",
       "text": "Zum Aufladen der TipCard den QR Code mit der Wallet App scannen oder auf {buttonOpenInWallet} klicken und in der App den gewünschten Betrag eingeben."
     },
     "lnurlpExpired": "Die Aufladefunktion dieser TipCard ist leider abgelaufen. Setze sie zurück um fortzufahren.",
     "lnurlpFundedExpired": "Die Aufladefunktion dieser TipCard ist leider abgelaufen. Schließe sie ab um fortzufahren.",
     "shared": {
+      "currentAmount": "Derzeit befindet sich dieser Betrag auf der Karte:",
       "text": "Diese TipCard kann gemeinsam von mehreren Personen aufgeladen werden. Den QR Code beliebig oft scannen/bezahlen und danach {buttonFinish}.",
       "textEmpty": "Derzeit befinden sich noch keine Sats auf der Karte. Sobald die Karte zumindest einmal aufgeladen wurde, kann das Aufladen abgeschlossen werden.",
       "textPartiallyFunded": "Die Karte wurde bereits mit {amountAndUnit} aufgeladen. Sobald du die Aufladung abschließt, können die Bitcoin abgeholt werden.",
       "buttonFinish": "Aufladen abschließen",
       "finishDisabledTooltip": "Die Karte muss zuerst aufgeladen werden.",
-      "buttonMakeShared": "TipCard gemeinsam aufladen"
+      "buttonMakeShared": "TipCard gemeinsam aufladen",
+      "fundedAmount": "Summe der bezahlten Beträge",
+      "amountOnCard": "Betrag auf der Karte"
     }
   },
   "setFunding": {

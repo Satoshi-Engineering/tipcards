@@ -12,7 +12,12 @@
     <input
       v-model="modelValue"
       v-bind="filteredAttrs"
-      :class="$attrs.inputClass"
+      :class="[
+        {
+          'opacity-70': $attrs.disabled,
+        },
+        $attrs.inputClass,
+      ]"
       class="w-full my-1 px-3 py-3 border border-[#c4c4c4] focus:border-black rounded-lg focus:outline-none"
       :type="type"
     >
