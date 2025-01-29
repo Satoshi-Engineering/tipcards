@@ -47,11 +47,12 @@ describe('OpenBulkWithdrawTask', () => {
     })
 
     expect(openTask.created).toEqual(lnurlW.created)
-    expect(openTask.sats).toEqual(420)
+    expect(openTask.amount).toEqual(420)
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.setAction,
       created: lnurlW.created,
-      sats: 420,
+      amount: 420,
+      feeAmount: 6,
       cardStatus: CardStatusEnum.enum.isLockedByBulkWithdraw,
       setId: set.id,
       setSettings: SetSettingsDto.parse(setSettings),

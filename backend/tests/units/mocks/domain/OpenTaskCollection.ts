@@ -10,7 +10,8 @@ vi.mock('@backend/domain/OpenTaskCollection.js', () => ({
 export const openTask: OpenTaskDto = {
   type: OpenTaskType.enum.cardAction,
   created: new Date(),
-  sats: 210,
+  amount: 210,
+  feeAmount: 3,
   cardStatus: CardStatusEnum.enum.invoiceFunding,
   cardHash: 'cardHash',
   noteForStatusPage: 'noteForStatusPage',

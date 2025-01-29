@@ -57,7 +57,7 @@ describe('OpenSetFundingTaskBuilder', () => {
     expect(openTask.setSettings).toEqual(setSettings)
     expect(openTask.invoice).toEqual(new InvoiceWithSetFundingInfo(invoice, 2))
     expect(openTask.created).toEqual(invoice.created)
-    expect(openTask.sats).toEqual(invoice.amount)
+    expect(openTask.amount).toEqual(invoice.amount)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.setInvoiceFunding)
   })
 
@@ -102,7 +102,7 @@ describe('OpenSetFundingTaskBuilder', () => {
     expect(openTask.setSettings).toEqual(setSettings)
     expect(openTask.invoice).toEqual(new InvoiceWithSetFundingInfo(invoice, 2))
     expect(openTask.created).toEqual(invoice.created)
-    expect(openTask.sats).toEqual(invoice.amount)
+    expect(openTask.amount).toEqual(invoice.amount)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.setInvoiceExpired)
   })
 })

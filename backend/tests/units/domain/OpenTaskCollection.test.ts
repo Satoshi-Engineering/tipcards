@@ -54,7 +54,8 @@ const getOpenSetTask = () => {
   const expectedOpenSetTaskDto = {
     type: OpenTaskType.enum.setAction,
     created: invoice.created,
-    sats: invoice.amount,
+    amount: invoice.amount,
+    feeAmount: invoice.feeAmount,
     cardStatus: CardStatusEnum.enum.setInvoiceFunding,
     setId: set.id,
     setSettings: SetSettingsDto.parse(setSettings),
@@ -93,7 +94,8 @@ const getOpenBulkWithdrawTask = () => {
   const expectedOpenBulkWithdrawTaskDto = {
     type: OpenTaskType.enum.setAction,
     created: lnurlW.created,
-    sats: 420,
+    amount: 420,
+    feeAmount: 6,
     cardStatus: CardStatusEnum.enum.isLockedByBulkWithdraw,
     setId: set.id,
     setSettings: SetSettingsDto.parse(setSettings),
@@ -115,7 +117,8 @@ const getOpenCardTask = () => {
   const expectedOpenCardTaskDto = {
     type: OpenTaskType.enum.cardAction,
     created: invoice.created,
-    sats: 210,
+    amount: 210,
+    feeAmount: 3,
     cardStatus: CardStatusEnum.enum.invoiceFunding,
     cardHash: card.hash,
     noteForStatusPage: cardVersion.noteForStatusPage,

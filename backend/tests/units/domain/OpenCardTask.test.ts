@@ -28,7 +28,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: invoice.created,
-      sats: 210,
+      amount: 210,
+      feeAmount: 3,
       cardStatus: CardStatusEnum.enum.invoiceFunding,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -52,7 +53,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: invoice.created,
-      sats: 210,
+      amount: 210,
+      feeAmount: 3,
       cardStatus: CardStatusEnum.enum.invoiceExpired,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -74,7 +76,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 0,
+      amount: 0,
+      feeAmount: 0,
       cardStatus: CardStatusEnum.enum.lnurlpFunding,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -98,7 +101,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 0,
+      amount: 0,
+      feeAmount: 0,
       cardStatus: CardStatusEnum.enum.lnurlpExpired,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -122,7 +126,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 0,
+      amount: 0,
+      feeAmount: 0,
       cardStatus: CardStatusEnum.enum.lnurlpSharedFunding,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -147,7 +152,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 0,
+      amount: 0,
+      feeAmount: 0,
       cardStatus: CardStatusEnum.enum.lnurlpSharedExpiredEmpty,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -172,7 +178,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 210,
+      amount: 210,
+      feeAmount: 3,
       cardStatus: CardStatusEnum.enum.lnurlpSharedFunding,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,
@@ -199,7 +206,8 @@ describe('OpenCardTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.cardAction,
       created: lnurlP.created,
-      sats: 210,
+      amount: 210,
+      feeAmount: 3,
       cardStatus: CardStatusEnum.enum.lnurlpSharedExpiredFunded,
       cardHash: card.hash,
       noteForStatusPage: cardVersion.noteForStatusPage,

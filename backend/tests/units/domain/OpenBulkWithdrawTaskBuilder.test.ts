@@ -67,6 +67,6 @@ describe('OpenBulkWithdrawTaskBuilder', () => {
     expect(openTask.set).toEqual(set)
     expect(openTask.setSettings).toEqual(setSettings)
     expect(openTask.created).toEqual(lnurlW1.created)
-    expect(openTask.sats).toEqual(420)
+    expect(openTask.amount).toEqual(420)
   })
 })

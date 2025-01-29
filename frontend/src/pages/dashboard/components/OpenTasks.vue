@@ -59,7 +59,7 @@
               </div>
             </template>
             <template #bottomEnd>
-              {{ $t('general.amountAndUnitSats', { amount: openTask.sats }, openTask.sats) }}
+              {{ $t('general.amountAndUnitSats', { amount: openTask.amount }, openTask.amount) }}
             </template>
           </ItemsListItem>
           <ItemsListItem
@@ -106,7 +106,7 @@
               </div>
             </template>
             <template #bottomEnd>
-              {{ $t('general.amountAndUnitSats', { amount: openTask.sats }, openTask.sats) }}
+              {{ $t('general.amountAndUnitSats', { amount: openTask.amount }, openTask.amount) }}
             </template>
           </ItemsListItem>
         </template>

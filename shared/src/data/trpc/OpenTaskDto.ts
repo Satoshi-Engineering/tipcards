@@ -8,7 +8,8 @@ export const OpenTaskType = z.enum(['cardAction', 'setAction'])
 const OpenTaskBase = z.object({
   type: OpenTaskType,
   created: z.date(),
-  sats: z.number(),
+  amount: z.number(),
+  feeAmount: z.number(),
 })
 
 export const OpenCardTaskDto = OpenTaskBase.extend({

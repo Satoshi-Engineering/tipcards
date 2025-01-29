@@ -34,7 +34,8 @@ describe('OpenSetFundingTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.setAction,
       created: invoice.created,
-      sats: invoice.amount,
+      amount: invoice.amount,
+      feeAmount: invoice.feeAmount,
       cardStatus: CardStatusEnum.enum.setInvoiceFunding,
       setId: set.id,
       setSettings: SetSettingsDto.parse(setSettings),
@@ -62,7 +63,8 @@ describe('OpenSetFundingTask', () => {
     expect(openTask.toTrpcResponse()).toEqual({
       type: OpenTaskType.enum.setAction,
       created: invoice.created,
-      sats: invoice.amount,
+      amount: invoice.amount,
+      feeAmount: invoice.feeAmount,
       cardStatus: CardStatusEnum.enum.setInvoiceExpired,
       setId: set.id,
       setSettings: SetSettingsDto.parse(setSettings),

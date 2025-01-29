@@ -35,7 +35,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.invoices).toEqual(expect.arrayContaining([invoice]))
     expect(openTask.lnurlP).toEqual(null)
     expect(openTask.created).toEqual(invoice.created)
-    expect(openTask.sats).toEqual(invoice.amount)
+    expect(openTask.amount).toEqual(invoice.amount)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.invoiceFunding)
   })
 
@@ -61,7 +61,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.invoices).toEqual(expect.arrayContaining([invoice]))
     expect(openTask.lnurlP).toEqual(null)
     expect(openTask.created).toEqual(invoice.created)
-    expect(openTask.sats).toEqual(invoice.amount)
+    expect(openTask.amount).toEqual(invoice.amount)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.invoiceExpired)
   })
 
@@ -84,7 +84,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(0)
+    expect(openTask.amount).toEqual(0)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpFunding)
   })
 
@@ -109,7 +109,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(0)
+    expect(openTask.amount).toEqual(0)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpExpired)
   })
 
@@ -133,7 +133,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(0)
+    expect(openTask.amount).toEqual(0)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpSharedFunding)
   })
 
@@ -159,7 +159,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(0)
+    expect(openTask.amount).toEqual(0)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpSharedExpiredEmpty)
   })
 
@@ -186,7 +186,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(210)
+    expect(openTask.amount).toEqual(210)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpSharedFunding)
   })
 
@@ -215,7 +215,7 @@ describe('OpenCardTaskBuilder', () => {
     expect(openTask.cardVersion).toEqual(cardVersion)
     expect(openTask.lnurlP).toEqual(lnurlP)
     expect(openTask.created).toEqual(lnurlP.created)
-    expect(openTask.sats).toEqual(210)
+    expect(openTask.amount).toEqual(210)
     expect(openTask.cardStatus).toEqual(CardStatusEnum.enum.lnurlpSharedExpiredFunded)
   })
 })

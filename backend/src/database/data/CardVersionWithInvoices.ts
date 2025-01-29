@@ -21,6 +21,12 @@ export default class CardVersionWithInvoices {
       .reduce((acc, invoice) => acc + invoice.amountPerCard, 0)
   }
 
+  public get feeAmountPaid(): number {
+    return this.invoices
+      .filter(invoice => invoice.isPaid)
+      .reduce((acc, invoice) => acc + invoice.feeAmountPerCard, 0)
+  }
+
   public get amountTotal(): number {
     return this.invoices.reduce((acc, invoice) => acc + invoice.amountPerCard, 0)
   }

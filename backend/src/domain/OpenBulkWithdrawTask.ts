@@ -26,7 +26,8 @@ export class OpenBulkwithdrawTask implements IOpenTask {
     return {
       type: OpenTaskType.enum.setAction,
       created: this.created,
-      sats: this.sats,
+      amount: this.amount,
+      feeAmount: this.feeAmount,
       cardStatus: CardStatusEnum.enum.isLockedByBulkWithdraw,
       setId: this.set.id,
       setSettings: SetSettingsDto.parse(this.setSettings),
@@ -38,8 +39,12 @@ export class OpenBulkwithdrawTask implements IOpenTask {
     return this.lnurlW.created
   }
 
-  public get sats(): number {
+  public get amount(): number {
     return this.cards.reduce((acc, card) => acc + card.amountPaid, 0)
+  }
+
+  public get feeAmount(): number {
+    return this.cards.reduce((acc, card) => acc + card.feeAmountPaid, 0)
   }
 
   private constructor(data: {

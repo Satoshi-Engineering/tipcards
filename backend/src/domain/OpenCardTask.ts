@@ -22,7 +22,8 @@ export class OpenCardTask implements IOpenTask {
     return {
       type: OpenTaskType.enum.cardAction,
       created: this.created,
-      sats: this.sats,
+      amount: this.amount,
+      feeAmount: this.feeAmount,
       cardStatus: this.cardStatus,
       cardHash: this.cardVersion.card,
       noteForStatusPage: this.cardVersion.noteForStatusPage,
@@ -42,13 +43,22 @@ export class OpenCardTask implements IOpenTask {
     }, new Date())
   }
 
-  public get sats(): number {
+  public get amount(): number {
     if (this.lnurlP == null) {
       return this.invoices.reduce((acc, invoice) => acc + invoice.amount, 0)
     }
     return this.invoices
       .filter(invoice => invoice.paid != null)
       .reduce((acc, invoice) => acc + invoice.amount, 0)
+  }
+
+  public get feeAmount(): number {
+    if (this.lnurlP == null) {
+      return this.invoices.reduce((acc, invoice) => acc + invoice.feeAmount, 0)
+    }
+    return this.invoices
+      .filter(invoice => invoice.paid != null)
+      .reduce((acc, invoice) => acc + invoice.feeAmount, 0)
   }
 
   public get cardStatus() {
@@ -72,7 +82,7 @@ export class OpenCardTask implements IOpenTask {
     if (this.lnurlP.expiresAt == null || this.lnurlP.expiresAt >= new Date()) {
       return CardStatusEnum.enum.lnurlpSharedFunding
     }
-    if (this.sats > 0) {
+    if (this.amount > 0) {
       return CardStatusEnum.enum.lnurlpSharedExpiredFunded
     }
     return CardStatusEnum.enum.lnurlpSharedExpiredEmpty
