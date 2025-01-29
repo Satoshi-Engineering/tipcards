@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { Router, type Request, type Response, type NextFunction } from 'express'
 
 import type { Card } from '@shared/data/api/Card.js'
@@ -17,9 +18,11 @@ import {
   lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers.js'
 import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils.js'
+import { LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN, TIPCARDS_API_ORIGIN, VOLT_VAULT_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
+import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 export default (
   applicationEventEmitter: ApplicationEventEmitter,
@@ -31,6 +34,83 @@ export default (
     status: 'ERROR',
     reason: message,
     code,
+  })
+
+  /**
+   * lnurlw withdraw endpoint
+   *
+   * this endpoint is used to validate the estimated fee for payout.
+   * return an error, if it is more than 1 % (our fee we take during funding).
+   */
+  router.get('/withdraw', async (req, res) => {
+    const callback = String(req.query.callback)
+    const k1 = String(req.query.k1)
+    const pr = String(req.query.pr)
+
+    // decode the invoice as the query-route api needs the payee
+    let payee: string
+    let amount: number
+    try {
+      const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments/decode`, {
+        data: pr,
+      }, {
+        headers: {
+          'Content-type': 'application/json',
+          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
+        },
+      })
+      payee = response.data.payee
+      amount = Math.round(response.data.amount_msat / 1000)
+    } catch {
+      res.status(400).json(toErrorResponse({
+        message: 'Unable to decode payment request.',
+      }))
+      return
+    }
+
+    // get the estimates fees
+    let totalFee: number | null = null
+    try {
+      const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes`
+      const response = await axios.get(`${url}?pub_key=${payee}&amt=${amount}`)
+      response.data.routes.forEach((route: { total_fees: string }) => {
+        const routeFee = Number(route.total_fees)
+        if (totalFee == null || routeFee < totalFee) {
+          totalFee = routeFee
+        }
+      })
+    } catch {
+      res.status(400).json(toErrorResponse({
+        message: 'Unable to calculate estimated fee.',
+      }))
+      return
+    }
+    if (totalFee == null) {
+      res.status(400).json(toErrorResponse({
+        message: 'No route found.',
+      }))
+      return
+    }
+
+    // check if the fee is too high
+    const maxAllowedFee = caluclateFeeForCard(amount)
+    if (totalFee > maxAllowedFee) {
+      res.status(400).json(toErrorResponse({
+        message: 'Unable to find valid route. Estimated fees too high.',
+      }))
+      return
+    }
+
+    // send the invoice to lnbits for payout
+    try {
+      const response = await axios.get(`${decodeURIComponent(callback)}&k1=${k1}&pr=${pr}`)
+      res.json(response.data)
+    } catch {
+      res.status(500).json(toErrorResponse({
+        message: 'Unable to resolve LNURL at lnbits.',
+        code: ErrorCode.UnableToResolveLnbitsLnurl,
+      }))
+    }
   })
 
   const routeHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -201,7 +281,18 @@ export default (
 
     try {
       const response = await retryGetRequestWithDelayUntilSuccessWithMaxAttempts(LNURL.decode(lnurl))
-      res.json(response.data)
+      if (
+        VOLT_VAULT_ORIGIN != null
+        && response.data.tag === 'withdrawRequest'
+      ) {
+        const callback = `${TIPCARDS_API_ORIGIN}/api/lnurl/withdraw?callback=${encodeURIComponent(response.data.callback)}`
+        res.json({
+          ...response.data,
+          callback,
+        })
+      } else {
+        res.json(response.data)
+      }
     } catch (error) {
       console.error(
         `Unable to resolve lnurlw at lnbits for card ${card.cardHash}`,

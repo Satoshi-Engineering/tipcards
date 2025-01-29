@@ -25,21 +25,14 @@ if (typeof process.env.NGROK_AUTH_TOKEN === 'string' && process.env.NGROK_AUTH_T
   NGROK_AUTH_TOKEN = process.env.NGROK_AUTH_TOKEN
 }
 
-let REDIS_BASE_PATH = 'tipcards:develop'
-if (typeof process.env.REDIS_BASE_PATH === 'string' && process.env.REDIS_BASE_PATH.length > 0) {
-  REDIS_BASE_PATH = process.env.REDIS_BASE_PATH
-}
-
-let REDIS_URL = '127.0.0.1:6379'
-if (typeof process.env.REDIS_URL === 'string' && process.env.REDIS_URL.length > 0) {
-  REDIS_URL = process.env.REDIS_URL
-}
-
-const REDIS_PASSPHRASE = process.env.REDIS_PASSPHRASE || ''
-
 let LNBITS_ORIGIN = 'https://legend.lnbits.com'
 if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.length > 0) {
   LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
+}
+
+let VOLT_VAULT_ORIGIN: string | null = null
+if (typeof process.env.VOLT_VAULT_ORIGIN === 'string' && process.env.VOLT_VAULT_ORIGIN.length > 0) {
+  VOLT_VAULT_ORIGIN = process.env.VOLT_VAULT_ORIGIN
 }
 
 let TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
@@ -109,10 +102,8 @@ export {
   PROXY_PORT,
   WEB_PORT,
   NGROK_AUTH_TOKEN,
-  REDIS_BASE_PATH,
-  REDIS_URL,
-  REDIS_PASSPHRASE,
   LNBITS_ORIGIN,
+  VOLT_VAULT_ORIGIN,
   TIPCARDS_ORIGIN,
   TIPCARDS_API_ORIGIN,
   CORS_WHITELIST_EXTEND,
