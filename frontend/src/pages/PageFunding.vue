@@ -255,51 +255,53 @@
               </template>
             </I18nT>
           </ParagraphDefault>
-          <div class="my-8 max-w-sm mx-auto">
-            <ParagraphDefault class="text-sm text-center">
-              {{ t('funding.lnurlp.currentAmount') }}
-            </ParagraphDefault>
-            <AmountDisplayFinalSum
-              :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
-              :amount-sats="amount"
-              :rate-btc-fiat="rateBtcEur"
-            />
-          </div>
-          <CollapsibleElement
-            :title="$t('general.details')"
-            level="h4"
-            class="max-w-sm mx-auto"
-          >
-            <AmountDisplayForCalculation
-              :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
-              :selected-currency="selectedCurrency"
-              :rate-btc-fiat="rateBtcEur"
-              :label="$t('funding.lnurlp.fundedAmount')"
-            />
-            <AmountDisplayForCalculation
-              :amount-sats="lnurlpFeeAmount"
-              :selected-currency="selectedCurrency"
-              :rate-btc-fiat="rateBtcEur"
+          <template v-if="funded">
+            <div class="my-8 max-w-sm mx-auto">
+              <ParagraphDefault class="text-sm text-center">
+                {{ t('funding.lnurlp.currentAmount') }}
+              </ParagraphDefault>
+              <AmountDisplayFinalSum
+                :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
+                :amount-sats="amount"
+                :rate-btc-fiat="rateBtcEur"
+              />
+            </div>
+            <CollapsibleElement
+              :title="$t('general.details')"
+              level="h4"
+              class="max-w-sm mx-auto"
             >
-              <template #label>
-                {{ $t('general.fee') }}
-                <TooltipDefault
-                  v-if="fee != null"
-                  class="ms-1"
-                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                >
-                  <IconInfoCircle class="w-4 text-yellow" />
-                </TooltipDefault>
-              </template>
-            </AmountDisplayForCalculation>
-            <AmountDisplayForCalculation
-              :amount-sats="amount"
-              :selected-currency="selectedCurrency"
-              :rate-btc-fiat="rateBtcEur"
-              :label="$t('funding.lnurlp.amountOnCard')"
-              strong
-            />
-          </CollapsibleElement>
+              <AmountDisplayForCalculation
+                :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+                :label="$t('funding.lnurlp.fundedAmount')"
+              />
+              <AmountDisplayForCalculation
+                :amount-sats="lnurlpFeeAmount"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+              >
+                <template #label>
+                  {{ $t('general.fee') }}
+                  <TooltipDefault
+                    v-if="fee != null"
+                    class="ms-1"
+                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                  >
+                    <IconInfoCircle class="w-4 text-yellow" />
+                  </TooltipDefault>
+                </template>
+              </AmountDisplayForCalculation>
+              <AmountDisplayForCalculation
+                :amount-sats="amount"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+                :label="$t('funding.lnurlp.amountOnCard')"
+                strong
+              />
+            </CollapsibleElement>
+          </template>
           <LightningQrCode
             class="my-7"
             :value="lnurl"
