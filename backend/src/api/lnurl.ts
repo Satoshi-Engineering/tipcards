@@ -97,6 +97,7 @@ export default (
     if (totalFee > maxAllowedFee) {
       res.status(400).json(toErrorResponse({
         message: 'Unable to find valid route. Estimated fees too high.',
+        code: ErrorCode.UnableToFindValidRoute,
       }))
       return
     }

@@ -7,6 +7,7 @@ export enum ErrorCode {
   UnableToGetLnurl = 'UnableToGetLnurl',
   WithdrawIdNotFound = 'WithdrawIdNotFound',
   UnableToResolveLnbitsLnurl = 'UnableToResolveLnbitsLnurl',
+  UnableToFindValidRoute = 'UnableToFindValidRoute',
   UnableToCreateLnbitsInvoice = 'UnableToCreateLnbitsInvoice',
   UnableToGetLnbitsInvoiceStatus = 'UnableToGetLnbitsInvoiceStatus',
   UnableToCreateLnbitsWithdrawLink = 'UnableToCreateLnbitsWithdrawLink',
