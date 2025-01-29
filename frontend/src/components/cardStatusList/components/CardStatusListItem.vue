@@ -90,7 +90,7 @@
       </div>
     </template>
     <template #bottomEnd>
-      {{ $t('general.amountAndUnitSats', { amount: cardStatus.amount }, cardStatus.amount || 0) }}
+      {{ $t('general.amountAndUnitSats', { amount: amountToDisplay }, amountToDisplay || 0) }}
     </template>
   </ItemsListItem>
 </template>
@@ -102,6 +102,7 @@ import type { CardStatusForHistoryDto } from '@shared/data/trpc/CardStatusForHis
 import { CardsSummaryCategoriesEnum } from '@shared/data/trpc/CardsSummaryDto'
 import { getCardsSummaryStatusCategoryForCardStatus } from '@shared/modules/statusCategoryHelpers'
 
+import { cardStatusesUnpaidInvoices } from '@/data/cardStatusesUnpaidInvoices'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
 import { dateWithTimeFormat } from '@/utils/dateFormats'
 import CardStatusPill from './CardStatusPill.vue'
@@ -117,4 +118,14 @@ const props = defineProps({
 const isCategoryUserActionRequired = computed(() =>
   getCardsSummaryStatusCategoryForCardStatus(props.cardStatus.status) === CardsSummaryCategoriesEnum.enum.userActionRequired,
 )
+
+const amountToDisplay = computed(() => {
+  if (props.cardStatus.status == null || props.cardStatus.amount == null || props.cardStatus.feeAmount == null) {
+    return undefined
+  }
+  if (cardStatusesUnpaidInvoices.includes(props.cardStatus.status)) {
+    return props.cardStatus.amount + props.cardStatus.feeAmount
+  }
+  return props.cardStatus.amount
+})
 </script>
