@@ -31,7 +31,8 @@
           v-if="headline !== ''"
           level="h1"
           styling="h4"
-          class="mb-1"
+          class="mb-1 leading-tight"
+          :style="{ fontSize: `${fontSizeHeadline}mm` }"
         >
           {{ headline }}
         </HeadlineDefault>
@@ -39,6 +40,7 @@
         <ParagraphDefault
           v-if="copytext !== ''"
           class="text-sm leading-tight"
+          :style="{ fontSize: `${fontSizeText}mm` }"
           v-html="sanitizeI18n(copytext)"
         />
         <!-- eslint-enable vue/no-v-html vue/no-v-text-v-html-on-component -->
@@ -95,6 +97,14 @@ defineProps({
     required: true,
   },
   qrCodeY: {
+    type: Number,
+    required: true,
+  },
+  fontSizeHeadline: {
+    type: Number,
+    required: true,
+  },
+  fontSizeText: {
     type: Number,
     required: true,
   },

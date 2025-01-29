@@ -11,6 +11,8 @@ export const PrintSettings = z.object({
   cardHeight: z.number().positive().default(55),
   cardGapHorizontal: z.number().nonnegative().default(0),
   cardGapVertical: z.number().nonnegative().default(0),
+  fontSizeHeadline: z.number().positive().default(3.7),
+  fontSizeText: z.number().positive().default(3.3),
   qrCodeSize: z.number().positive().default(41),
   qrCodeX: z.number().nonnegative().default(3),
   qrCodeY: z.number().nonnegative().default(7),
@@ -64,8 +66,28 @@ const avery80x50: PrintSettings = {
   printText: true,
 }
 
+const avery60x30: PrintSettings = {
+  ...defaultPrintSettings,
+  name: 'Avery Labels 60x30',
+  link: 'https://www.avery-zweckform.com/blanko-etiketten/rechteckig-60x30-mm',
+  cardWidth: 60,
+  cardHeight: 30,
+  cardGapHorizontal: 5,
+  cardGapVertical: 5,
+  qrCodeSize: 24,
+  qrCodeX: 3,
+  qrCodeY: 3,
+  fontSizeHeadline: 3,
+  fontSizeText: 2.7,
+  minPrintMarginHorizontal: 10,
+  minPrintMarginVertical: 10,
+  printCropMarks: false,
+  printText: true,
+}
+
 export default [
   defaultPrintSettings,
   avery45x45,
   avery80x50,
+  avery60x30,
 ]

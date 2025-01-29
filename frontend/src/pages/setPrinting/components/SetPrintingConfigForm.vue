@@ -51,48 +51,6 @@
         </div>
       </div>
       <div>
-        <strong>Page</strong>
-        <div class="flex gap-3">
-          <TextField
-            v-model="printSettings.pageWidth"
-            label="Width"
-            type="number"
-            min="0"
-            step="1"
-            class="w-full !mb-2"
-          />
-          <TextField
-            v-model="printSettings.pageHeight"
-            label="Height"
-            type="number"
-            min="0"
-            step="1"
-            class="w-full !mb-2"
-          />
-        </div>
-      </div>
-      <div>
-        <strong>Minimum print margins</strong>
-        <div class="flex gap-3">
-          <TextField
-            v-model="printSettings.minPrintMarginHorizontal"
-            label="Horizontal"
-            type="number"
-            min="0"
-            step="1"
-            class="w-full !mb-2"
-          />
-          <TextField
-            v-model="printSettings.minPrintMarginVertical"
-            label="Vertical"
-            type="number"
-            min="0"
-            step="1"
-            class="w-full !mb-2"
-          />
-        </div>
-      </div>
-      <div>
         <strong>Images</strong>
         <div class="flex flex-col gap-3 xs:flex-row lg:flex-col">
           <ImageDropZone
@@ -135,6 +93,80 @@
             class="w-full !mb-2"
           />
         </div>
+      </div>
+      <template v-if="showMoreOptions">
+        <div>
+          <strong>Page</strong>
+          <div class="flex gap-3">
+            <TextField
+              v-model="printSettings.pageWidth"
+              label="Width"
+              type="number"
+              min="0"
+              step="1"
+              class="w-full !mb-2"
+            />
+            <TextField
+              v-model="printSettings.pageHeight"
+              label="Height"
+              type="number"
+              min="0"
+              step="1"
+              class="w-full !mb-2"
+            />
+          </div>
+        </div>
+        <div>
+          <strong>Minimum print margins</strong>
+          <div class="flex gap-3">
+            <TextField
+              v-model="printSettings.minPrintMarginHorizontal"
+              label="Horizontal"
+              type="number"
+              min="0"
+              step="1"
+              class="w-full !mb-2"
+            />
+            <TextField
+              v-model="printSettings.minPrintMarginVertical"
+              label="Vertical"
+              type="number"
+              min="0"
+              step="1"
+              class="w-full !mb-2"
+            />
+          </div>
+        </div>
+        <div>
+          <strong>Font size</strong>
+          <div class="flex gap-3">
+            <TextField
+              v-model="printSettings.fontSizeHeadline"
+              label="Headline"
+              type="number"
+              min="0"
+              step="0.1"
+              class="w-full !mb-2"
+            />
+            <TextField
+              v-model="printSettings.fontSizeText"
+              label="Text"
+              type="number"
+              min="0"
+              step="0.1"
+              class="w-full !mb-2"
+            />
+          </div>
+        </div>
+      </template>
+      <div class="my-5">
+        <LinkDefault
+          type="button"
+          no-bold
+          @click="showMoreOptions = !showMoreOptions"
+        >
+          {{ showMoreOptions ? 'Hide' : 'Show' }} more options
+        </LinkDefault>
       </div>
       <div>
         <strong>Print settings</strong>
@@ -213,7 +245,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, type PropType } from 'vue'
+import { ref, reactive, watch, type PropType } from 'vue'
 
 import printSettingsPresets, { type PrintSettings } from '../printSettingsPresets'
 import TextField from '@/components/forms/TextField.vue'
@@ -248,4 +280,6 @@ watch(() => printSettings.backSideImage, () => {
     emitPrintSettings({ ...printSettings, doubleSidedPrinting: true })
   }
 })
+
+const showMoreOptions = ref(false)
 </script>

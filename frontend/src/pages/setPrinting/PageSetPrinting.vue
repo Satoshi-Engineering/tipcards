@@ -84,6 +84,8 @@
                 :qr-code-y="printSettings.qrCodeY"
                 :show-text="printSettings.printText"
                 :front-side-image="printSettings.frontSideImage"
+                :font-size-headline="printSettings.fontSizeHeadline"
+                :font-size-text="printSettings.fontSizeText"
 
                 :landing-page-url="getLandingPageUrlWithLnurl(page[indexOnPage].hash, set?.settings.landingPage ?? undefined)"
                 :headline="set?.settings.cardHeadline"
