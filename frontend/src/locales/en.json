@@ -246,7 +246,8 @@
       "buttonFinish": "Complete Funding",
       "finishDisabledTooltip": "You need to fund this card first.",
       "buttonMakeShared": "Activate shared funding on this TipCard"
-    }
+    },
+    "payInvoice": "Please pay the following amount:"
   },
   "setFunding": {
     "title": "Set funding",
@@ -271,7 +272,8 @@
     "resetInvoice": "Reset Set Invoice",
     "resetDisabledTooltip": "This set has already been funded",
     "backToSet": "Back to the cards",
-    "invoiceExpired": "The lightning invoice for this set has expired. Please reset it to continue."
+    "invoiceExpired": "The lightning invoice for this set has expired. Please reset it to continue.",
+    "payInvoice": "Pay the following amount to fund {cards}:"
   },
   "index": {
     "buttonLogin": "Login using LNURL-Auth",

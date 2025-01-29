@@ -1,13 +1,23 @@
 <template>
-  <div class="flex my-2">
-    <div class="mb-0 flex-1 font-lato" :class="{ 'font-bold': strong }">
-      <slot name="label">
-        {{ label }}
-      </slot>
-    </div>
-    <div class="text-right">
-      <div :class="{ 'font-bold': strong, 'text-sm': !strong }">
-        {{ amountPrimary }} {{ selectedCurrencyDisplay }}
+  <div
+    class="my-2 py-4 border rounded-default"
+    :class="{
+      'border-red-500': status === 'error',
+      'border-green-500': status === 'success',
+      'border-yellow': status === 'pending'
+    }"
+  >
+    <div class="text-center">
+      <div class="font-bold">
+        <FormatBitcoin
+          v-if="selectedCurrency === 'BTC' && amountPrimaryNumber != null"
+          :value="amountPrimaryNumber"
+          leading-zeros-class="text-white-50"
+        />
+        <template v-else>
+          {{ amountPrimaryString }}
+        </template>
+        {{ selectedCurrencyDisplay }}
       </div>
       <small
         class="block text-xs"
@@ -23,6 +33,7 @@
 import { computed, toRefs, type PropType } from 'vue'
 
 import { useAmountConversion, type SelectedCurrency } from '@/modules/useAmountConversion'
+import FormatBitcoin from './FormatBitcoin.vue'
 
 const props = defineProps({
   label: {
@@ -43,11 +54,15 @@ const props = defineProps({
   },
   selectedCurrency: {
     type: String as PropType<SelectedCurrency>,
-    required: true,
+    default: 'BTC',
   },
   fiatCurrency: {
     type: String,
     default: 'EUR',
+  },
+  status: {
+    type: String,
+    default: 'pending',
   },
 })
 
@@ -59,6 +74,7 @@ const { satsToPrimary, satsToSecondary, selectedCurrencyDisplay, secondaryCurren
   rateBtcFiat,
 })
 
-const amountPrimary = computed(() => props.amountSats != null ? satsToPrimary(props.amountSats) : '')
+const amountPrimaryNumber = computed(() => props.amountSats != null ? Number(satsToPrimary(props.amountSats, 'en')) : undefined)
+const amountPrimaryString = computed(() => props.amountSats != null ? satsToPrimary(props.amountSats) : '')
 const amountSecondary = computed(() => props.amountSats != null ? satsToSecondary(props.amountSats) : '')
 </script>

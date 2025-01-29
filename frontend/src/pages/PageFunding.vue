@@ -15,7 +15,7 @@
       >
         <HeadlineDefault
           level="h1"
-          class="mt-10"
+          class="mt-10 text-center"
         >
           {{ t('funding.headlineSetFunding') }}
         </HeadlineDefault>
@@ -29,7 +29,7 @@
       >
         <HeadlineDefault
           level="h1"
-          class="mt-10"
+          class="mt-10 text-center"
         >
           {{
             usedDate != null
@@ -57,21 +57,27 @@
                 </strong>
               </template>
             </I18nT>
-            <I18nT v-else keypath="funding.invoiceText">
-              <template #amount>
-                <strong>{{ invoiceAmount }}</strong>
-              </template>
-            </I18nT>
           </ParagraphDefault>
           <LightningQrCode
             class="my-7"
             :value="invoice"
             :success="funded"
             :error="invoiceExpired ? t('funding.invoiceExpired') : undefined"
-          />
-          <p v-if="invoiceExpired" class="mb-4">
-            {{ t('funding.invoiceExpired') }}
-          </p>
+          >
+            <template #preQrCode>
+              <ParagraphDefault v-if="invoiceExpired" class="text-sm text-red">
+                {{ t('funding.invoiceExpired') }}
+              </ParagraphDefault>
+              <ParagraphDefault v-else class="text-sm">
+                {{ t('funding.payInvoice') }}
+              </ParagraphDefault>
+              <AmountDisplayFinalSum
+                :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
+                :amount-sats="invoiceAmount"
+                :rate-btc-fiat="rateBtcEur"
+              />
+            </template>
+          </LightningQrCode>
           <div class="flex justify-center">
             <ButtonWithTooltip
               type="submit"
@@ -361,10 +367,11 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import TextField from '@/components/forms/TextField.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
-import AmountDisplay from '@/components/AmountDisplay.vue'
+import AmountDisplay from '@/components/AmountDisplayForCalculation.vue'
 import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
+import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
 
 const DEFAULT_AMOUNT = 2100
 
@@ -406,7 +413,9 @@ const loadLnurlData = async () => {
   usedDate.value = card?.used || undefined
   lnurlp.value = card?.lnurlp != null
   shared.value = !!card?.lnurlp?.shared
-  invoiceAmount.value = card?.invoice?.amount != null ? card.invoice.amount : undefined
+  const invoiceAmountNet = card?.invoice?.amount != null ? card.invoice.amount : undefined
+  const invoiceFeeAmount = card?.invoice?.feeAmount != null ? card.invoice.feeAmount : 0
+  invoiceAmount.value = invoiceAmountNet != null ? invoiceAmountNet + invoiceFeeAmount : undefined
   invoice.value = card?.invoice?.payment_request != null ? card.invoice.payment_request : undefined
   invoiceExpired.value = !!card?.invoice?.expired
   lnurlpExpired.value = !!card?.lnurlp?.expired

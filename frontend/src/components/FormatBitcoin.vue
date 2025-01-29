@@ -27,7 +27,7 @@ const props = defineProps({
   },
   format: {
     type: Object as PropType<NumberOptions>,
-    default: undefined,
+    default: () => ({ minimumFractionDigits: 8, maximumFractionDigits: 8 }),
   },
   leadingZerosClass: {
     type: String,

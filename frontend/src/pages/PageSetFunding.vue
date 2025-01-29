@@ -14,17 +14,10 @@
       >
         <HeadlineDefault
           level="h1"
-          class="mt-10"
+          class="mt-10 text-center"
         >
           {{ t('setFunding.headline') }}
         </HeadlineDefault>
-        <p class="my-3">
-          <I18nT keypath="setFunding.setName">
-            <template #setName>
-              <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
-            </template>
-          </I18nT>
-        </p>
         <p>
           {{ t('setFunding.textFundingNotPossible') }}
         </p>
@@ -41,64 +34,46 @@
       >
         <HeadlineDefault
           level="h1"
-          class="mt-10"
+          class="mt-10 text-center"
         >
           {{ t('setFunding.headline') }}
         </HeadlineDefault>
-        <p class="my-3">
-          <I18nT keypath="setFunding.setName">
-            <template #setName>
-              <strong>{{ settings.setName || t('index.unnamedSetNameFallback') }}</strong>
-            </template>
-          </I18nT>
-        </p>
         <div v-if="invoice != null">
-          <ParagraphDefault>
-            <I18nT
-              v-if="funded"
-              keypath="setFunding.textFunded"
-            >
-              <template #numberOfCardsToFund>
-                {{ numberOfCardsToFund }}
-              </template>
-              <template #amountAndUnitPerCard>
-                <strong
-                  v-if="invoiceAmount != null"
-                  class="inline-block"
-                >
-                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / numberOfCardsToFund / (100 * 1000 * 1000), 8, 8) }) }}
-                </strong>
-              </template>
-            </I18nT>
-            <I18nT
-              v-else
-              keypath="setFunding.invoiceText"
-            >
-              <template #numberOfCardsToFund>
-                {{ numberOfCardsToFund }}
-              </template>
-              <template #amountAndUnit>
-                <strong
-                  v-if="invoiceAmount != null"
-                  class="inline-block"
-                >
-                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(invoiceAmount / (100 * 1000 * 1000), 8, 8) }) }}
-                </strong>
-              </template>
-            </I18nT>
-          </ParagraphDefault>
           <LightningQrCode
             class="my-7"
             :value="invoice"
             :success="funded"
             :error="invoiceExpired ? t('setFunding.invoiceExpired') : undefined"
-          />
-          <p
-            v-if="invoiceExpired"
-            class="mb-4"
           >
-            {{ t('setFunding.invoiceExpired') }}
-          </p>
+            <template #headline>
+              <HeadlineDefault
+                level="h2"
+                class="mb-4 text-start"
+              >
+                {{ settings.setName || $t('index.unnamedSetNameFallback') }}
+              </HeadlineDefault>
+              <ParagraphDefault class="mb-4 text-start">
+                <IconTipCardSet class="inline-block w-6 h-6 me-2 text-yellow" /> {{ $t('general.cards', numberOfCardsToFund) }}
+              </ParagraphDefault>
+            </template>
+            <template #preQrCode>
+              <ParagraphDefault v-if="invoiceExpired" class="text-sm text-red">
+                {{ t('setFunding.invoiceExpired') }}
+              </ParagraphDefault>
+              <ParagraphDefault v-else class="text-sm">
+                <I18nT keypath="setFunding.payInvoice">
+                  <template #cards>
+                    <strong>{{ $t('general.cards', numberOfCardsToFund) }}</strong>
+                  </template>
+                </I18nT>
+              </ParagraphDefault>
+              <AmountDisplayFinalSum
+                :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
+                :amount-sats="invoiceAmount"
+                :rate-btc-fiat="rateBtcEur"
+              />
+            </template>
+          </LightningQrCode>
           <div class="flex justify-center">
             <ButtonWithTooltip
               type="submit"
@@ -113,18 +88,6 @@
           </div>
         </div>
         <div v-else>
-          <ParagraphDefault class="mb-8">
-            <I18nT keypath="setFunding.text">
-              <template #numberOfCardsToFund>
-                {{ numberOfCardsToFund }}
-              </template>
-              <template #amountAndUnit>
-                <strong class="inline-block">
-                  {{ t('setFunding.amountAndUnit', { amount: formatNumber(amountTotal / (100 * 1000 * 1000), 8, 8) }) }}
-                </strong>
-              </template>
-            </I18nT>
-          </ParagraphDefault>
           <div class="max-w-sm mx-auto mb-8 p-5 shadow-default rounded-default ">
             <form @submit.prevent="createInvoice">
               <HeadlineDefault
@@ -241,7 +204,6 @@ import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import ButtonWithTooltip from '@/components/ButtonWithTooltip.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
 import SatsAmountSelector from '@/components/SatsAmountSelector.vue'
-import formatNumber from '@/modules/formatNumber'
 import { rateBtcEur } from '@/modules/rateBtcFiat'
 import { loadCardStatus } from '@/modules/loadCardStatus'
 import hashSha256 from '@/modules/hashSha256'
@@ -251,10 +213,11 @@ import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
 import TextField from '@/components/forms/TextField.vue'
-import AmountDisplay from '@/components/AmountDisplay.vue'
+import AmountDisplay from '@/components/AmountDisplayForCalculation.vue'
 import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
+import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
 
 const { t } = useI18n()
 const route = useRoute()

@@ -253,6 +253,7 @@
       "feeInfo": "Die {fee}%-Gebühr deckt die Kosten für ausgehendes Routing und Infrastruktur"
     },
     "invoiceText": "Lade {amount} Sats auf deine TipCard:",
+    "payInvoice": "Bitte bezahle folgenden Betrag:",
     "invoiceExpired": "Die Rechnung für diese Karte ist bereits abgelaufen. Setze die TipCard zurück um fortzufahren.",
     "resetInvoice": "TipCard zurücksetzen",
     "resetDisabledTooltip": "Diese TipCard wurde bereits mit Sats aufgeladen.",
@@ -293,7 +294,8 @@
     "resetInvoice": "Set-Invoice zurücksetzen",
     "resetDisabledTooltip": "Dieses Set wurde bereits aufgeladen",
     "backToSet": "Zurück zum Set",
-    "invoiceExpired": "Die Rechnung für diess Set ist bereits abgelaufen. Setze die Set-Invoice zurück um fortzufahren."
+    "invoiceExpired": "Die Rechnung für diess Set ist bereits abgelaufen. Setze die Set-Invoice zurück um fortzufahren.",
+    "payInvoice": "Bezahle folgenden Betrag, um {cards} aufzuladen:"
   },
   "index": {
     "buttonLogin": "Einloggen mit LNURL-Auth",

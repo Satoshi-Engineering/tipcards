@@ -10,9 +10,15 @@
       </div>
       <hr class="border-white-50">
     </template>
+    <div v-if="$slots.preQrCode != null" class="max-w-sm p-5 mx-auto text-center">
+      <slot name="preQrCode" />
+    </div>
     <div
       class="w-full max-w-60 py-12 px-5 mx-auto"
-      :class="{ 'py-16': $slots.headline == null && headline == null }"
+      :class="{
+        'py-16': $slots.headline == null && headline == null,
+        'pt-4': $slots.preQrCode != null,
+      }"
     >
       <div class="relative">
         <!-- eslint-disable vue/no-v-html -->
@@ -98,6 +104,10 @@ const props = defineProps({
   headline: {
     type: String,
     default: undefined,
+  },
+  noHeadlineDivider: {
+    type: Boolean,
+    default: false,
   },
   value: {
     type: String,
