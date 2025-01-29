@@ -530,7 +530,7 @@ export const getLnurlpForCard = async (card: CardApi, shared: undefined | boolea
       const response = await axios.post(
         `${LNBITS_ORIGIN}/lnurlp/api/v1/links/`,
         {
-          description: 'Fund your tipcard!',
+          description: 'Fund your tipcard! (1% fee will be deducted)',
           min: 210,
           max: 210000,
           webhook_url: `${TIPCARDS_API_ORIGIN}/api/lnurlp/paid/${card.cardHash}`,
