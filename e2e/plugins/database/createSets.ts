@@ -5,6 +5,10 @@ import type { Sql } from 'postgres'
 
 import type { CardVersion, Invoice, LnurlP } from '../../../backend/src/database/schema/index'
 
+// these are copies of the functions from @shared because importing from there does not work
+const FEE_PERCENTAGE = 0.01
+const calculateFeeForCard = (amountInSats: number): number => Math.ceil(amountInSats * FEE_PERCENTAGE)
+
 export const create100TestSets = async (sql: Sql, userId: string): Promise<SetDto[]> => {
   const set1 = await createSet001(sql, userId)
   const set2 = await createSet002(sql, userId)
@@ -155,7 +159,7 @@ export const createSetsWithSetFunding = async (
 
     const invoiceValues = {
       amount: 21 * numberOfCardsPerSet,
-      feeAmount: numberOfCardsPerSet,
+      feeAmount: calculateFeeForCard(21) * numberOfCardsPerSet,
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created: set.created,
@@ -273,7 +277,7 @@ const createCardsFundedByBulkFunding = async (
 
   const invoice = {
     amount: 210 * indexes.length,
-    feeAmount: 2 * indexes.length,
+    feeAmount: calculateFeeForCard(210) * indexes.length,
     paymentHash: randomUUID(),
     paymentRequest: randomUUID(),
     created,
@@ -347,7 +351,7 @@ const createCardWithSharedFundingPartiallyFunded = async (
 
   const invoice = {
     amount: 210,
-    feeAmount: 2,
+    feeAmount: calculateFeeForCard(210),
     paymentHash: randomUUID(),
     paymentRequest: randomUUID(),
     created,
@@ -375,7 +379,7 @@ const createUnfundedCardsWithInvoice = async (
     const created = new Date()
     const invoice = {
       amount: 210,
-      feeAmount: 2,
+      feeAmount: calculateFeeForCard(210),
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,
@@ -411,7 +415,7 @@ const createCardsWithExpiredInvoice = async (
     const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
     const invoice = {
       amount: 210,
-      feeAmount: 2,
+      feeAmount: calculateFeeForCard(210),
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,
@@ -447,7 +451,7 @@ const createCardsFundedByInvoice = async (
     const created = createRandomTimestampBetweenDateAndNow(cardVersion.created)
     const invoice = {
       amount: 210,
-      feeAmount: 2,
+      feeAmount: calculateFeeForCard(210),
       paymentHash: randomUUID(),
       paymentRequest: randomUUID(),
       created,

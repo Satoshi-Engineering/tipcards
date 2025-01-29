@@ -66,7 +66,7 @@ describe('OpenTasks', () => {
         cy.get(`[data-test-card-hash="${cardHash}"]`)
           .should('exist')
           .should('contain.text', 'Waiting for payment')
-          .should('contain.text', '210 sats')
+          .should('contain.text', '213 sats')
       })
 
       // expired invoice
@@ -74,7 +74,7 @@ describe('OpenTasks', () => {
         cy.get(`[data-test-card-hash="${cardHash}"]`)
           .should('exist')
           .should('contain.text', 'Invoice expired')
-          .should('contain.text', '210 sats')
+          .should('contain.text', '213 sats')
       })
 
       // lnurlp
@@ -98,7 +98,7 @@ describe('OpenTasks', () => {
         cy.get(`[data-test-card-hash="${cardHash}"]`)
           .should('exist')
           .should('contain.text', 'Shared funding in progress')
-          .should('contain.text', '210 sats')
+          .should('contain.text', '213 sats')
       })
 
       // bulk funding
@@ -107,7 +107,7 @@ describe('OpenTasks', () => {
         .should('contain.text', 'Set invoice expired')
         .should('contain.text', 'BulkSet 040')
         .should('contain.text', '100 cards')
-        .should('contain.text', '2100 sats')
+        .should('contain.text', '2200 sats')
 
       // bulk withdraw
       cy.get(`[data-test-set-id="${set5.id}"]`)
