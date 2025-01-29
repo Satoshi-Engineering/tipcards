@@ -22,7 +22,7 @@ import { LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN, TIPCARDS_API_ORIGIN, VOLT_VAULT
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
-import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 export default (
   applicationEventEmitter: ApplicationEventEmitter,
@@ -93,7 +93,7 @@ export default (
     }
 
     // check if the fee is too high
-    const maxAllowedFee = caluclateFeeForCard(amount)
+    const maxAllowedFee = calculateFeeForCard(amount)
     if (totalFee > maxAllowedFee) {
       res.status(400).json(toErrorResponse({
         message: 'Unable to find valid route. Estimated fees too high.',

@@ -1,7 +1,7 @@
 import crypto, { randomUUID } from 'crypto'
 
 import LNURL from '@shared/modules/LNURL/LNURL.js'
-import { caluclateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
 
 import hashSha256 from '@backend/services/hashSha256.js'
 
@@ -18,7 +18,7 @@ export const cardData = {
     return {
       cardHash,
       amount,
-      feeAmount: caluclateFeeForCard(amount),
+      feeAmount: calculateFeeForCard(amount),
       text: `${cardHash} textForWithdraw`,
       note: `${cardHash} noteForStatusPage`,
     }

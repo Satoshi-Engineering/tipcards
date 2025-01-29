@@ -123,7 +123,7 @@
                 :label="$t('setFunding.form.totalAmountLabel')"
               />
               <AmountDisplay
-                :amount-sats="fee != null ? caluclateFeeForCard(amountTotal) : undefined"
+                :amount-sats="fee != null ? calculateFeeForCard(amountTotal) : undefined"
                 :fee="fee"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
@@ -141,7 +141,7 @@
               </AmountDisplay>
               <AmountDisplay
                 strong
-                :amount-sats="amountTotal + (fee != null ? caluclateFeeForCard(amountTotal) : 0)"
+                :amount-sats="amountTotal + (fee != null ? calculateFeeForCard(amountTotal) : 0)"
                 :fee="fee"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
@@ -194,6 +194,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@shared/data/api/Set'
+import { FEE_PERCENTAGE } from '@shared/constants'
+import { calculateFeeForCard } from '@shared/modules/feeCalculation'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -214,7 +216,6 @@ import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
 import TextField from '@/components/forms/TextField.vue'
 import AmountDisplay from '@/components/AmountDisplayForCalculation.vue'
-import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
@@ -223,7 +224,7 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const fee = ref<number | null>(0.01)
+const fee = ref<number | null>(FEE_PERCENTAGE)
 const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const settings = reactive(getDefaultSettings())

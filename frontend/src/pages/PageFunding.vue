@@ -339,7 +339,7 @@
               @update:selected-currency="selectedCurrency = $event"
             />
             <AmountDisplayForCalculation
-              :amount-sats="fee != null ? caluclateFeeForCard(amount) : undefined"
+              :amount-sats="fee != null ? calculateFeeForCard(amount) : undefined"
               :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
@@ -357,7 +357,7 @@
             </AmountDisplayForCalculation>
             <AmountDisplayForCalculation
               strong
-              :amount-sats="amount + (fee != null ? caluclateFeeForCard(amount) : 0)"
+              :amount-sats="amount + (fee != null ? calculateFeeForCard(amount) : 0)"
               :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
@@ -432,6 +432,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
+import { FEE_PERCENTAGE } from '@shared/constants'
+import { calculateFeeForCard } from '@shared/modules/feeCalculation'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'
@@ -454,7 +456,6 @@ import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import TextField from '@/components/forms/TextField.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
 import AmountDisplayForCalculation from '@/components/AmountDisplayForCalculation.vue'
-import { caluclateFeeForCard } from '@shared/modules/feeCalculation'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
@@ -466,7 +467,7 @@ const DEFAULT_AMOUNT = 2100
 const { t } = useI18n()
 const route = useRoute()
 
-const fee = ref<number | undefined>(0.01)
+const fee = ref<number | undefined>(FEE_PERCENTAGE)
 const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const lnurlp = ref(false)
