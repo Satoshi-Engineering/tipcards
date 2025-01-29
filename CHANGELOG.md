@@ -1,6 +1,69 @@
 # Changelog
 
 
+## v0.4.12...v0.4.13
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.12...v0.4.13)
+
+### 🚀 Enhancements
+
+- Add privacy policy page (95a77afc)
+- Place the set printing header dynamically (dd26e405)
+- **backend:** Add fee to invoices (2fe29be2)
+- **frontend:** Add fee calculation and display to invoice creation forms (08e06ee4)
+- **frontend:** Display invoice amount incl. fee (a19733c6)
+- **backend:** Add fee estimation check before lnurlw payout (ee1b6d4a)
+- **e2e:** Add fee calculation test that expects a fail with a fee that is too high (668b08e8)
+- **frontend:** Display the funded amount including fee information for shared and single lnurlp funding (184a64a0)
+- **frontend:** Cards in history that have a status that represents an unpaid invoice now display the gross amount (8fede437)
+- **frontend:** Display gross amount for open tasks with unpaid invoices (151ade9b)
+- **backend:** Add fee info to lnurlp description in lnbits (f371300b)
+- Add font size and new preset to set printing (db46fca3)
+
+### 🩹 Fixes
+
+- Polling sometimes fails on iOS Safari, remove timeout and adjust clearing timeouts (48cdb784)
+- Never clear a potentially existing polling timeout before starting the next timeout (4debdb68)
+- Throw NotFoundError for trpc queries about unsaved setIds so that Telegram sender does not send us a message (c5b9194f)
+- **frontend:** Add keyboard listeners to ImageDropZone for better accessibility (44ff1b79)
+- Disallow more routes in robots.txt (407838ec)
+- Temporarily disable funding (973de7af)
+- Temporarily disable funding" (80bc4637)
+- Enable doubleSidedPrinting as soon as a backSideImage is selected by the user (2f620fa8)
+- **e2e:** Removed randomly failing e2e test that checks if youtube is loaded (7f6e9c77)
+- Lnurl needs to point to BACKEND_API_ORIGIN (16fbd4cd)
+- **backend:** Rename volt vault env variable (9d06c059)
+- **backend:** Increase reconnect timeout and ping interval (c77fd374)
+- **backend:** Add feeAmount to SetApi (dff6f4ec)
+- Calculate fee for setFunding per card i/o for the total (5d86c7e0)
+- **e2e:** Typo in function name (d7e33185)
+- **e2e:** Adjust openTasks test (545bb868)
+- **frontend:** Add missing reset when deleting set invoice (7ceeb82f)
+- **frontend:** Tweak spaces and uppercase letters in texts and add missing texts (9e180bed)
+- Lnurlp single card funding: do not display funding info if card is not funded (473aeb3e)
+
+### 💅 Refactors
+
+- **backend:** Clean up import order (20b805fa)
+- Import FEE_PERCENTAGE from shared constants and fix typo in function name (5df3333c)
+- **backend:** Add feeAmount to OpenTasks (58043fed)
+
+### 🏡 Chore
+
+- Npm audit fix (2381e966)
+- Cleanup e2e tests (92a5d663)
+- **release:** V0.4.13 (ff190b16)
+
+### ✅ Tests
+
+- **e2e:** Disable the failing navigate-to-youtube test and add a test that only checks for a correct target and href (848831e7)
+- **e2e:** Add fee to unfunded landingpage e2e test (e53de118)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.11...v0.4.12
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.11...v0.4.12)
