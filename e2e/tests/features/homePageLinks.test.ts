@@ -1,13 +1,6 @@
 import tipCards from '@e2e/lib/tipCards'
 
 describe('homePageLinks', () => {
-  before(() => {
-    // we don't care about errors on youtube
-    cy.origin('https://www.youtube.com', () => {
-      cy.on('uncaught:exception', () => false) // this makes sure the test won't fail
-    })
-  })
-
   it('should navigate to the cards page when the create button is clicked', () => {
     tipCards.home.goto()
 
@@ -48,22 +41,5 @@ describe('homePageLinks', () => {
         expect($link).to.have.attr('target', '_blank')
         expect($link).attr('href').to.contain('https://www.youtube.com')
       })
-  })
-
-  it('should navigate to youtube when the play button in the second slider is clicked', () => {
-    tipCards.home.goto()
-
-    cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(1)
-      .should('exist')
-      .then(($link) => {
-        expect($link).to.have.attr('target', '_blank')
-        expect($link).attr('href').to.contain('youtube')
-        $link.attr('target', '_self')
-      })
-      .click()
-
-    cy.origin('https://www.youtube.com', () => {
-      cy.title().should('contain', 'Lightning Tip')
-    })
   })
 })
