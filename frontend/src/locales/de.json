@@ -251,7 +251,7 @@
       "button": "Jetzt aufladen",
       "labelText": "Nachricht",
       "textPlaceholder": "Nachricht in der Wallet des Empfängers",
-      "feeInfo": "Die {fee}%-Gebühr (aufgerundet) deckt die Kosten für ausgehendes Routing und Infrastruktur."
+      "feeInfo": "Die {fee}%-Gebühr deckt die Kosten für ausgehendes Routing und Infrastruktur. Die Gebühr wird pro Karte auf ganze sats aufgerundet, beträgt also mindestens 1 sat pro Karte."
     },
     "invoiceText": "Lade {amount} Sats auf deine TipCard:",
     "payInvoice": "Bitte bezahle folgenden Betrag:",
@@ -300,7 +300,8 @@
     "resetDisabledTooltip": "Dieses Set wurde bereits aufgeladen",
     "backToSet": "Zurück zum Set",
     "invoiceExpired": "Die Rechnung für diess Set ist bereits abgelaufen. Setze die Set-Invoice zurück um fortzufahren.",
-    "payInvoice": "Bezahle folgenden Betrag, um {cards} aufzuladen:"
+    "payInvoice": "Bezahle folgenden Betrag, um {cards} aufzuladen:",
+    "invoicePaidSuccessfully": "{cards} wurden erfolgreich aufgeladen."
   },
   "index": {
     "buttonLogin": "Einloggen mit LNURL-Auth",

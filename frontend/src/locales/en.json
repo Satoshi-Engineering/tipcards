@@ -229,7 +229,7 @@
       "button": "Fund card",
       "labelText": "Message",
       "textPlaceholder": "Message in the recipient's wallet",
-      "feeInfo": "The {fee}% fee (rounded up) covers outbound routing and infrastructure costs."
+      "feeInfo": "The {fee}% fee covers the costs of outbound routing and infrastructure. It is rounded up to whole sats per card, resulting in a minimum of 1 sat per card."
     },
     "invoiceText": "Fund your TipCard with {amount} sats:",
     "invoiceExpired": "The lightning invoice for this card has expired. Please reset the TipCard to continue.",
@@ -254,7 +254,8 @@
       "fundedAmount": "Total of the paid amounts",
       "amountOnCard": "Amount on the card"
     },
-    "payInvoice": "Please pay the following amount:"
+    "payInvoice": "Please pay the following amount:",
+    "invoicePaidSuccessfully": "{cards} have been funded successfully."
   },
   "setFunding": {
     "title": "Set funding",

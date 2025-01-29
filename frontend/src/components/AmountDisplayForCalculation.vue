@@ -1,11 +1,11 @@
 <template>
   <div class="flex my-2">
-    <div class="mb-0 flex-1 font-lato" :class="{ 'font-bold': strong }">
+    <div class="mb-0 flex-1 font-lato text-start" :class="{ 'font-bold': strong }">
       <slot name="label">
         {{ label }}
       </slot>
     </div>
-    <div class="text-right">
+    <div class="text-end">
       <div :class="{ 'font-bold': strong, 'text-sm': !strong }">
         {{ amountPrimary }} {{ selectedCurrencyDisplay }}
       </div>

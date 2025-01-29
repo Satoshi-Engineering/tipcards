@@ -69,13 +69,38 @@
                 {{ t('funding.invoiceExpired') }}
               </ParagraphDefault>
               <ParagraphDefault v-else class="text-sm">
-                {{ t('funding.payInvoice') }}
+                {{ !funded ? $t('funding.payInvoice') : $t('funding.headlineFunded') }}
               </ParagraphDefault>
               <AmountDisplayFinalSum
                 :status="funded ? 'success' : invoiceExpired || userErrorMessage != null ? 'error' : 'pending'"
                 :amount-sats="invoiceAmount"
                 :rate-btc-fiat="rateBtcEur"
               />
+              <div class="px-5">
+                <AmountDisplayForCalculation
+                  :amount-sats="invoiceAmountNet"
+                  :selected-currency="selectedCurrency"
+                  :rate-btc-fiat="rateBtcEur"
+                  :label="$t('funding.lnurlp.amountOnCard')"
+                />
+                <AmountDisplayForCalculation
+                  :amount-sats="invoiceFeeAmount"
+                  :selected-currency="selectedCurrency"
+                  :rate-btc-fiat="rateBtcEur"
+                  :label="$t('general.fee')"
+                >
+                  <template #label>
+                    {{ $t('general.fee') }}
+                    <TooltipDefault
+                      v-if="fee != null"
+                      class="ms-1"
+                      :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                    >
+                      <IconInfoCircle class="w-4 text-yellow" />
+                    </TooltipDefault>
+                  </template>
+                </AmountDisplayForCalculation>
+              </div>
             </template>
           </LightningQrCode>
           <div class="flex justify-center">
@@ -115,14 +140,12 @@
           >
             <AmountDisplayForCalculation
               :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.shared.fundedAmount')"
             />
             <AmountDisplayForCalculation
-              :amount-sats="lnurlpFeeAmount"
-              :fee="fee"
+              :amount-sats="lnurlpFeeAmount ?? 0"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
@@ -139,7 +162,6 @@
             </AmountDisplayForCalculation>
             <AmountDisplayForCalculation
               :amount-sats="amount"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.shared.amountOnCard')"
@@ -250,14 +272,12 @@
           >
             <AmountDisplayForCalculation
               :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.lnurlp.fundedAmount')"
             />
             <AmountDisplayForCalculation
               :amount-sats="lnurlpFeeAmount"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
@@ -274,7 +294,6 @@
             </AmountDisplayForCalculation>
             <AmountDisplayForCalculation
               :amount-sats="amount"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.lnurlp.amountOnCard')"
@@ -332,7 +351,6 @@
               :min="210"
               :max="2100000"
               :disabled="creatingInvoice"
-              :fee="fee"
               fiat-currency="EUR"
               class="mt-4 mb-2"
               @update:amount-sats="amount = $event"
@@ -340,7 +358,6 @@
             />
             <AmountDisplayForCalculation
               :amount-sats="fee != null ? calculateFeeForCard(amount) : undefined"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
@@ -358,7 +375,6 @@
             <AmountDisplayForCalculation
               strong
               :amount-sats="amount + (fee != null ? calculateFeeForCard(amount) : 0)"
-              :fee="fee"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('general.totalIncludingFee')"
@@ -479,6 +495,8 @@ const noteIsDirty = ref(false)
 const userErrorMessage = ref<string>()
 const invoice = ref<string>()
 const invoiceAmount = ref<number>()
+const invoiceAmountNet = ref<number>()
+const invoiceFeeAmount = ref<number>()
 const invoiceExpired = ref(false)
 const funded = ref(false)
 const creatingInvoice = ref(false)
@@ -503,9 +521,9 @@ const loadLnurlData = async () => {
   usedDate.value = card?.used || undefined
   lnurlp.value = card?.lnurlp != null
   shared.value = !!card?.lnurlp?.shared
-  const invoiceAmountNet = card?.invoice?.amount != null ? card.invoice.amount : undefined
-  const invoiceFeeAmount = card?.invoice?.feeAmount != null ? card.invoice.feeAmount : 0
-  invoiceAmount.value = invoiceAmountNet != null ? invoiceAmountNet + invoiceFeeAmount : undefined
+  invoiceAmountNet.value = card?.invoice?.amount != null ? card.invoice.amount : undefined
+  invoiceFeeAmount.value = card?.invoice?.feeAmount != null ? card.invoice.feeAmount : 0
+  invoiceAmount.value = invoiceAmountNet.value != null ? invoiceAmountNet.value + invoiceFeeAmount.value : undefined
   invoice.value = card?.invoice?.payment_request != null ? card.invoice.payment_request : undefined
   invoiceExpired.value = !!card?.invoice?.expired
   lnurlpExpired.value = !!card?.lnurlp?.expired

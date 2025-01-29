@@ -61,7 +61,7 @@
                 {{ t('setFunding.invoiceExpired') }}
               </ParagraphDefault>
               <ParagraphDefault v-else class="text-sm">
-                <I18nT keypath="setFunding.payInvoice">
+                <I18nT :keypath="funded ? 'setFunding.invoicePaidSuccessfully' : 'setFunding.payInvoice'">
                   <template #cards>
                     <strong>{{ $t('general.cards', numberOfCardsToFund) }}</strong>
                   </template>
@@ -72,6 +72,22 @@
                 :amount-sats="invoiceAmount"
                 :rate-btc-fiat="rateBtcEur"
               />
+              <AmountDisplayForCalculation
+                :amount-sats="invoiceFeeAmount"
+                :selected-currency="selectedCurrency"
+                :rate-btc-fiat="rateBtcEur"
+              >
+                <template #label>
+                  {{ $t('general.fee') }}
+                  <TooltipDefault
+                    v-if="fee != null"
+                    class="ms-1"
+                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
+                  >
+                    <IconInfoCircle class="w-4 text-yellow" />
+                  </TooltipDefault>
+                </template>
+              </AmountDisplayForCalculation>
             </template>
           </LightningQrCode>
           <div class="flex justify-center">
@@ -108,23 +124,20 @@
                 :min="21"
                 :max="2100000"
                 :disabled="creatingInvoice"
-                :fee="0.01"
                 @update:amount-sats="amountPerCard = $event"
                 @update:selected-currency="selectedCurrency = $event"
               />
               <small v-if="amountPerCard < 210" class="block leading-tight mb-3 text-sm text-yellow-dark">
                 {{ t('setFunding.form.smallAmountWarning') }}
               </small>
-              <AmountDisplay
-                :amount-sats="amountTotal"
-                :fee="fee"
+              <AmountDisplayForCalculation
+                :amount-sats="totalAmountNet"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
                 :label="$t('setFunding.form.totalAmountLabel')"
               />
-              <AmountDisplay
-                :amount-sats="fee != null ? calculateFeeForCard(amountTotal) : undefined"
-                :fee="fee"
+              <AmountDisplayForCalculation
+                :amount-sats="totalFeeAmount"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
               >
@@ -138,11 +151,10 @@
                     <IconInfoCircle class="w-4 text-yellow" />
                   </TooltipDefault>
                 </template>
-              </AmountDisplay>
-              <AmountDisplay
+              </AmountDisplayForCalculation>
+              <AmountDisplayForCalculation
                 strong
-                :amount-sats="amountTotal + (fee != null ? calculateFeeForCard(amountTotal) : 0)"
-                :fee="fee"
+                :amount-sats="totalAmountIncludingFee"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
                 :label="$t('general.totalIncludingFee')"
@@ -215,7 +227,7 @@ import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
 import TextField from '@/components/forms/TextField.vue'
-import AmountDisplay from '@/components/AmountDisplayForCalculation.vue'
+import AmountDisplayForCalculation from '@/components/AmountDisplayForCalculation.vue'
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
@@ -241,7 +253,9 @@ const pollingTimeout = ref<NodeJS.Timeout>()
 
 const funded = computed(() => set.value?.invoice?.paid != null)
 const invoice = computed(() => set.value?.invoice?.payment_request)
-const invoiceAmount = computed(() => set.value?.invoice?.amount)
+const invoiceAmountNet = computed(() => set.value?.invoice?.amount)
+const invoiceFeeAmount = computed(() => set.value?.invoice?.feeAmount)
+const invoiceAmount = computed(() => invoiceAmountNet.value != null && invoiceFeeAmount.value ? invoiceAmountNet.value + invoiceFeeAmount.value : undefined)
 const invoiceExpired = computed(() => !!set.value?.invoice?.expired)
 
 const loadSetData = async () => {
@@ -307,7 +321,10 @@ const numberOfCardsToFund = computed<number>(() => {
   }
   return settings.numberOfCards - cardIndicesNotUnfunded.value.length
 })
-const amountTotal = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
+const totalAmountNet = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
+const totalFeeAmount = computed(() => (calculateFeeForCard(amountPerCard.value)) * numberOfCardsToFund.value)
+const totalAmountIncludingFee = computed(() => totalAmountNet.value + totalFeeAmount.value)
+
 const cardIndicesToFund = computed<number[]>(() => [...new Array(settings.numberOfCards).keys()].filter(index => !cardIndicesNotUnfunded.value.includes(index)))
 
 const createInvoice = async () => {
