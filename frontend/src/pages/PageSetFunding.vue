@@ -366,6 +366,7 @@ const resetInvoice = async () => {
       textIsDirty.value = false
       note.value = undefined
       noteIsDirty.value = false
+      cardIndicesNotUnfunded.value = []
     }
   } catch(error) {
     console.error(error)
