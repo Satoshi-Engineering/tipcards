@@ -18,7 +18,7 @@ import {
   lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers.js'
 import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils.js'
-import { LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN, TIPCARDS_API_ORIGIN, VOLT_VAULT_ORIGIN } from '@backend/constants.js'
+import { TIPCARDS_API_ORIGIN, VOLT_VAULT_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
@@ -47,38 +47,19 @@ export default (
     const k1 = String(req.query.k1)
     const pr = String(req.query.pr)
 
-    // decode the invoice as the query-route api needs the payee
-    let payee: string
-    let amount: number
-    try {
-      const response = await axios.post(`${LNBITS_ORIGIN}/api/v1/payments/decode`, {
-        data: pr,
-      }, {
-        headers: {
-          'Content-type': 'application/json',
-          'X-Api-Key': LNBITS_INVOICE_READ_KEY,
-        },
-      })
-      payee = response.data.payee
-      amount = Math.round(response.data.amount_msat / 1000)
-    } catch {
-      res.status(400).json(toErrorResponse({
-        message: 'Unable to decode payment request.',
-      }))
-      return
-    }
-
     // get the estimates fees
     let totalFee: number | null = null
+    let amount: number | null = null
     try {
-      const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes`
-      const response = await axios.get(`${url}?pub_key=${payee}&amt=${amount}`)
-      response.data.routes.forEach((route: { total_fees: string }) => {
+      const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes-for-pay-req`
+      const response = await axios.get(`${url}?pay_req=${pr}`)
+      response.data.queryRoutesResponse.routes.forEach((route: { total_fees: string }) => {
         const routeFee = Number(route.total_fees)
         if (totalFee == null || routeFee < totalFee) {
           totalFee = routeFee
         }
       })
+      amount = Number(response.data.payReq.num_satoshis)
     } catch {
       res.status(400).json(toErrorResponse({
         message: 'Unable to calculate estimated fee.',
