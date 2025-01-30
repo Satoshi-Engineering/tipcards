@@ -14,7 +14,7 @@ import '../lib/initAxios.js'
 const frontend = new FrontendSimulator()
 const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
 
-const AMOUNT_PER_FUNDING = 210
+const AMOUNT_PER_FUNDING = 213
 
 const cardHash = cardData.generateCardHash()
 const lnurl = cardData.generateLnurl(cardHash)
