@@ -72,22 +72,19 @@
                 :amount-sats="invoiceAmount"
                 :rate-btc-fiat="rateBtcEur"
               />
-              <AmountDisplayForCalculation
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="invoiceFeeAmount"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
               >
                 <template #label>
                   {{ $t('general.fee') }}
-                  <TooltipDefault
-                    v-if="fee != null"
+                  <FeeInfoIconWithTooltip
                     class="ms-1"
-                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                  >
-                    <IconInfoCircle class="w-4 text-yellow" />
-                  </TooltipDefault>
+                    :minimum-card-amount="minimumCardAmount"
+                  />
                 </template>
-              </AmountDisplayForCalculation>
+              </FundingDetailsItemAmountDisplay>
             </template>
           </LightningQrCode>
           <div class="flex justify-center">
@@ -121,38 +118,35 @@
                 :amount-sats="amountPerCard"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
-                :min="21"
-                :max="2100000"
+                :min="minimumCardAmount"
+                :max="maximumCardAmount"
                 :disabled="creatingInvoice"
                 @update:amount-sats="amountPerCard = $event"
                 @update:selected-currency="selectedCurrency = $event"
               />
-              <small v-if="amountPerCard < 210" class="block leading-tight mb-3 text-sm text-yellow-dark">
+              <small v-if="amountPerCard < recommendedMinimumCardAmount" class="block leading-tight mb-3 text-sm text-yellow-dark">
                 {{ t('setFunding.form.smallAmountWarning') }}
               </small>
-              <AmountDisplayForCalculation
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="totalAmountNet"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
                 :label="$t('setFunding.form.totalAmountLabel')"
               />
-              <AmountDisplayForCalculation
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="totalFeeAmount"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
               >
                 <template #label>
                   {{ $t('general.fee') }}
-                  <TooltipDefault
-                    v-if="fee != null"
+                  <FeeInfoIconWithTooltip
                     class="ms-1"
-                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                  >
-                    <IconInfoCircle class="w-4 text-yellow" />
-                  </TooltipDefault>
+                    :minimum-card-amount="minimumCardAmount"
+                  />
                 </template>
-              </AmountDisplayForCalculation>
-              <AmountDisplayForCalculation
+              </FundingDetailsItemAmountDisplay>
+              <FundingDetailsItemAmountDisplay
                 strong
                 :amount-sats="totalAmountIncludingFee"
                 :selected-currency="selectedCurrency"
@@ -206,7 +200,6 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@shared/data/api/Set'
-import { FEE_PERCENTAGE } from '@shared/constants'
 import { calculateFeeForCard } from '@shared/modules/feeCalculation'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
@@ -227,20 +220,23 @@ import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import IconTipCardSet from '@/components/icons/IconTipCardSet.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
 import TextField from '@/components/forms/TextField.vue'
-import AmountDisplayForCalculation from '@/components/AmountDisplayForCalculation.vue'
-import TooltipDefault from '@/components/TooltipDefault.vue'
-import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
+import FundingDetailsItemAmountDisplay from '@/components/FundingDetailsItemAmountDisplay.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
+import FeeInfoIconWithTooltip from '@/components/FeeInfoIconWithTooltip.vue'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const fee = ref<number | null>(FEE_PERCENTAGE)
+const defaultCardAmount = 2100
+const recommendedMinimumCardAmount = 210
+const minimumCardAmount = 21
+const maximumCardAmount = 2100000
+
 const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const settings = reactive(getDefaultSettings())
-const amountPerCard = ref(2100)
+const amountPerCard = ref(defaultCardAmount)
 const text = ref(t('cards.settings.defaults.invoiceText'))
 const textIsDirty = ref(false)
 const note = ref<string>()
@@ -359,7 +355,7 @@ const resetInvoice = async () => {
       `${BACKEND_API_ORIGIN}/api/set/invoice/${route.params.setId}`)
     if (response.data.status === 'success') {
       set.value = undefined
-      amountPerCard.value = 2100
+      amountPerCard.value = defaultCardAmount
       userErrorMessage.value = undefined
       creatingInvoice.value = false
       text.value = t('cards.settings.defaults.invoiceText')

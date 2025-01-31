@@ -191,9 +191,9 @@
       "examplesIntro": "Here are a few websites where you can pay with bitcoin via Lightning:",
       "examples": {
         "saltNDaisy": "Buy some sustainable granola",
-        "satoshistore": "Shop Bitcoin Outfits",
+        "satoshistore": "Bitcoin merchandise store",
         "aprycotMedia": "Bitcoin books, media and more",
-        "copiaro": "Hardware Wallets & HODL tools",
+        "copiaro": "Hardware wallets & HODL tools",
         "lightningnetworkstores": "Find out what else you could do online",
         "coinpages": "Find stores that accept bitcoin",
         "btcmap": "Easily find places to spend sats anywhere on the planet"
@@ -229,7 +229,8 @@
       "button": "Fund card",
       "labelText": "Message",
       "textPlaceholder": "Message in the recipient's wallet",
-      "feeInfo": "The {fee}% fee covers the costs of outbound routing and infrastructure. It is rounded up to whole sats per card, resulting in a minimum of 1 sat per card."
+      "feeInfo": "The {fee}% fee covers the costs of outbound routing and infrastructure. It is rounded up to whole sats per card, resulting in a minimum of {minimumFeeAmountAndUnit} per card.",
+      "feeInfoShared": "The {fee}% fee covers the costs of outbound routing and infrastructure. It is rounded up to whole sats per payment, resulting in a minimum of {minimumFeeAmountAndUnit} per payment."
     },
     "invoiceText": "Fund your TipCard with {amount} sats:",
     "invoiceExpired": "The lightning invoice for this card has expired. Please reset the TipCard to continue.",
@@ -252,7 +253,8 @@
       "buttonMakeShared": "Activate shared funding on this TipCard",
       "currentAmount": "The current balance on the card is:",
       "fundedAmount": "Total of the paid amounts",
-      "amountOnCard": "Amount on the card"
+      "amountOnCard": "Amount on the card",
+      "paymentsCount": "Number of payments"
     },
     "payInvoice": "Please pay the following amount:",
     "invoicePaidSuccessfully": "{cards} have been funded successfully."

@@ -77,13 +77,13 @@
                 :rate-btc-fiat="rateBtcEur"
               />
               <div class="px-5">
-                <AmountDisplayForCalculation
+                <FundingDetailsItemAmountDisplay
                   :amount-sats="invoiceAmountNet"
                   :selected-currency="selectedCurrency"
                   :rate-btc-fiat="rateBtcEur"
                   :label="$t('funding.lnurlp.amountOnCard')"
                 />
-                <AmountDisplayForCalculation
+                <FundingDetailsItemAmountDisplay
                   :amount-sats="invoiceFeeAmount"
                   :selected-currency="selectedCurrency"
                   :rate-btc-fiat="rateBtcEur"
@@ -91,15 +91,12 @@
                 >
                   <template #label>
                     {{ $t('general.fee') }}
-                    <TooltipDefault
-                      v-if="fee != null"
+                    <FeeInfoIconWithTooltip
                       class="ms-1"
-                      :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                    >
-                      <IconInfoCircle class="w-4 text-yellow" />
-                    </TooltipDefault>
+                      :minimum-card-amount="minimumCardAmount"
+                    />
                   </template>
-                </AmountDisplayForCalculation>
+                </FundingDetailsItemAmountDisplay>
               </div>
             </template>
           </LightningQrCode>
@@ -138,29 +135,31 @@
             level="h4"
             class="max-w-sm mx-auto"
           >
-            <AmountDisplayForCalculation
+            <FundingDetailsItem
+              :primary-figure="String(sharedPaymentsCount)"
+              :label="$t('funding.shared.paymentsCount')"
+            />
+            <FundingDetailsItemAmountDisplay
               :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.shared.fundedAmount')"
             />
-            <AmountDisplayForCalculation
+            <FundingDetailsItemAmountDisplay
               :amount-sats="lnurlpFeeAmount ?? 0"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
               <template #label>
                 {{ $t('general.fee') }}
-                <TooltipDefault
-                  v-if="fee != null"
+                <FeeInfoIconWithTooltip
                   class="ms-1"
-                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                >
-                  <IconInfoCircle class="w-4 text-yellow" />
-                </TooltipDefault>
+                  :minimum-card-amount="minimumCardAmount"
+                  is-shared-funding
+                />
               </template>
-            </AmountDisplayForCalculation>
-            <AmountDisplayForCalculation
+            </FundingDetailsItemAmountDisplay>
+            <FundingDetailsItemAmountDisplay
               :amount-sats="amount"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
@@ -271,29 +270,26 @@
               level="h4"
               class="max-w-sm mx-auto"
             >
-              <AmountDisplayForCalculation
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="amount + (lnurlpFeeAmount ?? 0)"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
                 :label="$t('funding.lnurlp.fundedAmount')"
               />
-              <AmountDisplayForCalculation
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="lnurlpFeeAmount"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
               >
                 <template #label>
                   {{ $t('general.fee') }}
-                  <TooltipDefault
-                    v-if="fee != null"
+                  <FeeInfoIconWithTooltip
                     class="ms-1"
-                    :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                  >
-                    <IconInfoCircle class="w-4 text-yellow" />
-                  </TooltipDefault>
+                    :minimum-card-amount="minimumCardAmount"
+                  />
                 </template>
-              </AmountDisplayForCalculation>
-              <AmountDisplayForCalculation
+              </FundingDetailsItemAmountDisplay>
+              <FundingDetailsItemAmountDisplay
                 :amount-sats="amount"
                 :selected-currency="selectedCurrency"
                 :rate-btc-fiat="rateBtcEur"
@@ -350,31 +346,28 @@
               :amount-sats="amount"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
-              :min="210"
-              :max="2100000"
+              :min="minimumCardAmount"
+              :max="maximumCardAmount"
               :disabled="creatingInvoice"
               fiat-currency="EUR"
               class="mt-4 mb-2"
               @update:amount-sats="amount = $event"
               @update:selected-currency="selectedCurrency = $event"
             />
-            <AmountDisplayForCalculation
+            <FundingDetailsItemAmountDisplay
               :amount-sats="fee != null ? calculateFeeForCard(amount) : undefined"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
               <template #label>
                 {{ $t('general.fee') }}
-                <TooltipDefault
-                  v-if="fee != null"
+                <FeeInfoIconWithTooltip
                   class="ms-1"
-                  :content="$t('funding.form.feeInfo', { fee: `${100 * fee}` })"
-                >
-                  <IconInfoCircle class="w-4 text-yellow" />
-                </TooltipDefault>
+                  :minimum-card-amount="minimumCardAmount"
+                />
               </template>
-            </AmountDisplayForCalculation>
-            <AmountDisplayForCalculation
+            </FundingDetailsItemAmountDisplay>
+            <FundingDetailsItemAmountDisplay
               strong
               :amount-sats="amount + (fee != null ? calculateFeeForCard(amount) : 0)"
               :selected-currency="selectedCurrency"
@@ -473,23 +466,26 @@ import CenterContainer from '@/components/layout/CenterContainer.vue'
 import BackLinkDeprecated from '@/components/BackLinkDeprecated.vue'
 import TextField from '@/components/forms/TextField.vue'
 import type { SelectedCurrency } from '@/modules/useAmountConversion'
-import AmountDisplayForCalculation from '@/components/AmountDisplayForCalculation.vue'
-import TooltipDefault from '@/components/TooltipDefault.vue'
-import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
+import FundingDetailsItemAmountDisplay from '@/components/FundingDetailsItemAmountDisplay.vue'
 import AmountDisplayFinalSum from '@/components/AmountDisplayFinalSum.vue'
 import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import CollapsibleElement from '@/components/CollapsibleElement.vue'
+import FeeInfoIconWithTooltip from '@/components/FeeInfoIconWithTooltip.vue'
+import FundingDetailsItem from '@/components/FundingDetailsItem.vue'
 
-const DEFAULT_AMOUNT = 2100
 
 const { t } = useI18n()
 const route = useRoute()
+
+const defaultCardAmount = 2100
+const minimumCardAmount = 210
+const maximumCardAmount = 2100000
 
 const fee = ref<number | undefined>(FEE_PERCENTAGE)
 const selectedCurrency = ref<SelectedCurrency>('sats')
 const initializing = ref(true)
 const lnurlp = ref(false)
-const amount = ref(DEFAULT_AMOUNT)
+const amount = ref(defaultCardAmount)
 const text = ref(t('cards.settings.defaults.invoiceText'))
 const textIsDirty = ref(false)
 const note = ref<string>()
@@ -504,6 +500,7 @@ const funded = ref(false)
 const creatingInvoice = ref(false)
 const shared = ref(false)
 const finishingShared = ref(false)
+const sharedPaymentsCount = ref(0)
 const lnurlpFeeAmount = ref<number>()
 const lnurlpExpired = ref(false)
 const cardStatus = ref<string | undefined>()
@@ -541,6 +538,7 @@ const loadLnurlData = async () => {
   if (typeof card?.lnurlp?.amount === 'number') {
     amount.value = card.lnurlp.amount
     lnurlpFeeAmount.value = card.lnurlp.feeAmount ?? 0
+    sharedPaymentsCount.value = card.lnurlp.payment_hash?.length ?? 0
   } else if (card?.lnurlp?.shared) {
     amount.value = 0
   } else if (typeof card?.setFunding?.amount === 'number') {
@@ -604,7 +602,7 @@ const resetInvoice = async () => {
       invoice.value = undefined
       shared.value = false
       funded.value = false
-      amount.value = DEFAULT_AMOUNT
+      amount.value = defaultCardAmount
       userErrorMessage.value = undefined
       creatingInvoice.value = false
       finishingShared.value = false
@@ -615,6 +613,8 @@ const resetInvoice = async () => {
       noteIsDirty.value = false
       lnurlp.value = false
       lnurlpExpired.value = false
+      sharedPaymentsCount.value = 0
+      lnurlpFeeAmount.value = undefined
     }
   } catch(error) {
     console.error(error)

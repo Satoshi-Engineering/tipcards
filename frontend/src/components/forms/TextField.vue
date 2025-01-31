@@ -18,7 +18,7 @@
         },
         $attrs.inputClass,
       ]"
-      class="w-full my-1 px-3 py-3 border border-[#c4c4c4] focus:border-black rounded-lg focus:outline-none"
+      class="w-full my-1 px-3 py-3 border border-[#c4c4c4] focus:border-black rounded-lg focus:outline-none invalid:!border-red"
       :type="type"
     >
   </label>

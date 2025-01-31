@@ -1,28 +1,22 @@
 <template>
-  <div class="flex my-2">
-    <div class="mb-0 flex-1 font-lato text-start" :class="{ 'font-bold': strong }">
+  <FundingDetailsItem
+    :strong="strong"
+    :primary-figure="`${amountPrimary} ${selectedCurrencyDisplay}`"
+    :secondary-figure="amountSecondary != null ? `${amountSecondary} ${secondaryCurrencyDisplay}` : undefined"
+  >
+    <template #label>
       <slot name="label">
         {{ label }}
       </slot>
-    </div>
-    <div class="text-end">
-      <div :class="{ 'font-bold': strong, 'text-sm': !strong }">
-        {{ amountPrimary }} {{ selectedCurrencyDisplay }}
-      </div>
-      <small
-        class="block text-xs"
-        :class="{ 'invisible': amountSecondary == null }"
-      >
-        {{ amountSecondary }} {{ secondaryCurrencyDisplay }}
-      </small>
-    </div>
-  </div>
+    </template>
+  </FundingDetailsItem>
 </template>
 
 <script setup lang="ts">
 import { computed, toRefs, type PropType } from 'vue'
 
 import { useAmountConversion, type SelectedCurrency } from '@/modules/useAmountConversion'
+import FundingDetailsItem from './FundingDetailsItem.vue'
 
 const props = defineProps({
   label: {
