@@ -17,7 +17,6 @@
         >
           <BackLink
             data-test="modal-close-button"
-            autofocus
             class="!pb-2"
             @click="dialog?.close()"
           >
