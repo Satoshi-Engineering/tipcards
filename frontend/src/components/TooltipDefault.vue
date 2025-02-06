@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, type PropType, onUnmounted, nextTick, watch } from 'vue'
+import { onMounted, ref, useTemplateRef, type PropType, onUnmounted, nextTick, watch } from 'vue'
 // import Popper from 'vue3-popper'
 import { createPopper, type Instance, type ModifierArguments, type Placement } from '@popperjs/core'
 
@@ -63,8 +63,8 @@ const props = defineProps({
 
 const show = ref(false)
 
-const trigger = ref<HTMLElement | null>(null)
-const tooltip = ref<HTMLElement | null>(null)
+const trigger = useTemplateRef('trigger')
+const tooltip = useTemplateRef('tooltip')
 
 let popperInstance: Instance
 
@@ -113,9 +113,25 @@ const destroyPopper = () => {
   popperInstance.destroy()
 }
 
-onMounted(initPopper)
+const onDocumentTouch = (event: TouchEvent) => {
+  if (event.target instanceof Node && trigger.value?.contains(event.target)) {
+    return
+  }
+  if (trigger.value !== document.activeElement) {
+    return
+  }
+  trigger.value?.blur()
+}
 
-onUnmounted(destroyPopper)
+onMounted(() => {
+  initPopper()
+  document.addEventListener('touchstart', onDocumentTouch)
+})
+
+onUnmounted(() => {
+  destroyPopper()
+  document.removeEventListener('touchstart', onDocumentTouch)
+})
 
 const showTooltip = () => {
   // Make the tooltip visible
