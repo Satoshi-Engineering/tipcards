@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.4.13...v0.4.14
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.13...v0.4.14)
+
+### 🚀 Enhancements
+
+- Increase min lnurlp amount to 213 so that the amount on the card remains 210 sats (6def327e)
+- **frontend:** Improve fee & funding info (499768ca)
+
+### 🩹 Fixes
+
+- Use the new volt-vault route so that withdrawals through private channels become possible again (31128abf)
+- **backend:** Increase the test sats amount so that it matches the new lnurlp minimum (bbcfd543)
+- Update pinia and fix pinia mock (27afaea2)
+- Allow iOS users to close the tooltips by touching outside the trigger (a0bcb568)
+
+### 🏡 Chore
+
+- Update all packages except pinia and tailwind to latest versions, fix failing tests (aa6503c0)
+- Add ngrok to vite allowedHosts (5c2d3959)
+- **release:** V0.4.14 (91503f53)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.12...v0.4.13
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.12...v0.4.13)
