@@ -90,7 +90,7 @@ describe('RefreshGuard', () => {
   it('should fail login with walletLinkingKey, due to a database error', async () => {
     vi.spyOn(queries, 'getUserByLnurlAuthKey').mockRejectedValueOnce(new Error('Database Error'))
     await expect(refreshGuard.loginUserWithWalletLinkingKey(mockwalletLinkingKey))
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey))
+      .rejects.toThrowError(new ErrorWithCode(Error('Database Error'), ErrorCode.UnableToGetOrCreateUserByLnurlAuthKey))
   })
 
   it('should create authenticated user for wallet linking key ', async () => {
@@ -100,14 +100,14 @@ describe('RefreshGuard', () => {
 
   it('should fail refresh token validation, if json web token is missing in cookie', async () => {
     await expect(refreshGuard.authenticateUserViaRefreshToken())
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenMissing))
+      .rejects.toThrowError(new ErrorWithCode('Refresh token missing in request cookie', ErrorCode.RefreshTokenMissing))
   })
 
   it('should fail refresh token validation, if host is undefined', async () => {
     mockRequest.headers.cookie = mockRefreshTokenCookie
 
     await expect(refreshGuard.authenticateUserViaRefreshToken())
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.AuthHostMissingInRequest))
+      .rejects.toThrowError(new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest))
   })
 
   it('should fail refresh token validation, the allowedSession is missing in database', async () => {
@@ -122,7 +122,7 @@ describe('RefreshGuard', () => {
     vi.spyOn(mockJwtIssuer, 'validate').mockResolvedValueOnce(mockRefreshTokenPayloadWithSession)
 
     await expect(refreshGuard.authenticateUserViaRefreshToken())
-      .rejects.toThrowError(new ErrorWithCode('', ErrorCode.RefreshTokenDenied))
+      .rejects.toThrowError(new ErrorWithCode('SessionId not found in database', ErrorCode.RefreshTokenDenied))
 
     expect(mockJwtIssuer.validate).toHaveBeenCalledWith(mockRefreshToken, mockHost)
   })

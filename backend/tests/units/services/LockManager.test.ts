@@ -23,7 +23,7 @@ describe('LockManager', () => {
     expect(secondAquire).toBeInstanceOf(Lock)
   })
 
-  it('should fail, because aquire timed out', async () => {
+  it('should fail, because acquire timed out', async () => {
     const lock = await lockManager.acquire({ resourceId })
     expect(lock).toBeInstanceOf(Lock)
     await expect(async () => {
@@ -31,7 +31,7 @@ describe('LockManager', () => {
         resourceId,
         timeout: 1,
       })
-    }).rejects.toThrowError(new ErrorWithCode('', ErrorCode.LockManagerAquireTimeout))
+    }).rejects.toThrowError(new ErrorWithCode(`Timeout while waiting for lock on resource ${resourceId}`, ErrorCode.LockManagerAquireTimeout))
   })
 
   it('should fail, because a resource can only be unlocked once', async () => {
@@ -41,7 +41,10 @@ describe('LockManager', () => {
 
     expect(() => {
       lock.release()
-    }).toThrowError(new ErrorWithCode('', ErrorCode.LockManagerResourceNotLocked))
+    }).toThrowError(new ErrorWithCode(
+      `Release: Lock (${lock.id}) tries to unlock ${resourceId}, but it is not locked`,
+      ErrorCode.LockManagerResourceNotLocked,
+    ))
   })
 
   it('should fail, because a resource can only be unlocked with the same lock', async () => {
@@ -52,7 +55,10 @@ describe('LockManager', () => {
 
     expect(() => {
       culpritLock.release()
-    }).toThrowError(new ErrorWithCode('', ErrorCode.LockManagerResourceLockedWithDifferentLock))
+    }).toThrowError(new ErrorWithCode(
+      `Release: Lock (${culpritLock.id}) tries to unlock ${resourceId}, but it was locked by a different lock: ${lock.id}`,
+      ErrorCode.LockManagerResourceLockedWithDifferentLock,
+    ))
   })
 
   it('should wait for the release of a lock', async () => {
@@ -125,7 +131,7 @@ describe('LockManager', () => {
     })
   })
 
-  it('should fail to aquireAll if one resource is not available', async () => {
+  it('should fail to acquireAll if one resource is not available', async () => {
     const lock = await lockManager.acquire({ resourceId: 'asdf' })
     setTimeout(() => {
       lock.release()
@@ -134,7 +140,10 @@ describe('LockManager', () => {
     await expect(async () => lockManager.acquireAll({
       resourceIds: ['asdf', 'jklo'],
       timeout: 10,
-    })).rejects.toThrowError(new ErrorWithCode('', ErrorCode.LockManagerAquireTimeout))
+    })).rejects.toThrowError(new ErrorWithCode(
+      'Timeout while waiting for multiple resources asdf,jklo',
+      ErrorCode.LockManagerAquireTimeout,
+    ))
   })
 
   it('should aquire all locks as soon as all locks are available', async () => {

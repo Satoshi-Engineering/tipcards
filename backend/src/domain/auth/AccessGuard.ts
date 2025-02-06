@@ -72,7 +72,10 @@ export default class AccessGuard {
       if (error instanceof errors.JWTExpired) {
         throw new ErrorWithCode(error, ErrorCode.AccessTokenExpired)
       }
-      throw new ErrorWithCode(error, ErrorCode.AccessTokenInvalid)
+      if (error instanceof errors.JOSEError) {
+        throw new ErrorWithCode(error, ErrorCode.AccessTokenInvalid)
+      }
+      throw new ErrorWithCode('JWT validation failed.', ErrorCode.AccessTokenInvalid)
     }
   }
 

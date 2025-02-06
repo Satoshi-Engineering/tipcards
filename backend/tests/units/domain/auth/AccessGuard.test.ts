@@ -53,26 +53,26 @@ beforeEach(() => {
 })
 
 describe('AccessGuard', () => {
-  it('should fail due missing host', async () => {
+  it('should fail due to missing host', async () => {
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AuthHostMissingInRequest))
+      .rejects.toThrow(new ErrorWithCode('Host missing in Request', ErrorCode.AuthHostMissingInRequest))
   })
 
-  it('should fail due missing authorization header', async () => {
+  it('should fail due to missing authorization header', async () => {
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AccessTokenMissing))
+      .rejects.toThrow(new ErrorWithCode('Authorization in header missing or not a string (undefined)', ErrorCode.AccessTokenMissing))
   })
 
-  it('should fail due jwt is garbage', async () => {
+  it('should fail because jwt is garbage', async () => {
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     vi.spyOn(mockJwtValidator, 'validate').mockRejectedValueOnce(new Error())
     mockRequest.headers.authorization = 'accesstoken garbage'
     await expect(accessGuard.authenticateUserViaAccessToken())
-      .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.AccessTokenInvalid))
+      .rejects.toThrow(new ErrorWithCode('JWT validation failed.', ErrorCode.AccessTokenInvalid))
   })
 
-  it('should fail due access token payload is not in the correct format', async () => {
+  it('should fail because access token payload is not in the correct format', async () => {
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     vi.spyOn(mockJwtValidator, 'validate').mockResolvedValueOnce({})
     mockRequest.headers.authorization = mockAccessToken
@@ -80,7 +80,7 @@ describe('AccessGuard', () => {
       .rejects.toThrow(new ErrorWithCode('JWT payload parsing failed.', ErrorCode.ZodErrorParsingAccessTokenPayload))
   })
 
-  it('should fail due missing permission', async () => {
+  it('should fail due to missing permission', async () => {
     const permission = 'support'
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     vi.spyOn(mockJwtValidator, 'validate').mockResolvedValueOnce(mockAccessTokenPayload)
@@ -104,7 +104,7 @@ describe('AccessGuard', () => {
     }))
   })
 
-  it('should fail due missing user in database', async () => {
+  it('should fail due to missing user in database', async () => {
     vi.spyOn(mockRequest, 'get').mockReturnValueOnce(mockHost)
     mockRequest.headers.authorization = mockAccessToken
     vi.spyOn(mockJwtValidator, 'validate').mockResolvedValueOnce({
