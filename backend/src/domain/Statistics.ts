@@ -17,43 +17,64 @@ const Payment = z.object({
 type Payment = z.infer<typeof Payment>
 
 export default class Statistics {
-  public static async getStatistics(): Promise<StatisticsDto> {
-    const payments = await Statistics.loadPayments()
+  public static async getStatistics(limit?: number): Promise<StatisticsDto> {
+    const payments = await Statistics.loadPayments(limit)
     const daily = Statistics.accumulatePaymentsByPeriod(payments, 'yyyy-MM-dd')
+    if (limit != null) {
+      daily.pop()
+    }
     const weekly = Statistics.accumulatePaymentsByPeriod(payments, 'kkkk-WW')
+    // Remove the last week if we are not showing all the data, because the first week and day might be incomplete
+    if (limit != null) {
+      daily.pop()
+      weekly.pop()
+    }
     return {
       daily,
       weekly,
     }
   }
 
-  private static async loadPaymentsFromLnbits() {
+  private static async loadPaymentsFromLnbits(limit?: number, offset: number = 0): Promise<{ total: number, data: Payment[] }> {
     let response
     try {
-      response = await axios.get(`${LNBITS_ORIGIN}/api/v1/payments`, {
+      let url = `${LNBITS_ORIGIN}/api/v1/payments/paginated?sortby=time&direction=desc`
+      if (limit != null) {
+        url += `&limit=${limit}&offset=${offset}`
+      }
+      response = await axios.get(url, {
         headers: {
           'X-Api-Key': LNBITS_INVOICE_READ_KEY,
           'Content-type': 'application/json',
         },
       })
-      return Payment.array().parse(response.data)
+      return z.object({
+        data: Payment.array(),
+        total: z.number(),
+      }).parse(response.data)
     } catch (error) {
       throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsPaymentRequests)
     }
   }
 
-  private static async loadPayments() {
+  private static async loadPayments(limit?: number, offset: number = 0) {
     const paymentHashesToExclude = loadJsonIfExists<string[]>(STATISTICS_EXCLUDE_FILE, [])
     const paymentsToPrepend = loadJsonIfExists<Payment[]>(STATISTICS_PREPEND_FILE, [])
 
-    const paymentsFromLnbits = await Statistics.loadPaymentsFromLnbits()
-    const payments = [
-      ...paymentsToPrepend,
-      ...paymentsFromLnbits,
-    ]
-      .filter(
-        ({ payment_hash }) => !paymentHashesToExclude.includes(payment_hash),
-      )
+    const { data: paymentsFromLnbits, total } = await Statistics.loadPaymentsFromLnbits(limit, offset)
+
+    let payments = paymentsFromLnbits
+
+    if (offset + paymentsFromLnbits.length === total) {
+      payments = [
+        ...paymentsToPrepend,
+        ...payments,
+      ]
+    }
+
+    payments = payments.filter(
+      ({ payment_hash }) => !paymentHashesToExclude.includes(payment_hash),
+    )
 
     payments.sort((a, b) => b.time - a.time)
 

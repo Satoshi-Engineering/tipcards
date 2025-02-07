@@ -1,5 +1,5 @@
 <template>
-  <TheLayout>
+  <TheLayout horizontal-scrolling>
     <CenterContainer class="!max-w-4xl">
       <div class="py-4">
         <HeadlineDefault level="h1">
@@ -18,6 +18,16 @@
       </div>
       <div v-else-if="statistics != null" class="py-4">
         <HeadlineDefault level="h2">
+          Daily
+        </HeadlineDefault>
+        <StatisticsTable
+          period-label-col-header="Day"
+          :statistics="statistics.daily"
+          :bar-chart-mode="barChartMode"
+          @set-bar-chart-mode="barChartMode = $event"
+        />
+
+        <HeadlineDefault level="h2">
           Weekly
         </HeadlineDefault>
         <StatisticsTable
@@ -27,15 +37,29 @@
           @set-bar-chart-mode="barChartMode = $event"
         />
 
-        <HeadlineDefault level="h2">
-          Daily
-        </HeadlineDefault>
-        <StatisticsTable
-          period-label-col-header="Day"
-          :statistics="statistics.daily"
-          :bar-chart-mode="barChartMode"
-          @set-bar-chart-mode="barChartMode = $event"
-        />
+        <hr class="mt-20 mb-5">
+        <div>
+          <select
+            v-model="limit"
+            class="p-2 border border-gray-300 rounded"
+            @update:v-model="loadStats"
+          >
+            <option :value="1000">
+              Last 1000 payments
+            </option>
+            <option :value="10000">
+              Last 10000 payments
+            </option>
+            <option :value="30000">
+              Last 30000 payments
+            </option>
+            <option :value="null">
+              All payments
+            </option>
+          </select>
+          <br>
+          Only <em>full</em> days / weeks that can be calculated from the loaded data are shown.
+        </div>
       </div>
     </CenterContainer>
   </TheLayout>
@@ -48,7 +72,6 @@ import { ref, computed, watchEffect } from 'vue'
 import type { StatisticsDto } from '@shared/data/trpc/StatisticsDto'
 import { canAccessStatistics } from '@shared/modules/checkAccessTokenPermissions'
 
-import LinkDefault from '@/components/typography/LinkDefault.vue'
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
@@ -77,10 +100,16 @@ const statistics = ref<StatisticsDto>()
 
 const barChartMode = ref<'transactions' | 'balance'>('transactions')
 
+const limit = ref<number | null>(1000)
+
 const loadStats = async () => {
   fetching.value = true
   try {
-    statistics.value = await trpc.statistics.getFull.query()
+    if (limit.value == null) {
+      statistics.value = await trpc.statistics.getFull.query()
+    } else {
+      statistics.value = await trpc.statistics.getLatest.query({ limit: limit.value })
+    }
   } catch (error) {
     console.error(error)
     return
