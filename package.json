@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "@trpc/client": "^11.0.0-rc.741",
-    "@trpc/server": "^11.0.0-rc.741",
+    "@trpc/client": "^11.0.0-rc.744",
+    "@trpc/server": "^11.0.0-rc.744",
     "@vueuse/core": "^12.5.0",
     "axios": "^1.7.9",
     "bech32": "^2.0.0",
