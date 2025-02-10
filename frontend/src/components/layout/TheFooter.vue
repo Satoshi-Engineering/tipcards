@@ -81,7 +81,7 @@
         <LinkDefault
           no-bold
           invert-underline
-          href="https://github.com/Satoshi-Engineering/tipcards"
+          :href="GITHUB_LINK"
         >
           <IconLogoGithub class="w-8 text-white" />
         </LinkDefault>
@@ -114,6 +114,7 @@ import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
 import IconLogoX from '@/components/icons/IconLogoX.vue'
 import IconLogoGithub from '../icons/IconLogoGithub.vue'
+import { GITHUB_LINK } from '@/constants'
 
 const linkLegalNotice = inject<string | undefined>('linkLegalNotice')
 const supportEmail = inject<string | undefined>('supportEmail')
