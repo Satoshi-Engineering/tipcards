@@ -52,7 +52,7 @@
       </div>
       <div
         v-if="linkLinkedIn != null || linkX != null || linkInstagram != null"
-        class="grid grid-cols-[repeat(2,auto)_1fr] gap-x-8 mt-6"
+        class="flex gap-x-8 mt-6"
       >
         <LinkDefault
           v-if="linkLinkedIn != null"
@@ -78,16 +78,28 @@
         >
           <IconLogoInstagram class="w-8 text-white" />
         </LinkDefault>
-      </div>
-      <div class="mt-5 text-end">
         <LinkDefault
-          href="https://satoshiengineering.com"
-          class="text-white-50 text-sm"
           no-bold
           invert-underline
+          href="https://github.com/Satoshi-Engineering/tipcards"
         >
-          by Satoshi Engineering
+          <IconLogoGithub class="w-8 text-white" />
         </LinkDefault>
+      </div>
+      <div class="mt-5 text-end">
+        <div class="text-white-50 text-sm">
+          Version {{ version }}
+        </div>
+        <div>
+          <LinkDefault
+            href="https://satoshiengineering.com"
+            class="text-white-50 text-sm"
+            no-bold
+            invert-underline
+          >
+            by Satoshi Engineering
+          </LinkDefault>
+        </div>
       </div>
     </CenterContainer>
   </footer>
@@ -101,10 +113,13 @@ import LinkDefault from '@/components/typography/LinkDefault.vue'
 import IconLogoInstagram from '@/components/icons/IconLogoInstagram.vue'
 import IconLogoLinkedIn from '@/components/icons/IconLogoLinkedIn.vue'
 import IconLogoX from '@/components/icons/IconLogoX.vue'
+import IconLogoGithub from '../icons/IconLogoGithub.vue'
 
 const linkLegalNotice = inject<string | undefined>('linkLegalNotice')
 const supportEmail = inject<string | undefined>('supportEmail')
 const linkLinkedIn = inject<string | undefined>('linkLinkedIn')
 const linkX = inject<string | undefined>('linkX')
 const linkInstagram = inject<string | undefined>('linkInstagram')
+
+const version = __APP_VERSION__
 </script>

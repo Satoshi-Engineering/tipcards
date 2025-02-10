@@ -60,6 +60,7 @@ export default defineConfig(({ mode }) => {
       __VUE_I18N_FULL_INSTALL__: true,
       __VUE_I18N_LEGACY_API__: false,
       __INTLIFY_PROD_DEVTOOLS__: false,
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
     server: {
       allowedHosts: ['.ngrok-free.app'],

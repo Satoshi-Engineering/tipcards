@@ -106,7 +106,7 @@
     "@types/secp256k1": "^4.0.6",
     "@typescript-eslint/eslint-plugin": "^8.23.0",
     "@vitejs/plugin-vue": "^5.2.1",
-    "@vitest/eslint-plugin": "^1.1.27",
+    "@vitest/eslint-plugin": "^1.1.28",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.4.0",
     "@vue/test-utils": "^2.4.6",
