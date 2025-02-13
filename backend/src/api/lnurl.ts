@@ -51,15 +51,15 @@ export default (
     let totalFee: number | null = null
     let amount: number | null = null
     try {
-      const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes-for-pay-req`
-      const response = await axios.get(`${url}?pay_req=${pr}`)
+      const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes`
+      const response = await axios.get(`${url}?paymentRequestEncoded=${pr}`)
       response.data.queryRoutesResponse.routes.forEach((route: { total_fees: string }) => {
         const routeFee = Number(route.total_fees)
         if (totalFee == null || routeFee < totalFee) {
           totalFee = routeFee
         }
       })
-      amount = Number(response.data.payReq.num_satoshis)
+      amount = Number(response.data.paymentRequestDecoded.num_satoshis)
     } catch {
       res.status(400).json(toErrorResponse({
         message: 'Unable to calculate estimated fee.',
