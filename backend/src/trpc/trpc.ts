@@ -38,6 +38,7 @@ const tRpc = initTRPC.context<typeof createContext>().meta<Meta>().create({
       enabled: true,
       intervalMs: 1_000,
     },
+    maxDurationMs: 60_000 * 10,
   },
   transformer: superjson,
   defaultMeta: {
