@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v0.4.14...v0.4.15
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.14...v0.4.15)
+
+### 🚀 Enhancements
+
+- Per default only load the latest 1000 payments on the statistics page (c80aa6e3)
+- Add version number and github link to footer (ced54c3e)
+- Add maxDurationMs of 10 minutes when opening trpc subscriptions (6954f533)
+
+### 🩹 Fixes
+
+- Add missing english term (46104ca4)
+- Remove sse ping and reconnect timeout after trpc update which includes http2 support (71c12e0c)
+- Remove sse ping and reconnect timeout after trpc update which includes http2 support" (92f6b932)
+- Commit-msg newline (cecd5564)
+- PageLanding do not start loading if no card hash is set (show preview instead) (14cd4a7f)
+
+### 💅 Refactors
+
+- Use GITHUB_LINK from constants (4ac89598)
+- **backend:** Handle volt-vault update to v0.0.6 (8ef7fbf7)
+- Remove pre-commit hook as all checks are included in pre-push anyways (7cedb7fd)
+- PageLanding use polling i/o trpc subscription (50ed49ab)
+
+### 🏡 Chore
+
+- Update trpc to latest (2fac9a73)
+- Update trpc (414390c7)
+- Update trpc to latest (91789570)
+- Update trpc and other packages to latest (4069fa38)
+- Npm audit (550be43b)
+- Increase nsprc expiration as there is no fix yet (fef618f1)
+- **release:** V0.4.15 (0b4512e1)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.13...v0.4.14
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.13...v0.4.14)
