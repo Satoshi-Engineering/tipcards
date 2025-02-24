@@ -117,11 +117,13 @@ const { bulkWithdraw, card } = useTRpc()
 
 const { cardHash, lnurl } = useCardHashFromRoute()
 const {
+  loadingCardStatus,
   cardStatus,
   userErrorMessage: cardStatusUserErrorMessage,
 } = useCardStatus()
 
-loading.value = true
+watch(loadingCardStatus, () => loading.value = loadingCardStatus.value)
+
 const bulkWithdrawUserErrorMessage = ref<string | undefined>()
 const resettingBulkWithdraw = ref(false)
 

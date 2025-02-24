@@ -1,6 +1,6 @@
 
 import type { Unsubscribable } from '@trpc/server/observable'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import type { CardStatusDto } from '@shared/data/trpc/CardStatusDto'
@@ -98,6 +98,7 @@ export const useCardStatus = () => {
   })
 
   return {
+    loadingCardStatus: computed(() => loadingCardStatus.value),
     cardStatus,
     userErrorMessage,
   }
