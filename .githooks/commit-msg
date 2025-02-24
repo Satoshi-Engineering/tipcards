@@ -1,13 +1,24 @@
 #!/usr/bin/env node
 
 import fs from 'fs'
+
 import config from './commit-msg-config.json' with { type: 'json' }
+
+const expectedFormat = `ℹ️  Expected format:
+    
+\x1b[32m<type>(<scope>): <subject>
+<BLANK LINE>
+<body> (optional)
+<BLANK LINE> (required if body is present)
+BREAKING CHANGE: <description> (optional)
+Reviewed-by: <reviewer> (optional)
+Refs: projects#<issue-number> (required)\x1b[0m`
 
 // Regex to validate the commit message
 const allowedSubjectCharacters = '[\\w .,?:\\/\\-\'()&]' // allowedSubjectCharacters as RegEx string
 const allowedSubjectCharactersAsString = '.,?/-()&\''    // allowedSubjectCharacters as printable string
 
-const body = '(\\n[\\s\\S]+\\n)?'
+const body = '(\\n\\n[\\s\\S]+\\n)?'
 const breakingChangeFooter = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
 const reviewedByFooter = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
 const refFooter = '(\\nRefs:( projects#[0-9]+,?)+)'
@@ -19,11 +30,17 @@ const commitMsgFile = process.argv[2]
 // Read the commit message from the file
 const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim()
 
-const messageFormatRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)\n(?<bodyAndFooters>[\s\S]*)$/
+const messageFormatRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)(?<bodyAndFooters>[\s\S]*)$/
 const bodyAndFootersRegex = new RegExp(`^${body}${breakingChangeFooter}${reviewedByFooter}${refFooter}${footers}$`)
 
 // Split the message in to parts
 const messageMatch = commitMsg.match(messageFormatRegex)
+
+if (messageMatch?.groups == null) {
+  console.error(`❌ No regex mach!`)
+  console.info(expectedFormat)
+  process.exit(1)
+}
 
 // Header - Type
 if (!config.types.includes(messageMatch.groups.type)) {
@@ -50,16 +67,7 @@ if (!regexAllowedSubjectCharacters.test(messageMatch.groups.subject)) {
 // Body and footers
 if (!bodyAndFootersRegex.test(messageMatch.groups.bodyAndFooters)) {
   console.error(`❌ Body and/or footers are invalid:\n\n\x1b[31m${messageMatch.groups.bodyAndFooters}\x1b[0m\n\n`)
-  console.info(
-`ℹ️  Expected format:
-    
-\x1b[32m<type>(<scope>): <subject>
-<BLANK LINE>
-<body> (optional)
-<BLANK LINE> (required if body is present)
-BREAKING CHANGE: <description> (optional)
-Reviewed-by: <reviewer> (optional)
-Refs: projects#<issue-number> (required)\x1b[0m`)
+  console.info(expectedFormat)
   process.exit(1)
 }
 
