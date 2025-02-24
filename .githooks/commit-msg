@@ -18,7 +18,7 @@ Refs: projects#<issue-number> (required)\x1b[0m`
 const allowedSubjectCharacters = '[\\w .,?:\\/\\-\'()&]' // allowedSubjectCharacters as RegEx string
 const allowedSubjectCharactersAsString = '.,?/-()&\''    // allowedSubjectCharacters as printable string
 
-const body = '(\\n\\n[\\s\\S]+\\n)?'
+const body = '(\\n[\\s\\S]+\\n)?'
 const breakingChangeFooter = '(\\nBREAKING(-| )CHANGE: \\S[ \\S]*\\S)?'
 const reviewedByFooter = '(\\nReviewed-by: \\S[ \\S]*\\S)?'
 const refFooter = '(\\nRefs:( projects#[0-9]+,?)+)'
@@ -30,7 +30,7 @@ const commitMsgFile = process.argv[2]
 // Read the commit message from the file
 const commitMsg = fs.readFileSync(commitMsgFile, 'utf-8').trim()
 
-const messageFormatRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)(?<bodyAndFooters>[\s\S]*)$/
+const messageFormatRegex = /^(?<type>\w+)(\((?<scope>\w+)\))?: (?<subject>.+)\n(?<bodyAndFooters>[\s\S]*)$/
 const bodyAndFootersRegex = new RegExp(`^${body}${breakingChangeFooter}${reviewedByFooter}${refFooter}${footers}$`)
 
 // Split the message in to parts
