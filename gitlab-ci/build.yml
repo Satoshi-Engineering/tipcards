@@ -3,6 +3,7 @@ build-backend:
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
   cache:
     - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_backend]
@@ -24,6 +25,7 @@ build-frontend:
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
   cache:
     - !reference [.shared_config, cache, node_modules]
     - !reference [.shared_config, cache, env_frontend]

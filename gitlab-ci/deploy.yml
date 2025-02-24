@@ -5,6 +5,7 @@ deploy-backend:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, deployable_branches]
     - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
   dependencies:
     - build-backend
   variables:
@@ -79,6 +80,7 @@ deploy-frontend:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, deployable_branches]
     - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
   dependencies:
     - build-frontend
   variables:
