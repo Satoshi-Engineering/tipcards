@@ -35,6 +35,14 @@ export const cardRouter = router({
 
   status: publicProcedure
     .input(CardHash)
+    .output(CardStatusDto)
+    .query(async ({ input }) => {
+      const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
+      return CardStatusDto.parse(cardStatus.toTrpcResponse())
+    }),
+
+  statusSubscription: publicProcedure
+    .input(CardHash)
     // todo: add output type definition/validation:
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
     //.output(CardStatusDto)

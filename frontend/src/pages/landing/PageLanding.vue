@@ -74,24 +74,20 @@
 </template>
 
 <script setup lang="ts">
-import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
-import { CardStatusEnum, unfundedStatuses, withdrawnStatuses, type CardStatusDto } from '@shared/data/trpc/CardStatusDto'
-import LNURL from '@shared/modules/LNURL/LNURL'
+import { CardStatusEnum, unfundedStatuses, withdrawnStatuses } from '@shared/data/trpc/CardStatusDto'
 
 import IconAnimatedLoadingWheel from '@/components/icons/IconAnimatedLoadingWheel.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import TheLayout from '@/components/layout/TheLayout.vue'
 import ParagraphDefault from '@/components/typography/ParagraphDefault.vue'
-import { cardHashFromLnurl } from '@/modules/lnurlHelpers'
 import useDelayedLoadingAnimation from '@/modules/useDelayedLoadingAnimation'
 import useTRpc from '@/modules/useTRpc'
 import { useAuthStore } from '@/stores/auth'
-import { BACKEND_API_ORIGIN } from '@/constants'
 
 import GetYourBitcoin from './components/GetYourBitcoin.vue'
 import GreetingFunded from './components/GreetingFunded.vue'
@@ -105,9 +101,11 @@ import CreateYourOwnTipCard from './components/CreateYourOwnTipCard.vue'
 import GreetingPreview from './components/GreetingPreview.vue'
 import WhatIsBitcoin from './components/WhatIsBitcoin.vue'
 import WhatIsBitcoinCta from './components/WhatIsBitcoinCta.vue'
+import { useCardHashFromRoute } from './useCardHashFromRoute'
+import { useCardStatus } from './useCardStatus'
 
 const {
-  loading: loadingCardStatus,
+  loading,
   showLoadingAnimation,
   showContent,
 } = useDelayedLoadingAnimation()
@@ -117,9 +115,17 @@ const { isLoggedIn } = storeToRefs(useAuthStore())
 const { t } = useI18n()
 const { bulkWithdraw, card } = useTRpc()
 
-const cardStatus = ref<CardStatusDto>()
-const userErrorMessage = ref<string | undefined>()
+const { cardHash, lnurl } = useCardHashFromRoute()
+const {
+  cardStatus,
+  userErrorMessage: cardStatusUserErrorMessage,
+} = useCardStatus()
+
+loading.value = true
+const bulkWithdrawUserErrorMessage = ref<string | undefined>()
 const resettingBulkWithdraw = ref(false)
+
+const userErrorMessage = computed(() => cardStatusUserErrorMessage.value ?? bulkWithdrawUserErrorMessage.value)
 
 const showLandingPage = computed(() => {
   if (!showContent.value) {
@@ -135,31 +141,7 @@ const cardIsNotFunded = computed(() => {
   return unfundedStatuses.includes(cardStatus.value.status)
 })
 
-const cardHash = computed<string | null>(() => {
-  if (typeof route.params.cardHash === 'string' && route.params.cardHash.length > 0) {
-    return route.params.cardHash
-  }
-  if (typeof route.query.lightning === 'string' && route.query.lightning.length > 0) {
-    return cardHashFromLnurl(route.query.lightning)
-  }
-  return null
-})
-
-const lnurl = computed<string | null>(() => {
-  if (typeof route.params.cardHash === 'string' && route.params.cardHash.length > 0) {
-    return LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`)
-  }
-  if (typeof route.query.lightning === 'string' && route.query.lightning.length > 0) {
-    return route.query.lightning
-  }
-  return null
-})
-
 const isViewedFromQrCodeScan = computed(() => typeof route.query.lightning === 'string' && route.query.lightning.length > 0)
-
-let subscription: Unsubscribable
-onMounted(() => loadCardStatus())
-onBeforeUnmount(() => cleanupSubscription())
 
 watch(cardStatus, (newStatus, oldStatus) => {
   if (oldStatus == null && newStatus != null) {
@@ -167,43 +149,11 @@ watch(cardStatus, (newStatus, oldStatus) => {
   }
 })
 
-const loadCardStatus = () => {
-  if (cardHash.value == null) {
-    if (lnurl.value != null && lnurl.value !== '') {
-      userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
-    }
-    return
-  }
-
-  loadingCardStatus.value = true
-
-  subscription = card.status.subscribe(
-    { hash: cardHash.value },
-    {
-      onStarted: () => {
-        document.body.dataset.testCardStatusSubscription = 'started'
-      },
-      onData: (data) => {
-        cardStatus.value = data
-      },
-      onError: (error) => {
-        console.error(error)
-        userErrorMessage.value = t('landing.errors.errorInvalidLnurl')
-      },
-    },
-  )
-}
-
-const cleanupSubscription = () => {
-  subscription?.unsubscribe()
-  delete document.body.dataset.testCardStatusSubscription
-}
-
 const afterInitialCardStatusLoadHandler = () => {
   if (cardHash.value == null) {
     return
   }
-  loadingCardStatus.value = false
+  loading.value = false
 
   if (cardIsNotFunded.value) {
     redirectToFundingPage(cardHash.value)
@@ -237,13 +187,13 @@ const resetBulkWithdraw = async () => {
   if (cardHash.value == null) {
     return
   }
-  userErrorMessage.value = undefined
+  bulkWithdrawUserErrorMessage.value = undefined
   resettingBulkWithdraw.value = true
   try {
     await bulkWithdraw.deleteByCardHash.mutate({ hash: cardHash.value })
   } catch (error) {
     console.error(error)
-    userErrorMessage.value = t('landing.bulkWithdrawResetError')
+    bulkWithdrawUserErrorMessage.value = t('landing.bulkWithdrawResetError')
   }
   resettingBulkWithdraw.value = false
 }

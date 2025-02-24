@@ -42,7 +42,7 @@ describe('CardStatus', () => {
 
   it('should load the status for a card that doesnt exist', async () => {
     const imaginedCardId = cardData.generateCardHash() // random card hash that doesnt exist
-    const cardStatusIterable = await callerCards.status({ hash: imaginedCardId })
+    const cardStatusIterable = await callerCards.statusSubscription({ hash: imaginedCardId })
     const cardStatus = await cardStatusIterable[Symbol.asyncIterator]().next()
 
     expect(cardStatus).toEqual({
@@ -57,7 +57,7 @@ describe('CardStatus', () => {
   })
 
   it('should load a card with invoice from cardHash', async () => {
-    const cardStatusIterable = await callerCards.status({ hash: testCard.cardHash })
+    const cardStatusIterable = await callerCards.statusSubscription({ hash: testCard.cardHash })
     const cardStatus = await cardStatusIterable[Symbol.asyncIterator]().next()
 
     expect(cardStatus).toEqual({
