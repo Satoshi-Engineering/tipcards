@@ -63,9 +63,11 @@ import type { Unsubscribable } from '@trpc/server/observable'
 import { storeToRefs } from 'pinia'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
+import type { LnurlAuthLoginStatusDto } from '@shared/auth/data/trpc/LnurlAuthLoginStatusDto'
 import { LnurlAuthLoginStatusEnum } from '@shared/auth/data/trpc/LnurlAuthLoginStatusEnum'
 
 import { useProfileStore } from '@/stores/profile'
+import isTRpcSubscriptionAvailable from '@/modules/isTRpcSubscriptionAvailable'
 import useTRpcAuth from '@/modules/useTRpcAuth'
 import ModalDefault from '@/components/ModalDefault.vue'
 import LightningQrCode from '@/components/LightningQrCode.vue'
@@ -90,6 +92,8 @@ const { userEmail } = storeToRefs(profileStore)
 const modalLoginStore = useModalLoginStore()
 const { modalLoginUserMessage } = storeToRefs(modalLoginStore)
 
+let mounted = false
+let pollingTimeout: ReturnType<typeof setTimeout>
 const fetchingLogin = ref(true)
 const lnurl = ref<string>()
 const id = ref<string>()
@@ -137,6 +141,14 @@ const createLnurl = async () => {
   }
 }
 
+const waitForLogin = () => {
+  if (isTRpcSubscriptionAvailable()) {
+    subscribeToLogin()
+  } else {
+    loadLoginStatusPolling()
+  }
+}
+
 const subscribeToLogin = async () => {
   if (isLoggedIn.value || fetchingLogin.value) {
     return
@@ -146,7 +158,7 @@ const subscribeToLogin = async () => {
     console.error('subscribeToLogin: id is null')
     return
   }
-  subscription.value = trpcAuth.lnurlAuth.login.subscribe(
+  subscription.value = trpcAuth.lnurlAuth.loginStatusSubscription.subscribe(
     {
       lastEventId: id.value,
     },
@@ -170,15 +182,50 @@ const subscribeToLogin = async () => {
   )
 }
 
+const loadLoginStatusPolling = async () => {
+  if (!mounted || isLoggedIn.value || fetchingLogin.value) {
+    return
+  }
+  if (id.value == null) {
+    loginFailed.value = true
+    console.error('loadLoginStatusPolling: id is null')
+    return
+  }
+  document.body.dataset.testLoginStatusSubscription = 'started'
+
+  let loginStatus: LnurlAuthLoginStatusDto
+  try {
+    loginStatus = await trpcAuth.lnurlAuth.loginStatus.query({ id: id.value })
+  } catch (error) {
+    console.error(error)
+    loginFailed.value = true
+    return
+  }
+
+  if (
+    loginStatus.status === LnurlAuthLoginStatusEnum.enum.loggedIn
+    && hash.value != null
+  ) {
+    safeLogin(hash.value)
+  } else if (loginStatus.status === LnurlAuthLoginStatusEnum.enum.failed) {
+    loginFailed.value = true
+  } else {
+    pollingTimeout = setTimeout(() => loadLoginStatusPolling(), 3000)
+  }
+}
+
 onMounted(async () => {
+  mounted = true
   await createLnurl()
-  await subscribeToLogin()
+  waitForLogin()
 })
 
 onBeforeUnmount(() => {
+  mounted = false
   lnurl.value = undefined
   hash.value = undefined
   id.value = undefined
   subscription.value?.unsubscribe()
+  clearTimeout(pollingTimeout)
 })
 </script>

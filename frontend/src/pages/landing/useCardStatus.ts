@@ -23,8 +23,6 @@ export const useCardStatus = () => {
   const userErrorMessage = ref<string>()
 
   const subscribe = () => {
-    mounted = true
-
     if (cardHash.value == null) {
       if (lnurl.value != null && lnurl.value !== '') {
         userErrorMessage.value = t('landing.errors.errorInvalidLnurl')

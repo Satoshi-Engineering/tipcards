@@ -65,7 +65,7 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
   })
 
   it ('should send logged in event', async () => {
-    const loginGenerator = await caller.login({ lastEventId: lnurlAuthId })
+    const loginGenerator = await caller.loginStatusSubscription({ lastEventId: lnurlAuthId })
     setTimeout(() => {
       sendLoginEvent({
         key: randomUUID(),
@@ -127,7 +127,7 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
     const secret2 = randomUUID()
     const { id: id2 } = await createLnurlAuth(encoded2, secret2)
 
-    const loginGenerator1 = await caller.login({ lastEventId: id1 })
+    const loginGenerator1 = await caller.loginStatusSubscription({ lastEventId: id1 })
     setTimeout(() => {
       sendLoginEvent({
         key: id1,
@@ -136,7 +136,7 @@ describe('TRpc Router Auth LnurlAuthLogin', async () => {
     }, 10)
     const data1 = await loginGenerator1[Symbol.asyncIterator]().next()
 
-    const loginGenerator2 = await caller.login({ lastEventId: id1 })
+    const loginGenerator2 = await caller.loginStatusSubscription({ lastEventId: id1 })
     setTimeout(() => {
       sendLoginEvent({
         key: id2,

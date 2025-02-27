@@ -21,16 +21,37 @@ export const lnurlAuthRouter = router({
       }
     }),
 
-  login: publicProcedure
-    .input(
-      z
-        .object({
-          lastEventId: z.string(),
-        }),
-    )
+  loginStatus: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .output(LnurlAuthLoginStatusDto)
+    .query(async ({ input }) => {
+      const lnurlAuthLogin = await Auth.instance.lnurlAuthLogin.get(input.id)
+
+      if (lnurlAuthLogin == null) {
+        return {
+          id: input.id,
+          status: LnurlAuthLoginStatusEnum.enum.failed,
+        }
+      }
+
+      if (Auth.instance.lnurlAuthLogin.isOneTimeLoginHashValid(lnurlAuthLogin.hash)) {
+        return {
+          id: input.id,
+          status: LnurlAuthLoginStatusEnum.enum.loggedIn,
+        }
+      }
+
+      return {
+        id: input.id,
+        status: LnurlAuthLoginStatusEnum.enum.pending,
+      }
+    }),
+
+  loginStatusSubscription: publicProcedure
+    .input(z.object({ lastEventId: z.string() }))
     // todo: add output type definition/validation:
     // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1300#note_19422
-    //.output(LnurlAuthLoginDto)
+    //.output(LnurlAuthLoginStatusDto)
     .subscription(async function* ({ input }): AsyncGenerator<TrackedEnvelope<LnurlAuthLoginStatusDto>> {
       const lnurlAuthLogin = await Auth.instance.lnurlAuthLogin.get(input.lastEventId)
 
