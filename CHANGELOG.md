@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.4.15...v0.4.16
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.15...v0.4.16)
+
+### 🩹 Fixes
+
+- Pipeline always build and deploy frontend and backend, regardless of changes (8343c254)
+- Pipeline always build and deploy frontend and backend, regardless of changes (2ccdb6e0)
+- Turning on trpc subscriptions again (f51c855b)
+- Try using setInterval i/o setTimeout on PageFunding (2f29e9e7)
+
+### 💅 Refactors
+
+- Login do not use subscriptions (aa452e74)
+
+### 🏡 Chore
+
+- Update packages (5e6b36a1)
+- **release:** V0.4.16 (9900f857)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.14...v0.4.15
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.14...v0.4.15)
