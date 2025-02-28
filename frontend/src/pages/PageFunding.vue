@@ -508,7 +508,7 @@ const cardFundedDate = ref<number | undefined>()
 const usedDate = ref<number | undefined>()
 const viewed = ref(false)
 const setFunding = ref(false)
-const pollingTimeout = ref<NodeJS.Timeout>()
+const pollingInterval = ref<NodeJS.Timeout>()
 
 const lnurl = computed(() => LNURL.encode(`${BACKEND_API_ORIGIN}/api/lnurl/${route.params.cardHash}`))
 
@@ -546,8 +546,6 @@ const loadLnurlData = async () => {
   }
 
   initializing.value = false
-
-  pollingTimeout.value = setTimeout(loadLnurlData, 10 * 1000)
 }
 
 const onVisibilityChange = () => {
@@ -559,12 +557,13 @@ const onVisibilityChange = () => {
 
 onBeforeMount(() => {
   loadLnurlData()
+  pollingInterval.value = setInterval(loadLnurlData, 10000)
   document.addEventListener('visibilitychange', onVisibilityChange)
 })
 
 onUnmounted(() => {
-  if (pollingTimeout.value != null) {
-    clearTimeout(pollingTimeout.value)
+  if (pollingInterval.value != null) {
+    clearInterval(pollingInterval.value)
   }
   document.removeEventListener('visibilitychange', onVisibilityChange)
 })
