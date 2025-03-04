@@ -3,19 +3,25 @@
 # exit if any command in the script exits with a code != 0
 set -e
 
-# changing package.json version
-CURRENT_VERSION=$(git describe --tags --abbrev=0)
-NEXT_VERSION=$(npm version patch --no-git-tag-version --silent)
-echo "Bumping version from $CURRENT_VERSION to $NEXT_VERSION"
-git add package.json package-lock.json
+# check if there are any uncommited changes in the working directory
+if [ -n "$(git status --porcelain)" ]; then
+  echo "There are uncommitted changes in the working directory. Please commit or stash them before bumping the version."
+  exit 1
+fi
+
+# check if we are on the main branch
+if [ "$(git branch --show-current)" != "main" ]; then
+  echo "You must be on the main branch to bump the version."
+  exit 1
+fi
+
+# increase the version number in package.json and generate the changelog
+CHANGELOG=$(npx changelogen --bump --output CHANGELOG.md)
+
+NEXT_VERSION="v$(jq -r '.version' package.json)"
+
+git add package.json package-lock.json CHANGELOG.md
 git commit -m "chore(release): $NEXT_VERSION" --no-verify
 
-# create tag for changelogn
-git tag $NEXT_VERSION
-CHANGELOG=$(npx changelogen --from $CURRENT_VERSION --to $NEXT_VERSION)
-npx changelogen --from $CURRENT_VERSION --to $NEXT_VERSION --output CHANGELOG.md
-git add CHANGELOG.md
-git commit --amend --no-edit --no-verify
-
-# Force update the tag to point to the amended commit
-git tag -f $NEXT_VERSION -m "$CHANGELOG"
+# Tag the new commit with the new version and the changelog
+git tag -a $NEXT_VERSION -m "$CHANGELOG"
