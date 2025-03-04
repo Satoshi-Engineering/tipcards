@@ -60,12 +60,15 @@ export default (
         }
       })
       amount = Number(response.data.paymentRequestDecoded.num_satoshis)
-    } catch {
-      res.status(400).json(toErrorResponse({
-        message: 'Unable to calculate estimated fee.',
+    } catch (error) {
+      const errorMessage = 'Unable to calculate estimated fee.'
+      res.status(503).json(toErrorResponse({
+        message: errorMessage,
+        code: ErrorCode.UnableToFindValidRoute,
       }))
-      return
+      throw new ErrorWithCode(error, ErrorCode.UnableToFindValidRoute)
     }
+
     if (totalFee == null) {
       res.status(400).json(toErrorResponse({
         message: 'No route found.',
