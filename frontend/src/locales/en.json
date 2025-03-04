@@ -92,9 +92,13 @@
         "question": "I have questions, feedback, a problem or found a bug. What should I do?",
         "answer": "Don't hesitate to contact us at {supportEmail}."
       },
+      "setId": {
+        "question": "What was the Set ID for again?",
+        "answer": "The Set ID allows you to check the status of your funded and gifted TipCards at the URL https://tipcards.io/cards/<Set-ID>. If a card hasn't been redeemed after a while, you can get back the Sats there. If you've logged in with LNURL-Auth and created a user account, you can save your sets—so you don't have to remember your Set IDs manually."
+      },
       "monitorCards": {
         "question": "How can I track which cards have been redeemed?",
-        "answer": "Go to the page where you created your TipCards set. In the upper part you will see an overview of all cards in your set that have been funded, viewed and redeemed."
+        "answer": "Go to the page where you created your TipCards set (https://tipcards.io/cards/<Set-ID>). In the upper part you will see an overview of all cards in your set that have been funded, viewed and redeemed."
       },
       "getBackSats": {
         "question": "How can I get unused sats back?",

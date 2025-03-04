@@ -92,9 +92,13 @@
         "question": "Ich habe Fragen, Feedback, ein Problem oder einen Bug entdeckt. An wen kann ich mich wenden?",
         "answer": "Schreib uns an {supportEmail}."
       },
+      "setId": {
+        "question": "Wozu war nochmal die Set-ID?",
+        "answer": "Die Set-ID ermöglicht es dir, den Status deiner aufgeladenen und verschenkten TipCards unter der URL https://tipcards.io/cards/<Set-ID> zu überprüfen. Wenn eine Karte nach einer Weile nicht eingelöst wurde, kannst du die Sats dort auch zurückholen. Falls du dich mit LNURL-Auth eingeloggt und einen User-Account erstellt hast, kannst du deine Sets speichern – dann musst du dir deine Set-IDs nicht extra merken."
+      },
       "monitorCards": {
         "question": "Wie kann ich verfolgen, welche Karten eingelöst wurden?",
-        "answer": "Gehe auf die Seite, auf der du dein TipCards-Set erstellt hast. Im oberen Teil siehst du eine Übersicht aller Karten in deinem Set, die aufgeladen, angesehen oder eingelöst wurden."
+        "answer": "Gehe auf die Seite, auf der du dein TipCards-Set erstellt hast (https://tipcards.io/cards/<Set-ID>). Im oberen Teil siehst du eine Übersicht aller Karten in deinem Set, die aufgeladen, angesehen oder eingelöst wurden."
       },
       "getBackSats": {
         "question": "Wie kann ich nicht eingelöste Sats zurückholen?",

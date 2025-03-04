@@ -37,6 +37,7 @@ import { FAQS, type Faq } from '@/modules/faqs'
 
 const faqs: Faq[] = [
   FAQS.support,
+  FAQS.setId,
   FAQS.monitorCards,
   FAQS.getBackSats,
   FAQS.bulkFunding,

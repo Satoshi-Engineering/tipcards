@@ -3,6 +3,10 @@ export const FAQS: Record<string, { questionKeypath: string, answerKeypath: stri
     questionKeypath: 'faqs.questions.support.question',
     answerKeypath: 'faqs.questions.support.answer',
   },
+  setId: {
+    questionKeypath: 'faqs.questions.setId.question',
+    answerKeypath: 'faqs.questions.setId.answer',
+  },
   monitorCards: {
     questionKeypath: 'faqs.questions.monitorCards.question',
     answerKeypath: 'faqs.questions.monitorCards.answer',
