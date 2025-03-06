@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.4.17
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.16...v0.4.17)
+
+### 🚀 Enhancements
+
+- Add set id faq (01de85ac)
+
+### 🩹 Fixes
+
+- Rethrow if volt vault request does not work or response is not as expected (4c6c73a8)
+
+### 🏡 Chore
+
+- Postpone expiry of esbuild tools audit ignore and update trpc (437f22f5)
+- Change the bump-version script to use the default semver behaviour from changelogen (bb2260cf)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.15...v0.4.16
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.15...v0.4.16)
