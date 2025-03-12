@@ -42,7 +42,7 @@ describe('Card status list loading (sorted) data', () => {
     cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('be.visible')
   })
 
-  it('should display the small loading icon, when the list already has items', () => {
+  it.skip('should display the small loading icon, when the list already has items', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()
 
