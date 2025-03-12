@@ -20,6 +20,7 @@ describe('Fee Calculation', () => {
           failOnStatusCode: false,
         }).then((response) => {
           cy.log(response.body)
+          cy.log(JSON.stringify(response.body))
           cy.wrap(response.status).should('be.greaterThan', 399)
           cy.wrap(response.body.status).should('equal', 'ERROR')
           cy.wrap(response.body.code).should('equal', 'UnableToFindValidRoute')
