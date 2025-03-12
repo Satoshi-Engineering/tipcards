@@ -15,7 +15,6 @@ describe('Fee Calculation', () => {
         method: 'GET',
       }).then((response) => {
         const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)
-        cy.wait(1000) // wait link open_time 1 seconds for withdraw
         cy.request({
           url: `${lnurlWithdrawRequest.callback}&k1=${lnurlWithdrawRequest.k1}&pr=${invoice}`,
           failOnStatusCode: false,

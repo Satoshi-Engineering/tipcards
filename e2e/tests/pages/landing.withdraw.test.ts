@@ -6,7 +6,6 @@ describe('Landing Page', () => {
   it('should load the status of a pending withdraw', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
-      cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.withdrawAllSatsFromCard(cardHash)
 
       tipCards.landing.gotoPreview(cardHash)
@@ -19,7 +18,6 @@ describe('Landing Page', () => {
   it('should load the status of a recently withdrawn card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
-      cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.useFundedCard(cardHash)
 
       tipCards.landing.gotoPreview(cardHash)
@@ -31,7 +29,6 @@ describe('Landing Page', () => {
   it('should load the status of a withdrawn card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
-      cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
       tipCardsApi.card.useFundedCard(cardHash)
       cy.task('setCardWithdrawnDateIntoPast', cardHash)
 

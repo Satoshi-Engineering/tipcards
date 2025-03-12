@@ -20,6 +20,7 @@ export const fundCardWithInvoice = (cardHash: CardStatusDto['hash'], amount: num
     payInvoice(invoice)
     callInvoicePaidHookForCard(cardHash)
   })
+  cy.wait(1000) // lnbits does not allow to immediately withdraw the funds
 }
 
 export const createInvoiceForCardHash = (cardHash: CardStatusDto['hash'], amount: number) =>
