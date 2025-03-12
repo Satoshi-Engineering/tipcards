@@ -22,7 +22,12 @@ export const withdrawAllSatsFromLnurlWithdrawRequest = (lnurlWithdrawRequest: LN
   const amount = Math.floor(lnurlWithdrawRequest.maxWithdrawable / 1000)
   createInvoice(amount).then((invoice) => {
     const url = createUrlForLnurlWithdrawRequest(lnurlWithdrawRequest, invoice)
-    cy.request(url)
+    cy.request(url).then((response) => {
+      if (response.status !== 200) {
+        cy.log(response.body)
+        cy.log(JSON.stringify(response.body))
+      }
+    })
   })
 }
 
