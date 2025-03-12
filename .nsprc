@@ -3,5 +3,15 @@
     "active": true,
     "notes": "Moderate vulnerability in esbuild tools used by vite. Only affects development builds.",
     "expiry":  1742295600000
+  },
+  "1103013": {
+    "active": true,
+    "notes": "Babel has inefficient RexExp complexity in generated code with .replace when transpiling named capturing groups.",
+    "expiry":  1742295600000
+  },
+  "1103014": {
+    "active": true,
+    "notes": "Babel has inefficient RexExp complexity in generated code with .replace when transpiling named capturing groups.",
+    "expiry":  1742295600000
   }
 }
