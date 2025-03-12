@@ -13,7 +13,6 @@ describe('Card status list loading (sorted) data', () => {
   it('should load and display 50 card statuses (sorted) on the history page', () => {
     tipCards.history.goto()
 
-    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('be.visible')
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 50)
     cy.getTestElement('history-load-more-button').should('exist')
     cardStatusListItemsAreSorted()
@@ -23,7 +22,6 @@ describe('Card status list loading (sorted) data', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()
 
-    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--small]').should('be.visible')
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 100)
     cardStatusListItemsAreSorted()
   })
@@ -34,10 +32,30 @@ describe('Card status list loading (sorted) data', () => {
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 100)
     cy.getTestElement('history-load-more-button').click()
 
-    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--small]').should('be.visible')
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 105)
     cy.getTestElement('history-load-more-button').should('not.exist')
     cardStatusListItemsAreSorted()
+  })
+
+  it('should display the large loading icon, when the list has not yet loaded any items', () => {
+    tipCards.history.goto()
+    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('be.visible')
+  })
+
+  it('should display the small loading icon, when the list already has items', () => {
+    tipCards.history.goto()
+    cy.getTestElement('history-load-more-button').click()
+
+    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--small]').should('be.visible')
+  })
+
+  it('should display the small loading icon, when the list already has items', () => {
+    tipCards.history.goto()
+    cy.getTestElement('history-load-more-button').click()
+    cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 100)
+    cy.getTestElement('history-load-more-button').click()
+
+    cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--small]').should('be.visible')
   })
 })
 
