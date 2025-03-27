@@ -1,6 +1,44 @@
 # Changelog
 
 
+## v0.4.18
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.17...v0.4.18)
+
+### 🚀 Enhancements
+
+- Add SEO text to home page (2e9b7407)
+
+### 💅 Refactors
+
+- **e2e:** Move the testing of the loading icons to seperate tests (efcc5600)
+- **e2e:** Rename test to be more specific (be5db6fe)
+- **e2e:** Add 1 sec wait after a withdraw is created (59799af6)
+
+### 🏡 Chore
+
+- Postpone expiry of esbuild audit exception (51648968)
+- Npm audit fix (de1dc73b)
+- Skip failing test as it there is a problem with the lnbits wallet balances (736aa20d)
+- **e2e:** Skip regular failing test (c8a4e8fe)
+- Skip failing test as it there is a problem with the lnbits wallet balances" (26ff03eb)
+- **e2e:** Add log to see error message in sceenshot for failing test in pipeline (1a91a1cd)
+- **e2e:** Skip (another) regular failing test (099acec6)
+- **e2e:** Add log to see error message in sceenshot for failing test in pipeline (78c73732)
+- **e2e:** Add 1 second wait time between withdraw link creation and call (aed8b368)
+- **e2e:** Add npm audit excludes for inefficient Babel code (e671549f)
+- **e2e:** Add debug log when withdraw call failed to be visible on screenshot (4ead3c6d)
+- Audit fix (ab976ac6)
+- Bump esbuild expiry in nsprc (9e4333e1)
+- Audit fix (27f818b6)
+- Update trpc to stable v11 (6a0c5566)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Philipp Horwath <fil@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.17
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.16...v0.4.17)
