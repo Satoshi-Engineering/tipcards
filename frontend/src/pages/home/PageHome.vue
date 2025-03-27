@@ -62,6 +62,9 @@
         <SliderVideoGuides class="mt-1" />
       </CenterContainer>
     </section>
+    <section class="my-7">
+      <SeoText />
+    </section>
   </TheLayout>
 </template>
 
@@ -76,4 +79,5 @@ import ButtonDefault from '@/components/buttons/ButtonDefault.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
 import SliderHowItWorks from '@/pages/home/components/SliderHowItWorks.vue'
 import SliderVideoGuides from '@/pages/home/components/SliderVideoGuides.vue'
+import SeoText from './components/SeoText.vue'
 </script>
