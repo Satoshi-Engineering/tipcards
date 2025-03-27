@@ -2,7 +2,7 @@ import {
   createTRPCClient,
   splitLink,
   httpBatchLink,
-  unstable_httpSubscriptionLink,
+  httpSubscriptionLink,
   TRPCClientError,
   type CreateTRPCClient,
 } from '@trpc/client'
@@ -16,7 +16,7 @@ const createClient = () => createTRPCClient<AuthRouter>({
   links: [
     splitLink({
       condition: (operation) => operation.type === 'subscription',
-      true: unstable_httpSubscriptionLink({
+      true: httpSubscriptionLink({
         url: `${TIPCARDS_AUTH_ORIGIN}/auth/trpc`,
         transformer: superjson,
       }),

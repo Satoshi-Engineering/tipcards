@@ -2,7 +2,7 @@ import {
   createTRPCClient,
   splitLink,
   httpBatchLink,
-  unstable_httpSubscriptionLink,
+  httpSubscriptionLink,
   type CreateTRPCClient,
   type HTTPHeaders,
   type Operation,
@@ -31,7 +31,7 @@ export const createBaseClient = ({
     links: [
       splitLink({
         condition: (operation) => operation.type === 'subscription',
-        true: unstable_httpSubscriptionLink({
+        true: httpSubscriptionLink({
           url: `${BACKEND_API_ORIGIN}/trpc`,
           transformer: superjson,
         }),
