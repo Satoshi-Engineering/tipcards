@@ -92,7 +92,7 @@ cp -r node_modules dist/.
 cp backend/deploy/package.json dist/.
 cp backend/deploy/ecosystem.config.cjs dist/.
 cp backend/.env dist/.
-# set the following variables in .env.local:
+# set the following variables in a new  file named .env.local:
 # POSTGRES_HOST=localhost
 # POSTGRES_PASSWORD=<the-password-you-defined-in-postgres-env-before>
 # TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
@@ -113,7 +113,7 @@ pm2 startup
 ```bash
 # switch to tipcards root
 cd /opt/tip-cards
-# set the following variables in .env.local:
+# set the following variables in new file named .env.local:
 # VITE_BACKEND_API_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
 # VITE_TIPCARDS_AUTH_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
 # VITE_TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
