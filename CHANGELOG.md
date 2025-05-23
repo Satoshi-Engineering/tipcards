@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.4.19
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.18...v0.4.19)
+
+### 🚀 Enhancements
+
+- Add french to available locales (d1f45f5a)
+
+### 🩹 Fixes
+
+- Ignore abort errors in console hooks (8d865cf9)
+
+### 🏡 Chore
+
+- Audit fix (b2d3a1f2)
+- Bump esbuild expiry date as there is still no easy fix (06d0d5bb)
+- Npm audit fix (8b73ea18)
+- Npm audit fix (d26869ab)
+- Npm audit fix (ce890c52)
+- Npm audit fix (0f372918)
+- Add gitignore to postgres example so we can boot the database directly from the example (7cc9e91a)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.18
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.17...v0.4.18)
