@@ -14,6 +14,11 @@ const LOCALES_LOCAL = {
     dir: 'ltr',
     fiat: 'EUR',
   },
+  fr: {
+    name: 'Français',
+    dir: 'ltr',
+    fiat: 'EUR',
+  },
   he: {
     name: 'עברית',
     dir: 'rtl',
