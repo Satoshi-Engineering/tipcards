@@ -13,6 +13,14 @@ const initErrorLogging = () => {
 
   consoleHooks({
     onError: async (message: string) => {
+      // Ignore abort errors
+      // I was not able to figure out how to exactly reproduce it, and therefore also not how to catch it
+      // But it happens kinda often and spams the logs
+      // https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1809
+      if (message.includes('AbortError: The operation was aborted')) {
+        return
+      }
+
       await telegramSender?.sendMessage({ message })
     },
   })
