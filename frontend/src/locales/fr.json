@@ -79,58 +79,58 @@
   },
   "footer": {
     "mostRelevantFaqs": {
-      "title": "Bug, retour ou questions ?",
-      "subTitle": "Nous nous efforçons constamment de nous améliorer !",
+      "title": "Bug, retour ou questions ?",
+      "subTitle": "Nous nous efforçons constamment de nous améliorer !",
       "buttonToFaqs": "Vers les FAQs"
     }
   },
   "faqs": {
     "title": "Foire Aux Questions",
-    "intro": "Vous trouverez ici les réponses aux questions les plus fréquemment posées. Nous nous efforçons constamment de nous améliorer !",
+    "intro": "Vous trouverez ici les réponses aux questions les plus fréquemment posées. Nous nous efforçons constamment de nous améliorer !",
     "questions": {
       "support": {
-        "question": "J'ai des questions, des retours, un problème ou j'ai trouvé un bug. Que dois-je faire ?",
+        "question": "J'ai des questions, des retours, un problème ou j'ai trouvé un bug. Que dois-je faire ?",
         "answer": "N'hésitez pas à nous contacter à {supportEmail}."
       },
       "setId": {
-        "question": "À quoi sert l'ID de la collection ?",
+        "question": "À quoi sert l'ID de la collection ?",
         "answer": "L'ID de la collection vous permet de vérifier le statut de vos TipCards chargées et offertes à l'URL https://tipcards.io/cards/<Set-ID>. Si une carte n'a pas été utilisée après un certain temps, vous pouvez récupérer les Sats là-bas. Si vous vous êtes connecté avec LNURL-Auth et avez créé un compte utilisateur, vous pouvez sauvegarder vos collections — ainsi vous n'aurez pas à vous souvenir de vos ID de collection manuellement."
       },
       "monitorCards": {
-        "question": "Comment puis-je suivre les cartes qui ont été utilisées ?",
+        "question": "Comment puis-je suivre les cartes qui ont été utilisées ?",
         "answer": "Allez sur la page où vous avez créé votre collection de TipCards (https://tipcards.io/cards/<Set-ID>). Dans la partie supérieure, vous verrez un aperçu de toutes les cartes de votre collection qui ont été chargées, vues et utilisées."
       },
       "getBackSats": {
-        "question": "Comment puis-je récupérer les sats inutilisés ?",
+        "question": "Comment puis-je récupérer les sats inutilisés ?",
         "answer": "Sur la page de votre collection de TipCards, vous trouverez un bouton \"Retirer les sats restants\". Cela vous permettra de retirer toutes les cartes de cette collection qui ont encore une valeur sur elles en une seule fois. Vous devez être connecté pour utiliser cette fonctionnalité."
       },
       "bulkFunding": {
-        "question": "Puis-je financer plusieurs cartes à la fois ?",
+        "question": "Puis-je financer plusieurs cartes à la fois ?",
         "answer": "Il suffit de cliquer sur \"Financer la collection\" sur la page de configuration de la collection et de saisir le montant de sats par carte. Vous pouvez financer jusqu'à 100 cartes avec une seule transaction Lightning."
       },
       "custodial": {
-        "question": "TipCards est-il un service de garde ?",
+        "question": "TipCards est-il un service de garde ?",
         "answer": "Lightning TipCards est un service de garde et ne doit pas être utilisé comme un stockage à long terme pour vos sats. Nous vous recommandons vivement de ne pas laisser un montant important sur une TipCard pour une longue période."
       },
       "lightningNode": {
-        "question": "Quel nœud Lightning utilisez-vous ?",
+        "question": "Quel nœud Lightning utilisez-vous ?",
         "answer": "Nous utilisons le nœud Lightning {lightningNode}."
       },
       "openSource": {
-        "question": "Puis-je héberger TipCards moi-même ? Le code est-il open source ?",
+        "question": "Puis-je héberger TipCards moi-même ? Le code est-il open source ?",
         "answer": "Vous êtes libre d'hébérger votre propre instance de Lightning TipCards, de contribuer en créant des tickets de support, en participant aux traductions, corrections de bugs ou à l'implémentation de nouvelles fonctionnalités via des Pull Requests sur {github}."
       },
       "localStorageSets": {
-        "question": "Où sont mes anciennes collections ?",
+        "question": "Où sont mes anciennes collections ?",
         "answer": "Si vous avez sauvegardé des collections avant septembre 2023, elles étaient stockées localement dans votre navigateur. Vous pouvez aller sur {localSetsPage} pour les consulter. Nous vous recommandons de les sauvegarder dans votre compte, afin que vous puissiez y accéder depuis n'importe quel appareil."
       }
     }
   },
   "landing": {
     "title": "Obtenez vos bitcoins",
-    "introGreeting": "Salut !",
-    "introGreetingFunded": "Félicitations !",
-    "introMessage": "On vous a offert des bitcoins.{linebreak}Récupérer les maintenant !",
+    "introGreeting": "Salut !",
+    "introGreetingFunded": "Félicitations !",
+    "introMessage": "On vous a offert des bitcoins.{linebreak}Récupérer les maintenant !",
     "introMessageReceiveBtc": {
       "message": "Vous êtes sur le point de recevoir {amountAndUnit}",
       "amountAndUnit": "{amount} bitcoin",
@@ -144,26 +144,26 @@
     },
     "introMessageAlreadyUsed": {
       "headline": "Il semble que ce code QR a déjà été utilisé.",
-      "message": "Mais ne vous inquiétez pas : Vous pouvez obtenir vos propres bitcoins sur une bourse d'échange de cryptomonnaies (par exemple {exchange}), à un distributeur Bitcoin (par exemple {atm}) ou chez un courtier en cryptomonnaies (par exemple {broker}), etc."
+      "message": "Mais ne vous inquiétez pas : Vous pouvez obtenir vos propres bitcoins sur une bourse d'échange de cryptomonnaies (par exemple {exchange}), à un distributeur Bitcoin (par exemple {atm}) ou chez un courtier en cryptomonnaies (par exemple {broker}), etc."
     },
     "introMessageJustReceived": {
       "headline": "Votre code QR vient d'être utilisé. {emoji}",
       "message": "Vous pouvez obtenir plus de bitcoins sur une bourse d'échange de cryptomonnaies (par exemple {exchange}), à un distributeur Bitcoin (par exemple {atm}) ou chez un courtier en cryptomonnaies (par exemple {broker}), etc."
     },
     "sectionBitcoin": {
-      "title": "Qu'est-ce que le Bitcoin exactement ?",
+      "title": "Qu'est-ce que le Bitcoin exactement ?",
       "paragraphs": {
         "0": "Le Bitcoin est une <strong>monnaie numérique</strong>.",
         "1": "Elle est gérée par tous les membres du réseau Bitcoin, ce qui signifie qu'elle n'est <strong>pas sous le contrôle</strong> d'une banque centrale, d'un gouvernement ou d'une entreprise.",
-        "2": "Les transactions (y compris les transactions internationales) sont aussi simples que de scanner un code QR. Essayez-le !"
+        "2": "Les transactions (y compris les transactions internationales) sont aussi simples que de scanner un code QR. Essayez-le !"
       },
-      "headline": "Qu'est-ce que le Bitcoin ?"
+      "headline": "Qu'est-ce que le Bitcoin ?"
     },
     "sectionGetYourBitcoin": {
       "headline": "Comment obtenir vos bitcoins",
-      "explanation": "Si vous avez un portefeuille Lightning installé, <strong>scannez</strong> à nouveau le code QR de votre <strong>TipCard</strong> avec votre portefeuille ou <strong>appuyez</strong> sur le code QR suivant :",
+      "explanation": "Si vous avez un portefeuille Lightning installé, <strong>scannez</strong> à nouveau le code QR de votre <strong>TipCard</strong> avec votre portefeuille ou <strong>appuyez</strong> sur le code QR suivant :",
       "qrCodeHeadline": "Appuyez sur le code QR ci-dessous",
-      "noWallet": "Vous n'avez jamais utilisé Bitcoin et n'avez pas de portefeuille ?"
+      "noWallet": "Vous n'avez jamais utilisé Bitcoin et n'avez pas de portefeuille ?"
     },
     "sectionWallet": {
       "headline": "Télécharger un portefeuille",
@@ -181,18 +181,18 @@
         "step2": "<strong>scannez</strong> à nouveau le code QR sur votre TipCard<br>(à l'aide de votre application de portefeuille)"
       },
       "statusReceived": {
-        "congrats": "Félicitations !",
+        "congrats": "Félicitations !",
         "message": "Les bitcoins viennent d'être transférés vers votre portefeuille."
       }
     },
     "sectionNoWallet": {
-      "headline": "Vous n'avez jamais utilisé Bitcoin et n'avez pas de portefeuille ?",
-      "explanation": "Installez un portefeuille pour recevoir, stocker et dépenser des bitcoins. Une application smartphone est idéale pour un usage quotidien et de petits montants. Nous recommandons les portefeuilles suivants pour commencer :"
+      "headline": "Vous n'avez jamais utilisé Bitcoin et n'avez pas de portefeuille ?",
+      "explanation": "Installez un portefeuille pour recevoir, stocker et dépenser des bitcoins. Une application smartphone est idéale pour un usage quotidien et de petits montants. Nous recommandons les portefeuilles suivants pour commencer :"
     },
     "sectionUse": {
       "headline": "Utilisez vos bitcoins",
       "message": "Vous pouvez maintenant dépenser vos bitcoins dans un magasin ou sur un site web qui accepte les bitcoins, les transférer au portefeuille Lightning de votre ami ou collègue, ou simplement les conserver.",
-      "examplesIntro": "Voici quelques sites où vous pouvez payer avec des bitcoins via Lightning :",
+      "examplesIntro": "Voici quelques sites où vous pouvez payer avec des bitcoins via Lightning :",
       "examples": {
         "saltNDaisy": "Achetez des granolas durables",
         "satoshistore": "Boutique de produits dérivés Bitcoin",
@@ -203,7 +203,7 @@
         "btcmap": "Trouvez facilement des endroits pour dépenser des sats partout sur la planète"
       },
       "createYourOwnTipCardsHeadline": "Créez vos propres TipCards",
-      "createYourOwnTipCardsText": "Souhaitez-vous offrir à vos amis ou collègues quelques Sats (1 Sat = 0.00000001 bitcoin) ou récompenser quelqu'un en bitcoins ? Cliquez sur le bouton suivant et configurez vos TipCards personnelles.",
+      "createYourOwnTipCardsText": "Souhaitez-vous offrir à vos amis ou collègues quelques Sats (1 Sat = 0.00000001 bitcoin) ou récompenser quelqu'un en bitcoins ? Cliquez sur le bouton suivant et configurez vos TipCards personnelles.",
       "createYourOwnTipCardsButton": "Créer mes propres TipCards"
     },
     "bulkWithdrawExists": "Un rappel de cette TipCard est en cours. Vous devez d'abord l'annuler pour utiliser la carte.",
@@ -236,12 +236,12 @@
       "feeInfo": "Les frais de {fee}% couvrent les coûts de routage sortant et d'infrastructure. Ils sont arrondis à des sats entiers par carte, résultant en un minimum de {minimumFeeAmountAndUnit} par carte.",
       "feeInfoShared": "Les frais de {fee}% couvrent les coûts de routage sortant et d'infrastructure. Ils sont arrondis à des sats entiers par paiement, résultant en un minimum de {minimumFeeAmountAndUnit} par paiement."
     },
-    "invoiceText": "Chargez votre TipCard avec {amount} sats :",
+    "invoiceText": "Chargez votre TipCard avec {amount} sats :",
     "invoiceExpired": "La facture Lightning pour cette carte a expiré. Veuillez réinitialiser la TipCard pour continuer.",
     "resetInvoice": "Réinitialiser la TipCard",
     "resetDisabledTooltip": "Cette carte est déjà chargée avec des sats.",
     "lnurlp": {
-      "currentAmount": "La TipCard a été chargée avec :",
+      "currentAmount": "La TipCard a été chargée avec :",
       "text": "Scannez le code QR avec votre application de portefeuille ou cliquez sur {buttonOpenInWallet} pour charger la carte. Vous pouvez entrer le montant souhaité dans l'application de portefeuille.",
       "fundedAmount": "Montant payé",
       "amountOnCard": "Montant sur la carte"
@@ -255,17 +255,17 @@
       "buttonFinish": "Rajouter des fonds",
       "finishDisabledTooltip": "Vous devez d'abord charger cette carte.",
       "buttonMakeShared": "Activer le chargement partagé sur cette TipCard",
-      "currentAmount": "Le solde actuel sur la carte est :",
+      "currentAmount": "Le solde actuel sur la carte est :",
       "fundedAmount": "Total des montants payés",
       "amountOnCard": "Montant sur la carte",
       "paymentsCount": "Nombre de paiements"
     },
-    "payInvoice": "Veuillez payer le montant suivant :"
+    "payInvoice": "Veuillez payer le montant suivant :"
   },
   "setFunding": {
     "title": "Chargement de la collection",
     "headline": "Chargement de la collection",
-    "setName": "Nom de la collection : {setName}",
+    "setName": "Nom de la collection : {setName}",
     "amountAndUnit": "{amount} BTC",
     "text": "Cette collection a {numberOfCardsToFund} cartes sans sats. Spécifiez le montant par carte et le message que vous souhaitez que le destinataire voie dans son portefeuille. La facture totale sera de {amountAndUnit}.",
     "textFundingNotPossible": "Certaines cartes de cette collection ont déjà été utilisées. Créez une nouvelle collection pour charger toute une collection.",
@@ -273,7 +273,7 @@
     "textFunded": "Toutes les {numberOfCardsToFund} cartes de cette collection ont été chargées avec {amountAndUnitPerCard} chacune.",
     "form": {
       "amountLabel": "Montant par carte",
-      "smallAmountWarning": "Attention : De petits montants par carte peuvent causer des problèmes au destinataire lorsqu'il essaie de recevoir ses sats. Nous recommandons d'utiliser un minimum de 210 sats par carte.",
+      "smallAmountWarning": "Attention : De petits montants par carte peuvent causer des problèmes au destinataire lorsqu'il essaie de recevoir ses sats. Nous recommandons d'utiliser un minimum de 210 sats par carte.",
       "totalAmountLabel": "Montant total",
       "textHint": "Sera affiché dans le portefeuille du destinataire",
       "notePlaceholder": "Notes / remis à",
@@ -286,7 +286,7 @@
     "resetDisabledTooltip": "Cette collection a déjà été chargée",
     "backToSet": "Retour aux cartes",
     "invoiceExpired": "La facture Lightning pour cette collection a expiré. Veuillez la réinitialiser pour continuer.",
-    "payInvoice": "Payez le montant suivant pour charger {cards} :",
+    "payInvoice": "Payez le montant suivant pour charger {cards} :",
     "invoicePaidSuccessfully": "{cards} ont été chargées avec succès."
   },
   "index": {
@@ -333,7 +333,7 @@
       }
     },
     "videoGuidesHeadline": "Guides vidéo",
-    "videoGuidesText": "Vous avez reçu une TipCard ou vous souhaitez en créer une vous-même ? Dans nos guides vidéo, nous vous montrons comment cela fonctionne.",
+    "videoGuidesText": "Vous avez reçu une TipCard ou vous souhaitez en créer une vous-même ? Dans nos guides vidéo, nous vous montrons comment cela fonctionne.",
     "videoGuidesSlides": {
       "create": {
         "headline": "Créer",
@@ -345,7 +345,9 @@
         "text": "Comment charger et utiliser les TipCards.",
         "link": "https://www.youtube.com/watch?v=26dj0580HYc"
       }
-    }
+    },
+    "seoTextHeadline": "Offrir des bitcoins en toute simplicité.",
+    "seoText": "<p><strong>Les Lightning TipCards</strong> sont le moyen le plus simple d’offrir des <strong>bitcoins</strong> dans le monde réel. Chaque <strong>carte</strong> peut être chargée avec des bitcoins via le réseau Lightning, puis utilisée immédiatement – sans aucune connaissance technique préalable.</p><p>Que tu veuilles faire découvrir le bitcoin à quelqu’un pour la première fois, offrir un <strong>cadeau</strong> original ou partager de la vraie valeur lors d’un <strong>événement</strong>, les TipCards rendent cela simple et ludique. Scanner, utiliser, se réjouir.</p><p><strong>Idéal pour :</strong></p><ul><li>Anniversaires, fêtes et occasions spéciales</li><li>Conférences, meetups, <strong>onboarding</strong> et <strong>orange pilling</strong></li><li>Tout <strong>événement</strong> où tu veux transmettre des bitcoins</li><li>Toutes les personnes curieuses de découvrir le bitcoin</li></ul><p>Une <strong>carte-cadeau</strong> tournée vers l’avenir – propulsée par Lightning.</p><p><strong>Offre des bitcoins dès maintenant avec TipCards.io.</strong></p>"
   },
   "sets": {
     "title": "Toutes mes collections",
@@ -393,9 +395,9 @@
         "noLogo": "Pas de logo"
       },
       "defaults": {
-        "cardHeadline": "Salut :)",
+        "cardHeadline": "Salut :)",
         "cardCopytext": "Vous avez reçu des bitcoins. 🎉\nScannez ce code QR et apprenez comment recevoir des bitcoins.",
-        "invoiceText": "Amusez-vous avec Bitcoin :)"
+        "invoiceText": "Amusez-vous avec Bitcoin :)"
       }
     },
     "actions": {
@@ -408,9 +410,9 @@
       "buttonSaveDisabledTooltip": "Vous pouvez uniquement sauvegarder des collections lorsque vous êtes connecté. Alternativement, vous pouvez utiliser l'URL pour accéder à cette collection.",
       "buttonDeleteCardsSet": "Supprimer la collection sauvegardée",
       "saveHeadline": "Sauvegarder",
-      "saveSetConfirm": "La collection de TipCards actuelle sera sauvegardée localement dans ce navigateur, en utilisant localStorage.\n\nVous pouvez également utiliser l'URL (dans la barre d'adresse) pour accéder à cette collection de TipCards.\n\nContinuer ?",
-      "deleteSetConfirm": "Voulez-vous vraiment supprimer la collection de TipCards actuelle et ses paramètres de ce navigateur ?",
-      "deleteSetOnServerConfirm": "Voulez-vous vraiment supprimer la collection de TipCards actuelle du serveur ?",
+      "saveSetConfirm": "La collection de TipCards actuelle sera sauvegardée localement dans ce navigateur, en utilisant localStorage.\n\nVous pouvez également utiliser l'URL (dans la barre d'adresse) pour accéder à cette collection de TipCards.\n\nContinuer ?",
+      "deleteSetConfirm": "Voulez-vous vraiment supprimer la collection de TipCards actuelle et ses paramètres de ce navigateur ?",
+      "deleteSetOnServerConfirm": "Voulez-vous vraiment supprimer la collection de TipCards actuelle du serveur ?",
       "setFunding": {
         "headline": "Charger toutes les cartes",
         "intro": "Vous pouvez charger des TipCards individuelles en scannant le code QR d'une nouvelle carte. Si vous souhaitez charger toutes les cartes de cette collection en une seule fois, utilisez la fonctionnalité \"Chargement de la collection\".",
@@ -428,7 +430,7 @@
     },
     "cards": {
       "headline": "TipCards",
-      "filterLabel": "Afficher les cartes :",
+      "filterLabel": "Afficher les cartes :",
       "filter": {
         "all": "Toutes",
         "unfunded": "Non-chargé",
@@ -469,19 +471,19 @@
         "beforeCopy": "Vous pouvez également {action} pour le coller dans votre application de portefeuille.",
         "beforeCopyAction": "copier le LNURL dans votre presse-papier",
         "afterCopySuccess": "Copié avec succès.",
-        "afterCopyNextStep": "Collez-le maintenant dans<br>votre application de portefeuille :)"
+        "afterCopyNextStep": "Collez-le maintenant dans<br>votre application de portefeuille :)"
       },
       "invoice": {
         "beforeCopy": "Vous pouvez également {action} pour le coller dans votre application de portefeuille.",
         "beforeCopyAction": "copier la facture dans votre presse-papier",
         "afterCopySuccess": "Copié avec succès.",
-        "afterCopyNextStep": "Collez-le maintenant dans<br>votre application de portefeuille :)"
+        "afterCopyNextStep": "Collez-le maintenant dans<br>votre application de portefeuille :)"
       }
     }
   },
   "auth": {
     "modalLogin": {
-      "headline": "Ravi de vous rencontrer !",
+      "headline": "Ravi de vous rencontrer !",
       "qrCodeHeadline": "Connexion en utilisant LNURL-Auth",
       "text": "Il suffit de scanner le code QR avec votre application de portefeuille Lightning et de commencer. Vous avez besoin d'un portefeuille qui supporte LNURL-Auth.",
       "loginErrorText": "Quelque chose a mal tourné. Veuillez essayer à nouveau plus tard ou contacter le support.",
@@ -526,7 +528,7 @@
       "text": "Vos collections de TipCards sont actuellement stockées localement dans votre navigateur. Transférez-les sur votre compte pour y accéder depuis tous vos appareils.",
       "migrate": "Transférer les collections",
       "logout": "Déconnexion",
-      "confirmMigrate": "Transférer maintenant ?"
+      "confirmMigrate": "Transférer maintenant ?"
     }
   },
   "localStorageDeprecation": {
@@ -540,14 +542,14 @@
       "explanation": "Cliquez sur le nom de la collection pour l'ouvrir. Lorsque vous êtes connecté, vous pouvez l'enregistrer. Alternativement, vous pouvez créer un signet pour les liens de collection.",
       "noSets": "Vous n'avez pas encore de collections sauvegardées.",
       "buttonClearAll": "Supprimer toutes les collections locales",
-      "confirmClearAll": "Voulez-vous vraiment supprimer toutes les collections locales ? Cette action ne peut pas être annulée.",
+      "confirmClearAll": "Voulez-vous vraiment supprimer toutes les collections locales ? Cette action ne peut pas être annulée.",
       "buttonBack": "Retour"
     }
   },
   "bulkWithdraw": {
     "title": "Retirer les sats restants",
     "headline": "Retirer des sats",
-    "setName": "Nom de la collection : {setName}",
+    "setName": "Nom de la collection : {setName}",
     "amountAndUnit": "{amount} BTC",
     "withdrawExists": "La récupération des sats restants a déjà été commencée. Vous devez annuler et redémarrer pour afficher un nouveau code QR.",
     "withdrawPending": "La récupération des sats restants a déjà été commencée. Attendez qu'ils arrivent dans votre portefeuille Lightning. Si cela prend plus de quelques minutes, veuillez contacter le support.",
@@ -570,8 +572,8 @@
     "terms": {
       "title": "Conditions d'utilisation",
       "text": {
-        "1": "En accédant à ce service, vous acceptez les conditions suivantes :",
-        "2": "Ce programme est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GARANTIE ; sans même la garantie implicite de QUALITÉ MARCHANDE ou D'ADÉQUATION À UN USAGE PARTICULIER."
+        "1": "En accédant à ce service, vous acceptez les conditions suivantes :",
+        "2": "Ce programme est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GARANTIE ; sans même la garantie implicite de QUALITÉ MARCHANDE ou D'ADÉQUATION À UN USAGE PARTICULIER."
       },
       "licenseLinkTitle": "Conditions de licence complètes"
     },
@@ -586,7 +588,7 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Ravi de vous rencontrer !",
+    "welcome": "Ravi de vous rencontrer !",
     "allMySets": "Toutes mes collections",
     "errors": {
       "unableToLoadCardsSummaryFromBackend": "Le résumé des cartes n'a pas pu être chargé."
@@ -615,7 +617,7 @@
     "title": "Politique de confidentialité",
     "section1": {
       "title": "1. Partie responsable",
-      "description": "La partie responsable du traitement des données est :"
+      "description": "La partie responsable du traitement des données est :"
     },
     "section2": {
       "title": "2. Traitement des données lors de l'utilisation de la plateforme",
@@ -639,7 +641,7 @@
     "section3": {
       "title": "3. Objectif et base légale du traitement",
       "subsection1": {
-        "title": "Les données collectées sont traitées aux fins suivantes :",
+        "title": "Les données collectées sont traitées aux fins suivantes :",
         "item1": "Fournir et gérer votre compte utilisateur",
         "item2": "Assurer la fonctionnalité de la plateforme",
         "item3": "Améliorer l'expérience utilisateur",
@@ -668,14 +670,14 @@
     "section7": {
       "title": "7. Cookies et outils d'analyse",
       "subsection1": {
-        "title": "7.1 Que sont les cookies ?",
+        "title": "7.1 Que sont les cookies ?",
         "description": "Les cookies sont de petits fichiers texte stockés sur votre appareil lorsque vous visitez notre site web. Ils contiennent des informations qui permettent à votre navigateur d'être reconnu et assurent certaines fonctionnalités du site web."
       },
       "subsection2": {
         "title": "7.2 Types de cookies",
-        "item1": "Cookies nécessaires : Ces cookies sont nécessaires pour assurer la fonctionnalité de base de la plateforme.",
-        "item2": "Cookies fonctionnels : Ces cookies améliorent l'expérience utilisateur, par exemple en sauvegardant les paramètres.",
-        "item3": "Cookies analytiques : Ces cookies nous aident à analyser et à améliorer l'utilisation de la plateforme."
+        "item1": "Cookies nécessaires : Ces cookies sont nécessaires pour assurer la fonctionnalité de base de la plateforme.",
+        "item2": "Cookies fonctionnels : Ces cookies améliorent l'expérience utilisateur, par exemple en sauvegardant les paramètres.",
+        "item3": "Cookies analytiques : Ces cookies nous aident à analyser et à améliorer l'utilisation de la plateforme."
       },
       "subsection3": {
         "title": "7.3 Paramètres des cookies",
