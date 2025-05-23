@@ -8,6 +8,7 @@ describe('TheLangNav', () => {
     en: 'Create your TipCards set',
     de: 'Erstelle dein TipCards-Set',
     es: 'Crea tu conjunto de TipCards',
+    fr: 'Créer votre collection de TipCards',
     he: 'צור את סט ה-TipCards שלך',
     ru: 'Создать набор ТИП-карт',
     hi: 'अपना TipCards सेट बनाएं',
