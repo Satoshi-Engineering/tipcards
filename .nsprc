@@ -2,6 +2,6 @@
   "1102341": {
     "active": true,
     "notes": "Moderate vulnerability in esbuild tools used by vite. Only affects development builds.",
-    "expiry": 1748757600000
+    "expiry": "2025-07-01"
   }
 }
