@@ -150,16 +150,17 @@
     sudo /etc/init.d/nginx reload
     ```
 
-    If you are using ssl, add the http2 directive to your nginx config
-
-    ```bash
-    listen 443 ssl http2;
-    ```
-
 1. Add ssl certificate
 
     ```bash
     sudo certbot --nginx
+    ```
+
+1. Enable http2
+
+    ```bash
+    sudo sed -i 's/listen 443 ssl;/listen 443 ssl http2;/' /etc/nginx/sites-available/tip-cards
+    sudo /etc/init.d/nginx reload
     ```
 
 ## Update TipCards application to the latest version
