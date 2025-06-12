@@ -3,10 +3,5 @@
     "active": true,
     "notes": "Moderate vulnerability in esbuild tools used by vite. Only affects development builds.",
     "expiry": "2025-07-01"
-  },
-  "1105422": {
-    "active": true,
-    "notes": "Low vulnerability in regex library.",
-    "expiry": "2025-06-16"
   }
 }
