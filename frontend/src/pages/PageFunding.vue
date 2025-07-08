@@ -186,6 +186,7 @@
               class="w-full my-4"
               fiat-currency="EUR"
               :disabled="creatingInvoice"
+              data-test="textmessage-text-field"
               @update:model-value="updateText"
             />
             <TextField
@@ -194,6 +195,7 @@
               :placeholder="$t('setFunding.form.notePlaceholder')"
               class="w-full my-4"
               :disabled="creatingInvoice"
+              data-test="note-text-field"
               @update:model-value="updateNote"
             />
             <ParagraphDefault v-if="funded" class="text-sm">
@@ -315,6 +317,7 @@
               class="w-full my-4"
               fiat-currency="EUR"
               :disabled="creatingInvoice || funded"
+              data-test="textmessage-text-field"
               @update:model-value="updateText"
             />
             <TextField
@@ -323,6 +326,7 @@
               :placeholder="$t('setFunding.form.notePlaceholder')"
               class="w-full my-4"
               :disabled="creatingInvoice || funded"
+              data-test="note-text-field"
               @update:model-value="updateNote"
             />
           </div>
@@ -351,6 +355,7 @@
               :disabled="creatingInvoice"
               fiat-currency="EUR"
               class="mt-4 mb-2"
+              data-test="sats-amount-selector"
               @update:amount-sats="amount = $event"
               @update:selected-currency="selectedCurrency = $event"
             />
@@ -382,6 +387,7 @@
               class="w-full my-4"
               fiat-currency="EUR"
               :disabled="creatingInvoice"
+              data-test="textmessage-text-field"
             />
             <TextField
               v-model="note"
@@ -389,11 +395,13 @@
               :placeholder="$t('setFunding.form.notePlaceholder')"
               class="w-full my-4"
               :disabled="creatingInvoice"
+              data-test="note-text-field"
             />
             <div class="flex flex-col items-center mt-4">
               <ButtonDefault
                 type="submit"
                 :disabled="creatingInvoice"
+                data-test="funding-submit-button"
               >
                 {{ t('funding.form.button') }}
               </ButtonDefault>
