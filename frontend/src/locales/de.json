@@ -390,6 +390,13 @@
       "unableToLoadSetFromBackend": "Das Set konnte nicht geladen werden."
     }
   },
+  "card": {
+    "title": "TipCard-Details",
+    "actions": {
+      "toFundingPage": "Zur Auflade-Seite",
+      "fund": "Jetzt aufladen"
+    }
+  },
   "cards": {
     "title": "TipCards-Set",
     "status": {

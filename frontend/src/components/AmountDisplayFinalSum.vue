@@ -8,7 +8,7 @@
     }"
   >
     <div class="text-center">
-      <div class="font-bold">
+      <div class="font-bold" :class="{ 'text-lg': size === 'lg'}">
         <FormatBitcoin
           v-if="selectedCurrency === 'BTC' && amountPrimaryNumber != null"
           :value="amountPrimaryNumber"
@@ -43,6 +43,10 @@ const props = defineProps({
   strong: {
     type: Boolean,
     default: false,
+  },
+  size: {
+    type: String as PropType<'md' | 'lg'>,
+    default: 'md',
   },
   amountSats: {
     type: Number,

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { about, type RouteAbout } from '@/router/pages/about'
 import { bulkWithdraw, type RouteBulkWithdraw } from '@/router/pages/bulkWithdraw'
+import { card, type RouteCard } from '@/router/pages/card'
 import { cards, type RouteCards } from '@/router/pages/cards'
 import { dashboard, type RouteDashboard } from '@/router/pages/dashboard'
 import { faqs, type RouteFaqs } from '@/router/pages/faqs'
@@ -29,6 +30,7 @@ import { privacyPolicy, type RoutePrivacyPolicy } from './pages/privacyPolicy'
 export interface RouteNamedMap {
   about: RouteAbout,
   'bulk-withdraw': RouteBulkWithdraw,
+  card: RouteCard,
   cards: RouteCards,
   dashboard: RouteDashboard,
   faqs: RouteFaqs,
@@ -67,6 +69,7 @@ const router = createRouter({
   routes: [
     about,
     bulkWithdraw(() => router),
+    card,
     cards,
     dashboard,
     faqs,

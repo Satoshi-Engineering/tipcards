@@ -368,6 +368,13 @@
       "unableToLoadSetFromBackend": "Unable to load set from the server."
     }
   },
+  "card": {
+    "title": "TipCard details",
+    "actions": {
+      "toFundingPage": "Go to the funding page",
+      "fund": "Fund this TipCard now"
+    }
+  },
   "cards": {
     "title": "TipCards Set",
     "status": {
