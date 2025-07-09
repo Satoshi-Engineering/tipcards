@@ -51,20 +51,31 @@ export const cardRouter = router({
       input,
       signal,
     }): AsyncGenerator<CardStatusDto> {
-      // create iterator first so we do not miss events during fetch of initial data
-      const iterator = on(
-        ctx.applicationEventEmitter,
-        cardUpdateEvent(input.hash),
-        { signal },
-      )
+      try {
+        // create iterator first so we do not miss events during fetch of initial data
+        const iterator = on(
+          ctx.applicationEventEmitter,
+          cardUpdateEvent(input.hash),
+          { signal },
+        )
 
-      const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
-      yield CardStatusDto.parse(cardStatus.toTrpcResponse())
-
-      // eslint-disable-next-line
-      for await (const _ of iterator) {
         const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
         yield CardStatusDto.parse(cardStatus.toTrpcResponse())
+
+        // eslint-disable-next-line
+        for await (const _ of iterator) {
+          const cardStatus = await LiveCardStatus.latestFromCardHashOrDefault(input.hash)
+          yield CardStatusDto.parse(cardStatus.toTrpcResponse())
+        }
+      } catch (err) {
+        if (
+          err instanceof Error && (err.name === 'AbortError'
+          || ('code' in err && err.code === 'ABORT_ERR'))
+        ) {
+          // The subscription was aborted (e.g. client disconnected)
+          return
+        }
+        throw err
       }
     }),
 
