@@ -1,6 +1,53 @@
 # Changelog
 
 
+## v0.4.20
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.18...v0.4.20)
+
+### 🚀 Enhancements
+
+- Add french to available locales (d1f45f5a)
+- Replace spaces before certain interpunction signs with non-breaking narrow space (e2ca64d6)
+- Add card details page stub (92374787)
+
+### 🩹 Fixes
+
+- Ignore abort errors in console hooks (8d865cf9)
+- E2e test for langnav (d0f747b8)
+- Update setup docs to handle application backend update correctly (6e2d2207)
+- Add sed command to enable http2 in nginx config (e8fc539f)
+- Ignore AbortError in card status subscription (aaaf3f97)
+
+### 💅 Refactors
+
+- French seo text (d21659f6)
+
+### 🏡 Chore
+
+- Audit fix (b2d3a1f2)
+- Bump esbuild expiry date as there is still no easy fix (06d0d5bb)
+- Npm audit fix (8b73ea18)
+- Npm audit fix (d26869ab)
+- Npm audit fix (ce890c52)
+- Npm audit fix (0f372918)
+- Add gitignore to postgres example so we can boot the database directly from the example (7cc9e91a)
+- **release:** V0.4.19 (fe0054ca)
+- Increase nsprc expiration (6a7d0ece)
+- Add npm audit exception for brace-expansion (b1031401)
+- Npm audit fix brace-expansion vulnerability (f696d70d)
+- Increase esbuild exception (e7affd1b)
+
+### ✅ Tests
+
+- Add test attributes on funding page (164d4007)
+- **e2e:** Add tests for card page (2ce21a6b)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.19
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.18...v0.4.19)
