@@ -7,6 +7,9 @@
       'bg-white border border-black text-black': statusCategory === CardsSummaryCategoriesEnum.enum.unfunded,
       'bg-yellow-light text-yellow-dark': statusCategory === CardsSummaryCategoriesEnum.enum.funded,
     }"
+    :data-status="status"
+    :data-status-category="statusCategory"
+    data-test="card-status-pill"
   >
     {{ statusLabel }}
   </span>

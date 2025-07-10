@@ -23,6 +23,7 @@
           <ButtonContainer v-if="cardStatusCategory === 'userActionRequired'">
             <ButtonDefault
               :to="{ name: 'funding', params: { cardHash: props.cardHash, lang: route.params.lang } }"
+              data-test="card-user-action-button"
             >
               {{ $t('card.actions.toFundingPage') }}
             </ButtonDefault>
@@ -30,6 +31,7 @@
           <ButtonContainer v-else-if="cardStatusCategory === 'unfunded'">
             <ButtonDefault
               :to="{ name: 'funding', params: { cardHash: props.cardHash, lang: route.params.lang } }"
+              data-test="card-fund-button"
             >
               {{ $t('card.actions.fund') }}
             </ButtonDefault>
@@ -45,6 +47,7 @@
               :fiat-currency="currentFiat"
               selected-currency="BTC"
               size="lg"
+              data-test="card-amount-display"
             />
           </template>
         </template>
