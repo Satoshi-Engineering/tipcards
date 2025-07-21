@@ -352,7 +352,8 @@ export default (cardLockManager: CardLockManager) => {
           'X-Api-Key': LNBITS_INVOICE_READ_KEY,
         },
       })
-      ;({ payment_hash, payment_request } = response.data)
+      payment_hash = response.data.payment_hash
+      payment_request = response.data.bolt11 || response.data.payment_request // lnbits v1.0.0 changed the response format
     } catch (error) {
       console.error(ErrorCode.UnableToCreateLnbitsInvoice, error)
     }
