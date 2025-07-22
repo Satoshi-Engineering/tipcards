@@ -104,6 +104,9 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
     return card
   }
 
+  /**
+  It looks like currently served_pr is always 1 (lnbits version 1.2.1)
+  https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1913#note_28034
   // 1. check if payment requests were created
   let servedPaymentRequests: number
   try {
@@ -129,12 +132,13 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
   if (card.lnurlp.payment_hash != null) {
     servedPaymentRequests -= card.lnurlp.payment_hash.length
   }
+  */
 
-  // 2. query payment requests for lnurlp
+  // 2. query new payment requests for lnurlp
   const paymentRequests: string[] = []
   const limit = 500
   let offset = 0
-  while (paymentRequests.length < servedPaymentRequests) {
+  while (offset < 2_000) {
     try {
       const response = await axios.get(
         `${LNBITS_ORIGIN}/api/v1/payments?limit=${limit}&offset=${offset}&sortby=time&direction=desc`,
@@ -150,10 +154,13 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
         break
       }
       const paymentsOlderThanLnurlp = response.data.some((payment) => {
-        // invoices are more than 10 minutes older than the lnurlp, we can stop looking
+        const paymentTime = typeof payment.time === 'number'
+          ? payment.time
+          : Math.floor(+ new Date(payment.time) / 1_000)
+        // invoices are older than the lnurlp, we can stop looking
         if (
           card.lnurlp?.created != null
-          && card.lnurlp.created > payment.time + 60000
+          && card.lnurlp.created > paymentTime + (60 * 60 * 3) // add 3 hours as lnbits does not handle timestamps correctly: https://gitlab.satoshiengineering.com/satoshiengineering/projects/-/issues/1913#note_28035
         ) {
           return true
         }
