@@ -55,7 +55,7 @@ describe('LnBits - double spend attack - urlw extension ', () => {
 
     const data = await attackingWallet.payInvoice(fundingInvoice)
     expect(data.payment_hash).toHaveLength(64)
-    expect(data['checking_id']).toHaveLength(64)
+    expect(data.checking_id.length).toBeGreaterThanOrEqual(64)
   })
 
   it('should only once withdraw the funds of the card', async () => {

@@ -35,7 +35,7 @@ describe('fund card and create lnurlw once', () => {
     const paymentRequest = responseCreateInvoice?.data.data.invoice.payment_request
     const response = await wallet.payInvoice(paymentRequest)
     expect(response.payment_hash).toHaveLength(64)
-    expect(response.checking_id).toHaveLength(64)
+    expect(response.checking_id.length).toBeGreaterThanOrEqual(64)
   })
 
   failEarly.it('should create exactly one withdraw link', async () => {

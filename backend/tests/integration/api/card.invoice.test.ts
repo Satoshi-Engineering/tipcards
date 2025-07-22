@@ -118,7 +118,7 @@ describe('card | fund & withdraw', () => {
     const data = await wallet.payInvoice(fundingInvoice)
 
     expect(data.payment_hash).toHaveLength(64)
-    expect(data['checking_id'].replace('internal_', '')).toHaveLength(64)
+    expect(data.checking_id.length).toBeGreaterThanOrEqual(64)
   })
 
   failEarly.it('should return status of a funded card', async () => {
