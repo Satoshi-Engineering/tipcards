@@ -58,7 +58,10 @@ export default class LNBitsWallet {
       throw error
     }
 
-    return response.data
+    return {
+      ...response.data,
+      payment_request: response.data.bolt11 || response.data.payment_request, // lnbits v1.0.0 changed the response format
+    }
   }
 
   public async getLNURLWById(lnbitsWithdrawId: string) {

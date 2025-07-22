@@ -43,7 +43,7 @@ export const createInvoice = (amount: number) =>
     headers: {
       'X-Api-Key': LNBITS_ADMIN_KEY,
     },
-  }).then((response) => response.body.bolt11 || response.body.payment_request)
+  }).then((response) => response.body.bolt11 || response.body.payment_request) // lnbits v1.0.0 changed the response format
 
 export const createUrlForLnurlWithdrawRequest = (lnurlWithdrawRequest: LNURLWithdrawRequest, invoice: string) => {
   const parameterGlue = lnurlWithdrawRequest.callback.includes('?') ? '&' : '?'
