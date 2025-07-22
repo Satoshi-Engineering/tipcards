@@ -76,7 +76,7 @@ describe('set funding | create and pay', () => {
   failEarly.it('should pay the set funding invoice', async () => {
     const response = await wallet.payInvoice(payment_request)
     expect(response.payment_hash).toHaveLength(64)
-    expect(response.checking_id).toHaveLength(64)
+    expect(response.checking_id.replace('internal_', '')).toHaveLength(64)
   })
 
   failEarly.it('should load the set', async () => {

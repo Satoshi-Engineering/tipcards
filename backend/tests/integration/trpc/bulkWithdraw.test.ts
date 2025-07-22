@@ -163,7 +163,23 @@ const deleteBulkWithdraw = async () => {
 }
 
 const checkIfLnurlwIsRemoved = async (bulkWithdraw: BulkWithdraw) => {
-  await expect(() => axios.get(LNURL.decode(bulkWithdraw.lnurl))).rejects.toThrow(Error)
+  // lnbits v1.0.0 changed the status code response to 200
+  try {
+    const lnurlResponse = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
+    expect(lnurlResponse.data).toEqual(expect.objectContaining({
+      status: 'ERROR',
+      reason: 'LNURL-withdraw not found.',
+    }))
+  } catch (error) {
+    expect(axios.isAxiosError(error)).toBe(true)
+    expect((error as AxiosError).response?.status).toBe(404)
+    expect((error as AxiosError).response?.data).toEqual(
+      expect.objectContaining({
+        status: 'ERROR',
+        reason: 'LNURL-withdraw not found.',
+      }),
+    )
+  }
 }
 
 const checkIfCardsAreReleased = async () => {
@@ -197,20 +213,23 @@ const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
-  let caughtError: AxiosError | undefined
+  // lnbits v1.0.0 changed the status code response to 200
   try {
-    await axios.get(LNURL.decode(bulkWithdraw.lnurl))
-  } catch (error) {
-    caughtError = error as AxiosError
-  }
-  expect(axios.isAxiosError(caughtError)).toBe(true)
-  expect(caughtError?.response?.status).toBe(404)
-  expect(caughtError?.response?.data).toEqual(
-    expect.objectContaining({
+    const lnurlResponse = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
+    expect(lnurlResponse.data).toEqual(expect.objectContaining({
       status: 'ERROR',
       reason: 'Withdraw is spent.',
-    }),
-  )
+    }))
+  } catch (error) {
+    expect(axios.isAxiosError(error)).toBe(true)
+    expect((error as AxiosError).response?.status).toBe(404)
+    expect((error as AxiosError).response?.data).toEqual(
+      expect.objectContaining({
+        status: 'ERROR',
+        reason: 'Withdraw is spent.',
+      }),
+    )
+  }
 }
 
 const checkIfCardsAreWithdrawn = async () => {
