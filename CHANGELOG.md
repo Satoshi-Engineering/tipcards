@@ -1,6 +1,31 @@
 # Changelog
 
 
+## v0.4.21
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.20...v0.4.21)
+
+### 🚀 Enhancements
+
+- WIP - consider new lnbits api field name while remaining backwards compatible with the old api (534d8b60)
+- Consider new lnbits api field name while remaining backwards compatible with the old api (e93b7c22)
+
+### 🩹 Fixes
+
+- Backend integration tests handle lnbits v1.0 changes (5b426265)
+- Handle lnbits changes for shared funding (91b28f0f)
+- Backend integration tests handle lnbits v1.0 changes (2cb9e095)
+
+### 🏡 Chore
+
+- Npm audit fix (aec3b4cf)
+- Npm audit fix (38e63161)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.20
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.18...v0.4.20)
