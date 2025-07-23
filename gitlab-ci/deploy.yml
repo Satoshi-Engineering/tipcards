@@ -18,14 +18,16 @@ deploy-backend:
     - eval $(ssh-agent -s)
     - echo "$DEPLOY_USER_SSH_KEY" | ssh-add -
   script:
-    - | 
+    - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then
         echo "Deploying on Environment Main"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_MAIN
+        export DEPLOY_PORT=$BACKEND_DEPLOY_PORT_MAIN
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_MAIN
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]; then
         echo "Deploying on Environment Develop"
         export DEPLOY_SERVER=$BACKEND_DEPLOY_SERVER_DEVELOP
+        export DEPLOY_PORT=$BACKEND_DEPLOY_PORT_DEVELOP
         export DEPLOY_PATH=$BACKEND_DEPLOY_PATH_DEVELOP
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
@@ -33,9 +35,9 @@ deploy-backend:
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     # RSYNC Dist
-    - rsync -at --delete --stats ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
-    - | 
-      ssh $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
+    - rsync -at -e "ssh -p $DEPLOY_PORT" --delete --stats ./dist/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-node-next
+    - |
+      ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_SERVER /bin/bash -s << EOT
 
       # 0) Make sure the script (and pipeline) stops on error
       set -e
@@ -97,10 +99,12 @@ deploy-frontend:
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then 
         echo "Deploying on Environment Main"
         export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_MAIN
+        export DEPLOY_PORT=$FRONTEND_DEPLOY_PORT_MAIN
         export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_MAIN
       elif [ "$CI_COMMIT_BRANCH" == "develop" ]; then
         echo "Deploying on Environment Develop"
         export DEPLOY_SERVER=$FRONTEND_DEPLOY_SERVER_DEVELOP
+        export DEPLOY_PORT=$FRONTEND_DEPLOY_PORT_DEVELOP
         export DEPLOY_PATH=$FRONTEND_DEPLOY_PATH_DEVELOP
       else
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
@@ -108,10 +112,10 @@ deploy-frontend:
       fi
     - echo "Deploying with user $DEPLOY_USER on server $DEPLOY_SERVER to path $DEPLOY_PATH"
     # 1) RSYNC Dist
-    - rsync -at --delete --stats ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
+    - rsync -at -e "ssh -p $DEPLOY_PORT" --delete --stats ./dist/frontend/ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH/dist-www-next
     # 2) Remove old dist-www-previous dir
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-www-previous"
+    - ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_SERVER "rm -rf $DEPLOY_PATH/dist-www-previous"
     # 3) Save current dist to previous
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "if [ -d $DEPLOY_PATH/dist-www ]; then mv $DEPLOY_PATH/dist-www $DEPLOY_PATH/dist-www-previous; fi"
+    - ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_SERVER "if [ -d $DEPLOY_PATH/dist-www ]; then mv $DEPLOY_PATH/dist-www $DEPLOY_PATH/dist-www-previous; fi"
     # 4) Make new dist available
-    - ssh $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist-www-next $DEPLOY_PATH/dist-www"
+    - ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_SERVER "mv $DEPLOY_PATH/dist-www-next $DEPLOY_PATH/dist-www"
