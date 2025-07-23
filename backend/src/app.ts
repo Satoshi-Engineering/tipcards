@@ -30,7 +30,7 @@ export default () => {
   const cardLockManager = CardLockManager.instance
 
   const app = express()
-  app.use(bodyParser.json())
+  app.use(bodyParser.json({ strict: false }))
   app.use(cors(corsOptions))
   app.use(helmet())
   app.use(xstAttack())
