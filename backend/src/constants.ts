@@ -54,7 +54,6 @@ const CROSS_ORIGIN_RESOURCES = process.env.CROSS_ORIGIN_RESOURCES === '1'
 
 export const LNBITS_INVOICE_READ_KEY = process.env.LNBITS_INVOICE_READ_KEY || ''
 export const LNBITS_ADMIN_KEY = process.env.LNBITS_ADMIN_KEY || ''
-export const STATISTICS_PREPEND_FILE = process.env.STATISTICS_PREPEND_FILE || undefined
 export const STATISTICS_EXCLUDE_FILE = process.env.STATISTICS_EXCLUDE_FILE || undefined
 
 /////

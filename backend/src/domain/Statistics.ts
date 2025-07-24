@@ -6,11 +6,13 @@ import type { StatisticsDto, StatisticsPeriodDto } from '@shared/data/trpc/Stati
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
 
 import loadJsonIfExists from '@backend/services/loadJsonIfExists.js'
-import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE, STATISTICS_PREPEND_FILE } from '@backend/constants.js'
+import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE } from '@backend/constants.js'
 
 const Payment = z.object({
-  pending: z.boolean(),
-  time: z.number(),
+  status: z.string(),
+  time: z.string()
+    .refine(val => DateTime.fromISO(`${val}Z`).isValid, { message: 'Invalid date' })
+    .transform(val => Math.floor(DateTime.fromISO(`${val}Z`).toUTC().toSeconds())),
   amount: z.number(),
   payment_hash: z.string(),
 })
@@ -20,9 +22,6 @@ export default class Statistics {
   public static async getStatistics(limit?: number): Promise<StatisticsDto> {
     const payments = await Statistics.loadPayments(limit)
     const daily = Statistics.accumulatePaymentsByPeriod(payments, 'yyyy-MM-dd')
-    if (limit != null) {
-      daily.pop()
-    }
     const weekly = Statistics.accumulatePaymentsByPeriod(payments, 'kkkk-WW')
     // Remove the last week if we are not showing all the data, because the first week and day might be incomplete
     if (limit != null) {
@@ -59,20 +58,10 @@ export default class Statistics {
 
   private static async loadPayments(limit?: number, offset: number = 0) {
     const paymentHashesToExclude = loadJsonIfExists<string[]>(STATISTICS_EXCLUDE_FILE, [])
-    const paymentsToPrepend = loadJsonIfExists<Payment[]>(STATISTICS_PREPEND_FILE, [])
 
-    const { data: paymentsFromLnbits, total } = await Statistics.loadPaymentsFromLnbits(limit, offset)
+    const { data: paymentsFromLnbits } = await Statistics.loadPaymentsFromLnbits(limit, offset)
 
-    let payments = paymentsFromLnbits
-
-    if (offset + paymentsFromLnbits.length === total) {
-      payments = [
-        ...paymentsToPrepend,
-        ...payments,
-      ]
-    }
-
-    payments = payments.filter(
+    const payments = paymentsFromLnbits.filter(
       ({ payment_hash }) => !paymentHashesToExclude.includes(payment_hash),
     )
 
@@ -90,7 +79,7 @@ export default class Statistics {
     }> = {}
 
     payments.forEach((payment) => {
-      if (payment.pending || Number.isNaN(payment.time)) {
+      if (payment.status === 'pending' || Number.isNaN(payment.time)) {
         return
       }
       const dt = DateTime.fromSeconds(payment.time)
