@@ -32,6 +32,7 @@ ngrok.yml
 *.sln
 *.sw?
 /docs/examples/redis/.env
+/data
 
 # backend
 files/
