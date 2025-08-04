@@ -13,3 +13,27 @@ services:
       - ./scripts/docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-data.sh
     ports:
       - 127.0.0.1:5432:5432
+
+  lnbits-postgres:
+    image: postgres:16.9
+    container_name: lnbits-postgres
+    restart: unless-stopped
+    volumes:
+      - ./data/lnbits/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "lnbits"
+      POSTGRES_PASSWORD: "gobrrrrrr"
+      POSTGRES_DB: "lnbits"
+
+  lnbits:
+    image: lnbits/lnbits:v1.2.1
+    container_name: lnbits
+    restart: unless-stopped
+    depends_on:
+      - lnbits-postgres
+    volumes:
+      - ./data/lnbits/data:/app/data
+    env_file:
+      - ./scripts/docker/.lnbits.env
+    ports:
+      - 127.0.0.1:5000:5000
