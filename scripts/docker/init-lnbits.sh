@@ -57,8 +57,9 @@ GET_USER_RESPONSE=$(curl -s --location --request GET "$LN_BITS_API_BASE/users/ap
 
 WALLET_ID=$(echo "$GET_USER_RESPONSE" | jq -r '.wallets[0].id')
 WALLET_ADMIN_KEY=$(echo "$GET_USER_RESPONSE" | jq -r '.wallets[0].adminkey')
+WALLET_INVOICE_KEY=$(echo "$GET_USER_RESPONSE" | jq -r '.wallets[0].inkey')
 
-if [[ "$WALLET_ID" == "null" || -z "$WALLET_ID" || "$WALLET_ADMIN_KEY" == "null" || -z "$WALLET_ADMIN_KEY" ]]; then
+if [[ "$WALLET_ID" == "null" || -z "$WALLET_ID" || "$WALLET_ADMIN_KEY" == "null" || -z "$WALLET_ADMIN_KEY" || "$WALLET_INVOICE_KEY" == "null" || -z "$WALLET_INVOICE_KEY" ]]; then
   echo "Error: Failed to retrieve wallet info."
   echo "Response was: $GET_USER_RESPONSE"
   exit 1
@@ -66,6 +67,7 @@ fi
 
 echo "Wallet 1 ID: $WALLET_ID"
 echo "Wallet 1 Admin Key: $WALLET_ADMIN_KEY"
+echo "Wallet 1 Invoice Key: $WALLET_INVOICE_KEY"
 
 # --- Create second wallet ---
 echo "Creating second wallet..."
@@ -77,8 +79,9 @@ CREATE_SECOND_WALLET_RESPONSE=$(curl -s --location "$LN_BITS_API_BASE/api/v1/wal
 
 SECOND_WALLET_ID=$(echo "$CREATE_SECOND_WALLET_RESPONSE" | jq -r '.id')
 SECOND_WALLET_ADMIN_KEY=$(echo "$CREATE_SECOND_WALLET_RESPONSE" | jq -r '.adminkey')
+SECOND_WALLET_INVOICE_KEY=$(echo "$CREATE_SECOND_WALLET_RESPONSE" | jq -r '.inkey')
 
-if [[ "$SECOND_WALLET_ID" == "null" || -z "$SECOND_WALLET_ID" || "$SECOND_WALLET_ADMIN_KEY" == "null" || -z "$SECOND_WALLET_ADMIN_KEY" ]]; then
+if [[ "$SECOND_WALLET_ID" == "null" || -z "$SECOND_WALLET_ID" || "$SECOND_WALLET_ADMIN_KEY" == "null" || -z "$SECOND_WALLET_ADMIN_KEY" || "$SECOND_WALLET_INVOICE_KEY" == "null" || -z "$SECOND_WALLET_INVOICE_KEY" ]]; then
   echo "Error: Failed to create second wallet."
   echo "Response was: $CREATE_SECOND_WALLET_RESPONSE"
   exit 1
@@ -87,6 +90,7 @@ fi
 echo "Second wallet created successfully."
 echo "Wallet 2 ID: $SECOND_WALLET_ID"
 echo "Wallet 2 Admin Key: $SECOND_WALLET_ADMIN_KEY"
+echo "Wallet 2 Invoice Key: $SECOND_WALLET_INVOICE_KEY"
 
 # --- Top up wallet 1 ---
 echo "Topping up wallet 1 with 1,000,000 msat..."
