@@ -29,4 +29,8 @@ export default class FailEarly {
   it(name: string, test: () => Promise<void>, timeout?: number) {
     this.test(name, test, timeout)
   }
+
+  skip(name: string, test: () => Promise<void>, timeout?: number) {
+    this.vitestIt.skip(name, test, timeout)
+  }
 }
