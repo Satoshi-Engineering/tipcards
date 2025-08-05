@@ -1,0 +1,59 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/lnd/query-routes",
+      "queryStringParameters": {
+        "paymentRequestEncoded": ["highfee"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "queryRoutesResponse": {
+          "routes": [
+            {
+              "total_fees": "210"
+            }
+          ]
+        },
+        "paymentRequestDecoded": {
+          "num_satoshis": "210"
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    "times": {
+      "unlimited": true
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/lnd/query-routes"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "queryRoutesResponse": {
+          "routes": [
+            {
+              "total_fees": "0"
+            }
+          ]
+        },
+        "paymentRequestDecoded": {
+          "num_satoshis": "210"
+        }
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    },
+    "times": {
+      "unlimited": true
+    }
+  }
+]

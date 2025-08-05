@@ -38,3 +38,13 @@ services:
       - ./scripts/docker/lnbits/.env
     ports:
       - 127.0.0.1:5000:5000
+
+  volt-vault-mock:
+    image: mockserver/mockserver:5.15.0
+    container_name: volt-vault-mock
+    ports:
+      - "1080:1080"
+    environment:
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/config.json
+    volumes:
+      - ./scripts/docker/volt-vault-mock:/config
