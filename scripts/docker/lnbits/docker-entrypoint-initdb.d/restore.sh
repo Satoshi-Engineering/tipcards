@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-psql -X pretix -U pretix < /docker-entrypoint-initdb.d/init.sql
+psql -X lnbits -U lnbits < /docker-entrypoint-initdb.d/sql/init.sql

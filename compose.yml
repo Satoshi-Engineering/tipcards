@@ -20,6 +20,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/lnbits/postgres:/var/lib/postgresql/data
+      - ./scripts/docker/lnbits/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "lnbits"
       POSTGRES_PASSWORD: "gobrrrrrr"
