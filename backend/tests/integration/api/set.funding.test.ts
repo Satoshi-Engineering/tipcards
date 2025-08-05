@@ -11,6 +11,7 @@ import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
+import wait from '../lib/wait.js'
 
 const FE = new FrontendSimulator()
 
@@ -101,6 +102,7 @@ describe('set funding | create and pay', () => {
         const lnurlResponse = await FE.loadLnurlForCardHash(cardHash)
         expect(lnurlResponse).not.toBeUndefined()
 
+        await wait(1000) // Wait 1 second waiting time of lnurlw after creation
         const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(lnurlResponse?.data)
 
         const withdrawResponse = await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)

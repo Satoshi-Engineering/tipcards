@@ -19,6 +19,7 @@ import Frontend from '../lib/frontend/Frontend.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios.js'
+import wait from '../lib/wait.js'
 
 ApplicationEventEmitter.init()
 CardLockManager.init({ aquireTimeout: 1000 })
@@ -88,6 +89,7 @@ describe('TRpc Router BulkWithdraw', () => {
 
   it('creates and withdraws a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
+    await wait(1000) // Wait 1 second waiting time of lnurlw after creation
 
     await checkIfLnurlwExistsInLnbits(bulkWithdraw)
     await checkIfCardsAreLocked()

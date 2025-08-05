@@ -12,6 +12,7 @@ import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData } from '../lib/apiData.js'
 import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
 import '../lib/initAxios.js'
+import wait from '../lib/wait.js'
 
 const TEST_AMOUNT_IN_SATS = 213
 const TEST_ATTEMPT_COUNT = 21
@@ -60,6 +61,7 @@ describe('LnBits - double spend attack - urlw extension ', () => {
 
   it('should only once withdraw the funds of the card', async () => {
     const response = await frontend.loadLnurlForCardHash(testCard.cardHash)
+    await wait(1000) // Wait 1 second waiting time of lnurlw after creation
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
     const lnurlwCallbackUrls = await createLNURLwCallbackUrls(attackingWallet, lnurlWithdrawRequest, TEST_ATTEMPT_COUNT)
     expect(lnurlwCallbackUrls).toHaveLength(TEST_ATTEMPT_COUNT)
