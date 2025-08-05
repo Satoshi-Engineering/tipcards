@@ -41,7 +41,9 @@
     "changelog-print-current": "npx changelogen --from $(git describe --tags --abbrev=0) --to HEAD",
     "bump-version": "./scripts/bump-version/bump-version.sh",
     "docker:save-tipcards-database-to-sql": "docker exec -t postgres pg_dumpall -U postgres > scripts/docker/postgres/docker-entrypoint-initdb.d/sql/init.sql",
-    "docker:save-lnbits-database-to-sql": "docker exec -t lnbits-postgres pg_dumpall -U lnbits > scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql"
+    "docker:save-lnbits-database-to-sql": "docker exec -t lnbits-postgres pg_dumpall -U lnbits > scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql",
+    "docker:delete-data": "./scripts/docker/delete-data.sh"
+
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
