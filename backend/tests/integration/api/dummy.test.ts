@@ -8,6 +8,8 @@ import '../lib/initAxios.js'
 
 describe('dummy api', () => {
   it('returns success state', async () => {
+    // eslint-disable-next-line no-console
+    console.info(`Testing dummy API endpoint: ${API_ORIGIN}/api/dummy`)
     const { data } = await axios.get(`${API_ORIGIN}/api/dummy`)
     expect(data.status).toBe('success')
   })

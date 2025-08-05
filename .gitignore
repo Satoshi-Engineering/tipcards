@@ -40,4 +40,4 @@ lnurl.auth.pem
 lnurl.auth.pem.pub
 
 # docker
-compose.override.yml
+/compose.override.yml

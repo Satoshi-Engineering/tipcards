@@ -11,7 +11,7 @@ set -e
 # --- Configuration ---
 SUPERUSER_USERNAME="superuser"
 SUPERUSER_PASSWORD="superpassword"
-LN_BITS_API_BASE="http://127.0.0.1:5000"
+LN_BITS_API_BASE="http://127.0.0.1:4020"
 
 # --- First install: create superuser and get access token ---
 echo "Setting up LNbits superuser and retrieving access token..."

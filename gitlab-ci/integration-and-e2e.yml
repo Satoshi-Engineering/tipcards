@@ -5,10 +5,12 @@ variables:
   POSTGRES_PASSWORD: thisisonlyusedinthepipeline
 
 test-backend-integration:
-  services:
-    - name: postgres:16.3
-      alias: postgres
   stage: integration-and-e2e
+  image: docker:27.5.1
+  tags:
+    - docker
+  services:
+    - docker:27.5.1-dind
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
@@ -18,18 +20,37 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   script:
-    - cp $BACKEND_ENV_FILE_E2E_TESTS backend/.env.integrationTest
-    - echo "Running database migration to prepare database for backend integration tests"
-    - npm run drizzle-migrate
-    - echo "Running backend integration tests on branch $CI_COMMIT_BRANCH"
-    - sh backend-integration-tests.sh
-
-test-e2e:
+    - cat backend/.env
+    - ls -ahl backend
+    - ls
+    - docker compose up -d
+    - |
+      docker run -d \
+        --name tipcards \
+        --network=tipcards-local-dev_default \
+        -v $(pwd):/app \
+        -w /app \
+        -p 4000:4000 \
+        -p 4001:4001 \
+        node:lts-bookworm-slim /bin/bash \
+        -c "npm run backend-dev"
+    - |
+      docker run --rm \
+        --network=tipcards-local-dev_default \
+        -v $(pwd):/app \
+        -w /app \
+        node:lts-bookworm-slim /bin/bash \
+        -c "npm run backend-test-integration"
+  after_script:
+    - docker stop tipcards
+    - docker compose down
+  
+.test-e2e:
+  stage: integration-and-e2e
   image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
   services:
     - name: postgres:16.3
       alias: postgres
-  stage: integration-and-e2e
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]

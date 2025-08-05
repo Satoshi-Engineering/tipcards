@@ -12,7 +12,7 @@ services:
       - ./data/postgres:/var/lib/postgresql/data
       - ./scripts/docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
-      - 127.0.0.1:5432:5432
+      - 5432:5432
 
   lnbits-postgres:
     image: postgres:16.9
@@ -25,10 +25,12 @@ services:
       POSTGRES_USER: "lnbits"
       POSTGRES_PASSWORD: "gobrrrrrr"
       POSTGRES_DB: "lnbits"
+    ports:
+      - 5433:5432      
 
   lnbits:
     image: lnbits/lnbits:v1.2.1
-    container_name: lnbits
+    container_name: lnbits-app
     restart: unless-stopped
     depends_on:
       - lnbits-postgres
@@ -37,7 +39,22 @@ services:
     env_file:
       - ./scripts/docker/lnbits/.env
     ports:
-      - 127.0.0.1:5000:5000
+      - 4050:4050  
+
+  lnbits-proxy:
+    image: nginx:stable
+    container_name: lnbits
+    networks:
+      default:
+        aliases:
+          - lnbits.local.me    
+    volumes:
+      - ./scripts/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./scripts/docker/nginx/certs:/etc/nginx/certs:ro
+    ports:
+      - 4020:4020
+    depends_on:
+      - lnbits
 
   volt-vault-mock:
     image: mockserver/mockserver:5.15.0

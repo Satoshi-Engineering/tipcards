@@ -664,7 +664,7 @@ lnbits_email_notifications_email	""	core
 lnbits_email_notifications_username	""	core
 lnbits_email_notifications_password	""	core
 keycloak_discovery_url	""	core
-nostr_absolute_request_urls	["http://127.0.0.1:5000", "http://localhost:5000"]	core
+nostr_absolute_request_urls	["http://127.0.0.1:4020", "http://localhost:4020"]	core
 lnbits_webpush_pubkey	"BMpxaLHzOsrHnow3gIJYTk3xae4H8obo3sgaOVMEh2zGSGkKio_mRhf1Z6O8uhhn_62zYU0La6zEPgV-Pq7HmJU"	core
 lnbits_webpush_privkey	"-----BEGIN PRIVATE KEY-----\\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgr+rwxbvVdQu61j/n\\nibcofMwL5nrpfWqhZ9kw8kgEnLuhRANCAATKcWix8zrKx56MN4CCWE5N8WnuB/KG\\n6N7IGjlTBIdsxkhpCoqP5kYX9WejvLoYZ/+ts2FNC2usxD4Ffj6ux5iV\\n-----END PRIVATE KEY-----\\n"	core
 stripe_limits	{"allowed_users": [], "service_max_fee_sats": 0, "service_fee_percent": 0.0, "service_fee_wallet_id": null, "service_min_amount_sats": 0, "service_max_amount_sats": 0, "service_faucet_wallet_id": ""}	core
@@ -702,7 +702,7 @@ lnbits_service_fee	0.0	core
 lnbits_service_fee_ignore_internal	true	core
 lnbits_service_fee_max	0	core
 lnbits_service_fee_wallet	\N	core
-lnbits_baseurl	"http://127.0.0.1:5000/"	core
+lnbits_baseurl	"http://127.0.0.1:4020/"	core
 lnbits_hide_api	false	core
 lnbits_upload_size_bytes	512000	core
 lnbits_upload_allowed_types	["image/png", "image/jpeg", "image/jpg", "image/heic", "image/heif", "image/heics", "png", "jpeg", "jpg", "heic", "heif", "heics"]	core
