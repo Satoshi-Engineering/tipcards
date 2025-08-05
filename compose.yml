@@ -7,10 +7,10 @@ services:
     restart: unless-stopped
     shm_size: 128mb
     env_file:
-      - ./scripts/docker/.postgres.env
+      - ./scripts/docker/postgres/.env
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
-      - ./scripts/docker/init-postgres.sh:/docker-entrypoint-initdb.d/init-data.sh
+      - ./scripts/docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 127.0.0.1:5432:5432
 
@@ -34,6 +34,6 @@ services:
     volumes:
       - ./data/lnbits/data:/app/data
     env_file:
-      - ./scripts/docker/.lnbits.env
+      - ./scripts/docker/lnbits/.env
     ports:
       - 127.0.0.1:5000:5000
