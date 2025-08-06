@@ -20,9 +20,6 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   script:
-    - cat backend/.env
-    - ls -ahl backend
-    - ls
     - docker compose up -d
     - |
       docker run -d \
@@ -32,13 +29,27 @@ test-backend-integration:
         -w /app \
         -p 4000:4000 \
         -p 4001:4001 \
+        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
         node:lts-bookworm-slim /bin/bash \
         -c "npm run backend-dev"
+    - |
+      echo "Waiting for tipcards to become ready..."
+      for i in {1..30}; do
+        response=$(docker exec tipcards curl -s http://localhost:4000/api/dummy)
+        if [ -n "$response" ]; then
+          echo "Tipcards is up! Response:"
+          echo "$response"
+          break
+        fi
+        echo "Still waiting..."
+        sleep 1
+      done    
     - |
       docker run --rm \
         --network=tipcards-local-dev_default \
         -v $(pwd):/app \
         -w /app \
+        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
         node:lts-bookworm-slim /bin/bash \
         -c "npm run backend-test-integration"
   after_script:
