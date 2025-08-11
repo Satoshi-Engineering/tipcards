@@ -6,10 +6,10 @@ _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
   <a href="https://github.com/Satoshi-Engineering/tipcards/">
     <img src="https://img.shields.io/github/package-json/v/Satoshi-Engineering/tipcards?color=6B3D91" alt="Version">
   </a>
-  <a href="https://github.com/thespielplatz/foss-tsp-tools/blob/main/LICENSE">
+  <a href="https://github.com/Satoshi-Engineering/tipcards/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/Satoshi-Engineering/tipcards?color=6B3D91" alt="Licence">
   </a>
-  <a href="https://github.com/thespielplatz/nuxt-auth/stargazers">
+  <a href="https://github.com/Satoshi-Engineering/tipcards/stargazers">
     <img src="https://img.shields.io/github/stars/Satoshi-Engineering/tipcards.svg?style=flat&color=6B3D91" alt="Stars">
   </a>
 </p>
