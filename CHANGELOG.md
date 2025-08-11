@@ -1,6 +1,36 @@
 # Changelog
 
 
+## v0.4.22
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.21...v0.4.22)
+
+### 🚀 Enhancements
+
+- Add Tipping in Bitcoin to SEO text (fa168940)
+
+### 🩹 Fixes
+
+- Handle tipcards server port ssh port change (40c73aaa)
+- Bodyparser also accept stringified json, as lnbits v1 now sends the body data stringified when calling the webhooks (a2f22da1)
+- Adjust statistics to new lnbits api and remove prepend functionality (ad5efccc)
+- Npm audit fix (60f0428a)
+- Badges in readme (a0a18c11)
+
+### 📖 Documentation
+
+- Cleanup testing (0200c33c)
+
+### 🏡 Chore
+
+- Npm audit fix (409f4a66)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Philipp Horwath <fil@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.21
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.20...v0.4.21)
