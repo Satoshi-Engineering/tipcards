@@ -492,6 +492,8 @@ COPY public.apipayments (checking_id, amount, fee, wallet_id, memo, "time", paym
 --
 
 COPY public.audit (component, ip_address, user_id, path, request_type, request_method, request_details, response_code, duration, delete_at, created_at) FROM stdin;
+core	\N	\N	/api/v1/auth	http	POST	{"path_params": {}, "query_params": {}}	401	0.253255	2025-08-19 09:13:53.708101	2025-08-12 09:13:53.708101
+core	\N	\N	/api/v1/auth	http	POST	{"path_params": {}, "query_params": {}}	401	0.252038	2025-08-19 09:18:38.084271	2025-08-12 09:18:38.084271
 \.
 
 
@@ -548,8 +550,6 @@ withdraw	1.0.1	Withdraw Links	Make LNURL withdraw links	https://github.com/lnbit
 
 COPY public.system_settings (id, value, tag) FROM stdin;
 super_user	"7daa1ecbed4741198f05eb7c44a8f8c0"	core
-keycloak_client_id	""	core
-keycloak_client_secret	""	core
 keycloak_client_custom_org	\N	core
 keycloak_client_custom_icon	\N	core
 github_client_id	""	core
@@ -599,8 +599,6 @@ opennode_api_endpoint	\N	core
 opennode_key	\N	core
 opennode_admin_key	\N	core
 opennode_invoice_key	\N	core
-phoenixd_api_endpoint	"http://localhost:9740/"	core
-phoenixd_api_password	\N	core
 zbd_api_endpoint	"https://api.zebedee.io/v0/"	core
 zbd_api_key	\N	core
 boltz_client_endpoint	"127.0.0.1:9002"	core
@@ -609,7 +607,6 @@ boltz_client_wallet	"lnbits"	core
 boltz_client_password	""	core
 boltz_client_cert	\N	core
 boltz_mnemonic	\N	core
-alby_api_endpoint	"https://api.getalby.com/"	core
 alby_access_token	\N	core
 blink_api_endpoint	"https://api.blink.sv/graphql"	core
 blink_ws_endpoint	"wss://ws.blink.sv/graphql"	core
@@ -621,7 +618,6 @@ lnpay_admin_key	\N	core
 lnd_grpc_endpoint	\N	core
 lnd_grpc_cert	\N	core
 lnd_grpc_port	\N	core
-lnd_grpc_admin_macaroon	\N	core
 lnd_grpc_invoice_macaroon	\N	core
 lnd_grpc_macaroon	\N	core
 lnd_grpc_macaroon_encrypted	\N	core
@@ -635,10 +631,8 @@ lnd_cert	\N	core
 lnd_admin_macaroon	\N	core
 lnd_invoice_macaroon	\N	core
 lnd_rest_admin_macaroon	\N	core
-lnd_rest_invoice_macaroon	\N	core
 eclair_url	\N	core
 eclair_pass	\N	core
-corelightning_rest_url	\N	core
 corelightning_rest_macaroon	\N	core
 corelightning_rest_cert	\N	core
 corelightning_rpc	\N	core
@@ -649,9 +643,7 @@ lnbits_endpoint	"https://demo.lnbits.com"	core
 lnbits_key	\N	core
 lnbits_admin_key	\N	core
 lnbits_invoice_key	\N	core
-fake_wallet_secret	"ToTheMoon1"	core
 lnbits_denomination	"sats"	core
-lnbits_backend_wallet_class	"FakeWallet"	core
 lnbits_funding_source_pay_invoice_wait_seconds	5	core
 lnbits_nostr_notifications_enabled	false	core
 lnbits_nostr_notifications_private_key	""	core
@@ -664,32 +656,13 @@ lnbits_email_notifications_email	""	core
 lnbits_email_notifications_username	""	core
 lnbits_email_notifications_password	""	core
 keycloak_discovery_url	""	core
+phoenixd_api_endpoint	"http://localhost:9740/"	core
+lnd_grpc_admin_macaroon	\N	core
+lnd_rest_invoice_macaroon	\N	core
+fake_wallet_secret	"ToTheMoon1"	core
 nostr_absolute_request_urls	["http://127.0.0.1:4020", "http://localhost:4020"]	core
-lnbits_webpush_pubkey	"BMpxaLHzOsrHnow3gIJYTk3xae4H8obo3sgaOVMEh2zGSGkKio_mRhf1Z6O8uhhn_62zYU0La6zEPgV-Pq7HmJU"	core
-lnbits_webpush_privkey	"-----BEGIN PRIVATE KEY-----\\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgr+rwxbvVdQu61j/n\\nibcofMwL5nrpfWqhZ9kw8kgEnLuhRANCAATKcWix8zrKx56MN4CCWE5N8WnuB/KG\\n6N7IGjlTBIdsxkhpCoqP5kYX9WejvLoYZ/+ts2FNC2usxD4Ffj6ux5iV\\n-----END PRIVATE KEY-----\\n"	core
-stripe_limits	{"allowed_users": [], "service_max_fee_sats": 0, "service_fee_percent": 0.0, "service_fee_wallet_id": null, "service_min_amount_sats": 0, "service_max_amount_sats": 0, "service_faucet_wallet_id": ""}	core
-lnbits_email_notifications_server	"smtp.protonmail.ch"	core
-lnbits_email_notifications_port	587	core
-lnbits_email_notifications_to_emails	[]	core
-lnbits_notification_settings_update	true	core
-lnbits_notification_credit_debit	true	core
-notification_balance_delta_changed	true	core
-lnbits_notification_server_start_stop	true	core
-lnbits_notification_watchdog	false	core
-lnbits_notification_server_status_hours	24	core
-lnbits_notification_incoming_payment_amount_sats	1000000	core
-lnbits_notification_outgoing_payment_amount_sats	1000000	core
-lnbits_rate_limit_no	200	core
-lnbits_rate_limit_unit	"minute"	core
-lnbits_allowed_ips	[]	core
-lnbits_blocked_ips	[]	core
-lnbits_callback_url_rules	["https?://([a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,})(:\\\\d+)?"]	core
-lnbits_wallet_limit_max_balance	0	core
-lnbits_wallet_limit_daily_max_withdraw	0	core
-lnbits_wallet_limit_secs_between_trans	0	core
-lnbits_only_allow_incoming_payments	false	core
-lnbits_watchdog_switch_to_voidwallet	false	core
-lnbits_watchdog_interval_minutes	60	core
+keycloak_client_id	""	core
+keycloak_client_secret	""	core
 lnbits_watchdog_delta	1000000	core
 lnbits_max_outgoing_payment_amount_sats	10000000	core
 lnbits_max_incoming_payment_amount_sats	10000000	core
@@ -699,16 +672,9 @@ lnbits_exchange_history_refresh_interval_seconds	300	core
 lnbits_reserve_fee_min	2000	core
 lnbits_reserve_fee_percent	1.0	core
 lnbits_service_fee	0.0	core
-lnbits_service_fee_ignore_internal	true	core
-lnbits_service_fee_max	0	core
-lnbits_service_fee_wallet	\N	core
-lnbits_baseurl	"http://127.0.0.1:4020/"	core
-lnbits_hide_api	false	core
-lnbits_upload_size_bytes	512000	core
-lnbits_upload_allowed_types	["image/png", "image/jpeg", "image/jpg", "image/heic", "image/heif", "image/heics", "png", "jpeg", "jpg", "heic", "heif", "heics"]	core
 lnbits_site_title	"LNbits"	core
 lnbits_site_tagline	"free and open-source lightning wallet"	core
-lnbits_site_description	"The world's most powerful suite of bitcoin tools."	core
+lnbits_site_description	"Local development instance for https://tipcards.io"	core
 lnbits_show_home_page_elements	true	core
 lnbits_default_wallet_name	"LNbits wallet"	core
 lnbits_custom_badge	\N	core
@@ -716,8 +682,7 @@ lnbits_custom_badge_color	"warning"	core
 lnbits_theme_options	["classic", "freedom", "mint", "salvador", "monochrome", "autumn", "cyber", "flamingo", "bitcoin"]	core
 lnbits_custom_logo	\N	core
 lnbits_custom_image	"/static/images/logos/lnbits.svg"	core
-lnbits_ad_space_title	"Supported by"	core
-lnbits_ad_space	"https://shop.lnbits.com/;/static/images/bitcoin-shop-banner.png;/static/images/bitcoin-shop-banner.png,https://affil.trezor.io/aff_c?offer_id=169&aff_id=33845;/static/images/bitcoin-hardware-wallet.png;/static/images/bitcoin-hardware-wallet.png,https://opensats.org/;/static/images/open-sats.png;/static/images/open-sats.png"	core
+lnbits_ad_space_title	"Supported by Plebs \\ud83e\\udde1"	core
 lnbits_ad_space_enabled	false	core
 lnbits_allowed_currencies	[]	core
 lnbits_default_accounting_currency	\N	core
@@ -733,7 +698,44 @@ lnbits_extensions_deactivate_all	false	core
 lnbits_extensions_manifests	["https://raw.githubusercontent.com/lnbits/lnbits-extensions/main/extensions.json"]	core
 lnbits_admin_users	[]	core
 lnbits_allowed_users	[]	core
-lnbits_allow_new_accounts	true	core
+lnbits_allow_new_accounts	false	core
+lnbits_ad_space	""	core
+phoenixd_api_password	\N	core
+alby_api_endpoint	"https://api.getalby.com/"	core
+corelightning_rest_url	\N	core
+lnbits_backend_wallet_class	"FakeWallet"	core
+lnbits_webpush_pubkey	"BMpxaLHzOsrHnow3gIJYTk3xae4H8obo3sgaOVMEh2zGSGkKio_mRhf1Z6O8uhhn_62zYU0La6zEPgV-Pq7HmJU"	core
+lnbits_webpush_privkey	"-----BEGIN PRIVATE KEY-----\\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgr+rwxbvVdQu61j/n\\nibcofMwL5nrpfWqhZ9kw8kgEnLuhRANCAATKcWix8zrKx56MN4CCWE5N8WnuB/KG\\n6N7IGjlTBIdsxkhpCoqP5kYX9WejvLoYZ/+ts2FNC2usxD4Ffj6ux5iV\\n-----END PRIVATE KEY-----\\n"	core
+stripe_limits	{"allowed_users": [], "service_max_fee_sats": 0, "service_fee_percent": 0.0, "service_fee_wallet_id": null, "service_min_amount_sats": 0, "service_max_amount_sats": 0, "service_faucet_wallet_id": ""}	core
+lnbits_email_notifications_server	"smtp.protonmail.ch"	core
+lnbits_notification_credit_debit	true	core
+notification_balance_delta_changed	true	core
+lnbits_notification_server_start_stop	true	core
+lnbits_notification_watchdog	false	core
+lnbits_notification_server_status_hours	24	core
+lnbits_notification_incoming_payment_amount_sats	1000000	core
+lnbits_notification_outgoing_payment_amount_sats	1000000	core
+lnbits_email_notifications_port	587	core
+lnbits_email_notifications_to_emails	[]	core
+lnbits_notification_settings_update	true	core
+lnbits_wallet_limit_max_balance	0	core
+lnbits_wallet_limit_daily_max_withdraw	0	core
+lnbits_wallet_limit_secs_between_trans	0	core
+lnbits_only_allow_incoming_payments	false	core
+lnbits_watchdog_switch_to_voidwallet	false	core
+lnbits_watchdog_interval_minutes	60	core
+lnbits_service_fee_ignore_internal	true	core
+lnbits_service_fee_max	0	core
+lnbits_service_fee_wallet	\N	core
+lnbits_baseurl	"http://127.0.0.1:4020/"	core
+lnbits_hide_api	false	core
+lnbits_upload_size_bytes	512000	core
+lnbits_rate_limit_no	200	core
+lnbits_rate_limit_unit	"minute"	core
+lnbits_allowed_ips	[]	core
+lnbits_blocked_ips	[]	core
+lnbits_callback_url_rules	["^https?:\\\\/\\\\/(?:[a-zA-Z0-9.-]+|\\\\d{1,3}(?:\\\\.\\\\d{1,3}){3})(?::\\\\d+)?(?:\\\\/[^\\\\s]*)?$"]	core
+lnbits_upload_allowed_types	["image/png", "image/jpeg", "image/jpg", "image/heic", "image/heif", "image/heics", "png", "jpeg", "jpg", "heic", "heif", "heics"]	core
 lnbits_exchange_rate_providers	[{"name": "Binance", "api_url": "https://api.binance.com/api/v3/ticker/price?symbol=BTC{TO}", "path": "$.price", "exclude_to": ["czk"], "ticker_conversion": ["USD:USDT"]}, {"name": "Blockchain", "api_url": "https://blockchain.info/frombtc?currency={TO}&value=100000000", "path": "", "exclude_to": [], "ticker_conversion": []}, {"name": "Exir", "api_url": "https://api.exir.io/v1/ticker?symbol=btc-{to}", "path": "$.last", "exclude_to": ["czk", "eur"], "ticker_conversion": ["USD:USDT"]}, {"name": "Bitfinex", "api_url": "https://api.bitfinex.com/v1/pubticker/btc{to}", "path": "$.last_price", "exclude_to": ["czk"], "ticker_conversion": []}, {"name": "Bitstamp", "api_url": "https://www.bitstamp.net/api/v2/ticker/btc{to}/", "path": "$.last", "exclude_to": ["czk"], "ticker_conversion": []}, {"name": "Coinbase", "api_url": "https://api.coinbase.com/v2/exchange-rates?currency=BTC", "path": "$.data.rates.{TO}", "exclude_to": [], "ticker_conversion": []}, {"name": "Kraken", "api_url": "https://api.kraken.com/0/public/Ticker?pair=XBT{TO}", "path": "$.result.XXBTZ{TO}.c[0]", "exclude_to": ["czk"], "ticker_conversion": []}, {"name": "yadio", "api_url": "https://api.yadio.io/exrates/BTC", "path": "$.BTC.{TO}", "exclude_to": [], "ticker_conversion": []}]	core
 \.
 
