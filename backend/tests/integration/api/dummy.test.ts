@@ -11,10 +11,12 @@ describe('dummy api', () => {
     // eslint-disable-next-line no-console
     console.info(`Testing dummy API endpoint: ${API_ORIGIN}/api/dummy`)
     const response = await axios.get(`${API_ORIGIN}/api/dummy`)
-    // eslint-disable-next-line no-console
-    console.info('Response from dummy API:', response)
-    // eslint-disable-next-line no-console
-    console.info('Response from dummy API:', response.data)
+    if (response.status !== 200) {
+      // eslint-disable-next-line no-console
+      console.info('Response from dummy API:', response)
+      // eslint-disable-next-line no-console
+      console.info('Response from dummy API:', response.data)
+    }
     expect(response.data.status).toBe('success')
   })
 })
