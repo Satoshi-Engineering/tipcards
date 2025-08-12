@@ -19,6 +19,8 @@ test-backend-integration:
     - !reference [.shared_config, cache, node_modules]
   variables:
     NODE_ENV: test
+  before_script:
+    - apk add curl
   script:
     - docker compose up -d
     - |
@@ -33,17 +35,17 @@ test-backend-integration:
         node:lts-bookworm-slim /bin/bash \
         -c "npm run backend-dev"
     - |
-      echo "Waiting for tipcards to become ready..."
-      for i in {1..30}; do
-        response=$(docker exec tipcards curl -s http://localhost:4000/api/dummy)
-        if [ -n "$response" ]; then
-          echo "Tipcards is up! Response:"
-          echo "$response"
-          break
-        fi
-        echo "Still waiting..."
-        sleep 1
-      done    
+        echo "Waiting for tipcards to become ready..."
+        for i in $(seq 1 30); do
+          status_code=$(curl -s -o /dev/null -w "%{http_code}" http://tipcards:4000/api/dummy) || true
+          if [ "$status_code" -eq 200 ]; then
+            echo "Tipcards is up! Status code: $status_code"
+            curl -s http://tipcards:4000/api/dummy
+            break
+          fi
+          echo "Still waiting... (#$i status: $status_code)"
+          sleep 1
+        done
     - |
       docker run --rm \
         --network=tipcards-local-dev_default \
