@@ -20,32 +20,9 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   before_script:
-    - apk add curl
-  script:
     - docker compose up -d
-    - |
-      docker run -d \
-        --name tipcards \
-        --network=tipcards-local-dev_default \
-        -v $(pwd):/app \
-        -w /app \
-        -p 4000:4000 \
-        -p 4001:4001 \
-        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
-        node:lts-bookworm-slim /bin/bash \
-        -c "npm run backend-dev"
-    - |
-        echo "Waiting for tipcards to become ready..."
-        for i in $(seq 1 30); do
-          status_code=$(curl -s -o /dev/null -w "%{http_code}" http://tipcards:4000/api/dummy) || true
-          if [ "$status_code" -eq 200 ]; then
-            echo "Tipcards is up! Status code: $status_code"
-            curl -s http://tipcards:4000/api/dummy
-            break
-          fi
-          echo "Still waiting... (#$i status: $status_code)"
-          sleep 1
-        done
+    - ./gitlab-ci/start-backend.sh
+  script:
     - |
       docker run --rm \
         --network=tipcards-local-dev_default \
@@ -53,11 +30,17 @@ test-backend-integration:
         -w /app \
         -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
         node:lts-bookworm-slim /bin/bash \
-        -c "npm run backend-test-integration"
+        -c "npm run backend-test-integration -- --minWorkers=1 --maxWorkers=3 --testTimeout=50000"
   after_script:
-    - docker stop tipcards
+    - |
+      echo "Job status was: $CI_JOB_STATUS"
+      if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
+        echo "Dumping backend logs:"
+        docker logs tipcards || true
+      fi
+    - ./gitlab-ci/stop-backend.sh
     - docker compose down
-  
+
 .test-e2e:
   stage: integration-and-e2e
   image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
