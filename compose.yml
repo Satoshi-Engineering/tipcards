@@ -32,6 +32,12 @@ services:
     image: lnbits/lnbits:v1.2.1
     container_name: lnbits
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4050"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s    
     depends_on:
       - lnbits-postgres
     volumes:
@@ -56,7 +62,8 @@ services:
     ports:
       - 443:443
     depends_on:
-      - lnbits
+      lnbits:
+        condition: service_healthy    
 
   volt-vault-mock:
     image: mockserver/mockserver:5.15.0
