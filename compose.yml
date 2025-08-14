@@ -61,6 +61,10 @@ services:
   volt-vault-mock:
     image: mockserver/mockserver:5.15.0
     container_name: volt-vault-mock
+    networks:
+      default:
+        aliases:
+          - volt-vault.tipcards.local    
     ports:
       - "1080:1080"
     environment:
