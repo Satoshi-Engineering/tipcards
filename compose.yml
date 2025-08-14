@@ -71,3 +71,7 @@ services:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/config.json
     volumes:
       - ./scripts/docker/volt-vault-mock:/config
+
+networks:
+  default:
+    name: tipcards-internal

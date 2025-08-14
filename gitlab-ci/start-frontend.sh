@@ -2,7 +2,7 @@
 
 docker run -d \
   --name tipcards-frontend \
-  --network=tipcards-local-dev_default \
+  --network=tipcards-internal \
   -v $(pwd):/app \
   -w /app \
   -v $(pwd)/node_modules_docker:/app/node_modules \

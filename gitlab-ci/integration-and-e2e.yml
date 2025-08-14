@@ -24,15 +24,7 @@ test-backend-integration:
     - docker compose up -d
     - ./gitlab-ci/start-backend.sh
   script:
-    - |
-      docker run --rm \
-        --network=tipcards-local-dev_default \
-        -v $(pwd):/app \
-        -v $(pwd)/node_modules_docker:/app/node_modules \
-        -w /app \
-        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
-        node:lts-bookworm-slim /bin/bash \
-        -c "npm run backend-test-integration -- --minWorkers=1 --maxWorkers=3 --testTimeout=50000"
+    - ./gitlab-ci/run-backend-integration.sh
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
@@ -66,14 +58,16 @@ test-backend-integration:
       - cypress/screenshots/**/*.png
     expire_in: 1 day    
   before_script:
+    - ./gitlab-ci/install-dependencies.sh 
     - docker compose up -d
     - ./gitlab-ci/start-backend.sh
     - ./gitlab-ci/start-frontend.sh
   script:
     - |
       docker run --rm \
-        --network=tipcards-local-dev_default \
+        --network=tipcards-internal \
         -v $(pwd):/app \
+        -v $(pwd)/node_modules_docker:/app/node_modules \
         -w /app \
         -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
         cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
