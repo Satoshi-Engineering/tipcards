@@ -1,5 +1,19 @@
 # Compose project
 
+## add domains
+
+```bash
+sudo nano /etc/hosts
+```
+
+and add
+
+```text
+127.0.0.1      api.tipcards.internal
+127.0.0.1      www.tipcards.internal
+127.0.0.1      lnbits.tipcards.internal
+```
+
 ## LnBits Access Data
 
 ### Superuser
@@ -10,7 +24,7 @@
 ### User: develop
 
 - UserId: 79687332617c4a7fa27cb5d61e2603e0
-- LoginLink: http://127.0.0.1:4020/wallet?usr=79687332617c4a7fa27cb5d61e2603e0
+- LoginLink: https://lnbits.tipcards.internal/wallet?usr=79687332617c4a7fa27cb5d61e2603e0
 - Username: develop
 - Password: developpassword
 
