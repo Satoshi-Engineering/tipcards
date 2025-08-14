@@ -28,6 +28,6 @@ generate_cert() {
     -out "${domain}.crt" -days 825 -sha256 -extfile v3.ext
 }
 
-generate_cert "www.tipcards.local"
-generate_cert "api.tipcards.local"
-generate_cert "lnbits.tipcards.local"
+generate_cert "www.tipcards.internal"
+generate_cert "api.tipcards.internal"
+generate_cert "lnbits.tipcards.internal"
