@@ -17,7 +17,12 @@ export const login = () => {
         userId,
         sessionId,
       }).then((refreshToken) => {
-        cy.setCookie('refresh_token', refreshToken)
+        cy.setCookie('refresh_token', refreshToken, {
+          domain: TIPCARDS_AUTH_ORIGIN.hostname,
+          secure: true,
+          sameSite: 'no_restriction',
+          httpOnly: true,
+        })
         return cy.wrap(refreshToken)
       })
     })

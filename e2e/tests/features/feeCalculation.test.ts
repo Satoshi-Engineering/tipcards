@@ -1,4 +1,5 @@
 import { generateCardHash } from '@e2e/lib/api/data/card'
+import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
@@ -11,7 +12,7 @@ describe('Fee Calculation', () => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
       cy.request({
-        url: `http://localhost:4000/api/lnurl/${cardHash}`,
+        url: `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`,
         method: 'GET',
       }).then((response) => {
         const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)

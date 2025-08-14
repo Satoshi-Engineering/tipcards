@@ -1,3 +1,4 @@
+import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
@@ -23,7 +24,12 @@ describe('Sets Page Cards Info', () => {
   })
 
   beforeEach(() => {
-    cy.setCookie('refresh_token', refreshToken)
+    cy.setCookie('refresh_token', refreshToken, {
+      domain: TIPCARDS_AUTH_ORIGIN.hostname,
+      secure: true,
+      sameSite: 'no_restriction',
+      httpOnly: true,
+    })
   })
 
   it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, () => {

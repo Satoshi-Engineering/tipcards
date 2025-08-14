@@ -1,3 +1,4 @@
+import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
@@ -25,11 +26,18 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login with generic error message', () => {
     tipCardsApi.auth.login()
-    cy.getCookie('refresh_token').then((cookie) => {
+    cy.getCookie('refresh_token', {
+      domain: TIPCARDS_AUTH_ORIGIN.hostname,
+    }).then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
         refreshToken: cookie.value,
       }).then((refreshToken) => {
-        cy.setCookie('refresh_token', refreshToken)
+        cy.setCookie('refresh_token', refreshToken, {
+          domain: TIPCARDS_AUTH_ORIGIN.hostname,
+          secure: true,
+          sameSite: 'no_restriction',
+          httpOnly: true,
+        })
       })
     })
 
@@ -66,11 +74,18 @@ describe('Revoked/denied refresh doken', () => {
   it('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
     tipCardsApi.auth.login()
     tipCards.userAccount.goto()
-    cy.getCookie('refresh_token').then((cookie) => {
+    cy.getCookie('refresh_token', {
+      domain: TIPCARDS_AUTH_ORIGIN.hostname,
+    }).then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
         refreshToken: cookie.value,
       }).then((refreshToken) => {
-        cy.setCookie('refresh_token', refreshToken)
+        cy.setCookie('refresh_token', refreshToken, {
+          domain: TIPCARDS_AUTH_ORIGIN.hostname,
+          secure: true,
+          sameSite: 'no_restriction',
+          httpOnly: true,
+        })
       })
     })
 

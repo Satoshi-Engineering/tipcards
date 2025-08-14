@@ -1,3 +1,4 @@
+import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
@@ -88,6 +89,7 @@ const setRefreshToken = (refreshTokenIndex: number) => {
   cy.get<string>(`@refreshToken${refreshTokenIndex}`).then((refreshToken) => {
     cy.session(refreshToken, () => {
       cy.setCookie('refresh_token', refreshToken, {
+        domain: TIPCARDS_AUTH_ORIGIN.hostname,
         httpOnly: true,
         secure: true,
         sameSite: 'no_restriction',
