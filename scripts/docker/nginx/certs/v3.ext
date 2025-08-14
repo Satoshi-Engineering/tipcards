@@ -5,4 +5,6 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = lnbits.local.me
+DNS.1 = www.tipcards.local
+DNS.2 = api.tipcards.local
+DNS.3 = lnbits.tipcards.local

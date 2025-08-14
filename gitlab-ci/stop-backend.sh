@@ -1,4 +1,4 @@
 #/bin/bash
 
-docker stop tipcards
-docker rm tipcards
+docker stop tipcards-backend
+docker rm tipcards-backend

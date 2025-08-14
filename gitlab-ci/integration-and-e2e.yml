@@ -20,6 +20,7 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   before_script:
+    - ./gitlab-ci/install-dependencies.sh 
     - docker compose up -d
     - ./gitlab-ci/start-backend.sh
   script:
@@ -27,6 +28,7 @@ test-backend-integration:
       docker run --rm \
         --network=tipcards-local-dev_default \
         -v $(pwd):/app \
+        -v $(pwd)/node_modules_docker:/app/node_modules \
         -w /app \
         -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
         node:lts-bookworm-slim /bin/bash \
@@ -36,17 +38,18 @@ test-backend-integration:
       echo "Job status was: $CI_JOB_STATUS"
       if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
         echo "Dumping backend logs:"
-        docker logs tipcards || true
+        docker logs tipcards-backend || true
       fi
     - ./gitlab-ci/stop-backend.sh
     - docker compose down
 
 .test-e2e:
   stage: integration-and-e2e
-  image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
+  image: docker:27.5.1
+  tags:
+    - docker
   services:
-    - name: postgres:16.3
-      alias: postgres
+    - docker:27.5.1-dind
   rules:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
@@ -61,7 +64,36 @@ test-backend-integration:
     paths:
       - cypress/videos/**/*.mp4
       - cypress/screenshots/**/*.png
-    expire_in: 1 day
+    expire_in: 1 day    
+  before_script:
+    - docker compose up -d
+    - ./gitlab-ci/start-backend.sh
+    - ./gitlab-ci/start-frontend.sh
+  script:
+    - |
+      docker run --rm \
+        --network=tipcards-local-dev_default \
+        -v $(pwd):/app \
+        -w /app \
+        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+        cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
+        -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e-tests"
+  after_script:
+    - |
+      echo "Job status was: $CI_JOB_STATUS"
+      if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
+        echo "Dumping backend logs:"
+        docker logs tipcards-backend || true
+        echo "Dumping frontend logs:"
+        docker logs tipcards-frontend || true
+      fi
+    - ./gitlab-ci/stop-frontend.sh
+    - ./gitlab-ci/stop-backend.sh
+    - docker compose down
+
+.test-e2e-to-integrate:
+  stage: integration-and-e2e
+  image: 
   before_script:
     - apt-get update && apt-get install -y xsel # xsel is needed for clipbordly packages 
   script:

@@ -30,7 +30,7 @@ services:
 
   lnbits:
     image: lnbits/lnbits:v1.2.1
-    container_name: lnbits-app
+    container_name: lnbits
     restart: unless-stopped
     depends_on:
       - lnbits-postgres
@@ -39,20 +39,22 @@ services:
     env_file:
       - ./scripts/docker/lnbits/.env
     ports:
-      - 4050:4050  
+      - 4050:4050
 
-  lnbits-proxy:
+  proxy:
     image: nginx:stable
-    container_name: lnbits
+    container_name: proxy
     networks:
       default:
         aliases:
-          - lnbits.local.me    
+          - www.tipcards.local
+          - api.tipcards.local
+          - lnbits.tipcards.local
     volumes:
       - ./scripts/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./scripts/docker/nginx/certs:/etc/nginx/certs:ro
     ports:
-      - 4020:4020
+      - 443:443
     depends_on:
       - lnbits
 
