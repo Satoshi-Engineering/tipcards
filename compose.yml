@@ -32,6 +32,7 @@ services:
     image: lnbits/lnbits:v1.2.1
     container_name: lnbits
     restart: unless-stopped
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4050"]
       interval: 5s
@@ -42,10 +43,13 @@ services:
       - lnbits-postgres
     volumes:
       - ./data/lnbits/data:/app/data
-    env_file:
-      - ./scripts/docker/lnbits/.env
+      - ./scripts/docker/lnbits/certs/combined.pem:/etc/ssl/certs/combined.pem:ro
     ports:
       - 4050:4050
+    env_file:
+      - ./scripts/docker/lnbits/.env
+    environment:
+      - SSL_CERT_FILE=/etc/ssl/certs/combined.pem
 
   proxy:
     image: nginx:stable

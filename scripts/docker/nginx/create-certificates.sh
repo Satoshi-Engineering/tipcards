@@ -31,3 +31,5 @@ generate_cert() {
 generate_cert "www.tipcards.internal"
 generate_cert "api.tipcards.internal"
 generate_cert "lnbits.tipcards.internal"
+
+echo "Recreate the combined pem in lnbits directory!"
