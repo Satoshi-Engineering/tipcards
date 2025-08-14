@@ -37,3 +37,7 @@
 ### The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
 
 Add the `compose.override.yml` to the root of the project.
+
+#### How to reset development
+
+- Delete `./data` directory or call `npm run docker:delete-data`
