@@ -11,7 +11,7 @@
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
     "shared-test-units": "vitest run --config ./shared/vitest.config.ts ./shared/tests/units",
     "frontend-dev": "vite --config ./frontend/vite.config.ts",
-    "frontend-preview": "vite preview --host 0.0.0.0  --port 5050 --config ./frontend/vite.config.ts",
+    "frontend-preview": "vite preview --host 0.0.0.0 --port 5050 --config ./frontend/vite.config.ts",
     "frontend-build": "vite build --config ./frontend/vite.config.ts",
     "frontend-typecheck": "cd frontend && vue-tsc --build --force",
     "frontend-test-unit": "vitest run --config ./frontend/vitest.config.ts",
