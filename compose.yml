@@ -94,7 +94,7 @@ services:
     container_name: tipcards-backend
     restart: unless-stopped
     environment:
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:
       - .:/app
       - ./node_modules_docker:/app/node_modules
@@ -115,7 +115,7 @@ services:
     container_name: tipcards-frontend
     restart: unless-stopped
     environment:
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:
       - .:/app
       - ./node_modules_docker:/app/node_modules
@@ -132,7 +132,7 @@ services:
     container_name: tipcards-backend
     restart: unless-stopped
     environment:
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:
       - .:/app
       - ./node_modules_docker:/app/node_modules
@@ -153,7 +153,7 @@ services:
     container_name: tipcards-frontend
     restart: unless-stopped
     environment:
-      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:
       - .:/app
       - ./node_modules_docker:/app/node_modules
