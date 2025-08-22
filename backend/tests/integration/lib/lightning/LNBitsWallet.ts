@@ -4,7 +4,8 @@ import { LNURLPayRequest } from '@shared/modules/LNURL/models/LNURLPayRequest.js
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 import LNURLw from '@shared/modules/LNURL/LNURLw.js'
-import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils.js'
+import { retryGetRequestWithDelayUntilSuccessWithMaxAttemptsAndSchema } from '@backend/services/axiosUtils.js'
+import { z } from 'zod'
 
 export default class LNBitsWallet {
   adminKey: string
@@ -110,18 +111,26 @@ export default class LNBitsWallet {
     const invoice = invoiceData?.payment_request || ''
     const url = LNURLw.createCallbackUrl(lnurlWithdrawRequest, invoice)
 
-    let lnurlWithdrawResponse: AxiosResponse | null = null
-
-    const maxRetries = 15
+    const lnbitsResponse = z.object({ status: z.literal('OK') })
+    const immediateWait = true
+    const maxRetries = 5
+    const delayInMilliseconds = 1000 // lnbits enforces a 1 second wait time from creating an lnurlw link until it can be used
+    let lnurlWithdrawResponse: z.infer<typeof lnbitsResponse>
 
     try {
-      lnurlWithdrawResponse = await retryGetRequestWithDelayUntilSuccessWithMaxAttempts(url, maxRetries)
+      lnurlWithdrawResponse = await retryGetRequestWithDelayUntilSuccessWithMaxAttemptsAndSchema(
+        url,
+        lnbitsResponse,
+        immediateWait,
+        maxRetries,
+        delayInMilliseconds,
+      )
     } catch (error) {
       console.error('withdraw failed multiple times, only showing last error', error)
-      throw new Error(`Tried LNURLw callback link for ${maxRetries}x times: ${url}`)
+      throw new Error(`Tried LNURLw callback link for ${maxRetries} times with a delay of ${delayInMilliseconds} each time: ${url}`)
     }
 
-    return lnurlWithdrawResponse.data
+    return lnurlWithdrawResponse
   }
 
   public async loginWithLNURLAuth(lnurlAuth: string) {

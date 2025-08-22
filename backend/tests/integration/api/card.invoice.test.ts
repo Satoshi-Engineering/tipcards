@@ -139,20 +139,7 @@ describe('card | fund & withdraw', () => {
     await wallet.withdrawAllFromLNURLWithdrawRequest(lnurlWithdrawRequest)
   })
 
-  failEarly.skip('should return status of a withdraw pending card', async () => {
-    const response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
-
-    setExpectedCardToWithdrawPendingCardPre(EXPECTED_OBJECT)
-
-    expect(response.data).toEqual(expect.objectContaining(EXPECTED_OBJECT))
-  })
-
-  failEarly.it('should call lnurlw withdraw webhook', async () => {
-    const response = await axios.get(`${API_ORIGIN}/api/withdraw/used/${testCard.cardHash}`)
-    expect(response.status).toBe(200)
-  })
-
-  failEarly.skip('should return status of a withdrawn card', async () => {
+  failEarly.it('should return status of a withdrawn card', async () => {
     const response = await axios.get(`${API_ORIGIN}/api/card/${testCard.cardHash}`)
 
     setExpectedCardToWithdrawnCardPre(EXPECTED_OBJECT)

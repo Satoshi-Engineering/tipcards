@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { ZodSchema } from 'zod'
 
 import { delay } from './timingUtils.js'
 
@@ -8,15 +9,44 @@ import { delay } from './timingUtils.js'
  *
  * @throws
  * */
-export const retryGetRequestWithDelayUntilSuccessWithMaxAttempts = async (url: string, maxRetrys = 5, delayInMilliseconds = 200) => {
+export const retryGetRequestWithDelayUntilSuccessWithMaxAttempts = async (
+  url: string,
+  immediateWait = false,
+  maxRetrys = 5,
+  delayInMilliseconds = 200,
+): Promise<AxiosResponse> => {
   let caughtError: unknown
-  while (maxRetrys > 0) {
+  for (let x = 0; x < maxRetrys; x += 1) {
+    if (immediateWait || x > 0) {
+      await delay(delayInMilliseconds)
+    }
     try {
-      return await axios.get(url)
+      const response = await axios.get(url)
+      return response
     } catch (error) {
       caughtError = error
+    }
+  }
+  throw caughtError
+}
+
+export const retryGetRequestWithDelayUntilSuccessWithMaxAttemptsAndSchema = async <T>(
+  url: string,
+  schema: ZodSchema<T>,
+  immediateWait = false,
+  maxRetrys = 5,
+  delayInMilliseconds = 200,
+): Promise<T> => {
+  let caughtError: unknown
+  for (let x = 0; x < maxRetrys; x += 1) {
+    if (immediateWait || x > 0) {
       await delay(delayInMilliseconds)
-      maxRetrys--
+    }
+    try {
+      const response = await axios.get(url)
+      return schema.parse(response.data)
+    } catch (error) {
+      caughtError = error
     }
   }
   throw caughtError
