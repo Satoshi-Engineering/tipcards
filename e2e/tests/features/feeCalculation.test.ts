@@ -9,10 +9,10 @@ const invoice = 'lnbc4u1pne5fx3pp5w2ma9q08eh5t0amgjrnwmyceegn4za7tjnsursq8jmz8al
 describe('Fee Calculation', () => {
   it('Should fail to pay out, if the estimated fee is too high', () => {
     generateCardHash().then((cardHash) => {
-      tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
-
+      tipCardsApi.card.fundCardWithInvoice(cardHash, 400)
+      const url = new URL(`/api/lnurl/${cardHash}`, BACKEND_API_ORIGIN)
       cy.request({
-        url: `${BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`,
+        url: url.toString(),
         method: 'GET',
       }).then((response) => {
         const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.body)
@@ -21,7 +21,6 @@ describe('Fee Calculation', () => {
           failOnStatusCode: false,
         }).then((response) => {
           cy.log(response.body)
-          cy.log(JSON.stringify(response.body))
           cy.wrap(response.status).should('be.greaterThan', 399)
           cy.wrap(response.body.status).should('equal', 'ERROR')
           cy.wrap(response.body.code).should('equal', 'UnableToFindValidRoute')

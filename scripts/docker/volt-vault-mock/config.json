@@ -4,7 +4,7 @@
       "method": "GET",
       "path": "/api/lnd/query-routes",
       "queryStringParameters": {
-        "paymentRequestEncoded": ["highfee"]
+        "paymentRequestEncoded": ["lnbc4u1pne5fx3pp5w2ma9q08eh5t0amgjrnwmyceegn4za7tjnsursq8jmz8alq6rxhqdqqcqzzsxqyz5vqsp5ea4ng42k9kwz6dy8usd7xs37g0g5xlcy69ge7rvdnyquvqhv79zs9p4gqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpqysgqa6ej8npz6lxw2em8zlwvwdfh7sdvvvqdgpncvg5lfdwt5r8ked75xsnkutvt43uwwz34psxn4k2l6n6yyt6wu55huz82lknqt65uvccqk8j3w3"]
       }
     },
     "httpResponse": {
@@ -13,12 +13,12 @@
         "queryRoutesResponse": {
           "routes": [
             {
-              "total_fees": "210"
+              "total_fees": "100000000"
             }
           ]
         },
         "paymentRequestDecoded": {
-          "num_satoshis": "210"
+          "num_satoshis": "400"
         }
       },
       "headers": {
