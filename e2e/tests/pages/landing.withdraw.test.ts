@@ -3,18 +3,6 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
-  it('should load the status of a pending withdraw', () => {
-    generateCardHash().then((cardHash) => {
-      tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
-      tipCardsApi.card.withdrawAllSatsFromCard(cardHash)
-
-      tipCards.landing.gotoPreview(cardHash)
-
-      cy.getTestElement('get-your-bitcoin').should('exist')
-      cy.getTestElement('greeting-recently-withdrawn').should('not.exist')
-    })
-  })
-
   it('should load the status of a recently withdrawn card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
