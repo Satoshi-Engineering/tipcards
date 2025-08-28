@@ -63,7 +63,10 @@ export default defineConfig(({ mode }) => {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
     server: {
-      allowedHosts: ['.tipcards.internal', '.ngrok-free.app'],
+      allowedHosts: [
+        'tipcards.localhost',
+        '.ngrok-free.app',
+      ],
     },
     build,
     css: {

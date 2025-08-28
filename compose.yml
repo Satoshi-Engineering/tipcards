@@ -60,13 +60,14 @@ services:
     networks:
       default:
         aliases:
-          - www.tipcards.internal
-          - api.tipcards.internal
-          - lnbits.tipcards.internal
+          - tipcards.localhost
+          - auth.tipcards.localhost
+          - lnbits.tipcards.localhost
     volumes:
       - ./scripts/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./scripts/docker/nginx/certs:/etc/nginx/certs:ro
     ports:
+      - 80:80
       - 443:443
     depends_on:
       lnbits:
@@ -80,7 +81,7 @@ services:
     networks:
       default:
         aliases:
-          - volt-vault.tipcards.internal    
+          - volt-vault.tipcards.localhost    
     ports:
       - 1080:1080
     environment:

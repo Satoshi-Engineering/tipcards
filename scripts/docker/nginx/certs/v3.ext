@@ -5,6 +5,7 @@ extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = www.tipcards.internal
-DNS.2 = api.tipcards.internal
-DNS.3 = lnbits.tipcards.internal
+DNS.1 = tipcards.localhost
+DNS.2 = auth.tipcards.localhost
+DNS.3 = lnbits.tipcards.localhost
+DNS.4 = volt-vault.tipcards.localhost

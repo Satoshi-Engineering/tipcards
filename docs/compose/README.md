@@ -9,9 +9,11 @@ sudo nano /etc/hosts
 and add
 
 ```text
-127.0.0.1      api.tipcards.internal
-127.0.0.1      www.tipcards.internal
-127.0.0.1      lnbits.tipcards.internal
+127.0.0.1      tipcards.localhost
+127.0.0.1      auth.tipcards.localhost
+127.0.0.1      lnbits.tipcards.localhost
+127.0.0.1      volt-vault.tipcards.localhost
+127.0.0.1      postgres.tipcards.localhost
 ```
 
 ## LnBits Access Data
@@ -24,7 +26,7 @@ and add
 ### User: develop
 
 - UserId: 79687332617c4a7fa27cb5d61e2603e0
-- LoginLink: https://lnbits.tipcards.internal/wallet?usr=79687332617c4a7fa27cb5d61e2603e0
+- LoginLink: https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0
 - Username: develop
 - Password: developpassword
 
