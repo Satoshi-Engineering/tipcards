@@ -29,12 +29,17 @@ export const fundSet = (
   setId: string,
   amountPerCard = 210,
   cards = 8,
-) =>
-  createInvoiceForSet(setId, amountPerCard, cards).then((response) => {
+) => {
+  const data = createInvoiceForSet(setId, amountPerCard, cards).then((response) => {
     const invoice = response.body.data.invoice.payment_request
     payInvoice(invoice)
     callInvoicePaidHookForSet(setId)
   }).then((response) => response.body.data)
+
+  // give the backend some time to release the cards, otherwise the tests get flaky
+  cy.wait(100)
+  return data
+}
 
 export const callInvoicePaidHookForSet = (setId: string) =>
   cy.request({
