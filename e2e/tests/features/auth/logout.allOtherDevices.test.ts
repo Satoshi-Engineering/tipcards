@@ -9,7 +9,7 @@ describe('Feature logoutAllOtherDevices', () => {
     cy.clearAllCookies()
   })
 
-  it('all refresh tokens should be valid', () => {
+  it('should create multiple valid refresh tokens', () => {
     createUserAndWrapRefreshTokens({ numberOfRefreshTokens })
 
     for (let i = 0; i < numberOfRefreshTokens; i++) {
@@ -17,7 +17,7 @@ describe('Feature logoutAllOtherDevices', () => {
     }
   })
 
-  it('only the second refresh tokens should be valid', () => {
+  it('should invalidate all other refresh tokens on logout-all-other-devices', () => {
     const activeRefreshTokenIndex = 1
     createUserAndWrapRefreshTokens({ numberOfRefreshTokens })
 
@@ -90,9 +90,10 @@ const setRefreshToken = (refreshTokenIndex: number) => {
     cy.session(refreshToken, () => {
       cy.setCookie('refresh_token', refreshToken, {
         domain: TIPCARDS_AUTH_ORIGIN.hostname,
-        httpOnly: true,
         secure: true,
         sameSite: 'no_restriction',
+        httpOnly: true,
+        hostOnly: true,
       })
     })
   })

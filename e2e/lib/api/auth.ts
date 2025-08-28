@@ -22,6 +22,7 @@ export const login = () => {
           secure: true,
           sameSite: 'no_restriction',
           httpOnly: true,
+          hostOnly: true,
         })
         return cy.wrap(refreshToken)
       })

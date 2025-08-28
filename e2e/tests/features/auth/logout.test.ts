@@ -6,7 +6,7 @@ describe('Feature Logout', () => {
     tipCardsApi.auth.login()
   })
 
-  it('User should should get logged out', () => {
+  it('should should log out the user', () => {
     tipCards.home.goto()
 
     cy.getTestElement('the-layout').should('exist')
@@ -24,7 +24,7 @@ describe('Feature Logout', () => {
     tipCardsApi.auth.isLoggedOut()
   })
 
-  it('should vanishes user specific data after logout', () => {
+  it('should remove user specific data after logout', () => {
     const randomSetName = Math.random().toString(36).substring(7)
     tipCardsApi.set.generateAndAddSet(randomSetName)
     tipCards.sets.goto()

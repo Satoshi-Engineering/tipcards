@@ -29,6 +29,7 @@ describe('Sets Page Cards Info', () => {
       secure: true,
       sameSite: 'no_restriction',
       httpOnly: true,
+      hostOnly: true,
     })
   })
 

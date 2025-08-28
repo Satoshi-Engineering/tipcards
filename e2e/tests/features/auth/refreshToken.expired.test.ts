@@ -16,6 +16,7 @@ describe('Expired refresh token', () => {
           secure: true,
           sameSite: 'no_restriction',
           httpOnly: true,
+          hostOnly: true,
         })
       })
     })

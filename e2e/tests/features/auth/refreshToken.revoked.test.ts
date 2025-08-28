@@ -37,6 +37,7 @@ describe('Revoked/denied refresh doken', () => {
           secure: true,
           sameSite: 'no_restriction',
           httpOnly: true,
+          hostOnly: true,
         })
       })
     })
@@ -85,6 +86,7 @@ describe('Revoked/denied refresh doken', () => {
           secure: true,
           sameSite: 'no_restriction',
           httpOnly: true,
+          hostOnly: true,
         })
       })
     })
