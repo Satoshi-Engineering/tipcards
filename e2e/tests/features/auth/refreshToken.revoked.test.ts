@@ -50,6 +50,7 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login, if user logged out on another device while using application', () => {
     tipCardsApi.auth.login()
+    // the access token has to be expired so the frontend wants to request a new one using the refresh token
     tipCards.cards.gotoNewSetPageWithExpiredAccessToken()
     // make sure the access token is expired
     cy.wait(10_000)

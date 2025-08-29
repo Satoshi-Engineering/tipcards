@@ -65,7 +65,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         nonce: nonce as string,
       }
       const expiredAccessToken = jwtIssuer.createJwt(
-        process.env.JWT_AUTH_ISSUER,
+        process.env.JWT_TIPCARDS_API,
         '70 seconds',
         payload,
       )

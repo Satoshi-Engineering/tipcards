@@ -24,7 +24,7 @@ export const gotoPageWithExpiredAccessToken = (page: URL) => {
       refreshToken: cookie.value,
     }).then((accessToken) => {
       cy.intercept(
-        { url: '/auth/trpc/auth.refreshRefreshToken**', times: 1 },
+        { url: `${TIPCARDS_AUTH_ORIGIN.origin}/auth/trpc/auth.refreshRefreshToken**`, times: 1 },
         [{ result: { data: { json: { accessToken } } } } ],
       ).as('apiAuthRefresh')
     })
