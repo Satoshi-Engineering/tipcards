@@ -3,6 +3,11 @@ if (process.env.TEST_API_ORIGIN) {
   API_ORIGIN = process.env.TEST_API_ORIGIN
 }
 
+let AUTH_ORIGIN = API_ORIGIN || ''
+if (process.env.TEST_AUTH_ORIGIN) {
+  AUTH_ORIGIN = process.env.TEST_AUTH_ORIGIN
+}
+
 let WALLET_LNBITS_ORIGIN = process.env.LNBITS_ORIGIN || ''
 if (process.env.TEST_WALLET_LNBITS_ORIGIN) {
   WALLET_LNBITS_ORIGIN = process.env.TEST_WALLET_LNBITS_ORIGIN
@@ -15,6 +20,7 @@ if (process.env.TEST_WALLET_LNBITS_ADMIN_KEY) {
 
 export {
   API_ORIGIN,
+  AUTH_ORIGIN,
   WALLET_LNBITS_ORIGIN,
   WALLET_LNBITS_ADMIN_KEY,
 }

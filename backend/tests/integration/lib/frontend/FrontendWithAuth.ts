@@ -8,7 +8,7 @@ import { AppRouter as AuthRouter } from '@auth/trpc/index.js'
 import { Set } from '@shared/data/api/Set.js'
 
 import Frontend from './Frontend.js'
-import { API_ORIGIN } from '../constants.js'
+import { API_ORIGIN, AUTH_ORIGIN } from '../constants.js'
 
 export default class FrontendWithAuth extends Frontend {
   authServiceLoginHash = ''
@@ -22,7 +22,7 @@ export default class FrontendWithAuth extends Frontend {
     this.trpcAuth = createTRPCClient<AuthRouter>({
       links: [
         httpBatchLink({
-          url: `${API_ORIGIN}/auth/trpc`,
+          url: `${AUTH_ORIGIN}/auth/trpc`,
           transformer: superjson,
           maxURLLength: 2083,
           headers: async () => {
