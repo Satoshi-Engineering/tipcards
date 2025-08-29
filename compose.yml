@@ -1,9 +1,30 @@
-name: tipcards-local-dev
+name: tipcards-dev
 
 services:
+  proxy:
+    image: nginx:stable
+    container_name: tipcards-proxy
+    restart: unless-stopped
+    depends_on:
+      lnbits:
+        condition: service_healthy
+    volumes:
+      - ./scripts/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./scripts/docker/nginx/certs:/etc/nginx/certs:ro
+    networks:
+      default:
+        aliases:
+          - tipcards.localhost
+          - auth.tipcards.localhost
+          - lnbits.tipcards.localhost
+    ports:
+      - 80:80
+      - 443:443
+    profiles: [tools]
+
   postgres:
     image: postgres:16.9
-    container_name: postgres
+    container_name: tipcards-postgres
     restart: unless-stopped
     shm_size: 128mb
     env_file:
@@ -11,88 +32,75 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
       - ./scripts/docker/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      default:
+        aliases:
+          - postgres.tipcards.localhost
     ports:
       - 5432:5432
-    profiles: [test, dev, tools]
+    profiles: [tools]
 
   lnbits-postgres:
     image: postgres:16.9
-    container_name: lnbits-postgres
+    container_name: tipcards-lnbits-postgres
     restart: unless-stopped
-    volumes:
-      - ./data/lnbits/postgres:/var/lib/postgresql/data
-      - ./scripts/docker/lnbits/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: "lnbits"
       POSTGRES_PASSWORD: "gobrrrrrr"
       POSTGRES_DB: "lnbits"
+    volumes:
+      - ./data/lnbits/postgres:/var/lib/postgresql/data
+      - ./scripts/docker/lnbits/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      default:
+        aliases:
+          - postgres.lnbits.tipcards.localhost
     ports:
       - 5433:5432
-    profiles: [test, dev, tools]
+    profiles: [tools]
 
   lnbits:
     image: lnbits/lnbits:v1.2.1
-    container_name: lnbits
+    container_name: tipcards-lnbits
     restart: unless-stopped
+    depends_on:
+      - lnbits-postgres
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4050"]
       interval: 5s
       timeout: 3s
       retries: 30
-      start_period: 10s    
-    depends_on:
-      - lnbits-postgres
+      start_period: 10s
+    env_file:
+      - ./scripts/docker/lnbits/.env
+    environment:
+      - SSL_CERT_FILE=/etc/ssl/certs/combined.pem
     volumes:
       - ./data/lnbits/data:/app/data
       - ./scripts/docker/lnbits/certs/combined.pem:/etc/ssl/certs/combined.pem:ro
     ports:
       - 4050:4050
-    env_file:
-      - ./scripts/docker/lnbits/.env
-    environment:
-      - SSL_CERT_FILE=/etc/ssl/certs/combined.pem
-    profiles: [test, dev, tools]
-
-  proxy:
-    image: nginx:stable
-    container_name: proxy
-    restart: unless-stopped
-    networks:
-      default:
-        aliases:
-          - tipcards.localhost
-          - auth.tipcards.localhost
-          - lnbits.tipcards.localhost
-    volumes:
-      - ./scripts/docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./scripts/docker/nginx/certs:/etc/nginx/certs:ro
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      lnbits:
-        condition: service_healthy
-    profiles: [test, dev, tools]
+    profiles: [tools]
 
   volt-vault-mock:
     image: mockserver/mockserver:5.15.0
-    container_name: volt-vault-mock
+    container_name: tipcards-volt-vault-mock
     restart: unless-stopped
-    networks:
-      default:
-        aliases:
-          - volt-vault.tipcards.localhost    
-    ports:
-      - 1080:1080
     environment:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/config.json
     volumes:
       - ./scripts/docker/volt-vault-mock:/config
-    profiles: [test, dev, tools]
+    networks:
+      default:
+        aliases:
+          - volt-vault.tipcards.localhost
+    ports:
+      - 1080:1080
+    profiles: [tools]
 
   tipcards-backend-test:
     image: node:lts-bookworm-slim
-    container_name: tipcards-backend
+    container_name: tipcards-backend-test
     restart: unless-stopped
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
@@ -101,19 +109,18 @@ services:
       - ./node_modules_docker:/app/node_modules
     working_dir: /app
     command: /bin/bash -c "npm run backend-debug"
+    networks:
+      default:
+        aliases:
+          - tipcards-backend
     ports:
       - 4000:4000
       - 4001:4001
-    depends_on:
-      - postgres
-      - lnbits
-      - proxy
-      - volt-vault-mock
     profiles: [test]
 
   tipcards-frontend-test:
     image: node:lts-bookworm-slim
-    container_name: tipcards-frontend
+    container_name: tipcards-frontend-test
     restart: unless-stopped
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
@@ -122,15 +129,17 @@ services:
       - ./node_modules_docker:/app/node_modules
     working_dir: /app
     command: /bin/bash -c "npm run frontend-build && npm run frontend-preview"
+    networks:
+      default:
+        aliases:
+          - tipcards-frontend
     ports:
       - 5050:5050
-    depends_on:
-      - tipcards-backend-test
     profiles: [test]
 
   tipcards-backend-dev:
     image: node:lts-bookworm-slim
-    container_name: tipcards-backend
+    container_name: tipcards-backend-dev
     restart: unless-stopped
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
@@ -139,19 +148,18 @@ services:
       - ./node_modules_docker:/app/node_modules
     working_dir: /app
     command: /bin/bash -c "npm run backend-dev"
+    networks:
+      default:
+        aliases:
+          - tipcards-backend
     ports:
       - 4000:4000
       - 4001:4001
-    depends_on:
-      - postgres
-      - lnbits
-      - proxy
-      - volt-vault-mock
     profiles: [dev]
 
   tipcards-frontend-dev:
     image: node:lts-bookworm-slim
-    container_name: tipcards-frontend
+    container_name: tipcards-frontend-dev
     restart: unless-stopped
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
@@ -160,12 +168,14 @@ services:
       - ./node_modules_docker:/app/node_modules
     working_dir: /app
     command: /bin/bash -c "npm run frontend-dev -- --port 5050 --host"
+    networks:
+      default:
+        aliases:
+          - tipcards-frontend
     ports:
       - 5050:5050
-    depends_on:
-      - tipcards-backend-dev
     profiles: [dev]
 
 networks:
   default:
-    name: tipcards-internal
+    name: tipcards-localhost

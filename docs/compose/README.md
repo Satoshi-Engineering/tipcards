@@ -12,7 +12,6 @@ and add
 127.0.0.1      tipcards.localhost
 127.0.0.1      auth.tipcards.localhost
 127.0.0.1      lnbits.tipcards.localhost
-127.0.0.1      volt-vault.tipcards.localhost
 127.0.0.1      postgres.tipcards.localhost
 ```
 

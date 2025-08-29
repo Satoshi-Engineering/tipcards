@@ -8,4 +8,3 @@ subjectAltName = @alt_names
 DNS.1 = tipcards.localhost
 DNS.2 = auth.tipcards.localhost
 DNS.3 = lnbits.tipcards.localhost
-DNS.4 = volt-vault.tipcards.localhost
