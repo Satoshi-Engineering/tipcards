@@ -12,7 +12,12 @@ export const getJwtIssuer = async () => {
   return jwtIssuer = new JwtIssuer(keyPair, process.env.JWT_AUTH_ISSUER)
 }
 
-export const getJwtPayload = async ({ jwt }: { jwt: string }) => {
+export const getRefreshTokenPayload = async ({ jwt }: { jwt: string }) => {
   const jwtIssuer = await getJwtIssuer()
   return await jwtIssuer.validate(jwt, process.env.JWT_AUTH_ISSUER)
+}
+
+export const getAccessTokenPayload = async ({ jwt }: { jwt: string }) => {
+  const jwtIssuer = await getJwtIssuer()
+  return await jwtIssuer.validate(jwt, process.env.JWT_TIPCARDS_API)
 }

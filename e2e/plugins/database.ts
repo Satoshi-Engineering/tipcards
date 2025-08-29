@@ -5,7 +5,7 @@ import type { SetDto } from '@shared/data/trpc/SetDto'
 import crypto, { randomUUID } from 'crypto'
 import postgres from 'postgres'
 
-import { getJwtPayload } from '../lib/jwtHelpers'
+import { getRefreshTokenPayload } from '../lib/jwtHelpers'
 import {
   createSet001,
   createSet002,
@@ -32,7 +32,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     },
 
     'db:logoutAllDevices': async ({ refreshToken }: { refreshToken: string }) => {
-      const payload = await getJwtPayload({ jwt: refreshToken })
+      const payload = await getRefreshTokenPayload({ jwt: refreshToken })
       const userId = payload.userId as string
       await sql`DELETE FROM public."AllowedSession" WHERE "user"=${userId};`
       return userId

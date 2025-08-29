@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto'
 
 import { AccessTokenPayload } from '../../shared/src/data/auth/index'
 
-import { getJwtIssuer, getJwtPayload } from '../lib/jwtHelpers'
+import { getJwtIssuer, getRefreshTokenPayload, getAccessTokenPayload } from '../lib/jwtHelpers'
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
   on('task', {
@@ -29,7 +29,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateExpiredRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const payload = await getJwtPayload({ jwt: refreshToken })
+      const payload = await getRefreshTokenPayload({ jwt: refreshToken })
       const expiredRefreshToken = jwtIssuer.createJwt(
         process.env.JWT_AUTH_ISSUER,
         '0 seconds',
@@ -41,7 +41,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateInvalidRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const payload = await getJwtPayload({ jwt: refreshToken })
+      const payload = await getRefreshTokenPayload({ jwt: refreshToken })
       const expiredRefreshToken = jwtIssuer.createJwt(
         'invalid-audience',
         '28 days',
@@ -53,7 +53,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
 
     'jwt:generateExpiredAccessToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
-      const { userId, nonce } = await getJwtPayload({ jwt: refreshToken })
+      const { userId, nonce } = await getRefreshTokenPayload({ jwt: refreshToken })
 
       // the frontend requests a new access token,
       // if the current one expires within the next 60 seconds.
@@ -78,7 +78,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     }: {
       refreshToken: string,
     } ) => {
-      const { userId, sessionId, nonce } = await getJwtPayload({ jwt: refreshToken })
+      const { userId, sessionId, nonce } = await getRefreshTokenPayload({ jwt: refreshToken })
 
       if (typeof userId != 'string' && (userId as string).length <= 10) {
         return false
@@ -99,10 +99,11 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
       accessToken: string,
     } ) => {
       try {
-        const payload = await getJwtPayload({ jwt: accessToken })
+        const payload = await getAccessTokenPayload({ jwt: accessToken })
         AccessTokenPayload.parse(payload)
         return true
-      } catch {
+      } catch (error) {
+        console.log(error)
         return false
       }
     },
