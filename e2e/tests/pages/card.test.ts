@@ -23,7 +23,7 @@ describe('Card Details Page', () => {
       .should('exist')
       .then(($el) => {
         expect($el.attr('data-lnurl').endsWith(
-          '?lightning=LNURL1DP68GURN8GHJ7CTSDYH8G6TSVDSHYERN9E5KUAR9WFHXZMP0V9CXJTMVDE6HYMP0W3JHXAPDVDSHYEPDDPSHX6QLUZUP7',
+          '?lightning=LNURL1DP68GURN8GHJ7ARFWP3KZUNYWVHXCMMRV9KXSMMNWSHKZURF9AKXUATJDSHHGETNWSKKXCTJVSKKSCTNDQGEE52F',
         )).to.be.true
       })
   })
