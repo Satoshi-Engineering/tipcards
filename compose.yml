@@ -102,6 +102,12 @@ services:
     image: node:lts-bookworm-slim
     container_name: tipcards-backend-test
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"http.get('http://localhost:4000/api/dummy', res => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:
@@ -122,6 +128,12 @@ services:
     image: node:lts-bookworm-slim
     container_name: tipcards-frontend-test
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"http.get('http://localhost:5050', res => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 10s
     environment:
       - NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem
     volumes:

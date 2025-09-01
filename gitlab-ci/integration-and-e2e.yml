@@ -15,7 +15,7 @@ test-backend-integration:
     NODE_ENV: test
   before_script:
     - ./gitlab-ci/install-dependencies.sh 
-    - docker compose up -d
+    - docker compose --profile tools --profile test up -d --wait
   script:
     - ./gitlab-ci/run-backend-integration.sh
   after_script:
@@ -25,7 +25,7 @@ test-backend-integration:
         echo "Dumping backend logs:"
         docker logs tipcards-backend || true
       fi
-    - docker compose down
+    - docker compose --profile tools --profile test down
 
 test-e2e:
   stage: integration-and-e2e
@@ -51,7 +51,7 @@ test-e2e:
     expire_in: 1 day    
   before_script:
     - ./gitlab-ci/install-dependencies.sh 
-    - docker compose up -d
+    - docker compose --profile tools --profile test up -d --wait
   script:
     - |
       docker run --rm \
@@ -71,4 +71,4 @@ test-e2e:
         echo "Dumping frontend logs:"
         docker logs tipcards-frontend || true
       fi
-    - docker compose down
+    - docker compose --profile tools --profile test down
