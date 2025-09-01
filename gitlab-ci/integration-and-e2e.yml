@@ -1,9 +1,3 @@
-# these variables are only used for the integration test postgres service
-variables:
-  POSTGRES_DB: tipcards
-  POSTGRES_USER: tipcards
-  POSTGRES_PASSWORD: thisisonlyusedinthepipeline
-
 test-backend-integration:
   stage: integration-and-e2e
   image: docker:27.5.1
@@ -22,7 +16,6 @@ test-backend-integration:
   before_script:
     - ./gitlab-ci/install-dependencies.sh 
     - docker compose up -d
-    - ./gitlab-ci/start-backend.sh
   script:
     - ./gitlab-ci/run-backend-integration.sh
   after_script:
@@ -32,10 +25,9 @@ test-backend-integration:
         echo "Dumping backend logs:"
         docker logs tipcards-backend || true
       fi
-    - ./gitlab-ci/stop-backend.sh
     - docker compose down
 
-.test-e2e:
+test-e2e:
   stage: integration-and-e2e
   image: docker:27.5.1
   tags:
@@ -60,8 +52,6 @@ test-backend-integration:
   before_script:
     - ./gitlab-ci/install-dependencies.sh 
     - docker compose up -d
-    - ./gitlab-ci/start-backend.sh
-    - ./gitlab-ci/start-frontend.sh
   script:
     - |
       docker run --rm \
@@ -69,7 +59,7 @@ test-backend-integration:
         -v $(pwd):/app \
         -v $(pwd)/node_modules_docker:/app/node_modules \
         -w /app \
-        -e NODE_TLS_REJECT_UNAUTHORIZED=0 \
+        -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
         cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
         -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e-tests"
   after_script:
@@ -81,6 +71,4 @@ test-backend-integration:
         echo "Dumping frontend logs:"
         docker logs tipcards-frontend || true
       fi
-    - ./gitlab-ci/stop-frontend.sh
-    - ./gitlab-ci/stop-backend.sh
     - docker compose down
