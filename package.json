@@ -42,7 +42,15 @@
     "bump-version": "./scripts/bump-version/bump-version.sh",
     "docker:save-tipcards-database-to-sql": "docker exec -t tipcards-postgres pg_dumpall -U postgres > scripts/docker/postgres/docker-entrypoint-initdb.d/sql/init.sql",
     "docker:save-lnbits-database-to-sql": "docker exec -t tipcards-lnbits-postgres pg_dumpall -U lnbits > scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql",
-    "docker:delete-data": "./scripts/docker/delete-data.sh"
+    "docker:delete-data": "./scripts/docker/delete-data.sh",
+    "docker:tools:up": "docker compose --profile tools up -d",
+    "docker:tools:down": "docker compose --profile tools down",
+    "docker:test:up": "docker compose --profile test up -d",
+    "docker:test:down": "docker compose --profile test down",
+    "docker:dev:up": "docker compose --profile dev up -d",
+    "docker:dev:down": "docker compose --profile dev down",
+    "docker:down": "docker compose --profile tools --profile dev --profile test down",
+    "dev": "docker compose --profile tools --profile dev up -d && echo '✅ Dev containers running. Call `npm run docker:down` to remove them.\n\nNow go to https://tipcards.localhost and start hacking!'"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
