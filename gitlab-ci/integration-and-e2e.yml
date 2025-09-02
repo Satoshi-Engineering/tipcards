@@ -16,7 +16,6 @@ test-backend-integration:
   before_script:
     - docker compose --profile tools --profile test up -d --wait
   script:
-    - ls -al
     - ./scripts/docker/run-backend-integration.sh
   after_script:
     - |

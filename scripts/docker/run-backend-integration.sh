@@ -1,3 +1,5 @@
+#!/bin/sh
+
 SYSTEM_ARCHITECTURE=$(uname -m)
 NODE_MODULES_DIR=$(pwd)/node_modules
 
