@@ -1,5 +1,3 @@
-#!/bin/bash
-
 TEST_FILE=$1
 
 if [ -z "$TEST_FILE" ]; then
