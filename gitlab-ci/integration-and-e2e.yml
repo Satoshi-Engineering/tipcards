@@ -16,7 +16,7 @@ test-backend-integration:
   before_script:
     - docker compose --profile tools --profile test up -d --wait
   script:
-    - ./gitlab-ci/run-backend-integration.sh
+    - ./scripts/docker/run-backend-integration.sh
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
