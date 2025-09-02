@@ -43,3 +43,4 @@ lnurl.auth.pem.pub
 
 # docker
 /compose.override.yml
+/.env

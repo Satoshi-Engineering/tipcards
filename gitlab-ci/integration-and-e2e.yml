@@ -14,7 +14,6 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   before_script:
-    - ./gitlab-ci/install-dependencies.sh 
     - docker compose --profile tools --profile test up -d --wait
   script:
     - ./gitlab-ci/run-backend-integration.sh
@@ -48,9 +47,8 @@ test-e2e:
     paths:
       - cypress/videos/**/*.mp4
       - cypress/screenshots/**/*.png
-    expire_in: 1 day    
+    expire_in: 1 day
   before_script:
-    - ./gitlab-ci/install-dependencies.sh 
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
