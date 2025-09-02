@@ -55,7 +55,6 @@ test-e2e:
       docker run --rm \
         --network=tipcards-localhost \
         -v $(pwd):/app \
-        -v $(pwd)/node_modules_docker:/app/node_modules \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
         cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
