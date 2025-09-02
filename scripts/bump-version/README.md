@@ -1,3 +1,6 @@
-# Bump version script
+# Bump Version Script
 
-Small helper script to automate bump version
+This is a small helper script to automate version bumps.
+
+It generates a changelog entry, creates a new Git commit, and tags the commit.
+Note: the commit is not pushed automatically.

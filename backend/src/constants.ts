@@ -12,20 +12,8 @@ let EXPRESS_PORT = 4000
 if (Number(process.env.EXPRESS_PORT) > 0 && Number(process.env.EXPRESS_PORT) < 65536) {
   EXPRESS_PORT = Number(process.env.EXPRESS_PORT)
 }
-let PROXY_PORT = 4002
-if (Number(process.env.PROXY_PORT) > 0 && Number(process.env.PROXY_PORT) < 65536) {
-  PROXY_PORT = Number(process.env.PROXY_PORT)
-}
-let WEB_PORT = 5173
-if (Number(process.env.WEB_PORT) > 0 && Number(process.env.WEB_PORT) < 65536) {
-  WEB_PORT = Number(process.env.WEB_PORT)
-}
-let NGROK_AUTH_TOKEN: string | undefined = undefined
-if (typeof process.env.NGROK_AUTH_TOKEN === 'string' && process.env.NGROK_AUTH_TOKEN.length > 0) {
-  NGROK_AUTH_TOKEN = process.env.NGROK_AUTH_TOKEN
-}
 
-let LNBITS_ORIGIN = 'https://legend.lnbits.com'
+let LNBITS_ORIGIN = 'https://demo.lnbits.com'
 if (typeof process.env.LNBITS_ORIGIN === 'string' && process.env.LNBITS_ORIGIN.length > 0) {
   LNBITS_ORIGIN = process.env.LNBITS_ORIGIN
 }
@@ -35,8 +23,8 @@ if (typeof process.env.VOLT_VAULT_ORIGIN === 'string' && process.env.VOLT_VAULT_
   VOLT_VAULT_ORIGIN = process.env.VOLT_VAULT_ORIGIN
 }
 
-let TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
-let TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
+const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
+const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
 
 let CORS_WHITELIST_EXTEND: string[] = []
 if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {
@@ -78,15 +66,6 @@ if (typeof process.env.JWT_AUTH_AUDIENCE === 'string' && process.env.JWT_AUTH_AU
   }
 }
 
-/////
-// NGROK
-if (typeof process.env.NGROK_OVERRIDE === 'string' && process.env.NGROK_OVERRIDE.length > 0) {
-  TIPCARDS_ORIGIN = process.env.NGROK_OVERRIDE
-  TIPCARDS_API_ORIGIN = process.env.NGROK_OVERRIDE
-  JWT_AUTH_ISSUER = new URL(process.env.NGROK_OVERRIDE).host
-  JWT_AUTH_AUDIENCE = [new URL(process.env.NGROK_OVERRIDE).host]
-}
-
 ////
 // ERROR NOTIFICATION
 const TELEGRAM_BOT_ID = process.env.TELEGRAM_BOT_ID
@@ -98,9 +77,6 @@ export {
   APP_NAME,
   FAILED_STARTUPS_COUNTER_DIRECTORY,
   EXPRESS_PORT,
-  PROXY_PORT,
-  WEB_PORT,
-  NGROK_AUTH_TOKEN,
   LNBITS_ORIGIN,
   VOLT_VAULT_ORIGIN,
   TIPCARDS_ORIGIN,

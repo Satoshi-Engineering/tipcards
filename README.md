@@ -2,17 +2,9 @@
 
 _by [#sathoshiengineeringcrew](https://satoshiengineering.com/)_
 
-<p>
-  <a href="https://github.com/Satoshi-Engineering/tipcards/">
-    <img src="https://img.shields.io/github/package-json/v/Satoshi-Engineering/tipcards?color=6B3D91" alt="Version">
-  </a>
-  <a href="https://github.com/Satoshi-Engineering/tipcards/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/Satoshi-Engineering/tipcards?color=6B3D91" alt="Licence">
-  </a>
-  <a href="https://github.com/Satoshi-Engineering/tipcards/stargazers">
-    <img src="https://img.shields.io/github/stars/Satoshi-Engineering/tipcards.svg?style=flat&color=6B3D91" alt="Stars">
-  </a>
-</p>
+[![Version](https://img.shields.io/github/package-json/v/Satoshi-Engineering/tipcards?color=6B3D91)](https://github.com/Satoshi-Engineering/tipcards/)
+[![License](https://img.shields.io/github/license/Satoshi-Engineering/tipcards?color=6B3D91)](https://github.com/Satoshi-Engineering/tipcards/blob/main/LICENSE)
+[![Stars](https://img.shields.io/github/stars/Satoshi-Engineering/tipcards.svg?style=flat&color=6B3D91)](https://github.com/Satoshi-Engineering/tipcards/stargazers)
 
 ![TipCards Preview](docs/img/TipCardsHeader.png)
 
@@ -46,15 +38,11 @@ with a focus on "How to gentle orange pill nocoiners" - and without warranty of 
 
 ### Prerequisites
 
-- [nodejs 16.18.0 LTS](https://nodejs.org/en/)
+- [nodejs 20 LTS](https://nodejs.org/en/)
 - npm
-- docker (recommended for redis setup, see below)
+- docker
 
-### Setup
-
-```bash
-npm install
-```
+### Git hooks
 
 If you are working at Satoshi Engineering, please configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
 
@@ -65,7 +53,7 @@ git config core.hooksPath .githooks
 ### Backend
 
 - Setup a postgres database (locally or remote doesn't matter)
-- Create your own wallet on https://demo.lnbits.com/ or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env.local` (see below).
+- Create your own [lnbits wallet](https://demo.lnbits.com/) or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env.local` (see below).
 - Create a `backend/.env.local` file (or copy it from `backend/.env`) and configure database and lnbits connection
 - Additional configuration options are described in `backend/.env` (do not change it directly, copy the things you want to `backend/.env.local` and change them there).
 
@@ -91,14 +79,13 @@ npm run backend-test-one-integration-route ./backend/tests/integration/your/cust
 ### Frontend
 
 - Create a `frontend/.env.local` file  (or copy it from `frontend/.env`)  and add the following variable:
-  - `VITE_BACKEND_API_ORIGIN` probably http://localhost:4000 -> where your frontend will be served
+  - `VITE_BACKEND_API_ORIGIN` probably `http://localhost:4000` -> where your frontend will be served
 
 ### Testing
 
 If you want to test the tipcards on your local machine, here are some hints:
 
-- Fund your https://demo.lnbits.com/wallet with 1 - 100sats. The tipcard redeeming creates a lightning invoice 
-via lnbits and there are transaction costs.
+- Fund your [LNBits wallet](https://demo.lnbits.com/wallet) with 1 - 100sats. The tipcard redeeming creates a lightning invoice via lnbits and there are transaction costs.
 - It won't work with your smartphone, because the development setup restricted to localhost. (And if you use `vite --host` to expose the port,
 your lightning apps will refuse to work because there is no ssl connection)
   - We use BlueWallet Deskop app for testing (it can access localhost)
@@ -114,99 +101,9 @@ your lightning apps will refuse to work because there is no ssl connection)
 - [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-### Ngrok
-
-Ngrok is used to expose you local environment to the web. This is needed to test auth/backend features with your phone (e.g. paying invoices, logging in via lnurl-auth).
-
-1. Copy backend/.env into backend/.env.local
-2. Go to https://ngrok.com and create an account
-3. Go to https://dashboard.ngrok.com/get-started/setup, copy your authtoken and add it to backend/.env.local
-
-#### All in one script
-
-This will serve the project under a single publicly visible endpoint, using a local express proxy to map frontend and backend.
-
-Run `./dev-tip-cards.sh` and after it finishes copy the displayed ngrok url to your browser.
-
-#### Set up manually using local proxy
-
-This is the same as above, just done manually.
-
-- Run `npm run backend-proxy`. This starts an express server that proxies all requests to your other services that we will start later.
-- Run `npm run backend-ngrok`. Then copy the ngrok url that will be pasted in the console (something like https://cdb6-62-178-206-224.ngrok.io).
-- Open backend/.env.local and set the ngrok url (from the previous point) for `NGROK_OVERRIDE` as this is now your public URL for your phone and lnbits webhooks.
-- Open frontend/.env.local and set `VITE_NGROK_OVERRIDE=` to the ngrok endpoint
-- Run `npm run backend-dev`
-- Run `npm run frontend-dev`
-
-#### Set up ngrok without using a local proxy
-
-This will serve the frontend and backend with different endpoints (therefore auth will have to use third-party-cookies), but as the local express proxy is not an ideal setup this can improve page speed.
-
-- Set up an ngrok.yml for mapping all the necessary ports, e.g.:
-
-```yml
-version: 3
-
-agent:
-  authtoken: your_auth_token
-
-tunnels:
-  frontend:
-    proto: http
-    addr: 5173
-  backend:
-    proto: http
-    addr: 4000
-  lnurl:
-    proto: http
-    addr: 4001
-
-```
-
-- Start ngrok: `ngrok start --config ngrok.yml --all`
-- Update `backend/.env.local`, e.g.:
-
-```sh
-TIPCARDS_ORIGIN=https://5a9f99285ea2.ngrok.app
-TIPCARDS_API_ORIGIN=https://825015a6ed5e.ngrok.app
-LNURL_SERVICE_ORIGIN=https://995f20abcb0d.ngrok.app
-JWT_AUTH_ISSUER=825015a6ed5e.ngrok.app
-JWT_AUTH_AUDIENCE='["825015a6ed5e.ngrok.app"]'
-```
-
-- Update `frontend/.env.local`, e.g.:
-
-```sh
-VITE_BACKEND_API_ORIGIN=https://825015a6ed5e.ngrok.app
-VITE_TIPCARDS_AUTH_ORIGIN=https://825015a6ed5e.ngrok.app
-VITE_TIPCARDS_ORIGIN=https://5a9f99285ea2.ngrok.app
-```
-
-- Run `npm run backend-dev`
-- Run `npm run frontend-dev`
-
-#### Please consider
-
-As LNURL-auth tokens are based on the domain of the website where they are used, you will not be able to login with the same user after stopping and restarting the ngrok proxy (ngrok offers the possibility of a fixed domain, but you have to check out the docs how to use it).
-
 ### Scripts
 
 For additional developer tasks, scripts can be found in [scripts](scripts/README.md).
-
-## Run from source
-
-Start the frontend server on http://localhost:5173
-
-```bash
-npm run frontend-dev
-```
-
-Start the backend server on http://localhost:4000
-
-```bash
-npm run backend-dev
-```
 
 ## Production
 

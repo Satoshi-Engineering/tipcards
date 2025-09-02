@@ -1,5 +1,5 @@
 # Scripts
 
-This folder consists scripts for specfic developer tasks that have to done manually or is just 'a small helper'.
+This folder contains scripts designed for specific developer tasks that need to be performed manually or serve as small utilities.
 
-See README.md im every subfolder.
+Refer to the README.md file in each subfolder for details.

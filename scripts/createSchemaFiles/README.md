@@ -1,20 +1,23 @@
 # Create Schema Files Script
-**WHAT:** Create Drizzle MySql Schema files in backend project from a dbml file.
+
+**What:** Generates Drizzle MySQL schema files in the backend project from a DBML file.
 
 This script:
-- is reading drizzle config from  `/backend/drizzle.config.js`
-- is reading the dbml file from `/docs/database.bdml`
-- and rewrites the directory `/backend/src/database/schema/`
+
+- Reads the Drizzle config from `/backend/drizzle.config.js`
+- Reads the DBML file from `/docs/database.dbml`
+- Rewrites the directory `/backend/src/database/schema/`
 
 ## How To
 
-**Info:** run from project root
+**Info:** Run from the project root:
 
 ```bash
 npx tsx scripts/createSchemaFiles/script.ts
 ```
 
 ### DevNotes: DBML json Structure
+
 ```typescript
 const dbml = fs.readFileSync(DEFINITIONS_FILE, 'utf-8')
 
