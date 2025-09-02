@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 import { ZodSchema } from 'zod'
 
 import { delay } from './timingUtils.js'

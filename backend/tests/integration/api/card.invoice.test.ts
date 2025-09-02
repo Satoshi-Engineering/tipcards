@@ -65,10 +65,6 @@ const setExpectedCardToFundedCardPost = (expectedObject: ExpectedCard, paid: num
   expectedObject.data.lnbitsWithdrawId = lnbitsWithdrawId
 }
 
-const setExpectedCardToWithdrawPendingCardPre = (expectedObject: ExpectedCard) => {
-  expectedObject.data.withdrawPending = true
-}
-
 const setExpectedCardToWithdrawnCardPre = (expectedObject: ExpectedCard) => {
   expectedObject.data.used = expect.any(Number)
   expectedObject.data.withdrawPending = false

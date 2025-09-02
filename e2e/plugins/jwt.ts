@@ -102,8 +102,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         const payload = await getAccessTokenPayload({ jwt: accessToken })
         AccessTokenPayload.parse(payload)
         return true
-      } catch (error) {
-        console.log(error)
+      } catch {
         return false
       }
     },
