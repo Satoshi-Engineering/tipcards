@@ -16,13 +16,14 @@ test-backend-integration:
   before_script:
     - docker compose --profile tools --profile test up -d --wait
   script:
+    - ls -al
     - ./scripts/docker/run-backend-integration.sh
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
       if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
         echo "Dumping backend logs:"
-        docker logs tipcards-backend || true
+        docker logs tipcards-backend-test || true
       fi
     - docker compose --profile tools --profile test down
 
@@ -64,8 +65,8 @@ test-e2e:
       echo "Job status was: $CI_JOB_STATUS"
       if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
         echo "Dumping backend logs:"
-        docker logs tipcards-backend || true
+        docker logs tipcards-backend-test || true
         echo "Dumping frontend logs:"
-        docker logs tipcards-frontend || true
+        docker logs tipcards-frontend-test || true
       fi
     - docker compose --profile tools --profile test down
