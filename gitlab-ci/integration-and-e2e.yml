@@ -14,6 +14,7 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   before_script:
+    - echo "$SATE_DOCKER_ACCESS_TOKEN" | docker login -u "$SATE_DOCKER_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - ./scripts/docker/run-backend-integration.sh
@@ -49,6 +50,7 @@ test-e2e:
       - cypress/screenshots/**/*.png
     expire_in: 1 day
   before_script:
+    - echo "$SATE_DOCKER_ACCESS_TOKEN" | docker login -u "$SATE_DOCKER_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
@@ -92,6 +94,7 @@ test-e2e-playwright:
       - playwright-report
     expire_in: 1 day
   before_script:
+    - echo "$SATE_DOCKER_ACCESS_TOKEN" | docker login -u "$SATE_DOCKER_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
