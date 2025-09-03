@@ -14,6 +14,19 @@ export default defineConfig({
   reporter: 'list',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    clientCertificates: [{
+      origin: 'https://tipcards.localhost',
+      certPath: './scripts/docker/nginx/certs/rootCA.pem',
+      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+    },{
+      origin: 'https://auth.tipcards.localhost',
+      certPath: './scripts/docker/nginx/certs/rootCA.pem',
+      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+    },{
+      origin: 'https://lnbits.tipcards.localhost',
+      certPath: './scripts/docker/nginx/certs/rootCA.pem',
+      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+    }],
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://tipcards.localhost',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
