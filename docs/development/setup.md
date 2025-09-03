@@ -1,55 +1,105 @@
 # Setup for local development
 
-### Prerequisites
+## Prerequisites
 
 - [nodejs 20 LTS](https://nodejs.org/en/)
 - npm
 - docker
 
-### Git hooks
+## Git hooks
 
-If you are working at Satoshi Engineering, please configure your GIT repo to use the GIT hooks from  the directory `.githooks`:
+If you are working at Satoshi Engineering, please configure your GIT repo to use the GIT hooks from the directory `.githooks`:
 
-```bash
+```sh
 git config core.hooksPath .githooks
 ```
 
-### Backend
+## Local setup
 
-- Setup a postgres database (locally or remote doesn't matter)
-- Create your own [lnbits wallet](https://demo.lnbits.com/) or set your preferred lnbits instance via the env variable `LNBITS_ORIGIN` in `backend/.env.local` (see below).
-- Create a `backend/.env.local` file (or copy it from `backend/.env`) and configure database and lnbits connection
-- Additional configuration options are described in `backend/.env` (do not change it directly, copy the things you want to `backend/.env.local` and change them there).
+This guide explains how to set up all required tools along with the TipCards backend and frontend using Docker containers.
 
-#### Integration Test Env File
+You can also choose to skip Docker and install the tooling directly on your machine (or even connect to live instances, e.g. [LNBits](https://demo.lnbits.com/)). For that approach, please refer to our [legacy documentation](legacy-setup.md).
 
-Per default the backend loads the `backend/.env` and `backend/.env.local` files. If you need to start the backend for integration tests you have can use a different env file. Run the backend using `npm run backend-dev -- --envIntegrationTest` which will also use the file `backend/.env.integrationTest`. You can also add the parameter to all other commands (cli, drizzle-migration, etc.).
+### Domain
 
-#### Integration Test Script
+We use SSL in local development. Since we rely on `*.localhost`, the domains should usually resolve automatically. If they don’t, add the following entries to your `/etc/hosts` file:
 
-You can run backend integration tests locally, including starting the local backend, in one command by running the helper script `./backend-integration-tests.sh`. This command uses the `backend/.env.integrationTest` env file (see Integration Test Env File).
-
-Alternately, if you want to run specific tests, you could do:
-
-```bash
-# create custom env file for testing + startup backend using it
-vi backend/.env.integrationTest
-npm run backend-dev -- --envIntegrationTest
-
-# run a specific test using .env.integrationTest
-npm run backend-test-one-integration-route ./backend/tests/integration/your/custom/test.ts
+```text
+# TipCards
+127.0.0.1      tipcards.localhost
+127.0.0.1      auth.tipcards.localhost
+127.0.0.1      lnbits.tipcards.localhost
+127.0.0.1      postgres.tipcards.localhost
 ```
 
-### Frontend
+E.g. by running
 
-- Create a `frontend/.env.local` file  (or copy it from `frontend/.env`)  and add the following variable:
-  - `VITE_BACKEND_API_ORIGIN` probably `http://localhost:4000` -> where your frontend will be served
+```sh
+echo "
+# TipCards
+127.0.0.1 tipcards.localhost
+127.0.0.1 auth.tipcards.localhost
+127.0.0.1 lnbits.tipcards.localhost
+127.0.0.1 postgres.tipcards.localhost
+" | sudo tee -a /etc/hosts
+```
 
-### Testing
+### SSL Certificate
 
-If you want to test the tipcards on your local machine, here are some hints:
+All local routes are proxied through an Nginx service with self-signed certificates. To avoid browser warnings, you’ll need to trust the root certificate (`scripts/docker/nginx/certs/rootCA.pem`) — either system-wide on your OS or at least in the browser you use for testing/running your local TipCards instance.
 
-- Fund your [LNBits wallet](https://demo.lnbits.com/wallet) with 1 - 100sats. The tipcard redeeming creates a lightning invoice via lnbits and there are transaction costs.
-- It won't work with your smartphone, because the development setup restricted to localhost. (And if you use `vite --host` to expose the port,
-your lightning apps will refuse to work because there is no ssl connection)
-  - We use BlueWallet Deskop app for testing (it can access localhost)
+### Docker environment
+
+By default, all services we run in local Docker containers (e.g. LNBits, Postgres) store their data in a `data` directory at the project root.  
+
+If you don’t want that — for example, on Ubuntu the files may end up owned by `root` and cause issues with other tools — you can override the location by adding something like this to a `.env` file in the project root:
+
+```sh
+DATA_DIR=../tip-cards-data
+```
+
+#### ARM architecture
+
+The TipCards backend and frontend run inside Debian containers built for AMD. If your host machine uses a different architecture (e.g. Apple Silicon / ARM), copy the `compose.override.yml` file into your project root:
+
+```sh
+cp docs/development/compose.override.yml .
+```
+
+### Node modules installation
+
+The TipCards backend and frontend run inside Debian containers using the AMD architecture.
+
+- If your host machine is also AMD-based, just run:
+
+    ```sh
+    npm install
+    ```
+
+    from the project root.
+
+- If not, run:
+
+    ```sh
+    scripts/docker/install-dependencies.sh
+    ```
+
+    and then add this to your local `.env` file:
+
+    ```sh
+    NODE_MODULES_DIR=./node_modules_docker
+    ```
+
+### Start TipCards
+
+Start your local setup with:
+
+```sh
+docker compose --profile tools --profile dev up -d
+```
+
+Or simply use the shortcut:
+
+```sh
+npm run dev
+```

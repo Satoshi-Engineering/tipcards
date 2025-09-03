@@ -1,19 +1,4 @@
-# Compose project
-
-## add domains
-
-```bash
-sudo nano /etc/hosts
-```
-
-and add
-
-```text
-127.0.0.1      tipcards.localhost
-127.0.0.1      auth.tipcards.localhost
-127.0.0.1      lnbits.tipcards.localhost
-127.0.0.1      postgres.tipcards.localhost
-```
+# todo : move this into setup.md!!!!!!11elf
 
 ## LnBits Access Data
 
@@ -47,16 +32,12 @@ and add
 - AdminKey: 29f376ee8bec4503b241eb912666c397
 - InvoiceKey: ea059680d75b4b86aa2f9d0facf0edf5
 
-## FAQ
+## additional stuff
 
-### The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
-
-Add the `compose.override.yml` to the root of the project.
-
-#### How to reset development
+### How to reset your development instance
 
 - Delete `./data` directory or call `npm run docker:delete-data`
 
-## database
+### database
 
-TODO : add info how to update the data in `/scripts/docker/postgres
+TODO : add info how to update the data in `/scripts/docker/postgres`
