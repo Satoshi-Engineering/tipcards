@@ -94,13 +94,14 @@ test-e2e-playwright:
   before_script:
     - docker compose --profile tools --profile test up -d --wait
   script:
-    docker run --rm \
-      --network=tipcards-localhost \
-      -v $(pwd):/app \
-      -w /app \
-      -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-      node:lts-bookworm-slim /bin/bash \
-      -c "npx playwright install --with-deps && npm run e2e-playwright"
+    - |
+      docker run --rm \
+        --network=tipcards-localhost \
+        -v $(pwd):/app \
+        -w /app \
+        -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
+        node:lts-bookworm-slim /bin/bash \
+        -c "npx playwright install --with-deps && npm run e2e-playwright"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
