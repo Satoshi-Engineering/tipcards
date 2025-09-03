@@ -87,7 +87,7 @@
         </LinkDefault>
       </div>
       <div class="mt-5 text-end">
-        <div class="text-white-50 text-sm">
+        <div data-testid="version" class="text-white-50 text-sm">
           Version {{ version }}
         </div>
         <div>
