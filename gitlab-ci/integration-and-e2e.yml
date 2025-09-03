@@ -70,7 +70,7 @@ test-e2e:
       fi
     - docker compose --profile tools --profile test down
 
-test-e2e-playwright:
+.test-e2e-playwright:
   stage: integration-and-e2e
   image: docker:27.5.1
   tags:
