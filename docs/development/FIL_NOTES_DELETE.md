@@ -56,3 +56,7 @@ Add the `compose.override.yml` to the root of the project.
 #### How to reset development
 
 - Delete `./data` directory or call `npm run docker:delete-data`
+
+## database
+
+TODO : add info how to update the data in `/scripts/docker/postgres

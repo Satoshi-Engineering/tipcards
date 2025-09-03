@@ -4,9 +4,9 @@ File: [database.dbml](database.dbml)
 
 ## How to update the drizzle schema files
 
-1. Copy the new DBML file from (somewhere) to `/docs/database.dbml`
+1. Copy the new DBML file from (somewhere) to `/docs/backend/database.dbml`
 2. Run "Create Schema Files" Script: `npm run drizzle-update-schema`.  
-Infos: [createSchemaFiles/readme.md](../scripts/createSchemaFiles/README.md)
+Infos: [createSchemaFiles/readme.md](../../scripts/createSchemaFiles/README.md)
 
 ## How to run migrations
 

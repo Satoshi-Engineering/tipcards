@@ -74,7 +74,7 @@
 
     ```bash
     sudo mkdir /opt/postgres
-    cp -r /opt/tip-cards/docs/examples/postgres/. /opt/postgres/.
+    cp -r /opt/tip-cards/docs/host-your-own-tip-cards/postgres/. /opt/postgres/.
     sudo chown $(id -u):$(id -g) /opt/postgres
     cd /opt/postgres
     # change POSTGRES_PASSWORD and POSTGRES_NON_ROOT_PROJECT_USER_PASSWORD
@@ -140,7 +140,7 @@
 
     ```bash
     sudo rm /etc/nginx/sites-enabled/default
-    sudo cp docs/examples/nginx/tip-cards /etc/nginx/sites-available/
+    sudo cp docs/host-your-own-tip-cards/nginx/tip-cards /etc/nginx/sites-available/
     sudo mkdir -p /var/www/tip-cards
     sudo ln -s /opt/tip-cards/dist/frontend /var/www/tip-cards/www
     sudo chown -R www-data:www-data /var/www/tip-cards
