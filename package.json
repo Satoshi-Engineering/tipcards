@@ -34,6 +34,8 @@
     "e2e-live-checks": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/live-checks/**/*.test.ts'",
     "e2e-test": "cypress run --e2e -C ./e2e/cypress.config.ts",
     "e2e-tests": "cypress run --e2e -C ./e2e/cypress.config.ts --spec 'e2e/tests/**/*.test.ts'",
+    "e2e-playwright-test": "playwright test",
+    "e2e-playwright-test:ui": "npm run test:e2e -- --ui",
     "e2e-tests-with-frontend-build": "npm run frontend-build && start-server-and-test frontend-preview 5050 e2e-tests",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
     "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
@@ -43,7 +45,6 @@
     "docker:save-tipcards-database-to-sql": "docker exec -t postgres pg_dumpall -U postgres > scripts/docker/postgres/docker-entrypoint-initdb.d/sql/init.sql",
     "docker:save-lnbits-database-to-sql": "docker exec -t lnbits-postgres pg_dumpall -U lnbits > scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql",
     "docker:delete-data": "./scripts/docker/delete-data.sh"
-
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -92,6 +93,7 @@
     "@cypress/webpack-preprocessor": "^6.0.2",
     "@dbml/core": "^3.9.6",
     "@pinia/testing": "^1.0.0",
+    "@playwright/test": "^1.55.0",
     "@rushstack/eslint-patch": "^1.10.5",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
