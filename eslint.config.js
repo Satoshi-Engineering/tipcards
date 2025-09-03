@@ -15,7 +15,7 @@ export default [
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/*.min.js', '**/*.bundle.js', 'dist/*'],
+    ignores: ['**/*.min.js', '**/*.bundle.js', 'dist/*', 'node_modules_docker/**/*'],
   },
 
   js.configs.recommended,
