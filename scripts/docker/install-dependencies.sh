@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker run \
+docker run --rm \
   -v $(pwd):/app \
   -v $(pwd)/node_modules_docker:/app/node_modules \
   -w /app \
