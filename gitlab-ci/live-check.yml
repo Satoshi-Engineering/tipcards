@@ -33,5 +33,5 @@ live-check:
       fi
     - echo "Installing cypress"
     - npx cypress install
-    - echo "Running e2e-live-checks on branch $CI_COMMIT_BRANCH"
-    - npm run e2e-live-checks
+    - echo "Running e2e:cypress:live-checks on branch $CI_COMMIT_BRANCH"
+    - npm run e2e:cypress:live-checks

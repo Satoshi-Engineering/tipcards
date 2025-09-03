@@ -27,7 +27,7 @@ test-backend-integration:
       fi
     - docker compose --profile tools --profile test down
 
-test-e2e:
+test-e2e-cypress:
   stage: integration-and-e2e
   image: docker:27.5.1
   tags:
@@ -60,7 +60,7 @@ test-e2e:
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
         cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
-        -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e-tests"
+        -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e:cypress"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
@@ -104,7 +104,7 @@ test-e2e-playwright:
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
         node:lts-bookworm-slim /bin/bash \
-        -c "npx playwright install --with-deps && npm run e2e-playwright"
+        -c "npx playwright install --with-deps && npm run e2e:playwright"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
