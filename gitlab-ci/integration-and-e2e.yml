@@ -69,3 +69,45 @@ test-e2e:
         docker logs tipcards-frontend-test || true
       fi
     - docker compose --profile tools --profile test down
+
+test-e2e-playwright:
+  stage: integration-and-e2e
+  image: docker:27.5.1
+  tags:
+    - docker
+  services:
+    - docker:27.5.1-dind
+  rules:
+    - !reference [.shared_config, rules, no_tags]
+    - !reference [.shared_config, rules, web_and_push]
+    - when: on_success
+  cache:
+    - !reference [.shared_config, cache, node_modules]
+  variables:
+    NODE_ENV: test
+  artifacts:
+    name: playwright-e2e
+    when: always
+    paths:
+      - playwright-report
+    expire_in: 1 day
+  before_script:
+    - docker compose --profile tools --profile test up -d --wait
+  script:
+    docker run --rm \
+      --network=tipcards-localhost \
+      -v $(pwd):/app \
+      -w /app \
+      -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
+      node:lts-bookworm-slim /bin/bash \
+      -c "npx playwright install --with-deps && npm run e2e-playwright"
+  after_script:
+    - |
+      echo "Job status was: $CI_JOB_STATUS"
+      if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
+        echo "Dumping backend logs:"
+        docker logs tipcards-backend-test || true
+        echo "Dumping frontend logs:"
+        docker logs tipcards-frontend-test || true
+      fi
+    - docker compose --profile tools --profile test down
