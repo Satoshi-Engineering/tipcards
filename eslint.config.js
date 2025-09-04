@@ -1,13 +1,14 @@
+import globals from 'globals'
 import { createRequire } from 'node:module'
 import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVitest from '@vitest/eslint-plugin'
 import pluginCypress from 'eslint-plugin-cypress/flat'
 
 const INLINE_ELEMENTS = createRequire(import.meta.url)('eslint-plugin-vue/lib/utils/inline-non-void-elements.json')
 
-export default [
+export default defineConfigWithVueTs(
   {
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,tsx,vue,js,jsx,cjs,mjs,cts}'],
@@ -19,8 +20,8 @@ export default [
   },
 
   js.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
-  ...vueTsEslintConfig(),
+  pluginVue.configs['flat/essential'],
+  vueTsConfigs.recommended,
 
   {
     ...pluginVitest.configs.recommended,
@@ -39,6 +40,15 @@ export default [
     files: ['**/*.cjs'],
     languageOptions: {
       sourceType: 'commonjs',
+    },
+  },
+
+  {
+    files: ['frontend/public/**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
     },
   },
 
@@ -73,4 +83,4 @@ export default [
       'indent': ['error', 2, { SwitchCase: 1 }],
     },
   },
-]
+)
