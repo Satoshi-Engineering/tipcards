@@ -25,6 +25,7 @@
       "@auth/*": ["../backend/src/auth/*"],
     },
     "target": "ES2022",
+    "lib": ["es2022", "DOM"],
     "typeRoots": [
       "./src/types",
       "../node_modules/@types",

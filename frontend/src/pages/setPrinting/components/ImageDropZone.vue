@@ -66,7 +66,7 @@ const { onChange, open: openFileDialog, reset } = useFileDialog({
   directory: false, // Select directories instead of files if set true
   multiple: false, // Select multiple files if set true
 })
-onChange((files) => files != null && onFile([...files]))
+onChange((files) => files != null && onFile([...Array.from(files)]))
 
 const dropZoneRef = useTemplateRef('dropZoneRef')
 const { isOverDropZone } = useDropZone(dropZoneRef, {
