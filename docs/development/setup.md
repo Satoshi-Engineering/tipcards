@@ -103,3 +103,67 @@ Or simply use the shortcut:
 ```sh
 npm run dev
 ```
+
+## Using your local TipCards instance
+
+With this setup, a local LNBits instance is used. It comes preloaded with funds but is not connected to any external nodes.   Three wallets are configured. To fund a TipCard or withdraw Bitcoin, log in to your local LNBits instance via this link:   [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
+
+⚠️ Note: The first wallet (**develop**) is reserved for the TipCards backend. Use **Wallet2** or **Wallet3** instead.   In the TipCards frontend, click **Copy** (where you’d normally scan a QR code on a funding or landing page), then in LNBits click **Paste request** and complete the payment/withdrawal.
+
+You can also log in to your local TipCards instance:  
+
+- Click **Login** in the frontend  
+- In the overlay, click **Copy LNURL**  
+- Go to the helper tool [LNURL Web Wallet](https://foss.tsp.tools/wallet)  
+- Paste the LNURL and click **Login via new tab**  
+
+This creates a small web wallet in your browser that calls your local TipCards backend to log you in.
+
+### Local LNBits instance credentials
+
+- URL: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost)  
+- **Superuser**  
+  - Username: `superuser`  
+  - Password: `superpassword`  
+- **Development user**  
+  - Username: `develop`  
+  - Password: `developpassword`  
+
+#### Wallets
+
+- **Wallet develop** (used by TipCards backend)  
+  - Id: `171199a3d97a43c0b5fe811e32d47012`  
+  - AdminKey: `8d4e4a151ae5446586ab283e4a89d98c`  
+  - InvoiceKey: `f95447ee6414419b8ff3e415a4e359f8`  
+
+- **Wallet2**  
+  - Id: `161dee222082452baef5700de7553b3f`  
+  - AdminKey: `6da0c95636c44058bf1d09933476ac26`  
+  - InvoiceKey: `c2b6f2dcbdc944d3b4b932783d28a6db`  
+
+- **Wallet3**  
+  - Id: `563486e6cac2468b8e69293d1e77832d`  
+  - AdminKey: `29f376ee8bec4503b241eb912666c397`  
+  - InvoiceKey: `ea059680d75b4b86aa2f9d0facf0edf5`  
+
+## Additional info
+
+### Resetting your dev instance
+
+- Stop all containers:
+
+    ```sh
+    npm run docker:down
+    ```
+
+- Delete the data directory (`./data` or the directory defined in `.env`)
+- Restart the containers
+
+### Updating TipCards or LNBits database dumps
+
+If you made local changes in TipCards or LNBits that should be shared with the project (e.g. creating pre-funded TipCards for E2E tests), you can update the database dumps with:
+
+```sh
+npm run docker:save-tipcards-database-to-sql
+npm run docker:save-lnbits-database-to-sql
+```
