@@ -14,7 +14,7 @@ test-backend-integration:
   variables:
     NODE_ENV: test
   before_script:
-    - echo "$DOCKERHUB_SATE_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_SATE_USER" --password-stdin
+    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - ./scripts/docker/run-backend-integration.sh
@@ -50,7 +50,7 @@ test-e2e-cypress:
       - cypress/screenshots/**/*.png
     expire_in: 1 day
   before_script:
-    - echo "$DOCKERHUB_SATE_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_SATE_USER" --password-stdin
+    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
@@ -94,7 +94,7 @@ test-e2e-playwright:
       - playwright-report
     expire_in: 1 day
   before_script:
-    - echo "$DOCKERHUB_SATE_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_SATE_USER" --password-stdin
+    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
