@@ -16,16 +16,16 @@ export default defineConfig({
   use: {
     clientCertificates: [{
       origin: 'https://tipcards.localhost',
-      certPath: './scripts/docker/nginx/certs/rootCA.pem',
-      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+      certPath: './scripts/docker/nginx/certs/tipcards.localhost.crt',
+      keyPath: './scripts/docker/nginx/certs/tipcards.localhost.key',
     },{
       origin: 'https://auth.tipcards.localhost',
-      certPath: './scripts/docker/nginx/certs/rootCA.pem',
-      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+      certPath: './scripts/docker/nginx/certs/auth.tipcards.localhost.crt',
+      keyPath: './scripts/docker/nginx/certs/auth.tipcards.localhost.key',
     },{
       origin: 'https://lnbits.tipcards.localhost',
-      certPath: './scripts/docker/nginx/certs/rootCA.pem',
-      keyPath: './scripts/docker/nginx/certs/rootCA.key',
+      certPath: './scripts/docker/nginx/certs/lnbits.tipcards.localhost.crt',
+      keyPath: './scripts/docker/nginx/certs/lnbits.tipcards.localhost.key',
     }],
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'https://tipcards.localhost',
