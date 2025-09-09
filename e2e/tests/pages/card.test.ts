@@ -3,6 +3,8 @@
 import { getCardHashFromSet, goto } from '@e2e/lib/pages/card'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 import { SetDto } from '@shared/data/trpc/SetDto'
+import LNURL from '@shared/modules/LNURL/LNURL'
+import { BACKEND_API_ORIGIN } from '@e2e/lib/constants'
 
 let setId: string
 
@@ -19,11 +21,14 @@ describe('Card Details Page', () => {
   it('should show the card preview with the correct card LNURL generated', () => {
     goto('test-card-hash')
 
+    const expectedLnurl = LNURL.encode(
+      new URL('/api/lnurl/test-card-hash', BACKEND_API_ORIGIN).href,
+    ).toUpperCase()
     cy.getTestElement('card-preview')
       .should('exist')
       .then(($el) => {
         expect($el.attr('data-lnurl').endsWith(
-          '?lightning=LNURL1DP68GURN8GHJ7ARFWP3KZUNYWVHXCMMRV9KXSMMNWSHKZURF9AKXUATJDSHHGETNWSKKXCTJVSKKSCTNDQGEE52F',
+          `?lightning=${expectedLnurl}`,
         )).to.be.true
       })
   })
