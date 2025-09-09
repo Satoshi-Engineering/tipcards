@@ -2,7 +2,7 @@ name: tipcards-dev
 
 services:
   proxy:
-    image: nginx:stable
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/nginx:stable
     container_name: tipcards-proxy
     restart: unless-stopped
     depends_on:
@@ -23,7 +23,7 @@ services:
     profiles: [tools]
 
   postgres:
-    image: postgres:16.9
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/postgres:16.9
     container_name: tipcards-postgres
     restart: unless-stopped
     shm_size: 128mb
@@ -41,7 +41,7 @@ services:
     profiles: [tools]
 
   lnbits-postgres:
-    image: postgres:16.9
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/postgres:16.9
     container_name: tipcards-lnbits-postgres
     restart: unless-stopped
     environment:
@@ -60,7 +60,7 @@ services:
     profiles: [tools]
 
   lnbits:
-    image: lnbits/lnbits:v1.2.1
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/lnbits/lnbits:v1.2.1
     container_name: tipcards-lnbits
     restart: unless-stopped
     depends_on:
@@ -83,7 +83,7 @@ services:
     profiles: [tools]
 
   volt-vault-mock:
-    image: mockserver/mockserver:5.15.0
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/mockserver/mockserver:5.15.0
     container_name: tipcards-volt-vault-mock
     restart: unless-stopped
     environment:
@@ -99,7 +99,7 @@ services:
     profiles: [tools]
 
   tipcards-backend-test:
-    image: node:lts-bookworm-slim
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/node:lts-bookworm-slim
     container_name: tipcards-backend-test
     restart: unless-stopped
     healthcheck:
@@ -125,7 +125,7 @@ services:
     profiles: [test]
 
   tipcards-frontend-test:
-    image: node:lts-bookworm-slim
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/node:lts-bookworm-slim
     container_name: tipcards-frontend-test
     restart: unless-stopped
     healthcheck:
@@ -150,7 +150,7 @@ services:
     profiles: [test]
 
   tipcards-backend-dev:
-    image: node:lts-bookworm-slim
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/node:lts-bookworm-slim
     container_name: tipcards-backend-dev
     restart: unless-stopped
     environment:
@@ -170,7 +170,7 @@ services:
     profiles: [dev]
 
   tipcards-frontend-dev:
-    image: node:lts-bookworm-slim
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/node:lts-bookworm-slim
     container_name: tipcards-frontend-dev
     restart: unless-stopped
     environment:

@@ -1,6 +1,6 @@
 test-backend-integration:
   stage: integration-and-e2e
-  image: docker:27.5.1
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1
   tags:
     - docker
   services:
@@ -12,9 +12,10 @@ test-backend-integration:
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
+    CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}
     NODE_ENV: test
   before_script:
-    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - ./scripts/docker/run-backend-integration.sh
@@ -29,7 +30,7 @@ test-backend-integration:
 
 test-e2e-cypress:
   stage: integration-and-e2e
-  image: docker:27.5.1
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1
   tags:
     - docker
   services:
@@ -41,6 +42,7 @@ test-e2e-cypress:
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
+    CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}
     NODE_ENV: test
   artifacts:
     name: cypress-e2e
@@ -50,7 +52,7 @@ test-e2e-cypress:
       - cypress/screenshots/**/*.png
     expire_in: 1 day
   before_script:
-    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
@@ -74,7 +76,7 @@ test-e2e-cypress:
 
 test-e2e-playwright:
   stage: integration-and-e2e
-  image: docker:27.5.1
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1
   tags:
     - docker
   services:
@@ -86,6 +88,7 @@ test-e2e-playwright:
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
+    CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}
     NODE_ENV: test
   artifacts:
     name: playwright-e2e
@@ -94,7 +97,7 @@ test-e2e-playwright:
       - playwright-report
     expire_in: 1 day
   before_script:
-    - echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
     - |
