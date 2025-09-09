@@ -63,7 +63,7 @@ export default (
       amount = Number(response.data.paymentRequestDecoded.num_satoshis)
     } catch (error) {
       const errorMessage = 'Unable to calculate estimated fee.'
-      res.status(503).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: errorMessage,
         code: ErrorCode.UnableToFindValidRoute,
       }))
@@ -71,7 +71,7 @@ export default (
     }
 
     if (totalFee == null) {
-      res.status(400).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'No route found.',
       }))
       return
@@ -80,7 +80,7 @@ export default (
     // check if the fee is too high
     const maxAllowedFee = calculateFeeForCard(amount)
     if (totalFee > maxAllowedFee) {
-      res.status(400).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Unable to find valid route. Estimated fees too high.',
         code: ErrorCode.UnableToFindValidRoute,
       }))
@@ -92,7 +92,7 @@ export default (
       const response = await axios.get(`${decodeURIComponent(callback)}&k1=${k1}&pr=${pr}`)
       res.json(response.data)
     } catch {
-      res.status(500).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Unable to resolve LNURL at lnbits.',
         code: ErrorCode.UnableToResolveLnbitsLnurl,
       }))
@@ -112,7 +112,7 @@ export default (
       }
     } catch (error: unknown) {
       console.error(ErrorCode.UnknownDatabaseError, error)
-      res.status(500).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Unknown database error.',
         code: ErrorCode.UnknownDatabaseError,
       }))
@@ -127,7 +127,7 @@ export default (
         res.json(data)
       } catch (error) {
         console.error(ErrorCode.UnableToCreateLnurlP, error)
-        res.status(500).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'Unable to create LNURL-P at lnbits.',
           code: ErrorCode.UnableToCreateLnurlP,
         }))
@@ -138,7 +138,7 @@ export default (
 
     // check if card is locked by bulkWithdraw
     if (card.isLockedByBulkWithdraw) {
-      res.status(400).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'A recall of this TipCard is currently in progress. You have to cancel it first to use the card.',
         code: ErrorCode.CardIsLockedByBulkWithdraw,
       }))
@@ -158,7 +158,7 @@ export default (
           errorToLog = error.error
         }
         console.error(code, errorToLog)
-        res.status(500).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'Unable to check invoice status at lnbits.',
           code,
         }))
@@ -170,7 +170,7 @@ export default (
     // create + return lnurlp for unfunded card
     if (card.lnbitsWithdrawId == null) {
       if (card.invoice != null) {
-        res.status(400).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'This card has an invoice. Pay or reset the invoice first in your browser.',
           code: ErrorCode.CannotCreateLnurlPCardHasInvoice,
         }))
@@ -179,7 +179,7 @@ export default (
       }
 
       if (card.setFunding != null) {
-        res.status(400).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'This card is being funded via set funding.',
           code: ErrorCode.CardNeedsSetFunding,
         }))
@@ -192,7 +192,7 @@ export default (
         res.json(data)
       } catch (error) {
         console.error(ErrorCode.UnableToCreateLnurlP, error)
-        res.status(500).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'Unable to create LNURL-P at lnbits.',
           code: ErrorCode.UnableToCreateLnurlP,
         }))
@@ -213,7 +213,7 @@ export default (
           errorToLog = error.error
         }
         console.error(code, errorToLog)
-        res.status(500).json(toErrorResponse({
+        res.json(toErrorResponse({
           message: 'Unable to check withdraw status at lnbits.',
           code,
         }))
@@ -222,7 +222,7 @@ export default (
       }
     }
     if (card.used != null) {
-      res.status(400).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Card has already been used.',
         code: ErrorCode.WithdrawHasBeenSpent,
       }))
@@ -235,7 +235,7 @@ export default (
       if (!(await lnurlwCreationHappenedInLastTwoMinutes(card.lnbitsWithdrawId))) {
         console.error(`Card ${card.cardHash} withdraw is pending for more than 2 minutes and user tried again.`)
       }
-      res.status(400).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Card has already been used, but the payment is still pending.',
         code: ErrorCode.WithdrawIsPending,
       }))
@@ -248,7 +248,7 @@ export default (
       lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
     } catch (error) {
       console.error(ErrorCode.UnableToGetLnurl, error)
-      res.status(500).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Unable to get LNURL from lnbits.',
         code: ErrorCode.UnableToGetLnurl,
       }))
@@ -257,7 +257,7 @@ export default (
     }
 
     if (lnurl == null) {
-      res.status(404).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'WithdrawId not found at lnbits.',
         code: ErrorCode.CardByHashNotFound,
       }))
@@ -291,7 +291,7 @@ export default (
         `Unable to resolve lnurlw at lnbits for card ${card.cardHash}`,
         error,
       )
-      res.status(500).json(toErrorResponse({
+      res.json(toErrorResponse({
         message: 'Unable to resolve LNURL at lnbits.',
         code: ErrorCode.UnableToResolveLnbitsLnurl,
       }))

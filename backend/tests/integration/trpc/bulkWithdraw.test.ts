@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto'
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
-import { ErrorCode, type ErrorResponse } from '@shared/data/Errors.js'
+import { ErrorCode } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 
 import Database from '@backend/database/Database.js'
@@ -147,17 +147,12 @@ const checkIfCardsAreLocked = async () => {
 }
 
 const checkIfLnurlRouteHandlesBulkWithdrawLock = async () => {
-  let caughtError: AxiosError | undefined
-  try {
-    await axios.get(`${API_ORIGIN}/api/lnurl/${CARD_HASH_FUNDED_0}`)
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      caughtError = error
-    }
-  }
-  expect(caughtError).toBeDefined()
-  const reponseData = caughtError?.response?.data as ErrorResponse
-  expect(reponseData.code).toBe(ErrorCode.CardIsLockedByBulkWithdraw)
+  const response = await axios.get(`${API_ORIGIN}/api/lnurl/${CARD_HASH_FUNDED_0}`)
+  expect(response.data).toEqual({
+    status: 'ERROR',
+    reason: expect.any(String),
+    code: ErrorCode.CardIsLockedByBulkWithdraw,
+  })
 }
 
 const deleteBulkWithdraw = async () => {
