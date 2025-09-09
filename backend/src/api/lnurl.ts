@@ -17,12 +17,13 @@ import {
   loadCurrentLnurlFromLnbitsByWithdrawId,
   lnurlwCreationHappenedInLastTwoMinutes,
 } from '@backend/services/lnbitsHelpers.js'
-import { retryGetRequestWithDelayUntilSuccessWithMaxAttempts } from '@backend/services/axiosUtils.js'
+import { retryGetRequestWithDelayUntilSuccessWithMaxAttemptsAndSchema } from '@backend/services/axiosUtils.js'
 import { TIPCARDS_API_ORIGIN, VOLT_VAULT_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
 import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import z from 'zod'
 
 export default (
   applicationEventEmitter: ApplicationEventEmitter,
@@ -265,18 +266,25 @@ export default (
     }
 
     try {
-      const response = await retryGetRequestWithDelayUntilSuccessWithMaxAttempts(LNURL.decode(lnurl))
-      if (
-        VOLT_VAULT_ORIGIN != null
-        && response.data.tag === 'withdrawRequest'
-      ) {
-        const callback = `${TIPCARDS_API_ORIGIN}/api/lnurl/withdraw?callback=${encodeURIComponent(response.data.callback)}`
+      const data = await retryGetRequestWithDelayUntilSuccessWithMaxAttemptsAndSchema(
+        LNURL.decode(lnurl),
+        z.object({
+          tag: z.literal('withdrawRequest'),
+          callback: z.string(),
+          k1: z.string(),
+          minWithdrawable: z.number().int(),
+          maxWithdrawable: z.number().int(),
+          defaultDescription: z.string(),
+        }),
+      )
+      if (VOLT_VAULT_ORIGIN != null) {
+        const callback = `${TIPCARDS_API_ORIGIN}/api/lnurl/withdraw?callback=${encodeURIComponent(data.callback)}`
         res.json({
-          ...response.data,
+          ...data,
           callback,
         })
       } else {
-        res.json(response.data)
+        res.json(data)
       }
     } catch (error) {
       console.error(
