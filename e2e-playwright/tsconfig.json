@@ -1,0 +1,23 @@
+{
+  "include": ["**/*.ts"],
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "types": [
+      "playwright",
+      "node",
+    ],
+    "paths": {
+      "@backend/*": ["../backend/src/*"],
+      "@frontend/*": ["../frontend/src/*"],
+      "@shared/*": ["../shared/src/*"],
+      "@e2e-playwright/*": ["./*"],
+    }
+  },
+  "references": [
+    { "path" : "../shared/tsconfig.json" }
+  ]
+}

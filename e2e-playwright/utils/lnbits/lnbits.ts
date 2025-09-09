@@ -1,0 +1,183 @@
+import type { APIRequestContext } from '@playwright/test'
+import { request, expect } from '@playwright/test'
+import { z } from 'zod'
+
+import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix.js'
+
+export const PaymentDto = z.object({
+  checking_id: z.string(),
+  payment_hash: z.string(),
+  wallet_id: z.string(),
+  amount: z.number(),
+  fee: z.number(),
+  bolt11: z.string(),
+  fiat_provider: z.string().nullable(),
+  status: z.enum(['pending', 'success']),
+  memo: z.string(),
+  expiry: z.string(),
+  webhook: z.string().nullable(),
+  webhook_status: z.string().nullable(),
+  preimage: z.string().nullable(),
+  tag: z.string().nullable(),
+  extension: z.string().nullable(),
+  time: z.string()
+    .transform((val) => {
+      const [datePart] = val.split('.')
+      return new Date(datePart)
+    }),
+  created_at: z.string()
+    .transform((val) => {
+      const [datePart] = val.split('.')
+      return new Date(datePart)
+    }),
+  updated_at: z.string()
+    .transform((val) => {
+      const [datePart] = val.split('.')
+      return new Date(datePart)
+    }),
+  extra: z.record(z.string(), z.any()).optional(),
+})
+
+export const getLnbitsApiContext = async (baseURL: string, apiKey?: string) => {
+  if (!apiKey) {
+    throw new Error('API key is required to create LNbits context')
+  }
+  return await request.newContext({
+    baseURL: baseURL,
+    extraHTTPHeaders: {
+      'X-Api-Key': apiKey,
+    },
+  })
+}
+
+export const payInvoice = async (context: APIRequestContext, invoiceBolt11: string) => {
+  const response = await context.post('/api/v1/payments', {
+    data: {
+      out: true,
+      bolt11: removeLightningPrefix(invoiceBolt11),
+    },
+  })
+  if (!response.ok()) {
+    throw new Error(`Failed to pay invoice: ${await response.text()}`)
+  }
+  return await response.json()
+}
+
+export const getPayments = async (context: APIRequestContext) => {
+  const response = await context.get('/api/v1/payments')
+  if (!response.ok()) {
+    throw new Error(`Failed to get payments: ${await response.text()}`)
+  }
+  const json = await response.json()
+
+  for (const item of json) {
+    try {
+      PaymentDto.parse(item)
+    } catch (error) {
+      console.error('Invalid item:', item)
+      console.error('Zod error:', error)
+      throw error
+    }
+  }
+
+  return z.array(PaymentDto).parse(json)
+}
+
+export const payLnurlP = async (context: APIRequestContext, lnurl: string) => {
+  const lnurlData = await scanLnurl(context, lnurl)
+  expect(lnurlData.kind === 'pay')
+  expect(lnurlData.minSendable).toBeGreaterThan(0)
+  const response = await context.post('/api/v1/payments/lnurl', {
+    data: {
+      callback: lnurlData.callback,
+      description_hash: lnurlData.description_hash,
+      comment: lnurlData.defaultDescription || '',
+      amount: lnurlData.minSendable, // Convert from millisats to sats
+      description: lnurlData.description,
+      unit: 'sat',
+    },
+  })
+  if (!response.ok()) {
+    throw new Error(`Failed to pay LNURL: ${await response.text()}`)
+  }
+  return await response.json()
+}
+
+export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) => {
+  const lnurlData = await scanLnurl(context, lnurl)
+  expect(lnurlData.kind === 'withdraw')
+  expect(lnurlData.maxWithdrawable).toBeGreaterThan(0)
+  const response = await context.post('/api/v1/payments', {
+    data: {
+      out: false,
+      amount: lnurlData.maxWithdrawable / 1000, // Convert from millisats to sats
+      memo: lnurlData.defaultDescription,
+      lnurl_callback: lnurlData.callback,
+      unit: 'sat',
+    },
+  })
+  if (!response.ok()) {
+    throw new Error(`Failed to withdraw LNURL: ${await response.text()}`)
+  }
+  return await response.json()
+}
+
+export const createInvoice = async (context: APIRequestContext, amount: number, memo?: string) => {
+  const response = await context.post('/api/v1/payments', {
+    data: {
+      out: false,
+      amount: amount, // Convert from sats to millisats
+      memo: memo || 'Invoice created by E2E test',
+      unit: 'sat',
+    },
+  })
+  if (!response.ok()) {
+    throw new Error(`Failed to create invoice: ${await response.text()}`)
+  }
+  const json = await response.json()
+  if (!json.bolt11 && json.payment_request) {
+    // For compatibility with older versions of LNbits that return payment_request instead of bolt11
+    json.bolt11 = json.payment_request
+    delete json.payment_request
+  }
+  return z.object({
+    bolt11: z.string(),
+  }).parse(json)
+}
+
+export const getWalletBalance = async (context: APIRequestContext) => {
+  const details = await getWalletDetails(context)
+  return details.balance / 1000 // Return balance in sats
+}
+
+export const getAndCheckWalletBalance = async (context: APIRequestContext, balance: number, mode: 'minimal' | 'exact' = 'minimal') => {
+  const walletBalance = await getWalletBalance(context)
+  switch (mode) {
+    // Ensure the wallet has exactly the specified balance
+    case 'exact':
+      expect(walletBalance, `Wallet balance needs to be exactly ${balance} sats`).toBe(balance)
+      break
+
+    // Ensure the wallet has enough balance
+    case 'minimal':
+      expect(walletBalance, `Wallet balance needs to be >= ${balance} sats`).toBeGreaterThanOrEqual(balance)
+      break
+  }
+  return walletBalance // Return balance in sats
+}
+
+const getWalletDetails = async (context: APIRequestContext) => {
+  const response = await context.get('/api/v1/wallet')
+  if (!response.ok()) {
+    throw new Error(`Failed to get wallet balance: ${await response.text()}`)
+  }
+  return await response.json()
+}
+
+const scanLnurl = async (context: APIRequestContext, lnurl: string) => {
+  const response = await context.get(`/api/v1/lnurlscan/${removeLightningPrefix(lnurl)}`)
+  if (!response.ok()) {
+    throw new Error(`Failed to scan LNURL: ${await response.text()}`)
+  }
+  return await response.json()
+}

@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: new URL('./e2e-playwright/.env', import.meta.url).pathname })
 
 export default defineConfig({
   testDir: './e2e-playwright',
