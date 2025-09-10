@@ -1,6 +1,6 @@
 import postgres, { type Sql } from 'postgres'
 
-const host = '127.0.0.1'
+const host = 'postgres.lnbits.tipcards.localhost'
 const port = '5433'
 const user = 'lnbits'
 const password = 'gobrrrrrr'
