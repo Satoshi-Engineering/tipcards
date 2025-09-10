@@ -108,9 +108,9 @@ npm run dev
 
 ## Using your local TipCards instance
 
-With this setup, a local LNBits instance is used. It comes preloaded with funds but is not connected to any external nodes.   Three wallets are configured. To fund a TipCard or withdraw Bitcoin, log in to your local LNBits instance via this link:   [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
+With this setup, a local LNBits instance is used. It comes preloaded with funds but is not connected to any external nodes.   Three wallets are configured. To fund a TipCard or withdraw Bitcoin, log in to your local LNBits instance via this link: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
 
-⚠️ Note: The first wallet (**develop**) is reserved for the TipCards backend. Use **Wallet2** or **Wallet3** instead.   In the TipCards frontend, click **Copy** (where you’d normally scan a QR code on a funding or landing page), then in LNBits click **Paste request** and complete the payment/withdrawal.
+⚠️ Note: The first wallet (**develop**) is reserved for the TipCards backend. Use **Wallet2** or **Wallet3** instead. In the TipCards frontend, click **Copy** (where you’d normally scan a QR code on a funding or landing page), then in LNBits click **Paste request** and complete the payment/withdrawal.
 
 You can also log in to your local TipCards instance:  
 
