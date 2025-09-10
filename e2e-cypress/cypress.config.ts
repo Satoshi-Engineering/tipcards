@@ -48,9 +48,9 @@ export default defineConfig({
     responseTimeout: 60000,
     requestTimeout: 60000,
     experimentalInteractiveRunEvents: true, // this is allow before:run events to be triggered in interactive mode (needed for database plugin)
-    specPattern: 'e2e/**/*.test.ts',
-    supportFile: 'e2e/support/e2e.ts',
-    fixturesFolder: 'e2e/support/fixtures',
+    specPattern: 'e2e-cypress/**/*.test.ts',
+    supportFile: 'e2e-cypress/support/e2e.ts',
+    fixturesFolder: 'e2e-cypress/support/fixtures',
     setupNodeEvents(on, config) {
       on('file:preprocessor', webpack({ webpackOptions }))
 
