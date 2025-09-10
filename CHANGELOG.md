@@ -1,6 +1,138 @@
 # Changelog
 
 
+## v0.4.23
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.22...v0.4.23)
+
+### 🚀 Enhancements
+
+- Add tipcards frontend and backend to compose file (05bce403)
+- Add helper scripts to start and stop docker container (318e2613)
+- Integration and e2e tests in pipeline use gitlab dependency proxy (0820723b)
+
+### 🩹 Fixes
+
+- Move proxy configruation into location block (dc0aded2)
+- Integration test lnbits wallet handle withdraws (9f73e23d)
+- Change voltvaultmockserver response to a high fee result for feeCalculation e2e test (15bd2e71)
+- Add hostOnly to cypress setCookie calls as the auth service also creates hostOnly cookies (4f269093)
+- Add a small delay to funding cards in e2e tests to remove test flakiness (536b0b03)
+- Move the backend request forwarding to the correct vhost (c763dca3)
+- Backend integration auth helpers use auth origin (9e1e6792)
+- Update hardcoded tipcards origin in e2e test (6ba93bf9)
+- Jwt helper for e2e tests validate accesstoken with the correct audience (7d700027)
+- Create expired access token with the correct audience (2d8bb535)
+- Remove leftover code (c041dd84)
+- Run backend integration handle node_modules directory (252327f6)
+- Scripts use /bin/sh instead of bash as bash is not available in bare docker images (d523fc38)
+- Ci: fix script block beginning of test-e2e-playwright job (c14a2177)
+- Playwright ui npm script (9a92edae)
+- Add rule for frontend/public scripts to eslint config (c828f925)
+- Downgrade express to 4.x.x to prevent errors caused by incompatible route paths (4753ac9d)
+- E2e add root certificate to e2e npm scripts (4820245b)
+- Generate the testing lnurl dynamically (a1e3ca79)
+- Backend handle lnbits errors from lnurlw calls (53539feb)
+- Lnbits db sql client use hostname instead of localhost (8d8e2011)
+- Live checks use e2e-cypress directory name (ca1c0563)
+- Use lnbits api i/o direct database access to manipulate the withdraw link (7fb62de2)
+
+### 💅 Refactors
+
+- Use NODE_EXTRA_CA_CERTS i/o NODE_TLS_REJECT_UNAUTHORIZED to handle self signed root certificate (d685eea5)
+- Remove pending withdraw e2e test, it will be rewritten in playwright (08c9b422)
+- Use localhost as top level domain for local setup (d514e677)
+- Normalize domain names for all docker services (ee7aa0a0)
+- Enable e2e tests in pipeline using docker container for all services (05a07b2e)
+- Add healthcheck to tipcards test container and wait for healthy state in pipeline before running tests (c073ffb5)
+- Add env settings to compose.yml (77de5e5f)
+- Remove node_modules_docker from e2e test (a24af302)
+- Remove ngrok and do some file pruning (7e5619e0)
+- Remove unused npm script (04477958)
+- Restructure docs/guides (3f89b8ed)
+- Rename e2e npm scripts (a3d49346)
+- Remove SATE from dockerhub pipeline env vars (5407b0c5)
+- Use client certificates in playwright config (b18ee34b)
+- Lnurl route always return status code 200 even in error case (08be3ba9)
+- Restructure playwright util imports (6a2914b3)
+- Rename cypress directory from e2e to e2e-cypress and normalize npm e2e scripts (5f2e28fa)
+- Switch port for lnbits postgres instance to make the setup work locally and in the pipeline (23beca6d)
+
+### 📖 Documentation
+
+- Add compose documentation (573af1fd)
+- Update compose docs (0b2fa1e5)
+- Update nginx docs (31dd5c4d)
+- Change domain of lnbits login link and add hosts description (7da79dc5)
+- Add development setup guide (760f1f9a)
+- Add info how to use your local lnbits instance (f6c75bb6)
+
+### 🏡 Chore
+
+- Move npm audit expiry date to next week (f78fd972)
+- Npm audit (0154d219)
+- Npm audit fix (bbf019f1)
+- Add compose with postgres (70e91de1)
+- Add lnbits to compose (0233be3d)
+- Add script to init user and fund wallets of lnbits (d51fe176)
+- Add invoice keys of wallets (dcc09398)
+- Add skip method to FailEarly (e3bdf5fd)
+- Add tipcards postgres db autoinitialize and save db (1496934f)
+- Add lnbits postgres db autoinitialize and save db (4c96c7a2)
+- Add delete data script (ae8a6190)
+- Adapt e2e tests to new domains - WIP (24016f6e)
+- Adapt e2e pipeline tests to dockerizred proxy setup (5d98775e)
+- Npm install and gitignore cypress download (6ade260e)
+- Debugging be integration in pipeline (28dcc030)
+- Debugging be integration in pipeline (b46fe345)
+- Add autoremove flag to install dependencies docker container (ddf2b0d6)
+- Add system architecture to install dependencies script (48c37266)
+- Add node_modules_docker directory to eslint ignores (186ac25a)
+- Add failed.startups.counter to gitignore (194837b3)
+- Override esbuild version (c5989df2)
+- Update most packages to their latest compatible minor version (8ef5b177)
+- Perform major updates for all packages that don't require additional changes (4309b678)
+- Update types/node package to latest version (adaddf69)
+- Npm audit fix (68fc4064)
+- .gitlab-ci.yml prune unused var (5ad0722c)
+- Add lnbits postgres hosts entry to docs (8d09edcc)
+
+### ✅ Tests
+
+- Add 1 sec wait time after lnurlw creations (3e9f7d82)
+- Only show reponse when response is not successfull in dummy test (34ad7fc9)
+- Install playwright incl config (d77a4799)
+- Playwright: add simple home test (c685bdc5)
+- Add ssl certificates to playwright (79467f45)
+- **e2e:** Add a playwright test for withdrawPending state (ac41abd8)
+
+### 🤖 CI
+
+- Add volt-vault-mock to compose (83edea6e)
+- Change integration test to use compose project (6f577e11)
+- Lnbits nginx proxy with self signed ssl certifcate (0192d7d0)
+- Add waiting for tipcards service (7724ce80)
+- Close registration, change callback regex and remove ads from lnbits (888d9a41)
+- Refactor start and stop backend into seperate script files (4dee5941)
+- Move tipcards backend and frontend behind proxy with self signed ssl (306df240)
+- Refactor voltvault to internal tipcards.local domain (534de338)
+- Switch to internal top level domain (12f65b1f)
+- Name the compose network (e1224643)
+- Add lnbits readiness check (b07d98ec)
+- Add combined pem for lnbits linux (c7fc732c)
+- Add a playwright e2e test job (9718c5ed)
+- Disable e2e-playwright pipeline (fd7042e1)
+- Enable e2e-playwright pipeline (7d3361e2)
+- Add docker login (56818eb3)
+- Change docker login variables (fec4838e)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+- Philipp Horwath <fil@satoshiengineering.com>
+- Thespielplatz <informatics@gmx.net>
+
 ## v0.4.22
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.21...v0.4.22)

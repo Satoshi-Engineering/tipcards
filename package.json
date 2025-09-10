@@ -1,6 +1,6 @@
 {
   "name": "lightning-tip-cards",
-  "version": "0.4.22",
+  "version": "0.4.23",
   "type": "module",
   "scripts": {
     "audit": "better-npm-audit audit",
