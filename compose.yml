@@ -55,8 +55,9 @@ services:
       default:
         aliases:
           - postgres.lnbits.tipcards.localhost
+    command: ["postgres", "-c", "port=5433"] # switch port so we can use the same port locally on the host machine and in the pipeline
     ports:
-      - 5433:5432
+      - 5433:5433
     profiles: [tools]
 
   lnbits:
