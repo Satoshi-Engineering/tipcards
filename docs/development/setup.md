@@ -30,6 +30,7 @@ We use SSL in local development. Since we rely on `*.localhost`, the domains sho
 127.0.0.1      auth.tipcards.localhost
 127.0.0.1      lnbits.tipcards.localhost
 127.0.0.1      postgres.tipcards.localhost
+127.0.0.1      postgres.lnbits.tipcards.localhost
 ```
 
 E.g. by running
@@ -41,6 +42,7 @@ echo "
 127.0.0.1 auth.tipcards.localhost
 127.0.0.1 lnbits.tipcards.localhost
 127.0.0.1 postgres.tipcards.localhost
+127.0.0.1 postgres.lnbits.tipcards.localhost
 " | sudo tee -a /etc/hosts
 ```
 
