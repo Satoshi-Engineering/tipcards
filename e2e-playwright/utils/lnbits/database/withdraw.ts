@@ -1,5 +1,6 @@
-import sqlClient from '@e2e-playwright/utils/lnbits/database/sqlClient'
 import postgres from 'postgres'
+
+import sqlClient from '@e2e-playwright/utils/lnbits/database/sqlClient'
 
 export const updateWithdrawLink = async (id: string, {
   webhookUrl,

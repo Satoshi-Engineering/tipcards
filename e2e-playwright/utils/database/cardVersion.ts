@@ -1,5 +1,6 @@
-import sqlClient from '@e2e-playwright/utils/database/sqlClient'
 import postgres from 'postgres'
+
+import sqlClient from '@e2e-playwright/utils/database/sqlClient'
 
 export const getCardVersion = async (cardHash: string): Promise<postgres.Row> => {
   const client = sqlClient()

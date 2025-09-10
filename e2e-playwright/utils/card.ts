@@ -2,6 +2,7 @@ import { request, expect, type APIRequestContext } from '@playwright/test'
 import * as z from 'zod'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
+
 import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/lnbits'
 
 export const cardDynamicLnurl = (cardHash: string) => LNURL.encode(`${process.env.BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
