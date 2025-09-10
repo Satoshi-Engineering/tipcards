@@ -2,11 +2,12 @@ import { test, expect } from '@playwright/test'
 
 import hashSha256 from '@frontend/modules/hashSha256'
 import { getCardVersion } from '@e2e-playwright/utils/database/cardVersion'
-import { updateWithdrawLink } from '@e2e-playwright/utils/lnbits/database/withdraw'
-import { getLnbitsApiContext } from '@e2e-playwright/utils/lnbits/lnbits'
+import { getLnbitsApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { updateWithdrawLink } from '@e2e-playwright/utils/lnbits/api/withdraw'
 import { fundCard, getCardStatus, withdrawCard } from '@e2e-playwright/utils/card'
 
-const lnbitsUserWalletApiContext = await getLnbitsApiContext(process.env.LNBITS_ORIGIN, process.env.LNBITS_ADMIN_KEY)
+const lnbitsUserWalletApiContext = await getLnbitsApiContext(process.env.LNBITS_ORIGIN, process.env.LNBITS_ADMIN_KEY_USER)
+const lnbitsApplicationWalletApiContext = await getLnbitsApiContext(process.env.LNBITS_ORIGIN, process.env.LNBITS_ADMIN_KEY_APPLICATION)
 
 test('check if card has withdrawPending state after withdrawing before the webhook call from lnbits comes in', async () => {
   const cardHash = await hashSha256(crypto.randomUUID())
@@ -21,5 +22,5 @@ test('check if card has withdrawPending state after withdrawing before the webho
 
 const replaceWebhookUrlWithGibberish = async (cardHash: string) => {
   const lnurlWId = (await getCardVersion(cardHash)).lnurlW
-  await updateWithdrawLink(lnurlWId, { webhookUrl: 'gibberish' })
+  await updateWithdrawLink(lnbitsApplicationWalletApiContext, lnurlWId, { webhook_url: 'gibberish' })
 }

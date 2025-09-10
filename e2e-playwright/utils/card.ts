@@ -3,7 +3,7 @@ import * as z from 'zod'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/lnbits'
+import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments'
 
 export const cardDynamicLnurl = (cardHash: string) => LNURL.encode(`${process.env.BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 

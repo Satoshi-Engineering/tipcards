@@ -1,8 +1,7 @@
-import type { APIRequestContext } from '@playwright/test'
-import { request, expect } from '@playwright/test'
-import { z } from 'zod'
+import { expect, type APIRequestContext } from '@playwright/test'
+import * as z from 'zod'
 
-import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix.js'
+import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix'
 
 export const PaymentDto = z.object({
   checking_id: z.string(),
@@ -37,18 +36,6 @@ export const PaymentDto = z.object({
     }),
   extra: z.record(z.string(), z.any()).optional(),
 })
-
-export const getLnbitsApiContext = async (baseURL: string, apiKey?: string) => {
-  if (!apiKey) {
-    throw new Error('API key is required to create LNbits context')
-  }
-  return await request.newContext({
-    baseURL: baseURL,
-    extraHTTPHeaders: {
-      'X-Api-Key': apiKey,
-    },
-  })
-}
 
 export const payInvoice = async (context: APIRequestContext, invoiceBolt11: string) => {
   const response = await context.post('/api/v1/payments', {
@@ -145,35 +132,6 @@ export const createInvoice = async (context: APIRequestContext, amount: number, 
   }).parse(json)
 }
 
-export const getWalletBalance = async (context: APIRequestContext) => {
-  const details = await getWalletDetails(context)
-  return details.balance / 1000 // Return balance in sats
-}
-
-export const getAndCheckWalletBalance = async (context: APIRequestContext, balance: number, mode: 'minimal' | 'exact' = 'minimal') => {
-  const walletBalance = await getWalletBalance(context)
-  switch (mode) {
-    // Ensure the wallet has exactly the specified balance
-    case 'exact':
-      expect(walletBalance, `Wallet balance needs to be exactly ${balance} sats`).toBe(balance)
-      break
-
-    // Ensure the wallet has enough balance
-    case 'minimal':
-      expect(walletBalance, `Wallet balance needs to be >= ${balance} sats`).toBeGreaterThanOrEqual(balance)
-      break
-  }
-  return walletBalance // Return balance in sats
-}
-
-const getWalletDetails = async (context: APIRequestContext) => {
-  const response = await context.get('/api/v1/wallet')
-  if (!response.ok()) {
-    throw new Error(`Failed to get wallet balance: ${await response.text()}`)
-  }
-  return await response.json()
-}
-
 const scanLnurl = async (context: APIRequestContext, lnurl: string) => {
   const response = await context.get(`/api/v1/lnurlscan/${removeLightningPrefix(lnurl)}`)
   if (!response.ok()) {
@@ -181,3 +139,4 @@ const scanLnurl = async (context: APIRequestContext, lnurl: string) => {
   }
   return await response.json()
 }
+
