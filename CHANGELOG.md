@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.4.24
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.23...v0.4.24)
+
+### 📖 Documentation
+
+- Removed some spaceings (a8dcbe24)
+
+### 🏡 Chore
+
+- Npm audit fix (bac4b90d)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Philipp Horwath <fil@satoshiengineering.com>
+
 ## v0.4.23
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.22...v0.4.23)
