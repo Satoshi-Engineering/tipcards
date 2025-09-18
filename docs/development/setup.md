@@ -100,6 +100,13 @@ Start your local setup with:
 docker compose --profile tools --profile dev up -d
 ```
 
+Or the npm script helpers:
+
+```sh
+npm run docker:tools:up
+npm run docker:test:up
+```
+
 Or simply use the shortcut:
 
 ```sh
@@ -116,10 +123,8 @@ You can also log in to your local TipCards instance:
 
 - Click **Login** in the frontend  
 - In the overlay, click **Copy LNURL**  
-- Go to the helper tool [LNURL Web Wallet](https://foss.tsp.tools/wallet)  
-- Paste the LNURL and click **Login via new tab**  
-
-This creates a small web wallet in your browser that calls your local TipCards backend to log you in.
+- Go to [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
+- Click **Paste request** and complete the login
 
 ### Local LNBits instance credentials
 
@@ -163,9 +168,17 @@ This creates a small web wallet in your browser that calls your local TipCards b
 
 ### Updating TipCards or LNBits database dumps
 
+⚠️ Avoid creating a database dump while LNbits or TipCards is running!
+
 If you made local changes in TipCards or LNBits that should be shared with the project (e.g. creating pre-funded TipCards for E2E tests), you can update the database dumps with:
 
 ```sh
+npm run docker:dev:down
+npm run docker:test:down
 npm run docker:save-tipcards-database-to-sql
+
+docker compose --profile tools stop lnbits
 npm run docker:save-lnbits-database-to-sql
+
+npm run dev
 ```
