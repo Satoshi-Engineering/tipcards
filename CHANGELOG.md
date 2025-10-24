@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v0.4.25
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.24...v0.4.25)
+
+### 📖 Documentation
+
+- Add fil feedback to dev setup guide (d81379d4)
+
+### 🏡 Chore
+
+- Npm audit (d6d3f8af)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.24
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.23...v0.4.24)
