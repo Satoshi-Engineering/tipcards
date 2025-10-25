@@ -4,7 +4,7 @@ import z from 'zod'
 import type { Card } from '@shared/data/api/Card'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { BACKEND_API_ORIGIN, LNBITS_ORIGIN } from '@/constants'
+import { BACKEND_API_ORIGIN } from '@/constants'
 
 export const CardStatusEnum = z.enum([
   'unfunded',
@@ -73,36 +73,6 @@ export type CardStatusDeprecated = {
   fundedDate?: number,
   message?: string // a message intended for the user
   card?: Card
-}
-
-export const loadCardStatusForLnurl = async (lnurl: string): Promise<CardStatusDeprecated> => {
-  let lnurlDecoded: URL
-  try {
-    lnurlDecoded = new URL(LNURL.decode(lnurl))
-  } catch (error) {
-    console.error(error)
-    return {
-      status: 'error',
-      message: 'Sorry, the provided LNURL is invalid.',
-    }
-  }
-
-  if (lnurlDecoded.origin !== BACKEND_API_ORIGIN && lnurlDecoded.origin !== LNBITS_ORIGIN) {
-    console.error(`LNURL points to a foreign origin: ${lnurlDecoded.origin}`)
-    return {
-      status: 'error',
-      message: 'Sorry, the provided LNURL cannot be used on this website.',
-    }
-  }
-
-  const cardHashMatch = lnurlDecoded.pathname.match(/\/api\/lnurl\/([a-z0-9]*)/)
-  if (cardHashMatch == null) {
-    return {
-      status: 'error',
-      message: 'Sorry, the provided LNURL is invalid.',
-    }
-  }
-  return loadCardStatus(cardHashMatch[1])
 }
 
 export const loadCardStatus = async (cardHash: string): Promise<CardStatusDeprecated> => {

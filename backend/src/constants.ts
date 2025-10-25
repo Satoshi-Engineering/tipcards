@@ -24,7 +24,10 @@ if (typeof process.env.VOLT_VAULT_ORIGIN === 'string' && process.env.VOLT_VAULT_
 }
 
 const TIPCARDS_ORIGIN = process.env.TIPCARDS_ORIGIN || ''
-const TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN || ''
+let TIPCARDS_API_ORIGIN = TIPCARDS_ORIGIN
+if (typeof process.env.TIPCARDS_API_ORIGIN === 'string' && process.env.TIPCARDS_API_ORIGIN.length > 0) {
+  TIPCARDS_API_ORIGIN = process.env.TIPCARDS_API_ORIGIN
+}
 
 let CORS_WHITELIST_EXTEND: string[] = []
 if (typeof process.env.CORS_WHITELIST_EXTEND === 'string' && process.env.CORS_WHITELIST_EXTEND.length > 0) {

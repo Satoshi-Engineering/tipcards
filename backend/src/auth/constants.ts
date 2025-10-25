@@ -1,6 +1,4 @@
-import z from 'zod'
-
-import { ErrorCode } from '@shared/data/Errors.js'
+import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 /////
 // ------------------- READ FROM .env FILE -------------------
@@ -9,15 +7,9 @@ import { ErrorCode } from '@shared/data/Errors.js'
 // LNURL JWT AUTH
 const JWT_AUTH_KEY_DIRECTORY = process.env.JWT_AUTH_KEY_DIRECTORY || ''
 
-let LNURL_SERVICE_ORIGIN: string
-try {
-  LNURL_SERVICE_ORIGIN = z.string().parse(process.env.LNURL_SERVICE_ORIGIN)
-} catch (error) {
-  console.error(ErrorCode.UnableToParseEnvVar, {
-    error,
-    constant: 'LNURL_SERVICE_ORIGIN',
-    envValue: process.env.LNURL_SERVICE_ORIGIN,
-  })
+let LNURL_SERVICE_ORIGIN = TIPCARDS_API_ORIGIN
+if (typeof process.env.LNURL_SERVICE_ORIGIN === 'string' && process.env.LNURL_SERVICE_ORIGIN.length > 0) {
+  LNURL_SERVICE_ORIGIN = process.env.LNURL_SERVICE_ORIGIN
 }
 
 let LNURL_PORT = 4001

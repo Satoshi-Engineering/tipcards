@@ -8,7 +8,7 @@ if (typeof import.meta.env.VITE_TIPCARDS_AUTH_ORIGIN === 'string' && import.meta
   authOrigin = import.meta.env.VITE_TIPCARDS_AUTH_ORIGIN
 }
 
-let tipcardsOrigin = import.meta.env.VITE_TIPCARDS_ORIGIN || 'https://tipcards.io'
+let tipcardsOrigin = import.meta.env.VITE_TIPCARDS_ORIGIN || document.location.origin
 
 if (typeof import.meta.env.VITE_NGROK_OVERRIDE === 'string' && import.meta.env.VITE_NGROK_OVERRIDE.length > 0) {
   backendApiOrigin = import.meta.env.VITE_NGROK_OVERRIDE
@@ -21,7 +21,6 @@ export const TIPCARDS_AUTH_ORIGIN = authOrigin
 export const TIPCARDS_ORIGIN = tipcardsOrigin
 export const CANONICAL_URL_ORIGIN = import.meta.env.VITE_CANONICAL_URL_ORIGIN || null
 export const DEFAULT_DOCUMENT_TITLE = import.meta.env.VITE_DEFAULT_DOCUMENT_TITLE || 'Lightning TipCards'
-export const LNBITS_ORIGIN = import.meta.env.VITE_LNBITS_ORIGIN || 'https://legend.lnbits.com'
 
 export const PRIVACY_POLICY_CONTACT_NAME = import.meta.env.VITE_PRIVACY_POLICY_CONTACT_NAME || undefined
 export const PRIVACY_POLICY_CONTACT_EMAIL = import.meta.env.VITE_PRIVACY_POLICY_CONTACT_EMAIL || undefined

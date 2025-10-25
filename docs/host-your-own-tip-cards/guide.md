@@ -104,16 +104,9 @@
     cp -r node_modules dist/.
     cp backend/deploy/package.json dist/.
     cp backend/deploy/ecosystem.config.cjs dist/.
-    cp backend/.env dist/.
-    # set the following variables in a new file named .env.local:
-    # POSTGRES_HOST=localhost
-    # POSTGRES_PASSWORD=<the-password-you-defined-in-postgres-env-before>
-    # TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    # TIPCARDS_API_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    # LNBITS_ORIGIN=https://demo.lnbits.com
-    # LNBITS_INVOICE_READ_KEY=<see-above>
-    # LNBITS_ADMIN_KEY=<see-above>
-    # LNURL_SERVICE_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
+    cp /opt/tip-cards/docs/host-your-own-tip-cards/backend/.env dist/.
+    cp /opt/tip-cards/docs/host-your-own-tip-cards/backend/.env.local dist/.
+    # set all variables within .env.local:
     vi dist/.env.local
     cd dist
     node ./backend/drizzle.migrate.js
@@ -127,12 +120,7 @@
     ```bash
     # switch to tipcards root
     cd /opt/tip-cards
-    # set the following variables in new file named .env.local:
-    # VITE_BACKEND_API_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    # VITE_TIPCARDS_AUTH_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    # VITE_TIPCARDS_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    # VITE_CANONICAL_URL_ORIGIN=<your domain, e.g. https://my.tip-cards.custom>
-    vi frontend/.env.local
+    cp /opt/tip-cards/docs/host-your-own-tip-cards/frontend/.env.local frontend/.
     npm run frontend-build
     ```
 
@@ -176,7 +164,7 @@
     cp -r node_modules dist/.
     cp backend/deploy/package.json dist/.
     cp backend/deploy/ecosystem.config.cjs dist/.
-    cp backend/.env dist/.
+    cp /opt/tip-cards/docs/host-your-own-tip-cards/backend/.env dist/.
     cd dist
     node ./backend/drizzle.migrate.js
     pm2 restart lightning-tip-cards-backend
