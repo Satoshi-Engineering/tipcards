@@ -74,8 +74,8 @@
 
     ```bash
     sudo mkdir /opt/postgres
-    cp -r /opt/tip-cards/docs/host-your-own-tip-cards/postgres/. /opt/postgres/.
     sudo chown $(id -u):$(id -g) /opt/postgres
+    cp -r /opt/tip-cards/docs/host-your-own-tip-cards/postgres/. /opt/postgres/.
     cd /opt/postgres
     # change POSTGRES_PASSWORD and POSTGRES_NON_ROOT_PROJECT_USER_PASSWORD
     vi .postgres.env
