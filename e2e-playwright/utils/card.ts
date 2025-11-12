@@ -1,4 +1,4 @@
-import { request, expect, type APIRequestContext } from '@playwright/test'
+import { request, expect, type APIRequestContext, type Page } from '@playwright/test'
 import * as z from 'zod'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
@@ -32,6 +32,22 @@ export const withdrawCard = async (cardHash: string, lnbitsApiContext: APIReques
   await expect.poll(async () => await getCardStatus(cardHash)).not.toBe('funded')
 }
 
+export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, lnbitsApiContext: APIRequestContext) => {
+  // Go to tipcard landing page
+  await page.goto(`${process.env.TIPCARDS_ORIGIN}/landing/${cardHash}`)
+  await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()
+
+  // Get the LNURL withdraw link
+  const lnurlW = await page.locator('[data-test="lightning-qr-code-image"]').getAttribute('href')
+  if (!lnurlW) {
+    throw new Error('LNURL withdraw link not found or empty')
+  }
+
+  // Withdraw the tipcard to LNbits
+  await withdrawLnurlW(lnbitsApiContext, lnurlW)
+  await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
+}
+
 export const getCardStatus = async (cardHash: string) => {
   const context = await request.newContext()
   const input = encodeURIComponent(JSON.stringify({ json: { hash: cardHash } }))
@@ -46,4 +62,9 @@ export const getCardStatus = async (cardHash: string) => {
     }),
   }).parse(await response.json())
   return result.data.json.status
+}
+
+export const generateTestingCardHash = () => {
+  const cardHashPrefix = 'e2e-testing-card'
+  return `${cardHashPrefix}-${crypto.randomUUID()}`
 }

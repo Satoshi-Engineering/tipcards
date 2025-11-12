@@ -11,3 +11,6 @@ export const getLnbitsApiContext = async (baseURL: string, apiKey?: string) => {
     },
   })
 }
+
+export const lnbitsUserWalletApiContext = await getLnbitsApiContext(process.env.LNBITS_ORIGIN, process.env.LNBITS_ADMIN_KEY_USER)
+export const lnbitsApplicationWalletApiContext = await getLnbitsApiContext(process.env.LNBITS_ORIGIN, process.env.LNBITS_ADMIN_KEY_APPLICATION)
