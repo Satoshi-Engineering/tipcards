@@ -17,7 +17,7 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
   test.afterAll(async () => {
     // Allow for some fees
     const walletBalanceAfterMinimal = walletBalanceBefore - 3
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceAfterMinimal, 'minimal')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceAfterMinimal, 'exact')
   })
 
   test('fund a tipcard with payment method invoice', async ({ page }) => {
@@ -38,6 +38,7 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
     // Pay the invoice using LNbits
     await payInvoice(lnbitsUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - 213, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {
