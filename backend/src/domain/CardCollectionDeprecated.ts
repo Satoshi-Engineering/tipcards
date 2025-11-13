@@ -1,3 +1,4 @@
+import assert from 'node:assert'
 import type z from 'zod'
 
 import type { Card as CardRedis } from '@backend/database/deprecated/data/Card.js'
@@ -12,6 +13,7 @@ import {
 import hashSha256 from '@backend/services/hashSha256.js'
 import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers.js'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'
+import { asTransaction } from '@backend/database/client.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
 type CardHash = z.infer<typeof CardRedis.shape.cardHash>
@@ -160,15 +162,22 @@ export default class CardCollectionDeprecated {
    * @throws AxiosError
    */
   private async removeLnbitsWithdrawLinkFromCard(card: CardRedis) {
-    if (card.lnbitsWithdrawId == null) {
+    const { lnbitsWithdrawId } = card
+    if (lnbitsWithdrawId == null) {
       return
     }
     await deleteWithdrawIfNotUsed(
-      card.lnbitsWithdrawId,
+      lnbitsWithdrawId,
       card.text,
       `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
     )
+    await asTransaction(async (queries) => {
+      const cardVersion = await queries.getLatestCardVersion(card.cardHash)
+      assert(cardVersion != null, `Trying to delete lnurlW for card ${card.cardHash}, but no cardVersion found.`)
+      cardVersion.lnurlW = null
+      await queries.updateCardVersion(cardVersion)
+      await queries.deleteLnurlWByLnbitsId(lnbitsWithdrawId)
+    })
     card.lnbitsWithdrawId = null
-    await updateCard(card)
   }
 }

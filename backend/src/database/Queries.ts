@@ -473,6 +473,11 @@ export default class Queries {
       .where(eq(LnurlW.lnbitsId, lnurlw.lnbitsId))
   }
 
+  async deleteLnurlWByLnbitsId(lnbitsId: LnurlW['lnbitsId']): Promise<void> {
+    await this.transaction.delete(LnurlW)
+      .where(eq(LnurlW.lnbitsId, lnbitsId))
+  }
+
   async insertOrUpdateSet(set: Set): Promise<void> {
     await this.transaction.insert(Set)
       .values(set)
