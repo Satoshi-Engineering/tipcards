@@ -9,13 +9,12 @@ import { payLnurlP } from '@e2e-playwright/utils/lnbits/api/payments'
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
-  const cardAmount = Math.floor(Math.random() * (2100 - 210 + 1)) + 210
-  const fee = calculateFeeForCard(cardAmount)
-  const cardAmountInclFee = cardAmount + fee
+  const fundingAmount = Math.floor(Math.random() * (2100 - 213 + 1)) + 213
+  const fee = calculateFeeForCard(fundingAmount)
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, cardAmountInclFee, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, fundingAmount, 'minimal')
   })
 
   test.afterAll(async () => {
@@ -34,12 +33,12 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
     const lnurl = extractLnurlFromUrl(landingpageUrl)
 
     // Pay the invoice using LNbits
-    await payLnurlP(lnbitsUserWalletApiContext, lnurl, cardAmountInclFee)
+    await payLnurlP(lnbitsUserWalletApiContext, lnurl, fundingAmount)
 
     // Wait for the payment to be processed and the success QR code to appear on the funding page
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/funding/${cardHash}`)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - cardAmountInclFee, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fundingAmount, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {

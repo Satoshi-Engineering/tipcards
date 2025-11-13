@@ -9,13 +9,13 @@ import { generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwr
 test.describe('Tipcard Invoice Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
-  const cardAmount = Math.floor(Math.random() * (2100 - 210 + 1)) + 210
-  const fee = calculateFeeForCard(cardAmount)
-  const cardAmountInclFee = cardAmount + fee
+  const fundingAmount = Math.floor(Math.random() * (2100 - 213 + 1)) + 213
+  const fee = calculateFeeForCard(fundingAmount)
+  const cardAmount = fundingAmount - fee
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, cardAmountInclFee, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, fundingAmount, 'minimal')
   })
 
   test.afterAll(async () => {
@@ -40,7 +40,7 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
     // Pay the invoice using LNbits
     await payInvoice(lnbitsUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - cardAmountInclFee, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fundingAmount, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {
