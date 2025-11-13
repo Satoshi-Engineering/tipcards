@@ -4,6 +4,7 @@ import { SetDeprecatedId } from '@shared/data/trpc/Set.js'
 
 import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
 import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
+import { assertNoDuplicateHashes } from '@backend/services/assertNoDuplicateHashes.js'
 import Lock from '@backend/services/locking/Lock.js'
 
 import { publicProcedure } from '../../trpc.js'
@@ -23,6 +24,7 @@ export const handleCardLockForSingleCard = publicProcedure
 export const handleCardLockForMultipleCards = publicProcedure
   .input(CardHash.shape.hash.array())
   .use(async ({ input, ctx, next }) => {
+    assertNoDuplicateHashes(input)
     const locks = await ctx.cardLockManager.lockCards(input)
     try {
       const result = await next()

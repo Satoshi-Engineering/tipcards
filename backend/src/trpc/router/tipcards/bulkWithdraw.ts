@@ -3,6 +3,7 @@ import { BulkWithdrawId, BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 
 import CardCollectionDeprecated from '@backend/domain/CardCollectionDeprecated.js'
 import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
+import { assertNoDuplicateHashes } from '@backend/services/assertNoDuplicateHashes.js'
 
 import { router } from '../../trpc.js'
 import publicProcedure from '../../procedures/public.js'
@@ -32,6 +33,7 @@ export const bulkWithdrawRouter = router({
     .unstable_concat(handleCardLockForMultipleCards)
     .unstable_concat(emitCardUpdatesForMultipleCards)
     .mutation(async ({ input }) => {
+      assertNoDuplicateHashes(input)
       const cards = await CardCollectionDeprecated.fromCardHashes(input)
       const bulkWithdraw = BulkWithdrawDeprecated.fromCardCollection(cards)
       await bulkWithdraw.create()
