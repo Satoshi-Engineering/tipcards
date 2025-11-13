@@ -14,7 +14,7 @@ import {
   createCard, deleteCard, getCardByHash,
 } from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
-import { checkIfSetInvoiceIsPaid } from '@backend/services/lnbitsHelpers.js'
+import { checkIfSetInvoiceIsPaid, createLnurlWsForSetInvoice } from '@backend/services/lnbitsHelpers.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
@@ -598,6 +598,26 @@ export default (cardLockManager: CardLockManager) => {
       })
       return
     }
+
+    // 3. create a lnurlW for every funded card
+    try {
+      await createLnurlWsForSetInvoice(set)
+    } catch (error: unknown) {
+      let code = ErrorCode.UnknownErrorWhileCreatingLnurlWsForCards
+      let errorToLog = error
+      if (error instanceof ErrorWithCode) {
+        code = error.code
+        errorToLog = error.error
+      }
+      console.error(code, errorToLog)
+      res.status(500).json({
+        status: 'error',
+        message: 'Unable to create lnurlWs for funded set.',
+        code,
+      })
+      return
+    }
+
     res.json({
       status: 'success',
       data: SetApi.parse(set),

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import assert from 'node:assert'
 import z from 'zod'
 
 import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card.js'
@@ -10,6 +11,7 @@ import type { Set } from '@backend/database/deprecated/data/Set.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
 import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/deprecated/queries.js'
+import { asTransaction } from '@backend/database/client.js'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
 
@@ -652,6 +654,37 @@ export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
   return set
+}
+
+export const createLnurlWsForSetInvoice = async (set: Set): Promise<void> => {
+  assert(
+    set.invoice != null && set.invoice.paid != null,
+    `Unable to create lnurlws for set ${set.id} as the invoice is not paid!`,
+  )
+  const amount = Math.floor(set.invoice.amount / set.invoice.fundedCards.length)
+
+  await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
+    const cardHash = hashSha256(`${set.id}/${cardIndex}`)
+    const cardVersion = await asTransaction((queries) => queries.getLatestCardVersion(cardHash))
+    assert(cardVersion != null, `No cardVersion found when trying to create lnurlW for card ${cardIndex} of set ${set.id}`)
+
+    const { lnbitsWithdrawId } = await createWithdrawLink(
+      cardVersion!.textForWithdraw,
+      amount,
+      `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${cardHash}`,
+    )
+    await asTransaction(async (queries) => {
+      await queries.insertLnurlWs({
+        lnbitsId: lnbitsWithdrawId,
+        created: new Date(),
+        expiresAt: null,
+        withdrawn: null,
+        bulkWithdrawId: null,
+      })
+      cardVersion.lnurlW = lnbitsWithdrawId
+      await queries.updateCardVersion(cardVersion)
+    })
+  }))
 }
 
 /**

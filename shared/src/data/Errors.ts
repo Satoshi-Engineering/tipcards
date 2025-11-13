@@ -12,6 +12,7 @@ export enum ErrorCode {
   UnableToGetLnbitsInvoiceStatus = 'UnableToGetLnbitsInvoiceStatus',
   UnableToCreateLnbitsWithdrawLink = 'UnableToCreateLnbitsWithdrawLink',
   UnknownErrorWhileCheckingInvoiceStatus = 'UnknownErrorWhileCheckingInvoiceStatus',
+  UnknownErrorWhileCreatingLnurlWsForCards = 'UnknownErrorWhileCreatingLnurlWsForCards',
   UnableToGetLnbitsWithdrawStatus = 'UnableToGetLnbitsWithdrawStatus',
   UnknownErrorWhileCheckingWithdrawStatus = 'UnknownErrorWhileCheckingWithdrawStatus',
   WithdrawHasBeenSpent = 'WithdrawHasBeenSpent',
