@@ -11,7 +11,6 @@ import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
 import {
   getLnurlpForCard,
-  checkIfCardLnurlpIsPaid,
   checkIfCardIsPaidAndCreateWithdrawId,
 } from '@backend/services/lnbitsHelpers.js'
 import { TIPCARDS_ORIGIN } from '@backend/constants.js'
@@ -344,7 +343,7 @@ export default (
 
     // check if card has funding and set to "paid"
     try {
-      await checkIfCardLnurlpIsPaid(card, true)
+      await checkIfCardIsPaidAndCreateWithdrawId(card, true)
     } catch (error: unknown) {
       let code = ErrorCode.UnknownErrorWhileCheckingInvoiceStatus
       let errorToLog = error
