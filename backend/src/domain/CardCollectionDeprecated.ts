@@ -11,7 +11,7 @@ import {
   getCardByHash, updateCard,
 } from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
-import { deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers.js'
+import { createWithdrawLink, deleteWithdrawIfNotUsed } from '@backend/services/lnbitsHelpers.js'
 import { cardFromCardRedis } from '@backend/trpc/data/transforms/cardFromCardRedis.js'
 import { asTransaction } from '@backend/database/client.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
@@ -92,6 +92,10 @@ export default class CardCollectionDeprecated {
    */
   public async removeLnbitsWithdrawLinks() {
     await Promise.all(this.cards.map(async (card) => await this.removeLnbitsWithdrawLinkFromCard(card)))
+  }
+
+  public async createLnbitsWithdrawLinks() {
+    await Promise.all(this.cards.map(async (card) => await this.createLnbitsWithdrawLinkForCard(card)))
   }
 
   /**
@@ -179,5 +183,34 @@ export default class CardCollectionDeprecated {
       await queries.deleteLnurlWByLnbitsId(lnbitsWithdrawId)
     })
     card.lnbitsWithdrawId = null
+  }
+
+  private async createLnbitsWithdrawLinkForCard(card: CardRedis) {
+    if (card.lnbitsWithdrawId != null) {
+      return
+    }
+    const cardVersion = await asTransaction((queries) => queries.getLatestCardVersion(card.cardHash))
+    assert(cardVersion != null, `Trying to create lnurlW for card ${card.cardHash}, but no cardVersion found.`)
+
+    const amount = this.getFundedAmountForCard(card)
+    const { lnbitsWithdrawId } = await createWithdrawLink(
+      card.text,
+      amount,
+      `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${card.cardHash}`,
+    )
+
+    await asTransaction(async (queries) => {
+      await queries.insertLnurlWs({
+        lnbitsId: lnbitsWithdrawId,
+        created: new Date(),
+        expiresAt: null,
+        withdrawn: null,
+        bulkWithdrawId: null,
+      })
+      cardVersion.lnurlW = lnbitsWithdrawId
+      await queries.updateCardVersion(cardVersion)
+    })
+
+    card.lnbitsWithdrawId = lnbitsWithdrawId
   }
 }

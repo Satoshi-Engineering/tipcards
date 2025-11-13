@@ -74,6 +74,7 @@ export default class BulkWithdrawDeprecated {
     await this.removeLnbitsWithdraw()
     await this.cards.releaseBulkWithdrawLock()
     await deleteBulkWithdraw(this.bulkWithdrawRedis)
+    await this.cards.createLnbitsWithdrawLinks()
   }
 
   async toTRpcResponse() {
