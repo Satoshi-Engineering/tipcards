@@ -1,5 +1,9 @@
 <template>
-  <div class="flex gap-1.5 text-sm">
+  <div
+    class="flex gap-1.5 text-sm"
+    data-test="card-status"
+    :data-status="status"
+  >
     <div
       class="w-3 h-3 mt-1 flex-none"
       :class="{

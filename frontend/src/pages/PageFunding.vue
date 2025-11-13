@@ -144,6 +144,7 @@
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.shared.fundedAmount')"
+              data-test="funding-shared-total-paid"
             />
             <FundingDetailsItemAmountDisplay
               :amount-sats="lnurlpFeeAmount ?? 0"
@@ -165,6 +166,7 @@
               :rate-btc-fiat="rateBtcEur"
               :label="$t('funding.shared.amountOnCard')"
               strong
+              data-test="funding-shared-total-on-card"
             />
           </CollapsibleElement>
           <div class="mb-12">
@@ -225,6 +227,7 @@
                 :disabled="amount === 0 || finishingShared || funded"
                 :tooltip="amount === 0 ? t('funding.shared.finishDisabledTooltip') : undefined"
                 @click="finishShared"
+                data-test="funding-shared-submit-button"
               >
                 {{ t('funding.shared.buttonFinish') }}
               </ButtonWithTooltip>
@@ -433,6 +436,7 @@
         <LinkDefault
           v-if="!initializing && invoice == null && !shared && !funded && !setFunding"
           class="mt-12"
+          data-test="funding-make-shared-button"
           :disabled="creatingInvoice"
           @click.prevent="makeShared"
         >
