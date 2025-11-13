@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 
+import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
 import { payInvoice } from '@e2e-playwright/utils/lnbits/api/payments.js'
 import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
 import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
@@ -8,24 +9,25 @@ import { generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwr
 test.describe('Tipcard Invoice Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
+  const cardAmount = Math.floor(Math.random() * (2100 - 210 + 1)) + 210
+  const fee = calculateFeeForCard(cardAmount)
+  const cardAmountInclFee = cardAmount + fee
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, 213, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, cardAmountInclFee, 'minimal')
   })
 
   test.afterAll(async () => {
-    // Allow for some fees
-    const walletBalanceAfterMinimal = walletBalanceBefore - 3
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceAfterMinimal, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fee, 'exact')
   })
 
   test('fund a tipcard with payment method invoice', async ({ page }) => {
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/funding/${cardHash}`)
 
     // Fill in and submit the form
-    await page.locator('[data-test="sats-amount-selector"] input').fill('210')
-    await page.locator('[data-test="textmessage-text-field"] input').fill('Dev-ops E2E Test Invoice Tipcard Message')
+    await page.locator('[data-test="sats-amount-selector"] input').fill(`${cardAmount}`)
+    await page.locator('[data-test="textmessage-text-field"] input').fill('E2E Test Invoice Tipcard Message')
     await page.locator('[data-test="funding-submit-button"]').click()
 
     // Get the invoice
@@ -38,7 +40,7 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
     // Pay the invoice using LNbits
     await payInvoice(lnbitsUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - 213, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - cardAmountInclFee, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {

@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test'
 
+import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
 import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
 import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 import { generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
@@ -8,16 +9,17 @@ import { payLnurlP } from '@e2e-playwright/utils/lnbits/api/payments'
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
+  const cardAmount = Math.floor(Math.random() * (2100 - 210 + 1)) + 210
+  const fee = calculateFeeForCard(cardAmount)
+  const cardAmountInclFee = cardAmount + fee
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, 213, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, cardAmountInclFee, 'minimal')
   })
 
   test.afterAll(async () => {
-    // Allow for some fees
-    const walletBalanceAfterMinimal = walletBalanceBefore - 3
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceAfterMinimal, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fee, 'exact')
   })
 
   test('fund a tipcard with payment method lnurlp', async ({ page }) => {
@@ -32,12 +34,12 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
     const lnurl = extractLnurlFromUrl(landingpageUrl)
 
     // Pay the invoice using LNbits
-    await payLnurlP(lnbitsUserWalletApiContext, lnurl)
+    await payLnurlP(lnbitsUserWalletApiContext, lnurl, cardAmountInclFee)
 
     // Wait for the payment to be processed and the success QR code to appear on the funding page
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/funding/${cardHash}`)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - 213, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - cardAmountInclFee, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {

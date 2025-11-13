@@ -70,16 +70,19 @@ export const getPayments = async (context: APIRequestContext) => {
   return z.array(PaymentDto).parse(json)
 }
 
-export const payLnurlP = async (context: APIRequestContext, lnurl: string) => {
+export const payLnurlP = async (context: APIRequestContext, lnurl: string, amount?: number) => {
   const lnurlData = await scanLnurl(context, lnurl)
   expect(lnurlData.kind === 'pay')
   expect(lnurlData.minSendable).toBeGreaterThan(0)
+  const amountToSend = amount ? amount * 1000 : lnurlData.minSendable
+  expect(amountToSend).toBeGreaterThanOrEqual(lnurlData.minSendable)
+  expect(amountToSend).toBeLessThanOrEqual(lnurlData.maxSendable)
   const response = await context.post('/api/v1/payments/lnurl', {
     data: {
       callback: lnurlData.callback,
       description_hash: lnurlData.description_hash,
       comment: lnurlData.defaultDescription || '',
-      amount: lnurlData.minSendable, // Convert from millisats to sats
+      amount: amountToSend,
       description: lnurlData.description,
       unit: 'sat',
     },
