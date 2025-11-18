@@ -6,14 +6,16 @@ import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/api
 import { generateRandomCardFundingInfo, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
 import { getRandomInt } from '@e2e-playwright/utils/getRandomInt'
 import hashSha256 from '@frontend/modules/hashSha256'
+import { loginViaUi } from '@e2e-playwright/utils/auth/login'
 
 test.describe('Tipcard Set Funding', () => {
   let walletBalanceBefore: number
   const setId = crypto.randomUUID()
   let fullSetUrl = ''
   const numberOfCards = getRandomInt(2, 50)
-  const { netAmount, grossAmount } = generateRandomCardFundingInfo(210, 2100)
+  const { netAmount, grossAmount, fee } = generateRandomCardFundingInfo(210, 2100)
   const totalGrossAmount = grossAmount * numberOfCards
+  const totalFee = fee * numberOfCards
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
@@ -21,8 +23,8 @@ test.describe('Tipcard Set Funding', () => {
   })
 
   test.afterAll(async () => {
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount + netAmount, 'exact')
-    // await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fee, 'exact')
+    // await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount + netAmount, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact')
   })
 
   test('fund a tipcard with payment method invoice', async ({ page }) => {
@@ -58,8 +60,11 @@ test.describe('Tipcard Set Funding', () => {
     await withdrawCardViaLandingPage(cardHash, page, lnbitsUserWalletApiContext)
   })
 
-  test.skip('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
+  test('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
     await page.goto(fullSetUrl)
+
+    // Bulk withdraw is only possible for logged in users
+    await loginViaUi({ page, lnbitsApiContext: lnbitsUserWalletApiContext })
 
     await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10000 })
 
