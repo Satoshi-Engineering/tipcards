@@ -27,7 +27,7 @@ test.describe('Tipcard Set Funding', () => {
     await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact')
   })
 
-  test('fund a tipcard with payment method invoice', async ({ page }) => {
+  test('fund a set via set funding', async ({ page }) => {
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/cards/${setId}`)
 
     // Configure the set
