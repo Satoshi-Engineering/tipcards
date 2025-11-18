@@ -1,4 +1,4 @@
-import { calculateFeeForCard } from '../../../shared/src/modules/feeCalculation'
+import { calculateFeeForNetAmount } from '../../../shared/src/modules/feeCalculation'
 
 import { generateCardHash, generateCardHashForSet } from '@e2e/lib/api/data/card'
 import { generateSetId } from '@e2e/lib/api/data/set'
@@ -18,7 +18,7 @@ describe('Landing Page', () => {
   it('should redirect to the funding page, if an unpaid invoice exists', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createInvoiceForCardHash(cardHash, 210)
-      const totalBtcInclFee = (210 + calculateFeeForCard(210)) / 100_000_000
+      const totalBtcInclFee = (210 + calculateFeeForNetAmount(210)) / 100_000_000
 
       tipCards.landing.gotoPreview(cardHash)
 

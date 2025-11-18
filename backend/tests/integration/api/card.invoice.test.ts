@@ -5,7 +5,7 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 
 import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdrawRequest.js'
 import { Card } from '@shared/data/api/Card.js'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
@@ -30,7 +30,7 @@ const getExpectedCard = (cardHash: string, text: string, note: string, amount: n
         created: expect.any(Number),
         expired: false,
         amount: amount,
-        feeAmount: calculateFeeForCard(amount),
+        feeAmount: calculateFeeForNetAmount(amount),
         paid: null,
         payment_request: '',
         payment_hash: expect.any(String),

@@ -4,6 +4,8 @@ import * as z from 'zod'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
 import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments'
+import { getRandomInt } from './getRandomInt'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 export const cardDynamicLnurl = (cardHash: string) => LNURL.encode(`${process.env.BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 
@@ -32,7 +34,9 @@ export const withdrawCard = async (cardHash: string, lnbitsApiContext: APIReques
   await expect.poll(async () => await getCardStatus(cardHash)).not.toBe('funded')
 }
 
-export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, lnbitsApiContext: APIRequestContext) => {
+export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, lnbitsApiContext: APIRequestContext, expectedAmount?: number) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000)) // lnbits withdraw links have 1 second wait time
+
   // Go to tipcard landing page
   await page.goto(`${process.env.TIPCARDS_ORIGIN}/landing/${cardHash}`)
   await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()
@@ -44,8 +48,12 @@ export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, l
   }
 
   // Withdraw the tipcard to LNbits
-  await withdrawLnurlW(lnbitsApiContext, lnurlW)
+  const { amount } = await withdrawLnurlW(lnbitsApiContext, lnurlW)
   await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
+
+  if (expectedAmount) {
+    expect(amount).toBe(expectedAmount)
+  }
 }
 
 export const getCardStatus = async (cardHash: string) => {
@@ -67,4 +75,19 @@ export const getCardStatus = async (cardHash: string) => {
 export const generateTestingCardHash = () => {
   const cardHashPrefix = 'e2e-testing-card'
   return `${cardHashPrefix}-${crypto.randomUUID()}`
+}
+
+export const generateRandomCardFundingInfo = (minNetAmount: number, maxNetAmount: number) => {
+  const netAmount = getRandomInt(minNetAmount, maxNetAmount)
+  const fee = calculateFeeForNetAmount(netAmount)
+  return {
+    netAmount,
+    fee,
+    grossAmount: netAmount + fee,
+  }
+}
+
+export const generateMultipleRandomCardFundingInfos = (minNumberOfFundings: number, maxNumberOfFundings: number) => {
+  const numberOfFundings = getRandomInt(minNumberOfFundings, maxNumberOfFundings)
+  return Array(numberOfFundings).fill(undefined).map(() => generateRandomCardFundingInfo(210, 53100))
 }

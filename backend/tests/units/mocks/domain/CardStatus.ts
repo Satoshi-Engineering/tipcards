@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { vi } from 'vitest'
 
 import { CardStatusDto, CardStatusEnum } from '@shared/data/trpc/CardStatusDto.js'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 
 import { Card, CardVersion } from '@backend/database/schema/index.js'
 
@@ -15,7 +15,7 @@ export const addCard = (card: Card, status?: CardStatusEnum, amount?: number) =>
     card,
     status,
     amount,
-    feeAmount: amount != null ? calculateFeeForCard(amount): undefined,
+    feeAmount: amount != null ? calculateFeeForNetAmount(amount): undefined,
   }
 }
 

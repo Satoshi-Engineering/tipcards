@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { FEE_PERCENTAGE } from '@shared/constants'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 import TooltipDefault from '@/components/TooltipDefault.vue'
 import IconInfoCircle from '@/components/icons/IconInfoCircle.vue'
@@ -32,5 +32,5 @@ const props = defineProps({
   },
 })
 
-const minimumFeeAmount = computed(() => calculateFeeForCard(props.minimumCardAmount))
+const minimumFeeAmount = computed(() => calculateFeeForNetAmount(props.minimumCardAmount))
 </script>

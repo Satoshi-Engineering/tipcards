@@ -22,7 +22,7 @@ import { TIPCARDS_API_ORIGIN, VOLT_VAULT_ORIGIN } from '@backend/constants.js'
 
 import { emitCardUpdateForSingleCard } from './middleware/emitCardUpdates.js'
 import { lockCardMiddleware, releaseCardMiddleware } from './middleware/handleCardLock.js'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 import z from 'zod'
 
 export default (
@@ -78,7 +78,7 @@ export default (
     }
 
     // check if the fee is too high
-    const maxAllowedFee = calculateFeeForCard(amount)
+    const maxAllowedFee = calculateFeeForNetAmount(amount)
     if (totalFee > maxAllowedFee) {
       res.json(toErrorResponse({
         message: 'Unable to find valid route. Estimated fees too high.',

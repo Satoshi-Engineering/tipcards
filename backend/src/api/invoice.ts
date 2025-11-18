@@ -4,7 +4,7 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import type { Card as CardApi } from '@shared/data/api/Card.js'
 import { ErrorCode, ErrorWithCode, type ToErrorResponse } from '@shared/data/Errors.js'
 import { getLandingPageLinkForCardHash } from '@shared/modules/cardUrlHelpers.js'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 
 import { cardApiFromCardRedis } from '@backend/database/deprecated/transforms/cardApiFromCardRedis.js'
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
@@ -50,7 +50,7 @@ export default (
     }
 
     // calculate fee
-    const feeAmount = calculateFeeForCard(amount)
+    const feeAmount = calculateFeeForNetAmount(amount)
     const totalAmount = amount + feeAmount
 
     // check if card/invoice already exists

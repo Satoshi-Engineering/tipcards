@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
 
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
@@ -101,7 +101,7 @@ describe('sharedFunding', () => {
   })
 
   it('should show the first funding', async () => {
-    const expectedFeeAmount = calculateFeeForCard(AMOUNT_PER_FUNDING)
+    const expectedFeeAmount = calculateFeeForNetAmount(AMOUNT_PER_FUNDING)
     const expectedAmount = AMOUNT_PER_FUNDING - expectedFeeAmount
 
     const { data } = await frontend.loadCard(cardHash)
@@ -142,7 +142,7 @@ describe('sharedFunding', () => {
   })
 
   it('should show the fully funded card', async () => {
-    const expectedFeeAmount = calculateFeeForCard(AMOUNT_PER_FUNDING) * 3
+    const expectedFeeAmount = calculateFeeForNetAmount(AMOUNT_PER_FUNDING) * 3
     const expectedAmount = AMOUNT_PER_FUNDING * 3 - expectedFeeAmount
 
     const { data } = await frontend.loadCard(cardHash)

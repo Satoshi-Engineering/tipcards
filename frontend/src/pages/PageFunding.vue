@@ -363,7 +363,7 @@
               @update:selected-currency="selectedCurrency = $event"
             />
             <FundingDetailsItemAmountDisplay
-              :amount-sats="fee != null ? calculateFeeForCard(amount) : undefined"
+              :amount-sats="fee != null ? calculateFeeForNetAmount(amount) : undefined"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
             >
@@ -377,7 +377,7 @@
             </FundingDetailsItemAmountDisplay>
             <FundingDetailsItemAmountDisplay
               strong
-              :amount-sats="amount + (fee != null ? calculateFeeForCard(amount) : 0)"
+              :amount-sats="amount + (fee != null ? calculateFeeForNetAmount(amount) : 0)"
               :selected-currency="selectedCurrency"
               :rate-btc-fiat="rateBtcEur"
               :label="$t('general.totalIncludingFee')"
@@ -456,7 +456,7 @@ import { useRoute } from 'vue-router'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 import { FEE_PERCENTAGE } from '@shared/constants'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 import HeadlineDefault from '@/components/typography/HeadlineDefault.vue'
 import LinkDefault from '@/components/typography/LinkDefault.vue'

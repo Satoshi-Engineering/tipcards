@@ -200,7 +200,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import type { Set, Settings } from '@shared/data/api/Set'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation'
+import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 import TheLayout from '@/components/layout/TheLayout.vue'
 import CenterContainer from '@/components/layout/CenterContainer.vue'
@@ -318,7 +318,7 @@ const numberOfCardsToFund = computed<number>(() => {
   return settings.numberOfCards - cardIndicesNotUnfunded.value.length
 })
 const totalAmountNet = computed<number>(() => amountPerCard.value * numberOfCardsToFund.value)
-const totalFeeAmount = computed(() => (calculateFeeForCard(amountPerCard.value)) * numberOfCardsToFund.value)
+const totalFeeAmount = computed(() => (calculateFeeForNetAmount(amountPerCard.value)) * numberOfCardsToFund.value)
 const totalAmountIncludingFee = computed(() => totalAmountNet.value + totalFeeAmount.value)
 
 const cardIndicesToFund = computed<number[]>(() => [...new Array(settings.numberOfCards).keys()].filter(index => !cardIndicesNotUnfunded.value.includes(index)))

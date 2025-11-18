@@ -5,7 +5,7 @@ import z from 'zod'
 import { Card as ZodCardApi, type Card as CardApi } from '@shared/data/api/Card.js'
 import { getPaidAmount } from '@shared/data/api/cardHelpers.js'
 import { ErrorWithCode, ErrorCode } from '@shared/data/Errors.js'
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
+import { calculateFeeForGrossAmount } from '@shared/modules/feeCalculation.js'
 
 import type { Set } from '@backend/database/deprecated/data/Set.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
@@ -212,7 +212,7 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
         }
 
         const paidAmount = Math.round(amountForPayment / 1000)
-        const paidFeeAmount = calculateFeeForCard(paidAmount)
+        const paidFeeAmount = calculateFeeForGrossAmount(paidAmount)
         amount += paidAmount- paidFeeAmount
         feeAmount += paidFeeAmount
         payment_hash.push(response.data.details.payment_hash)

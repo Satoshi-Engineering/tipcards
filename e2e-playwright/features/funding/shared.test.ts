@@ -1,34 +1,27 @@
 import { test, expect } from '@playwright/test'
 
-import { calculateFeeForCard } from '@shared/modules/feeCalculation.js'
 import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
 import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
-import { generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
+import { generateMultipleRandomCardFundingInfos, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
 import { payLnurlP } from '@e2e-playwright/utils/lnbits/api/payments'
-
-const generateRandomAmount = () => Math.floor(Math.random() * (2100 - 210 + 1)) + 210
-const generateMultipleRandomAmounts = () => {
-  const numberOfFundings = Math.floor(Math.random() * (13 - 2 + 1) + 2)
-  return Array(numberOfFundings).fill(undefined).map(() => generateRandomAmount())
-}
 
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
-  const fundingAmounts = generateMultipleRandomAmounts()
-  const fees = fundingAmounts.map((cardAmount) => calculateFeeForCard(cardAmount))
-  const cardAmounts = fundingAmounts.map((fundingAmount, i) => fundingAmount - fees[i])
-  const cardAmountsTotal = cardAmounts.reduce((sum, amount) => sum + amount, 0)
-  const feesTotal = fees.reduce((sum, amount) => sum + amount, 0)
-  const fundingAmountsTotal = fundingAmounts.reduce((sum, amount) => sum + amount, 0)
+
+  const cardFundingInfos = generateMultipleRandomCardFundingInfos(2, 27)
+
+  const netAmountOnCard = cardFundingInfos.reduce((sum, { netAmount }) => sum + netAmount, 0)
+  const grossAmountsTotal = cardFundingInfos.reduce((sum, { grossAmount }) => sum + grossAmount, 0)
+  const totalFee = cardFundingInfos.reduce((sum, { fee }) => sum + fee, 0)
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, fundingAmountsTotal, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, grossAmountsTotal, 'minimal')
   })
 
   test.afterAll(async () => {
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - feesTotal, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact')
   })
 
   test('fund a tipcard with payment method lnurlp', async ({ page }) => {
@@ -43,12 +36,12 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
     }
 
     // Pay the invoice multiple times using LNbits
-    for (const fundingAmount of fundingAmounts) {
-      const response = await payLnurlP(lnbitsUserWalletApiContext, lnurl, fundingAmount)
+    for (const cardFundingInfo of cardFundingInfos) {
+      const response = await payLnurlP(lnbitsUserWalletApiContext, lnurl, cardFundingInfo.grossAmount)
       expect(response.status).toBe('success')
     }
-    await expect(page.locator('[data-test="funding-shared-total-paid"]')).toContainText(`${fundingAmountsTotal} sats`, { timeout: 60000 })
-    await expect(page.locator('[data-test="funding-shared-total-on-card"]')).toContainText(`${cardAmountsTotal} sats`, { timeout: 60000 })
+    await expect(page.locator('[data-test="funding-shared-total-paid"]')).toContainText(`${grossAmountsTotal} sats`, { timeout: 60000 })
+    await expect(page.locator('[data-test="funding-shared-total-on-card"]')).toContainText(`${netAmountOnCard} sats`, { timeout: 60000 })
 
     // Complete the funding
     await page.locator('[data-test="textmessage-text-field"] input').fill('E2E Test Shared Tipcard Message')
@@ -58,11 +51,10 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
 
     // Wait for the payment to be processed and the success QR code to appear on the funding page
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await expect(page.locator('[data-test="card-status"][data-status="funded"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fundingAmountsTotal, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - grossAmountsTotal, 'exact')
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {
-    await withdrawCardViaLandingPage(cardHash, page, lnbitsUserWalletApiContext)
+    await withdrawCardViaLandingPage(cardHash, page, lnbitsUserWalletApiContext, netAmountOnCard)
   })
 })

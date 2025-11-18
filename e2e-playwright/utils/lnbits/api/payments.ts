@@ -109,7 +109,13 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
   if (!response.ok()) {
     throw new Error(`Failed to withdraw LNURL: ${await response.text()}`)
   }
-  return await response.json()
+  const responseJson = z.object({
+    amount: z.number(),
+  }).parse(await response.json())
+
+  return {
+    amount: responseJson.amount / 1000, // convert from millisats to stats
+  }
 }
 
 export const createInvoice = async (context: APIRequestContext, amount: number, memo?: string) => {
