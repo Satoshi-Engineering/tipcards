@@ -1,1 +1,7 @@
-{}
+{
+  "1109809": {
+    "active": true,
+    "notes": "High vulnerability in build tools, waiting for fix in tailwindcss.",
+    "expiry": "2025-12-01"
+  }
+}
