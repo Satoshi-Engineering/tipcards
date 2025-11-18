@@ -6,7 +6,11 @@ export const getWalletBalance = async (context: APIRequestContext) => {
   return details.balance / 1000 // Return balance in sats
 }
 
-export const getAndCheckWalletBalance = async (context: APIRequestContext, balance: number, mode: 'minimal' | 'exact' = 'minimal') => {
+export const getAndCheckWalletBalance = async (context: APIRequestContext, balance: number, mode: 'minimal' | 'exact' = 'minimal', waitOneSecond: boolean = false) => {
+  if (waitOneSecond) {
+    await new Promise((resolve) => setTimeout(resolve, 1000)) // lnbits sometimes seems to need some time to return the correct balance
+  }
+
   const walletBalance = await getWalletBalance(context)
   switch (mode) {
     // Ensure the wallet has exactly the specified balance

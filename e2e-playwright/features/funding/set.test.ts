@@ -23,8 +23,7 @@ test.describe('Tipcard Set Funding', () => {
   })
 
   test.afterAll(async () => {
-    // await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount + netAmount, 'exact')
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact', true)
   })
 
   test('fund a set via set funding', async ({ page }) => {
@@ -52,7 +51,7 @@ test.describe('Tipcard Set Funding', () => {
     // Pay the invoice using LNbits
     await payInvoice(lnbitsUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount, 'exact', true)
   })
 
   test('withdraw one tipcard back to the user wallet', async ({ page }) => {

@@ -17,7 +17,7 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   })
 
   test.afterAll(async () => {
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fee, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - fee, 'exact', true)
   })
 
   test('fund a tipcard with payment method lnurlp', async ({ page }) => {
@@ -37,7 +37,7 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
     // Wait for the payment to be processed and the success QR code to appear on the funding page
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/funding/${cardHash}`)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - grossAmount, 'exact')
+    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - grossAmount, 'exact', true)
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {
