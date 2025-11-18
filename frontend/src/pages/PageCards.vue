@@ -90,6 +90,7 @@
             min="1"
             max="100"
             class="w-full border my-1 px-3 py-2 focus:outline-none"
+            data-test="number-of-cards"
           >
         </label>
         <label class="block mb-2">

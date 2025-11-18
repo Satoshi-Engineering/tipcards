@@ -114,6 +114,7 @@
               </ParagraphDefault>
               <SatsAmountSelector
                 class="my-4"
+                data-test="sats-amount-selector"
                 :label="t('setFunding.form.amountLabel')"
                 :amount-sats="amountPerCard"
                 :selected-currency="selectedCurrency"
@@ -159,7 +160,7 @@
                 :label="$t('funding.form.textPlaceholder')"
                 :placeholder="$t('funding.form.textPlaceholder')"
                 class="w-full my-4"
-                fiat-currency="EUR"
+                data-test="textmessage-text-field"
                 :disabled="creatingInvoice"
               />
               <TextField
@@ -172,6 +173,7 @@
               <div class="flex flex-col items-center mt-4">
                 <ButtonDefault
                   type="submit"
+                  data-test="funding-submit-button"
                   :disabled="creatingInvoice"
                 >
                   {{ t('funding.form.button') }}

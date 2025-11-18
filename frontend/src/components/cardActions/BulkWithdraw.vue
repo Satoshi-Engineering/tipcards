@@ -14,6 +14,7 @@
         :href="bulkWithdrawHref"
         :disabled="bulkWithdrawDisabled"
         :tooltip="bulkWithdrawDisabled ? t('cards.actions.bulkWithdraw.disabledReason') : undefined"
+        data-test="start-bulk-withdraw"
       >
         {{ t('cards.actions.bulkWithdraw.button') }}
       </ButtonWithTooltip>

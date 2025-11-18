@@ -14,6 +14,7 @@
         :href="buttonHref"
         :disabled="buttonDisabled"
         :tooltip="buttonDisabled ? t('cards.actions.setFunding.disabledReason') : undefined"
+        data-test="start-set-funding"
       >
         {{ t('cards.actions.setFunding.button') }}
       </ButtonWithTooltip>
