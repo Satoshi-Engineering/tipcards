@@ -1,6 +1,54 @@
 # Changelog
 
 
+## v0.4.28
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.26...v0.4.28)
+
+### 🩹 Fixes
+
+- Use chown before using the directory in hosting guide (617e8547)
+- Card collection delete lnurlw database entry after deleting it in lnbits and removing it from card (81670dce)
+- Check for duplicates before locking cards or creating a bulk withdraw (11305b6b)
+- Shared funding finish create lnurlw immediately (a5bf5146)
+- After successful invoice funding immediately create lnurlws for all cards (5e94c9d1)
+- After bulkwithdraw immediately create lnurlw for all affected cards (64a60b6c)
+- Calculate fee correctly when funding via lnurlp, which means only the gross amount is known (d2437e50)
+- Wait a second before querying the balance from lnbits after funding (9bd562a2)
+- Prevent test flakiness by checking for attribute existance before reading it (d6d1a12d)
+
+### 💅 Refactors
+
+- Fix and streamline host-your-own-tip-cards (7234682d)
+- Fix the test title (0c389acc)
+
+### 📖 Documentation
+
+- Add comment for backend .env.local (d937adf1)
+
+### 🏡 Chore
+
+- Npm install (b2790494)
+- Npm audit (47ecfcc9)
+- **release:** V0.4.27 (e340136e)
+- Remove audit exclusion (37c69178)
+
+### ✅ Tests
+
+- Add invoice and lnurlp funding e2e tests (c571a7b6)
+- Add check for wallet balance after funding (6ee389be)
+- Add e2e test for duplicate hash check during bulk withdraw creation (6bbb2d1b)
+- Use random sat amounts in the funding tests (cc39646f)
+- Calculate the fees correctly (starting from the funded amount) (26548543)
+- Add e2e test for shared funding (a45a313b)
+- Add set funding test (ef1957e3)
+- Add bulk withdraw after set funding (3b9d55f4)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.27
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.26...v0.4.27)
