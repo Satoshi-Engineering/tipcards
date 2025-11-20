@@ -28,7 +28,7 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
     await page.locator('[data-test="funding-submit-button"]').click()
 
     // Get the invoice
-    await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()
+    await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')
     const invoice = await page.locator('[data-test="lightning-qr-code-image"]').getAttribute('href')
     if (!invoice) {
       throw new Error('Invoice QR code not found or empty')

@@ -42,6 +42,7 @@ export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, l
   await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()
 
   // Get the LNURL withdraw link
+  await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')
   const lnurlW = await page.locator('[data-test="lightning-qr-code-image"]').getAttribute('href')
   if (!lnurlW) {
     throw new Error('LNURL withdraw link not found or empty')

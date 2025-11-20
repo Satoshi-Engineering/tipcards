@@ -30,6 +30,7 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
 
     // Get the card's LNURL
     await expect(page.locator('[data-test="funding-shared"]')).toBeVisible()
+    await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')
     const lnurl = await page.locator('[data-test="lightning-qr-code-image"]').getAttribute('href')
     if (!lnurl) {
       throw new Error('Invoice QR code not found or empty')

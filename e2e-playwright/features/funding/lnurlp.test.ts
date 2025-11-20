@@ -24,7 +24,7 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
     await page.goto(`${process.env.TIPCARDS_ORIGIN}/card/${cardHash}`)
 
     // Get the card's LNURL
-    await expect(page.locator('[data-test="card-preview"]')).toBeVisible()
+    await expect(page.locator('[data-test="card-preview"]')).toHaveAttribute('data-lnurl')
     const landingpageUrl = await page.locator('[data-test="card-preview"]').getAttribute('data-lnurl')
     if (!landingpageUrl) {
       throw new Error('Invoice QR code not found or empty')

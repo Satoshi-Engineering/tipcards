@@ -115,7 +115,7 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
   }).parse(await response.json())
 
   return {
-    amount: responseJson.amount / 1000, // convert from millisats to stats
+    amount: responseJson.amount / 1000, // convert from millisats to sats
   }
 }
 

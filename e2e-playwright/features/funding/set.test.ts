@@ -68,6 +68,7 @@ test.describe('Tipcard Set Funding', () => {
     await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10000 })
 
     // Get the LNURL withdraw link
+    await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')
     const lnurlW = await page.locator('[data-test="lightning-qr-code-image"]').getAttribute('href')
     if (!lnurlW) {
       throw new Error('LNURL withdraw link not found or empty')
