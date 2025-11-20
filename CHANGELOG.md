@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v0.4.29
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.28...v0.4.29)
+
+### 🩹 Fixes
+
+- Prevent test flakiness by checking for attribute existance before reading it also in login (0aff3765)
+- Check attribute content in login modal qr code to be even safer (656f6bc8)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.28
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.26...v0.4.28)
