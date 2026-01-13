@@ -1,7 +1,7 @@
 {
-  "1111529": {
+  "1112030": {
     "active": true,
-    "notes": "High vulnerability, but in cypress, so not really relevant.",
-    "expiry": "2026-01-11"
+    "notes": "Low severity",
+    "expiry": "2026-02-01"
   }
 }
