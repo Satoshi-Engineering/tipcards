@@ -60,4 +60,47 @@ describe('Set', () => {
       [CardsSummaryCategoriesEnum.enum.withdrawn]: { count: 0, amount: 0 },
     })
   })
+
+  it('should clone a set with a new name', async () => {
+    const userId = 'test-user-id'
+    const newName = 'Cloned Set Name'
+
+    const clonedSet = await Set.clone(set.id, newName, userId)
+
+    // Verify the cloned set has a different ID
+    expect(clonedSet.set.id).not.toEqual(set.id)
+
+    // Verify the cloned set has the new name
+    expect(clonedSet.set.settings.name).toEqual(newName)
+
+    // Verify all other settings were copied
+    expect(clonedSet.set.settings.numberOfCards).toEqual(setSettings.numberOfCards)
+    expect(clonedSet.set.settings.cardHeadline).toEqual(setSettings.cardHeadline)
+    expect(clonedSet.set.settings.cardCopytext).toEqual(setSettings.cardCopytext)
+    expect(clonedSet.set.settings.image).toEqual(setSettings.image)
+    expect(clonedSet.set.settings.landingPage).toEqual(setSettings.landingPage)
+
+    // Verify the cloned set has new timestamps
+    expect(clonedSet.set.created).toBeInstanceOf(Date)
+    expect(clonedSet.set.changed).toBeInstanceOf(Date)
+  })
+
+  it('should generate unique card hashes for cloned set', async () => {
+    const userId = 'test-user-id'
+    const newName = 'Another Cloned Set'
+
+    const originalSet = await Set.fromId(set.id)
+    const originalCardHashes = originalSet.getAllCardHashes()
+
+    const clonedSet = await Set.clone(set.id, newName, userId)
+    const clonedCardHashes = clonedSet.getAllCardHashes()
+
+    // Verify same number of cards
+    expect(clonedCardHashes).toHaveLength(originalCardHashes.length)
+
+    // Verify all hashes are different (because set ID is different)
+    clonedCardHashes.forEach((clonedHash, index) => {
+      expect(clonedHash).not.toEqual(originalCardHashes[index])
+    })
+  })
 })
