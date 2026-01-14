@@ -244,7 +244,16 @@
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
         "button": "Load set"
-      }
+      },
+      "cloneHeadline": "Clonar",
+      "cloneDescription": "Crea una copia de este set con toda su configuración. El nuevo set tendrá tarjetas nuevas y sin fondos.",
+      "cloneNameLabel": "Nombre para el set clonado",
+      "cloneNamePlaceholder": "Ingresa un nombre para el nuevo set",
+      "cloneNameDefault": "Copia de {name}",
+      "cloneNameDefaultUnnamed": "Copia de set sin nombre",
+      "buttonCloneSet": "Clonar set",
+      "cloneSetDisabledTooltip": "Solo puedes clonar sets cuando has iniciado sesión.",
+      "cloneSetConfirm": "¿Quieres crear un clon de este set llamado \"{name}\"?"
     },
     "cards": {
       "headline": "TipCards",
@@ -258,7 +267,8 @@
     },
     "errors": {
       "unableToSaveSet": "Unable to save set on server.",
-      "unableToDeleteSet": "Unable to delete set from server."
+      "unableToDeleteSet": "Unable to delete set from server.",
+      "unableToCloneSet": "No se pudo clonar el set. Por favor inténtalo de nuevo."
     }
   },
   "lightningQrCode": {

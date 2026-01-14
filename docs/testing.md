@@ -121,4 +121,18 @@ Test everything at least with: Wallet of Satoshi, Breez, Phoenix.
 
 ### set funding
 
+### clone set
+
+* make sure you are logged in
+* open an existing set
+* scroll down to the 'Clone' section
+* verify the name field is prefilled with "Copy of [Set Name]" (or "Copy of Unnamed Set" if nameless)
+* change the name and click 'Clone set'
+* verify the confirmation dialog appears
+* after confirming, verify you are redirected to a new set page
+* verify the new set has a different ID in the URL
+* verify all settings (number of cards, headline, text, etc.) match the original set
+* verify all cards in the cloned set are unfunded (even if original set had funded cards)
+* verify you can save changes to the cloned set
+
 ### bulk withdraw
