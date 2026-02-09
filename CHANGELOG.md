@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.4.30
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.29...v0.4.30)
+
+### 🩹 Fixes
+
+- Npm audit fix (2570b78a)
+- Npm audit (1059fee1)
+- Npm audit (7b91a7c8)
+- Npm audit lodash moderate vulnerability (1ff6eb50)
+- Npm audit fix and extend grace period for elliptic minor vulnerability (75b486a1)
+
+### 🏡 Chore
+
+- Npm audit (dea24375)
+- Npm audit (f08d861e)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.29
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.28...v0.4.29)
