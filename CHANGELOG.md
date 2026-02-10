@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.4.31
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.30...v0.4.31)
+
+### 🩹 Fixes
+
+- Npm audit fix (5fda0645)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.30
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.29...v0.4.30)
