@@ -44,18 +44,10 @@ test-e2e-cypress:
   variables:
     CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}
     NODE_ENV: test
-  artifacts:
-    name: cypress-e2e
-    when: always
-    paths:
-      - cypress/videos/**/*.mp4
-      - cypress/screenshots/**/*.png
-    expire_in: 1 day
   before_script:
     - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - docker compose --profile tools --profile test up -d --wait
   script:
-    - mkdir -p cypress/videos cypress/screenshots
     - |
       docker run --rm \
         --network=tipcards-localhost \
