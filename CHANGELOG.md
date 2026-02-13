@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.4.33
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.32...v0.4.33)
+
+### 🩹 Fixes
+
+- Cypress e2e test create empty screenshot/video dirs to prevent no files to upload error (a916711b)
+- Remove artifacts from cypress e2e tests (dc0490e1)
+
+### ✅ Tests
+
+- Use new cypress image for e2e tests (853d4ed7)
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.32
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.31...v0.4.32)
