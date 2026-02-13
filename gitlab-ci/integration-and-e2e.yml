@@ -54,7 +54,7 @@ test-e2e-cypress:
         -v $(pwd):/app \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-        cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1 /bin/bash \
+        cypress/browsers:node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1 /bin/bash \
         -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e:cypress:tests"
   after_script:
     - |
