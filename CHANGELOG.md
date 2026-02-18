@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.4.34
+
+[compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.33...v0.4.34)
+
+### 🏡 Chore
+
+- Npm audit fix and temporarily add eslint/ajv vulnerability to exceptions (249b5e24)
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.33
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.32...v0.4.33)
