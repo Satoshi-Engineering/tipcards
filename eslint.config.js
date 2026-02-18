@@ -6,7 +6,7 @@ import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescri
 import pluginVitest from '@vitest/eslint-plugin'
 import pluginCypress from 'eslint-plugin-cypress/flat'
 
-const INLINE_ELEMENTS = createRequire(import.meta.url)('eslint-plugin-vue/lib/utils/inline-non-void-elements.json')
+const INLINE_ELEMENTS = createRequire(import.meta.url)('eslint-plugin-vue/dist/utils/inline-non-void-elements.js').default
 
 export default defineConfigWithVueTs(
   {
