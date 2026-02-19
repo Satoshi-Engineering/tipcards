@@ -8,5 +8,10 @@
     "active": true,
     "notes": "Eslint dependency ajv has moderate vulnerability.",
     "expiry": "2026-02-25"
+  },
+  "1113296": {
+    "active": true,
+    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
+    "expiry": "2026-02-23"
   }
 }
