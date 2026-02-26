@@ -4,14 +4,9 @@
     "notes": "elliptic low severity",
     "expiry": "2026-03-01"
   },
-  "1113402": {
-    "active": true,
-    "notes": "bn.js moderate severity",
-    "expiry": "2026-03-01"
-  },
-  "1113371": {
+  "1113465": {
     "active": true,
     "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
-    "expiry": "2026-02-25"
+    "expiry": "2026-03-02"
   }
 }
