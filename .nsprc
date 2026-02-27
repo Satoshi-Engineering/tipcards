@@ -8,5 +8,15 @@
     "active": true,
     "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
     "expiry": "2026-03-02"
+  },
+  "1113544": {
+    "active": true,
+    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
+    "expiry": "2026-03-02"
+  },
+  "1113552": {
+    "active": true,
+    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
+    "expiry": "2026-03-02"
   }
 }
