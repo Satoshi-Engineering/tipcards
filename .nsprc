@@ -2,21 +2,11 @@
   "1112030": {
     "active": true,
     "notes": "elliptic low severity",
-    "expiry": "2026-03-01"
+    "expiry": "2026-04-01"
   },
-  "1113465": {
+  "1113633": {
     "active": true,
-    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
-    "expiry": "2026-03-02"
-  },
-  "1113544": {
-    "active": true,
-    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
-    "expiry": "2026-03-02"
-  },
-  "1113552": {
-    "active": true,
-    "notes": "Minimatch has redos vulnerability. Used in eslint and express.",
-    "expiry": "2026-03-02"
+    "notes": "serialize js high severity.",
+    "expiry": "2026-03-05"
   }
 }
