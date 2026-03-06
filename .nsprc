@@ -3,10 +3,5 @@
     "active": true,
     "notes": "elliptic low severity",
     "expiry": "2026-04-01"
-  },
-  "1113686": {
-    "active": true,
-    "notes": "serialize js high severity.",
-    "expiry": "2026-03-05"
   }
 }
