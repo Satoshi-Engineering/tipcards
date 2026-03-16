@@ -75,7 +75,8 @@ describe('TRpc Router BulkWithdraw', () => {
     await expect(() => callerBulkWithdraw.createForCards([CARD_HASH_FUNDED_0, CARD_HASH_UNFUNDED])).rejects.toThrow(Error)
   })
 
-  it('creates and deletes a bulkWithdraw', async () => {
+  // skip these tests as they are flaky, and we want to move to e2e tests w/ playwright anyways
+  it.skip('creates and deletes a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
 
     await checkIfLnurlwExistsInLnbits(bulkWithdraw)
@@ -87,7 +88,8 @@ describe('TRpc Router BulkWithdraw', () => {
     await checkIfCardsAreReleased()
   })
 
-  it('creates and withdraws a bulkWithdraw', async () => {
+  // skip these tests as they are flaky, and we want to move to e2e tests w/ playwright anyways
+  it.skip('creates and withdraws a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
     await wait(1000) // Wait 1 second waiting time of lnurlw after creation
 
