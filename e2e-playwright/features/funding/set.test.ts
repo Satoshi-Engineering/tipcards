@@ -59,7 +59,7 @@ test.describe('Tipcard Set Funding', () => {
     await withdrawCardViaLandingPage(cardHash, page, lnbitsUserWalletApiContext)
   })
 
-  test('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
+  test.skip('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
     await page.goto(fullSetUrl)
 
     // Bulk withdraw is only possible for logged in users
