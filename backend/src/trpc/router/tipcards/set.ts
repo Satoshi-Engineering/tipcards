@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 import { Card } from '@shared/data/trpc/Card.js'
 import { SetDto } from '@shared/data/trpc/SetDto.js'
 import { CardsSummaryDto } from '@shared/data/trpc/CardsSummaryDto.js'
@@ -66,5 +68,20 @@ export const setRouter = router({
     .query(async ({ input }) => {
       const cards = await CardCollectionDeprecated.fromSetId(input.id)
       return await cards.toTRpcResponse()
+    }),
+
+  clone: loggedInProcedure
+    .input(z.object({
+      sourceSetId: z.string().uuid(),
+      newName: z.string().min(1),
+    }))
+    .output(SetDto)
+    .mutation(async ({ ctx, input }) => {
+      const clonedSet = await Set.clone(
+        input.sourceSetId,
+        input.newName,
+        ctx.loggedInUser.id,
+      )
+      return clonedSet.toTRpcResponse()
     }),
 })

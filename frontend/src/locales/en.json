@@ -433,7 +433,16 @@
         "label": "Withdraw all Satoshis at once",
         "button": "Withdraw remaining sats",
         "disabledReason": "There are no funded cards in this set."
-      }
+      },
+      "cloneHeadline": "Clone",
+      "cloneDescription": "Create a copy of this set with all its settings. The new set will have new, unfunded cards.",
+      "cloneNameLabel": "Name for the cloned set",
+      "cloneNamePlaceholder": "Enter a name for the new set",
+      "cloneNameDefault": "Copy of {name}",
+      "cloneNameDefaultUnnamed": "Copy of Unnamed Set",
+      "buttonCloneSet": "Clone set",
+      "cloneSetDisabledTooltip": "You can only clone sets when you are logged in.",
+      "cloneSetConfirm": "Do you want to create a clone of this set named \"{name}\"?"
     },
     "cards": {
       "headline": "TipCards",
@@ -447,7 +456,8 @@
     },
     "errors": {
       "unableToSaveSet": "Unable to save set on server.",
-      "unableToDeleteSet": "Unable to delete set from server."
+      "unableToDeleteSet": "Unable to delete set from server.",
+      "unableToCloneSet": "Unable to clone set. Please try again."
     },
     "cardInfo": "Card info"
   },

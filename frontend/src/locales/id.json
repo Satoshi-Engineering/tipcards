@@ -263,7 +263,16 @@
         "label": "Tarik semua Sats sekaligus",
         "button": "Tarik Sats",
         "disabledReason": "Tidak ada kartu yang telah diisi dalam set ini."
-      }
+      },
+      "cloneHeadline": "Kloning",
+      "cloneDescription": "Buat salinan set ini dengan semua pengaturannya. Set baru akan memiliki kartu baru yang belum didanai.",
+      "cloneNameLabel": "Nama untuk set yang dikloning",
+      "cloneNamePlaceholder": "Masukkan nama untuk set baru",
+      "cloneNameDefault": "Salinan dari {name}",
+      "cloneNameDefaultUnnamed": "Salinan Set Tanpa Nama",
+      "buttonCloneSet": "Kloning set",
+      "cloneSetDisabledTooltip": "Anda hanya dapat mengkloning set saat Anda masuk.",
+      "cloneSetConfirm": "Apakah Anda ingin membuat klon dari set ini dengan nama \"{name}\"?"
     },
     "cards": {
       "headline": "TipCards",
@@ -277,7 +286,8 @@
     },
     "errors": {
       "unableToSaveSet": "Set tidak dapat disimpan di server.",
-      "unableToDeleteSet": "Set tidak dapat dihapus dari server."
+      "unableToDeleteSet": "Set tidak dapat dihapus dari server.",
+      "unableToCloneSet": "Tidak dapat mengkloning set. Silakan coba lagi."
     }
   },
   "userAccount": {

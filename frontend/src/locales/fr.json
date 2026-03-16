@@ -426,7 +426,16 @@
         "label": "Retirer tous les Satoshis en une fois",
         "button": "Retirer les sats restants",
         "disabledReason": "Il n'y a pas de cartes chargées dans cette collection."
-      }
+      },
+      "cloneHeadline": "Cloner",
+      "cloneDescription": "Créez une copie de ce set avec tous ses paramètres. Le nouveau set aura de nouvelles cartes non financées.",
+      "cloneNameLabel": "Nom du set cloné",
+      "cloneNamePlaceholder": "Entrez un nom pour le nouveau set",
+      "cloneNameDefault": "Copie de {name}",
+      "cloneNameDefaultUnnamed": "Copie d'un set sans nom",
+      "buttonCloneSet": "Cloner le set",
+      "cloneSetDisabledTooltip": "Vous ne pouvez cloner des sets que lorsque vous êtes connecté.",
+      "cloneSetConfirm": "Voulez-vous créer un clone de ce set nommé \"{name}\" ?"
     },
     "cards": {
       "headline": "TipCards",
@@ -440,7 +449,8 @@
     },
     "errors": {
       "unableToSaveSet": "Impossible de sauvegarder la collection sur le serveur.",
-      "unableToDeleteSet": "Impossible de supprimer la collection du serveur."
+      "unableToDeleteSet": "Impossible de supprimer la collection du serveur.",
+      "unableToCloneSet": "Impossible de cloner le set. Veuillez réessayer."
     },
     "cardInfo": "Infos sur la carte"
   },

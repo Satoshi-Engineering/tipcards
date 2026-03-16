@@ -241,7 +241,16 @@
         "labelAll": "Fund all cards at once",
         "labelUnfunded": "Fund all unfunded cards",
         "button": "Load set"
-      }
+      },
+      "cloneHeadline": "क्लोन",
+      "cloneDescription": "इस सेट की सभी सेटिंग्स के साथ एक प्रति बनाएं। नए सेट में नए, बिना फंड वाले कार्ड होंगे।",
+      "cloneNameLabel": "क्लोन किए गए सेट का नाम",
+      "cloneNamePlaceholder": "नए सेट के लिए नाम दर्ज करें",
+      "cloneNameDefault": "{name} की प्रति",
+      "cloneNameDefaultUnnamed": "अनाम सेट की प्रति",
+      "buttonCloneSet": "सेट क्लोन करें",
+      "cloneSetDisabledTooltip": "आप केवल लॉग इन होने पर ही सेट क्लोन कर सकते हैं।",
+      "cloneSetConfirm": "क्या आप \"{name}\" नाम से इस सेट का क्लोन बनाना चाहते हैं?"
     },
     "cards": {
       "headline": "TipCards",
@@ -255,7 +264,8 @@
     },
     "errors": {
       "unableToSaveSet": "Unable to save set on server.",
-      "unableToDeleteSet": "Unable to delete set from server."
+      "unableToDeleteSet": "Unable to delete set from server.",
+      "unableToCloneSet": "सेट क्लोन करने में असमर्थ। कृपया पुनः प्रयास करें।"
     }
   },
   "lightningQrCode": {

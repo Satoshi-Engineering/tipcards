@@ -30,6 +30,9 @@ export const tRpcMock = {
     getCardsSummaryForSetId: {
       query: vi.fn(async (): Promise<CardsSummaryDto> => CardsSummaryDto.parse({})),
     },
+    clone: {
+      mutate: vi.fn(async (): Promise<SetDto> => ({} as SetDto)),
+    },
   },
 }
 

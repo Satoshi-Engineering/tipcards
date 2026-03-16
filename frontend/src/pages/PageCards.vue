@@ -275,6 +275,42 @@
         :set="set"
         :cards="cards"
       />
+      <div v-if="setId != null" class="my-5">
+        <HeadlineDefault level="h3" class="mb-2">
+          {{ t('cards.actions.cloneHeadline') }}
+        </HeadlineDefault>
+        <ParagraphDefault class="mb-3 text-sm">
+          {{ t('cards.actions.cloneDescription') }}
+        </ParagraphDefault>
+        <div class="flex flex-col gap-3">
+          <label class="block">
+            <span class="block mb-1 text-sm font-medium">
+              {{ t('cards.actions.cloneNameLabel') }}
+            </span>
+            <input
+              v-model="cloneName"
+              type="text"
+              class="w-full border px-3 py-2 rounded focus:outline-none"
+              :placeholder="t('cards.actions.cloneNamePlaceholder')"
+              :disabled="cloning || !isLoggedIn"
+            />
+          </label>
+          <ButtonContainer>
+            <ButtonWithTooltip
+              data-test="clone-cards-set"
+              :disabled="cloning || !isLoggedIn || !cloneName.trim()"
+              :tooltip="!isLoggedIn ? t('cards.actions.cloneSetDisabledTooltip') : undefined"
+              :loading="cloning"
+              @click="cloneCurrentSet"
+            >
+              {{ t('cards.actions.buttonCloneSet') }}
+            </ButtonWithTooltip>
+            <ParagraphDefault v-if="cloneError" class="text-red text-sm mt-2">
+              {{ cloneError }}
+            </ParagraphDefault>
+          </ButtonContainer>
+        </div>
+      </div>
       <BulkWithdraw
         v-if="isLoggedIn"
         class="my-5"
@@ -528,6 +564,7 @@ import useSetSettingsFromUrl from '@/modules/useSetSettingsFromUrl'
 import useLocalStorageSets from '@/modules/useLocalStorageSets'
 import { useAuthStore } from '@/stores/auth'
 import { useCardsSetsStore } from '@/stores/cardsSets'
+import { useSetsStore } from '@/stores/sets'
 import { useModalLoginStore } from '@/stores/modalLogin'
 import { BACKEND_API_ORIGIN } from '@/constants'
 import sanitizeI18n from '@/modules/sanitizeI18n'
@@ -536,7 +573,7 @@ import ButtonContainer from '@/components/buttons/ButtonContainer.vue'
 import type { CardsSummaryWithLoadingStatus } from '@/data/CardsSummaryWithLoadingStatus'
 import { SetDto } from '@shared/data/trpc/SetDto'
 import useTRpc from '@/modules/useTRpc'
-import { setSettingsDtoFromLegacySettings } from '@/utils/cardsSetSettings'
+import { setSettingsDtoFromLegacySettings, encodeCardsSetSettingsFromDto } from '@/utils/cardsSetSettings'
 import useCardLogos from '@/modules/useCardLogos'
 
 // this is just for debugging purposes,
@@ -556,6 +593,9 @@ const { isLoggedIn } = storeToRefs(useAuthStore())
 const cardsStore = useCardsSetsStore()
 const { subscribe, saveSet, deleteSet } = cardsStore
 const { sets } = storeToRefs(cardsStore)
+
+const setsStore = useSetsStore()
+const { cloneSet } = setsStore
 
 const { showModalLogin } = storeToRefs(useModalLoginStore())
 
@@ -625,6 +665,53 @@ const deleteCardsSet = async () => {
     savingError.value = t('cards.errors.unableToDeleteSet')
   } finally {
     deleting.value = false
+  }
+}
+
+///////////////////////
+// CLONE SET
+//
+const cloning = ref(false)
+const cloneName = ref('')
+const cloneError = ref<string>()
+
+// Prefill clone name when set name changes
+watchEffect(() => {
+  if (settings.setName) {
+    cloneName.value = t('cards.actions.cloneNameDefault', { name: settings.setName })
+  } else {
+    cloneName.value = t('cards.actions.cloneNameDefaultUnnamed')
+  }
+})
+
+const cloneCurrentSet = async () => {
+  if (setId.value == null || !cloneName.value.trim()) {
+    return
+  }
+
+  if (!confirm(t('cards.actions.cloneSetConfirm', { name: cloneName.value }))) {
+    return
+  }
+
+  cloning.value = true
+  cloneError.value = undefined
+  try {
+    const clonedSet = await cloneSet(setId.value, cloneName.value.trim())
+    // Navigate to the cloned set
+    const encodedSettings = encodeCardsSetSettingsFromDto(clonedSet.settings)
+    router.push({
+      name: 'cards',
+      params: {
+        setId: clonedSet.id,
+        settings: encodedSettings,
+        lang: route.params.lang,
+      },
+    })
+  } catch (error) {
+    console.error(error)
+    cloneError.value = t('cards.errors.unableToCloneSet')
+  } finally {
+    cloning.value = false
   }
 }
 
@@ -736,7 +823,12 @@ const cardCopytextComputed = computed(() => settings.cardCopytext
 
 const createNewCards = async () => {
   await nextTick()
-  router.replace({ ...route, name: 'cards', params: { ...route.params, setId: crypto.randomUUID(), settings: '' } })
+  router.replace({
+    name: 'cards',
+    params: { ...route.params, setId: crypto.randomUUID(), settings: '' },
+    query: route.query,
+    hash: route.hash,
+  })
 }
 
 onBeforeMount(() => {
@@ -835,6 +927,18 @@ const repopulateCards = async () => {
     cards.value = []
     return
   }
+
+  // Check if existing cards belong to the current set.
+  // This is necessary because if we clone a set (or navigate to another set with same numberOfCards),
+  // the cards array might not be cleared because the length matches.
+  // We check the first card's hash against the expected hash for the current setId.
+  if (cards.value.length > 0) {
+    const expectedHash0 = await hashSha256(`${setId.value}/0`)
+    if (cards.value[0].cardHash !== expectedHash0) {
+      cards.value = []
+    }
+  }
+
   settings.numberOfCards = Math.max(Math.min(settings.numberOfCards, 100), 0)
   cards.value.splice(settings.numberOfCards)
   for (let i = 0; i < settings.numberOfCards; i+=1) {

@@ -142,6 +142,21 @@ export const useSetsStore = defineStore('sets', () => {
       }, {} as CardsSummaryWithLoadingStatusBySetId)
   }
 
+  const cloneSet = async (sourceSetId: string, newName: string): Promise<SetDto> => {
+    try {
+      const clonedSet = await set.clone.mutate({
+        sourceSetId,
+        newName,
+      })
+      // Reload sets list to include the new cloned set
+      await fetchSets()
+      return clonedSet
+    } catch (error) {
+      console.error('Failed to clone set:', error)
+      throw error
+    }
+  }
+
   return {
     sets,
     cardsSummaryWithStatusBySetId,
@@ -150,6 +165,7 @@ export const useSetsStore = defineStore('sets', () => {
     loadSets,
     loadCardsSummaryForSet,
     fetchCardsSummaryForSet,
+    cloneSet,
     subscribeToLoggedInChanges,
     unsubscribeFromLoggedInChanges,
   }

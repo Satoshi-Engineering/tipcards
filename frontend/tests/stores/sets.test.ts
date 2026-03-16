@@ -163,4 +163,21 @@ describe('useSetsStore', () => {
       status: 'success',
     })
   })
+
+  it('should clone a set', async () => {
+    vi.clearAllMocks()
+    const set = createSet()
+    const clonedSet = createSet({ id: 'cloned-set-id', settings: { ...set.settings, name: 'Cloned Set' } })
+    const mutateClone = vi.fn(async () => clonedSet)
+    tRpcMock.set.clone.mutate = mutateClone
+
+    const result = await setsStore.cloneSet(set.id, 'Cloned Set')
+
+    expect(mutateClone).toHaveBeenCalledWith({
+      sourceSetId: set.id,
+      newName: 'Cloned Set',
+    })
+    expect(querySets).toHaveBeenCalled() // fetchSets should be called after clone
+    expect(result).toStrictEqual(clonedSet)
+  })
 })

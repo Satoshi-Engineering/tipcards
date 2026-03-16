@@ -238,7 +238,16 @@
       "buttonSaveCardsSet": "שמור קבוצת כרטיסים",
       "buttonDeleteCardsSet": "מחק קבוצת כרטיסים",
       "saveSetConfirm": "קבוצת הכרטיסים הנוכחית תשמר בזכרון המקומי של הדפדפן.\n\nניתן להשתמש גם בשורת הכתובת של עמוד זה כדי לגשת לקבוצת כרטיסי הטיפ הנוכחית.\n\nלהמשיך?",
-      "deleteSetConfirm": "האם את/ה בטוח/ה שברצונך למחוק את קבוצת הכרטיסים הנוכחית מהזכרון של הדפדפן?"
+      "deleteSetConfirm": "האם את/ה בטוח/ה שברצונך למחוק את קבוצת הכרטיסים הנוכחית מהזכרון של הדפדפן?",
+      "cloneHeadline": "שכפל",
+      "cloneDescription": "צור עותק של סט זה עם כל ההגדרות שלו. לסט החדש יהיו כרטיסים חדשים ללא מימון.",
+      "cloneNameLabel": "שם לסט המשוכפל",
+      "cloneNamePlaceholder": "הזן שם לסט החדש",
+      "cloneNameDefault": "עותק של {name}",
+      "cloneNameDefaultUnnamed": "עותק של סט ללא שם",
+      "buttonCloneSet": "שכפל סט",
+      "cloneSetDisabledTooltip": "אתה יכול לשכפל סטים רק כאשר אתה מחובר.",
+      "cloneSetConfirm": "האם אתה רוצה ליצור עותק של סט זה בשם \"{name}\"?"
     },
     "cards": {
       "headline": "TipCards",
@@ -249,6 +258,9 @@
         "funded": "נטענו",
         "used": "נוצלו"
       }
+    },
+    "errors": {
+      "unableToCloneSet": "לא ניתן לשכפל את הסט. נסה שוב."
     }
   },
   "lightningQrCode": {

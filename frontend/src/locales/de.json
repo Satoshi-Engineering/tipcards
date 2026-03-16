@@ -456,7 +456,16 @@
         "label": "Alle Sats auf einmal zurückholen",
         "button": "Sats zurückholen",
         "disabledReason": "In diesem Set befinden sich keine aufgeladenen Karten."
-      }
+      },
+      "cloneHeadline": "Klonen",
+      "cloneDescription": "Erstelle eine Kopie dieses Sets mit allen Einstellungen. Das neue Set wird neue, ungeladene Karten enthalten.",
+      "cloneNameLabel": "Name für das geklonte Set",
+      "cloneNamePlaceholder": "Gib einen Namen für das neue Set ein",
+      "cloneNameDefault": "Kopie von {name}",
+      "cloneNameDefaultUnnamed": "Kopie eines unbenannten Sets",
+      "buttonCloneSet": "Set klonen",
+      "cloneSetDisabledTooltip": "Du kannst Sets nur klonen, wenn du eingeloggt bist.",
+      "cloneSetConfirm": "Möchtest du einen Klon dieses Sets mit dem Namen \"{name}\" erstellen?"
     },
     "cards": {
       "headline": "TipCards",
@@ -470,7 +479,8 @@
     },
     "errors": {
       "unableToSaveSet": "Das Set konnte nicht am Server gespeichert werden.",
-      "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden."
+      "unableToDeleteSet": "Das Set konnte nicht am Server gelöscht werden.",
+      "unableToCloneSet": "Das Set konnte nicht geklont werden. Bitte versuche es erneut."
     },
     "cardInfo": "Karten-Info"
   },
