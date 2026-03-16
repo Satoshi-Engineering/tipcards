@@ -229,8 +229,16 @@
             <span>
               {{ t('cards.actions.buttonSaveCardsSet') }}
             </span>
-            <IconCheckSquareFill v-if="isSaved && !saving" class="inline-block ms-2 h-[1em] w-[1em]" />
-            <IconExclamationSquare v-else-if="showSaveWarning && !saving" class="inline-block ms-2 h-[1em] w-[1em]" />
+            <IconCheckSquareFill
+              v-if="isSaved && !saving"
+              class="inline-block ms-2 h-[1em] w-[1em]"
+              data-test="svg-set-saved"
+            />
+            <IconExclamationSquare
+              v-else-if="showSaveWarning && !saving"
+              class="inline-block ms-2 h-[1em] w-[1em]"
+              data-test="svg-set-save-warning"
+            />
             <span v-else-if="saving" class="inline-block ms-2 h-[1em] w-[1em]" />
           </ButtonWithTooltip>
           <ButtonDefault
