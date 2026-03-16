@@ -60,14 +60,12 @@ test.describe('Tipcard Set Funding', () => {
   })
 
   test('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
-    test.skip(!!process.env.CI, 'Bulk withdraw is disabled in the pipeline')
-
     await page.goto(fullSetUrl)
 
     // Bulk withdraw is only possible for logged in users
     await loginViaUi({ page, lnbitsApiContext: lnbitsUserWalletApiContext })
 
-    await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10000 })
+    await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10_000 })
 
     // Get the LNURL withdraw link
     await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')
@@ -78,7 +76,7 @@ test.describe('Tipcard Set Funding', () => {
 
     // Withdraw the tipcard to LNbits
     const { amount } = await withdrawLnurlW(lnbitsUserWalletApiContext, lnurlW)
-    await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
+    await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60_000 })
 
     const expectedAmount = netAmount * (numberOfCards - 1)
     expect(amount).toBe(expectedAmount)

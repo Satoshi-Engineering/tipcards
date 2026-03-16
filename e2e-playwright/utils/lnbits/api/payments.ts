@@ -95,6 +95,9 @@ export const payLnurlP = async (context: APIRequestContext, lnurl: string, amoun
 }
 
 export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) => {
+  // always wait at least 1 second before using an lnurlW (security "feature" in lnbits)
+  await new Promise((resolve) => setTimeout(resolve, 1_000))
+
   const lnurlData = await scanLnurl(context, lnurl)
   expect(lnurlData.kind === 'withdraw')
   expect(lnurlData.maxWithdrawable).toBeGreaterThan(0)
@@ -115,7 +118,7 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
   }).parse(await response.json())
 
   return {
-    amount: responseJson.amount / 1000, // convert from millisats to sats
+    amount: responseJson.amount / 1_000, // convert from millisats to sats
   }
 }
 

@@ -3,7 +3,7 @@ import { expect } from '@playwright/test'
 
 export const getWalletBalance = async (context: APIRequestContext) => {
   const details = await getWalletDetails(context)
-  return details.balance / 1000 // Return balance in sats
+  return details.balance / 1_000 // Return balance in sats
 }
 
 export const getAndCheckWalletBalance = async (context: APIRequestContext, balance: number, mode: 'minimal' | 'exact' = 'minimal', waitOneSecond: boolean = false) => {
