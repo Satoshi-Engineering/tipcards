@@ -246,7 +246,8 @@
       "cloneNameDefaultUnnamed": "Копия безымянного набора",
       "buttonCloneSet": "Клонировать набор",
       "cloneSetDisabledTooltip": "Вы можете клонировать наборы только после входа в систему.",
-      "cloneSetConfirm": "Вы хотите создать клон этого набора с именем \"{name}\"?"
+      "cloneSetConfirm": "Вы хотите создать клон этого набора с именем \"{name}\"?",
+      "cloneSetDisabledNotSavedTooltip": "Клонировать можно только уже сохраненные наборы."
     },
     "cards": {
       "headline": "TipCards",

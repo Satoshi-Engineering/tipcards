@@ -253,7 +253,8 @@
       "cloneNameDefaultUnnamed": "Copia de set sin nombre",
       "buttonCloneSet": "Clonar set",
       "cloneSetDisabledTooltip": "Solo puedes clonar sets cuando has iniciado sesión.",
-      "cloneSetConfirm": "¿Quieres crear un clon de este set llamado \"{name}\"?"
+      "cloneSetConfirm": "¿Quieres crear un clon de este set llamado \"{name}\"?",
+      "cloneSetDisabledNotSavedTooltip": "Solo se pueden clonar los sets ya guardados."
     },
     "cards": {
       "headline": "TipCards",

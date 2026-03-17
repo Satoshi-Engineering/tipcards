@@ -306,8 +306,12 @@
           <ButtonContainer>
             <ButtonWithTooltip
               data-test="clone-cards-set"
-              :disabled="cloning || !isLoggedIn || !cloneName.trim()"
-              :tooltip="!isLoggedIn ? t('cards.actions.cloneSetDisabledTooltip') : undefined"
+              :disabled="cloning || !isLoggedIn || !cloneName.trim() || !hasBeenSaved"
+              :tooltip="
+                !isLoggedIn ? t('cards.actions.cloneSetDisabledTooltip')
+                : !hasBeenSaved ? t('cards.actions.cloneSetDisabledNotSavedTooltip') :
+                undefined
+              "
               :loading="cloning"
               @click="cloneCurrentSet"
             >

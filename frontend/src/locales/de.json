@@ -465,7 +465,8 @@
       "cloneNameDefaultUnnamed": "Kopie eines unbenannten Sets",
       "buttonCloneSet": "Set klonen",
       "cloneSetDisabledTooltip": "Du kannst Sets nur klonen, wenn du eingeloggt bist.",
-      "cloneSetConfirm": "Möchtest du einen Klon dieses Sets mit dem Namen \"{name}\" erstellen?"
+      "cloneSetConfirm": "Möchtest du einen Klon dieses Sets mit dem Namen \"{name}\" erstellen?",
+      "cloneSetDisabledNotSavedTooltip": "Nur bereits gespeicherte Sets können geklont werden."
     },
     "cards": {
       "headline": "TipCards",

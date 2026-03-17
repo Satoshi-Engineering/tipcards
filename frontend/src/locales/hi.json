@@ -250,7 +250,8 @@
       "cloneNameDefaultUnnamed": "अनाम सेट की प्रति",
       "buttonCloneSet": "सेट क्लोन करें",
       "cloneSetDisabledTooltip": "आप केवल लॉग इन होने पर ही सेट क्लोन कर सकते हैं।",
-      "cloneSetConfirm": "क्या आप \"{name}\" नाम से इस सेट का क्लोन बनाना चाहते हैं?"
+      "cloneSetConfirm": "क्या आप \"{name}\" नाम से इस सेट का क्लोन बनाना चाहते हैं?",
+      "cloneSetDisabledNotSavedTooltip": "केवल पहले से सहेजे गए सेट ही क्लोन किए जा सकते हैं।"
     },
     "cards": {
       "headline": "TipCards",

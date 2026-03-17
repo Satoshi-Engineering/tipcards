@@ -442,7 +442,8 @@
       "cloneNameDefaultUnnamed": "Copy of Unnamed Set",
       "buttonCloneSet": "Clone set",
       "cloneSetDisabledTooltip": "You can only clone sets when you are logged in.",
-      "cloneSetConfirm": "Do you want to create a clone of this set named \"{name}\"?"
+      "cloneSetConfirm": "Do you want to create a clone of this set named \"{name}\"?",
+      "cloneSetDisabledNotSavedTooltip": "Only saved sets can be cloned."
     },
     "cards": {
       "headline": "TipCards",

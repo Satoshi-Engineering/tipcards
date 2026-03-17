@@ -272,7 +272,8 @@
       "cloneNameDefaultUnnamed": "Salinan Set Tanpa Nama",
       "buttonCloneSet": "Kloning set",
       "cloneSetDisabledTooltip": "Anda hanya dapat mengkloning set saat Anda masuk.",
-      "cloneSetConfirm": "Apakah Anda ingin membuat klon dari set ini dengan nama \"{name}\"?"
+      "cloneSetConfirm": "Apakah Anda ingin membuat klon dari set ini dengan nama \"{name}\"?",
+      "cloneSetDisabledNotSavedTooltip": "Hanya set yang sudah disimpan yang dapat dikloning."
     },
     "cards": {
       "headline": "TipCards",

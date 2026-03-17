@@ -247,7 +247,8 @@
       "cloneNameDefaultUnnamed": "עותק של סט ללא שם",
       "buttonCloneSet": "שכפל סט",
       "cloneSetDisabledTooltip": "אתה יכול לשכפל סטים רק כאשר אתה מחובר.",
-      "cloneSetConfirm": "האם אתה רוצה ליצור עותק של סט זה בשם \"{name}\"?"
+      "cloneSetConfirm": "האם אתה רוצה ליצור עותק של סט זה בשם \"{name}\"?",
+      "cloneSetDisabledNotSavedTooltip": "ניתן לשכפל רק סטים שכבר נשמרו."
     },
     "cards": {
       "headline": "TipCards",

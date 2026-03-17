@@ -1,8 +1,9 @@
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test'
 
 import hashSha256 from '@frontend/modules/hashSha256'
+import { loginViaUi } from '@e2e-playwright/utils/auth/login'
 import { fundCard, getCardStatus } from '@e2e-playwright/utils/card'
-import { createSavedSet, gotoSetPage } from '@e2e-playwright/utils/set'
+import { createSavedSet, gotoCardsPage, gotoSetPage } from '@e2e-playwright/utils/set'
 import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 
 test.describe('Tipcard Set Cloning', () => {
@@ -12,6 +13,30 @@ test.describe('Tipcard Set Cloning', () => {
   const numberOfCards = 3
   const cardHeadline = 'E2E Clone Headline'
   const cardCopytext = 'E2E clone copytext'
+
+  test('disables the clone button if the user is not logged in', async ({ page, browser }) => {
+    // setup
+    const unauthenticatedSetId = crypto.randomUUID()
+    const unauthenticatedSetName = `E2E Clone Source ${unauthenticatedSetId}`
+    await createSavedSet({
+      page,
+      setId: unauthenticatedSetId,
+      setName: unauthenticatedSetName,
+      numberOfCards,
+      cardHeadline,
+      cardCopytext,
+    })
+
+    const loggedOutContext = await browser.newContext()
+    const loggedOutPage = await loggedOutContext.newPage()
+
+    // action
+    await gotoSetPage({ page: loggedOutPage, setId: unauthenticatedSetId })
+
+    // test
+    await expect(loggedOutPage.locator('button[data-test="clone-cards-set"]')).toBeDisabled()
+    await loggedOutContext.close()
+  })
 
   test('clones a saved set with copied settings and unfunded cards', async ({ page, request }) => {
     // setup
@@ -41,6 +66,18 @@ test.describe('Tipcard Set Cloning', () => {
       cardCopytext,
       clonedSetName,
     })
+  })
+
+  test('disables the clone button for a new unsaved set even if the user is logged in', async ({ page }) => {
+    // setup
+    await loginViaUi({ page, lnbitsApiContext: lnbitsUserWalletApiContext })
+    const unsavedSetId = crypto.randomUUID()
+
+    // action
+    await gotoCardsPage({ page, setId: unsavedSetId })
+
+    // test
+    await expect(page.locator('button[data-test="clone-cards-set"]')).toBeDisabled()
   })
 })
 
