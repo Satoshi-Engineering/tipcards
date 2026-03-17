@@ -709,6 +709,11 @@ const cloneCurrentSet = async () => {
   cloneError.value = undefined
   try {
     const clonedSet = await cloneSet(setId.value, cloneName.value.trim())
+    const storedPrintSettings = localStorage.getItem(`printSettings-${setId.value}`)
+    if (storedPrintSettings != null) {
+      localStorage.setItem(`printSettings-${clonedSet.id}`, storedPrintSettings)
+    }
+
     // Navigate to the cloned set
     const encodedSettings = encodeCardsSetSettingsFromDto(clonedSet.settings)
     router.push({
