@@ -306,10 +306,10 @@
           <ButtonContainer>
             <ButtonWithTooltip
               data-test="clone-cards-set"
-              :disabled="cloning || !isLoggedIn || !cloneName.trim() || !hasBeenSaved"
+              :disabled="cloning || !isLoggedIn || !cloneName.trim() || !isSaved"
               :tooltip="
                 !isLoggedIn ? t('cards.actions.cloneSetDisabledTooltip')
-                : !hasBeenSaved ? t('cards.actions.cloneSetDisabledNotSavedTooltip') :
+                : !isSaved ? t('cards.actions.cloneSetDisabledNotSavedTooltip') :
                 undefined
               "
               :loading="cloning"
@@ -697,7 +697,7 @@ watchEffect(() => {
 })
 
 const cloneCurrentSet = async () => {
-  if (setId.value == null || !cloneName.value.trim()) {
+  if (setId.value == null || !cloneName.value.trim() || !isSaved.value) {
     return
   }
 

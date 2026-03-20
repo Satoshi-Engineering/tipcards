@@ -79,6 +79,29 @@ test.describe('Tipcard Set Cloning', () => {
     // test
     await expect(page.locator('button[data-test="clone-cards-set"]')).toBeDisabled()
   })
+
+  test('disables the clone button if the set has unsaved changes', async ({ page }) => {
+    // setup
+    const dirtySetId = crypto.randomUUID()
+    const dirtySetName = `E2E Clone Dirty Source ${dirtySetId}`
+    await createSavedSet({
+      page,
+      setId: dirtySetId,
+      setName: dirtySetName,
+      numberOfCards,
+      cardHeadline,
+      cardCopytext,
+    })
+
+    // action
+    await gotoSetPage({ page, setId: dirtySetId })
+    await page.getByLabel('Set name').fill(`${dirtySetName} changed`)
+    await page.getByLabel('Set name').blur()
+
+    // test
+    await expect(page.locator('[data-test="svg-set-save-warning"]')).toBeVisible()
+    await expect(page.locator('button[data-test="clone-cards-set"]')).toBeDisabled()
+  })
 })
 
 async function assertChangedSetId({ page, setId }: { page: Page; setId: string }) {
