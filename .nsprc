@@ -3,10 +3,5 @@
     "active": true,
     "notes": "elliptic low severity",
     "expiry": "2026-04-01"
-  },
-  "1114530": {
-    "active": true,
-    "notes": "yauzl moderate severity",
-    "expiry": "2026-03-23"
   }
 }
