@@ -1,6 +1,37 @@
 # Changelog
 
 
+## v0.4.36
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.35...v0.4.36)
+
+### 🚀 Enhancements
+
+- Implement clone set functionality ([87d89640](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/87d89640))
+
+### 🩹 Fixes
+
+- Flaky set funding+bulk withdrawing playwright tests ([621096e3](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/621096e3))
+- Disable clone set button if set hasnt been saved yet ([76bc8c62](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/76bc8c62))
+- Also copy print settings when cloning a set ([b8adfc21](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/b8adfc21))
+- Disable cloning for sets with unsaved changes ([42fdb137](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/42fdb137))
+
+### 🏡 Chore
+
+- Npm audit ([8661e02a](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/8661e02a))
+- Npm audit ([7e874923](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/7e874923))
+- Skip flaky e2e test ([71e66ea0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/71e66ea0))
+- Skip flaky e2e test ([19f9a4cf](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/19f9a4cf))
+- Remove flaky backend integration tests ([68a3e5e4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/68a3e5e4))
+
+### ✅ Tests
+
+- Add e2e test for set clone feature ([2c4e4f29](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/2c4e4f29))
+
+### ❤️ Contributors
+
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.35
 
 [compare changes](https://gitlab.satoshiengineering.com/satoshiengineering/lightning-tip-cards/compare/v0.4.34...v0.4.35)
