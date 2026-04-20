@@ -80,11 +80,9 @@ export const payLnurlP = async (context: APIRequestContext, lnurl: string, amoun
   expect(amountToSend).toBeLessThanOrEqual(lnurlData.maxSendable)
   const response = await context.post('/api/v1/payments/lnurl', {
     data: {
-      callback: lnurlData.callback,
-      description_hash: lnurlData.description_hash,
+      res: lnurlData,
       comment: lnurlData.defaultDescription || '',
       amount: amountToSend,
-      description: lnurlData.description,
       unit: 'sat',
     },
   })
@@ -106,7 +104,7 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
       out: false,
       amount: lnurlData.maxWithdrawable / 1000, // Convert from millisats to sats
       memo: lnurlData.defaultDescription,
-      lnurl_callback: lnurlData.callback,
+      lnurl_withdraw: lnurlData,
       unit: 'sat',
     },
   })
