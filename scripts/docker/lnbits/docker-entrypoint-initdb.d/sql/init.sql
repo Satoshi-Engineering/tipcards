@@ -39,8 +39,8 @@ ALTER ROLE lnbits WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN REPLICATION B
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.9 (Debian 16.9-1.pgdg120+1)
--- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg120+1)
+-- Dumped from database version 16.9 (Debian 16.9-1.pgdg130+1)
+-- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg130+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -65,8 +65,8 @@ SET row_security = off;
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.9 (Debian 16.9-1.pgdg120+1)
--- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg120+1)
+-- Dumped from database version 16.9 (Debian 16.9-1.pgdg130+1)
+-- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg130+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -147,7 +147,8 @@ CREATE TABLE lnurlp.pay_links (
     zaps boolean,
     domain text,
     created_at timestamp without time zone DEFAULT now(),
-    updated_at timestamp without time zone DEFAULT now()
+    updated_at timestamp without time zone DEFAULT now(),
+    disposable boolean DEFAULT true
 );
 
 
@@ -200,7 +201,9 @@ CREATE TABLE public.accounts (
     updated_at timestamp without time zone DEFAULT now(),
     pubkey text,
     access_control_list text,
-    external_id text
+    external_id text,
+    ui_customization text,
+    activated boolean DEFAULT true
 );
 
 
@@ -229,11 +232,32 @@ CREATE TABLE public.apipayments (
     extension text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    fiat_provider text
+    fiat_provider text,
+    labels text
 );
 
 
 ALTER TABLE public.apipayments OWNER TO lnbits;
+
+--
+-- Name: assets; Type: TABLE; Schema: public; Owner: lnbits
+--
+
+CREATE TABLE public.assets (
+    id text NOT NULL,
+    user_id text NOT NULL,
+    mime_type text NOT NULL,
+    is_public boolean DEFAULT false NOT NULL,
+    name text NOT NULL,
+    size_bytes integer NOT NULL,
+    thumbnail_base64 text,
+    thumbnail bytea,
+    data bytea NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.assets OWNER TO lnbits;
 
 --
 -- Name: audit; Type: TABLE; Schema: public; Owner: lnbits
@@ -295,7 +319,10 @@ CREATE TABLE public.wallets (
     deleted boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
     updated_at timestamp without time zone DEFAULT now(),
-    extra text
+    extra text,
+    stored_paylinks text,
+    wallet_type text DEFAULT 'lightning'::text,
+    shared_wallet_id text
 );
 
 
@@ -454,7 +481,7 @@ ALTER TABLE ONLY lnurlp.pay_links ALTER COLUMN id SET DEFAULT nextval('lnurlp.pa
 -- Data for Name: pay_links; Type: TABLE DATA; Schema: lnurlp; Owner: lnbits
 --
 
-COPY lnurlp.pay_links (id, wallet, description, min, served_meta, served_pr, webhook_url, success_text, success_url, currency, comment_chars, max, fiat_base_multiplier, webhook_headers, webhook_body, username, zaps, domain, created_at, updated_at) FROM stdin;
+COPY lnurlp.pay_links (id, wallet, description, min, served_meta, served_pr, webhook_url, success_text, success_url, currency, comment_chars, max, fiat_base_multiplier, webhook_headers, webhook_body, username, zaps, domain, created_at, updated_at, disposable) FROM stdin;
 \.
 
 
@@ -470,9 +497,9 @@ COPY lnurlp.settings (nostr_private_key) FROM stdin;
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: lnbits
 --
 
-COPY public.accounts (id, email, password_hash, username, extra, created_at, updated_at, pubkey, access_control_list, external_id) FROM stdin;
-7daa1ecbed4741198f05eb7c44a8f8c0	\N	$2b$12$4/0XUrvTj6e1ftTr3JIwUOf6IBlDtKz5Mw3nRRvxc2foY8If1dqNK	superuser	{"email_verified": false, "first_name": null, "last_name": null, "display_name": null, "picture": null, "provider": "lnbits", "visible_wallet_count": 10}	2025-08-05 10:20:13.542773	2025-08-05 10:20:55.961505	\N	\N	\N
-79687332617c4a7fa27cb5d61e2603e0	\N	$2b$12$R/b7cq.Wd3RZ5kKHT6w/pey1MVhiB6YCtVFE1o6HerTUNmcpKdboW	develop	{"email_verified": false, "first_name": null, "last_name": null, "display_name": null, "picture": null, "provider": "lnbits", "visible_wallet_count": 10}	2025-08-05 10:21:35.244001	2025-08-05 10:21:56.636442	\N	\N	\N
+COPY public.accounts (id, email, password_hash, username, extra, created_at, updated_at, pubkey, access_control_list, external_id, ui_customization, activated) FROM stdin;
+7daa1ecbed4741198f05eb7c44a8f8c0	\N	$2b$12$4/0XUrvTj6e1ftTr3JIwUOf6IBlDtKz5Mw3nRRvxc2foY8If1dqNK	superuser	{"email_verified": false, "first_name": null, "last_name": null, "display_name": null, "picture": null, "provider": "lnbits", "visible_wallet_count": 10}	2025-08-05 10:20:13.542773	2025-08-05 10:20:55.961505	\N	\N	\N	\N	t
+79687332617c4a7fa27cb5d61e2603e0	\N	$2b$12$R/b7cq.Wd3RZ5kKHT6w/pey1MVhiB6YCtVFE1o6HerTUNmcpKdboW	develop	{"email_verified": false, "first_name": null, "last_name": null, "display_name": null, "picture": null, "provider": "lnbits", "visible_wallet_count": 10}	2025-08-05 10:21:35.244001	2025-08-05 10:21:56.636442	\N	\N	\N	\N	t
 \.
 
 
@@ -480,10 +507,18 @@ COPY public.accounts (id, email, password_hash, username, extra, created_at, upd
 -- Data for Name: apipayments; Type: TABLE DATA; Schema: public; Owner: lnbits
 --
 
-COPY public.apipayments (checking_id, amount, fee, wallet_id, memo, "time", payment_hash, preimage, bolt11, extra, webhook, webhook_status, expiry, status, tag, extension, created_at, updated_at, fiat_provider) FROM stdin;
-71b7f9ac2e25a1d5f2bf58dca9143f91045742fb3e5991f865c479cbefe8ccca	1000000000	0	171199a3d97a43c0b5fe811e32d47012	Admin credit	2025-08-05 10:32:32.372253	71b7f9ac2e25a1d5f2bf58dca9143f91045742fb3e5991f865c479cbefe8ccca	a63afff1475b2b5f8e6f4d95171e3049666b069d268405885f54596d79f2af89	lnbc10m1p5frhwqdq5g9jx66twyp3hyetyd96qxqrrsssp52fcwgqtxr27kkpdxhygmnrl5g79gvs6j3jz5zrx7e2z4uurqy78spp5wxmlntpwyksatu4ltrw2j9pljyz9wshm8ever7r9c3uuhmlgen9qr5ueq6hxfw6htdr0nwmt96et0dtkk4eml0r3vvuruhr2pth2z2w8cel9mjs5wg3e6gvmvxyngwm6ztzhr3jdv6qpw2l8tk30g76g4xqqzwexxn	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 1150.099, "wallet_fiat_rate": 869.4905357150735, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:32	success	\N	\N	2025-08-05 10:32:32.372255	2025-08-05 10:32:32.372256	\N
-1d82424c38e55df3b2488898fe338920aef00afedced314c8514d9bdc65c9cd2	2000000000	0	161dee222082452baef5700de7553b3f	Admin credit	2025-08-05 10:32:36.797282	1d82424c38e55df3b2488898fe338920aef00afedced314c8514d9bdc65c9cd2	43b5a08869bb75d9805afd3d9560633b379d5e5dd5dc8bf4d6b9dc2ca84aa0c6	lnbc20m1p5frhwydq5g9jx66twyp3hyetyd96qxqrrsssp50nyderlkactv2ym77u2vhl7rteap6f9kr2pnn0jlkutp0n2l9fgspp5rkpyynpcu4wl8vjg3zv0uvufyzh0qzh7mnknzny9znvmm3junnfqdw9lqflj0zvwg3jun0z0cgy8ttfd0v4lkutxa6zzpxql58jk7lh9zx6pdwh08a4vhm2rr6t78cvdrke8dssz4n2lkw7qj2nk2f0wrlqpg74fru	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 2300.198, "wallet_fiat_rate": 869.4905357150735, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:36	success	\N	\N	2025-08-05 10:32:36.797285	2025-08-05 10:32:36.797285	\N
-3f0bed262a2b5780576c5dee472353cf37783a32510b585592d611134e4c6aba	3000000000	0	563486e6cac2468b8e69293d1e77832d	Admin credit	2025-08-05 10:32:41.153917	3f0bed262a2b5780576c5dee472353cf37783a32510b585592d611134e4c6aba	79542deeb6d266a70b39f3d1b1286ec73f32aa6a5b87002b5b1667c4e137d2d6	lnbc30m1p5frhwfdq5g9jx66twyp3hyetyd96qxqrrsssp56m6acxzz0u2u3umuzdeawutk996uh69kdtrxq22hznenfyxkmdrqpp58u976f329dtcq4mvthhywg6neumhsw3j2y94s4vj6cg3xnjvd2aqre9f60l3mrdc0r5ykwhl0rtrmq4az3ugs7txcj0r32gep7rw64wzwgh5rjtl2mk23hlwx0409uw22p8hcxme97q7dh0pcv8y7f5qfjspyw3wkh	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 3450.296, "wallet_fiat_rate": 869.4905357150736, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:41	success	\N	\N	2025-08-05 10:32:41.153924	2025-08-05 10:32:41.153924	\N
+COPY public.apipayments (checking_id, amount, fee, wallet_id, memo, "time", payment_hash, preimage, bolt11, extra, webhook, webhook_status, expiry, status, tag, extension, created_at, updated_at, fiat_provider, labels) FROM stdin;
+71b7f9ac2e25a1d5f2bf58dca9143f91045742fb3e5991f865c479cbefe8ccca	1000000000	0	171199a3d97a43c0b5fe811e32d47012	Admin credit	2025-08-05 10:32:32.372253	71b7f9ac2e25a1d5f2bf58dca9143f91045742fb3e5991f865c479cbefe8ccca	a63afff1475b2b5f8e6f4d95171e3049666b069d268405885f54596d79f2af89	lnbc10m1p5frhwqdq5g9jx66twyp3hyetyd96qxqrrsssp52fcwgqtxr27kkpdxhygmnrl5g79gvs6j3jz5zrx7e2z4uurqy78spp5wxmlntpwyksatu4ltrw2j9pljyz9wshm8ever7r9c3uuhmlgen9qr5ueq6hxfw6htdr0nwmt96et0dtkk4eml0r3vvuruhr2pth2z2w8cel9mjs5wg3e6gvmvxyngwm6ztzhr3jdv6qpw2l8tk30g76g4xqqzwexxn	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 1150.099, "wallet_fiat_rate": 869.4905357150735, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:32	success	\N	\N	2025-08-05 10:32:32.372255	2025-08-05 10:32:32.372256	\N	\N
+1d82424c38e55df3b2488898fe338920aef00afedced314c8514d9bdc65c9cd2	2000000000	0	161dee222082452baef5700de7553b3f	Admin credit	2025-08-05 10:32:36.797282	1d82424c38e55df3b2488898fe338920aef00afedced314c8514d9bdc65c9cd2	43b5a08869bb75d9805afd3d9560633b379d5e5dd5dc8bf4d6b9dc2ca84aa0c6	lnbc20m1p5frhwydq5g9jx66twyp3hyetyd96qxqrrsssp50nyderlkactv2ym77u2vhl7rteap6f9kr2pnn0jlkutp0n2l9fgspp5rkpyynpcu4wl8vjg3zv0uvufyzh0qzh7mnknzny9znvmm3junnfqdw9lqflj0zvwg3jun0z0cgy8ttfd0v4lkutxa6zzpxql58jk7lh9zx6pdwh08a4vhm2rr6t78cvdrke8dssz4n2lkw7qj2nk2f0wrlqpg74fru	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 2300.198, "wallet_fiat_rate": 869.4905357150735, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:36	success	\N	\N	2025-08-05 10:32:36.797285	2025-08-05 10:32:36.797285	\N	\N
+3f0bed262a2b5780576c5dee472353cf37783a32510b585592d611134e4c6aba	3000000000	0	563486e6cac2468b8e69293d1e77832d	Admin credit	2025-08-05 10:32:41.153917	3f0bed262a2b5780576c5dee472353cf37783a32510b585592d611134e4c6aba	79542deeb6d266a70b39f3d1b1286ec73f32aa6a5b87002b5b1667c4e137d2d6	lnbc30m1p5frhwfdq5g9jx66twyp3hyetyd96qxqrrsssp56m6acxzz0u2u3umuzdeawutk996uh69kdtrxq22hznenfyxkmdrqpp58u976f329dtcq4mvthhywg6neumhsw3j2y94s4vj6cg3xnjvd2aqre9f60l3mrdc0r5ykwhl0rtrmq4az3ugs7txcj0r32gep7rw64wzwgh5rjtl2mk23hlwx0409uw22p8hcxme97q7dh0pcv8y7f5qfjspyw3wkh	{"wallet_fiat_currency": "USD", "wallet_fiat_amount": 3450.296, "wallet_fiat_rate": 869.4905357150736, "wallet_btc_rate": 115009.87750000002}	\N	\N	2025-08-05 11:32:41	success	\N	\N	2025-08-05 10:32:41.153924	2025-08-05 10:32:41.153924	\N	\N
+\.
+
+
+--
+-- Data for Name: assets; Type: TABLE DATA; Schema: public; Owner: lnbits
+--
+
+COPY public.assets (id, user_id, mime_type, is_public, name, size_bytes, thumbnail_base64, thumbnail, data, created_at) FROM stdin;
 \.
 
 
@@ -492,8 +527,6 @@ COPY public.apipayments (checking_id, amount, fee, wallet_id, memo, "time", paym
 --
 
 COPY public.audit (component, ip_address, user_id, path, request_type, request_method, request_details, response_code, duration, delete_at, created_at) FROM stdin;
-core	\N	\N	/api/v1/auth	http	POST	{"path_params": {}, "query_params": {}}	401	0.253255	2025-08-19 09:13:53.708101	2025-08-12 09:13:53.708101
-core	\N	\N	/api/v1/auth	http	POST	{"path_params": {}, "query_params": {}}	401	0.252038	2025-08-19 09:18:38.084271	2025-08-12 09:18:38.084271
 \.
 
 
@@ -518,9 +551,9 @@ COPY public.balance_notify (wallet, url) FROM stdin;
 --
 
 COPY public.dbversions (db, version) FROM stdin;
-core	33
-lnurlp	11
 withdraw	7
+core	44
+lnurlp	12
 \.
 
 
@@ -539,8 +572,8 @@ COPY public.extensions ("user", extension, active, extra) FROM stdin;
 --
 
 COPY public.installed_extensions (id, version, name, short_description, icon, stars, active, meta) FROM stdin;
-lnurlp	1.0.1	Pay Links	Make reusable LNURL pay links	https://github.com/lnbits/lnurlp/raw/main/static/image/lnurl-pay.png	0	t	{"installed_release": {"name": "Pay Links", "version": "1.0.1", "archive": "https://github.com/lnbits/lnurlp/archive/refs/tags/v1.0.1.zip", "source_repo": "https://raw.githubusercontent.com/lnbits/lnbits-extensions/main/extensions.json", "is_github_release": false, "hash": "281cf5b0ebb4289f93c97ff9438abf18e01569508faaf389723144104bba2273", "min_lnbits_version": "1.0.0", "max_lnbits_version": "1.2.2", "is_version_compatible": true, "html_url": null, "description": "Make reusable LNURL pay links", "warning": null, "repo": "https://github.com/lnbits/lnurlp", "icon": "https://github.com/lnbits/lnurlp/raw/main/static/image/lnurl-pay.png", "details_link": "https://raw.githubusercontent.com/lnbits/lnurlp/main/config.json", "pay_link": null, "cost_sats": null, "paid_sats": 0, "payment_hash": null}, "latest_release": null, "pay_to_enable": null, "payments": [], "dependencies": [], "archive": null, "featured": false}
-withdraw	1.0.1	Withdraw Links	Make LNURL withdraw links	https://github.com/lnbits/withdraw/raw/main/static/image/lnurl-withdraw.png	0	t	{"installed_release": {"name": "Withdraw Links", "version": "1.0.1", "archive": "https://github.com/lnbits/withdraw/archive/refs/tags/v1.0.1.zip", "source_repo": "https://raw.githubusercontent.com/lnbits/lnbits-extensions/main/extensions.json", "is_github_release": false, "hash": "58b3847801efb0dcabd7fa8c9d16c08a2d50cd0e21e96b00b3a0baf88daa9a98", "min_lnbits_version": "1.0.0", "max_lnbits_version": "1.3.0", "is_version_compatible": true, "html_url": null, "description": "Make LNURL withdraw links", "warning": null, "repo": "https://github.com/lnbits/withdraw", "icon": "https://github.com/lnbits/withdraw/raw/main/static/image/lnurl-withdraw.png", "details_link": "https://raw.githubusercontent.com/lnbits/withdraw/main/config.json", "pay_link": null, "cost_sats": null, "paid_sats": 0, "payment_hash": null}, "latest_release": null, "pay_to_enable": null, "payments": [], "dependencies": [], "archive": null, "featured": false}
+withdraw	1.2.2	Withdraw Links	Make LNURL withdraw links	https://github.com/lnbits/withdraw/raw/main/static/image/lnurl-withdraw.png	0	t	{"installed_release": {"name": "Withdraw Links", "version": "1.2.2", "archive": "https://github.com/lnbits/withdraw/archive/refs/tags/v1.2.2.zip", "source_repo": "https://raw.githubusercontent.com/lnbits/lnbits-extensions/main/extensions.json", "is_github_release": false, "hash": "4e66ed94bc9be8c0e0fe4f3b6019fdb7688bab70ab18162cb564cf9f5397606c", "min_lnbits_version": "1.3.0", "max_lnbits_version": null, "is_version_compatible": true, "html_url": null, "description": "Make LNURL withdraw links", "warning": null, "repo": "https://github.com/lnbits/withdraw", "icon": "https://github.com/lnbits/withdraw/raw/main/static/image/lnurl-withdraw.png", "details_link": "https://raw.githubusercontent.com/lnbits/withdraw/main/config.json", "paid_features": null, "pay_link": null, "cost_sats": null, "paid_sats": 0, "payment_hash": null}, "latest_release": null, "pay_to_enable": null, "payments": [], "dependencies": [], "archive": null, "featured": false, "paid_features": null, "has_paid_release": false, "has_free_release": false}
+lnurlp	1.3.0	Pay Links	Make reusable LNURL pay links	https://github.com/lnbits/lnurlp/raw/main/static/image/lnurl-pay.png	0	t	{"installed_release": {"name": "Pay Links", "version": "1.3.0", "archive": "https://github.com/lnbits/lnurlp/archive/refs/tags/v1.3.0.zip", "source_repo": "https://raw.githubusercontent.com/lnbits/lnbits-extensions/main/extensions.json", "is_github_release": false, "hash": "71701b5756628fec6d7418192158c647e840e1fbf9a65e6fd2372bc73f626562", "min_lnbits_version": "1.4.0", "max_lnbits_version": null, "is_version_compatible": true, "html_url": null, "description": "Make reusable LNURL pay links", "warning": null, "repo": "https://github.com/lnbits/lnurlp", "icon": "https://github.com/lnbits/lnurlp/raw/main/static/image/lnurl-pay.png", "details_link": "https://raw.githubusercontent.com/lnbits/lnurlp/main/config.json", "paid_features": null, "pay_link": null, "cost_sats": null, "paid_sats": 0, "payment_hash": null}, "latest_release": null, "pay_to_enable": null, "payments": [], "dependencies": [], "archive": null, "featured": false, "paid_features": null, "has_paid_release": false, "has_free_release": false}
 \.
 
 
@@ -752,11 +785,11 @@ COPY public.tiny_url (id, url, endless, wallet, "time") FROM stdin;
 -- Data for Name: wallets; Type: TABLE DATA; Schema: public; Owner: lnbits
 --
 
-COPY public.wallets (id, name, "user", adminkey, inkey, currency, deleted, created_at, updated_at, extra) FROM stdin;
-cf5830a4ca104772ae659467842c0a4f	LNbits wallet	7daa1ecbed4741198f05eb7c44a8f8c0	9875485db2954b26acc6b027618e7592	9991b4a2222046f98bf2194605e13fa8	USD	f	2025-08-05 10:20:13.543589	2025-08-05 10:20:13.54359	{"icon": "flash_on", "color": "primary", "pinned": false}
-171199a3d97a43c0b5fe811e32d47012	develop	79687332617c4a7fa27cb5d61e2603e0	8d4e4a151ae5446586ab283e4a89d98c	f95447ee6414419b8ff3e415a4e359f8	USD	f	2025-08-05 10:21:35.248214	2025-08-05 10:21:35.248222	{"icon": "flash_on", "color": "primary", "pinned": false}
-161dee222082452baef5700de7553b3f	Wallet2	79687332617c4a7fa27cb5d61e2603e0	6da0c95636c44058bf1d09933476ac26	c2b6f2dcbdc944d3b4b932783d28a6db	USD	f	2025-08-05 10:22:44.960417	2025-08-05 10:22:44.960423	{"icon": "flash_on", "color": "primary", "pinned": false}
-563486e6cac2468b8e69293d1e77832d	Wallet3	79687332617c4a7fa27cb5d61e2603e0	29f376ee8bec4503b241eb912666c397	ea059680d75b4b86aa2f9d0facf0edf5	USD	f	2025-08-05 10:23:05.876348	2025-08-05 10:23:05.876355	{"icon": "flash_on", "color": "primary", "pinned": false}
+COPY public.wallets (id, name, "user", adminkey, inkey, currency, deleted, created_at, updated_at, extra, stored_paylinks, wallet_type, shared_wallet_id) FROM stdin;
+cf5830a4ca104772ae659467842c0a4f	LNbits wallet	7daa1ecbed4741198f05eb7c44a8f8c0	9875485db2954b26acc6b027618e7592	9991b4a2222046f98bf2194605e13fa8	USD	f	2025-08-05 10:20:13.543589	2025-08-05 10:20:13.54359	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+171199a3d97a43c0b5fe811e32d47012	develop	79687332617c4a7fa27cb5d61e2603e0	8d4e4a151ae5446586ab283e4a89d98c	f95447ee6414419b8ff3e415a4e359f8	USD	f	2025-08-05 10:21:35.248214	2025-08-05 10:21:35.248222	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+161dee222082452baef5700de7553b3f	Wallet2	79687332617c4a7fa27cb5d61e2603e0	6da0c95636c44058bf1d09933476ac26	c2b6f2dcbdc944d3b4b932783d28a6db	USD	f	2025-08-05 10:22:44.960417	2025-08-05 10:22:44.960423	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+563486e6cac2468b8e69293d1e77832d	Wallet3	79687332617c4a7fa27cb5d61e2603e0	29f376ee8bec4503b241eb912666c397	ea059680d75b4b86aa2f9d0facf0edf5	USD	f	2025-08-05 10:23:05.876348	2025-08-05 10:23:05.876355	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
 \.
 
 
@@ -813,6 +846,14 @@ ALTER TABLE ONLY public.accounts
 
 ALTER TABLE ONLY public.apipayments
     ADD CONSTRAINT apipayments_wallet_payhash_key UNIQUE (wallet_id, checking_id);
+
+
+--
+-- Name: assets assets_pkey; Type: CONSTRAINT; Schema: public; Owner: lnbits
+--
+
+ALTER TABLE ONLY public.assets
+    ADD CONSTRAINT assets_pkey PRIMARY KEY (id);
 
 
 --
@@ -927,6 +968,174 @@ CREATE INDEX by_hash ON public.apipayments USING btree (payment_hash);
 
 
 --
+-- Name: idx_accounts_email; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_accounts_email ON public.accounts USING btree (email);
+
+
+--
+-- Name: idx_accounts_external_id; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_accounts_external_id ON public.accounts USING btree (external_id);
+
+
+--
+-- Name: idx_accounts_id; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_accounts_id ON public.accounts USING btree (id);
+
+
+--
+-- Name: idx_accounts_pubkey; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_accounts_pubkey ON public.accounts USING btree (pubkey);
+
+
+--
+-- Name: idx_accounts_username; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_accounts_username ON public.accounts USING btree (username);
+
+
+--
+-- Name: idx_payments_amount; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_amount ON public.apipayments USING btree (amount);
+
+
+--
+-- Name: idx_payments_checking_id; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_checking_id ON public.apipayments USING btree (checking_id);
+
+
+--
+-- Name: idx_payments_created_at; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_created_at ON public.apipayments USING btree (created_at);
+
+
+--
+-- Name: idx_payments_fee; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_fee ON public.apipayments USING btree (fee);
+
+
+--
+-- Name: idx_payments_labels; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_labels ON public.apipayments USING btree (labels);
+
+
+--
+-- Name: idx_payments_memo; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_memo ON public.apipayments USING btree (memo);
+
+
+--
+-- Name: idx_payments_payment_hash; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_payment_hash ON public.apipayments USING btree (payment_hash);
+
+
+--
+-- Name: idx_payments_status; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_status ON public.apipayments USING btree (status);
+
+
+--
+-- Name: idx_payments_time; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_time ON public.apipayments USING btree ("time");
+
+
+--
+-- Name: idx_payments_updated_at; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_updated_at ON public.apipayments USING btree (updated_at);
+
+
+--
+-- Name: idx_payments_wallet_id; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_payments_wallet_id ON public.apipayments USING btree (wallet_id);
+
+
+--
+-- Name: idx_wallets_adminkey; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_adminkey ON public.wallets USING btree (adminkey);
+
+
+--
+-- Name: idx_wallets_created_at; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_created_at ON public.wallets USING btree (created_at);
+
+
+--
+-- Name: idx_wallets_deleted; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_deleted ON public.wallets USING btree (deleted);
+
+
+--
+-- Name: idx_wallets_id; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_id ON public.wallets USING btree (id);
+
+
+--
+-- Name: idx_wallets_inkey; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_inkey ON public.wallets USING btree (inkey);
+
+
+--
+-- Name: idx_wallets_updated_at; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_updated_at ON public.wallets USING btree (updated_at);
+
+
+--
+-- Name: idx_wallets_user; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_user ON public.wallets USING btree ("user");
+
+
+--
+-- Name: idx_wallets_wallet_type; Type: INDEX; Schema: public; Owner: lnbits
+--
+
+CREATE INDEX idx_wallets_wallet_type ON public.wallets USING btree (wallet_type);
+
+
+--
 -- Name: balance_check balance_check_wallet_fkey; Type: FK CONSTRAINT; Schema: public; Owner: lnbits
 --
 
@@ -956,8 +1165,8 @@ ALTER TABLE ONLY public.balance_notify
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.9 (Debian 16.9-1.pgdg120+1)
--- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg120+1)
+-- Dumped from database version 16.9 (Debian 16.9-1.pgdg130+1)
+-- Dumped by pg_dump version 16.9 (Debian 16.9-1.pgdg130+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
