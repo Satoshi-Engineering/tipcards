@@ -1,6 +1,27 @@
 # Changelog
 
 
+## v0.4.39
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.38...v0.4.39)
+
+### 🩹 Fixes
+
+- Update lnbits db dump after upgrading lnbits withdraw and lnurlp extensions ([74aebfd7](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/74aebfd7))
+- Bypass TipCards withdraw proxy in LnBits double-withdraw integration test ([4f29fea5](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/4f29fea5))
+- **e2e:** Use POST body for LNbits lnurlscan API ([f4222796](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f4222796))
+- **e2e:** Update LNBits lnurl scan and payment payloads for v1.5 API ([af4f9f47](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/af4f9f47))
+- Bump cypress lnurlw wait to 2s for lnbits v1.5.3 ([f7fd111d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f7fd111d))
+- **e2e:** Bypass broken LNBits lnurlauth endpoint ([86198751](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/86198751))
+
+### ✅ Tests
+
+- Handle LNbits replay rejections returned as 200 responses ([711e97f0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/711e97f0))
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.38
 
 [compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.37...v0.4.38)
