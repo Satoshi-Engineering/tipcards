@@ -1,21 +1,26 @@
-import { APIRequestContext } from '@playwright/test'
-import scanLnurl from './scanLnurl'
+import { APIRequestContext, request } from '@playwright/test'
+
+import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix'
+import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
+import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 
 export const lnurlAuth = async (context: APIRequestContext, lnurl: string) => {
-  const { callback } = await scanLnurl(context, lnurl)
-  const k1 = new URL(callback).searchParams.get('k1')
-  if (!k1) {
-    throw new Error('Failed to perform lnurlauth: missing k1 in LNURL auth callback')
-  }
+  void context
 
-  const response = await context.post('/api/v1/lnurlauth', {
-    data: {
-      tag: 'login',
-      callback,
-      k1,
-    },
+  const signingKey = HDWallet.generateRandomNode()
+  const lnurlAuth = new LNURLAuth({
+    publicKeyAsHex: signingKey.getPublicKeyAsHex(),
+    privateKeyAsHex: signingKey.getPrivateKeyAsHex(),
   })
-  if (!response.ok()) {
-    throw new Error(`Failed to perform lnurlauth: ${await response.text()}`)
+  const callbackUrl = lnurlAuth.getLNURLAuthCallbackUrl(removeLightningPrefix(lnurl))
+  const authContext = await request.newContext()
+
+  try {
+    const response = await authContext.get(callbackUrl.toString())
+    if (!response.ok()) {
+      throw new Error(`Failed to perform lnurlauth: ${await response.text()}`)
+    }
+  } finally {
+    await authContext.dispose()
   }
 }
