@@ -1,6 +1,25 @@
 # Changelog
 
 
+## v0.4.38
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.37...v0.4.38)
+
+### 🩹 Fixes
+
+- New lnbits versions return valid ISO dates ([46750c26](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/46750c26))
+
+### 🏡 Chore
+
+- Npm audit ([a467f173](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/a467f173))
+- Increase drizzle expiry date ([7d0cf4dc](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/7d0cf4dc))
+- Upgrade dev lnbits to v1.5.3 ([0c0c62d1](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/0c0c62d1))
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.37
 
 [compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.36...v0.4.37)
