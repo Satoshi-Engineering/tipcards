@@ -10,9 +10,8 @@ import { LNBITS_ORIGIN, LNBITS_INVOICE_READ_KEY, STATISTICS_EXCLUDE_FILE } from 
 
 const Payment = z.object({
   status: z.string(),
-  time: z.string()
-    .refine(val => DateTime.fromISO(`${val}Z`).isValid, { message: 'Invalid date' })
-    .transform(val => Math.floor(DateTime.fromISO(`${val}Z`).toUTC().toSeconds())),
+  time: z.string().datetime({ offset: true })
+    .transform(val => Math.floor(DateTime.fromISO(val).toUTC().toSeconds())),
   amount: z.number(),
   payment_hash: z.string(),
 })
