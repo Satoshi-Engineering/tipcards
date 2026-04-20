@@ -78,11 +78,14 @@ describe('LnBits - double spend attack - urlw extension ', () => {
     let countFailed = 0
     await Promise.all(lnurlwCallbackUrls.map(async (lnurlwCallbackUrl) => {
       try {
-        const lnurlWithdrawResponse = await axios.get(lnurlwCallbackUrl)
-        expect(lnurlWithdrawResponse.data).toEqual(expect.objectContaining({
-          'status': 'OK',
-        }))
-        countSuccess++
+        const lnurlWithdrawResponse = await axios.get(lnurlwCallbackUrl, {
+          validateStatus: () => true,
+        })
+        if (lnurlWithdrawResponse.data?.status === 'OK') {
+          countSuccess++
+          return
+        }
+        countFailed++
       } catch {
         countFailed++
       }
