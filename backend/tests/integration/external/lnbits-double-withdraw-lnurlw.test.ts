@@ -63,6 +63,14 @@ describe('LnBits - double spend attack - urlw extension ', () => {
     const response = await frontend.loadLnurlForCardHash(testCard.cardHash)
     await wait(1000) // Wait 1 second waiting time of lnurlw after creation
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
+    // `loadLnurlForCardHash()` returns the TipCards proxy callback:
+    // `/api/lnurl/withdraw?callback=<lnbits-callback>`.
+    // This test is about LnBits single-use behavior, so we want the raw LnBits callback instead of the proxy.
+    const tipcardsProxyCallback = new URL(lnurlWithdrawRequest.callback)
+    const lnbitsCallback = tipcardsProxyCallback.searchParams.get('callback')
+    if (lnbitsCallback != null) {
+      lnurlWithdrawRequest.callback = lnbitsCallback
+    }
     const lnurlwCallbackUrls = await createLNURLwCallbackUrls(attackingWallet, lnurlWithdrawRequest, TEST_ATTEMPT_COUNT)
     expect(lnurlwCallbackUrls).toHaveLength(TEST_ATTEMPT_COUNT)
 
