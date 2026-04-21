@@ -13,10 +13,13 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
   const router = Router()
 
   const bulkWithdrawWithdrawn = async (req: Request, res: Response) => {
+    const { bulkWithdrawId } = req.params
+    // eslint-disable-next-line no-console
+    console.info(`[bulkWithdraw/withdrawn] called id=${bulkWithdrawId} method=${req.method}`)
     // 1. check if bulkwithdraw exists
     let bulkWithdraw: BulkWithdraw | null = null
     try {
-      bulkWithdraw = await getBulkWithdrawById(req.params.bulkWithdrawId)
+      bulkWithdraw = await getBulkWithdrawById(bulkWithdrawId)
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -27,6 +30,8 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
       return
     }
     if (bulkWithdraw == null) {
+      // eslint-disable-next-line no-console
+      console.info(`[bulkWithdraw/withdrawn] id=${bulkWithdrawId} not found → 404`)
       res.status(404).json({
         status: 'error',
         message: 'BulkWithdraw not found.',
@@ -34,6 +39,8 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
       return
     }
     if (bulkWithdraw.withdrawn != null) {
+      // eslint-disable-next-line no-console
+      console.info(`[bulkWithdraw/withdrawn] id=${bulkWithdrawId} already withdrawn → 200`)
       res.json({
         status: 'success',
         data: { withdrawn: bulkWithdraw.withdrawn, bulkWithdrawId: bulkWithdraw.id },
@@ -61,6 +68,8 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
       return
     }
     if (!withdrawn) {
+      // eslint-disable-next-line no-console
+      console.info(`[bulkWithdraw/withdrawn] id=${bulkWithdrawId} lnbits reports not withdrawn → 400`)
       res.status(400).json({
         status: 'error',
         message: 'BulkWithdraw not withdrawn.',
@@ -89,6 +98,8 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
       })
       return
     }
+    // eslint-disable-next-line no-console
+    console.info(`[bulkWithdraw/withdrawn] id=${bulkWithdrawId} marked withdrawn → 200`)
     res.json({
       status: 'success',
       data: { withdrawn: bulkWithdraw.withdrawn, bulkWithdrawId: bulkWithdraw.id },
