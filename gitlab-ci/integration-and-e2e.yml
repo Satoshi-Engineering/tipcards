@@ -25,6 +25,8 @@ test-backend-integration:
       if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
         echo "Dumping backend logs:"
         docker logs tipcards-backend-test || true
+        echo "Dumping lnbits logs:"
+        docker logs tipcards-lnbits || true
       fi
     - docker compose --profile tools --profile test down
 
@@ -64,6 +66,8 @@ test-e2e-cypress:
         docker logs tipcards-backend-test || true
         echo "Dumping frontend logs:"
         docker logs tipcards-frontend-test || true
+        echo "Dumping lnbits logs:"
+        docker logs tipcards-lnbits || true
       fi
     - docker compose --profile tools --profile test down
 
@@ -109,5 +113,7 @@ test-e2e-playwright:
         docker logs tipcards-backend-test || true
         echo "Dumping frontend logs:"
         docker logs tipcards-frontend-test || true
+        echo "Dumping lnbits logs:"
+        docker logs tipcards-lnbits || true
       fi
     - docker compose --profile tools --profile test down

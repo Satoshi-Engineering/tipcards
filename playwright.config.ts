@@ -14,7 +14,7 @@ export default defineConfig({
   /* Opt out of parallel tests */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'list',
+  reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     clientCertificates: [{
@@ -34,6 +34,8 @@ export default defineConfig({
     baseURL: 'https://tipcards.localhost',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
