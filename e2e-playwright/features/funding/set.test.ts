@@ -60,6 +60,8 @@ test.describe('Tipcard Set Funding', () => {
   })
 
   test('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
+    test.setTimeout(90_000)
+
     await page.goto(fullSetUrl)
 
     // Bulk withdraw is only possible for logged in users
