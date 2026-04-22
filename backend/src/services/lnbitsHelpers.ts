@@ -759,6 +759,20 @@ export const createWithdrawLink = async (title: string, amount: number, webhook_
 }
 
 /**
+ * Diagnostic helper: reads the raw `webhook_url` field stored against a withdraw link.
+ * Used to verify what LNbits persisted after a create/update.
+ *
+ * @throws AxiosError
+ */
+export const readWithdrawLinkWebhookUrl = async (lnbitsWithdrawId: string): Promise<unknown> => {
+  const response = await axios.get(
+    `${LNBITS_ORIGIN}/withdraw/api/v1/links/${lnbitsWithdrawId}`,
+    axiosOptionsWithAdminHeaders,
+  )
+  return response.data?.webhook_url
+}
+
+/**
  * @param withdrawId string
  * @throws
  */
