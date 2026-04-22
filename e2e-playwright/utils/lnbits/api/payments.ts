@@ -108,12 +108,22 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
       unit: 'sat',
     },
   })
+  const bodyText = await response.text()
+  console.warn(`[withdrawLnurlW] callback=${lnurlData.callback} maxWithdrawable=${lnurlData.maxWithdrawable} httpStatus=${response.status()} body=${bodyText}`)
   if (!response.ok()) {
-    throw new Error(`Failed to withdraw LNURL: ${await response.text()}`)
+    throw new Error(`Failed to withdraw LNURL: ${bodyText}`)
   }
+  const rawJson = JSON.parse(bodyText)
   const responseJson = z.object({
     amount: z.number(),
-  }).parse(await response.json())
+  }).parse(rawJson)
+
+  if (rawJson.payment_hash || rawJson.checking_id) {
+    const paymentId = rawJson.payment_hash ?? rawJson.checking_id
+    await new Promise((resolve) => setTimeout(resolve, 1_000))
+    const followUp = await context.get(`/api/v1/payments/${paymentId}`)
+    console.warn(`[withdrawLnurlW] payment ${paymentId} status=${followUp.status()} body=${await followUp.text()}`)
+  }
 
   return {
     amount: responseJson.amount / 1_000, // convert from millisats to sats
