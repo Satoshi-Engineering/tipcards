@@ -9,7 +9,7 @@ import {
   updateBulkWithdraw, deleteBulkWithdraw,
 } from '@backend/database/deprecated/queries.js'
 import hashSha256 from '@backend/services/hashSha256.js'
-import { deleteWithdrawIfNotUsed, createWithdrawLink } from '@backend/services/lnbitsHelpers.js'
+import { deleteWithdrawIfNotUsed, createWithdrawLink, readWithdrawLinkWebhookUrl } from '@backend/services/lnbitsHelpers.js'
 import { bulkWithdrawFromBulkWithdrawRedis } from '@backend/trpc/data/transforms/bulkWithdrawFromBulkWithdrawRedis.js'
 import { TIPCARDS_API_ORIGIN } from '@backend/constants.js'
 
@@ -119,11 +119,20 @@ export default class BulkWithdrawDeprecated {
     id: string,
     amount: number,
   }) {
-    return await createWithdrawLink(
+    const sentWebhookUrl = `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${id}`
+    const result = await createWithdrawLink(
       `Bulk withdrawing ${this.cards.length} card(s).`,
       amount,
-      `${TIPCARDS_API_ORIGIN}/api/bulkWithdraw/withdrawn/${id}`,
+      sentWebhookUrl,
     )
+    try {
+      const storedWebhookUrl = await readWithdrawLinkWebhookUrl(result.lnbitsWithdrawId)
+      // eslint-disable-next-line no-console
+      console.info(`[bulkWithdraw/create] id=${id} lnbitsId=${result.lnbitsWithdrawId} sent=${JSON.stringify(sentWebhookUrl)} stored=${JSON.stringify(storedWebhookUrl)}`)
+    } catch (error) {
+      console.error(`[bulkWithdraw/create] id=${id} lnbitsId=${result.lnbitsWithdrawId} failed to read back webhook_url:`, error)
+    }
+    return result
   }
 
   private async createBulkWithdrawRedis({
