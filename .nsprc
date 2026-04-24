@@ -8,5 +8,10 @@
     "active": true,
     "notes": "drizzle high severity",
     "expiry": "2026-04-27"
+  },
+  "1116970": {
+    "active": true,
+    "notes": "uuid moderate severity",
+    "expiry": "2026-04-27"
   }
 }
