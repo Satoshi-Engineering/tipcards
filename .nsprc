@@ -2,16 +2,16 @@
   "1112030": {
     "active": true,
     "notes": "elliptic low severity",
-    "expiry": "2026-05-01"
+    "expiry": "2026-05-04"
   },
   "1116251": {
     "active": true,
     "notes": "drizzle high severity",
-    "expiry": "2026-04-27"
+    "expiry": "2026-05-04"
   },
   "1116970": {
     "active": true,
     "notes": "uuid moderate severity",
-    "expiry": "2026-04-27"
+    "expiry": "2026-05-04"
   }
 }
