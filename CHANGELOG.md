@@ -1,6 +1,40 @@
 # Changelog
 
 
+## v0.4.40
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.39...v0.4.40)
+
+### 🩹 Fixes
+
+- Increase timeout for bulk withdraw test ([29ef8aba](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/29ef8aba))
+- Align Node environment for integration tests ([281d425e](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/281d425e))
+- Invalidate incompatible Node modules cache ([e4c46926](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e4c46926))
+- Handle LNbits withdrawal delay consistently ([6e6327a8](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/6e6327a8))
+
+### 🏡 Chore
+
+- Add uuid to nsprc ([3b94eea4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/3b94eea4))
+- Npm audit ([32f83e74](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/32f83e74))
+- Npm audit ([2e49dc15](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/2e49dc15))
+- Npm audit ([fd6f7507](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/fd6f7507))
+- **ci:** Log bulkWithdraw webhook + enable playwright html report + dump lnbits logs ([53bbc06f](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/53bbc06f))
+- **backend:** Log stored webhook_url after creating bulk withdraw link ([c20acdcb](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/c20acdcb))
+- **e2e:** Log lnbits response + payment status in withdrawLnurlW ([d335b613](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/d335b613))
+- Npm audit via codex ([9ea090e7](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/9ea090e7))
+- Update packages to latest patch versions, adapt typed routes and backlink handling for vue-router 4.5.1. ([7ef5b5c4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/7ef5b5c4))
+- Clean up dependency and TypeScript configuration ([f76aaec2](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f76aaec2))
+- Update dependencies to latest minor versions ([e4095d39](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e4095d39))
+
+### 🤖 CI
+
+- Optimize integration and end-to-end test setup ([804f4ff7](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/804f4ff7))
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.39
 
 [compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.38...v0.4.39)
