@@ -26,7 +26,7 @@
       key:
         files:
           - package-lock.json
-        prefix: node_modules
+        prefix: node_modules-bookworm
       paths:
         - node_modules/
       policy: pull

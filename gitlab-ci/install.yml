@@ -4,12 +4,15 @@ install:
     - !reference [.shared_config, rules, no_tags]
     - changes:
       - package-lock.json
+      - .gitlab-ci.yml
+      - gitlab-ci/.shared_config.yml
+      - gitlab-ci/install.yml
   cache:
     - !reference [.shared_config, cache, npm]
     - key:
         files:
           - package-lock.json
-        prefix: node_modules
+        prefix: node_modules-bookworm
       paths:
         - node_modules/
       when: on_success
