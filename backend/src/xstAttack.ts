@@ -1,5 +1,5 @@
 // Exclude TRACE and TRACK methods to avoid XST attacks.
-import type { NextFunction, Request, Response } from 'express-serve-static-core'
+import type { NextFunction, Request, Response } from 'express'
 
 const ALLOWED_METHODS = [
   'OPTIONS',
