@@ -52,7 +52,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@trpc/client": "^11.18.0",
-    "@trpc/server": "^11.5.1",
+    "@trpc/server": "^11.18.0",
     "@vueuse/core": "^13.9.0",
     "axios": "^1.20.0",
     "bech32": "^2.0.0",
@@ -88,7 +88,7 @@
     "vite-plugin-html": "^3.2.2",
     "vue": "^3.5.42",
     "vue-i18n": "^11.4.10",
-    "vue-router": "4.5.1",
+    "vue-router": "4.6.4",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -117,7 +117,7 @@
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "^2.5.0",
-    "@vue/tsconfig": "^0.7.0",
+    "@vue/tsconfig": "^0.9.1",
     "autoprefixer": "^10.5.5",
     "better-npm-audit": "^3.11.0",
     "bip32": "^4.0.0",
@@ -127,7 +127,7 @@
     "cypress": "^15.21.1",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.39.5",
-    "eslint-plugin-cypress": "^5.3.0",
+    "eslint-plugin-cypress": "5.3.0",
     "eslint-plugin-vue": "^10.10.0",
     "jsdom": "^26.1.0",
     "memfs": "^4.71.0",
@@ -138,7 +138,7 @@
     "tiny-secp256k1": "^2.2.4",
     "ts-loader": "^9.6.2",
     "tsc-alias": "^1.9.4",
-    "typescript": "~5.7.3",
+    "typescript": "~5.9.3",
     "vite": "^7.3.6",
     "vitest": "^3.2.7",
     "vue-tsc": "^3.3.11"

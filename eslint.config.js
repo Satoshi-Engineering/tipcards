@@ -16,7 +16,14 @@ export default defineConfigWithVueTs(
 
   {
     name: 'app/files-to-ignore',
-    ignores: ['**/*.min.js', '**/*.bundle.js', 'dist/*', 'node_modules_docker/**/*'],
+    ignores: [
+      '**/*.min.js',
+      '**/*.bundle.js',
+      'dist/*',
+      'node_modules_docker/**/*',
+      'playwright-report/**/*',
+      'test-results/**/*',
+    ],
   },
 
   js.configs.recommended,
