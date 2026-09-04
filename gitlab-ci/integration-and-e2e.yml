@@ -16,7 +16,9 @@ test-backend-integration:
     NODE_ENV: test
   before_script:
     - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
-    - docker compose --profile tools --profile test up -d --wait
+    - >
+      docker compose --profile tools --profile test up -d --wait
+      proxy postgres lnbits-postgres lnbits volt-vault-mock tipcards-backend-test
   script:
     - ./scripts/docker/run-backend-integration.sh
   after_script:
@@ -25,8 +27,6 @@ test-backend-integration:
       if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
         echo "Dumping backend logs:"
         docker logs tipcards-backend-test || true
-        echo "Dumping frontend logs:"
-        docker logs tipcards-frontend-test || true
         echo "Dumping lnbits logs:"
         docker logs tipcards-lnbits || true
       fi
@@ -58,8 +58,9 @@ test-e2e-cypress:
         -v $(pwd):/app \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-        cypress/browsers:node-24.13.1-chrome-144.0.7559.132-1-ff-147.0.3-edge-144.0.3719.115-1 /bin/bash \
-        -c "apt-get update && apt-get install -y xsel && npx cypress install && npm run e2e:cypress:tests"
+        --entrypoint /bin/bash \
+        cypress/included:cypress-15.21.1-node-24.20.0-chrome-152.0.7977.64-1-ff-154.0.1-edge-151.0.4129.107-1 \
+        -c "apt-get update && apt-get install -y xsel && npm run e2e:cypress:tests"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
@@ -105,8 +106,8 @@ test-e2e-playwright:
         -v $(pwd):/app \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-        node:lts-bookworm-slim /bin/bash \
-        -c "npx playwright install --with-deps && npm run e2e:playwright:tests"
+        mcr.microsoft.com/playwright:v1.62.1-noble /bin/bash \
+        -c "npm run e2e:playwright:tests"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"
