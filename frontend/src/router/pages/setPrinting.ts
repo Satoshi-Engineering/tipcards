@@ -4,7 +4,6 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export interface SetPrintingParamsRaw extends LocalizedRouteParamsRaw {
@@ -19,8 +18,7 @@ export type RouteSetPrinting = RouteRecordInfo<
   'set-printing',
   `${localizedRoutePrefix}/set-printing/:setId`,
   SetPrintingParamsRaw,
-  SetPrintingParams,
-  AppRouteMeta
+  SetPrintingParams
 >
 
 export const setPrinting = {
@@ -29,6 +27,6 @@ export const setPrinting = {
   component: () => import('@/pages/setPrinting/PageSetPrinting.vue'),
   props: true,
   meta: {
-    title: () => false, // title will be set in the page component
+    title: (): false => false, // title will be set in the page component
   },
 }

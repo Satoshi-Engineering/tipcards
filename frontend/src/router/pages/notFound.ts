@@ -5,15 +5,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RouteNotFound = RouteRecordInfo<
   'not-found',
   `${localizedRoutePrefix}/not-found`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const notFound = {

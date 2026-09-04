@@ -4,7 +4,6 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export interface SetParamsRaw extends LocalizedRouteParamsRaw {
@@ -19,8 +18,7 @@ export type RouteSet = RouteRecordInfo<
   'set',
   `${localizedRoutePrefix}/set/:setId`,
   SetParamsRaw,
-  SetParams,
-  AppRouteMeta
+  SetParams
 >
 
 export const set = {
@@ -29,6 +27,6 @@ export const set = {
   component: () => import('@/pages/PageSet.vue'),
   props: true,
   meta: {
-    title: () => false, // title will be set in the page component
+    title: (): false => false, // title will be set in the page component
   },
 }

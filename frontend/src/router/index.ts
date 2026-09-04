@@ -68,7 +68,7 @@ const router = createRouter({
   },
   routes: [
     about,
-    bulkWithdraw(() => router),
+    bulkWithdraw,
     card,
     cards,
     dashboard,
@@ -81,7 +81,7 @@ const router = createRouter({
     notFound,
     privacyPolicy,
     set,
-    setFunding(() => router),
+    setFunding,
     setPrinting,
     sets,
     statistics,

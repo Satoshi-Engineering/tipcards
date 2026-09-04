@@ -1,8 +1,9 @@
 import type {
-  RouteMeta,
   RouteLocationNormalizedLoaded,
+  RouteLocationRaw,
   RouteParamsGeneric,
   RouteParamsRawGeneric,
+  RouteRecordName,
 } from 'vue-router'
 
 import { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales'
@@ -15,10 +16,12 @@ export interface LocalizedRouteParams extends RouteParamsGeneric {
   lang: LocaleCode | '',
 }
 
-export interface AppRouteMeta extends RouteMeta {
-  title: () => string | false,
-  // deprecated
-  backlink: boolean | string | ((route: RouteLocationNormalizedLoaded) => RouteLocationNormalizedLoaded),
+declare module 'vue-router' {
+  interface RouteMeta {
+    title?: () => string | false,
+    // deprecated
+    backlink?: true | RouteRecordName | ((route: RouteLocationNormalizedLoaded) => RouteLocationRaw),
+  }
 }
 
 export const localizedRoutePrefix = `/:lang(${LOCALE_CODES.join('|')})?`

@@ -5,15 +5,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RouteSets = RouteRecordInfo<
   'sets',
   `${localizedRoutePrefix}/sets`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const sets = {

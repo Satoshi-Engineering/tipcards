@@ -4,15 +4,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RouteFaqs = RouteRecordInfo<
   'faqs',
   `${localizedRoutePrefix}/faqs`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const faqs = {

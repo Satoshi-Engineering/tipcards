@@ -5,15 +5,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RoutePrivacyPolicy = RouteRecordInfo<
   'privacy-policy',
   `${localizedRoutePrefix}/privacy-policy`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const privacyPolicy = {

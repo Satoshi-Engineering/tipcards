@@ -5,15 +5,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RouteLocalStorageSets = RouteRecordInfo<
   'local-storage-sets',
   `${localizedRoutePrefix}/local-storage-sets`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const localStorageSets = {

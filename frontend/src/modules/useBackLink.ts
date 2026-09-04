@@ -1,17 +1,11 @@
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
 
 export default () => {
   const route = useRoute()
   const router = useRouter()
 
-  const showBacklink = computed(() =>
-    routeUsesBacklink.value
-    && (
-      !route.meta.backlinkOnlyInternalReferrer
-      || isReferrerFromApplication.value
-    ),
-  )
+  const showBacklink = computed(() => routeUsesBacklink.value)
 
   const routeUsesBacklink = computed( () =>
     route.meta.backlink === true
@@ -24,9 +18,9 @@ export default () => {
     || typeof route.meta.backlink === 'function',
   )
 
-  const to = computed(() => {
+  const to = computed<RouteLocationRaw>(() => {
     if (typeof route.meta.backlink === 'string') {
-      return { name: route.meta.backlink, params: { lang: route.params.lang } }
+      return { name: route.meta.backlink, params: { lang: route.params.lang } } as RouteLocationRaw
     }
 
     if (typeof route.meta.backlink === 'function') {
@@ -36,13 +30,13 @@ export default () => {
     return historyBackTo.value
   })
 
-  const historyBackTo = computed(() => {
-    const home = { name: 'home', params: { lang: route.params.lang } }
+  const historyBackTo = computed<RouteLocationRaw>(() => {
+    const home: RouteLocationRaw = { name: 'home', params: { lang: route.params.lang } }
     if (!isReferrerFromApplication.value) {
       return home
     }
     try {
-      return router.resolve(new URL(document.referrer).pathname)
+      return new URL(document.referrer).pathname
     } catch {
       return home
     }
@@ -90,7 +84,7 @@ export default () => {
     if (!canWeGoBackInHistory.value) {
       return false
     }
-    return to.value.name === historyBackTo.value.name
+    return router.resolve(to.value).name === router.resolve(historyBackTo.value).name
   })
 
   const followDefaultAction = () => true

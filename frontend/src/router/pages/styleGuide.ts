@@ -4,15 +4,13 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export type RouteStyleGuide = RouteRecordInfo<
   'style-guide',
   `${localizedRoutePrefix}/style-guide`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const styleGuide = {
@@ -28,8 +26,7 @@ export type RouteStyleGuideComponents = RouteRecordInfo<
   'style-guide/components',
   `${localizedRoutePrefix}/style-guide/components`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const styleGuideComponents = {
@@ -45,8 +42,7 @@ export type RouteStyleGuideForms = RouteRecordInfo<
   'style-guide/forms',
   `${localizedRoutePrefix}/style-guide/forms`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const styleGuideForms = {
@@ -62,8 +58,7 @@ export type RouteStyleGuideIcons = RouteRecordInfo<
   'style-guide/icons',
   `${localizedRoutePrefix}/style-guide/icons`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const styleGuideIcons = {
@@ -79,8 +74,7 @@ export type RouteStyleGuideTypographyAndButtons = RouteRecordInfo<
   'style-guide/typography-and-buttons',
   `${localizedRoutePrefix}/style-guide/typography-and-buttons`,
   LocalizedRouteParamsRaw,
-  LocalizedRouteParams,
-  AppRouteMeta
+  LocalizedRouteParams
 >
 
 export const styleGuideTypographyAndButtons = {

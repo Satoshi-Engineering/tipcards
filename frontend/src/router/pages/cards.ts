@@ -4,7 +4,6 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export interface CardsParamsRaw extends LocalizedRouteParamsRaw {
@@ -21,8 +20,7 @@ export type RouteCards = RouteRecordInfo<
   'cards',
   `${localizedRoutePrefix}/cards/:setId?/:settings?`,
   CardsParamsRaw,
-  CardsParams,
-  AppRouteMeta
+  CardsParams
 >
 
 export const cards = {
@@ -30,6 +28,6 @@ export const cards = {
   path: `${localizedRoutePrefix}/cards/:setId?/:settings?`,
   component: () => import('@/pages/PageCards.vue'),
   meta: {
-    title: () => false, // title will be set in the page component
+    title: (): false => false, // title will be set in the page component
   },
 }

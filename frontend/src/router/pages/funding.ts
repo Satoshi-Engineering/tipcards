@@ -5,7 +5,6 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export interface FundingParamsRaw extends LocalizedRouteParamsRaw {
@@ -20,8 +19,7 @@ export type RouteFunding = RouteRecordInfo<
   'funding',
   `${localizedRoutePrefix}/funding/:cardHash`,
   FundingParamsRaw,
-  FundingParams,
-  AppRouteMeta
+  FundingParams
 >
 
 export const funding = {

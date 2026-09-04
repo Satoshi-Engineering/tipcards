@@ -52,7 +52,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@trpc/client": "^11.18.0",
-    "@trpc/server": "^11.5.0",
+    "@trpc/server": "^11.5.1",
     "@vueuse/core": "^13.9.0",
     "axios": "^1.20.0",
     "bech32": "^2.0.0",
@@ -88,8 +88,8 @@
     "tsx": "^4.23.13",
     "vite-plugin-html": "^3.2.2",
     "vue": "^3.5.42",
-    "vue-i18n": "^11.4.2",
-    "vue-router": "4.5.0",
+    "vue-i18n": "^11.4.10",
+    "vue-router": "4.5.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -100,7 +100,7 @@
     "@rushstack/eslint-patch": "^1.16.1",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
-    "@types/express": "5.0.3",
+    "@types/express": "5.0.6",
     "@types/express-serve-static-core": "5.0.7",
     "@types/express-http-proxy": "^1.6.7",
     "@types/file-saver": "^2.0.7",
@@ -120,7 +120,7 @@
     "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "^2.5.0",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.5.4",
+    "autoprefixer": "^10.5.5",
     "bech32": "^2.0.0",
     "better-npm-audit": "^3.11.0",
     "bip32": "^4.0.0",
@@ -154,5 +154,10 @@
     "qs": "^6.16.0",
     "secp256k1": "$secp256k1",
     "esbuild": "^0.28.0"
+  },
+  "allowScripts": {
+    "cypress@15.21.1": true,
+    "esbuild@0.28.2": true,
+    "secp256k1@5.0.2": true
   }
 }

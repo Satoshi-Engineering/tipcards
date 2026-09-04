@@ -5,7 +5,6 @@ import {
   localizedRoutePrefix,
   type LocalizedRouteParamsRaw,
   type LocalizedRouteParams,
-  type AppRouteMeta,
 } from '@/router/utils'
 
 export interface CardParamsRaw extends LocalizedRouteParamsRaw {
@@ -20,8 +19,7 @@ export type RouteCard = RouteRecordInfo<
   'card',
   `${localizedRoutePrefix}/card/:cardHash`,
   CardParamsRaw,
-  CardParams,
-  AppRouteMeta
+  CardParams
 >
 
 export const card = {
