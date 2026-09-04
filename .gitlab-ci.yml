@@ -30,7 +30,7 @@
 # - E2E_ENV_FILE_LIVE_CHECK_MAIN
 # - E2E_ENV_FILE_LIVE_CHECK_DEVELOP
 
-image: node:lts-alpine
+image: node:lts-bookworm-slim
 
 # ------------- STAGES
 # List of stages for jobs, and their order of execution

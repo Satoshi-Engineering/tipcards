@@ -61,7 +61,7 @@ describe('LnBits - double spend attack - urlw extension ', () => {
 
   it('should only once withdraw the funds of the card', async () => {
     const response = await frontend.loadLnurlForCardHash(testCard.cardHash)
-    await wait(1000) // Wait 1 second waiting time of lnurlw after creation
+    await wait(2000) // Wait for LNbits to index the newly created withdraw link
     const lnurlWithdrawRequest = LNURLWithdrawRequest.parse(response.data)
     // `loadLnurlForCardHash()` returns the TipCards proxy callback:
     // `/api/lnurl/withdraw?callback=<lnbits-callback>`.
