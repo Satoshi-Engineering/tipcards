@@ -35,8 +35,6 @@ export const withdrawCard = async (cardHash: string, lnbitsApiContext: APIReques
 }
 
 export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, lnbitsApiContext: APIRequestContext, expectedAmount?: number) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000)) // lnbits withdraw links have 1 second wait time
-
   // Go to tipcard landing page
   await page.goto(`${process.env.TIPCARDS_ORIGIN}/landing/${cardHash}`)
   await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()

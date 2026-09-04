@@ -93,12 +93,14 @@ export const payLnurlP = async (context: APIRequestContext, lnurl: string, amoun
 }
 
 export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) => {
-  // always wait at least 1 second before using an lnurlW (security "feature" in lnbits)
-  await new Promise((resolve) => setTimeout(resolve, 1_000))
-
   const lnurlData = await scanLnurl(context, lnurl)
   expect(lnurlData.kind === 'withdraw')
   expect(lnurlData.maxWithdrawable).toBeGreaterThan(0)
+
+  // LNbits v1.5.3 applies wait_time twice when a withdraw link is first created.
+  // Waiting after the scan guarantees that even newly created links are ready.
+  await new Promise((resolve) => setTimeout(resolve, 2_100))
+
   const response = await context.post('/api/v1/payments', {
     data: {
       out: false,
@@ -109,20 +111,20 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
     },
   })
   const bodyText = await response.text()
-  console.warn(`[withdrawLnurlW] callback=${lnurlData.callback} maxWithdrawable=${lnurlData.maxWithdrawable} httpStatus=${response.status()} body=${bodyText}`)
   if (!response.ok()) {
     throw new Error(`Failed to withdraw LNURL: ${bodyText}`)
   }
   const rawJson = JSON.parse(bodyText)
   const responseJson = z.object({
     amount: z.number(),
+    status: z.enum(['pending', 'success', 'failed']),
+    extra: z.object({
+      lnurl_response: z.union([z.boolean(), z.string()]),
+    }),
   }).parse(rawJson)
 
-  if (rawJson.payment_hash || rawJson.checking_id) {
-    const paymentId = rawJson.payment_hash ?? rawJson.checking_id
-    await new Promise((resolve) => setTimeout(resolve, 1_000))
-    const followUp = await context.get(`/api/v1/payments/${paymentId}`)
-    console.warn(`[withdrawLnurlW] payment ${paymentId} status=${followUp.status()} body=${await followUp.text()}`)
+  if (responseJson.status !== 'success' || responseJson.extra.lnurl_response !== true) {
+    throw new Error(`Failed to withdraw LNURL: ${bodyText}`)
   }
 
   return {
