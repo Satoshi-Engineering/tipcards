@@ -786,10 +786,10 @@ COPY public.tiny_url (id, url, endless, wallet, "time") FROM stdin;
 --
 
 COPY public.wallets (id, name, "user", adminkey, inkey, currency, deleted, created_at, updated_at, extra, stored_paylinks, wallet_type, shared_wallet_id) FROM stdin;
-cf5830a4ca104772ae659467842c0a4f	LNbits wallet	7daa1ecbed4741198f05eb7c44a8f8c0	9875485db2954b26acc6b027618e7592	9991b4a2222046f98bf2194605e13fa8	USD	f	2025-08-05 10:20:13.543589	2025-08-05 10:20:13.54359	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
-171199a3d97a43c0b5fe811e32d47012	develop	79687332617c4a7fa27cb5d61e2603e0	8d4e4a151ae5446586ab283e4a89d98c	f95447ee6414419b8ff3e415a4e359f8	USD	f	2025-08-05 10:21:35.248214	2025-08-05 10:21:35.248222	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
-161dee222082452baef5700de7553b3f	Wallet2	79687332617c4a7fa27cb5d61e2603e0	6da0c95636c44058bf1d09933476ac26	c2b6f2dcbdc944d3b4b932783d28a6db	USD	f	2025-08-05 10:22:44.960417	2025-08-05 10:22:44.960423	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
-563486e6cac2468b8e69293d1e77832d	Wallet3	79687332617c4a7fa27cb5d61e2603e0	29f376ee8bec4503b241eb912666c397	ea059680d75b4b86aa2f9d0facf0edf5	USD	f	2025-08-05 10:23:05.876348	2025-08-05 10:23:05.876355	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+cf5830a4ca104772ae659467842c0a4f	LNbits wallet	7daa1ecbed4741198f05eb7c44a8f8c0	9875485db2954b26acc6b027618e7592	9991b4a2222046f98bf2194605e13fa8	\N	f	2025-08-05 10:20:13.543589	2025-08-05 10:20:13.54359	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+171199a3d97a43c0b5fe811e32d47012	develop	79687332617c4a7fa27cb5d61e2603e0	8d4e4a151ae5446586ab283e4a89d98c	f95447ee6414419b8ff3e415a4e359f8	\N	f	2025-08-05 10:21:35.248214	2025-08-05 10:21:35.248222	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+161dee222082452baef5700de7553b3f	Wallet2	79687332617c4a7fa27cb5d61e2603e0	6da0c95636c44058bf1d09933476ac26	c2b6f2dcbdc944d3b4b932783d28a6db	\N	f	2025-08-05 10:22:44.960417	2025-08-05 10:22:44.960423	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
+563486e6cac2468b8e69293d1e77832d	Wallet3	79687332617c4a7fa27cb5d61e2603e0	29f376ee8bec4503b241eb912666c397	ea059680d75b4b86aa2f9d0facf0edf5	\N	f	2025-08-05 10:23:05.876348	2025-08-05 10:23:05.876355	{"icon": "flash_on", "color": "primary", "pinned": false}	\N	lightning	\N
 \.
 
 
