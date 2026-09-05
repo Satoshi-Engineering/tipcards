@@ -344,3 +344,43 @@ A future implementation session should expect only this documentation to survive
 - Cypress `allowScripts` change.
 
 Use the findings as a map for future focused upgrades, then re-derive the smallest correct change against the current source tree.
+
+## Upgrade log
+
+### 2026-09-05: First batch completed
+
+Applied the first batch from a clean working tree after rechecking npm releases and peer/engine requirements. This entry records the actual upgrade; the clean-baseline assumptions and incomplete validation above describe the earlier combined experiment.
+
+| Package | Before | After |
+| --- | --- | --- |
+| `@vueuse/core` | `^13.9.0` | `^14.4.0` |
+| `@dbml/core` | `^3.14.1` | `^10.1.1` |
+| `clipboardy` | `^4.0.0` | `^5.3.2` |
+| `start-server-and-test` | `^2.1.5` | `^3.0.12` |
+| `vue-router` | `4.6.4` | `5.3.1` |
+| `pinia` | `^3.0.4` | `^4.0.3` |
+| `@pinia/testing` | `^1.0.3` | `^2.0.1` |
+| `@vue/devtools-api` | not declared | `^8.2.1` in dependencies |
+
+`@vue/devtools-api` 8.2.1 superseded the guide's 8.1.5 target. Regenerated `package-lock.json` with npm and confirmed that only the intended direct dependencies changed. No application or configuration changes were needed; all later migration groups remain deferred.
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- `npm install` and `npm ls --depth=0`.
+- `npm run lint` and `npm run typecheck`.
+- `npm run test-units`: 417 tests passed and 1 skipped across 117 files.
+- `npm run frontend-build` and `npm run backend-build`.
+- Schema-generation smoke check using the existing generator in a temporary directory, covering tables, an enum, a boolean default, an index, and a reference. The repository's `docs/database.dbml` is missing, so the check used a fixture with supported types rather than the real schema.
+- Actual Cypress clipboard tasks completed a write/read round trip outside the sandbox, then restored the original clipboard text.
+- `start-server-and-test` started a temporary localhost server, waited for readiness, ran a response check, and shut the server down. This required execution outside the sandbox.
+- `git diff --check`.
+
+Reviewed all four npm overrides and retained them: LNURL still pins older Express, Express dependencies restrict `qs` to 6.15.x, LNURL-related packages request older `secp256k1`, and Drizzle tooling requests older `esbuild` versions. Refreshed `npm audit`: five low-severity findings remain, all stemming from the `elliptic` advisory `1112030`. No patched release is listed. The existing `.nsprc` exception still applies, and `npm run audit` passes with it. Neither the overrides nor `.nsprc` changed.
+
+Release verification still outstanding:
+
+- Staging/manual checks and full Cypress, Playwright, and backend integration suites, particularly navigation, login, and card/set workflows.
+- Maintenance and library frontend builds and visual checks.
+- Validation on the pinned Node `v24.13.0`; `.nvmrc` remains unchanged.
+
+The normal frontend build passed with warnings about `qrcode-svg` importing `fs` and the English locale being imported both statically and dynamically. The batch is ready for review and commit as a release candidate, subject to the remaining runtime checks. Work stopped here to allow a commit and potential release before the next migration. No commit or release was performed during this session.
