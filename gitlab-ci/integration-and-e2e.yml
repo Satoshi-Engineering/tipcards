@@ -60,7 +60,7 @@ test-e2e-cypress:
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
         --entrypoint /bin/bash \
         cypress/included:cypress-15.21.1-node-24.20.0-chrome-152.0.7977.64-1-ff-154.0.1-edge-151.0.4129.107-1 \
-        -c "apt-get update && apt-get install -y xsel && npm run e2e:cypress:tests"
+        -c "npm run e2e:cypress:tests"
   after_script:
     - |
       echo "Job status was: $CI_JOB_STATUS"

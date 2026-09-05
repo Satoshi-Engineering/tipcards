@@ -21,7 +21,7 @@
     "backend-dev-for-integration-tests": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem tsx watch --tsconfig ./backend/tsconfig.json ./backend/index.ts --envIntegrationTest",
     "backend-debug": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem tsx --tsconfig ./backend/tsconfig.json ./backend/index.ts",
     "backend-debug-for-integration-tests": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem tsx --tsconfig ./backend/tsconfig.json ./backend/index.ts --envIntegrationTest",
-    "backend-build": "npm run shared-build && rm -rf ./dist/backend && tsc -p ./backend/tsconfig.build.json && tsc -p ./backend/tsconfig.build.json && tsc-alias -p ./backend/tsconfig.build.json",
+    "backend-build": "npm run shared-build && rm -rf ./dist/backend && tsc -p ./backend/tsconfig.build.json && tsc-alias -p ./backend/tsconfig.build.json",
     "backend-typecheck": "npm run shared-build && tsc -p ./backend/tsconfig.json --noEmit",
     "backend-test-unit": "vitest run --config ./backend/vitest.config.ts",
     "backend-test-units": "vitest run --config ./backend/vitest.config.ts ./backend/tests/units",

@@ -1,7 +1,9 @@
 # This job will run even if the previous stages fail.
 # It tests the live environment, which should always be available.
 live-check:
-  image: cypress/browsers:node-20.15.1-chrome-126.0.6478.114-1-ff-128.0-edge-126.0.2592.61-1
+  image:
+    name: cypress/included:cypress-15.21.1-node-24.20.0-chrome-152.0.7977.64-1-ff-154.0.1-edge-151.0.4129.107-1
+    entrypoint: [""]
   stage: live-check
   rules:
     - !reference [.shared_config, rules, no_tags]
@@ -31,7 +33,5 @@ live-check:
         echo "ERROR: this branch $CI_COMMIT_BRANCH is not allowed to run this job! Wake up your devops team!"
         exit 1
       fi
-    - echo "Installing cypress"
-    - npx cypress install
     - echo "Running e2e:cypress:live-checks on branch $CI_COMMIT_BRANCH"
     - npm run e2e:cypress:live-checks
