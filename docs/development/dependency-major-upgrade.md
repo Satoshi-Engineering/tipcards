@@ -287,19 +287,19 @@ Keep `@types/node` on major 24 while production and development use Node 24. The
 1. Start from the clean, pre-experiment checkout described in the handoff section.
 2. Apply the first-run dependency group and update the lockfile.
 3. Validate the first run once with lint, project-wide typecheck, unit tests, builds, and the relevant small smoke checks.
-4. Upgrade each focused group independently in roughly this order:
+4. Upgrade each focused group independently in this order:
    1. Node patch + jsdom/types
    2. Vite 8
    3. Vitest 5
    4. Cypress 16 + webpack preprocessor 8
    5. ESLint 10 + eslint-plugin-cypress 7
-   6. Express 5 + its types
+   6. Zod 4
    7. JOSE 6
    8. bip32 5
-   9. Zod 4
+   9. Express 5 + its types
 5. Handle Tailwind 4 and TypeScript 7 as later dedicated projects.
 
-The exact order among independent backend libraries is flexible. The important constraints are keeping coupled packages together and keeping each behavior-changing major isolated enough to review and roll back.
+Complete Zod, JOSE, and bip32 before Express so their behavior is validated before changing HTTP request handling. The Express override also applies to `lnurl`, which widens its compatibility checks. Keep coupled packages together and each behavior-changing major in its own reviewable batch. Stop after each completed batch for review and commit before starting the next.
 
 ## Validation status of the combined experiment
 
@@ -473,4 +473,23 @@ Validation passed on Node `v24.20.0` with npm `11.19.0`:
 
 Builds, backend integration tests, application E2E suites, and CI/Docker execution were not run for this lint-tooling batch. The frontend unit run reports a Vite future-native-config-loader warning about the extensionless `./vite.config` import; this configuration was not changed. npm install still reports five low-severity audit findings.
 
-Stopped after this batch for review and commit. No commit or release was performed. Express 5 + its types is the next separate migration.
+Stopped after this batch for review and commit. No commit or release was performed. Zod 4 is the next separate migration, followed by JOSE 6, bip32 5, and Express 5 + its types.
+
+### 2026-09-07: Zod 4 batch completed
+
+- Confirmed npm reports Zod `4.5.4` as the current release and reviewed the [Zod 4 migration guide](https://zod.dev/v4/changelog). The installed tRPC server uses Zod 4 in its own development dependencies.
+- Updated `zod` from `^3.25.76` to `^4.5.4`. The user completed installation after the initial silent install was stopped. Verified the installed version and reviewed the package/lockfile diff: only Zod changed; overrides and other direct dependencies are unchanged.
+- Changed the nested deprecated-user profile from `.default({})` to `.prefault({})` to preserve child defaults, and changed the axios helper's `ZodSchema` import to a type-only import.
+- Added regression coverage for missing profiles, partial profiles, and invalid stored profile fields.
+
+Validation passed:
+
+- Installed-version and dependency-tree check (`npm ls zod --depth=1`).
+- Lint and project-wide typecheck.
+- Unit suites: 420 passed and 1 skipped across 118 files, including the three new profile-schema regression tests.
+- Normal frontend production build and backend production build.
+- `git diff --check`.
+
+The existing Vite warning about the extensionless test-config import and the `qrcode-svg` browser externalization warning remain. Backend integration tests, application E2E suites, maintenance/library builds, CI/Docker execution, and staging/visual checks were not run for this batch.
+
+Stopped after this batch for review and commit. No commit or release was performed. JOSE 6 is next, followed by bip32 5 and Express 5 + its types.
