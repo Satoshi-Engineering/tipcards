@@ -436,3 +436,22 @@ Final validation passed on Node `v24.20.0` with npm `11.19.0`:
 The normal frontend build retains the existing `qrcode-svg` browser externalization warning. npm install reports five low-severity findings; overrides and `.nsprc` remain unchanged. Backend integration tests, Cypress/Playwright E2E suites, browser/visual checks, and CI/Docker execution were not run.
 
 Stopped after this batch for review and commit. No commit or release was performed. Cypress 16 + webpack preprocessor 8 is the next separate migration.
+
+### 2026-09-07: Cypress 16 + webpack preprocessor 8 batch completed
+
+- Updated `cypress` from `^15.21.1` to `^16.0.0` and `@cypress/webpack-preprocessor` from `^7.1.2` to `^8.0.0`, including the exact Cypress `allowScripts` entry. Current npm engines and webpack/Babel peers are satisfied.
+- Removed `allowCypressEnv`, which Cypress 16 no longer supports, following the [official migration guide](https://docs.cypress.io/app/references/migration-guide#Migrating-to-Cypress-160). Existing environment access already uses `Cypress.expose()` and `cy.env()`. No other removed API usage was found, and no application or existing test changes were needed.
+- Preserved the preceding minor updates: DOMPurify 3.4.15, Playwright 1.63.0, and eslint-plugin-vue 10.11.0. Kept eslint-plugin-cypress pinned to 5.3.0 because npm still marks 5.4.0 deprecated for accidental breaking changes. Overrides and `.nsprc` remain unchanged.
+
+Validation on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation, dependency-tree checks, lint, and project-wide typecheck passed.
+- Unit suites: 417 passed and 1 skipped across 117 files.
+- Cypress package and binary both report 16.0.0. Binary verification passed after removing the execution environment's inherited `ELECTRON_RUN_AS_NODE` flag with `env -u ELECTRON_RUN_AS_NODE`.
+- A temporary headless Chrome 152 smoke spec passed through the real Cypress configuration, plugin registration, support file, and webpack preprocessor. It exercised a TypeScript import, public configuration access, DOM interaction, typing, and an assertion without application services. No removed-option or deprecation warnings appeared. The temporary spec was removed afterward.
+- The separate Cypress TypeScript check encountered Drizzle dependency declaration errors. `npx tsc --noEmit --skipLibCheck -p e2e-cypress/tsconfig.json` passed; the config was not changed to suppress these errors.
+- Reviewed the package/lockfile diff and ran `git diff --check`. npm still reports five low-severity audit findings.
+
+Full application Cypress/Playwright E2E suites and backend integration tests were not run; the localhost backend readiness check failed. Application builds, CI/Docker execution, and visual checks were not repeated for this E2E-tooling batch. Cypress 16's network, visibility, typing-delay, and cookie/storage query behavior still require coverage in the full application E2E run.
+
+Stopped after this batch for review and commit. No commit or release was performed. ESLint 10 + eslint-plugin-cypress 7 is the next separate migration.

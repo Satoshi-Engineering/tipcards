@@ -43,7 +43,6 @@ config({
 })
 
 export default defineConfig({
-  allowCypressEnv: false,
   e2e: {
     defaultCommandTimeout: 60000,
     responseTimeout: 60000,
