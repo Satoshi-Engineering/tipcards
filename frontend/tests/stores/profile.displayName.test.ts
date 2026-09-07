@@ -51,6 +51,6 @@ describe('useProfile', () => {
       }
     })
     expect(userDisplayName.value).toBeUndefined()
-    expect(queryDisplayName).toHaveBeenCalledOnce()
+    expect(queryDisplayName).not.toHaveBeenCalled()
   })
 })

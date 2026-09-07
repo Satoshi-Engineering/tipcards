@@ -100,7 +100,11 @@ const getAllInvoicesFundingCardVersionsWithSetFundingInfo = async (cardVersionId
   return invoicesByCardVersionId
 }
 
-export default vi.fn().mockImplementation(() => ({
+export default vi.fn(function Queries() {
+  return createQueries()
+})
+
+const createQueries = () => ({
   getSetById: async (setId: Set['id']): Promise<Set | null> => setsById[setId] || null,
 
   getSetSettingsForSet: async (set: Set): Promise<SetSettings | null> => setSettingsBySetId[set.id] || null,
@@ -474,4 +478,4 @@ export default vi.fn().mockImplementation(() => ({
   deleteAllowedSession: vi.fn(async (allowedSession: AllowedSession): Promise<void> => { delete allowedSessionsById[allowedSession.sessionId] }),
 
   getCardByHash: vi.fn(async (hash: Card['hash']): Promise<Card | null> => cardsByHash[hash] || null),
-}))
+})

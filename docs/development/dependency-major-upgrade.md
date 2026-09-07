@@ -417,3 +417,22 @@ Validation passed on Node `v24.20.0` with npm `11.19.0`:
 The existing `qrcode-svg` browser externalization warning remains. npm install still reports five low-severity audit findings; overrides and `.nsprc` are unchanged. Full browser/visual checks, staging workflows, E2E suites, and backend integration tests were not run.
 
 Stopped after this batch for review and commit. No commit or release was performed. Vitest 5 is the next separate migration.
+
+### 2026-09-07: Vitest 5 batch completed
+
+- Updated `vitest` from `^3.2.7` to `^5.0.0` after checking npm releases, engines, peers, and the [Vitest 4](https://v4.vitest.dev/guide/migration) and [Vitest 5](https://vitest.dev/guide/migration/) migration guides. No other direct dependency version changed.
+- Vitest now shares Vite 8.2.2 with the app; the nested Vite 7 copies and `vite-node` were removed from the lockfile. Node 24.20.0, jsdom 30.0.1, and the existing Vitest ESLint plugin satisfy the requirements.
+- Updated database and JOSE constructor mocks to use constructible functions. Corrected the mocked transaction callback type to accept a query instance, declared the card-summary mock's string argument, and removed an unused router-mock export whose inferred type exposed private Vitest declarations.
+- Awaited the login-rejection assertion, which Vitest now rejects when unawaited. Kept the new `clearMocks: true` default and adjusted two profile assertions to count calls within the current test instead of accumulating calls across tests. No production application code changed.
+- Completed the deferred Vite configuration cleanup: renamed `rollupOptions` to `rolldownOptions` and removed the obsolete `commonjsOptions`, now that both builds and tests use Vite 8.
+
+Final validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation, dependency-tree checks, lint, and project-wide typecheck.
+- All unit suites: 417 passed and 1 skipped across 117 files, now running Vitest 5 with Vite 8.
+- Normal, maintenance, and library frontend builds (both ES and UMD library output), plus the backend build.
+- Reviewed the package/lockfile diff and ran `git diff --check`.
+
+The normal frontend build retains the existing `qrcode-svg` browser externalization warning. npm install reports five low-severity findings; overrides and `.nsprc` remain unchanged. Backend integration tests, Cypress/Playwright E2E suites, browser/visual checks, and CI/Docker execution were not run.
+
+Stopped after this batch for review and commit. No commit or release was performed. Cypress 16 + webpack preprocessor 8 is the next separate migration.

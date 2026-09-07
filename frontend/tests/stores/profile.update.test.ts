@@ -49,6 +49,6 @@ describe('useProfile to update the profile', () => {
     expect(userAccountName.value).toBe('john_doe')
     expect(userDisplayName.value).toBe('John Doe')
     expect(userEmail.value).toBe('hello@john.doe')
-    expect(tRpcMock.profile.update.mutate).toHaveBeenCalledTimes(2)
+    expect(tRpcMock.profile.update.mutate).toHaveBeenCalledOnce()
   })
 })

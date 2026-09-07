@@ -5,7 +5,7 @@ export const mockRoute = {
   params: {},
 }
 
-export const mockRouter = {
+const mockRouter = {
   push: vi.fn(),
 }
 

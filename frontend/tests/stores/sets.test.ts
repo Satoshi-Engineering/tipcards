@@ -25,7 +25,7 @@ describe('useSetsStore', () => {
   const querySets = vi.fn(async () => setsResponse)
 
   const originalQueryCardsSummary = tRpcMock.set.getCardsSummaryForSetId.query
-  const queryCardsSummary = vi.fn(async (setId): Promise<CardsSummaryDto> => {
+  const queryCardsSummary = vi.fn(async (setId: string): Promise<CardsSummaryDto> => {
     if (setId === 'setThatThrowsError') {
       throw new Error('Test error')
     }

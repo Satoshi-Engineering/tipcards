@@ -40,6 +40,6 @@ describe('LoginInformer', () => {
       loginInformer.emitLoginFailed('hash1')
     }, 30)
 
-    expect(loginInformer.waitForLogin('hash1')).rejects.toThrow()
+    await expect(loginInformer.waitForLogin('hash1')).rejects.toThrow()
   })
 })

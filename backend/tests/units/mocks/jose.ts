@@ -7,14 +7,16 @@ export const setSignedValue = (value: string) => {
   signedReturnValue = value
 }
 
-export const SignJWT = vi.fn(() => ({
-  setProtectedHeader: vi.fn().mockReturnThis(),
-  setIssuedAt: vi.fn().mockReturnThis(),
-  setIssuer: vi.fn().mockReturnThis(),
-  setAudience: vi.fn().mockReturnThis(),
-  setExpirationTime: vi.fn().mockReturnThis(),
-  sign: vi.fn().mockResolvedValue(signedReturnValue),
-}))
+export const SignJWT = vi.fn(function SignJWT() {
+  return {
+    setProtectedHeader: vi.fn().mockReturnThis(),
+    setIssuedAt: vi.fn().mockReturnThis(),
+    setIssuer: vi.fn().mockReturnThis(),
+    setAudience: vi.fn().mockReturnThis(),
+    setExpirationTime: vi.fn().mockReturnThis(),
+    sign: vi.fn().mockResolvedValue(signedReturnValue),
+  }
+})
 
 vi.mock('jose', () => ({
   importSPKI: vi.fn(),

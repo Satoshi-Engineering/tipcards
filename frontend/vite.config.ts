@@ -10,19 +10,18 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   let build: BuildOptions = {
-    rollupOptions: {
+    rolldownOptions: {
       input: {
         'index': fileURLToPath(new URL('./index.html', import.meta.url)),
       },
     },
     emptyOutDir: true,
     outDir: fileURLToPath(new URL('../dist/frontend/', import.meta.url)),
-    commonjsOptions: { include: [/shared/, /node_modules/] },
   }
 
   if (env.BUILD_MAINTENANCE) {
     build = {
-      rollupOptions: {
+      rolldownOptions: {
         input: {
           'maintenance': fileURLToPath(new URL('./index.maintenance.html', import.meta.url)),
         },
