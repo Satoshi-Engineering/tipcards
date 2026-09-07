@@ -106,7 +106,7 @@ test-e2e-playwright:
         -v $(pwd):/app \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-        mcr.microsoft.com/playwright:v1.62.1-noble /bin/bash \
+        mcr.microsoft.com/playwright:v1.63.0-noble /bin/bash \
         -c "npm run e2e:playwright:tests"
   after_script:
     - |
