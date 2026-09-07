@@ -19,7 +19,7 @@ export default class RefreshGuard {
   }
 
   async loginUserWithWalletLinkingKey(walletPublicKey: string) {
-    let user = null
+    let user: User | null
     try {
       user = await User.fromLnurlAuthKey(walletPublicKey)
       if (user == null) {

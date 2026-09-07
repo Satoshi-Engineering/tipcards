@@ -50,7 +50,7 @@ export default (
 
     // get the estimates fees
     let totalFee: number | null = null
-    let amount: number | null = null
+    let amount: number
     try {
       const url = `${VOLT_VAULT_ORIGIN}/api/lnd/query-routes`
       const response = await axios.get(`${url}?paymentRequestEncoded=${pr}`)
@@ -243,7 +243,7 @@ export default (
       return
     }
 
-    let lnurl = null
+    let lnurl: string
     try {
       lnurl = await loadCurrentLnurlFromLnbitsByWithdrawId(card.lnbitsWithdrawId)
     } catch (error) {

@@ -46,7 +46,7 @@ export default (cardLockManager: CardLockManager) => {
     const userId: string = accessTokenPayload.userId
 
     // load set from database
-    let sets: SetRedis[] | null = null
+    let sets: SetRedis[] | null
     try {
       sets = await getSetsByUserId(userId)
     } catch (error: unknown) {
@@ -85,7 +85,7 @@ export default (cardLockManager: CardLockManager) => {
       console.error(error)
     }
 
-    let set: SetRedis | null = null
+    let set: SetRedis | null
     // load set from database
     try {
       set = await getSetById(req.params.setId)
@@ -186,7 +186,7 @@ export default (cardLockManager: CardLockManager) => {
   })
 
   router.get('/:setId', async (req, res) => {
-    let set: SetRedis | null = null
+    let set: SetRedis | null
 
     // load set from database
     try {
@@ -273,7 +273,7 @@ export default (cardLockManager: CardLockManager) => {
     const feeAmountPerCard = calculateFeeForNetAmount(amountPerCard)
 
     // check if set/invoice already exists
-    let set: SetRedis | null = null
+    let set: SetRedis | null
     try {
       set = await getSetById(req.params.setId)
     } catch (error) {
@@ -559,7 +559,7 @@ export default (cardLockManager: CardLockManager) => {
 
   const invoicePaid = async (req: Request, res: Response) => {
     // 1. check if set exists
-    let set: SetRedis | null = null
+    let set: SetRedis | null
     try {
       set = await getSetById(req.params.setId)
     } catch (error) {

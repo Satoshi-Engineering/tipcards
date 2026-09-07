@@ -455,3 +455,22 @@ Validation on Node `v24.20.0` with npm `11.19.0`:
 Full application Cypress/Playwright E2E suites and backend integration tests were not run; the localhost backend readiness check failed. Application builds, CI/Docker execution, and visual checks were not repeated for this E2E-tooling batch. Cypress 16's network, visibility, typing-delay, and cookie/storage query behavior still require coverage in the full application E2E run.
 
 Stopped after this batch for review and commit. No commit or release was performed. ESLint 10 + eslint-plugin-cypress 7 is the next separate migration.
+
+### 2026-09-07: ESLint 10 + eslint-plugin-cypress 7 batch completed
+
+- Updated `eslint` from `^9.39.5` to `^10.10.0` and `eslint-plugin-cypress` from `5.3.0` to `7.0.1`, preserving the plugin's exact-version declaration. Added direct development dependencies on `@eslint/js` `^10.0.1` and `globals` `^17.12.0`, which the configuration already imports. Regenerated the lockfile and verified current npm releases and requirements; the existing Vue, TypeScript, and Vitest lint integrations accept ESLint 10.
+- Replaced the removed `eslint-plugin-cypress/flat` import with `eslint-plugin-cypress`. Removed the redundant `frontend/eslint.config.js` re-export so ESLint discovers the root config directly, retaining the precise `frontend/public/**/*.{js,cjs,mjs}` browser-global glob. Existing Cypress rule file patterns remain unchanged.
+- Kept the new recommended rules enabled. Removed 15 redundant initial assignments, using explicit types or a local `const` as appropriate. Preserved caught errors with `cause` in both card-lock timeout errors and the LNBits integration-test helper; error messages remain unchanged.
+- Reviewed the dependency diff: version changes are confined to ESLint, its plugin, globals, and supporting transitive dependencies. Overrides, runtime dependency declarations, and `.nsprc` remain unchanged.
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation and `npm ls --depth=0`.
+- Final lint and project-wide typecheck.
+- Unit suites: 417 passed and 1 skipped across 117 files.
+- Configuration-resolution smoke check for Cypress recommended rules at the existing configured path and browser globals under `frontend/public`.
+- `git diff --check`.
+
+Builds, backend integration tests, application E2E suites, and CI/Docker execution were not run for this lint-tooling batch. The frontend unit run reports a Vite future-native-config-loader warning about the extensionless `./vite.config` import; this configuration was not changed. npm install still reports five low-severity audit findings.
+
+Stopped after this batch for review and commit. No commit or release was performed. Express 5 + its types is the next separate migration.

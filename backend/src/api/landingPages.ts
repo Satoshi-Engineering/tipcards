@@ -25,7 +25,7 @@ router.get('/', authGuardAccessToken, async (_, res) => {
   const userId: string = accessTokenPayload.userId
 
   // load user from database
-  let user: User | null = null
+  let user: User | null
   try {
     user = await getUserById(userId)
   } catch (error: unknown) {

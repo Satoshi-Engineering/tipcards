@@ -17,7 +17,7 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
     // eslint-disable-next-line no-console
     console.info(`[bulkWithdraw/withdrawn] called id=${bulkWithdrawId} method=${req.method}`)
     // 1. check if bulkwithdraw exists
-    let bulkWithdraw: BulkWithdraw | null = null
+    let bulkWithdraw: BulkWithdraw | null
     try {
       bulkWithdraw = await getBulkWithdrawById(bulkWithdrawId)
     } catch (error) {
@@ -49,7 +49,7 @@ export default (applicationEventEmitter: ApplicationEventEmitter) => {
     }
 
     // 2. check lnbits if withdrawn
-    let withdrawn = false
+    let withdrawn: boolean
     try {
       withdrawn = await isBulkWithdrawWithdrawn(bulkWithdraw)
     } catch (error: unknown) {

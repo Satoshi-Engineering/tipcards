@@ -127,7 +127,7 @@ export default class LNBitsWallet {
       )
     } catch (error) {
       console.error('withdraw failed multiple times, only showing last error', error)
-      throw new Error(`Tried LNURLw callback link for ${maxRetries} times with a delay of ${delayInMilliseconds} each time: ${url}`)
+      throw new Error(`Tried LNURLw callback link for ${maxRetries} times with a delay of ${delayInMilliseconds} each time: ${url}`, { cause: error })
     }
 
     return lnurlWithdrawResponse

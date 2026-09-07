@@ -20,8 +20,8 @@ router.get('/cardLogos/:image', crossOriginResources, async (req, res) => {
   const imageId = imageName.split('.')[0]
 
   // load set from database
-  let imageMeta: ImageMeta | null = null
-  let image: string | null = null
+  let imageMeta: ImageMeta | null
+  let image: string | null
   try {
     imageMeta = await getImageMeta(imageId)
     image = await getImageAsString(imageId)

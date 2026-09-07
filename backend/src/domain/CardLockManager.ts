@@ -27,7 +27,7 @@ export default class CardLockManager {
       })
     } catch (error) {
       if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
-        throw Error(`Cannot lock card "${cardHash}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
+        throw new Error(`Cannot lock card "${cardHash}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`, { cause: error })
       }
       throw error
     }
@@ -41,7 +41,7 @@ export default class CardLockManager {
       })
     } catch (error) {
       if (error instanceof ErrorWithCode && error.code == ErrorCode.LockManagerAquireTimeout) {
-        throw Error(`Cannot lock cardHashes "${cardHashes.join('", "')}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`)
+        throw new Error(`Cannot lock cardHashes "${cardHashes.join('", "')}" after ${this.aquireTimeout / 1000 } seconds of trying. It is currently locked by another process.`, { cause: error })
       }
       throw error
     }
