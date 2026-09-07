@@ -33,10 +33,11 @@ describe('SliderDefault', () => {
     cy.get('@slider').find('[data-test="slide-default"]').eq(2).as('slide3')
 
     cy.get('@slide1')
+      .children().first()
       .should('be.visible')
       .should('contain', 'Slide 1')
-    cy.get('@slide2').should('not.be.visible')
-    cy.get('@slide3').should('not.be.visible')
+    cy.get('@slide2').children().first().should('not.be.visible')
+    cy.get('@slide3').children().first().should('not.be.visible')
   })
 
   it.skip('swipes to the second slide', () => {
@@ -72,11 +73,10 @@ describe('SliderDefault', () => {
     cy.get('@slider').find('[data-test="slide-default"]').eq(2).as('slide3')
 
     // navigate to third slide using pagination
-    cy.get('[data-test="slider-default-pagination"] button').eq(2).click()
-    cy.wait(500)
+    cy.get('@slider').find('[data-test="slider-default-pagination"] button').eq(2).click()
 
-    cy.get('@slide1').should('not.be.visible')
-    cy.get('@slide2').should('not.be.visible')
-    cy.get('@slide3').should('be.visible')
+    cy.get('@slide1').children().first().should('not.be.visible')
+    cy.get('@slide2').children().first().should('not.be.visible')
+    cy.get('@slide3').children().first().should('be.visible')
   })
 })
