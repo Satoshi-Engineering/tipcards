@@ -384,3 +384,16 @@ Release verification still outstanding:
 - Validation on the pinned Node `v24.13.0`; `.nvmrc` remains unchanged.
 
 The normal frontend build passed with warnings about `qrcode-svg` importing `fs` and the English locale being imported both statically and dynamically. The batch is ready for review and commit as a release candidate, subject to the remaining runtime checks. Work stopped here to allow a commit and potential release before the next migration. No commit or release was performed during this session.
+
+### 2026-09-07: Node LTS + jsdom batch completed
+
+- Updated `.nvmrc` from `v24.13.0` to `v24.20.0` within Node 24 LTS, satisfying jsdom 30's Node 24 minimum of 24.15.0.
+- Updated `jsdom` from `^26.1.0` to `^30.0.1` and `@types/jsdom` from `^21.1.7` to `^30.0.0`, after checking current releases and requirements. Regenerated the lockfile; no other direct dependency versions changed.
+- Keep CI, Compose, and Docker helper scripts on the floating `node:lts-bookworm-slim` tag, per user preference. The temporary exact-version image pins were reverted. Preserve this LTS tag convention in future upgrade batches.
+- No application or test source changes were required. Node typings remain on major 24; overrides and `.nsprc` are unchanged.
+
+Validation passed locally on Node `v24.20.0` with npm `11.19.0`: install, lint, project-wide typecheck, unit suites (417 passed, 1 skipped across 117 files), normal frontend production build, backend production build, and dependency-tree checks. Vitest resolves jsdom 30.0.1. `npm run audit` passes with the existing elliptic exception; npm still reports five low-severity findings.
+
+Full CI/Docker execution, staging/manual checks, backend integration tests, Cypress/Playwright E2E suites, maintenance/library builds, and production-server Node verification remain outstanding. The production Node installation is managed outside this repository. The normal frontend build retains the previously recorded browser externalization and locale chunking warnings.
+
+Stopped after this batch for review, commit, and potential release. No commit or release was performed. Vite remains the next separate migration.
