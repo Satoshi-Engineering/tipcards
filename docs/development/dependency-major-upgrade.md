@@ -397,3 +397,23 @@ Validation passed locally on Node `v24.20.0` with npm `11.19.0`: install, lint, 
 Full CI/Docker execution, staging/manual checks, backend integration tests, Cypress/Playwright E2E suites, maintenance/library builds, and production-server Node verification remain outstanding. The production Node installation is managed outside this repository. The normal frontend build retains the previously recorded browser externalization and locale chunking warnings.
 
 Stopped after this batch for review, commit, and potential release. No commit or release was performed. Vite remains the next separate migration.
+
+### 2026-09-07: Vite 8 batch completed
+
+- Updated `vite` from `^7.3.6` to `^8.2.2` and regenerated the lockfile after checking current npm releases, engines, and plugin peers. No other direct dependency changed.
+- Existing `@vitejs/plugin-vue` 6.0.8 and `vite-plugin-html` 3.2.2 accept Vite 8. Node `v24.20.0` satisfies its engine requirement.
+- Vitest 3.2.7 retains nested Vite 7.3.6 dependencies because its supported range excludes Vite 8. The unit suites therefore validate compatibility with the existing test runner, while production builds and the development smoke check exercise Vite 8.
+- No application or configuration edits were required. Keep `rollupOptions` (a supported but deprecated alias in Vite 8) while the frontend configuration is also merged into Vitest's Vite 7 configuration. `commonjsOptions` is a no-op in Vite 8; reassess these settings with the next Vitest migration.
+- Vite 8 changes bundling and minification to Rolldown/Oxc and Lightning CSS, and raises the default browser targets to Chrome/Edge 111, Firefox 114, and Safari 16.4. See the [official migration guide](https://vite.dev/guide/migration.html).
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation, `npm ls --depth=0`, lint, and project-wide typecheck.
+- Unit suites: 417 passed and 1 skipped across 117 files.
+- Normal frontend build, maintenance build (`BUILD_MAINTENANCE=true`), library build (`VITE_BUILD_LIBS=true`, both ES and UMD output), and backend build.
+- Actual Vite CLI localhost smoke check: served HTML and transformed `/src/main.ts`, then shut down successfully. An initial inline JavaScript API harness served/transformed successfully but stalled during shutdown and was stopped by a 20-second timeout; the CLI check replaced that harness.
+- Lockfile review confirmed Vite was the only existing package entry whose version changed; new bundler/platform dependencies and nested Vite 7 copies account for the remaining changes. `git diff --check` passed.
+
+The existing `qrcode-svg` browser externalization warning remains. npm install still reports five low-severity audit findings; overrides and `.nsprc` are unchanged. Full browser/visual checks, staging workflows, E2E suites, and backend integration tests were not run.
+
+Stopped after this batch for review and commit. No commit or release was performed. Vitest 5 is the next separate migration.
