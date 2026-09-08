@@ -54,7 +54,7 @@ test-e2e-cypress:
   script:
     - |
       docker run --rm \
-        --network=tipcards-localhost \
+        --network=container:tipcards-proxy \
         -v $(pwd):/app \
         -w /app \
         -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \

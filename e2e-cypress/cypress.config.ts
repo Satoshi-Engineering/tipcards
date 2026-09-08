@@ -43,6 +43,7 @@ config({
 })
 
 export default defineConfig({
+  defaultBrowser: 'chrome',
   e2e: {
     defaultCommandTimeout: 60000,
     responseTimeout: 60000,
