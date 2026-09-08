@@ -1,10 +1,10 @@
 import {
-  type KeyLike, jwtVerify,
+  type CryptoKey, jwtVerify,
   errors,
 } from 'jose'
 
 export default class JwtValidator {
-  protected publicKey: KeyLike
+  protected publicKey: CryptoKey
   protected issuer: string
 
   /**
@@ -22,7 +22,7 @@ export default class JwtValidator {
   }
 
   constructor(
-    publicKey: KeyLike,
+    publicKey: CryptoKey,
     issuer: string,
   ) {
     this.publicKey = publicKey

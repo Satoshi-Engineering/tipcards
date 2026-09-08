@@ -1,6 +1,5 @@
 import assert from 'assert'
 import axios from 'axios'
-import crypto from 'crypto'
 
 import JwtValidator from '@shared/modules/Jwt/JwtValidator.js'
 import JwtKeyPairHandler from '@shared/modules/Jwt/JwtKeyPairHandler.js'
@@ -24,9 +23,9 @@ export const initJwtValidator = async () => {
   }
 
   const response = await axios(PUBLIC_KEY_API)
-  const publicKey = await JwtKeyPairHandler.convertPublicKeyToKeyLike({
+  const publicKey = await JwtKeyPairHandler.convertPublicKeyToCryptoKey({
     publicKeyAsString: response.data.data,
   })
-  assert(publicKey instanceof crypto.KeyObject, `Could not load publicKey from ${PUBLIC_KEY_API}`)
+  assert(publicKey instanceof CryptoKey, `Could not load publicKey from ${PUBLIC_KEY_API}`)
   jwtValidator = new JwtValidator(publicKey, JWT_AUTH_ISSUER)
 }

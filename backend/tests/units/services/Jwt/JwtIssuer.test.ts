@@ -15,8 +15,8 @@ describe('JwtIssuer', () => {
   const mockSignedJwt = 'mockSignedJwt'
   const mockAlgorithm = Algorithms.RS256
   const mockKeyPair: KeyPair = {
-    publicKey: mockPublicKey as unknown as jose.KeyLike,
-    privateKey: mockPrivateKey as unknown as jose.KeyLike,
+    publicKey: mockPublicKey as unknown as jose.CryptoKey,
+    privateKey: mockPrivateKey as unknown as jose.CryptoKey,
   }
 
   const jwtIssuer = new JwtIssuer(mockKeyPair, mockIssuer, mockAlgorithm)

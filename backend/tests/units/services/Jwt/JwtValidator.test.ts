@@ -6,7 +6,7 @@ import * as jose from 'jose'
 import JwtValidator from '../../../../../shared/src/modules/Jwt/JwtValidator.js'
 
 describe('JwtValidator', () => {
-  const mockPublicKey = 'mockPublicKey' as unknown as jose.KeyLike
+  const mockPublicKey = 'mockPublicKey' as unknown as jose.CryptoKey
   const mockIssuer = 'mockIssuer'
   const mockAudience = 'mockAudience'
   const mockJwt = 'mockJwt'
@@ -19,9 +19,7 @@ describe('JwtValidator', () => {
         exp: undefined,
       },
       protectedHeader: { alg: 'RS256', typ: 'JWT' },
-      key: {
-        type: '',
-      },
+      key: mockPublicKey,
     })
 
     await expect(jwtValidator.validate(mockJwt, mockAudience)).rejects.toThrow(jose.errors.JWTExpired)
@@ -36,9 +34,7 @@ describe('JwtValidator', () => {
         exp: pastDateInSeconds,
       },
       protectedHeader: { alg: 'RS256', typ: 'JWT' },
-      key: {
-        type: '',
-      },
+      key: mockPublicKey,
     })
 
     await expect(jwtValidator.validate(mockJwt, mockAudience)).rejects.toThrow(jose.errors.JWTExpired)
@@ -56,9 +52,7 @@ describe('JwtValidator', () => {
     vi.spyOn(jose, 'jwtVerify').mockResolvedValueOnce({
       payload: mockPayload,
       protectedHeader: { alg: 'RS256', typ: 'JWT' },
-      key: {
-        type: '',
-      },
+      key: mockPublicKey,
     })
 
     const result = await jwtValidator.validate(mockJwt, mockAudience)

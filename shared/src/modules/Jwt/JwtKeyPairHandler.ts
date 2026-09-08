@@ -19,7 +19,7 @@ export default class JwtKeyPairHandler {
     this.keyPairDirectory = keyPairDirectory
   }
 
-  static async convertPublicKeyToKeyLike({
+  static async convertPublicKeyToCryptoKey({
     publicKeyAsString,
     algorithm = Algorithms.RS256,
   }: {
@@ -38,12 +38,12 @@ export default class JwtKeyPairHandler {
     const filenamePrivateKeyResolved = path.resolve(this.keyPairDirectory, filenamePrivateKey)
     if (fs.existsSync(filenamePublicKeyResolved) && fs.existsSync(filenamePrivateKeyResolved)) {
       let data = fs.readFileSync(filenamePublicKeyResolved, 'utf8')
-      const publicKey = await JwtKeyPairHandler.convertPublicKeyToKeyLike({
+      const publicKey = await JwtKeyPairHandler.convertPublicKeyToCryptoKey({
         publicKeyAsString: data,
         algorithm,
       })
       data = fs.readFileSync(filenamePrivateKeyResolved, 'utf8')
-      const privateKey = await importPKCS8(data, algorithm)
+      const privateKey = await importPKCS8(data, algorithm, { extractable: true })
 
       return { publicKey, privateKey }
     }
@@ -66,6 +66,6 @@ export default class JwtKeyPairHandler {
   }
 
   async generateKeyPair(algorithm: Algorithms = Algorithms.RS256) {
-    return await generateKeyPair(algorithm)
+    return await generateKeyPair(algorithm, { extractable: true })
   }
 }

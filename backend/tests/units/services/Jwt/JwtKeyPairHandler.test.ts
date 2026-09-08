@@ -13,8 +13,8 @@ vi.mock('fs', async () => {
 })
 
 const mockKeyPair = {
-  publicKey: { type: 'type' },
-  privateKey: { type: 'type' },
+  publicKey: { type: 'public' } as jose.CryptoKey,
+  privateKey: { type: 'private' } as jose.CryptoKey,
 }
 
 const keyPairDirectory = '/some/directory'
@@ -48,7 +48,7 @@ describe('JwtKeyPairHandler', () => {
       const result = await jwtKeyPairHandler.loadKeyPairFromDirectory()
       expect(result).toEqual(mockKeyPair)
       expect(jose.importSPKI).toHaveBeenCalledWith(mockPublicKeyData, 'RS256')
-      expect(jose.importPKCS8).toHaveBeenCalledWith(mockPrivateKeyData, 'RS256')
+      expect(jose.importPKCS8).toHaveBeenCalledWith(mockPrivateKeyData, 'RS256', { extractable: true })
     })
 
     it('should return null if default keys don’t exist', async () => {
@@ -86,7 +86,7 @@ describe('JwtKeyPairHandler', () => {
 
       const result = await jwtKeyPairHandler.generateKeyPair()
       expect(result).toEqual(mockKeyPair)
-      expect(jose.generateKeyPair).toHaveBeenCalledWith('RS256')
+      expect(jose.generateKeyPair).toHaveBeenCalledWith('RS256', { extractable: true })
     })
   })
 })

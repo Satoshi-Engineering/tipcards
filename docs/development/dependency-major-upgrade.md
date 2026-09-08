@@ -493,3 +493,22 @@ Validation passed:
 The existing Vite warning about the extensionless test-config import and the `qrcode-svg` browser externalization warning remain. Backend integration tests, application E2E suites, maintenance/library builds, CI/Docker execution, and staging/visual checks were not run for this batch.
 
 Stopped after this batch for review and commit. No commit or release was performed. JOSE 6 is next, followed by bip32 5 and Express 5 + its types.
+
+### 2026-09-08: JOSE 6 batch completed
+
+- Confirmed JOSE `6.2.12` as the current npm release and reviewed the [JOSE 6 release notes](https://github.com/panva/jose/releases/tag/v6.0.0). Updated `jose` from `^5.10.0` to `^6.2.12`; no other dependency changed.
+- Replaced the removed `KeyLike` type with JOSE's exported `CryptoKey` type throughout the JWT boundary. Updated the backend runtime assertion because imported keys are now Web Crypto `CryptoKey` instances instead of Node.js `KeyObject` instances.
+- Made generated and imported private keys explicitly extractable. JOSE 6 returns Web Crypto keys, and the application must export private keys to PKCS#8 when persisting them.
+- Added an unmocked round-trip regression test covering RSA key generation, PEM save/load, signing with both generated and reloaded private keys, verification with converted and reloaded public keys, and rejection for invalid audience, issuer, expiry, and signature.
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation and dependency-tree check (`npm ls jose --depth=1`).
+- Lint and project-wide typecheck.
+- Unit suites: 421 passed and 1 skipped across 119 files.
+- Normal frontend production build and backend production build.
+- `git diff --check`.
+
+The existing Vite warning about the extensionless test-config import and the `qrcode-svg` browser externalization warning remain. Backend integration tests, application E2E suites, maintenance/library builds, CI/Docker execution, and staging checks were not run for this batch.
+
+Stopped after this batch for review and commit. No commit or release was performed. bip32 5 is next, followed by Express 5 + its types.

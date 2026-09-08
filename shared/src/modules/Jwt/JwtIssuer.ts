@@ -1,6 +1,6 @@
 import {
   type JWTPayload,
-  type KeyLike, SignJWT,
+  type CryptoKey, SignJWT,
   exportSPKI,
 } from 'jose'
 
@@ -9,7 +9,7 @@ import { Algorithms } from './types/Algorithms.js'
 import JwtValidator from './JwtValidator.js'
 
 export default class JwtIssuer extends JwtValidator{
-  private privateKey: KeyLike
+  private privateKey: CryptoKey
   private algorithm: Algorithms
 
   constructor(

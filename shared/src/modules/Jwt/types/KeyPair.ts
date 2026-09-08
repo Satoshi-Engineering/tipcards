@@ -1,8 +1,8 @@
 import {
-  type KeyLike,
+  type CryptoKey,
 } from 'jose'
 
 export type KeyPair = {
-  publicKey: KeyLike
-  privateKey: KeyLike
+  publicKey: CryptoKey
+  privateKey: CryptoKey
 }
