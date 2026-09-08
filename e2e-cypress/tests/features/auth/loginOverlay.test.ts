@@ -31,10 +31,16 @@ describe('Login Overlay', () => {
   it('Login with lnurl from clipboard', () => {
     tipCards.auth.openModalLoginFromMainNav()
 
-    cy.getTestElement('lnurlauth-qrcode-copy-2-clipboard').click()
-    cy.task<string>('getClipboard').then((clipboardText) => {
-      cy.wrap(clipboardText).as('lnurlAuthUrl')
+    cy.window().then((window) => {
+      const writeText = cy.stub(window.navigator.clipboard, 'writeText').resolves()
+      cy.wrap(writeText).as('writeText')
     })
+    cy.getTestElement('lnurlauth-qrcode-copy-2-clipboard').click()
+    cy.get('@writeText')
+      .should('have.been.calledOnce')
+      .its('firstCall.args.0')
+      .should('be.a', 'string')
+      .as('lnurlAuthUrl')
 
     tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
     tipCards.auth.closeModalLoginAfterSuccessfulLogin()
@@ -62,11 +68,11 @@ const wrapLNURLAuthFromLinkClick = () => {
 
   // Stub the link click, because cypress can not handle different protocolls, then http and https
   // Attention: You should not use variables! Please refactor if you have an idea!
-  let lnurlAuthUrlHref = ''
+  let lnurlAuthUrlHref: string
   cy.get('a[href^="lightning:"]').then(($link) => {
     $link.on('click', (event) => {
       event.preventDefault()
-      lnurlAuthUrlHref = $link.attr('href')
+      lnurlAuthUrlHref = $link.attr('href') ?? ''
     })
   })
 
