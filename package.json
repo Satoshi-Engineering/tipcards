@@ -122,7 +122,7 @@
     "@vue/tsconfig": "^0.9.1",
     "autoprefixer": "^10.5.5",
     "better-npm-audit": "^3.11.0",
-    "bip32": "^4.0.0",
+    "bip32": "^5.0.1",
     "bip39": "^3.1.0",
     "changelogen": "^0.6.2",
     "clipboardy": "^5.3.2",

@@ -27,7 +27,7 @@ export default class HDWallet {
     bip39.validateMnemonic(mnemonic)
 
     const bip39Seed = bip39.mnemonicToSeedSync(mnemonic)
-    return bip32api.fromSeed(bip39Seed)
+    return bip32api.fromSeed(Uint8Array.from(bip39Seed))
   }
 
   static deriveNodeAtPath(node: bip32.BIP32Interface, hdPath: string) {
