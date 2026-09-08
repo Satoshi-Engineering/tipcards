@@ -43,7 +43,6 @@ config({
 })
 
 export default defineConfig({
-  defaultBrowser: 'chrome',
   e2e: {
     defaultCommandTimeout: 60000,
     responseTimeout: 60000,
@@ -55,7 +54,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('file:preprocessor', webpack({ webpackOptions }))
 
-      // Configure Chromium browsers for tests
+      // Mute audio for all tests
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.family !== 'chromium') {
           return launchOptions
@@ -63,7 +62,7 @@ export default defineConfig({
         if (browser.name == 'electron') {
           launchOptions.preferences.webPreferences.autoplayPolicy = 'user-gesture-required'
         } else {
-          launchOptions.args.push('--ignore-certificate-errors', '--mute-audio')
+          launchOptions.args.push('--mute-audio')
         }
         return launchOptions
       })
