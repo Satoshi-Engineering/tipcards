@@ -55,7 +55,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('file:preprocessor', webpack({ webpackOptions }))
 
-      // Mute audio for all tests
+      // Configure Chromium browsers for tests
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.family !== 'chromium') {
           return launchOptions
@@ -63,7 +63,7 @@ export default defineConfig({
         if (browser.name == 'electron') {
           launchOptions.preferences.webPreferences.autoplayPolicy = 'user-gesture-required'
         } else {
-          launchOptions.args.push('--mute-audio')
+          launchOptions.args.push('--ignore-certificate-errors', '--mute-audio')
         }
         return launchOptions
       })
