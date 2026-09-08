@@ -2,7 +2,7 @@
 # It tests the live environment, which should always be available.
 live-check:
   image:
-    name: cypress/included:cypress-15.21.1-node-24.20.0-chrome-152.0.7977.64-1-ff-154.0.1-edge-151.0.4129.107-1
+    name: cypress/included:cypress-16.0.0-node-24.20.0-chrome-152.0.7977.64-1-ff-155.0-edge-152.0.4191.53-1
     entrypoint: [""]
   stage: live-check
   rules:
