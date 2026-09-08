@@ -1,3 +1,15 @@
+check-e2e-image-versions:
+  stage: .pre
+  rules:
+    - !reference [.shared_config, rules, no_tags]
+    - changes:
+      - package.json
+      - package-lock.json
+      - gitlab-ci/*.yml
+      - scripts/check-e2e-image-versions.mjs
+  script:
+    - npm run check:e2e-image-versions
+
 install:
   stage: .pre # always first, no matter if it is listed in stages
   rules:

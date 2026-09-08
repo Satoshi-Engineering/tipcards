@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "audit": "better-npm-audit audit",
+    "check:e2e-image-versions": "node ./scripts/check-e2e-image-versions.mjs",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck",
     "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-tests",
