@@ -512,3 +512,18 @@ Validation passed on Node `v24.20.0` with npm `11.19.0`:
 The existing Vite warning about the extensionless test-config import and the `qrcode-svg` browser externalization warning remain. Backend integration tests, application E2E suites, maintenance/library builds, CI/Docker execution, and staging checks were not run for this batch.
 
 Stopped after this batch for review and commit. No commit or release was performed. bip32 5 is next, followed by Express 5 + its types.
+
+### 2026-09-08: bip32 5 batch completed
+
+- Updated `bip32` from `^4.0.0` to `^5.0.1` in commit `b34abf50` (`chore: upgrade bip32 to v5`).
+- Adapted the bip32 boundary to its `Uint8Array` API for seeds, hashes, signatures, and key material while preserving the existing `HDNode` public API: byte-returning key methods still return Node.js `Buffer` values, and signatures still return the requested hex or base64 string encoding.
+- Added deterministic regression coverage for the derived private/public keys, key byte types, hex encodings, signature lengths, successful verification, and rejection of a signature for a different message.
+
+The committed diff records the dependency, compatibility changes, and focused regression tests, but does not record which validation commands were run. Treat wider lint, typecheck, build, and test-suite validation for this batch as undocumented rather than confirmed here.
+
+### 2026-09-08: subsequent minor upgrade completed
+
+- Updated the exact `eslint-plugin-cypress` development dependency from `7.0.1` to `7.0.2` in commit `6293c156` (`chore: minor upgrade`). Its lockfile dependency on `globals` moved from `^17.11.0` to `^17.12.0`; the repository's direct `globals` version was already `^17.12.0`.
+- No application or configuration files changed. The commit does not record its validation commands, so validation for this follow-up is undocumented here.
+
+Express 5 + its types is the next focused migration in the recorded sequence. Tailwind 4 and TypeScript 7 remain separate later projects.
