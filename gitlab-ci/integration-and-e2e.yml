@@ -10,6 +10,9 @@ test-backend-integration:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - when: on_success
+  needs:
+    - job: install
+      optional: true
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
@@ -45,6 +48,11 @@ test-e2e-cypress:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - when: on_success
+  needs:
+    - job: check-e2e-image-versions
+      optional: true
+    - job: install
+      optional: true
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
@@ -88,6 +96,11 @@ test-e2e-playwright:
     - !reference [.shared_config, rules, no_tags]
     - !reference [.shared_config, rules, web_and_push]
     - when: on_success
+  needs:
+    - job: check-e2e-image-versions
+      optional: true
+    - job: install
+      optional: true
   cache:
     - !reference [.shared_config, cache, node_modules]
   variables:
