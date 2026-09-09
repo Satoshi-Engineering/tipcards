@@ -1,5 +1,5 @@
 deploy-backend:
-  image: alpine
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine
   stage: deploy
   rules:
     - !reference [.shared_config, rules, no_tags]
@@ -76,7 +76,7 @@ deploy-backend:
       EOT
 
 deploy-frontend:
-  image: alpine
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine
   stage: deploy
   rules:
     - !reference [.shared_config, rules, no_tags]

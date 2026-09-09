@@ -13,5 +13,5 @@ docker run --rm \
   -v $NODE_MODULES_DIR:/app/node_modules \
   -w /app \
   -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-  node:lts-bookworm-slim /bin/bash \
+  "${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/node:lts-bookworm-slim" /bin/bash \
   -c "npm run backend-test-integration -- --maxWorkers=3 --testTimeout=50000"
