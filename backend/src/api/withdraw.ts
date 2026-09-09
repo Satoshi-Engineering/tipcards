@@ -26,11 +26,13 @@ export default (
 
   const router = Router()
 
-  const cardUsed = async (req: Request, res: Response, next: NextFunction) => {
+  const cardUsed = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
+
     // 1. check if card exists
     let card: Card | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -47,7 +49,7 @@ export default (
     if (card == null) {
       res.status(404).json({
         status: 'error',
-        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       })
       next()
       return
@@ -55,7 +57,7 @@ export default (
     if (card.lnbitsWithdrawId == null) {
       res.status(404).json({
         status: 'error',
-        message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       })
       next()
       return

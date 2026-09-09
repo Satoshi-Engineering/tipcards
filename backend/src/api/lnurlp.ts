@@ -33,7 +33,9 @@ export default (
   /**
    * Create shared funding lnurlp link
    */
-  router.post('/create/:cardHash', async (req, res) => {
+  router.post<{ cardHash: string }>('/create/:cardHash', async (req, res) => {
+    const cardHash = req.params.cardHash
+
     let text = ''
     let note = ''
     try {
@@ -45,7 +47,7 @@ export default (
     // check if card/invoice already exists
     let card: Card | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -61,7 +63,7 @@ export default (
     // create new card if it doesn't exist yet
     if (card == null) {
       card = {
-        cardHash: req.params.cardHash,
+        cardHash,
         text,
         note,
         invoice: null,
@@ -128,11 +130,13 @@ export default (
   /**
    * Handle lnurlp link payment. Either single or shared funding.
    */
-  const cardPaid = async (req: Request, res: Response, next: NextFunction) => {
+  const cardPaid = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
+
     // 1. check if card exists
     let card: Card | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -147,7 +151,7 @@ export default (
     }
     if (card?.lnurlp == null) {
       res.status(404).json(toErrorResponse({
-        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       }))
       next()
       return
@@ -213,11 +217,13 @@ export default (
   /**
    * Update text+note for shared cards
    */
-  const cardUpdate = async (req: Request, res: Response, next: NextFunction) => {
+  const cardUpdate = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
+
     // check if card exists
     let card: Card | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -298,11 +304,13 @@ export default (
   /**
    * Finish shared funding lnurlp link
    */
-  const cardFinish = async (req: Request, res: Response, next: NextFunction) => {
+  const cardFinish = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
+
     // check if card exists
     let card: Card | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }

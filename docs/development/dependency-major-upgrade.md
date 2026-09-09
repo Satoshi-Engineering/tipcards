@@ -526,4 +526,25 @@ The committed diff records the dependency, compatibility changes, and focused re
 - Updated the exact `eslint-plugin-cypress` development dependency from `7.0.1` to `7.0.2` in commit `6293c156` (`chore: minor upgrade`). Its lockfile dependency on `globals` moved from `^17.11.0` to `^17.12.0`; the repository's direct `globals` version was already `^17.12.0`.
 - No application or configuration files changed. The commit does not record its validation commands, so validation for this follow-up is undocumented here.
 
-Express 5 + its types is the next focused migration in the recorded sequence. Tailwind 4 and TypeScript 7 remain separate later projects.
+### 2026-09-09: Express 5 + types batch completed
+
+- Confirmed and installed the current npm releases: `express` `5.2.1` and `@types/express` `5.0.6`.
+- Kept `lnurl` on a nested, overridden `express` `4.22.2`. `lnurl` `0.27.0` declares Express `4.19.2` and still relies on Express 4 wildcard-route syntax and writable `req.query`; forcing it onto Express 5 prevents its server from starting.
+- Added route-specific parameter types so required named parameters remain strings throughout their handlers and reusable middleware.
+- Removed a handlerless `router.get('/')` registration. Express 4 tolerated this no-op, while Express 5 rejects it during application startup.
+- Reviewed the Express 5 runtime migration boundaries. The Tipcards backend has no incompatible wildcard or optional route patterns, does not mutate `req.query`, does not use Express static-file serving, and already uses explicit `body-parser` middleware.
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation and dependency-tree check (`npm ls express lnurl --all`): Tipcards resolves Express `5.2.1`, while `lnurl` resolves its nested Express `4.22.2` override.
+- Lint and project-wide typecheck.
+- Unit suites: 423 passed and 1 skipped across 120 files.
+- Backend production build.
+- Runtime application-startup and `/api/dummy` route smoke test against the compiled backend.
+- Real `lnurl` server startup and `/status` route smoke test against its nested Express 4 runtime.
+- Dependency audit with the existing low-severity `elliptic` exception only.
+- `git diff --check`.
+
+Backend integration tests, application E2E suites, frontend production builds, CI/Docker execution, and staging checks were not run for this batch.
+
+Stopped after this batch for review and commit. No commit or release was performed. Tailwind 4 and TypeScript 7 remain separate later projects.

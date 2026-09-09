@@ -15,7 +15,7 @@ export const crossOriginResources = async (_: Request, res: Response, next: Next
   next()
 }
 
-router.get('/cardLogos/:image', crossOriginResources, async (req, res) => {
+router.get<{ image: string }>('/cardLogos/:image', crossOriginResources, async (req, res) => {
   const imageName = req.params.image
   const imageId = imageName.split('.')[0]
 

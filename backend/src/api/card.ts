@@ -24,12 +24,13 @@ export default (
     code,
   })
 
-  const routeHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const routeHandler = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
     let card: CardApi | null = null
 
     // load card from database
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -107,8 +108,6 @@ export default (
     })
     next()
   }
-
-  router.get('/')
 
   router.get(
     '/:cardHash',

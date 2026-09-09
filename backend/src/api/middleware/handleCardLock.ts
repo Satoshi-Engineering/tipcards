@@ -15,7 +15,7 @@ import CardLockManager from '@backend/domain/CardLockManager.js'
  */
 
 export const lockCardMiddleware = (toError: ToErrorResponse, cardLockManager: CardLockManager) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
     const cardHash = req.params.cardHash
 
     if (!cardHash) {
@@ -44,7 +44,7 @@ export const lockCardMiddleware = (toError: ToErrorResponse, cardLockManager: Ca
     next()
   }
 
-export const releaseCardMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const releaseCardMiddleware = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
   if (!req.params.cardHash) {
     console.error('releaseCard called without cardHash', req)
     return
@@ -60,8 +60,8 @@ export const releaseCardMiddleware = async (req: Request, res: Response, next: N
 }
 
 export const lockSetCardsMiddleware = (toError: ToErrorResponse, cardLockManager: CardLockManager) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    const setId: string = req.params.setId
+  async (req: Request<{ setId: string }>, res: Response, next: NextFunction) => {
+    const setId = req.params.setId
     const cardIndices: number[] = req.body.cardIndices
     const cardHashes = cardIndices.map((index) => hashSha256(`${setId}/${index}`))
 
@@ -91,7 +91,7 @@ export const lockSetCardsMiddleware = (toError: ToErrorResponse, cardLockManager
     next()
   }
 
-export const releaseSetCardsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+export const releaseSetCardsMiddleware = async (req: Request<{ setId: string }>, res: Response, next: NextFunction) => {
   if (!req.params.setId) {
     console.error('releaseSetCards called without setId', req)
     return

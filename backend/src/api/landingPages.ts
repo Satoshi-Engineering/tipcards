@@ -64,8 +64,8 @@ router.get('/', authGuardAccessToken, async (_, res) => {
   })
 })
 
-router.get('/:landingPageId', async (req, res) => {
-  const landingPageId: string = req.params.landingPageId
+router.get<{ landingPageId: string }>('/:landingPageId', async (req, res) => {
+  const landingPageId = req.params.landingPageId
 
   // load landing page from database
   try {

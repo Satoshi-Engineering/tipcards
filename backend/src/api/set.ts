@@ -65,7 +65,8 @@ export default (cardLockManager: CardLockManager) => {
     })
   })
 
-  router.post('/:setId', authGuardAccessToken, async (req, res) => {
+  router.post<{ setId: string }>('/:setId', authGuardAccessToken, async (req, res) => {
+    const setId = req.params.setId
     const accessTokenPayload: AccessTokenPayload = res.locals.accessTokenPayload
     if (accessTokenPayload == null) {
       res.status(401).json({
@@ -88,7 +89,7 @@ export default (cardLockManager: CardLockManager) => {
     let set: SetRedis | null
     // load set from database
     try {
-      set = await getSetById(req.params.setId)
+      set = await getSetById(setId)
     } catch (error: unknown) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -102,7 +103,7 @@ export default (cardLockManager: CardLockManager) => {
     // create a new set
     if (set == null) {
       set = {
-        id: req.params.setId,
+        id: setId,
         userId,
         invoice: null,
         settings,
@@ -185,12 +186,13 @@ export default (cardLockManager: CardLockManager) => {
     })
   })
 
-  router.get('/:setId', async (req, res) => {
+  router.get<{ setId: string }>('/:setId', async (req, res) => {
+    const setId = req.params.setId
     let set: SetRedis | null
 
     // load set from database
     try {
-      set = await getSetById(req.params.setId)
+      set = await getSetById(setId)
     } catch (error: unknown) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -236,7 +238,9 @@ export default (cardLockManager: CardLockManager) => {
     })
   })
 
-  router.post('/invoice/:setId', lockSetCardsMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
+  router.post<{ setId: string }>('/invoice/:setId', lockSetCardsMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
+    const setId = req.params.setId
+
     // amount in sats
     let amountPerCard: number | undefined = undefined
     let text = ''
@@ -275,7 +279,7 @@ export default (cardLockManager: CardLockManager) => {
     // check if set/invoice already exists
     let set: SetRedis | null
     try {
-      set = await getSetById(req.params.setId)
+      set = await getSetById(setId)
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -308,7 +312,7 @@ export default (cardLockManager: CardLockManager) => {
     const cards: CardRedis[] = []
     try {
       await Promise.all(cardIndices.map(async (index) => {
-        const cardHash = hashSha256(`${req.params.setId}/${index}`)
+        const cardHash = hashSha256(`${setId}/${index}`)
         const cardRedis = await getCardByHash(cardHash)
         if (cardRedis != null) {
           cards.push(cardRedis)
@@ -345,7 +349,7 @@ export default (cardLockManager: CardLockManager) => {
         out: false,
         amount: totalAmount,
         memo: `Fund ${cardIndices.length} Lightning TipCards`,
-        webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${req.params.setId}`,
+        webhook: `${TIPCARDS_API_ORIGIN}/api/set/invoice/paid/${setId}`,
       }, {
         headers: {
           'Content-type': 'application/json',
@@ -372,7 +376,7 @@ export default (cardLockManager: CardLockManager) => {
     if (set == null) {
       insertNewSet = true
       set = {
-        id: req.params.setId,
+        id: setId,
         created: Math.floor(+ new Date() / 1000),
         date: Math.floor(+ new Date() / 1000),
         text: '',
@@ -399,7 +403,7 @@ export default (cardLockManager: CardLockManager) => {
     // persist data
     try {
       await Promise.all(cardIndices.map(async (index) => {
-        const cardHash = hashSha256(`${req.params.setId}/${index}`)
+        const cardHash = hashSha256(`${setId}/${index}`)
         await createCard({
           cardHash,
           text,
@@ -440,11 +444,13 @@ export default (cardLockManager: CardLockManager) => {
     next()
   }, releaseSetCardsMiddleware)
 
-  const deleteSetRoute = async (req: Request, res: Response, invoiceOnly = false) => {
+  const deleteSetRoute = async (req: Request<{ setId: string }>, res: Response, invoiceOnly = false) => {
+    const setId = req.params.setId
+
     // 1. check if set exists
     let set: SetRedis | null = null
     try {
-      set = await getSetById(req.params.setId)
+      set = await getSetById(setId)
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -554,14 +560,16 @@ export default (cardLockManager: CardLockManager) => {
     })
   }
 
-  router.delete('/:setId', (req, res) => deleteSetRoute(req, res))
-  router.delete('/invoice/:setId', (req, res) => deleteSetRoute(req, res, true))
+  router.delete<{ setId: string }>('/:setId', (req, res) => deleteSetRoute(req, res))
+  router.delete<{ setId: string }>('/invoice/:setId', (req, res) => deleteSetRoute(req, res, true))
 
-  const invoicePaid = async (req: Request, res: Response) => {
+  const invoicePaid = async (req: Request<{ setId: string }>, res: Response) => {
+    const setId = req.params.setId
+
     // 1. check if set exists
     let set: SetRedis | null
     try {
-      set = await getSetById(req.params.setId)
+      set = await getSetById(setId)
     } catch (error) {
       console.error(ErrorCode.UnknownDatabaseError, error)
       res.status(500).json({
@@ -574,7 +582,7 @@ export default (cardLockManager: CardLockManager) => {
     if (set?.invoice == null) {
       res.status(404).json({
         status: 'error',
-        message: `Set not found. Go to /set-funding/${req.params.setId} to create an invoice.`,
+        message: `Set not found. Go to /set-funding/${setId} to create an invoice.`,
         code: ErrorCode.SetNotFound,
       })
       return

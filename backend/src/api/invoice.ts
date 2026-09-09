@@ -29,7 +29,9 @@ export default (
     code,
   })
 
-  router.post('/create/:cardHash', lockCardMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
+  router.post<{ cardHash: string }>('/create/:cardHash', lockCardMiddleware(toErrorResponse, cardLockManager), async (req, res, next) => {
+    const cardHash = req.params.cardHash
+
     // amount in sats
     let amount: number | undefined = undefined
     let text = ''
@@ -56,7 +58,7 @@ export default (
     // check if card/invoice already exists
     let card: CardApi | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -110,7 +112,7 @@ export default (
         out: false,
         amount: totalAmount,
         memo: 'Fund your Lightning TipCard',
-        webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${req.params.cardHash}`,
+        webhook: `${TIPCARDS_API_ORIGIN}/api/invoice/paid/${cardHash}`,
       }, {
         headers: {
           'Content-type': 'application/json',
@@ -134,7 +136,7 @@ export default (
     // persist data
     try {
       await createCard({
-        cardHash: req.params.cardHash,
+        cardHash,
         text,
         note,
         invoice: {
@@ -168,11 +170,13 @@ export default (
     next()
   }, releaseCardMiddleware)
 
-  const invoicePaid = async (req: Request, res: Response, next: NextFunction) => {
+  const invoicePaid = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
+    const cardHash = req.params.cardHash
+
     // 1. check if card exists
     let card: CardApi | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -187,14 +191,14 @@ export default (
     }
     if (card == null) {
       res.status(404).json(toErrorResponse({
-        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       }))
       next()
       return
     }
     if (card.invoice == null) {
       res.status(404).json(toErrorResponse({
-        message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card has no funding invoice. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       }))
       next()
       return
@@ -257,11 +261,13 @@ export default (
     emitCardUpdateForSingleCard(applicationEventEmitter),
   )
 
-  router.delete('/delete/:cardHash', async (req, res) => {
+  router.delete<{ cardHash: string }>('/delete/:cardHash', async (req, res) => {
+    const cardHash = req.params.cardHash
+
     // 1. check if card exists
     let card: CardApi | null = null
     try {
-      const cardRedis = await getCardByHash(req.params.cardHash)
+      const cardRedis = await getCardByHash(cardHash)
       if (cardRedis != null) {
         card = cardApiFromCardRedis(cardRedis)
       }
@@ -275,7 +281,7 @@ export default (
     }
     if (card == null) {
       res.status(404).json(toErrorResponse({
-        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, req.params.cardHash)} to fund it.`,
+        message: `Card not found. Go to ${getLandingPageLinkForCardHash(TIPCARDS_ORIGIN, cardHash)} to fund it.`,
       }))
       return
     }

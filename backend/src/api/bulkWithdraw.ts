@@ -12,8 +12,8 @@ import { emitCardUpdatesForBulkWithdraw } from './middleware/emitCardUpdates.js'
 export default (applicationEventEmitter: ApplicationEventEmitter) => {
   const router = Router()
 
-  const bulkWithdrawWithdrawn = async (req: Request, res: Response) => {
-    const { bulkWithdrawId } = req.params
+  const bulkWithdrawWithdrawn = async (req: Request<{ bulkWithdrawId: string }>, res: Response) => {
+    const bulkWithdrawId = req.params.bulkWithdrawId
     // eslint-disable-next-line no-console
     console.info(`[bulkWithdraw/withdrawn] called id=${bulkWithdrawId} method=${req.method}`)
     // 1. check if bulkwithdraw exists

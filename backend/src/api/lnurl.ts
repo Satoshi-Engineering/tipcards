@@ -99,7 +99,7 @@ export default (
     }
   })
 
-  const routeHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const routeHandler = async (req: Request<{ cardHash: string }>, res: Response, next: NextFunction) => {
     const cardHash = req.params.cardHash
 
     let card: Card | null = null

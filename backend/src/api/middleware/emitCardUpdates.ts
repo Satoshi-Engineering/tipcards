@@ -4,7 +4,7 @@ import ApplicationEventEmitter, { cardUpdateEvent } from '@backend/domain/Applic
 import BulkWithdrawDeprecated from '@backend/domain/BulkWithdrawDeprecated.js'
 
 export const emitCardUpdateForSingleCard = (applicationEventEmitter: ApplicationEventEmitter) =>
-  async (req: Request, _: Response, next: NextFunction) => {
+  async (req: Request<{ cardHash: string }>, _: Response, next: NextFunction) => {
     const cardHash = req.params.cardHash
     if (!cardHash) {
       console.error('emitCardUpdateForSingleCard called without cardHash', req)
@@ -17,7 +17,7 @@ export const emitCardUpdateForSingleCard = (applicationEventEmitter: Application
   }
 
 export const emitCardUpdatesForBulkWithdraw = (applicationEventEmitter: ApplicationEventEmitter) =>
-  async (req: Request, _: Response, next: NextFunction) => {
+  async (req: Request<{ bulkWithdrawId: string }>, _: Response, next: NextFunction) => {
     const bulkWithdrawId = req.params.bulkWithdrawId
     if (!bulkWithdrawId) {
       console.error('emitCardUpdatesForBulkWithdraw called without bulkWithdrawId', req)
