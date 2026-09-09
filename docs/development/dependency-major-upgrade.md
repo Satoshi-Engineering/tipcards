@@ -542,6 +542,7 @@ Validation passed on Node `v24.20.0` with npm `11.19.0`:
 - Backend production build.
 - Runtime application-startup and `/api/dummy` route smoke test against the compiled backend.
 - Real `lnurl` server startup and `/status` route smoke test against its nested Express 4 runtime.
+- Automated regression coverage confirms that an `EADDRINUSE` error from Express 5's `app.listen()` callback rejects startup instead of being logged as a successful listen.
 - Dependency audit with the existing low-severity `elliptic` exception only.
 - `git diff --check`.
 

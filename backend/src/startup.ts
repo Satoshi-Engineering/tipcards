@@ -8,6 +8,7 @@ import Database from '@backend/database/Database.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
 import CardLockManager from '@backend/domain/CardLockManager.js'
 import { loadCoarsWhitelist } from '@backend/services/corsOptions.js'
+import startExpressServer from '@backend/services/startExpressServer.js'
 import initApp from '@backend/app.js'
 import { APP_NAME, EXPRESS_PORT, FAILED_STARTUPS_COUNTER_DIRECTORY, JWT_AUTH_AUDIENCE } from '@backend/constants.js'
 import { shutdown } from '@backend/shutdown.js'
@@ -54,9 +55,8 @@ const startupApplication = async () => {
   const app = initApp()
   console.info(' - app started')
 
-  const server = app.listen(EXPRESS_PORT, async () => {
-    console.info(` - app running and listening on port ${EXPRESS_PORT}`)
-  })
+  const server = await startExpressServer(app, EXPRESS_PORT)
+  console.info(` - app running and listening on port ${EXPRESS_PORT}`)
   let connections: Socket[] = []
 
   server.on('connection', (connection: Socket) => {
