@@ -74,7 +74,7 @@
     "http-proxy": "^1.18.1",
     "http-proxy-rules": "^1.1.3",
     "jose": "^6.2.12",
-    "jszip": "^3.10.1",
+    "jszip": "^3.10.2",
     "lnurl": "^0.27.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
