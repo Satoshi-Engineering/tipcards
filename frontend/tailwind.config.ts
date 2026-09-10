@@ -1,8 +1,7 @@
 import { fileURLToPath } from 'node:url'
 import type { Config } from 'tailwindcss'
-import plugin from 'tailwindcss/plugin'
-import colors from 'tailwindcss/colors'
 import defaultTheme from 'tailwindcss/defaultTheme'
+import plugin from 'tailwindcss/plugin'
 
 export default {
   content: [
@@ -16,17 +15,20 @@ export default {
         yellow: {
           DEFAULT: '#f2cc50', // primary color
           light: '#FDF5DD',
-          dark: colors.yellow[600],
+          dark: '#ca8a04',
         },
         black: '#010101', // headlines, labels
         bluegrey: '#2a2c31', // default color
         green: {
           DEFAULT: '#99be5a', // statistics
           light: '#EBF3DF', // statistics
+          200: '#bbf7d0',
+          500: '#22c55e',
         },
         red: {
           DEFAULT: '#c05749', // statistics
           light: '#F3DEDB', // statistics
+          500: '#ef4444',
         },
         white: {
           DEFAULT: '#ffffff', // white
@@ -45,15 +47,19 @@ export default {
           light: '#f6f7f7', // backgrounds
 
           // deprecated colors - remove when new design is finished
-          medium: colors.gray[400],
-          DEFAULT: colors.gray[500],
-          dark: colors.gray[600],
+          medium: '#9ca3af',
+          DEFAULT: '#6b7280',
+          dark: '#4b5563',
+        },
+        gray: {
+          200: '#e5e7eb',
+          300: '#d1d5db',
         },
 
         // deprecated colors - remove when new design is finished
         btcorange: {
-          DEFAULT: colors.orange[400],
-          effect: colors.orange[500],
+          DEFAULT: '#fb923c',
+          effect: '#f97316',
         },
         lightningpurple: '#7B1AF7',
       },
@@ -67,6 +73,7 @@ export default {
       }),
       blur: {
         'xs': '0.125rem',
+        'sm': '0.25rem',
       },
       spacing: {
         '18': '4.5rem',
@@ -108,7 +115,11 @@ export default {
     },
     screens: {
       'xs': '475px',
-      ...defaultTheme.screens,
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
     },
   },
   future: {

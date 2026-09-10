@@ -3,8 +3,8 @@
     <dialog
       ref="dialog"
       class="
-        w-full max-w-full sm:max-w-xl max-h-full sm:max-h-[calc(100dvh-32px)] h-full sm:h-fit bg-white
-        backdrop:bg-opacity-50 backdrop:bg-grey backdrop:overflow-y-auto
+        m-auto w-full max-w-full sm:max-w-xl max-h-full sm:max-h-[calc(100dvh-32px)] h-full sm:h-fit bg-white
+        backdrop:bg-grey/50 backdrop:overflow-y-auto
       "
       data-test="modal"
       v-bind="$attrs"

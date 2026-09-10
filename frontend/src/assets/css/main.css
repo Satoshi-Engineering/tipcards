@@ -1,10 +1,35 @@
 @import './fonts.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config '../../../tailwind.config.ts';
+@import 'tailwindcss';
 
 @layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: #010101;
+  }
+
+  dialog {
+    padding: 0;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+  }
+
+  [role='button'],
+  button {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: default;
+  }
+
   html {
     font-size: 14px;
     @apply text-bluegrey;

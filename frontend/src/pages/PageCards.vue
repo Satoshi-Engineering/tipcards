@@ -3,7 +3,7 @@
     <CenterContainer class="print:hidden">
       <BackLink
         :to="{ name: 'sets', params: { lang: $route.params.lang } }"
-        class="!pb-2"
+        class="pb-2!"
       >
         {{ t('sets.title') }}
       </BackLink>
@@ -16,14 +16,14 @@
       </div>
     </CenterContainer>
     <div class="mb-3 bg-grey-light print:hidden">
-      <CenterContainer class="!py-5">
+      <CenterContainer class="py-5!">
         <div class="flex justify-between items-center">
-          <HeadlineDefault level="h2" class="!my-0">
+          <HeadlineDefault level="h2" class="my-0!">
             {{ pageTitle }}
           </HeadlineDefault>
           <LinkDefault
             no-bold
-            class="text-xs !text-black underline hover:no-underline active:no-underline disabled:no-underline"
+            class="text-xs text-black! underline hover:no-underline active:no-underline disabled:no-underline"
             :disabled="reloadingStatusForCards"
             @click="reloadStatusForCards()"
           >
@@ -89,7 +89,7 @@
             inputmode="numeric"
             min="1"
             max="100"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            class="w-full border my-1 px-3 py-2 focus:outline-hidden"
             data-test="number-of-cards"
           >
         </label>
@@ -100,7 +100,7 @@
           <input
             v-model.lazy.trim="settings.cardHeadline"
             type="text"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            class="w-full border my-1 px-3 py-2 focus:outline-hidden"
           >
         </label>
         <label class="block mb-2">
@@ -109,7 +109,7 @@
           </span>
           <textarea
             v-model.lazy.trim="settings.cardCopytext"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            class="w-full border my-1 px-3 py-2 focus:outline-hidden"
             rows="4"
           />
         </label>
@@ -197,7 +197,7 @@
           <input
             v-model="settings.setName"
             type="text"
-            class="w-full border my-1 px-3 py-2 focus:outline-none"
+            class="w-full border my-1 px-3 py-2 focus:outline-hidden"
             :disabled="saving"
           >
         </label>
@@ -298,7 +298,7 @@
             <input
               v-model="cloneName"
               type="text"
-              class="w-full border px-3 py-2 rounded focus:outline-none"
+              class="w-full border px-3 py-2 rounded focus:outline-hidden"
               :placeholder="t('cards.actions.cloneNamePlaceholder')"
               :disabled="cloning || !isLoggedIn"
             />
@@ -386,13 +386,13 @@
             :key="card.urlLandingWithLnurl"
             class="relative break-inside-avoid w-[85mm] h-[55mm] float-left group"
           >
-            <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-            <div class="group-odd:[inset-inline-start:0] group-even:[inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
-            <div class="hidden group-first:block [inset-inline-end:0] absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
-            <div class="hidden group-last:block [inset-inline-start:0] absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+            <div class="group-odd:inset-s-0 group-even:inset-e-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+            <div class="group-odd:inset-s-0 group-even:inset-e-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
+            <div class="hidden group-first:block inset-e-0 absolute border-l-[0.5px] opacity-50 h-3 -top-4" />
+            <div class="hidden group-last:block inset-s-0 absolute border-l-[0.5px] opacity-50 h-3 -bottom-4" />
 
-            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 top-0" />
-            <div class="group-odd:[inset-inline-start:-1rem] group-even:[inset-inline-end:-1rem] absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />
+            <div class="group-odd:-inset-s-4 group-even:-inset-e-4 absolute border-t-[0.5px] opacity-50 w-3 top-0" />
+            <div class="group-odd:-inset-s-4 group-even:-inset-e-4 absolute border-t-[0.5px] opacity-50 w-3 bottom-0" />
             <div
               v-if="card.urlLandingWithLnurl != ''"
               class="absolute w-full h-full"

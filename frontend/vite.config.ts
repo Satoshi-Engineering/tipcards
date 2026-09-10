@@ -1,9 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv, type BuildOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 import { createHtmlPlugin } from 'vite-plugin-html'
-import tailwindcss from 'tailwindcss'
-import autoprefixer from 'autoprefixer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -46,7 +45,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     root: fileURLToPath(new URL('./', import.meta.url)),
-    plugins: [vue(), createHtmlPlugin({ inject: { data: { env } } })],
+    plugins: [vue(), tailwindcss(), createHtmlPlugin({ inject: { data: { env } } })],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -68,15 +67,5 @@ export default defineConfig(({ mode }) => {
       ],
     },
     build,
-    css: {
-      postcss: {
-        plugins: [
-          tailwindcss({
-            config: fileURLToPath(new URL('./tailwind.config.ts', import.meta.url)),
-          }),
-          autoprefixer(),
-        ],
-      },
-    },
   }
 })

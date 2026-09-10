@@ -201,7 +201,9 @@ watch(() => props.disabled, async () => {
 
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
+@reference '../assets/css/main.css';
+
 .tooltip[data-popper-placement^='top'] > .arrow {
   @apply -bottom-[7px] before:border-t-0 before:border-l-0;
 }

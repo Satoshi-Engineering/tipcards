@@ -5,7 +5,7 @@
         <TextField
           :model-value="amount"
           :label="label || $t('general.amount')"
-          class="w-full focus:outline-none"
+          class="w-full focus:outline-hidden"
           input-class="text-right"
           type="number"
           inputmode="decimal"

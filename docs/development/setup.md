@@ -83,7 +83,7 @@ The TipCards backend and frontend run inside Debian containers using the AMD arc
 - If not, run:
 
     ```sh
-    scripts/docker/install-dependencies.sh
+    npm run docker:install-dependencies
     ```
 
     and then add this to your local `.env` file:

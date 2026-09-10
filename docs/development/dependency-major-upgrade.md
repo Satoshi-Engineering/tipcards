@@ -549,3 +549,36 @@ Validation passed on Node `v24.20.0` with npm `11.19.0`:
 Backend integration tests and the Cypress and Playwright application E2E suites passed before the follow-up `app.listen()` hardening. After that narrow change, its focused regression test, focused lint, backend typecheck, and `git diff --check` passed. Frontend production builds, a complete post-hardening CI run, and staging checks were not run.
 
 Stopped after this batch for review and commit. No commit or release was performed. Tailwind 4 and TypeScript 7 remain separate later projects.
+
+### 2026-09-09: Tailwind CSS 4 batch completed
+
+- Confirmed and installed the current `tailwindcss` `4.3.3` release together with the official `@tailwindcss/vite` `4.3.3` plugin. Removed the obsolete direct `autoprefixer` and `postcss` dependencies; Vite and Vue retain their own transitive PostCSS runtime.
+- Replaced the Tailwind 3 directives with the Tailwind 4 CSS import and loaded the existing TypeScript configuration through `@config`. Vite now uses the dedicated Tailwind plugin instead of an inline PostCSS configuration.
+- Preserved the Tailwind 3 design contract explicitly: legacy palette values, fallback font stack, breakpoints, `blur-sm`, default border color, dialog padding, placeholder color, button cursors, and sRGB vertical gradients. This prevents Tailwind 4 defaults from subtly changing existing screens.
+- Added Tailwind 4's `@reference` directive to the scoped tooltip stylesheet so its existing `@apply` declarations continue to use the shared theme without duplicating generated CSS.
+- Migrated the two deprecated `bg-gradient-to-b` usages to `bg-linear-to-b/srgb`. The sRGB interpolation modifier preserves the Tailwind 3 gradient rendering.
+- Kept the existing custom theme, animations, utilities, responsive behavior, and browser-supported hover behavior.
+
+Validation passed on Node `v24.20.0` with npm `11.19.0`:
+
+- Installation and dependency-tree checks confirmed `tailwindcss` and `@tailwindcss/vite` at `4.3.3`; Tailwind 3 and the direct PostCSS/Autoprefixer dependencies are absent.
+- Lint and project-wide typecheck.
+- Unit suites: 424 passed and 1 skipped across 121 files. The Express listener test initially hit the sandbox's `listen EPERM` restriction and passed when rerun with local-port access.
+- Normal, maintenance, and library frontend builds (both ES and UMD library output). The existing `qrcode-svg` browser externalization warning remains; Tailwind emitted no migration warnings.
+- Clean-room browser comparison against Tailwind 3 at desktop (`1440x1200`) and mobile (`390x844`) viewports produced pixel-identical home-page screenshots. Computed layout, typography, spacing, and color styles also matched across the forms, components, typography/buttons, cards, and account views.
+- Refreshed the ARM-specific `node_modules_docker` installation and restarted the development frontend. The container resolves Tailwind `4.3.3`, Vite starts without Tailwind compilation errors, and `https://tipcards.localhost` responds successfully.
+- Dependency audit passed with only the existing excepted low-severity `elliptic` advisory. `git diff --check` passed.
+
+A follow-up source audit after manual login-dialog comparison found two Tailwind 4 incompatibilities that the initial page comparison did not exercise:
+
+- Tailwind 4 Preflight resets all element margins, including the user-agent `margin: auto` that centered modal dialogs. `ModalDefault` now applies `m-auto` explicitly.
+- The removed `backdrop:bg-opacity-50` utility silently produced no CSS. It is replaced by `backdrop:bg-grey/50`.
+- Remaining `focus:outline-none` usages are migrated to Tailwind 4's `focus:outline-hidden` equivalent. No other removed or renamed utilities remain in frontend source.
+
+The reported missing login banner was not a generated-CSS failure: its responsive order selectors are present in the production CSS, while the component deliberately renders only after authentication resolves to logged out. A failed local auth request leaves that state unresolved and also explains the login QR error shown in the same screenshot.
+
+Follow-up validation passed: lint, project-wide typecheck, all 130 frontend tests, the normal frontend production build, targeted compiled-CSS assertions for dialog/backdrop and responsive header selectors, and `git diff --check`.
+
+Full application Cypress/Playwright E2E suites, backend integration tests, CI/Docker execution, staging workflows, and manual cross-browser checks were not run. Tailwind 4 raises the supported browser baseline to Safari 16.4, Chrome 111, and Firefox 128.
+
+Stopped after this batch for review and commit. No commit or release was performed. TypeScript 7 remains a separate later project.

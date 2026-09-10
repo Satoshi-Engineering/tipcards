@@ -51,7 +51,7 @@
         <SliderHowItWorks />
       </CenterContainer>
     </section>
-    <section class="py-4 bg-gradient-to-b from-grey-light to-transparent">
+    <section class="py-4 bg-linear-to-b from-grey-light to-transparent">
       <CenterContainer>
         <HeadlineDefault level="h2" class="text-center">
           {{ $t('home.videoGuidesHeadline') }}
