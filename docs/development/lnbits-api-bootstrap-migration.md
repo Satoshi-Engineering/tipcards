@@ -39,15 +39,15 @@ Current infrastructure:
 
 ## Credential ownership and naming
 
-The local and CI wallet credentials are deterministic, committed test fixtures. The migration must retain their current values. They must never be reused for hosted or production LNbits wallets.
+The local and CI wallet credentials are deterministic, committed test fixtures. They must never be reused for hosted or production LNbits wallets.
 
-Application configuration and the backend integration user wallet remain in `backend/.env` because that file is both the backend setup template and the GitLab environment-file contract:
+Application configuration and the shared test-user wallet remain in `backend/.env` because that file is both the backend setup template and the GitLab environment-file contract:
 
 ```dotenv
 LNBITS_ADMIN_KEY=8d4e4a151ae5446586ab283e4a89d98c
 LNBITS_INVOICE_READ_KEY=f95447ee6414419b8ff3e415a4e359f8
 LNBITS_ORIGIN_INTEGRATION=https://lnbits.tipcards.localhost
-LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET=6da0c95636c44058bf1d09933476ac26
+LNBITS_ADMIN_KEY_TEST_USER_WALLET=29f376ee8bec4503b241eb912666c397
 ```
 
 Do not rename the two application variables. Keeping their established names avoids changes to development, production, demo, and self-hosted backend environment files. The integration overrides use property-first names, with the wallet role appended where needed.
@@ -57,10 +57,10 @@ Keep each browser test runner's committed environment file self-contained. `e2e-
 ```dotenv
 LNBITS_ORIGIN=https://lnbits.tipcards.localhost
 LNBITS_ADMIN_KEY=8d4e4a151ae5446586ab283e4a89d98c
-LNBITS_ADMIN_KEY_E2E_USER_WALLET=29f376ee8bec4503b241eb912666c397
+LNBITS_ADMIN_KEY_TEST_USER_WALLET=29f376ee8bec4503b241eb912666c397
 ```
 
-`e2e-cypress/.env` contains its LNbits origin and the same E2E user-wallet key. This small duplication is intentional: it keeps environment loading explicit and avoids cross-loading backend or runner-specific files.
+`e2e-cypress/.env` contains its LNbits origin and the same test-user wallet key. The key is intentionally repeated in the three owning environment files so each test runner remains self-contained without cross-file parsing.
 
 The canonical wallet contract is:
 
@@ -68,8 +68,7 @@ The canonical wallet contract is:
 | --- | --- | --- | --- |
 | Application wallet | `Application` | `LNBITS_ADMIN_KEY` | 1,000,000 sats |
 | Application wallet | `Application` | `LNBITS_INVOICE_READ_KEY` | Same wallet; no separate balance |
-| Backend integration-test user wallet | `Integration User Wallet` | `LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET` | 2,000,000 sats |
-| Cypress and Playwright user wallet | `E2E User Wallet` | `LNBITS_ADMIN_KEY_E2E_USER_WALLET` | 3,000,000 sats |
+| Backend integration, Cypress, and Playwright user wallet | `Test User Wallet` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` | 3,000,000 sats |
 
 The migration replaces these ambiguous aliases:
 
@@ -79,16 +78,18 @@ The migration replaces these ambiguous aliases:
 | `TEST_AUTH_ORIGIN` | `AUTH_ORIGIN_INTEGRATION` |
 | Playwright `LNBITS_ADMIN_KEY_APPLICATION` | `LNBITS_ADMIN_KEY` in `e2e-playwright/.env` |
 | `TEST_WALLET_LNBITS_ORIGIN` | `LNBITS_ORIGIN_INTEGRATION` |
-| `TEST_WALLET_LNBITS_ADMIN_KEY` | `LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET` |
-| Playwright `LNBITS_ADMIN_KEY_USER` | `LNBITS_ADMIN_KEY_E2E_USER_WALLET` |
-| Cypress `LNBITS_ADMIN_KEY` | `LNBITS_ADMIN_KEY_E2E_USER_WALLET` |
+| `TEST_WALLET_LNBITS_ADMIN_KEY` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` |
+| `LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` |
+| `LNBITS_ADMIN_KEY_E2E_USER_WALLET` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` |
+| Playwright `LNBITS_ADMIN_KEY_USER` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` |
+| Cypress `LNBITS_ADMIN_KEY` | `LNBITS_ADMIN_KEY_TEST_USER_WALLET` |
 
 The runner-specific files are test infrastructure, not a new deployment convention:
 
-- Development and production backends continue to receive one aggregate backend environment file through the existing GitLab variables. Apply the documented integration-variable renames without changing their values in both `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP`; the setup job validates these files against `backend/.env`.
+- Development and production backends continue to receive one aggregate backend environment file through the existing GitLab variables. Apply the documented shared test-wallet name and value in both `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP`; the setup job validates these files against `backend/.env`.
 - Demo containers continue to mount their existing `app-config/.env` as `/app/.env`.
 - Self-hosted installations continue to configure the application wallet in the backend environment file.
-- Deployed backends do not receive the browser-test user-wallet key.
+- The test-user key is only consumed by test code. Update its name and value in the GitLab backend environment-file variables even though normal backend runtime does not use it.
 - Do not add a wallet key to `E2E_ENV_FILE_LIVE_CHECK_MAIN` or `E2E_ENV_FILE_LIVE_CHECK_DEVELOP`. The live-check specs do not make LNbits wallet API requests.
 - Do not update the separate DevOps repository's legacy `tip-cards-mvp` and `tip-cards-feature-complete` environment files; they configure older application images with their historical variable names.
 - Current hosted wallet values and GitLab file-variable contents remain outside version control and must be updated separately.
@@ -102,6 +103,8 @@ Use supported LNbits APIs for first installation, authentication, extensions, us
 This narrow database dependency is intentional. Document and test its schema assumptions against the pinned LNbits version. An LNbits version upgrade remains a separate change and must revalidate the reconciliation before changing the image tag.
 
 Wallet IDs are not application contracts and do not need to retain their current values. The bootstrap must discover them through the API.
+
+On a clean LNbits installation, the bootstrap reuses the single automatic `LNbits wallet` belonging to the bootstrap user as `Application`. It does so only when no application wallet is already resolved by its canonical name or committed keys. Multiple eligible default wallets are rejected as ambiguous. Existing databases may retain unrelated legacy wallets; the bootstrap does not delete wallet data.
 
 ## Bootstrap command
 
@@ -156,16 +159,16 @@ The TypeScript bootstrap replaces that prototype while step 3 remains responsibl
 ```text
 Implement step 1 of the LNbits bootstrap migration described in docs/development/lnbits-api-bootstrap-migration.md.
 
-Goal: establish the committed credential contract and clear wallet-role names without changing wallet values, activating a bootstrap, changing Compose, or removing the SQL seed.
+Goal: establish the committed two-wallet credential contract and clear wallet-role names without changing application wallet values, activating a bootstrap, changing Compose, or removing the SQL seed.
 
 Required behavior:
 
 1. Keep LNBITS_ADMIN_KEY and LNBITS_INVOICE_READ_KEY with their current values in backend/.env. They remain the application wallet contract for local, development, production, demo, and self-hosted backends.
-2. Rename the backend integration variables according to the mapping above without changing their values.
+2. Consolidate the backend integration and browser-test user-wallet variables under LNBITS_ADMIN_KEY_TEST_USER_WALLET with the committed shared value shown above.
 3. Update backend integration-test configuration to use the renamed variables while preserving all existing fallbacks.
-4. Update Playwright's own environment file to use LNBITS_ADMIN_KEY for the application wallet and LNBITS_ADMIN_KEY_E2E_USER_WALLET for the user wallet. Keep its LNBITS_ORIGIN in that file.
-5. Update Cypress's own environment file to use LNBITS_ADMIN_KEY_E2E_USER_WALLET instead of interpreting its user-wallet key as LNBITS_ADMIN_KEY. Keep its LNBITS_ORIGIN in that file and preserve the existing live-check overrides through e2e-cypress/.env.local.
-6. Keep the E2E user-wallet value identical in the Playwright and Cypress environment files. Add no shared environment loader or cross-file parsing for this small fixture duplication.
+4. Update Playwright's own environment file to use LNBITS_ADMIN_KEY for the application wallet and LNBITS_ADMIN_KEY_TEST_USER_WALLET for the user wallet. Keep its LNBITS_ORIGIN in that file.
+5. Update Cypress's own environment file to use LNBITS_ADMIN_KEY_TEST_USER_WALLET instead of interpreting its user-wallet key as LNBITS_ADMIN_KEY. Keep its LNBITS_ORIGIN in that file and preserve the existing live-check overrides through e2e-cypress/.env.local.
+6. Keep the test-user wallet value identical in the backend, Playwright, and Cypress environment files. Add no shared environment loader or cross-file parsing for this small fixture duplication.
 7. Update focused tests and development documentation for the new variable names. Do not change application configuration values or the application-wallet contract.
 
 Verify the backend integration configuration, Playwright configuration, Cypress configuration, lint, typecheck, and git diff. Do not run full browser suites unless focused verification exposes a runtime concern.
@@ -196,10 +199,10 @@ The bootstrap must:
 2. Wait for LNbits readiness using a bounded timeout and clear errors.
 3. Complete first installation on an empty instance and authenticate on subsequent runs using an explicit local/CI bootstrap identity. Do not use or modify hosted credentials.
 4. Install and enable deterministic, compatible versions of withdraw and lnurlp.
-5. Provision three currency-neutral wallets named Application, Integration User Wallet, and E2E User Wallet with minimum balances of 1,000,000, 2,000,000, and 3,000,000 sats respectively.
+5. Provision two currency-neutral wallets named Application and Test User Wallet with minimum balances of 1,000,000 and 3,000,000 sats respectively. On a clean installation, reuse LNbits' single unambiguous automatic wallet as Application.
 6. Reuse existing users and wallets when rerun. Identify them through stable API-visible properties and never duplicate wallets.
 7. Ensure balances reach the required minimum without resetting higher balances or repeatedly adding the initial amount. Confirm the balance unit against the pinned implementation.
-8. Read the application and integration user-wallet keys from backend/.env and the E2E user-wallet key from e2e-playwright/.env. Verify that e2e-cypress/.env contains the same E2E user-wallet value. Fail if a required value is absent or duplicated values differ.
+8. Read the application and test-user wallet keys from backend/.env. Verify that the committed Playwright and Cypress environment files contain the same test-user wallet value. Fail if a required value is absent or the duplicated values differ.
 9. Use the LNbits APIs wherever supported. Reconcile only each resolved wallet's adminkey and inkey through the minimal pinned-schema PostgreSQL operation required to preserve the committed values.
 10. Verify after reconciliation that every wallet exposes the expected key through an authenticated API response. Never print the values.
 
@@ -245,7 +248,7 @@ Verification:
 
 - Start from genuinely empty application and LNbits data directories using a temporary DATA_DIR. Never delete a developer's existing data directory.
 - Prove the bootstrap completes and a second docker compose up is idempotent.
-- Confirm the three wallet roles have their expected fixed keys, at least their required balances, and no fiat currency without printing key values.
+- Confirm the two wallet roles have their expected fixed keys, at least their required balances, and no fiat currency without printing key values.
 - Run the complete backend integration suite once.
 - Run the two Playwright funding files that exercise invoice/LNURL payments and at least the Playwright clone test that uses the funding helper. Run the full Playwright suite only if focused tests expose cross-file state concerns.
 - Start Cypress far enough to prove browser and application startup; run more only if the infrastructure change affects Cypress behavior.
@@ -281,8 +284,8 @@ Remove:
 
 Retain:
 
-- LNBITS_ADMIN_KEY, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN_INTEGRATION, and LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET in backend/.env;
-- LNBITS_ADMIN_KEY_E2E_USER_WALLET in the committed Playwright and Cypress environment files;
+- LNBITS_ADMIN_KEY, LNBITS_INVOICE_READ_KEY, LNBITS_ORIGIN_INTEGRATION, and LNBITS_ADMIN_KEY_TEST_USER_WALLET in backend/.env;
+- LNBITS_ADMIN_KEY_TEST_USER_WALLET in the committed Playwright and Cypress environment files;
 - the pinned LNbits image and deterministic extension versions;
 - the satoshi-only wallet requirement;
 - bounded readiness handling;
@@ -300,7 +303,7 @@ Final verification must start from an empty temporary DATA_DIR:
 4. Run the affected Cypress payment/authentication coverage, or the complete suite if reasonably fast.
 5. Run npm run typecheck and npm run lint.
 6. Confirm no active references remain to the SQL restore, save command, old wallet IDs, old wallet names, or superseded variable names.
-7. Confirm the committed fixture values are present only in the documented environment files, duplicated E2E user-wallet values match, and no values appear in logs or artifacts.
+7. Confirm the committed fixture values are present only in the documented environment files, duplicated test-user wallet values match, and no values appear in logs or artifacts.
 8. Restore the developer's original Compose stack afterward.
 
 Keep the final diff reviewer-focused. Do not introduce package or LNbits upgrades. Do not commit or push unless explicitly asked.
@@ -319,10 +322,10 @@ Refs: projects#2288
 After all four prompts are complete:
 
 - PostgreSQL starts empty and is migrated by LNbits itself.
-- An idempotent bootstrap provisions pinned extensions and the three required wallet roles.
+- An idempotent bootstrap provisions pinned extensions and the two required wallet roles.
 - Supported LNbits APIs handle provisioning; a minimal, pinned-schema PostgreSQL reconciliation preserves the committed wallet keys that the API cannot accept.
 - `backend/.env` remains the canonical application-wallet configuration and deployment template.
-- Each existing environment file remains self-contained. The small E2E user-wallet duplication between Playwright and Cypress is intentional and checked for consistency.
+- Each existing environment file remains self-contained. The small test-user wallet duplication across backend, Playwright, and Cypress is intentional and checked for consistency.
 - Development, production, demo, and self-hosted backend environment-file structures remain unchanged.
 - Wallets have no fiat currency, so payment tests do not depend on public exchange-rate providers.
 - Compose and GitLab CI enforce bootstrap completion before dependent services start.

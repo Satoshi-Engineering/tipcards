@@ -36,7 +36,7 @@ export async function ensureWallets(
   authenticatedUserId: string,
   contracts: WalletContract[],
 ): Promise<Map<string, Wallet>> {
-  const resolvedWallets = resolveWallets(await api.getWallets(accessToken), contracts)
+  const resolvedWallets = resolveWallets(await api.getWallets(accessToken), contracts, authenticatedUserId)
 
   for (const contract of contracts) {
     let wallet = resolvedWallets.get(contract.name)
@@ -123,7 +123,11 @@ export async function verifyWallets(
   }
 }
 
-export function resolveWallets(wallets: Wallet[], contracts: WalletContract[]): Map<string, Wallet> {
+export function resolveWallets(
+  wallets: Wallet[],
+  contracts: WalletContract[],
+  authenticatedUserId?: string,
+): Map<string, Wallet> {
   const resolvedWallets = new Map<string, Wallet>()
   const claimedWalletIds = new Set<string>()
 
@@ -148,6 +152,14 @@ export function resolveWallets(wallets: Wallet[], contracts: WalletContract[]): 
     resolvedWallets.set(contract.name, wallet)
   }
 
+  const applicationContract = contracts.find(contract => contract.name === 'Application')
+  if (applicationContract && authenticatedUserId && !resolvedWallets.has(applicationContract.name)) {
+    const defaultWallet = findReusableDefaultWallet(wallets, authenticatedUserId)
+    if (defaultWallet) {
+      resolvedWallets.set(applicationContract.name, defaultWallet)
+    }
+  }
+
   return resolvedWallets
 }
 
@@ -166,6 +178,16 @@ function assertWalletContract(wallet: Wallet | undefined, contract: WalletContra
   if (wallet.balance_msat < contract.minimumBalanceSats * SATS_TO_MSATS) {
     throw new Error(`LNbits wallet ${contract.name} is below its required minimum balance.`)
   }
+}
+
+function findReusableDefaultWallet(wallets: Wallet[], authenticatedUserId: string): Wallet | undefined {
+  const defaultWallets = wallets.filter(wallet =>
+    wallet.user === authenticatedUserId && wallet.name === 'LNbits wallet',
+  )
+  if (defaultWallets.length > 1) {
+    throw new Error('More than one default LNbits wallet belongs to the bootstrap user.')
+  }
+  return defaultWallets[0]
 }
 
 function requireWallet(wallets: Map<string, Wallet>, name: string): Wallet {

@@ -4,7 +4,7 @@ import hashSha256 from '@frontend/modules/hashSha256'
 import { loginViaUi } from '@e2e-playwright/utils/auth/login'
 import { fundCard, getCardStatus } from '@e2e-playwright/utils/card'
 import { createSavedSet, gotoCardsPage, gotoSetPage } from '@e2e-playwright/utils/set'
-import { lnbitsE2eUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 
 test.describe('Tipcard Set Cloning', () => {
   const setId = crypto.randomUUID()
@@ -41,7 +41,7 @@ test.describe('Tipcard Set Cloning', () => {
   test('clones a saved set with copied settings and unfunded cards', async ({ page, request }) => {
     // setup
     await createSavedSet({ page, setId, setName, numberOfCards, cardHeadline, cardCopytext })
-    await fundCard(await hashSha256(`${setId}/0`), lnbitsE2eUserWalletApiContext)
+    await fundCard(await hashSha256(`${setId}/0`), lnbitsTestUserWalletApiContext)
 
     // action
     await gotoSetPage({ page, setId })
@@ -70,7 +70,7 @@ test.describe('Tipcard Set Cloning', () => {
 
   test('disables the clone button for a new unsaved set even if the user is logged in', async ({ page }) => {
     // setup
-    await loginViaUi({ page, lnbitsApiContext: lnbitsE2eUserWalletApiContext })
+    await loginViaUi({ page, lnbitsApiContext: lnbitsTestUserWalletApiContext })
     const unsavedSetId = crypto.randomUUID()
 
     // action

@@ -1,7 +1,7 @@
 import { expect, type Page } from '@playwright/test'
 
 import { loginViaUi } from '@e2e-playwright/utils/auth/login'
-import { lnbitsE2eUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 
 export const gotoCardsPage = async ({ page, setId }: { page: Page; setId: string }) => {
   await page.goto(`${process.env.TIPCARDS_ORIGIN}/cards/${setId}`)
@@ -30,7 +30,7 @@ export const createSavedSet = async ({
   cardCopytext: string
 }) => {
   await gotoCardsPage({ page, setId })
-  await loginViaUi({ page, lnbitsApiContext: lnbitsE2eUserWalletApiContext })
+  await loginViaUi({ page, lnbitsApiContext: lnbitsTestUserWalletApiContext })
 
   await page.locator('[data-test="number-of-cards"]').fill(`${numberOfCards}`)
   await page.locator('[data-test="number-of-cards"]').blur()

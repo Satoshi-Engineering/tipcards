@@ -57,11 +57,12 @@ export function parseWalletContracts(
   playwrightEnvironment: EnvironmentFile,
   cypressEnvironment: EnvironmentFile,
 ): WalletContract[] {
-  const e2eAdminKey = requireValue(playwrightEnvironment, 'LNBITS_ADMIN_KEY_E2E_USER_WALLET')
-  const cypressE2eAdminKey = requireValue(cypressEnvironment, 'LNBITS_ADMIN_KEY_E2E_USER_WALLET')
+  const backendTestAdminKey = requireValue(backendEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
+  const playwrightTestAdminKey = requireValue(playwrightEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
+  const cypressTestAdminKey = requireValue(cypressEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
 
-  if (e2eAdminKey !== cypressE2eAdminKey) {
-    throw new Error('Playwright and Cypress must use the same E2E user-wallet key.')
+  if (new Set([backendTestAdminKey, playwrightTestAdminKey, cypressTestAdminKey]).size !== 1) {
+    throw new Error('Backend, Playwright, and Cypress must use the same test-user wallet key.')
   }
 
   const wallets: WalletContract[] = [
@@ -72,13 +73,8 @@ export function parseWalletContracts(
       minimumBalanceSats: 1_000_000,
     },
     {
-      name: 'Integration User Wallet',
-      adminKey: requireValue(backendEnvironment, 'LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET'),
-      minimumBalanceSats: 2_000_000,
-    },
-    {
-      name: 'E2E User Wallet',
-      adminKey: e2eAdminKey,
+      name: 'Test User Wallet',
+      adminKey: backendTestAdminKey,
       minimumBalanceSats: 3_000_000,
     },
   ]

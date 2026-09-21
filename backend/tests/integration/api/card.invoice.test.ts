@@ -10,7 +10,7 @@ import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
-import { API_ORIGIN, LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
+import { API_ORIGIN, LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_TEST_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 
@@ -76,7 +76,7 @@ const testCard = cardData.generateCard(TEST_AMOUNT_IN_SATS)
 
 let fundingInvoice = ''
 
-const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
+const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_TEST_USER_WALLET)
 const failEarly = new FailEarly(it)
 
 const frontend = new FrontendSimulator()

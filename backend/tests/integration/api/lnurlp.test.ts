@@ -6,11 +6,11 @@ import '@backend/initEnv.js' // Info: .env needs to read before imports
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
-import { LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
+import { LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_TEST_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 
 const frontend = new FrontendSimulator()
-const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
+const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_TEST_USER_WALLET)
 
 const cardHash = cardData.generateCardHash()
 describe('lnurlp without funding', () => {

@@ -115,9 +115,9 @@ npm run dev
 
 ## Using your local TipCards instance
 
-With this setup, a local LNBits instance is used. It comes preloaded with funds but is not connected to any external nodes.   Three wallets are configured. To fund a TipCard or withdraw Bitcoin, log in to your local LNBits instance via this link: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
+With this setup, a local LNBits instance is used. It comes preloaded with funds but is not connected to any external nodes. To fund a TipCard or withdraw Bitcoin, log in to your local LNBits instance via this link: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost/wallet?usr=79687332617c4a7fa27cb5d61e2603e0)
 
-⚠️ Note: The first wallet (**develop**) is reserved for the TipCards backend. Use **Wallet2** or **Wallet3** instead. In the TipCards frontend, click **Copy** (where you’d normally scan a QR code on a funding or landing page), then in LNBits click **Paste request** and complete the payment/withdrawal.
+⚠️ Note: The **develop** wallet is reserved for the TipCards backend. Use **Wallet3**, the shared test-user wallet, instead. The legacy SQL seed also contains an unused **Wallet2** until the bootstrap replaces that seed. In the TipCards frontend, click **Copy** (where you’d normally scan a QR code on a funding or landing page), then in LNBits click **Paste request** and complete the payment/withdrawal.
 
 You can also log in to your local TipCards instance:  
 
@@ -138,17 +138,12 @@ You can also log in to your local TipCards instance:
 
 #### Wallets
 
-- **Wallet develop** (used by TipCards backend)  
+- **Wallet develop** (`Application`, used by TipCards backend)
   - Id: `171199a3d97a43c0b5fe811e32d47012`  
   - AdminKey: `8d4e4a151ae5446586ab283e4a89d98c`  
   - InvoiceKey: `f95447ee6414419b8ff3e415a4e359f8`  
 
-- **Wallet2**  
-  - Id: `161dee222082452baef5700de7553b3f`  
-  - AdminKey: `6da0c95636c44058bf1d09933476ac26`  
-  - InvoiceKey: `c2b6f2dcbdc944d3b4b932783d28a6db`  
-
-- **Wallet3**  
+- **Wallet3** (`Test User Wallet`, used by backend integration, Cypress, and Playwright)
   - Id: `563486e6cac2468b8e69293d1e77832d`  
   - AdminKey: `29f376ee8bec4503b241eb912666c397`  
   - InvoiceKey: `ea059680d75b4b86aa2f9d0facf0edf5`  

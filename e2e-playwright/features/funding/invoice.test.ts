@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 import { payInvoice } from '@e2e-playwright/utils/lnbits/api/payments.js'
 import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
-import { lnbitsE2eUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 import { generateRandomCardFundingInfo, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
 
 test.describe('Tipcard Invoice Funding and Withdraw', () => {
@@ -12,11 +12,11 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, grossAmount, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsTestUserWalletApiContext, grossAmount, 'minimal')
   })
 
   test.afterAll(async () => {
-    await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, walletBalanceBefore - fee, 'exact', true)
+    await getAndCheckWalletBalance(lnbitsTestUserWalletApiContext, walletBalanceBefore - fee, 'exact', true)
   })
 
   test('fund a tipcard with payment method invoice', async ({ page }) => {
@@ -35,12 +35,12 @@ test.describe('Tipcard Invoice Funding and Withdraw', () => {
     }
 
     // Pay the invoice using LNbits
-    await payInvoice(lnbitsE2eUserWalletApiContext, invoice)
+    await payInvoice(lnbitsTestUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, walletBalanceBefore - grossAmount, 'exact', true)
+    await getAndCheckWalletBalance(lnbitsTestUserWalletApiContext, walletBalanceBefore - grossAmount, 'exact', true)
   })
 
   test('withdraw the tipcard back to the user wallet', async ({ page }) => {
-    await withdrawCardViaLandingPage(cardHash, page, lnbitsE2eUserWalletApiContext, netAmount)
+    await withdrawCardViaLandingPage(cardHash, page, lnbitsTestUserWalletApiContext, netAmount)
   })
 })
