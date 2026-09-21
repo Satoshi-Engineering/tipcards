@@ -18,6 +18,8 @@ git config core.hooksPath .githooks
 
 This guide explains how to set up all required tools along with the TipCards backend and frontend using Docker containers.
 
+The local LNbits service, wallet contract, and clean rebuild workflow are documented in [LNbits deterministic test bootstrap](lnbits-bootstrap.md).
+
 You can also choose to skip Docker and install the tooling directly on your machine (or even connect to live instances, e.g. [LNBits](https://demo.lnbits.com/)). For that approach, please refer to our [legacy documentation](legacy-setup.md).
 
 ### Domain
