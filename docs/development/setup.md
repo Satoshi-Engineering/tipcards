@@ -128,19 +128,17 @@ You can also log in to your local TipCards instance:
 
 ### Local LNBits instance credentials
 
-- URL: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost)  
-- **Superuser**  
-  - Username: `superuser`  
-  - Password: `superpassword`  
+- URL: [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost)
+- The local superuser credentials are defined in `scripts/docker/lnbits/.env`.
+
 #### Wallets
 
 - **Application** (used by TipCards backend)
-  - AdminKey: `8d4e4a151ae5446586ab283e4a89d98c`  
-  - InvoiceKey: `f95447ee6414419b8ff3e415a4e359f8`  
+  - Admin and invoice keys are defined in `backend/.env`.
   - Minimum balance: 1,000,000 sats
 
 - **Test User Wallet** (used by backend integration, Cypress, and Playwright)
-  - AdminKey: `29f376ee8bec4503b241eb912666c397`  
+  - The admin key is defined in `backend/.env`, `e2e-playwright/.env`, and `e2e-cypress/.env`.
   - Minimum balance: 3,000,000 sats
 
 Wallet IDs and the test-user invoice key are generated during bootstrap and are not application contracts. Both wallets intentionally use sats without a fiat currency.
@@ -158,19 +156,17 @@ Wallet IDs and the test-user invoice key are generated during bootstrap and are 
 - Delete the data directory (`./data` or the directory defined in `.env`)
 - Restart the containers
 
-### Updating TipCards or LNBits database dumps
+### Updating the TipCards database dump
 
-⚠️ Avoid creating a database dump while LNbits or TipCards is running!
+⚠️ Avoid creating a database dump while TipCards is running!
 
-If you made local changes in TipCards or LNBits that should be shared with the project (e.g. creating pre-funded TipCards for E2E tests), you can update the database dumps with:
+If you made local TipCards database changes that should be shared with the project, update its database dump with:
 
 ```sh
 npm run docker:dev:down
 npm run docker:test:down
 npm run docker:save-tipcards-database-to-sql
-
-docker compose --profile tools stop lnbits
-npm run docker:save-lnbits-database-to-sql
-
 npm run dev
 ```
+
+LNbits has no committed database dump. It initializes an empty database and provisions its extensions, wallets, balances, and committed test keys through the idempotent bootstrap.
