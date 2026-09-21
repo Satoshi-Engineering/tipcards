@@ -2,7 +2,7 @@
   <ButtonLinkSkeleton
     class="
       -mx-5 px-5 py-4 group-last:pb-6 group-last:rounded-b-default
-      grid grid-cols-[1fr,auto] grid-rows-[repeat(2,auto)]
+      grid grid-cols-[1fr_auto] grid-rows-[repeat(2,auto)]
     "
     :to="to"
     :element="to == null ? 'div' : undefined"
