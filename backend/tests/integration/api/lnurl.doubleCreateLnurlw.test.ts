@@ -10,7 +10,7 @@ import { Card } from '@shared/data/api/Card.js'
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
-import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
+import { API_ORIGIN, LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 import wait from '../lib/wait.js'
@@ -21,7 +21,7 @@ const CARD_INDEX = 0
 
 const failEarly = new FailEarly(it)
 const frontendSimulator = new FrontendSimulator()
-const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
+const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
 
 describe('fund card and create lnurlw once', () => {
   failEarly.it('should check if lnbits wallet has enough balance for testing', async () => {

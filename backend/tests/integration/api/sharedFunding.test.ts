@@ -8,11 +8,11 @@ import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation.js'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { cardData } from '../lib/apiData.js'
-import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
+import { LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 
 const frontend = new FrontendSimulator()
-const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
+const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
 
 const AMOUNT_PER_FUNDING = 213
 

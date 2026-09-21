@@ -3,7 +3,7 @@ import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdraw
 import { LNBITS_ORIGIN } from '@e2e/lib/constants'
 
 export const payInvoice = (invoice: string) =>
-  cy.env(['LNBITS_ADMIN_KEY']).then(({ LNBITS_ADMIN_KEY }) =>
+  cy.env(['LNBITS_ADMIN_KEY_E2E_USER_WALLET']).then(({ LNBITS_ADMIN_KEY_E2E_USER_WALLET }) =>
     cy.request({
       url: `${LNBITS_ORIGIN}/api/v1/payments`,
       method: 'POST',
@@ -12,7 +12,7 @@ export const payInvoice = (invoice: string) =>
         bolt11: invoice,
       },
       headers: {
-        'X-Api-Key': LNBITS_ADMIN_KEY,
+        'X-Api-Key': LNBITS_ADMIN_KEY_E2E_USER_WALLET,
       },
     }),
   )
@@ -31,7 +31,7 @@ export const withdrawAllSatsFromLnurlWithdrawRequest = (lnurlWithdrawRequest: LN
 }
 
 export const createInvoice = (amount: number) =>
-  cy.env(['LNBITS_ADMIN_KEY']).then(({ LNBITS_ADMIN_KEY }) =>
+  cy.env(['LNBITS_ADMIN_KEY_E2E_USER_WALLET']).then(({ LNBITS_ADMIN_KEY_E2E_USER_WALLET }) =>
     cy.request({
       url: `${LNBITS_ORIGIN}/api/v1/payments`,
       method: 'POST',
@@ -41,7 +41,7 @@ export const createInvoice = (amount: number) =>
         amount,
       },
       headers: {
-        'X-Api-Key': LNBITS_ADMIN_KEY,
+        'X-Api-Key': LNBITS_ADMIN_KEY_E2E_USER_WALLET,
       },
     }),
   ).then((response) => response.body.bolt11 || response.body.payment_request) // lnbits v1.0.0 changed the response format

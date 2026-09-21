@@ -10,7 +10,7 @@ import FailEarly from '../../FailEarly.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import { cardData } from '../lib/apiData.js'
-import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
+import { LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import wait from '../lib/wait.js'
 
@@ -19,7 +19,7 @@ const TEST_ATTEMPT_COUNT = 21
 
 const testCard = cardData.generateCard(TEST_AMOUNT_IN_SATS)
 
-const attackingWallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
+const attackingWallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
 const frontend = new FrontendSimulator()
 
 const failEarly = new FailEarly(it)

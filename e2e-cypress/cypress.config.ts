@@ -78,7 +78,7 @@ export default defineConfig({
     },
   },
   env: {
-    LNBITS_ADMIN_KEY: process.env.LNBITS_ADMIN_KEY || '',
+    LNBITS_ADMIN_KEY_E2E_USER_WALLET: process.env.LNBITS_ADMIN_KEY_E2E_USER_WALLET || '',
   },
   expose: {
     BACKEND_API_ORIGIN: process.env.BACKEND_API_ORIGIN || 'http://localhost:4000',

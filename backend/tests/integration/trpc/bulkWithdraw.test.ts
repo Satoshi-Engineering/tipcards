@@ -17,7 +17,7 @@ import AccessGuard from '@backend/domain/auth/AccessGuard.js'
 
 import Frontend from '../lib/frontend/Frontend.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
-import { API_ORIGIN, WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
+import { API_ORIGIN, LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import wait from '../lib/wait.js'
 
@@ -46,7 +46,7 @@ const SET_ID = randomUUID()
 const CARD_HASH_FUNDED_0 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 0)
 const CARD_HASH_FUNDED_1 = FE.getCardHashBySetIdAndCardIndex(SET_ID, 1)
 
-const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
+const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
 
 beforeAll(async () => {
   await Database.init()

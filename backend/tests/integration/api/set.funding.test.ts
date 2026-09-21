@@ -8,7 +8,7 @@ import { LNURLWithdrawRequest } from '@shared/modules/LNURL/models/LNURLWithdraw
 
 import FrontendSimulator from '../lib/frontend/FrontendSimulator.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
-import { WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY } from '../lib/constants.js'
+import { LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
 import FailEarly from '../../FailEarly.js'
 import wait from '../lib/wait.js'
@@ -53,7 +53,7 @@ describe('set funding | create and pay', () => {
   const SET_ID = randomUUID()
   const AMOUNT_PER_CARD = 42
   const CARD_INDICES = [0,1,2]
-  const wallet = new LNBitsWallet(WALLET_LNBITS_ORIGIN, WALLET_LNBITS_ADMIN_KEY)
+  const wallet = new LNBitsWallet(LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_INTEGRATION_USER_WALLET)
 
   const failEarly = new FailEarly(it)
 

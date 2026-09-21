@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments.js'
 import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
-import { lnbitsUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { lnbitsE2eUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 import { generateRandomCardFundingInfo, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
 import { getRandomInt } from '@e2e-playwright/utils/getRandomInt'
 import hashSha256 from '@frontend/modules/hashSha256'
@@ -19,11 +19,11 @@ test.describe('Tipcard Set Funding', () => {
 
   test.beforeAll(async () => {
     // Ensure the wallet has enough balance
-    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsUserWalletApiContext, totalGrossAmount, 'minimal')
+    walletBalanceBefore = await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, totalGrossAmount, 'minimal')
   })
 
   test.afterAll(async () => {
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalFee, 'exact', true)
+    await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, walletBalanceBefore - totalFee, 'exact', true)
   })
 
   test('fund a set via set funding', async ({ page }) => {
@@ -49,14 +49,14 @@ test.describe('Tipcard Set Funding', () => {
     }
 
     // Pay the invoice using LNbits
-    await payInvoice(lnbitsUserWalletApiContext, invoice)
+    await payInvoice(lnbitsE2eUserWalletApiContext, invoice)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60000 })
-    await getAndCheckWalletBalance(lnbitsUserWalletApiContext, walletBalanceBefore - totalGrossAmount, 'exact', true)
+    await getAndCheckWalletBalance(lnbitsE2eUserWalletApiContext, walletBalanceBefore - totalGrossAmount, 'exact', true)
   })
 
   test('withdraw one tipcard back to the user wallet', async ({ page }) => {
     const cardHash = await hashSha256(`${setId}/${getRandomInt(0, numberOfCards - 1)}`)
-    await withdrawCardViaLandingPage(cardHash, page, lnbitsUserWalletApiContext)
+    await withdrawCardViaLandingPage(cardHash, page, lnbitsE2eUserWalletApiContext)
   })
 
   test('bulk withdraw the remaining tipcards back to the user wallet', async ({ page }) => {
@@ -65,7 +65,7 @@ test.describe('Tipcard Set Funding', () => {
     await page.goto(fullSetUrl)
 
     // Bulk withdraw is only possible for logged in users
-    await loginViaUi({ page, lnbitsApiContext: lnbitsUserWalletApiContext })
+    await loginViaUi({ page, lnbitsApiContext: lnbitsE2eUserWalletApiContext })
 
     await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10_000 })
 
@@ -77,7 +77,7 @@ test.describe('Tipcard Set Funding', () => {
     }
 
     // Withdraw the tipcard to LNbits
-    const { amount } = await withdrawLnurlW(lnbitsUserWalletApiContext, lnurlW)
+    const { amount } = await withdrawLnurlW(lnbitsE2eUserWalletApiContext, lnurlW)
     await expect(page.locator('[data-test="lightning-qr-code-image-success"]')).toBeVisible({ timeout: 60_000 })
 
     const expectedAmount = netAmount * (numberOfCards - 1)
