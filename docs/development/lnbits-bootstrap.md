@@ -12,7 +12,7 @@ lnbits-postgres -> lnbits -> lnbits-bootstrap -> backend -> tests
 
 The frontend remains independent of the bootstrap. The one-shot `lnbits-bootstrap` service must exit successfully before either backend starts. Bootstrap failures are reported with LNbits and bootstrap logs without printing credentials.
 
-LNbits is pinned in `compose.yml` to v1.6.0 and uses PostgreSQL 16.9 with `FakeWallet`. The bootstrap installs and enables the pinned `withdraw` 1.3.0 and `lnurlp` 1.3.2 extensions.
+LNbits is pinned in `compose.yml` to v1.6.0 and uses PostgreSQL 16.9 with `FakeWallet`. A small derived image patches two upstream LNURL-auth regressions in that release. The bootstrap installs and enables the pinned `withdraw` 1.3.0 and `lnurlp` 1.3.2 extensions.
 
 All test wallets intentionally use sats without a fiat currency. This keeps payment tests independent of external exchange-rate providers.
 
@@ -45,11 +45,12 @@ The bootstrap:
 
 1. Waits for LNbits with a bounded timeout.
 2. Completes first installation or authenticates the existing local bootstrap identity.
-3. Installs and enables the pinned extensions.
-4. Reuses the clean installation's single automatic wallet as `Application` and creates or resolves `Test User Wallet`.
-5. Reconciles the committed keys and clears wallet currency.
-6. Funds each wallet only up to its required minimum.
-7. Verifies the final wallet contract through authenticated API responses.
+3. Allows LNURL requests to the local Docker network. Compose mounts the combined CA bundle at LNbits' `certifi` path because the hardened LNURL client does not read `SSL_CERT_FILE`.
+4. Installs and enables the pinned extensions.
+5. Reuses the clean installation's single automatic wallet as `Application` and creates or resolves `Test User Wallet`.
+6. Reconciles the committed keys and clears wallet currency.
+7. Funds each wallet only up to its required minimum.
+8. Verifies the final wallet contract through authenticated API responses.
 
 LNbits v1.6.0 cannot accept caller-supplied wallet keys or clear wallet currency through its wallet APIs. The bootstrap therefore uses supported APIs for provisioning and a narrow PostgreSQL update for the resolved wallet IDs. The reconciliation verifies the pinned `public.wallets` schema before updating only `adminkey`, `inkey`, and `currency`. Any LNbits image upgrade must revalidate this assumption first.
 

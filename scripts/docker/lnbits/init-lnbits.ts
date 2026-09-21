@@ -20,6 +20,7 @@ async function main(): Promise<void> {
   const accessToken = await api.authenticate(config.username, config.password)
   const authenticatedUser = await api.getAuthenticatedUser(accessToken)
 
+  await api.allowPrivateLnurlTargets(accessToken)
   await ensureExtensions(api, accessToken, config.extensions)
   const wallets = await ensureWallets(api, accessToken, authenticatedUser.id, config.wallets)
   await reconcileWallets(config.databaseUrl, wallets, config.wallets)

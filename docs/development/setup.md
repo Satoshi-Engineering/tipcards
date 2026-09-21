@@ -126,10 +126,7 @@ You can also log in to your local TipCards instance:
 - Click **Login** in the frontend  
 - In the overlay, click **Copy LNURL**  
 - Go to [https://lnbits.tipcards.localhost](https://lnbits.tipcards.localhost), sign in, and select **Test User Wallet**
-- Open the browser console and run `window.wallet = window.g.wallet`
 - Click **Paste request** and complete the login
-
-The console command temporarily works around an LNbits v1.6.0 frontend bug and must be run again after reloading LNbits.
 
 ### Local LNBits instance credentials
 
