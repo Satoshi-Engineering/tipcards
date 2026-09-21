@@ -4,6 +4,19 @@ This guide contains four prompts for replacing the committed LNbits PostgreSQL d
 
 The migration should be incremental. Each step must leave the existing development and test environments usable, must be independently revertible, and must keep the GitLab pipeline green. Do not combine all four steps into one change.
 
+## Migration progress
+
+Status on 2026-09-21:
+
+- Prompt 1 is complete in the current working tree. Backend integration, Cypress, and Playwright use the shared `Test User Wallet` contract through `LNBITS_ADMIN_KEY_TEST_USER_WALLET`. The corresponding `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab variables were updated separately.
+- Prompt 2 is complete. The TypeScript bootstrap provisions `Application` and `Test User Wallet`, reuses LNbits' automatic wallet on a clean installation, reconciles the committed keys, installs the pinned extensions, funds both wallets to their minimum balances, and is idempotent.
+- Prompt 2 was verified against both an empty LNbits v1.5.3 database and the committed SQL seed. A clean database produced exactly the two canonical wallets. The seeded database migrated the canonical wallets without deleting unrelated legacy wallets. Focused bootstrap tests, typecheck, lint, and `git diff --check` passed.
+- Prompt 3 is implemented in the current working tree. Compose and the GitLab integration/end-to-end jobs use an empty LNbits database followed by the bootstrap. Clean-data bootstrap/idempotency checks, backend integration, Cypress startup, typecheck, and lint pass locally. The focused Playwright checks remain pending because the pinned image was not cached and its download exceeded the local execution window. The SQL seed remains available as an inactive rollback path until CI validation completes.
+
+### Prompt 3 rollback
+
+To temporarily restore the legacy LNbits seed, remove the `lnbits-bootstrap` service and the backend dependencies on it from `compose.yml`, remove its explicit target and failure-log diagnostics from `gitlab-ci/integration-and-e2e.yml`, then restore the `./scripts/docker/lnbits/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d` volume on `lnbits-postgres`. Use a new empty `DATA_DIR` because PostgreSQL only runs initialization scripts for a new data directory. The committed dump, restore script, and database-save command remain unchanged for this rollback window.
+
 ## Repository context
 
 The repository is `lightning-tip-cards`, normally checked out at `/Users/davidscheuch/Projects/tipcards`.

@@ -22,7 +22,7 @@ test-backend-integration:
     - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
     - >
       docker compose --profile tools --profile test up -d --wait
-      proxy postgres lnbits-postgres lnbits volt-vault-mock tipcards-backend-test
+      proxy postgres lnbits-postgres lnbits lnbits-bootstrap volt-vault-mock tipcards-backend-test
   script:
     - ./scripts/docker/run-backend-integration.sh
   after_script:
@@ -33,6 +33,8 @@ test-backend-integration:
         docker logs tipcards-backend-test || true
         echo "Dumping lnbits logs:"
         docker logs tipcards-lnbits || true
+        echo "Dumping lnbits bootstrap logs:"
+        docker logs tipcards-lnbits-bootstrap || true
       fi
     - docker compose --profile tools --profile test down
 
@@ -81,6 +83,8 @@ test-e2e-cypress:
         docker logs tipcards-frontend-test || true
         echo "Dumping lnbits logs:"
         docker logs tipcards-lnbits || true
+        echo "Dumping lnbits bootstrap logs:"
+        docker logs tipcards-lnbits-bootstrap || true
       fi
     - docker compose --profile tools --profile test down
 
@@ -134,5 +138,7 @@ test-e2e-playwright:
         docker logs tipcards-frontend-test || true
         echo "Dumping lnbits logs:"
         docker logs tipcards-lnbits || true
+        echo "Dumping lnbits bootstrap logs:"
+        docker logs tipcards-lnbits-bootstrap || true
       fi
     - docker compose --profile tools --profile test down
