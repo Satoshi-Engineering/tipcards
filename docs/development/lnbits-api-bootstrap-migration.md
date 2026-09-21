@@ -8,10 +8,10 @@ The migration should be incremental. Each step must leave the existing developme
 
 Status on 2026-09-21:
 
-- Prompt 1 is complete in the current working tree. Backend integration, Cypress, and Playwright use the shared `Test User Wallet` contract through `LNBITS_ADMIN_KEY_TEST_USER_WALLET`. The corresponding `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab variables were updated separately.
+- Prompt 1 is complete. Backend integration, Cypress, and Playwright use the shared `Test User Wallet` contract through `LNBITS_ADMIN_KEY_TEST_USER_WALLET`. The corresponding `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab variables were updated separately.
 - Prompt 2 is complete. The TypeScript bootstrap provisions `Application` and `Test User Wallet`, reuses LNbits' automatic wallet on a clean installation, reconciles the committed keys, installs the pinned extensions, funds both wallets to their minimum balances, and is idempotent.
 - Prompt 2 was verified against both an empty LNbits v1.5.3 database and the committed SQL seed. A clean database produced exactly the two canonical wallets. The seeded database migrated the canonical wallets without deleting unrelated legacy wallets. Focused bootstrap tests, typecheck, lint, and `git diff --check` passed.
-- Prompt 3 is implemented in the current working tree. Compose and the GitLab integration/end-to-end jobs use an empty LNbits database followed by the bootstrap. Clean-data bootstrap/idempotency checks, backend integration, Cypress startup, typecheck, and lint pass locally. The focused Playwright checks remain pending because the pinned image was not cached and its download exceeded the local execution window. The SQL seed remains available as an inactive rollback path until CI validation completes.
+- Prompt 3 is implemented and committed. Compose and the GitLab integration/end-to-end jobs use an empty LNbits database followed by the bootstrap. Clean-data bootstrap/idempotency checks, backend integration, Cypress startup, typecheck, and lint pass locally. The GitLab backend integration and full Playwright jobs pass; the Cypress job is still running. The SQL seed remains available as an inactive rollback path until the complete pipeline passes.
 
 ### Prompt 3 rollback
 
@@ -27,7 +27,6 @@ Relevant files:
 - `gitlab-ci/integration-and-e2e.yml`
 - `gitlab-ci/live-check.yml`
 - `scripts/docker/lnbits/.env`
-- `scripts/docker/lnbits/init-lnbits.sh`
 - `scripts/docker/lnbits/docker-entrypoint-initdb.d/restore.sh`
 - `scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql`
 - `backend/.env`
@@ -45,9 +44,9 @@ Current infrastructure:
 - LNbits listens on port `4050`.
 - Within the Compose network it is reachable directly as `http://lnbits:4050`.
 - Through nginx it is reachable as `https://lnbits.tipcards.localhost`.
-- The LNbits PostgreSQL database currently restores the committed dump at `scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql` through `restore.sh`.
-- The dump contains LNbits' internal schema, settings, extension metadata, users, wallets, keys, and historical payments. This couples the test setup to the internal schema of the pinned LNbits release.
-- Required LNbits extensions are `withdraw` and `lnurlp`. Their versions in the current seed are `withdraw` 1.2.2 and `lnurlp` 1.3.0. Verify compatible versions against the pinned image and its extension API before implementing the bootstrap.
+- LNbits initializes and migrates an empty PostgreSQL database. Compose then runs the one-shot `lnbits-bootstrap` service before either backend starts.
+- The bootstrap provisions the required `withdraw` 1.3.0 and `lnurlp` 1.3.2 extensions and reconciles the two canonical wallet contracts.
+- The committed dump and restore script are inactive rollback artifacts. The dump still contains LNbits' internal schema, settings, extension metadata, users, wallets, keys, and historical payments, which couples it to the old seeded setup.
 - All test wallets must remain satoshi-only. Do not assign a fiat currency. Fiat wallets make payment processing depend on external exchange-rate APIs and have already caused nondeterministic CI failures.
 
 ## Credential ownership and naming
@@ -135,7 +134,7 @@ The pinned LNbits v1.5.3 API creates wallets with generated keys and cannot clea
 
 The bootstrap pins `withdraw` 1.3.0 and `lnurlp` 1.3.2. These are the deterministic releases currently marked compatible with LNbits v1.5.3 by its extension API; the older versions in the SQL seed no longer satisfy that API contract and are upgraded when the bootstrap runs against seeded data.
 
-Until step 3 activates this command in Compose, the SQL restore remains the active setup path.
+Step 3 activates this command in Compose and GitLab CI. The legacy SQL restore remains inactive until step 4 removes it.
 
 The replaced `scripts/docker/lnbits/init-lnbits.sh` was only a prototype. It:
 
@@ -148,7 +147,7 @@ The replaced `scripts/docker/lnbits/init-lnbits.sh` was only a prototype. It:
 - assumes `curl` and `jq` are available;
 - does not replace the SQL restore in the active Compose setup.
 
-The TypeScript bootstrap replaces that prototype while step 3 remains responsible for activating it in Compose and GitLab CI.
+The TypeScript bootstrap replaced that prototype and is active in Compose and GitLab CI.
 
 ## General implementation rules
 
@@ -292,8 +291,7 @@ Remove:
 2. scripts/docker/lnbits/docker-entrypoint-initdb.d/sql/init.sql.
 3. The now-unused LNbits docker-entrypoint-initdb.d directory if empty.
 4. docker:save-lnbits-database-to-sql from package.json.
-5. Superseded credential aliases, compatibility branches, old wallet names, and obsolete migration commands.
-6. The old scripts/docker/lnbits/init-lnbits.sh if step 2 replaced it.
+5. Superseded repository credential aliases, compatibility branches, old wallet names, and obsolete migration commands.
 
 Retain:
 
@@ -306,7 +304,9 @@ Retain:
 - clear bootstrap diagnostics that never expose credentials;
 - the optimized integration and pinned browser-image CI setup.
 
-Update documentation to explain the committed test-fixture contract, wallet roles, minimum balances, idempotent startup, and non-destructive temporary-DATA_DIR rebuild workflow. Remove instructions for dumping or restoring LNbits PostgreSQL internals. State that test wallets intentionally have no fiat currency.
+Do not remove the deprecated aliases from the external `BACKEND_ENV_FILE_MAIN` or `BACKEND_ENV_FILE_DEVELOP` GitLab file variables in this step. Retire those aliases separately only after the renamed-variable release is deployed to both branches, the rollback window no longer includes versions that read them, and active pipelines no longer reference them. Do not remove LNbits variables from `E2E_ENV_FILE_LIVE_CHECK_MAIN` or `E2E_ENV_FILE_LIVE_CHECK_DEVELOP`.
+
+Update documentation to explain the committed test-fixture contract, wallet roles, minimum balances, idempotent startup, and non-destructive temporary-DATA_DIR rebuild workflow. Remove instructions for dumping or restoring LNbits PostgreSQL internals and remove duplicated literal wallet keys from documentation in favor of references to their owning environment files. State that test wallets intentionally have no fiat currency.
 
 Final verification must start from an empty temporary DATA_DIR:
 
