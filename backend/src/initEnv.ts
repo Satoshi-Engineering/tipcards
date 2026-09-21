@@ -7,10 +7,12 @@ const loadEnvFile = (envFile: string) => {
   config({
     path: path.resolve(process.cwd(), envFile),
     override: true, // we want to make sure that our configured values are always used
+    quiet: true,
   })
   config({
     path: path.resolve(process.cwd(), 'backend', envFile),
     override: true, // we want to make sure that our configured values are always used
+    quiet: true,
   })
 }
 

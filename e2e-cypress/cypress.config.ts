@@ -35,11 +35,13 @@ const webpackOptions = {
 config({
   path: './.env',
   override: true, // we want to make sure that our configured values are always used
+  quiet: true,
 })
 
 config({
   path: './.env.local',
   override: true, // we want to make sure that our configured values are always used
+  quiet: true,
 })
 
 export default defineConfig({
