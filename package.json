@@ -33,6 +33,8 @@
     "e2e:cypress:live-checks": "cypress run --e2e -C ./e2e-cypress/cypress.config.ts --spec 'e2e-cypress/live-checks/**/*.test.ts'",
     "e2e:playwright:ui": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem playwright test --ui",
     "e2e:playwright:tests": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem playwright test",
+    "lnbits:bootstrap": "tsx ./scripts/docker/lnbits/init-lnbits.ts",
+    "lnbits:bootstrap:test": "vitest run ./scripts/docker/lnbits/init-lnbits.test.ts",
     "drizzle-update-schema": "tsx scripts/createSchemaFiles/script.ts",
     "drizzle-create-migration-files": "npm run backend-build && drizzle-kit generate --config=./dist/backend/drizzle.config.js",
     "drizzle-migrate": "tsx --tsconfig ./backend/tsconfig.json ./backend/drizzle.migrate.ts",

@@ -103,9 +103,25 @@ This narrow database dependency is intentional. Document and test its schema ass
 
 Wallet IDs are not application contracts and do not need to retain their current values. The bootstrap must discover them through the API.
 
-## Existing bootstrap prototype
+## Bootstrap command
 
-The existing `scripts/docker/lnbits/init-lnbits.sh` is only a prototype. It currently:
+The bootstrap command added in step 2 is:
+
+```bash
+npm run lnbits:bootstrap -- [LNbits base URL]
+```
+
+It defaults to `http://127.0.0.1:4050` on the host and `http://lnbits:4050` in a container. `LNBITS_BASE_URL` can also provide the API URL. `LNBITS_DATABASE_URL` can override the PostgreSQL connection; otherwise the command reads the committed LNbits database configuration and substitutes localhost only when running on the host.
+
+The bootstrap identity defaults to the committed local credentials documented in `setup.md`. CI can explicitly override them with `LNBITS_BOOTSTRAP_USERNAME` and `LNBITS_BOOTSTRAP_PASSWORD`.
+
+The pinned LNbits v1.5.3 API creates wallets with generated keys and cannot clear an existing wallet currency. The bootstrap therefore verifies the `public.wallets` columns `id`, `adminkey`, `inkey`, and `currency`, then updates only those fields for the exact wallet IDs resolved through the API. All first-install, authentication, extension, wallet, naming, balance, and verification work uses supported LNbits APIs. Balance adjustments use sats; LNbits stores the resulting balances as msats.
+
+The bootstrap pins `withdraw` 1.3.0 and `lnurlp` 1.3.2. These are the deterministic releases currently marked compatible with LNbits v1.5.3 by its extension API; the older versions in the SQL seed no longer satisfy that API contract and are upgraded when the bootstrap runs against seeded data.
+
+Until step 3 activates this command in Compose, the SQL restore remains the active setup path.
+
+The replaced `scripts/docker/lnbits/init-lnbits.sh` was only a prototype. It:
 
 - targets port `4020` instead of `4050`;
 - performs first-install setup but is not idempotent;
@@ -116,7 +132,7 @@ The existing `scripts/docker/lnbits/init-lnbits.sh` is only a prototype. It curr
 - assumes `curl` and `jq` are available;
 - does not replace the SQL restore in the active Compose setup.
 
-Do not treat that script as production-ready. It may be replaced if a small TypeScript or shell implementation is clearer.
+The TypeScript bootstrap replaces that prototype while step 3 remains responsible for activating it in Compose and GitLab CI.
 
 ## General implementation rules
 
