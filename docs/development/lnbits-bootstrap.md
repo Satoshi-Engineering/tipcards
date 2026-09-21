@@ -45,7 +45,7 @@ The bootstrap:
 
 1. Waits for LNbits with a bounded timeout.
 2. Completes first installation or authenticates the existing local bootstrap identity.
-3. Allows LNURL requests to the local Docker network. Compose mounts the combined CA bundle at LNbits' `certifi` path because the hardened LNURL client does not read `SSL_CERT_FILE`.
+3. Allows LNURL requests and payment callbacks to the local Docker network. Compose mounts the combined CA bundle at LNbits' `certifi` path because the hardened LNURL client does not read `SSL_CERT_FILE`.
 4. Installs and enables the pinned extensions.
 5. Reuses the clean installation's single automatic wallet as `Application` and creates or resolves `Test User Wallet`.
 6. Reconciles the committed keys and clears wallet currency.

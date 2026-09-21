@@ -123,7 +123,7 @@ export const withdrawLnurlW = async (context: APIRequestContext, lnurl: string) 
     }),
   }).parse(rawJson)
 
-  if (responseJson.status !== 'success' || responseJson.extra.lnurl_response !== true) {
+  if (responseJson.status === 'failed' || responseJson.extra.lnurl_response !== true) {
     throw new Error(`Failed to withdraw LNURL: ${bodyText}`)
   }
 

@@ -45,6 +45,7 @@ interface InvoiceWallet {
 }
 
 interface AdminSettings {
+  lnbits_callback_allow_private_ips: boolean
   lnbits_lnurl_allow_private_ips: boolean
 }
 
@@ -111,17 +112,20 @@ export class LnbitsApi {
     return this.request('/api/v1/auth', { token })
   }
 
-  async allowPrivateLnurlTargets(token: string): Promise<void> {
+  async allowPrivateNetworkTargets(token: string): Promise<void> {
     const settings = await this.request<AdminSettings>('/admin/api/v1/settings', { token })
-    if (settings.lnbits_lnurl_allow_private_ips) {
+    if (settings.lnbits_callback_allow_private_ips && settings.lnbits_lnurl_allow_private_ips) {
       return
     }
 
-    console.error('Allowing LNURL requests to the local Docker network.')
+    console.error('Allowing LNURL requests and callbacks to the local Docker network.')
     await this.request('/admin/api/v1/settings', {
       method: 'PATCH',
       token,
-      body: { lnbits_lnurl_allow_private_ips: true },
+      body: {
+        lnbits_callback_allow_private_ips: true,
+        lnbits_lnurl_allow_private_ips: true,
+      },
     })
   }
 
