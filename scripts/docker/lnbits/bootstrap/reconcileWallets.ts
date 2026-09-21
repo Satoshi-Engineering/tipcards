@@ -42,7 +42,7 @@ async function assertWalletSchema(sql: ReturnType<typeof postgres>): Promise<voi
       AND column_name IN ('id', 'adminkey', 'inkey', 'currency')
   `
   if (columns.length !== 4) {
-    throw new Error('LNbits wallet schema does not match the pinned v1.5.3 reconciliation contract.')
+    throw new Error('LNbits wallet schema does not match the pinned v1.6.0 reconciliation contract.')
   }
 }
 

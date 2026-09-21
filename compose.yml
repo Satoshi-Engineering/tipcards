@@ -66,7 +66,7 @@ services:
     profiles: [tools]
 
   lnbits:
-    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/lnbits/lnbits:v1.5.3
+    image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX:-docker.io}/lnbits/lnbits:v1.6.0
     container_name: tipcards-lnbits
     restart: unless-stopped
     depends_on:
