@@ -8,7 +8,7 @@ check-e2e-image-versions:
       - gitlab-ci/*.yml
       - scripts/check-e2e-image-versions.mjs
   script:
-    - npm run check:e2e-image-versions
+    - npm run e2e:image-versions:check
 
 install:
   stage: .pre # always first, no matter if it is listed in stages
