@@ -18,7 +18,9 @@ fi
 # increase the version number in package.json and generate the changelog
 CHANGELOG=$(npx changelogen --bump --output CHANGELOG.md)
 
-NEXT_VERSION="v$(jq -r '.version' package.json)"
+VERSION=$(jq -r '.version' package.json)
+npm version "$VERSION" --no-git-tag-version --allow-same-version --ignore-scripts --silent
+NEXT_VERSION="v$VERSION"
 
 git add package.json package-lock.json CHANGELOG.md
 git commit -m "chore(release): $NEXT_VERSION" --no-verify
