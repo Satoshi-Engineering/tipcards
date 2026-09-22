@@ -24,8 +24,9 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 
 Inventory date: 2026-09-09.
 
-- Cypress: 42 spec files and 154 statically declared `it` calls.
-- `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
+- Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
+- The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
+- After Batch 4, 11 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 31 specs with 113 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -56,6 +57,8 @@ it.skip('should return public key', () => {
 
 Do not use only `describe.skip`; individual cases must remain visibly accounted for. Do not delete migrated Cypress files or helpers during intermediate batches. Cleanup happens only after every case is migrated and the Playwright suite has passed reliably.
 
+Once every case in a Cypress spec is migrated, rename the file from `*.test.ts` to `*.test.skip.ts`. The Cypress spec pattern will no longer discover it in local or CI runs, while the source remains covered by the Cypress TypeScript project. Do not rename a partially migrated spec.
+
 For a test that was already skipped before the migration, retain its original skip and add a separate migration note only after a skipped Playwright equivalent exists. Record that it was pre-existing; do not count it as newly disabled coverage.
 
 ## Batch workflow
@@ -69,8 +72,9 @@ For every batch:
 5. Run the Playwright replacements against a fresh equivalent environment. Compare the actual assertions and relevant request/state transitions, not only the final pass result.
 6. If equivalence is demonstrated, add the migration comment and change each corresponding Cypress `it` to `it.skip`. Set the inventory state to `migrated` and record the replacement path.
 7. Run the focused Playwright replacements again and run the affected Cypress spec once to prove the intended cases are reported as skipped.
-8. Run lint and typecheck once after the batch. Let the normal GitLab pipeline run the complete Cypress and Playwright jobs once.
-9. Stop for review. Do not begin the next batch in the same change.
+8. If every case in the Cypress spec is now migrated, rename it to `*.test.skip.ts` only after the focused Cypress verification in the previous step.
+9. Run lint and typecheck once after the batch. Let the normal GitLab pipeline run the remaining Cypress specs and the complete Playwright suite once.
+10. Stop for review. Do not begin the next batch in the same change.
 
 If either runner exposes a product defect or a semantic difference, stop the migration for that case and mark it `blocked`. Fixing product behavior is a separate change.
 
@@ -147,8 +151,8 @@ This is an inspection step and does not create a generic compatibility layer. Ad
 
 Migrate together:
 
-- `e2e-cypress/tests/features/auth/api.publicKey.test.ts` — one unauthenticated HTTP response-shape case.
-- `e2e-cypress/tests/trpc/profile.test.ts` — one unauthenticated tRPC rejection case.
+- `e2e-cypress/tests/features/auth/api.publicKey.test.skip.ts` — one unauthenticated HTTP response-shape case.
+- `e2e-cypress/tests/trpc/profile.test.skip.ts` — one unauthenticated tRPC rejection case.
 
 These cases require no browser interaction, database task, wallet operation, or shared test sequence. This is the first implementation batch.
 
@@ -158,9 +162,9 @@ Completed on 2026-09-22. Both Cypress source cases passed before migration, both
 
 Consider two or three files together after Batch 1:
 
-- `e2e-cypress/tests/index.test.ts`
-- `e2e-cypress/tests/features/homePageLinks.test.ts`
-- `e2e-cypress/tests/features/aboutPageLinks.test.ts`
+- `e2e-cypress/tests/index.test.skip.ts`
+- `e2e-cypress/tests/features/homePageLinks.test.skip.ts`
+- `e2e-cypress/tests/features/aboutPageLinks.test.skip.ts`
 
 Preserve same-tab versus external navigation behavior and exact URLs. Do not replace navigation assertions with href-only assertions unless the Cypress source asserted only the href.
 
@@ -168,8 +172,8 @@ Completed on 2026-09-22. All 14 Cypress source cases passed before migration, al
 
 ### Batch 3: application shell and locales
 
-- `e2e-cypress/tests/components/layout/TheHeader.test.ts`
-- `e2e-cypress/tests/components/layout/TheLangNav.test.ts`
+- `e2e-cypress/tests/components/layout/TheHeader.test.skip.ts`
+- `e2e-cypress/tests/components/layout/TheLangNav.test.skip.ts`
 
 Preserve header scope, first-element selection, menu open/close behavior, all eight generated locales, translated button text, document language, and optional trailing-slash behavior.
 
@@ -177,10 +181,10 @@ Completed on 2026-09-22. All 14 Cypress source cases passed before migration, al
 
 ### Batch 4: simple client and logged-out state
 
-- `features/localStorageSets.test.ts`
-- `features/auth/refreshToken.test.ts`
-- `features/historyList/historyList.empty.test.ts`
-- `features/setsList/setsList.empty.test.ts`
+- `features/localStorageSets.test.skip.ts`
+- `features/auth/refreshToken.test.skip.ts`
+- `features/historyList/historyList.empty.test.skip.ts`
+- `features/setsList/setsList.empty.test.skip.ts`
 
 This batch establishes browser storage and the smallest reusable login/UI helpers.
 
@@ -247,17 +251,17 @@ All entries start as `planned`. Update the status and replacement path as work p
 
 | Batch | Cypress spec | Declared cases | State | Playwright replacement |
 | --- | --- | ---: | --- | --- |
-| 1 | `features/auth/api.publicKey.test.ts` | 1 | migrated | `features/auth/api.publicKey.test.ts` |
-| 1 | `trpc/profile.test.ts` | 1 | migrated | `trpc/profile.test.ts` |
-| 2 | `index.test.ts` | 6 | migrated | `index.test.ts` |
-| 2 | `features/homePageLinks.test.ts` | 5 | migrated | `features/homePageLinks.test.ts` |
-| 2 | `features/aboutPageLinks.test.ts` | 3 | migrated | `features/aboutPageLinks.test.ts` |
-| 3 | `components/layout/TheHeader.test.ts` | 6 | migrated | `components/layout/TheHeader.test.ts` |
-| 3 | `components/layout/TheLangNav.test.ts` | 1 generated across 8 locales | migrated | `components/layout/TheLangNav.test.ts` |
-| 4 | `features/localStorageSets.test.ts` | 4 | migrated | `features/localStorageSets.test.ts` |
-| 4 | `features/auth/refreshToken.test.ts` | 2 | migrated | `features/auth/refreshToken.test.ts` |
-| 4 | `features/historyList/historyList.empty.test.ts` | 6 | migrated | `features/historyList/historyList.empty.test.ts` |
-| 4 | `features/setsList/setsList.empty.test.ts` | 6 | migrated | `features/setsList/setsList.empty.test.ts` |
+| 1 | `features/auth/api.publicKey.test.skip.ts` | 1 | migrated | `features/auth/api.publicKey.test.ts` |
+| 1 | `trpc/profile.test.skip.ts` | 1 | migrated | `trpc/profile.test.ts` |
+| 2 | `index.test.skip.ts` | 6 | migrated | `index.test.ts` |
+| 2 | `features/homePageLinks.test.skip.ts` | 5 | migrated | `features/homePageLinks.test.ts` |
+| 2 | `features/aboutPageLinks.test.skip.ts` | 3 | migrated | `features/aboutPageLinks.test.ts` |
+| 3 | `components/layout/TheHeader.test.skip.ts` | 6 | migrated | `components/layout/TheHeader.test.ts` |
+| 3 | `components/layout/TheLangNav.test.skip.ts` | 1 generated across 8 locales | migrated | `components/layout/TheLangNav.test.ts` |
+| 4 | `features/localStorageSets.test.skip.ts` | 4 | migrated | `features/localStorageSets.test.ts` |
+| 4 | `features/auth/refreshToken.test.skip.ts` | 2 | migrated | `features/auth/refreshToken.test.ts` |
+| 4 | `features/historyList/historyList.empty.test.skip.ts` | 6 | migrated | `features/historyList/historyList.empty.test.ts` |
+| 4 | `features/setsList/setsList.empty.test.skip.ts` | 6 | migrated | `features/setsList/setsList.empty.test.ts` |
 | 5 | `features/auth/accessToken.test.ts` | 2 | planned | — |
 | 5 | `features/auth/loginOverlay.loginWarning.test.ts` | 2 | planned | — |
 | 5 | `features/auth/loginOverlay.test.ts` | 5 | planned | — |
