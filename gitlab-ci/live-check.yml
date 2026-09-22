@@ -17,11 +17,10 @@ live-check:
     NODE_ENV: test
   artifacts:
     name: cypress-live-check
-    when: always
+    when: on_failure
     paths:
-      - cypress/videos/**/*.mp4
       - cypress/screenshots/**/*.png
-    expire_in: 1 day    
+    expire_in: 1 day
   script:
     - |
       if [ "$CI_COMMIT_BRANCH" == "main" ]; then
