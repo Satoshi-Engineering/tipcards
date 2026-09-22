@@ -3,7 +3,8 @@ import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 const API_PUBLIC_KEY = new URL('/auth/api/publicKey', TIPCARDS_AUTH_ORIGIN)
 
 describe('Auth API - public Key', () => {
-  it('should return public key', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/api.publicKey.test.ts
+  it.skip('should return public key', () => {
     cy.request({
       url: API_PUBLIC_KEY.href,
     }).then((response) => {

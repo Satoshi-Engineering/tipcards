@@ -151,6 +151,8 @@ Migrate together:
 
 These cases require no browser interaction, database task, wallet operation, or shared test sequence. This is the first implementation batch.
 
+Completed on 2026-09-22. Both Cypress source cases passed before migration, both Playwright replacements passed against the same local environment, and the focused post-migration verification passed.
+
 ### Batch 2: public navigation
 
 Consider two or three files together after Batch 1:
@@ -238,8 +240,8 @@ All entries start as `planned`. Update the status and replacement path as work p
 
 | Batch | Cypress spec | Declared cases | State | Playwright replacement |
 | --- | --- | ---: | --- | --- |
-| 1 | `features/auth/api.publicKey.test.ts` | 1 | planned | — |
-| 1 | `trpc/profile.test.ts` | 1 | planned | — |
+| 1 | `features/auth/api.publicKey.test.ts` | 1 | migrated | `features/auth/api.publicKey.test.ts` |
+| 1 | `trpc/profile.test.ts` | 1 | migrated | `trpc/profile.test.ts` |
 | 2 | `index.test.ts` | 6 | planned | — |
 | 2 | `features/homePageLinks.test.ts` | 5 | planned | — |
 | 2 | `features/aboutPageLinks.test.ts` | 3 | planned | — |
