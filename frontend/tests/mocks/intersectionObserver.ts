@@ -3,6 +3,7 @@ import { vi } from 'vitest'
 class MockIntersectionObserver implements IntersectionObserver {
   root: Document | Element | null = null
   rootMargin: string = ''
+  scrollMargin: string = ''
   thresholds: readonly number[] = []
 
   disconnect = vi.fn()
