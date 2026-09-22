@@ -16,7 +16,8 @@ describe('TheLangNav', () => {
   }
 
   LOCALE_CODES.forEach((languageCode) => {
-    it(`click on "${LOCALES[languageCode].name}" lang nav menu item and check if the language of the website changed to "${languageCode}"`, () => {
+    // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheLangNav.test.ts
+    it.skip(`click on "${LOCALES[languageCode].name}" lang nav menu item and check if the language of the website changed to "${languageCode}"`, () => {
       cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
       cy.get('header [data-test=the-header-lang-button]').first().click()
       cy.contains(`header nav[data-test=the-lang-nav] [data-test=the-lang-nav-item-${languageCode}]`, LOCALES[languageCode].name)

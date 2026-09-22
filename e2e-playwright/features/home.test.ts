@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(process.env.TIPCARDS_ORIGIN)
+  await page.goto('/')
 })
 
 test('if has title', async ({ page }) => {

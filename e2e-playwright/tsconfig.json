@@ -9,6 +9,7 @@
     "types": [
       "playwright",
       "node",
+      "vite/client",
     ],
     "paths": {
       "@backend/*": ["../backend/src/*"],

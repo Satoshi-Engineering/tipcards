@@ -1,7 +1,8 @@
 import tipCards from '@e2e/lib/tipCards'
 
 describe('homePageLinks', () => {
-  it('should navigate to the cards page when the create button is clicked', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/homePageLinks.test.ts
+  it.skip('should navigate to the cards page when the create button is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="hero-section"] [data-test="button-create"]').should('exist').click()
@@ -9,7 +10,8 @@ describe('homePageLinks', () => {
     cy.url().should('contain', 'cards')
   })
 
-  it('should navigate to the dashboard page when the dashboard button is clicked', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/homePageLinks.test.ts
+  it.skip('should navigate to the dashboard page when the dashboard button is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="hero-section"] [data-test="button-dashboard"]').should('exist').click()
@@ -17,14 +19,16 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/dashboard')
   })
 
-  it('should render the two expected sliders', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/homePageLinks.test.ts
+  it.skip('should render the two expected sliders', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-how-it-works"]').should('exist')
     cy.get('[data-test="slider-video-guides"]').should('exist')
   })
 
-  it('should navigate to the cards page when the button in the first slider is clicked', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/homePageLinks.test.ts
+  it.skip('should navigate to the cards page when the button in the first slider is clicked', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-how-it-works"] [data-test="slider-button-start"]').first().click()
@@ -32,7 +36,8 @@ describe('homePageLinks', () => {
     cy.url().should('contain', '/cards')
   })
 
-  it('should contain a link to the youtube video in the second slider\'s play button', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/homePageLinks.test.ts
+  it.skip('should contain a link to the youtube video in the second slider\'s play button', () => {
     tipCards.home.goto()
 
     cy.get('[data-test="slider-video-guides"] [data-test="slider-video-link"]').eq(0)

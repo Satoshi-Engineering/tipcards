@@ -1,8 +1,8 @@
-import { expect } from '@playwright/test'
+import { expect, type APIRequestContext, type Page } from '@playwright/test'
 
 import { lnurlAuth } from '../lnbits/api/lnurlAuth'
 
-export const ensureAtTipcardsOrigin = async (page) => {
+export const ensureAtTipcardsOrigin = async (page: Page) => {
   const tipcardsOrigin = process.env.TIPCARDS_ORIGIN
   if (!tipcardsOrigin) {
     throw new Error('TIPCARDS_ORIGIN is not set')
@@ -16,7 +16,13 @@ export const ensureAtTipcardsOrigin = async (page) => {
   }
 }
 
-export const loginViaUi = async ({ page, lnbitsApiContext }) => {
+export const loginViaUi = async ({
+  page,
+  lnbitsApiContext,
+}: {
+  page: Page
+  lnbitsApiContext: APIRequestContext
+}) => {
   await ensureAtTipcardsOrigin(page)
   await page.locator('[data-test="the-header-main-nav-button"]').click()
   await page.locator('[data-test="main-nav-link-login"]').click()

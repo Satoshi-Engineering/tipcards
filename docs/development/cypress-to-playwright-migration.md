@@ -163,12 +163,16 @@ Consider two or three files together after Batch 1:
 
 Preserve same-tab versus external navigation behavior and exact URLs. Do not replace navigation assertions with href-only assertions unless the Cypress source asserted only the href.
 
+Completed on 2026-09-22. All 14 Cypress source cases passed before migration, all Playwright replacements passed against the same local environment, and the focused post-migration verification passed.
+
 ### Batch 3: application shell and locales
 
 - `e2e-cypress/tests/components/layout/TheHeader.test.ts`
 - `e2e-cypress/tests/components/layout/TheLangNav.test.ts`
 
 Preserve header scope, first-element selection, menu open/close behavior, all eight generated locales, translated button text, document language, and optional trailing-slash behavior.
+
+Completed on 2026-09-22. All 14 Cypress source cases passed before migration, all Playwright replacements passed against the same local environment, and the focused post-migration verification passed.
 
 ### Batch 4: simple client and logged-out state
 
@@ -242,11 +246,11 @@ All entries start as `planned`. Update the status and replacement path as work p
 | --- | --- | ---: | --- | --- |
 | 1 | `features/auth/api.publicKey.test.ts` | 1 | migrated | `features/auth/api.publicKey.test.ts` |
 | 1 | `trpc/profile.test.ts` | 1 | migrated | `trpc/profile.test.ts` |
-| 2 | `index.test.ts` | 6 | planned | — |
-| 2 | `features/homePageLinks.test.ts` | 5 | planned | — |
-| 2 | `features/aboutPageLinks.test.ts` | 3 | planned | — |
-| 3 | `components/layout/TheHeader.test.ts` | 6 | planned | — |
-| 3 | `components/layout/TheLangNav.test.ts` | 1 generated across 8 locales | planned | — |
+| 2 | `index.test.ts` | 6 | migrated | `index.test.ts` |
+| 2 | `features/homePageLinks.test.ts` | 5 | migrated | `features/homePageLinks.test.ts` |
+| 2 | `features/aboutPageLinks.test.ts` | 3 | migrated | `features/aboutPageLinks.test.ts` |
+| 3 | `components/layout/TheHeader.test.ts` | 6 | migrated | `components/layout/TheHeader.test.ts` |
+| 3 | `components/layout/TheLangNav.test.ts` | 1 generated across 8 locales | migrated | `components/layout/TheLangNav.test.ts` |
 | 4 | `features/localStorageSets.test.ts` | 4 | planned | — |
 | 4 | `features/auth/refreshToken.test.ts` | 2 | planned | — |
 | 4 | `features/historyList/historyList.empty.test.ts` | 6 | planned | — |

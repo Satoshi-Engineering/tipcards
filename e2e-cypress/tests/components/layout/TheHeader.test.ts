@@ -2,7 +2,8 @@ import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 import tipCards from '@e2e/lib/tipCards'
 
 describe('TheHeader', () => {
-  it('clicks on the lang icon in the header and the lang nav should appear and disappear', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('clicks on the lang icon in the header and the lang nav should appear and disappear', () => {
     cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
     cy.get('header nav[data-test=the-lang-nav]').should('not.exist')
     cy.get('header [data-test=the-header-lang-button]').first().click()
@@ -12,7 +13,8 @@ describe('TheHeader', () => {
     cy.get('header nav[data-test=the-lang-nav]').should('not.exist')
   })
 
-  it('click on a lang nav menu item should close the lang nav', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('click on a lang nav menu item should close the lang nav', () => {
     cy.visit(new URL('/en/style-guide', TIPCARDS_ORIGIN).href)
     cy.get('header nav[data-test=the-lang-nav]').should('not.exist')
     cy.get('header [data-test=the-header-lang-button]').first().click()
@@ -21,7 +23,8 @@ describe('TheHeader', () => {
     cy.get('header nav[data-test=the-lang-nav]').should('not.exist')
   })
 
-  it('clicks on the main nav icon in the header and the main nav should appear and disappear', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('clicks on the main nav icon in the header and the main nav should appear and disappear', () => {
     cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
     cy.get('header nav[data-test=the-main-nav]').should('not.exist')
     cy.get('header [data-test=the-header-main-nav-button]').first().click()
@@ -31,7 +34,8 @@ describe('TheHeader', () => {
     cy.get('header nav[data-test=the-main-nav]').should('not.exist')
   })
 
-  it('click on a main nav menu item should close the main nav', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('click on a main nav menu item should close the main nav', () => {
     cy.visit(new URL('/en/style-guide', TIPCARDS_ORIGIN).href)
     cy.get('header nav[data-test=the-main-nav]').should('not.exist')
     cy.get('header [data-test=the-header-main-nav-button]').first().click()
@@ -40,7 +44,8 @@ describe('TheHeader', () => {
     cy.get('header nav[data-test=the-main-nav]').should('not.exist')
   })
 
-  it('opening the login modal via button in login banner should close the lang nav', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('opening the login modal via button in login banner should close the lang nav', () => {
     tipCards.utils.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
@@ -50,7 +55,8 @@ describe('TheHeader', () => {
     cy.get('header nav[data-test=the-lang-nav]').should('not.exist')
   })
 
-  it('opening the login modal via button in login banner should close the main nav', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/layout/TheHeader.test.ts
+  it.skip('opening the login modal via button in login banner should close the main nav', () => {
     tipCards.utils.gotoPage(new URL('/sets', TIPCARDS_ORIGIN))
 
     cy.get('header [data-test=login-banner-login]').should('exist')
