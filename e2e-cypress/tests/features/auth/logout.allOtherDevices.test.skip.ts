@@ -9,7 +9,8 @@ describe('Feature logoutAllOtherDevices', () => {
     cy.clearAllCookies()
   })
 
-  it('should create multiple valid refresh tokens', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/logout.allOtherDevices.test.ts
+  it.skip('should create multiple valid refresh tokens', () => {
     createUserAndWrapRefreshTokens({ numberOfRefreshTokens })
 
     for (let i = 0; i < numberOfRefreshTokens; i++) {
@@ -17,7 +18,8 @@ describe('Feature logoutAllOtherDevices', () => {
     }
   })
 
-  it('should invalidate all other refresh tokens on logout-all-other-devices', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/logout.allOtherDevices.test.ts
+  it.skip('should invalidate all other refresh tokens on logout-all-other-devices', () => {
     const activeRefreshTokenIndex = 1
     createUserAndWrapRefreshTokens({ numberOfRefreshTokens })
 
@@ -38,7 +40,8 @@ describe('Feature logoutAllOtherDevices', () => {
 
   // on a 401 the user gets logged out (checkout refreshToken.revoked.test.ts)
   // on other errors (e.g. 500), the user should not get logged out but an error message should be shown
-  it('should show an error message if an error on the backend occurs', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/logout.allOtherDevices.test.ts
+  it.skip('should show an error message if an error on the backend occurs', () => {
     tipCardsApi.auth.login()
     tipCards.userAccount.goto()
     cy.intercept('/auth/trpc/auth.logoutAllOtherDevices**', {

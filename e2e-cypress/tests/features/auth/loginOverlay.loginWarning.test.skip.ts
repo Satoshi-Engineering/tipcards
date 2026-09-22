@@ -8,7 +8,8 @@ describe('Login Overlay - Email CTA', () => {
     tipCards.home.goto()
   })
 
-  it('After login email cta should be displayed', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.loginWarning.test.ts
+  it.skip('After login email cta should be displayed', () => {
     cy.getTestElement('the-header-main-nav-button').click()
     cy.getTestElement('main-nav-link-login').click()
     wrapLNURLAuthFromLinkClick()
@@ -19,7 +20,8 @@ describe('Login Overlay - Email CTA', () => {
     cy.getTestElement('emailCta').should('exist')
   })
 
-  it('After login email cta should not be displayed', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.loginWarning.test.ts
+  it.skip('After login email cta should not be displayed', () => {
     const profileEmail = 'email@domain.com'
     cy.get('@keyPair').then(function () {
       cy.task<{ userId: string, lnurlAuthKey: string }>('db:createUser', {

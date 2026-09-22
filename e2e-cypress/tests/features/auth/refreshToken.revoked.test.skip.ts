@@ -2,8 +2,9 @@ import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
-describe('Revoked/denied refresh doken', () => {
-  it('should show modal login with logged out by other device error message', () => {
+describe('Revoked/denied refresh token', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show modal login with logged out by other device error message', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.logoutAllDevices()
 
@@ -13,7 +14,8 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
   })
 
-  it('should show nothing if the user is logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show nothing if the user is logged out', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.logoutAllDevices()
     tipCards.home.goto() // after this the user is logged out and the refresh token cookie should be cleared
@@ -24,7 +26,8 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login').should('not.exist')
   })
 
-  it('should show modal login with generic error message', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show modal login with generic error message', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.getRefreshTokenCookie().then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
@@ -46,7 +49,8 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login-user-message').should('contain', 'You were logged out')
   })
 
-  it('should show modal login, if user logged out on another device while using application', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show modal login, if user logged out on another device while using application', () => {
     tipCardsApi.auth.login()
     // the access token has to be expired so the frontend wants to request a new one using the refresh token
     tipCards.cards.gotoNewSetPageWithExpiredAccessToken()
@@ -60,7 +64,8 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
   })
 
-  it('should show modal login, if user logged out on another device and wants to use the log out all other devices feature', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show modal login, if user logged out on another device and wants to use the log out all other devices feature', () => {
     tipCardsApi.auth.login()
     tipCards.userAccount.goto()
     tipCardsApi.auth.logoutAllDevices()
@@ -71,7 +76,8 @@ describe('Revoked/denied refresh doken', () => {
     cy.getTestElement('modal-login-user-message').should('contain', 'You logged out on another device')
   })
 
-  it('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.revoked.test.ts
+  it.skip('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
     tipCardsApi.auth.login()
     tipCards.userAccount.goto()
     tipCardsApi.auth.getRefreshTokenCookie().then((cookie) => {

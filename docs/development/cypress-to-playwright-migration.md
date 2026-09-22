@@ -26,7 +26,7 @@ Inventory date: 2026-09-09.
 
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After Batch 4, 11 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 31 specs with 113 runtime cases, including the three pre-existing skips.
+- After Batch 5, 19 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 23 specs with 90 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -203,6 +203,8 @@ Completed on 2026-09-22. All 18 Cypress source cases passed before migration, al
 
 Port JWT, LNURL-auth, cookie, clipboard, and backend-error behavior incrementally within this batch group. Split it further if one review would contain more than one new helper boundary.
 
+Completed on 2026-09-22. Playwright typecheck, lint, and all 23 Cypress source cases passed. The first Playwright run passed 18 of 23 cases; five session-lifecycle cases exposed missing waits for the same auth/profile/set requests awaited by their Cypress sources. After those waits were added, all affected Playwright cases passed on the focused rerun. The post-migration Cypress run confirmed the 23 source cases are skipped.
+
 ### Batch 6: profile and basic collection views
 
 - `features/profileData.test.ts`
@@ -262,14 +264,14 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 4 | `features/auth/refreshToken.test.skip.ts` | 2 | migrated | `features/auth/refreshToken.test.ts` |
 | 4 | `features/historyList/historyList.empty.test.skip.ts` | 6 | migrated | `features/historyList/historyList.empty.test.ts` |
 | 4 | `features/setsList/setsList.empty.test.skip.ts` | 6 | migrated | `features/setsList/setsList.empty.test.ts` |
-| 5 | `features/auth/accessToken.test.ts` | 2 | planned | — |
-| 5 | `features/auth/loginOverlay.loginWarning.test.ts` | 2 | planned | — |
-| 5 | `features/auth/loginOverlay.test.ts` | 5 | planned | — |
-| 5 | `features/auth/logout.test.ts` | 2 | planned | — |
-| 5 | `features/auth/logout.allOtherDevices.test.ts` | 3 | planned | — |
-| 5 | `features/auth/refreshToken.expired.test.ts` | 1 | planned | — |
-| 5 | `features/auth/refreshToken.revoked.test.ts` | 6 | planned | — |
-| 5 | `trpc/auth.test.ts` | 2 | planned | — |
+| 5 | `features/auth/accessToken.test.skip.ts` | 2 | migrated | `features/auth/accessToken.test.ts` |
+| 5 | `features/auth/loginOverlay.loginWarning.test.skip.ts` | 2 | migrated | `features/auth/loginOverlay.loginWarning.test.ts` |
+| 5 | `features/auth/loginOverlay.test.skip.ts` | 5 | migrated | `features/auth/loginOverlay.test.ts` |
+| 5 | `features/auth/logout.test.skip.ts` | 2 | migrated | `features/auth/logout.test.ts` |
+| 5 | `features/auth/logout.allOtherDevices.test.skip.ts` | 3 | migrated | `features/auth/logout.allOtherDevices.test.ts` |
+| 5 | `features/auth/refreshToken.expired.test.skip.ts` | 1 | migrated | `features/auth/refreshToken.expired.test.ts` |
+| 5 | `features/auth/refreshToken.revoked.test.skip.ts` | 6 | migrated | `features/auth/refreshToken.revoked.test.ts` |
+| 5 | `trpc/auth.test.skip.ts` | 2 | migrated | `trpc/auth.test.ts` |
 | 6 | `features/profileData.test.ts` | 1 | planned | — |
 | 6 | `features/setsList/setsList.withSets.test.ts` | 3 | planned | — |
 | 6 | `pages/sets.test.ts` | 4 | planned | — |

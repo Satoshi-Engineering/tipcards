@@ -5,7 +5,8 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
 describe('Trpc Auth', () => {
-  it('should not be able to refresh, if the user is logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/trpc/auth.test.ts
+  it.skip('should not be able to refresh, if the user is logged out', () => {
     cy.request({
       url: API_AUTH_REFRESH.href,
       failOnStatusCode: false,
@@ -14,7 +15,8 @@ describe('Trpc Auth', () => {
     })
   })
 
-  it('Lnurl auth callback url call should fail, after a login has happend', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/trpc/auth.test.ts
+  it.skip('Lnurl auth callback url call should fail, after a login has happend', () => {
     tipCardsApi.auth.createNewKeysAndWrap()
     tipCards.home.goto()
     cy.getTestElement('the-header-main-nav-button').click()

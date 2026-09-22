@@ -4,6 +4,10 @@ import { lnurlAuth } from '../lnbits/api/lnurlAuth'
 import { createRefreshToken } from './refreshToken'
 
 export const login = async (browserContext: BrowserContext) => {
+  await setRefreshToken(browserContext, await createRefreshToken())
+}
+
+export const setRefreshToken = async (browserContext: BrowserContext, refreshToken: string) => {
   const authOrigin = process.env.TIPCARDS_AUTH_ORIGIN
   if (!authOrigin) {
     throw new Error('TIPCARDS_AUTH_ORIGIN is not set')
@@ -11,7 +15,7 @@ export const login = async (browserContext: BrowserContext) => {
 
   await browserContext.addCookies([{
     name: 'refresh_token',
-    value: await createRefreshToken(),
+    value: refreshToken,
     url: authOrigin,
     httpOnly: true,
     secure: true,

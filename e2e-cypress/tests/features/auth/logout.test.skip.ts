@@ -6,7 +6,8 @@ describe('Feature Logout', () => {
     tipCardsApi.auth.login()
   })
 
-  it('should should log out the user', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/logout.test.ts
+  it.skip('should should log out the user', () => {
     tipCards.home.goto()
 
     cy.getTestElement('the-layout').should('exist')
@@ -24,7 +25,8 @@ describe('Feature Logout', () => {
     tipCardsApi.auth.isLoggedOut()
   })
 
-  it('should remove user specific data after logout', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/logout.test.ts
+  it.skip('should remove user specific data after logout', () => {
     const randomSetName = Math.random().toString(36).substring(7)
     tipCardsApi.set.generateAndAddSet(randomSetName)
     tipCards.sets.goto()

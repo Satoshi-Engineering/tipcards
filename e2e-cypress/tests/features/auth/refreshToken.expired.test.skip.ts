@@ -3,7 +3,8 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
 
 describe('Expired refresh token', () => {
-  it('should show modal login with session expiration message', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/refreshToken.expired.test.ts
+  it.skip('should show modal login with session expiration message', () => {
     tipCardsApi.auth.login()
     tipCardsApi.auth.getRefreshTokenCookie().then((cookie) => {
       cy.task<string>('jwt:generateExpiredRefreshToken', {

@@ -8,19 +8,22 @@ describe('Login Overlay', () => {
     tipCards.home.goto()
   })
 
-  it('check if user is logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.test.ts
+  it.skip('check if user is logged out', () => {
     cy.getTestElement('the-layout').should('exist')
     cy.getTestElement('logged-in').should('not.exist')
     cy.getTestElement('modal-login').should('not.exist')
   })
 
-  it('Close ModalLogin with close button', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.test.ts
+  it.skip('Close ModalLogin with close button', () => {
     tipCards.auth.openModalLoginFromMainNav()
     cy.getTestElement('modal-login-close-button').click()
     cy.getTestElement('modal-login').should('not.exist')
   })
 
-  it('Login with click on qr code', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.test.ts
+  it.skip('Login with click on qr code', () => {
     tipCards.auth.openModalLoginFromMainNav()
     wrapLNURLAuthFromLinkClick()
     tipCardsApi.auth.lnurlAuthLoginWithWrappedKeyPair()
@@ -28,7 +31,8 @@ describe('Login Overlay', () => {
     reloadPageAndCheckAuth()
   })
 
-  it('Login with lnurl from clipboard', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.test.ts
+  it.skip('Login with lnurl from clipboard', () => {
     tipCards.auth.openModalLoginFromMainNav()
 
     cy.window().then((window) => {
@@ -47,7 +51,8 @@ describe('Login Overlay', () => {
     reloadPageAndCheckAuth()
   })
 
-  it('Should login, after a login and logout has happend without reloading or revisiting the page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/loginOverlay.test.ts
+  it.skip('Should login, after a login and logout has happend without reloading or revisiting the page', () => {
     // Login
     tipCards.auth.loginViaMainNav()
 

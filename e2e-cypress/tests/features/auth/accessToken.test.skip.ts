@@ -4,7 +4,8 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 const API_AUTH_REFRESH = new URL('/auth/trpc/auth.refreshRefreshToken', TIPCARDS_AUTH_ORIGIN)
 
 describe('accessToken', () => {
-  it('should not be able to get an access token, if the user is logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/accessToken.test.ts
+  it.skip('should not be able to get an access token, if the user is logged out', () => {
     cy.request({
       url: API_AUTH_REFRESH.href,
       failOnStatusCode: false,
@@ -13,7 +14,8 @@ describe('accessToken', () => {
     })
   })
 
-  it('should get an access token', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/accessToken.test.ts
+  it.skip('should get an access token', () => {
     tipCardsApi.auth.login()
 
     cy.request({
