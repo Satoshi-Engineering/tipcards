@@ -18,6 +18,7 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 8. Preserve existing skipped behavior. A Cypress test that was already skipped must not become active as a side effect of migration.
 9. Add helpers only when a batch needs them. Prefer an explicit local helper over a speculative Cypress compatibility layer.
 10. Run focused verification during a batch and the full CI suites once when the batch is complete. Do not repeatedly run all browser tests between small edits.
+11. Use explicit `page.goto(...)` calls in Playwright tests. Do not introduce a shared page-navigation wrapper such as `gotoPage`; rely on web-first assertions and add only the narrowly scoped request wait a specific test requires.
 
 ## Baseline
 
@@ -183,6 +184,8 @@ Completed on 2026-09-22. All 14 Cypress source cases passed before migration, al
 
 This batch establishes browser storage and the smallest reusable login/UI helpers.
 
+Completed on 2026-09-22. All 18 Cypress source cases passed before migration, all Playwright replacements passed against the same local environment, and the focused post-migration verification passed.
+
 ### Batch 5: authentication and session lifecycle
 
 - `features/auth/accessToken.test.ts`
@@ -251,10 +254,10 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 2 | `features/aboutPageLinks.test.ts` | 3 | migrated | `features/aboutPageLinks.test.ts` |
 | 3 | `components/layout/TheHeader.test.ts` | 6 | migrated | `components/layout/TheHeader.test.ts` |
 | 3 | `components/layout/TheLangNav.test.ts` | 1 generated across 8 locales | migrated | `components/layout/TheLangNav.test.ts` |
-| 4 | `features/localStorageSets.test.ts` | 4 | planned | — |
-| 4 | `features/auth/refreshToken.test.ts` | 2 | planned | — |
-| 4 | `features/historyList/historyList.empty.test.ts` | 6 | planned | — |
-| 4 | `features/setsList/setsList.empty.test.ts` | 6 | planned | — |
+| 4 | `features/localStorageSets.test.ts` | 4 | migrated | `features/localStorageSets.test.ts` |
+| 4 | `features/auth/refreshToken.test.ts` | 2 | migrated | `features/auth/refreshToken.test.ts` |
+| 4 | `features/historyList/historyList.empty.test.ts` | 6 | migrated | `features/historyList/historyList.empty.test.ts` |
+| 4 | `features/setsList/setsList.empty.test.ts` | 6 | migrated | `features/setsList/setsList.empty.test.ts` |
 | 5 | `features/auth/accessToken.test.ts` | 2 | planned | — |
 | 5 | `features/auth/loginOverlay.loginWarning.test.ts` | 2 | planned | — |
 | 5 | `features/auth/loginOverlay.test.ts` | 5 | planned | — |

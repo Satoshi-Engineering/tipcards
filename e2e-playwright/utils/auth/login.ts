@@ -1,6 +1,23 @@
-import { expect, type APIRequestContext, type Page } from '@playwright/test'
+import { expect, type APIRequestContext, type BrowserContext, type Page } from '@playwright/test'
 
 import { lnurlAuth } from '../lnbits/api/lnurlAuth'
+import { createRefreshToken } from './refreshToken'
+
+export const login = async (browserContext: BrowserContext) => {
+  const authOrigin = process.env.TIPCARDS_AUTH_ORIGIN
+  if (!authOrigin) {
+    throw new Error('TIPCARDS_AUTH_ORIGIN is not set')
+  }
+
+  await browserContext.addCookies([{
+    name: 'refresh_token',
+    value: await createRefreshToken(),
+    url: authOrigin,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  }])
+}
 
 export const ensureAtTipcardsOrigin = async (page: Page) => {
   const tipcardsOrigin = process.env.TIPCARDS_ORIGIN

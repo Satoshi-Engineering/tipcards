@@ -2,12 +2,14 @@ import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 import { urlWithOptionalTrailingSlash } from '@e2e/lib/urlHelpers'
 
 describe('localStorageSets', () => {
-  it('should render no warning, if no localStorage sets exist', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/localStorageSets.test.ts
+  it.skip('should render no warning, if no localStorage sets exist', () => {
     cy.visit(new URL('/sets', TIPCARDS_ORIGIN).href)
     cy.get('[data-test="sets-in-local-storage-warning"]').should('not.exist')
   })
 
-  it('should render a warning with link, if localStorage sets exist', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/localStorageSets.test.ts
+  it.skip('should render a warning with link, if localStorage sets exist', () => {
     cy.visit(new URL('/sets', TIPCARDS_ORIGIN).href, {
       onBeforeLoad: (window) => {
         window.localStorage.setItem('savedTipCardsSets', JSON.stringify([{
@@ -26,7 +28,8 @@ describe('localStorageSets', () => {
     )
   })
 
-  it('should navigate to a set page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/localStorageSets.test.ts
+  it.skip('should navigate to a set page', () => {
     cy.visit(new URL('/local-storage-sets', TIPCARDS_ORIGIN).href, {
       onBeforeLoad: (window) => {
         window.localStorage.setItem('savedTipCardsSets', JSON.stringify([{
@@ -47,7 +50,8 @@ describe('localStorageSets', () => {
     cy.url().should('contain', 'cards/54b13b5f-8d0f-4003-bd15-e3002ec5c932')
   })
 
-  it('should delete all sets', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/localStorageSets.test.ts
+  it.skip('should delete all sets', () => {
     cy.visit(new URL('/local-storage-sets', TIPCARDS_ORIGIN).href, {
       onBeforeLoad: (window) => {
         window.localStorage.setItem('savedTipCardsSets', JSON.stringify([{
