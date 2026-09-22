@@ -1,10 +1,10 @@
-import LOCALES from '@shared/modules/i18n/locales.js'
+import LOCALES, { LOCALE_CODES, type LocaleCode } from '@shared/modules/i18n/locales.js'
 
 import { urlWithOptionalTrailingSlash } from '@e2e/lib/urlHelpers'
 import { TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('TheLangNav', () => {
-  const rootPageButtonText = {
+  const rootPageButtonText: Record<LocaleCode, string> = {
     en: 'Create your TipCards set',
     de: 'Erstelle dein TipCards-Set',
     es: 'Crea tu conjunto de TipCards',
@@ -15,7 +15,7 @@ describe('TheLangNav', () => {
     id: 'Buat set TipCards Anda',
   }
 
-  Object.keys(LOCALES).forEach((languageCode) => {
+  LOCALE_CODES.forEach((languageCode) => {
     it(`click on "${LOCALES[languageCode].name}" lang nav menu item and check if the language of the website changed to "${languageCode}"`, () => {
       cy.visit(new URL('/style-guide', TIPCARDS_ORIGIN).href)
       cy.get('header [data-test=the-header-lang-button]').first().click()

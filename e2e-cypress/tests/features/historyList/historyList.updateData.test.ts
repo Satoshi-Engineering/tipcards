@@ -64,7 +64,7 @@ function historyPageMakeSureTestDataIsFetchedAndRendered() {
 }
 
 function changeTestData() {
-  cy.get<SetDto>('@testSet').then((set) => {
+  cy.get('@testSet').then((set: SetDto) => {
     generateCardHashForSet(set.id, 2).then((cardHash) => {
       cy.task('db:setFundedCardToLandingPageViewed', cardHash)
     })

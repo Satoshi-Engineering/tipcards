@@ -39,7 +39,12 @@ describe('Landing Page', () => {
 
     cy.getTestElement('get-your-bitcoin').should('exist')
     cy.getTestElement('lightning-qr-code-button-open-in-wallet').then(($button) => {
-      const lnurlEncoded = $button.attr('href').split('lightning:')[1]
+      const href = $button.attr('href')
+      const lnurlEncoded = href?.split('lightning:')[1]
+      if (!lnurlEncoded) {
+        throw new Error('Wallet link does not contain an encoded LNURL.')
+      }
+
       const lnurl = LNURL.decode(lnurlEncoded)
       cy.wrap(lnurl).should('include', `/api/lnurl/${cardHash}`)
     })

@@ -21,6 +21,10 @@ describe('Trpc Auth', () => {
     cy.getTestElement('main-nav-link-login').click()
     cy.getTestElement('lightning-qr-code-button-open-in-wallet').should('have.attr', 'href')
     cy.getTestElement('lightning-qr-code-button-open-in-wallet').invoke('attr', 'href').then(lnurlAuthUrlHref => {
+      if (!lnurlAuthUrlHref) {
+        throw new Error('LNURL auth link is missing its href attribute.')
+      }
+
       const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
       cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
     })

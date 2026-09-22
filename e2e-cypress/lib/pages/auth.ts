@@ -29,7 +29,12 @@ export const wrapLnurlAuthUrlFromModalLogin = () => {
     .should('have.attr', 'href')
     .and('match', /^lightning:.+/)
   cy.get('[data-test=modal-login] [data-test=lightning-qr-code-image]').then(($el) => {
-    const lnurlAuthUrl = $el.attr('href').substring(10)
+    const href = $el.attr('href')
+    if (!href) {
+      throw new Error('LNURL auth link is missing its href attribute.')
+    }
+
+    const lnurlAuthUrl = href.substring(10)
     cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
   })
 }

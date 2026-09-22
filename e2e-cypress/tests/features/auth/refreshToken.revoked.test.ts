@@ -26,9 +26,7 @@ describe('Revoked/denied refresh doken', () => {
 
   it('should show modal login with generic error message', () => {
     tipCardsApi.auth.login()
-    cy.getCookie('refresh_token', {
-      domain: TIPCARDS_AUTH_ORIGIN.hostname,
-    }).then((cookie) => {
+    tipCardsApi.auth.getRefreshTokenCookie().then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
         refreshToken: cookie.value,
       }).then((refreshToken) => {
@@ -76,9 +74,7 @@ describe('Revoked/denied refresh doken', () => {
   it('should show modal login with generic error message, if user clicked log out all other devices but has no valid refresh token', () => {
     tipCardsApi.auth.login()
     tipCards.userAccount.goto()
-    cy.getCookie('refresh_token', {
-      domain: TIPCARDS_AUTH_ORIGIN.hostname,
-    }).then((cookie) => {
+    tipCardsApi.auth.getRefreshTokenCookie().then((cookie) => {
       cy.task<string>('jwt:generateInvalidRefreshToken', {
         refreshToken: cookie.value,
       }).then((refreshToken) => {

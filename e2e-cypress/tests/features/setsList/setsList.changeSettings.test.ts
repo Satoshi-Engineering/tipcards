@@ -56,6 +56,10 @@ function createTestData() {
     }).then((sets) => {
       // grab the older set, it should be on the second position in the setsList
       const testSet = sets.sort((setA, setB) => new Date(setA.changed).getTime() - new Date(setB.changed).getTime())[0]
+      if (!testSet) {
+        throw new Error('Expected the test sets to contain an older set.')
+      }
+
       cy.wrap(testSet).as('testSet')
     })
   })
@@ -66,7 +70,7 @@ function makeSureTestDataIsFetchedAndRendered() {
 }
 
 function changeTestSetData() {
-  cy.get<SetDto>('@testSet').then((set) => {
+  cy.get('@testSet').then((set: SetDto) => {
     cy.task('db:updateSetName', {
       setId: set.id,
       name: 'Updated Set Name',
@@ -75,7 +79,7 @@ function changeTestSetData() {
 }
 
 function oldDataShouldBeDisplayed() {
-  cy.get<SetDto>('@testSet').then((set) => {
+  cy.get('@testSet').then((set: SetDto) => {
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').eq(1).should('contain', set.settings.name)
   })
 }

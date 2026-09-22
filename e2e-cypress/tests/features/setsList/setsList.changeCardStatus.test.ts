@@ -66,7 +66,7 @@ function makeSureTestDataIsFetchedAndRendered() {
 }
 
 function changeTestSetData() {
-  cy.get<SetDto>('@testSet').then((set) => {
+  cy.get('@testSet').then((set: SetDto) => {
     generateCardHashForSet(set.id, 0).then((cardHash) => {
       cy.task('db:setFundedCardToWithdrawn', cardHash)
     })

@@ -107,6 +107,18 @@ export const clearAuth = () => {
   }).its('status').should('eq', 401)
 }
 
+export const getRefreshTokenCookie = () => {
+  return cy.getCookie('refresh_token', {
+    domain: TIPCARDS_AUTH_ORIGIN.hostname,
+  }).then((cookie) => {
+    if (!cookie) {
+      throw new Error('Refresh token cookie is missing.')
+    }
+
+    return cookie
+  })
+}
+
 export const createNewKeysAndWrap = () => {
   cy.task<{ publicKeyAsHex: string, privateKeyAsHex: string }>('lnurl:createRandomKeyPair').then((keyPair) => {
     cy.wrap(keyPair).as('keyPair')
@@ -131,9 +143,7 @@ export const lnurlAuthLoginWithWrappedKeyPair = () => {
 }
 
 export const logoutAllDevices = () => {
-  cy.getCookie('refresh_token', {
-    domain: TIPCARDS_AUTH_ORIGIN.hostname,
-  }).then((cookie) => {
+  getRefreshTokenCookie().then((cookie) => {
     cy.task('db:logoutAllDevices', {
       refreshToken: cookie.value,
     })

@@ -63,23 +63,28 @@ const cardStatusListItemsAreSorted = () => {
   cy.getTestElement('card-status-list-item')
     .then(($els) => {
       const dates = $els.toArray().map((el) => {
-        const withdrawn = el.querySelector('[data-test=card-status-list-item-date-withdrawn]')
+        const withdrawn = el.querySelector('[data-test=card-status-list-item-date-withdrawn]')?.textContent
         if (withdrawn) {
-          return withdrawn.textContent
+          return withdrawn
         }
-        const bulkWithdrawCreated = el.querySelector('[data-test=card-status-list-item-date-bulkWithdrawCreated]')
+        const bulkWithdrawCreated = el.querySelector('[data-test=card-status-list-item-date-bulkWithdrawCreated]')?.textContent
         if (bulkWithdrawCreated) {
-          return bulkWithdrawCreated.textContent
+          return bulkWithdrawCreated
         }
-        const landingPageViewed = el.querySelector('[data-test=card-status-list-item-date-landingPageViewed]')
+        const landingPageViewed = el.querySelector('[data-test=card-status-list-item-date-landingPageViewed]')?.textContent
         if (landingPageViewed) {
-          return landingPageViewed.textContent
+          return landingPageViewed
         }
-        const funded = el.querySelector('[data-test=card-status-list-item-date-funded]')
+        const funded = el.querySelector('[data-test=card-status-list-item-date-funded]')?.textContent
         if (funded) {
-          return funded.textContent
+          return funded
         }
-        return el.querySelector('[data-test=card-status-list-item-date-created]').textContent
+        const created = el.querySelector('[data-test=card-status-list-item-date-created]')?.textContent
+        if (created) {
+          return created
+        }
+
+        throw new Error('Card status list item is missing its date.')
       })
       for (let i = 0; i < dates.length - 1; i++) {
         cy.wrap(new Date(dates[i])).should('not.be.lessThan', new Date(dates[i + 1]))

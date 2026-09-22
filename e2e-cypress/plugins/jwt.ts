@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto'
 
 import { AccessTokenPayload } from '../../shared/src/data/auth/index'
 
+import { getRequiredEnvironmentVariable } from '../lib/environment'
 import { getJwtIssuer, getRefreshTokenPayload, getAccessTokenPayload } from '../lib/jwtHelpers'
 
 export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) => {
@@ -24,14 +25,14 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         nonce,
       }
       const jwtIssuer = await getJwtIssuer()
-      return await jwtIssuer.createJwt(process.env.JWT_AUTH_ISSUER, expirationTime, payload)
+      return await jwtIssuer.createJwt(getRequiredEnvironmentVariable('JWT_AUTH_ISSUER'), expirationTime, payload)
     },
 
     'jwt:generateExpiredRefreshToken': async ({ refreshToken }: { refreshToken: string }) => {
       const jwtIssuer = await getJwtIssuer()
       const payload = await getRefreshTokenPayload({ jwt: refreshToken })
       const expiredRefreshToken = jwtIssuer.createJwt(
-        process.env.JWT_AUTH_ISSUER,
+        getRequiredEnvironmentVariable('JWT_AUTH_ISSUER'),
         '0 seconds',
         payload,
       )
@@ -65,7 +66,7 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
         nonce: nonce as string,
       }
       const expiredAccessToken = jwtIssuer.createJwt(
-        process.env.JWT_TIPCARDS_API,
+        getRequiredEnvironmentVariable('JWT_TIPCARDS_API'),
         '70 seconds',
         payload,
       )
@@ -80,13 +81,13 @@ export default (on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) =
     } ) => {
       const { userId, sessionId, nonce } = await getRefreshTokenPayload({ jwt: refreshToken })
 
-      if (typeof userId != 'string' && (userId as string).length <= 10) {
+      if (typeof userId !== 'string' || userId.length <= 10) {
         return false
       }
-      if (typeof sessionId != 'string' && (sessionId as string).length <= 10) {
+      if (typeof sessionId !== 'string' || sessionId.length <= 10) {
         return false
       }
-      if (typeof nonce != 'string' && (nonce as string).length <= 10) {
+      if (typeof nonce !== 'string' || nonce.length <= 10) {
         return false
       }
 

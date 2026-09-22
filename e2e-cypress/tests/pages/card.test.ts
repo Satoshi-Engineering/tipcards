@@ -27,14 +27,16 @@ describe('Card Details Page', () => {
     cy.getTestElement('card-preview')
       .should('exist')
       .then(($el) => {
-        expect($el.attr('data-lnurl').endsWith(
+        const lnurl = $el.attr('data-lnurl')
+        expect(lnurl, 'data-lnurl attribute should exist').to.be.a('string')
+        expect(lnurl?.endsWith(
           `?lightning=${expectedLnurl}`,
         )).to.be.true
       })
   })
 
   it('should show the card details page with status unfunded', () => {
-    cy.wrap(getCardHashFromSet(setId, 0)).then((cardHash: string) => {
+    cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 0)).then((cardHash) => {
       goto(cardHash)
     })
 
@@ -48,7 +50,7 @@ describe('Card Details Page', () => {
   })
 
   it('should show the card details page with status userActionRequired', () => {
-    cy.wrap(getCardHashFromSet(setId, 3)).then((cardHash: string) => {
+    cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 3)).then((cardHash) => {
       goto(cardHash)
     })
 
@@ -62,7 +64,7 @@ describe('Card Details Page', () => {
   })
 
   it('should show the card details page with status funded', () => {
-    cy.wrap(getCardHashFromSet(setId, 2)).then((cardHash: string) => {
+    cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 2)).then((cardHash) => {
       goto(cardHash)
     })
 
@@ -76,7 +78,7 @@ describe('Card Details Page', () => {
   })
 
   it('should show the card details page with status withdrawn', () => {
-    cy.wrap(getCardHashFromSet(setId, 1)).then((cardHash: string) => {
+    cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 1)).then((cardHash) => {
       goto(cardHash)
     })
 

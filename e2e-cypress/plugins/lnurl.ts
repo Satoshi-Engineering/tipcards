@@ -5,7 +5,7 @@ import LNURLAuth from '../../shared/src/modules/LNURL/LNURLAuth'
 import { createRandomKeyPair } from '../lib/lnurlHelpers'
 
 type GetLNURLAuthCallbackUrlParams =
-  | { publicKeyAsHex: string; privateKeyAsHex: string; lnurlAuth?: string }
+  | { publicKeyAsHex: string; privateKeyAsHex: string; lnurlAuth: string }
   | { lnurlAuth: string; publicKeyAsHex?: never; privateKeyAsHex?: never };
 
 // This function is the entry point for plugins

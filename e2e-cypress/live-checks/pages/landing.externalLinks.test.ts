@@ -6,6 +6,10 @@ describe('Landing Page', () => {
 
     cy.getTestElement('no-wallet').find('a').each(($a) => {
       const href = $a.attr('href')
+      if (!href) {
+        throw new Error('Wallet link is missing its href attribute.')
+      }
+
       cy.request(href).its('status').should('eq', 200)
     })
   })
@@ -15,6 +19,10 @@ describe('Landing Page', () => {
 
     cy.getTestElement('use-your-bitcoin').find('a').each(($a) => {
       const href = $a.attr('href')
+      if (!href) {
+        throw new Error('Store link is missing its href attribute.')
+      }
+
       cy.request(href).its('status').should('eq', 200)
     })
   })

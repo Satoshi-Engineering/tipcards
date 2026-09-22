@@ -32,7 +32,12 @@ describe('Landing Page', () => {
 
       tipCards.landing.goto(cardHash)
       cy.getTestElement('lightning-qr-code-button-open-in-wallet').then(($button) => {
-        const lnurlEncoded = $button.attr('href').split('lightning:')[1]
+        const href = $button.attr('href')
+        const lnurlEncoded = href?.split('lightning:')[1]
+        if (!lnurlEncoded) {
+          throw new Error('Wallet link does not contain an encoded LNURL.')
+        }
+
         tipCardsApi.card.useLnurlWithdraw(cardHash, lnurlEncoded)
       })
       cy.wait(5000) // wait for the next card status polling/update to happen

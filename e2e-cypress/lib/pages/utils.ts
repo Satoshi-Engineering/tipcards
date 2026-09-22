@@ -1,4 +1,5 @@
 import { TIPCARDS_AUTH_ORIGIN } from '@e2e/lib/constants'
+import { getRefreshTokenCookie } from '@e2e/lib/api/auth'
 
 export const reloadPage = () => {
   cy.intercept('/auth/trpc/auth.refreshRefreshToken**').as('apiAuthRefresh')
@@ -17,9 +18,7 @@ export const gotoPage = (page: URL) => {
 }
 
 export const gotoPageWithExpiredAccessToken = (page: URL) => {
-  cy.getCookie('refresh_token', {
-    domain: TIPCARDS_AUTH_ORIGIN.hostname,
-  }).then((cookie) => {
+  getRefreshTokenCookie().then((cookie) => {
     cy.task<string>('jwt:generateExpiredAccessToken', {
       refreshToken: cookie.value,
     }).then((accessToken) => {

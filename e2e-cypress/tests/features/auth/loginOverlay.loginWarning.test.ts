@@ -46,7 +46,7 @@ const wrapLNURLAuthFromLinkClick = () => {
 
   // Stub the link click, because cypress can not handle different protocolls, then http and https
   // Attention: You should not use variables! Please refactor if you have an idea!
-  let lnurlAuthUrlHref = ''
+  let lnurlAuthUrlHref: string | undefined
   cy.get('a[href^="lightning:"]').then(($link) => {
     $link.on('click', (e) => {
       e.preventDefault()
@@ -57,6 +57,10 @@ const wrapLNURLAuthFromLinkClick = () => {
   cy.getTestElement('lightning-qr-code-image').click()
 
   cy.then(() => {
+    if (!lnurlAuthUrlHref) {
+      throw new Error('LNURL auth link is missing its href attribute.')
+    }
+
     const lnurlAuthUrl = lnurlAuthUrlHref.substring(10)
     cy.wrap(lnurlAuthUrl).as('lnurlAuthUrl')
   })
