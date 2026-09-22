@@ -1,6 +1,67 @@
 # Changelog
 
 
+## v0.4.41
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.40...v0.4.41)
+
+### 🩹 Fixes
+
+- Remove exchange-rate dependency from test wallets ([c5b07d41](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/c5b07d41))
+- Migrate deprecated Cypress environment access ([57e5978a](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/57e5978a))
+- Remove unknown option minWorkers from test call ([28ba9d9d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/28ba9d9d))
+- Browser setup mismatches for playwright and cypress ([b3c1d1d9](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/b3c1d1d9))
+- Attempt to make flaky test more stable ([28237db3](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/28237db3))
+- Check slide visibility by using getBoundingClientRect i/o Cypress's visibility checks ([586bdea3](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/586bdea3))
+- Handle Express startup errors ([bf4e3fc3](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/bf4e3fc3))
+
+### 📖 Documentation
+
+- Add LNbits API bootstrap migration guide ([107460ed](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/107460ed))
+- Add document about the major upgrade path ([1751f7fc](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/1751f7fc))
+- Update dependency upgrade status ([5ad13e98](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/5ad13e98))
+- Add latest status to upgrade document ([f6a7430d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f6a7430d))
+- Add incremental Cypress to Playwright migration guide ([d40916fe](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/d40916fe))
+
+### 🏡 Chore
+
+- Package-lock.json for new version ([07018cad](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/07018cad))
+- Upgrade first batch of major dependencies ([afcf11b1](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/afcf11b1))
+- Upgrade Node LTS baseline and jsdom ([e54d25ea](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e54d25ea))
+- Upgrade vite ([bbd84115](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/bbd84115))
+- Upgrade vitest and adapt test mocks ([5240b7ab](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/5240b7ab))
+- Upgrade Cypress and remaining minor dependencies ([9da38a16](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/9da38a16))
+- Upgrade eslint to v10 and cypress lint plugin to v7 ([9777f890](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/9777f890))
+- Upgrade zod to v4 ([db161481](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/db161481))
+- Upgrade jose to v6 ([2dcb70ac](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/2dcb70ac))
+- Upgrade bip32 to v5 ([1155610a](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/1155610a))
+- Minor upgrade ([eff6e255](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/eff6e255))
+- Relax Vue Router and Cypress plugin version ranges ([7f1a2ccb](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/7f1a2ccb))
+- Minor pkg update ([956678c4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/956678c4))
+- Upgrade Express to v5 ([540ade6c](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/540ade6c))
+
+### ✅ Tests
+
+- Temporarily add a 20 times run of the slider test to check whether it's still flaky ([493a7519](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/493a7519))
+- Temporarily add a 20 times run of the slider test to check whether it's still flaky" ([d353a0ff](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/d353a0ff))
+- Run Cypress tests in Chrome ([b842752f](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/b842752f))
+- Allow self-signed certificates in Cypress Chrome ([a65507af](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/a65507af))
+- Run Cypress in Chrome through proxy network ([4b3d1486](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/4b3d1486))
+- Make clipboard login browser-independent ([70be1de2](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/70be1de2))
+
+### 🤖 CI
+
+- Remove redundant pipeline setup and compilation ([ce09a755](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/ce09a755))
+- Align Cypress image with version 16 ([e99447ba](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e99447ba))
+- Align live check with Cypress 16 ([3f1164a5](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/3f1164a5))
+- Validate E2E image versions ([27687972](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/27687972))
+- Proxy Docker Hub images in GitLab jobs ([b962a27d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/b962a27d))
+- Start integration and e2e jobs after required prechecks ([61058bef](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/61058bef))
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+
 ## v0.4.40
 
 [compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.39...v0.4.40)
