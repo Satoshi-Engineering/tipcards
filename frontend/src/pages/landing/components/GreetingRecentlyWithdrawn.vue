@@ -8,7 +8,7 @@
       {{ $t('landing.introMessageJustReceived.headline', { emoji: '🥳' }) }}
     </HeadlineDefault>
     <ParagraphDefault>
-      <I18nT keypath="landing.introMessageJustReceived.message">
+      <I18nT keypath="landing.introMessageJustReceived.message" scope="global">
         <template #exchange>
           <LinkDefault href="https://kraken.com/">Kraken</LinkDefault>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <ParagraphDefault data-test="list-message-not-logged-in">
-    <I18nT keypath="header.loginBanner.claim">
+    <I18nT keypath="header.loginBanner.claim" scope="global">
       <template #login>
         <LinkDefault @click="showModalLogin = true">
           {{ $t('header.loginBanner.login') }}

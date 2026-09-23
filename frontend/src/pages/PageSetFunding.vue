@@ -61,7 +61,7 @@
                 {{ t('setFunding.invoiceExpired') }}
               </ParagraphDefault>
               <ParagraphDefault v-else class="text-sm">
-                <I18nT :keypath="funded ? 'setFunding.invoicePaidSuccessfully' : 'setFunding.payInvoice'">
+                <I18nT :keypath="funded ? 'setFunding.invoicePaidSuccessfully' : 'setFunding.payInvoice'" scope="global">
                   <template #cards>
                     <strong>{{ $t('general.cards', numberOfCardsToFund) }}</strong>
                   </template>

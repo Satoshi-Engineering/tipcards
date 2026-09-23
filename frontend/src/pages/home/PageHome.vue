@@ -35,7 +35,7 @@
     <section class="my-9">
       <CenterContainer>
         <HeadlineDefault level="blockquote" styling="h1">
-          <I18nT keypath="home.quote">
+          <I18nT keypath="home.quote" scope="global">
             <template #em>
               <em class="not-italic text-yellow">{{ $t('home.quoteEm') }}</em>
             </template>

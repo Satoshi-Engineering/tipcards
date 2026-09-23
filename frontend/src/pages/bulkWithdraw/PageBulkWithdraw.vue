@@ -10,7 +10,7 @@
       </HeadlineDefault>
 
       <ParagraphDefault class="my-3">
-        <I18nT keypath="bulkWithdraw.setName">
+        <I18nT keypath="bulkWithdraw.setName" scope="global">
           <template #setName>
             <strong>{{ settings.setName || $t('index.unnamedSetNameFallback') }}</strong>
           </template>

@@ -37,7 +37,7 @@ defineProps({
   },
   i18nScope: {
     type: String as PropType<ComponentI18nScope>,
-    default: 'parent',
+    default: 'global',
   },
 })
 </script>

@@ -9,7 +9,7 @@
       {{ $t('landing.introGreetingFunded') }}
     </HeadlineDefault>
     <ParagraphDefault class="mb-10 text-center">
-      <I18nT keypath="landing.introMessage">
+      <I18nT keypath="landing.introMessage" scope="global">
         <template #linebreak>
           <br>
         </template>

@@ -1,6 +1,6 @@
 <template>
   <ParagraphDefault data-test="history-list-message-not-logged-in">
-    <I18nT keypath="cardStatusList.loginToSeeYourCards">
+    <I18nT keypath="cardStatusList.loginToSeeYourCards" scope="global">
       <template #loginLink>
         <LinkDefault @click="showModalLogin = true">
           {{ $t('cardStatusList.loginToSeeYourCardsLoginLink') }}

@@ -1,6 +1,6 @@
 <template>
   <ParagraphDefault data-test="sets-list-message-not-logged-in">
-    <I18nT keypath="sets.loginToSeeYourSets">
+    <I18nT keypath="sets.loginToSeeYourSets" scope="global">
       <template #loginLink>
         <LinkDefault @click="showModalLogin = true">
           {{ $t('sets.loginToSeeYourSetsLoginLink') }}

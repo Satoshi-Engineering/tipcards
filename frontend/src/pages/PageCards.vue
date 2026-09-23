@@ -212,7 +212,7 @@
           </ParagraphDefault>
         </div>
         <ParagraphDefault v-if="!isLoggedIn" class="text-sm">
-          <I18nT keypath="localStorageDeprecation.loginCta">
+          <I18nT keypath="localStorageDeprecation.loginCta" scope="global">
             <template #loginCtaAction>
               <LinkDefault @click="showModalLogin = true">{{ $t('localStorageDeprecation.loginCtaAction') }}</LinkDefault>
             </template>

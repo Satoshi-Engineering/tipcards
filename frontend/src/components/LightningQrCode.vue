@@ -56,7 +56,7 @@
       >
         <template #default>
           <span class="font-normal">
-            <I18nT :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'">
+            <I18nT :keypath="type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopy' : 'lightningQrCode.copyToClipboard.invoice.beforeCopy'" scope="global">
               <template #action>
                 <br>
                 <strong class="underline hover:no-underline">{{ t(type === 'lnurl' ? 'lightningQrCode.copyToClipboard.lnurl.beforeCopyAction' : 'lightningQrCode.copyToClipboard.invoice.beforeCopyAction') }}</strong>

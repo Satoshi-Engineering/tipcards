@@ -8,7 +8,7 @@
       {{ $t('landing.introMessageAlreadyUsed.headline') }}
     </HeadlineDefault>
     <ParagraphDefault>
-      <I18nT keypath="landing.introMessageAlreadyUsed.message">
+      <I18nT keypath="landing.introMessageAlreadyUsed.message" scope="global">
         <template #exchange>
           <LinkDefault href="https://kraken.com/">Kraken</LinkDefault>
         </template>

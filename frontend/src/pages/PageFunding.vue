@@ -50,6 +50,7 @@
             <I18nT
               v-if="funded || usedDate != null"
               :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'"
+              scope="global"
             >
               <template #amountAndUnit>
                 <strong v-if="invoiceAmount != null" class="inline-block">
@@ -114,7 +115,7 @@
         </div>
         <div v-else-if="shared" data-test="funding-shared">
           <ParagraphDefault class="mb-8">
-            <I18nT keypath="funding.shared.text">
+            <I18nT keypath="funding.shared.text" scope="global">
               <template #buttonFinish>
                 "{{ t('funding.shared.buttonFinish') }}"
               </template>
@@ -201,7 +202,7 @@
               @update:model-value="updateNote"
             />
             <ParagraphDefault v-if="funded" class="text-sm">
-              <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
+              <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'" scope="global">
                 <template #amountAndUnit>
                   <strong class="inline-block">
                     {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
@@ -213,7 +214,7 @@
               {{ t('funding.shared.textEmpty') }}
             </ParagraphDefault>
             <ParagraphDefault v-else class="text-sm">
-              <I18nT keypath="funding.shared.textPartiallyFunded">
+              <I18nT keypath="funding.shared.textPartiallyFunded" scope="global">
                 <template #amountAndUnit>
                   <strong class="inline-block">
                     {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
@@ -244,7 +245,7 @@
         </div>
         <div v-else-if="lnurlp" data-test="funding-lnurlp">
           <ParagraphDefault v-if="funded">
-            <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'">
+            <I18nT :keypath="usedDate != null ? 'funding.textUsed' : 'funding.textFunded'" scope="global">
               <template #amountAndUnit>
                 <strong class="inline-block">
                   {{ t('funding.amountAndUnit', { amount: formatNumber(amount / (100 * 1000 * 1000), 8, 8)}) }}
@@ -253,7 +254,7 @@
             </I18nT>
           </ParagraphDefault>
           <ParagraphDefault v-else>
-            <I18nT keypath="funding.lnurlp.text">
+            <I18nT keypath="funding.lnurlp.text" scope="global">
               <template #buttonOpenInWallet>
                 "{{ t('lightningQrCode.buttonOpenInWallet') }}"
               </template>

@@ -38,7 +38,7 @@ import type { PropType } from 'vue'
 defineProps({
   i18nScope: {
     type: String as PropType<ComponentI18nScope>,
-    default: 'parent',
+    default: 'global',
   },
 })
 
