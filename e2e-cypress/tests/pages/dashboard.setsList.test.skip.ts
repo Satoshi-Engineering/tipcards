@@ -4,7 +4,8 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 // generic setsList tests are found at e2e/tests/features/setsList/*
 // this group only containts dashboard page specific sets list behaviour
 describe('Dashboard Sets List', () => {
-  it('loads 100 sets and displays the 3 most recently changed (descending)', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.setsList.test.ts
+  it.skip('loads 100 sets and displays the 3 most recently changed (descending)', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task('db:create100TestSets', { userId })
@@ -20,7 +21,8 @@ describe('Dashboard Sets List', () => {
     })
   })
 
-  it('only shows 3 sets on the dashboard, even if it loaded all on the sets page before', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.setsList.test.ts
+  it.skip('only shows 3 sets on the dashboard, even if it loaded all on the sets page before', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task('db:create100TestSets', { userId })

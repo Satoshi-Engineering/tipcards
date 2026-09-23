@@ -1,10 +1,12 @@
 import { expect, type APIRequestContext, type BrowserContext, type Page } from '@playwright/test'
 
 import { lnurlAuth } from '../lnbits/api/lnurlAuth'
-import { createRefreshToken } from './refreshToken'
+import { createRefreshToken, createUser } from './refreshToken'
 
 export const login = async (browserContext: BrowserContext) => {
-  await setRefreshToken(browserContext, await createRefreshToken())
+  const { userId } = await createUser()
+  await setRefreshToken(browserContext, await createRefreshToken({ userId }))
+  return userId
 }
 
 export const setRefreshToken = async (browserContext: BrowserContext, refreshToken: string) => {

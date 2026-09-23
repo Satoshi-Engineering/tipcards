@@ -2,13 +2,15 @@ import tipCardsApi from '@e2e/lib/tipCardsApi'
 import tipCards from '@e2e/lib/tipCards'
 
 describe('Dashboard Cards Summary', () => {
-  it('should show the preview if the user is logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.cardsSummary.test.ts
+  it.skip('should show the preview if the user is logged out', () => {
     tipCards.dashboard.goto()
 
     cy.getTestElement('cards-summary-preview').should('exist')
   })
 
-  it('should open the modal login', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.cardsSummary.test.ts
+  it.skip('should open the modal login', () => {
     tipCards.dashboard.goto()
 
     cy.getTestElement('dashboard-login-link').click()
@@ -16,7 +18,8 @@ describe('Dashboard Cards Summary', () => {
     cy.getTestElement('modal-login').should('exist')
   })
 
-  it('should show zeros if the user has no sets', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.cardsSummary.test.ts
+  it.skip('should show zeros if the user has no sets', () => {
     tipCardsApi.auth.login()
 
     tipCards.dashboard.goto()
@@ -27,7 +30,8 @@ describe('Dashboard Cards Summary', () => {
     cy.getTestElement('cards-summary-total').should('contain.text', '0 sats')
   })
 
-  it('should show correct numbers if the user has sets', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.cardsSummary.test.ts
+  it.skip('should show correct numbers if the user has sets', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task('db:create100TestSets', { userId })

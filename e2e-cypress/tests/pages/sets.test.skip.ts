@@ -6,7 +6,8 @@ describe('Sets Page', () => {
     tipCardsApi.auth.login()
   })
 
-  it('User should see the empty sets list', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.test.ts
+  it.skip('User should see the empty sets list', () => {
     tipCards.sets.goto()
 
     cy.getTestElement('the-layout').should('exist')
@@ -14,7 +15,8 @@ describe('Sets Page', () => {
     cy.getTestElement('sets-list-message-empty').should('exist')
   })
 
-  it('User should access a saved set', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.test.ts
+  it.skip('User should access a saved set', () => {
     const randomSetName = Math.random().toString(36).substring(7)
     tipCardsApi.set.generateAndAddSet()
     tipCardsApi.set.generateAndAddSet(randomSetName)
@@ -26,7 +28,8 @@ describe('Sets Page', () => {
     cy.getTestElement('the-layout').contains(randomSetName).should('be.visible')
   })
 
-  it('User should see logged out message after logging out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.test.ts
+  it.skip('User should see logged out message after logging out', () => {
     tipCardsApi.auth.clearAuth()
 
     tipCards.sets.goto()
@@ -36,7 +39,8 @@ describe('Sets Page', () => {
     cy.getTestElement('sets-list-message-empty').should('not.exist')
   })
 
-  it('loads 100 sets and lists them ordered (latest changed first)', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.test.ts
+  it.skip('loads 100 sets and lists them ordered (latest changed first)', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task('db:create100TestSets', { userId })

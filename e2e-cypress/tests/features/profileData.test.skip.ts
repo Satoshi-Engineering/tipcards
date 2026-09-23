@@ -10,7 +10,8 @@ describe('profileData', () => {
     tipCardsApi.auth.login()
   })
 
-  it('user navigates to account page and enters their data', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/profileData.test.ts
+  it.skip('user navigates to account page and enters their data', () => {
     tipCards.userAccount.goto()
 
     cy.getTestElement('profile-form-account-name').find('input').type(`{selectAll}${profile.accountName}`)

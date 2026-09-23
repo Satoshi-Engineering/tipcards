@@ -2,7 +2,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Sets List with sets data', () => {
-  it('should login and display the user\'s sets aferwards', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/setsList/setsList.withSets.test.ts
+  it.skip('should login and display the user\'s sets aferwards', () => {
     // preparation: create a user and a set w/o logging in
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId({
@@ -19,7 +20,8 @@ describe('Sets List with sets data', () => {
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 3)
   })
 
-  it('loads a single set on the dashboard page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/setsList/setsList.withSets.test.ts
+  it.skip('loads a single set on the dashboard page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 
@@ -28,7 +30,8 @@ describe('Sets List with sets data', () => {
     cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 1)
   })
 
-  it('loads a single set on the sets page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/setsList/setsList.withSets.test.ts
+  it.skip('loads a single set on the sets page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 

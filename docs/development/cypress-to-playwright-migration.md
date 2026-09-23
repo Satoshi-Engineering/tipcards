@@ -19,6 +19,7 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 9. Add helpers only when a batch needs them. Prefer an explicit local helper over a speculative Cypress compatibility layer.
 10. Run focused verification during a batch and the full CI suites once when the batch is complete. Do not repeatedly run all browser tests between small edits.
 11. Use explicit `page.goto(...)` calls in Playwright tests. Do not introduce a shared page-navigation wrapper such as `gotoPage`; rely on web-first assertions and add only the narrowly scoped request wait a specific test requires.
+12. Do not introduce a temporary runner-neutral E2E module such as `e2e-shared` during the migration. Keep Cypress helpers self-contained until Cypress is removed, and port the smallest required implementation directly into `e2e-playwright`, adapting its public API for Playwright usage. Temporary duplication between Cypress and Playwright is preferred over compatibility wrappers or shared migration infrastructure that would need another cleanup step.
 
 ## Baseline
 
@@ -26,7 +27,7 @@ Inventory date: 2026-09-09.
 
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After Batch 5, 19 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 23 specs with 90 runtime cases, including the three pre-existing skips.
+- After Batch 6, 24 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 18 specs with 76 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -123,7 +124,7 @@ For every migrated test, compare all applicable items:
 
 Cypress plugins currently provide database, JWT, LNURL, and clipboard tasks. Playwright tests run in Node and can call equivalent typed helpers directly.
 
-- Move database operations behind focused helpers in `e2e-playwright/utils/database` as they are needed.
+- Port database operations directly into focused helpers in `e2e-playwright/utils/database` as they are needed. Let Playwright helpers acquire their own dependencies, such as the SQL client, instead of adding thin wrappers around Cypress helpers or temporary shared E2E modules.
 - Reuse the existing shared JWT and LNURL domain modules rather than copying Cypress task wrappers.
 - Preserve transaction boundaries, inserted values, returned identifiers, and direct database timing.
 - Keep secrets in the current environment contract and never print them.
@@ -213,6 +214,8 @@ Completed on 2026-09-22. Playwright typecheck, lint, and all 23 Cypress source c
 - `pages/dashboard.cardsSummary.test.ts`
 - `pages/dashboard.setsList.test.ts`
 
+Completed on 2026-09-23. All 14 Cypress source cases and all 14 Playwright replacements passed focused verification. Two Playwright response waits were corrected to preserve Cypress's synchronization without relying on broader assertion timeouts. The post-migration Cypress run confirmed all 14 source cases are pending before the five fully migrated specs were renamed to `*.test.skip.ts`.
+
 ### Batch 7: cards, landing pages, and funding state
 
 - `deprecated/api/multipleInvoices.test.ts`
@@ -272,11 +275,11 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 5 | `features/auth/refreshToken.expired.test.skip.ts` | 1 | migrated | `features/auth/refreshToken.expired.test.ts` |
 | 5 | `features/auth/refreshToken.revoked.test.skip.ts` | 6 | migrated | `features/auth/refreshToken.revoked.test.ts` |
 | 5 | `trpc/auth.test.skip.ts` | 2 | migrated | `trpc/auth.test.ts` |
-| 6 | `features/profileData.test.ts` | 1 | planned | — |
-| 6 | `features/setsList/setsList.withSets.test.ts` | 3 | planned | — |
-| 6 | `pages/sets.test.ts` | 4 | planned | — |
-| 6 | `pages/dashboard.cardsSummary.test.ts` | 4 | planned | — |
-| 6 | `pages/dashboard.setsList.test.ts` | 2 | planned | — |
+| 6 | `features/profileData.test.skip.ts` | 1 | migrated | `features/profileData.test.ts` |
+| 6 | `features/setsList/setsList.withSets.test.skip.ts` | 3 | migrated | `features/setsList/setsList.withSets.test.ts` |
+| 6 | `pages/sets.test.skip.ts` | 4 | migrated | `pages/sets.test.ts` |
+| 6 | `pages/dashboard.cardsSummary.test.skip.ts` | 4 | migrated | `pages/dashboard.cardsSummary.test.ts` |
+| 6 | `pages/dashboard.setsList.test.skip.ts` | 2 | migrated | `pages/dashboard.setsList.test.ts` |
 | 7 | `deprecated/api/multipleInvoices.test.ts` | 2 | planned | — |
 | 7 | `features/feeCalculation.test.ts` | 1 | planned | — |
 | 7 | `pages/card.test.ts` | 5 | planned | — |
