@@ -15,7 +15,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should load the seo preview page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should load the seo preview page', () => {
     tipCards.landing.gotoSeoPreview()
 
     cy.getTestElement('greeting-preview').should('exist')
@@ -26,7 +27,8 @@ describe('Landing Page', () => {
     cy.getTestElement('create-your-own-tip-card').should('exist')
   })
 
-  it('should show scroll down to "what is bitcoin" section', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should show scroll down to "what is bitcoin" section', () => {
     tipCards.landing.gotoPreview(cardHash)
     cy.getTestElement('link-what-is-bitcoin').click()
 
@@ -34,7 +36,8 @@ describe('Landing Page', () => {
     cy.getTestElement('what-is-bitcoin').should('be.visible')
   })
 
-  it('should show the "get your bitcoin" section', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should show the "get your bitcoin" section', () => {
     tipCards.landing.gotoPreview(cardHash)
 
     cy.getTestElement('get-your-bitcoin').should('exist')
@@ -50,21 +53,24 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should show the "no wallet" section', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should show the "no wallet" section', () => {
     tipCards.landing.gotoPreview(cardHash)
 
     cy.getTestElement('no-wallet').should('exist')
     cy.getTestElement('no-wallet').find('a').should('have.length.gte', 2)
   })
 
-  it('should show the "use-your-bitcoin" section', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should show the "use-your-bitcoin" section', () => {
     tipCards.landing.gotoPreview(cardHash)
 
     cy.getTestElement('use-your-bitcoin').should('exist')
     cy.getTestElement('use-your-bitcoin').find('a').should('have.length.gte', 2)
   })
 
-  it('should show more info about bitcoin', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should show more info about bitcoin', () => {
     tipCards.landing.gotoPreview(cardHash, 'de')
 
     cy.getTestElement('more-bitcoin-explanation').should('exist')
@@ -72,14 +78,16 @@ describe('Landing Page', () => {
     cy.getTestElement('collapsible-element-content').should('not.be.visible')
   })
 
-  it('should open the first extra info about bitcoin', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should open the first extra info about bitcoin', () => {
     tipCards.landing.gotoPreview(cardHash, 'de')
     cy.getTestElement('more-bitcoin-explanation').find('button').first().click()
 
     cy.getTestElement('collapsible-element-content').should('be.visible')
   })
 
-  it('should send the user to "home"', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.content.test.ts
+  it.skip('should send the user to "home"', () => {
     tipCards.landing.gotoPreview(cardHash)
     cy.getTestElement('create-your-own-tip-card').find('button').click()
 

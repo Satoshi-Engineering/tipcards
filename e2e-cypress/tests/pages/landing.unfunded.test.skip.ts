@@ -6,7 +6,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
-  it('should redirect to the funding page, if the card does not exist', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.unfunded.test.ts
+  it.skip('should redirect to the funding page, if the card does not exist', () => {
     generateCardHash().then((cardHash) => {
 
       tipCards.landing.gotoPreview(cardHash)
@@ -15,7 +16,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should redirect to the funding page, if an unpaid invoice exists', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.unfunded.test.ts
+  it.skip('should redirect to the funding page, if an unpaid invoice exists', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createInvoiceForCardHash(cardHash, 210)
       const totalBtcInclFee = (210 + calculateFeeForNetAmount(210)) / 100_000_000
@@ -27,7 +29,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should redirect to the funding page, if a lnurlp link for the card exists', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.unfunded.test.ts
+  it.skip('should redirect to the funding page, if a lnurlp link for the card exists', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createLnurlpLinkForCardHash(cardHash)
 
@@ -38,7 +41,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should redirect to the funding page, if a shared funding lnurlp link exists', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.unfunded.test.ts
+  it.skip('should redirect to the funding page, if a shared funding lnurlp link exists', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.createSharedFundingForCardHash(cardHash)
 
@@ -49,7 +53,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should redirect to the funding page, if a set funding invoice exists', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.unfunded.test.ts
+  it.skip('should redirect to the funding page, if a set funding invoice exists', () => {
     const setId = generateSetId()
     tipCardsApi.set.createInvoiceForSet(setId)
     generateCardHashForSet(setId).then((cardHash) => {

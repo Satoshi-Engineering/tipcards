@@ -3,7 +3,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
-  it('should show the default landing page for a funded card', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.funded.test.ts
+  it.skip('should show the default landing page for a funded card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 
@@ -14,7 +15,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should rewrite the url to cardHash from /landing?lightning=lnurl', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.funded.test.ts
+  it.skip('should rewrite the url to cardHash from /landing?lightning=lnurl', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 

@@ -31,6 +31,11 @@ export const create100TestSets = async (userId: string): Promise<SetDto[]> => {
   return [set1, set2, set3, set4, set5, set6, set7, ...setsWithSetFunding]
 }
 
+export const createSetWithCardStatusExamples = async (userId: string): Promise<SetDto> => {
+  const sql = getSqlClient()
+  return await createSet002(sql, userId)
+}
+
 // funded by invoice: 1 card
 const createSet001 = async (sql: Sql, userId: string): Promise<SetDto> => {
   const set = await createSet(sql, userId, 'Set 001', 1)

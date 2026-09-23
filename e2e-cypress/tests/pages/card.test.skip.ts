@@ -18,7 +18,8 @@ describe('Card Details Page', () => {
     })
   })
 
-  it('should show the card preview with the correct card LNURL generated', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/card.test.ts
+  it.skip('should show the card preview with the correct card LNURL generated', () => {
     goto('test-card-hash')
 
     const expectedLnurl = LNURL.encode(
@@ -35,7 +36,8 @@ describe('Card Details Page', () => {
       })
   })
 
-  it('should show the card details page with status unfunded', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/card.test.ts
+  it.skip('should show the card details page with status unfunded', () => {
     cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 0)).then((cardHash) => {
       goto(cardHash)
     })
@@ -49,7 +51,8 @@ describe('Card Details Page', () => {
       .should('exist')
   })
 
-  it('should show the card details page with status userActionRequired', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/card.test.ts
+  it.skip('should show the card details page with status userActionRequired', () => {
     cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 3)).then((cardHash) => {
       goto(cardHash)
     })
@@ -63,7 +66,8 @@ describe('Card Details Page', () => {
       .should('exist')
   })
 
-  it('should show the card details page with status funded', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/card.test.ts
+  it.skip('should show the card details page with status funded', () => {
     cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 2)).then((cardHash) => {
       goto(cardHash)
     })
@@ -77,7 +81,8 @@ describe('Card Details Page', () => {
       .should('exist')
   })
 
-  it('should show the card details page with status withdrawn', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/card.test.ts
+  it.skip('should show the card details page with status withdrawn', () => {
     cy.wrap<Promise<string>, string>(getCardHashFromSet(setId, 1)).then((cardHash) => {
       goto(cardHash)
     })

@@ -9,14 +9,19 @@ import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 export const cardDynamicLnurl = (cardHash: string) => LNURL.encode(`${process.env.BACKEND_API_ORIGIN}/api/lnurl/${cardHash}`).toUpperCase()
 
-export const fundCard = async (cardHash: string, lnbitsApiContext: APIRequestContext) => {
+export const fundCard = async (
+  cardHash: string,
+  lnbitsApiContext: APIRequestContext,
+  amount = 2100,
+  text = 'Have fun with testing',
+) => {
   const context = await request.newContext()
   const response = await context.post(
     `${process.env.BACKEND_API_ORIGIN}/api/invoice/create/${cardHash}`,
     {
       data: {
-        amount: 2100,
-        text: 'Have fun with testing',
+        amount,
+        text,
       },
     },
   )
@@ -28,12 +33,22 @@ export const fundCard = async (cardHash: string, lnbitsApiContext: APIRequestCon
   await expect.poll(async () => await getCardStatus(cardHash)).toBe('funded')
 }
 
-export const withdrawCard = async (cardHash: string, lnbitsApiContext: APIRequestContext) => {
+// Withdraw directly through LNbits without manually simulating its backend webhook.
+export const withdrawCardWithoutWebhookSimulation = async (cardHash: string, lnbitsApiContext: APIRequestContext) => {
   const lnurl = cardDynamicLnurl(cardHash)
   await withdrawLnurlW(lnbitsApiContext, lnurl)
   await expect.poll(async () => await getCardStatus(cardHash)).not.toBe('funded')
 }
 
+// Withdraw directly, simulate the LNbits webhook, and wait for the recently-withdrawn state.
+export const withdrawCard = async (cardHash: string, lnbitsApiContext: APIRequestContext) => {
+  await withdrawCardWithoutWebhookSimulation(cardHash, lnbitsApiContext)
+  const context = await request.newContext()
+  await context.post(`${process.env.BACKEND_API_ORIGIN}/api/withdraw/used/${cardHash}`)
+  await expect.poll(async () => await getCardStatus(cardHash)).toBe('recentlyWithdrawn')
+}
+
+// Load the withdrawal through the landing page, complete it via LNbits, and wait for UI success.
 export const withdrawCardViaLandingPage = async (cardHash: string, page: Page, lnbitsApiContext: APIRequestContext, expectedAmount?: number) => {
   // Go to tipcard landing page
   await page.goto(`${process.env.TIPCARDS_ORIGIN}/landing/${cardHash}`)

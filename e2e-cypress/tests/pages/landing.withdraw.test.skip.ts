@@ -3,7 +3,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
-  it('should load the status of a recently withdrawn card', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.withdraw.test.ts
+  it.skip('should load the status of a recently withdrawn card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
       tipCardsApi.card.useFundedCard(cardHash)
@@ -14,7 +15,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should load the status of a withdrawn card', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.withdraw.test.ts
+  it.skip('should load the status of a withdrawn card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
       tipCardsApi.card.useFundedCard(cardHash)
@@ -26,7 +28,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should use (withdraw from) a funded card', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.withdraw.test.ts
+  it.skip('should use (withdraw from) a funded card', () => {
     generateCardHash().then((cardHash) => {
       tipCardsApi.card.fundCardWithInvoice(cardHash, 210)
 

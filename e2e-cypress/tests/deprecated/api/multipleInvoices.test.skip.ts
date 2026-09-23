@@ -4,7 +4,8 @@ import tipCards from '@e2e/lib/tipCards'
 import { BACKEND_API_ORIGIN, TIPCARDS_ORIGIN } from '@e2e/lib/constants'
 
 describe('Card invoices', () => {
-  it('should not be possible to create invoice for card with set-invoice', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/deprecated/api/multipleInvoices.test.ts
+  it.skip('should not be possible to create invoice for card with set-invoice', () => {
     const setId = generateSetId()
     tipCards.utils.gotoPage(new URL(`set-funding/${setId}`, TIPCARDS_ORIGIN))
     cy.get('button[type=submit]').click()
@@ -25,7 +26,8 @@ describe('Card invoices', () => {
     })
   })
 
-  it('should not be possible to create set-invoice for card with invoice', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/deprecated/api/multipleInvoices.test.ts
+  it.skip('should not be possible to create set-invoice for card with invoice', () => {
     const setId = generateSetId()
     generateCardHashForSet(setId).then((cardHash) => {
       tipCards.utils.gotoPage(new URL(`funding/${cardHash}`, TIPCARDS_ORIGIN))
