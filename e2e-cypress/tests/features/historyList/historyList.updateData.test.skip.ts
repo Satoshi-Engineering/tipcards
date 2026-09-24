@@ -5,7 +5,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('History list without data', () => {
-  it('should refresh when navigating from dashboard to history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.updateData.test.ts
+  it.skip('should refresh when navigating from dashboard to history page', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
@@ -25,7 +26,8 @@ describe('History list without data', () => {
     historyPageNewDataShouldBeDisplayed()
   })
 
-  it('should refresh when navigating from history page to dashboard', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.updateData.test.ts
+  it.skip('should refresh when navigating from history page to dashboard', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()

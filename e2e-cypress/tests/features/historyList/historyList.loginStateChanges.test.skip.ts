@@ -2,7 +2,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('History list handling login state changes', () => {
-  it('should login and display the user\'s history afterwards, on the dashboard', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.loginStateChanges.test.ts
+  it.skip('should login and display the user\'s history afterwards, on the dashboard', () => {
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.dashboard.goto()
@@ -16,7 +17,8 @@ describe('History list handling login state changes', () => {
     cy.getTestElement('history-list-message-not-logged-in').should('not.exist')
   })
 
-  it('should login and display the user\'s history afterwards, on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.loginStateChanges.test.ts
+  it.skip('should login and display the user\'s history afterwards, on the history page', () => {
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.history.goto()
@@ -30,7 +32,8 @@ describe('History list handling login state changes', () => {
     cy.getTestElement('history-list-message-not-logged-in').should('not.exist')
   })
 
-  it('should clear the data on logout, on the dashboard', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.loginStateChanges.test.ts
+  it.skip('should clear the data on logout, on the dashboard', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.dashboard.goto()
@@ -44,7 +47,8 @@ describe('History list handling login state changes', () => {
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 0)
   })
 
-  it('should clear the data on logout, on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.loginStateChanges.test.ts
+  it.skip('should clear the data on logout, on the history page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCards.history.goto()
@@ -58,7 +62,8 @@ describe('History list handling login state changes', () => {
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 0)
   })
 
-  it('should clear the data on logout, on the dashboard, even if the data loading takes longer', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.loginStateChanges.test.ts
+  it.skip('should clear the data on logout, on the dashboard, even if the data loading takes longer', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.createSetsWithSetFundingForCurrentUserId()
     tipCardsApi.utils.delayNextTrpcResponse()

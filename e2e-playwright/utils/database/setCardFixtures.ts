@@ -371,6 +371,8 @@ const hashSha256 = (message: string) => {
   return hash
 }
 
+export const generateCardHashForSet = (setId: string, cardIndex: number) => hashSha256(`${setId}/${cardIndex}`)
+
 export const createRandomTimestampLastYear = () => new Date(new Date().getTime() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 365))
 
 const createRandomTimestampBetweenDateAndNow = (date: Date) => new Date(date.getTime() + Math.floor(Math.random() * (new Date().getTime() - date.getTime())))

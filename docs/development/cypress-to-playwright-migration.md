@@ -23,11 +23,11 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 
 ## Baseline
 
-Inventory date: 2026-09-23.
+Inventory date: 2026-09-24.
 
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After the verified portion of Batch 7, 31 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining 11 specs with 50 runtime cases, including the three pre-existing skips.
+- After the verified history-list slice of Batch 8, 34 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining eight specs with 39 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -257,6 +257,8 @@ Handle this as a separate backend change:
 
 Preserve exact counts, ordering, delayed-response races, viewport intersection, database fixtures, and currently skipped cases.
 
+The three `features/historyList` specs were finalized on 2026-09-24. The user reported all 11 active Cypress source cases and all 11 Playwright replacements passing; the post-migration Cypress run confirmed all 11 source cases are pending before the specs were renamed to `*.test.skip.ts`.
+
 ### Batch 9: slider and pre-existing skipped cases
 
 - `components/slider/SliderDefault.test.ts`
@@ -302,9 +304,9 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 7 | `pages/landing.funded.test.skip.ts` | 2 | migrated | `pages/landing.funded.test.ts` |
 | 7 | `pages/landing.unfunded.test.skip.ts` | 5 | migrated | `pages/landing.unfunded.test.ts` |
 | 7 | `pages/landing.withdraw.test.skip.ts` | 3 | migrated | `pages/landing.withdraw.test.ts` |
-| 8 | `features/historyList/historyList.loginStateChanges.test.ts` | 5 | planned | — |
-| 8 | `features/historyList/historyList.updateData.test.ts` | 2 | planned | — |
-| 8 | `features/historyList/historyList.withData.test.ts` | 4 | planned | — |
+| 8 | `features/historyList/historyList.loginStateChanges.test.skip.ts` | 5 | migrated | `features/historyList/historyList.loginStateChanges.test.ts` |
+| 8 | `features/historyList/historyList.updateData.test.skip.ts` | 2 | migrated | `features/historyList/historyList.updateData.test.ts` |
+| 8 | `features/historyList/historyList.withData.test.skip.ts` | 4 | migrated | `features/historyList/historyList.withData.test.ts` |
 | 8 | `features/setsList/setsList.changeCardStatus.test.ts` | 2 | planned | — |
 | 8 | `features/setsList/setsList.changeSettings.test.ts` | 2 | planned | — |
 | 8 | `pages/dashboard.openTasks.test.ts` | 10 | planned | — |

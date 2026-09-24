@@ -2,7 +2,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('History list loading (sorted) data', () => {
-  it('should load and display 3 card statuses (sorted) on the dashboard page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.withData.test.ts
+  it.skip('should load and display 3 card statuses (sorted) on the dashboard page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.create100TestSetsForCurrentUserId()
 
@@ -13,7 +14,8 @@ describe('History list loading (sorted) data', () => {
     cardStatusListItemsAreSorted()
   })
 
-  it('should load and display 50 card statuses (sorted) on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.withData.test.ts
+  it.skip('should load and display 50 card statuses (sorted) on the history page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.create100TestSetsForCurrentUserId()
 
@@ -24,7 +26,8 @@ describe('History list loading (sorted) data', () => {
     cardStatusListItemsAreSorted()
   })
 
-  it('should display 3 card statuses and load additional data when navigating from dashboard to history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.withData.test.ts
+  it.skip('should display 3 card statuses and load additional data when navigating from dashboard to history page', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.create100TestSetsForCurrentUserId()
     tipCards.dashboard.goto()
@@ -39,7 +42,8 @@ describe('History list loading (sorted) data', () => {
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 50)
   })
 
-  it('should display 3 card statuses when navigating from history page to dashboard', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/historyList/historyList.withData.test.ts
+  it.skip('should display 3 card statuses when navigating from history page to dashboard', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.create100TestSetsForCurrentUserId()
     tipCards.history.goto()

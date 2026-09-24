@@ -15,6 +15,7 @@ import {
   createRandomTimestampLastYear,
   createUnfundedCardsWithInvoice,
   createWithdrawnCards,
+  generateCardHashForSet,
 } from './setCardFixtures'
 import getSqlClient from './sqlClient'
 
@@ -34,6 +35,18 @@ export const create100TestSets = async (userId: string): Promise<SetDto[]> => {
 export const createSetWithCardStatusExamples = async (userId: string): Promise<SetDto> => {
   const sql = getSqlClient()
   return await createSet002(sql, userId)
+}
+
+export const createHistoryUpdateTestData = async (userId: string): Promise<SetDto> => {
+  const sql = getSqlClient()
+  await createSet001(sql, userId)
+  return await createSet002(sql, userId)
+}
+
+export const setFundedCardToLandingPageViewed = async (setId: string, cardIndex: number) => {
+  const sql = getSqlClient()
+  const cardHash = generateCardHashForSet(setId, cardIndex)
+  await sql`UPDATE public."CardVersion" SET "landingPageViewed" = ${ new Date() } WHERE card = ${ cardHash };`
 }
 
 // funded by invoice: 1 card
