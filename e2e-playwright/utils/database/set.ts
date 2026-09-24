@@ -43,6 +43,31 @@ export const createHistoryUpdateTestData = async (userId: string): Promise<SetDt
   return await createSet002(sql, userId)
 }
 
+export const createSetWithFundedCard = async (userId: string): Promise<SetDto> => {
+  const sql = getSqlClient()
+  return await createSet001(sql, userId)
+}
+
+export const updateSetName = async (setId: string, name: string) => {
+  const sql = getSqlClient()
+  await sql`UPDATE public."SetSettings" SET name = ${ name } WHERE set = ${ setId };`
+  await sql`UPDATE public."Set" SET changed = ${ new Date() } WHERE id = ${ setId };`
+}
+
+export const setFundedCardToWithdrawn = async (setId: string, cardIndex: number) => {
+  const sql = getSqlClient()
+  const cardHash = generateCardHashForSet(setId, cardIndex)
+  const lnurlW = {
+    lnbitsId: randomUUID(),
+    created: new Date(),
+    expiresAt: new Date(),
+    withdrawn: new Date(),
+    bulkWithdrawId: null,
+  }
+  await sql`INSERT INTO public."LnurlW" ${ sql(lnurlW) };`
+  await sql`UPDATE public."CardVersion" SET "lnurlW" = ${ lnurlW.lnbitsId } WHERE card = ${ cardHash };`
+}
+
 export const setFundedCardToLandingPageViewed = async (setId: string, cardIndex: number) => {
   const sql = getSqlClient()
   const cardHash = generateCardHashForSet(setId, cardIndex)

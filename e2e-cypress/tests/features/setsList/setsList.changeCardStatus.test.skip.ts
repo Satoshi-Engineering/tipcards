@@ -1,10 +1,12 @@
 import type { SetDto } from '@shared/data/trpc/SetDto'
 
+import { generateCardHashForSet } from '@e2e/lib/api/data/card'
 import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Sets List with sets data', () => {
-  it('should update the changed set name on the dashboard page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/setsList/setsList.changeCardStatus.test.ts
+  it.skip('should update a cards summary checkbox on the dashboard page', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
@@ -20,16 +22,22 @@ describe('Sets List with sets data', () => {
     cy.get('[data-test=items-list-reloading-icon]').should('be.visible')
     oldDataShouldBeDisplayed()
 
+    // action 2 - we need to scoll into view to trigger fetching of the cardsSummary
+    cy.wait('@delayedRequest')
+    cy.get('[data-test=sets-list]').scrollIntoView()
+
     // after fetching the sets, the new data should be displayed
     newDataShouldBeDisplayed()
     cy.get('[data-test=items-list-reloading-icon]').should('not.be.visible')
   })
 
-  it('should update the changed set name on the sets page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/features/setsList/setsList.changeCardStatus.test.ts
+  it.skip('should update a cards summary checkbox on the sets page', () => {
     // preparation
     tipCardsApi.auth.login()
     createTestData()
     tipCards.dashboard.goto()
+    cy.get('[data-test=sets-list]').scrollIntoView()
     makeSureTestDataIsFetchedAndRendered()
     changeTestSetData()
     tipCardsApi.utils.delayNextTrpcResponse()
@@ -49,41 +57,30 @@ describe('Sets List with sets data', () => {
 
 function createTestData() {
   cy.get('@userId').then((userId) => {
-    cy.task<SetDto[]>('db:createSetsWithSetFunding', {
-      userId,
-      numberOfSets: 2,
-      numberOfCardsPerSet: 8,
-    }).then((sets) => {
-      // grab the older set, it should be on the second position in the setsList
-      const testSet = sets.sort((setA, setB) => new Date(setA.changed).getTime() - new Date(setB.changed).getTime())[0]
-      if (!testSet) {
-        throw new Error('Expected the test sets to contain an older set.')
-      }
-
-      cy.wrap(testSet).as('testSet')
+    cy.task<SetDto>('db:createSet1', { userId }).then((set) => {
+      cy.wrap(set).as('testSet')
     })
   })
 }
 
 function makeSureTestDataIsFetchedAndRendered() {
-  cy.get('[data-test=sets-list] [data-test=sets-list-item]').should('have.length', 2)
+  cy.get('[data-test=sets-list-item-cards-summary-funded]').should('exist')
 }
 
 function changeTestSetData() {
   cy.get('@testSet').then((set: SetDto) => {
-    cy.task('db:updateSetName', {
-      setId: set.id,
-      name: 'Updated Set Name',
+    generateCardHashForSet(set.id, 0).then((cardHash) => {
+      cy.task('db:setFundedCardToWithdrawn', cardHash)
     })
   })
 }
 
 function oldDataShouldBeDisplayed() {
-  cy.get('@testSet').then((set: SetDto) => {
-    cy.get('[data-test=sets-list] [data-test=sets-list-item]').eq(1).should('contain', set.settings.name)
-  })
+  cy.get('[data-test=sets-list-item-cards-summary-funded]').should('exist')
+  cy.get('[data-test=sets-list-item-cards-summary-withdrawn]').should('not.exist')
 }
 
 function newDataShouldBeDisplayed() {
-  cy.get('[data-test=sets-list] [data-test=sets-list-item]').eq(0).should('contain', 'Updated Set Name')
+  cy.get('[data-test=sets-list-item-cards-summary-funded]').should('not.exist')
+  cy.get('[data-test=sets-list-item-cards-summary-withdrawn]').should('exist')
 }

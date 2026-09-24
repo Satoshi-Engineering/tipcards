@@ -28,7 +28,7 @@ Inventory date: 2026-09-24.
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - Cypress live-check inventory: four spec files and five statically declared `it` calls. These are tracked separately because they run against deployed environments rather than the local E2E stack.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After the verified history-list slice of Batch 8, 34 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining eight specs with 39 runtime cases, including the three pre-existing skips.
+- After the verified history-list and sets-list slices of Batch 8, 36 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining six specs with 35 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -249,8 +249,8 @@ Handle this as a separate backend change:
 - `features/historyList/historyList.loginStateChanges.test.ts`
 - `features/historyList/historyList.updateData.test.ts`
 - `features/historyList/historyList.withData.test.ts`
-- `features/setsList/setsList.changeCardStatus.test.ts`
-- `features/setsList/setsList.changeSettings.test.ts`
+- `features/setsList/setsList.changeCardStatus.test.skip.ts`
+- `features/setsList/setsList.changeSettings.test.skip.ts`
 - `pages/dashboard.openTasks.test.ts`
 - `pages/history.cardStatusList.test.ts`
 - `pages/sets.cardsInfo.test.ts`
@@ -259,6 +259,8 @@ Handle this as a separate backend change:
 Preserve exact counts, ordering, delayed-response races, viewport intersection, database fixtures, and currently skipped cases.
 
 The three `features/historyList` specs were finalized on 2026-09-24. The user reported all 11 active Cypress source cases and all 11 Playwright replacements passing; the post-migration Cypress run confirmed all 11 source cases are pending before the specs were renamed to `*.test.skip.ts`.
+
+The two `features/setsList` change-detection specs were finalized on 2026-09-24. The user reported all four active Cypress source cases and all four Playwright replacements passing; the post-migration Cypress run confirmed all four source cases are pending before the specs were renamed to `*.test.skip.ts`.
 
 ### Batch 9: slider and pre-existing skipped cases
 
@@ -308,8 +310,8 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 8 | `features/historyList/historyList.loginStateChanges.test.skip.ts` | 5 | migrated | `features/historyList/historyList.loginStateChanges.test.ts` |
 | 8 | `features/historyList/historyList.updateData.test.skip.ts` | 2 | migrated | `features/historyList/historyList.updateData.test.ts` |
 | 8 | `features/historyList/historyList.withData.test.skip.ts` | 4 | migrated | `features/historyList/historyList.withData.test.ts` |
-| 8 | `features/setsList/setsList.changeCardStatus.test.ts` | 2 | planned | — |
-| 8 | `features/setsList/setsList.changeSettings.test.ts` | 2 | planned | — |
+| 8 | `features/setsList/setsList.changeCardStatus.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeCardStatus.test.ts` |
+| 8 | `features/setsList/setsList.changeSettings.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeSettings.test.ts` |
 | 8 | `pages/dashboard.openTasks.test.ts` | 10 | planned | — |
 | 8/9 | `pages/history.cardStatusList.test.ts` | 6, including 2 pre-existing skips | planned | — |
 | 8 | `pages/sets.cardsInfo.test.ts` | 4 | planned | — |
