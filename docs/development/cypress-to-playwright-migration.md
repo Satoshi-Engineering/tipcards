@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This guide tracks the incremental migration of every Cypress test to Playwright. Codex performs one small, reviewable batch at a time. Do not migrate the complete suite in one change.
+This guide tracks the incremental migration of every Cypress test to Playwright, including the live checks against deployed environments. Codex performs one small, reviewable batch at a time. Do not migrate the complete suite in one change.
 
 The migration changes the test runner, not the tested behavior. Every active Playwright replacement must test the same scenario, setup, interaction, observable result, and failure condition as its Cypress source.
 
@@ -26,6 +26,7 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 Inventory date: 2026-09-24.
 
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
+- Cypress live-check inventory: four spec files and five statically declared `it` calls. These are tracked separately because they run against deployed environments rather than the local E2E stack.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
 - After the verified history-list slice of Batch 8, 34 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining eight specs with 39 runtime cases, including the three pre-existing skips.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
@@ -315,11 +316,30 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 8 | `pages/sets.search.test.ts` | 10 | planned | — |
 | 9 | `components/slider/SliderDefault.test.ts` | 3, including 1 pre-existing skip | planned | — |
 
+## Live-check migration
+
+The deployed-environment live check must also be migrated before Cypress can be removed. It is not part of the numbered local E2E batches because it has separate CI triggers, environment files, and availability expectations.
+
+| Cypress spec | Declared cases | State | Playwright replacement |
+| --- | ---: | --- | --- |
+| `live-checks/backendDummy.test.ts` | 1 | planned | — |
+| `live-checks/externalLandingPage.test.ts` | 1 | planned | — |
+| `live-checks/webClientRoot.test.ts` | 1 | planned | — |
+| `live-checks/pages/landing.externalLinks.test.ts` | 2 | planned | — |
+
+Preserve the live-check job's operational contract when moving it to Playwright:
+
+- Run against the deployed `main` and `develop` environments using their existing live-check environment files.
+- Keep the job in the `live-check` stage and preserve its current rules, including scheduled/nightly execution and running even if an earlier stage fails.
+- Preserve all five checks: backend health response, funded external card content, web-client root content, wallet-link availability, and store-link availability.
+- Keep failure-only browser artifacts, adapted to Playwright's artifact paths and report format.
+- Verify the Playwright live check in CI before removing the Cypress script, specs, image, or job configuration.
+
 ## Final cleanup gate
 
-Remove Cypress only after all inventory rows are migrated, all pre-existing skips are represented accurately, and several normal pipelines have passed with Playwright as the sole source of active E2E coverage.
+Remove Cypress only after all local and live-check inventory rows are migrated, all pre-existing skips are represented accurately, and several normal pipelines have passed with Playwright as the sole source of active E2E and live-check coverage.
 
-The final cleanup may then remove Cypress CI jobs, live-check implementation, packages, configuration, plugins, helpers, and skipped source files. Perform that cleanup as its own reviewable change; do not mix it with the last behavioral migration batch.
+The final cleanup may then remove Cypress CI jobs, the old Cypress live-check implementation, packages, configuration, plugins, helpers, and skipped source files. Perform that cleanup as its own reviewable change; do not mix it with the last behavioral migration batch.
 
 After Cypress has been removed, remove the Cypress-only card-status subscription marker from `frontend/src/pages/landing/useCardStatus.ts`: both assignments to `document.body.dataset.testCardStatusSubscription` and the corresponding cleanup deletion. Playwright waits for the resulting UI or URL state instead of this implementation-level readiness marker.
 
