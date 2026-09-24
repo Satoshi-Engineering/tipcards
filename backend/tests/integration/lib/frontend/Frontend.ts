@@ -67,6 +67,10 @@ export default class Frontend {
     return await axios.get(`${API_ORIGIN}/api/set/${setId}`)
   }
 
+  async markSetFundingInvoicePaid(setId: string) {
+    return await axios.post(`${API_ORIGIN}/api/set/invoice/paid/${setId}`)
+  }
+
   async deleteSetFundingInvoice(setId: string) {
     return await axios.delete(`${API_ORIGIN}/api/set/invoice/${setId}`)
   }

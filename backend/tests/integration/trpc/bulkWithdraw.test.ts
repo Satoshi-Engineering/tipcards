@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import axios, { AxiosError } from 'axios'
+import assert from 'node:assert'
 import { randomUUID } from 'crypto'
 
 import '@backend/initEnv.js' // Info: .env needs to read before imports
@@ -8,7 +9,9 @@ import { BulkWithdraw } from '@shared/data/trpc/BulkWithdraw.js'
 import { ErrorCode } from '@shared/data/Errors.js'
 import LNURL from '@shared/modules/LNURL/LNURL.js'
 
+import { asTransaction } from '@backend/database/client.js'
 import Database from '@backend/database/Database.js'
+import type { LnurlW } from '@backend/database/schema/index.js'
 import { bulkWithdrawRouter } from '@backend/trpc/router/tipcards/bulkWithdraw.js'
 import { setRouter } from '@backend/trpc/router/tipcards/set.js'
 import ApplicationEventEmitter from '@backend/domain/ApplicationEventEmitter.js'
@@ -75,6 +78,16 @@ describe('TRpc Router BulkWithdraw', () => {
     await expect(() => callerBulkWithdraw.createForCards([CARD_HASH_FUNDED_0, CARD_HASH_UNFUNDED])).rejects.toThrow(Error)
   })
 
+  it('keeps the bulk withdraw links after a late set funding callback', async () => {
+    const bulkWithdraw = await createBulkWithdraw()
+    const bulkWithdrawLinks = await loadFundedCardWithdrawLinks(bulkWithdraw.id)
+
+    const response = await FE.markSetFundingInvoicePaid(SET_ID)
+
+    expect(response.data.status).toBe('success')
+    await expectFundedCardsToKeepBulkWithdrawLinks(bulkWithdrawLinks)
+  })
+
   // skip these tests as they are flaky, and we want to move to e2e tests w/ playwright anyways
   it.skip('creates and deletes a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
@@ -126,6 +139,25 @@ const createBulkWithdraw = async () => {
   expect(bulkWithdraw.amount).toBe(AMOUNT_PER_CARD * 2)
   expect(bulkWithdraw.cards.length).toBe(2)
   return bulkWithdraw
+}
+
+const loadFundedCardWithdrawLinks = async (bulkWithdrawId: string): Promise<Record<string, LnurlW>> => Object.fromEntries(await Promise.all(
+  [CARD_HASH_FUNDED_0, CARD_HASH_FUNDED_1].map(async (cardHash) => {
+    const lnurlW = await asTransaction((queries) => queries.getLnurlWByCardHash(cardHash))
+    expect(lnurlW?.bulkWithdrawId).toBe(bulkWithdrawId)
+    assert(lnurlW != null)
+    return [cardHash, lnurlW] as const
+  }),
+))
+
+const expectFundedCardsToKeepBulkWithdrawLinks = async (bulkWithdrawLinks: Record<string, LnurlW>) => {
+  await Promise.all([CARD_HASH_FUNDED_0, CARD_HASH_FUNDED_1].map(async (cardHash) => {
+    const lnurlW = await asTransaction((queries) => queries.getLnurlWByCardHash(cardHash))
+    const response = await FE.loadCard(cardHash)
+
+    expect(lnurlW).toEqual(bulkWithdrawLinks[cardHash])
+    expect(response.data.data.isLockedByBulkWithdraw).toBe(true)
+  }))
 }
 
 const checkIfLnurlwExistsInLnbits = async (bulkWithdraw: BulkWithdraw) => {
