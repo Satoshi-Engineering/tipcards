@@ -665,15 +665,18 @@ export const createLnurlWsForSetInvoice = async (set: Set): Promise<void> => {
 
   await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
     const cardHash = hashSha256(`${set.id}/${cardIndex}`)
-    const cardVersion = await asTransaction((queries) => queries.getLatestCardVersion(cardHash))
-    assert(cardVersion != null, `No cardVersion found when trying to create lnurlW for card ${cardIndex} of set ${set.id}`)
-
-    const { lnbitsWithdrawId } = await createWithdrawLink(
-      cardVersion!.textForWithdraw,
-      amount,
-      `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${cardHash}`,
-    )
     await asTransaction(async (queries) => {
+      const cardVersion = await queries.getLatestCardVersionForUpdate(cardHash)
+      assert(cardVersion != null, `No cardVersion found when trying to create lnurlW for card ${cardIndex} of set ${set.id}`)
+      if (cardVersion.lnurlW != null) {
+        return
+      }
+
+      const { lnbitsWithdrawId } = await createWithdrawLink(
+        cardVersion.textForWithdraw,
+        amount,
+        `${TIPCARDS_API_ORIGIN}/api/withdraw/used/${cardHash}`,
+      )
       await queries.insertLnurlWs({
         lnbitsId: lnbitsWithdrawId,
         created: new Date(),

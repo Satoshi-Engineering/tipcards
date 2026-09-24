@@ -117,6 +117,8 @@ const createQueries = () => ({
 
   getLatestCardVersion,
 
+  getLatestCardVersionForUpdate: getLatestCardVersion,
+
   getLatestCardVersions,
 
   getLnurlPFundingCardVersion: async (cardVersion: CardVersion): Promise<LnurlP | null> => {
