@@ -33,14 +33,16 @@ describe('Sets Page Cards Info', () => {
     })
   })
 
-  it(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.cardsInfo.test.ts
+  it.skip(`loads ${numberOfSets} sets with ${numberOfCardsPerSet} cards each`, () => {
     tipCards.sets.goto()
 
     cy.getTestElement('sets-list-item')
       .should('have.length', numberOfSets)
   })
 
-  it('loads only cards info for sets in viewport', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.cardsInfo.test.ts
+  it.skip('loads only cards info for sets in viewport', () => {
     gotoSetsPageAndWaitForInitialCardsInfoRequest()
 
     cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.at.least', 4 * Math.min(12, numberOfCardsPerSet))
@@ -50,7 +52,8 @@ describe('Sets Page Cards Info', () => {
     cy.getTestElement('sets-list-item-cards-summary-userActionRequired').should('have.length.at.most', 4 * Math.min(12, numberOfCardsPerSet))
   })
 
-  it('loads cards info for sets in viewport after scrolling', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.cardsInfo.test.ts
+  it.skip('loads cards info for sets in viewport after scrolling', () => {
     gotoSetsPageAndWaitForInitialCardsInfoRequest()
 
     scrollDownAndWaitForCardsInfoRequest()
@@ -61,7 +64,8 @@ describe('Sets Page Cards Info', () => {
     setListItemsInViewportHaveCardsInfoLoaded(numberOfCardsPerSet, viewportHeight)
   })
 
-  it('does only load cards info for sets that have been in viewport before and after scrolling', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/sets.cardsInfo.test.ts
+  it.skip('does only load cards info for sets that have been in viewport before and after scrolling', () => {
     gotoSetsPageAndWaitForInitialCardsInfoRequest()
     scrollDownAndWaitForCardsInfoRequest()
 

@@ -10,7 +10,8 @@ describe('Card status list loading (sorted) data', () => {
     })
   })
 
-  it('should load and display 50 card statuses (sorted) on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
+  it.skip('should load and display 50 card statuses (sorted) on the history page', () => {
     tipCards.history.goto()
 
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 50)
@@ -18,7 +19,8 @@ describe('Card status list loading (sorted) data', () => {
     cardStatusListItemsAreSorted()
   })
 
-  it('should load and display 100 card statuses (sorted) on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
+  it.skip('should load and display 100 card statuses (sorted) on the history page', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()
 
@@ -26,7 +28,8 @@ describe('Card status list loading (sorted) data', () => {
     cardStatusListItemsAreSorted()
   })
 
-  it('should load and display all card statuses (sorted) on the history page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
+  it.skip('should load and display all card statuses (sorted) on the history page', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()
     cy.get('[data-test=card-status-list] [data-test=card-status-list-item]').should('have.length', 100)
@@ -37,7 +40,8 @@ describe('Card status list loading (sorted) data', () => {
     cardStatusListItemsAreSorted()
   })
 
-  it('should display the large loading icon, when the list has not yet loaded any items', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
+  it.skip('should display the large loading icon, when the list has not yet loaded any items', () => {
     tipCards.history.goto()
     cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('be.visible')
   })

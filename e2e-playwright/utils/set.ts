@@ -3,6 +3,14 @@ import { expect, type BrowserContext, type Page } from '@playwright/test'
 import { loginViaUi } from '@e2e-playwright/utils/auth/login'
 import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
 
+type GenerateSetOptions = {
+  changed?: number
+  created?: number
+  name?: string
+  numberOfCards?: number
+  userId?: string
+}
+
 export const gotoCardsPage = async ({ page, setId }: { page: Page; setId: string }) => {
   await page.goto(`${process.env.TIPCARDS_ORIGIN}/cards/${setId}`)
   await expect(page.locator('button[data-test="save-cards-set"]')).toBeVisible()
@@ -47,14 +55,17 @@ export const createSavedSet = async ({
   await expect(page.locator('[data-test="svg-set-saved"]')).toBeVisible()
 }
 
-export const generateAndAddSet = async (browserContext: BrowserContext, setName?: string) => {
+export const generateAndAddSet = async (
+  browserContext: BrowserContext,
+  options?: string | GenerateSetOptions,
+) => {
   const accessTokenResponse = await browserContext.request.get(
     `${process.env.TIPCARDS_AUTH_ORIGIN}/auth/trpc/auth.refreshRefreshToken`,
   )
   expect(accessTokenResponse.ok()).toBe(true)
   const accessTokenBody = await accessTokenResponse.json()
   const accessToken = accessTokenBody.result.data.json.accessToken as string
-  const set = generateSet(setName)
+  const set = generateSet(typeof options === 'string' ? { name: options } : options)
   const addSetResponse = await browserContext.request.post(
     `${process.env.BACKEND_API_ORIGIN}/api/set/${set.id}/`,
     {
@@ -66,22 +77,27 @@ export const generateAndAddSet = async (browserContext: BrowserContext, setName?
   return set
 }
 
-const generateSet = (setName?: string) => {
+const generateSet = ({
+  changed = Math.floor(Date.now() / 1000),
+  created = Math.floor(Date.now() / 1000),
+  name,
+  numberOfCards = 8,
+  userId,
+}: GenerateSetOptions = {}) => {
   const id = crypto.randomUUID()
-  const now = Math.floor(Date.now() / 1000)
   return {
     id,
     settings: {
-      numberOfCards: 8,
+      numberOfCards,
       cardHeadline: `${id} cardHeadline`,
       cardCopytext: `${id} cardCopytext`,
       cardsQrCodeLogo: 'bitcoin',
-      setName: setName ?? `${id} setName`,
+      setName: name || `${id} setName`,
       landingPage: 'default',
     },
-    created: now,
-    date: now,
-    userId: undefined,
+    created,
+    date: changed,
+    userId,
     text: '',
     note: '',
     invoice: null,
