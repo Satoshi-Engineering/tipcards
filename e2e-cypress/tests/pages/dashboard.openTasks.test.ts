@@ -5,13 +5,15 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('OpenTasks', () => {
-  it('should not render if logged out', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('should not render if logged out', () => {
     tipCards.dashboard.goto()
 
     cy.getTestElement('open-tasks').should('not.exist')
   })
 
-  it('should not render if the user is logged in and there are no todos', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('should not render if the user is logged in and there are no todos', () => {
     tipCardsApi.auth.login()
 
     tipCards.dashboard.goto()
@@ -19,7 +21,8 @@ describe('OpenTasks', () => {
     cy.getTestElement('open-tasks').should('not.exist')
   })
 
-  it('should not render, even if a set is created', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('should not render, even if a set is created', () => {
     tipCardsApi.auth.login()
     tipCardsApi.set.generateAndAddSet()
 
@@ -28,7 +31,8 @@ describe('OpenTasks', () => {
     cy.getTestElement('open-tasks').should('not.exist')
   })
 
-  it('should load the open tasks on login', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('should load the open tasks on login', () => {
     // preparation: create a user and a set w/o logging in
     tipCardsApi.auth.createUserWithoutLogin()
     tipCardsApi.set.createSet(5)
@@ -42,7 +46,8 @@ describe('OpenTasks', () => {
     cy.getTestElement('open-tasks').should('exist')
   })
 
-  it('should show all todos for the 100 test sets', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('should show all todos for the 100 test sets', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto[]>('db:create100TestSets', { userId }).then((sets) => {
@@ -119,7 +124,8 @@ describe('OpenTasks', () => {
     })
   })
 
-  it('it should sort the todos (desc by created)', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('it should sort the todos (desc by created)', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto[]>('db:create100TestSets', { userId }).then((sets) => {
@@ -137,7 +143,8 @@ describe('OpenTasks', () => {
     })
   })
 
-  it('it should link to funding page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('it should link to funding page', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto>('db:createSet7', { userId }).then((set) => {
@@ -156,7 +163,8 @@ describe('OpenTasks', () => {
     })
   })
 
-  it('it should link to set funding page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('it should link to set funding page', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto[]>('db:createSetsWithSetFunding', {
@@ -177,7 +185,8 @@ describe('OpenTasks', () => {
     })
   })
 
-  it('it should link to bulk withdraw page', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('it should link to bulk withdraw page', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto>('db:createSet5', { userId }).then((set) => {
@@ -193,7 +202,8 @@ describe('OpenTasks', () => {
     })
   })
 
-  it('it should remove the remove the task if its resolved', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/dashboard.openTasks.test.ts
+  it.skip('it should remove the remove the task if its resolved', () => {
     tipCardsApi.auth.login()
     cy.get('@userId').then((userId) => {
       cy.task<SetDto[]>('db:createSetsWithSetFunding', {

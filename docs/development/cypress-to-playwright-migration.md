@@ -262,6 +262,8 @@ The three `features/historyList` specs were finalized on 2026-09-24. The user re
 
 The two `features/setsList` change-detection specs were finalized on 2026-09-24. The user reported all four active Cypress source cases and all four Playwright replacements passing; the post-migration Cypress run confirmed all four source cases are pending before the specs were renamed to `*.test.skip.ts`.
 
+The `pages/dashboard.openTasks.test.ts` source and replacement passed focused verification. Its Cypress cases are marked as migrated pending the post-migration Cypress skip check.
+
 ### Batch 9: slider and pre-existing skipped cases
 
 - `components/slider/SliderDefault.test.ts`
@@ -312,7 +314,7 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 8 | `features/historyList/historyList.withData.test.skip.ts` | 4 | migrated | `features/historyList/historyList.withData.test.ts` |
 | 8 | `features/setsList/setsList.changeCardStatus.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeCardStatus.test.ts` |
 | 8 | `features/setsList/setsList.changeSettings.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeSettings.test.ts` |
-| 8 | `pages/dashboard.openTasks.test.ts` | 10 | planned | — |
+| 8 | `pages/dashboard.openTasks.test.ts` | 10 | dual-run | `pages/dashboard.openTasks.test.ts` |
 | 8/9 | `pages/history.cardStatusList.test.ts` | 6, including 2 pre-existing skips | planned | — |
 | 8 | `pages/sets.cardsInfo.test.ts` | 4 | planned | — |
 | 8 | `pages/sets.search.test.ts` | 10 | planned | — |

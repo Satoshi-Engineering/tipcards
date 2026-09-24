@@ -48,6 +48,16 @@ export const createSetWithFundedCard = async (userId: string): Promise<SetDto> =
   return await createSet001(sql, userId)
 }
 
+export const createSetWithBulkWithdrawTask = async (userId: string): Promise<SetDto> => {
+  const sql = getSqlClient()
+  return await createSet005(sql, userId)
+}
+
+export const createSetWithCardFundingTasks = async (userId: string): Promise<SetDto> => {
+  const sql = getSqlClient()
+  return await createSet007(sql, userId)
+}
+
 export const updateSetName = async (setId: string, name: string) => {
   const sql = getSqlClient()
   await sql`UPDATE public."SetSettings" SET name = ${ name } WHERE set = ${ setId };`
