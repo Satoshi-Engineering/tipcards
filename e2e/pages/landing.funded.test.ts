@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test'
 import hashSha256 from '@frontend/modules/hashSha256'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { fundCard } from '@e2e-playwright/utils/card'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { fundCard } from '@e2e/utils/card'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 

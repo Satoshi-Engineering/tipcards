@@ -1,7 +1,7 @@
 import { expect, type BrowserContext, type Page } from '@playwright/test'
 
-import { loginViaUi } from '@e2e-playwright/utils/auth/login'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { loginViaUi } from '@e2e/utils/auth/login'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
 type GenerateSetOptions = {
   changed?: number

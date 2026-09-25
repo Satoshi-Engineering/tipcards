@@ -27,7 +27,7 @@ The bootstrap provisions these wallet roles and never reduces a higher existing 
 
 The committed values are deterministic local and CI fixtures. Never reuse them for hosted or production wallets.
 
-`backend/.env` owns the application keys and shared test-user key. `e2e-playwright/.env` repeats the test-user key so its configuration remains self-contained. The bootstrap validates that the duplicated values match. Playwright also owns its application-wallet key in `e2e-playwright/.env`.
+`backend/.env` owns the application keys and shared test-user key. `e2e/.env` repeats the test-user key so its configuration remains self-contained. The bootstrap validates that the duplicated values match. Playwright also owns its application-wallet key in `e2e/.env`.
 
 Wallet IDs and the test-user invoice key are generated values, not application contracts.
 

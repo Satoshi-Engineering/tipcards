@@ -1,10 +1,10 @@
 import { expect, test, type APIRequestContext, type Page } from '@playwright/test'
 
 import hashSha256 from '@frontend/modules/hashSha256'
-import { loginViaUi } from '@e2e-playwright/utils/auth/login'
-import { fundCard, getCardStatus } from '@e2e-playwright/utils/card'
-import { createSavedSet, gotoCardsPage, gotoSetPage } from '@e2e-playwright/utils/set'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { loginViaUi } from '@e2e/utils/auth/login'
+import { fundCard, getCardStatus } from '@e2e/utils/card'
+import { createSavedSet, gotoCardsPage, gotoSetPage } from '@e2e/utils/set'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
 test.describe('Tipcard Set Cloning', () => {
   const setId = crypto.randomUUID()

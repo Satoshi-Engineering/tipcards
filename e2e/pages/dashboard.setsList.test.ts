@@ -5,7 +5,7 @@ import { create100TestSets } from '../utils/database/set'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-// generic setsList tests are found at e2e-playwright/features/setsList/*
+// generic setsList tests are found at e2e/features/setsList/*
 // this group only contains dashboard page specific sets list behaviour
 test.describe('Dashboard Sets List', () => {
   test('loads 100 sets and displays the 3 most recently changed (descending)', async ({ context, page }) => {

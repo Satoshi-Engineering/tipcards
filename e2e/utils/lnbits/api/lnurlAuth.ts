@@ -1,6 +1,6 @@
 import { APIRequestContext, request } from '@playwright/test'
 
-import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix'
+import { removeLightningPrefix } from '@e2e/utils/removeLightningPrefix'
 import HDWallet from '@shared/modules/HDWallet/HDWallet.js'
 import LNURLAuth from '@shared/modules/LNURL/LNURLAuth.js'
 

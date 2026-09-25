@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
 
 import hashSha256 from '@frontend/modules/hashSha256'
-import { getCardVersion } from '@e2e-playwright/utils/database/cardVersion'
-import { updateWithdrawLink } from '@e2e-playwright/utils/lnbits/api/withdraw'
-import { fundCard, getCardStatus, withdrawCardWithoutWebhookSimulation } from '@e2e-playwright/utils/card'
-import { lnbitsApplicationWalletApiContext, lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { getCardVersion } from '@e2e/utils/database/cardVersion'
+import { updateWithdrawLink } from '@e2e/utils/lnbits/api/withdraw'
+import { fundCard, getCardStatus, withdrawCardWithoutWebhookSimulation } from '@e2e/utils/card'
+import { lnbitsApplicationWalletApiContext, lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
 test('check if card has withdrawPending state after withdrawing before the webhook call from lnbits comes in', async () => {
   const cardHash = await hashSha256(crypto.randomUUID())

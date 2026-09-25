@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test'
 import hashSha256 from '@frontend/modules/hashSha256'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { login } from '@e2e-playwright/utils/auth/login'
-import { createSetWithCardStatusExamples } from '@e2e-playwright/utils/database/set'
+import { login } from '@e2e/utils/auth/login'
+import { createSetWithCardStatusExamples } from '@e2e/utils/database/set'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 

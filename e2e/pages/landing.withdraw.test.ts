@@ -3,10 +3,10 @@ import { expect, test } from '@playwright/test'
 import hashSha256 from '@frontend/modules/hashSha256'
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { fundCard, withdrawCard } from '@e2e-playwright/utils/card'
-import { setCardWithdrawnDateIntoPast } from '@e2e-playwright/utils/database/cardVersion'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
-import { withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments'
+import { fundCard, withdrawCard } from '@e2e/utils/card'
+import { setCardWithdrawnDateIntoPast } from '@e2e/utils/database/cardVersion'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
+import { withdrawLnurlW } from '@e2e/utils/lnbits/api/payments'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 

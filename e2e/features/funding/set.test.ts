@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test'
 
-import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments.js'
-import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
-import { generateRandomCardFundingInfo, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
-import { getRandomInt } from '@e2e-playwright/utils/getRandomInt'
+import { payInvoice, withdrawLnurlW } from '@e2e/utils/lnbits/api/payments.js'
+import { getAndCheckWalletBalance } from '@e2e/utils/lnbits/api/wallet.js'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
+import { generateRandomCardFundingInfo, withdrawCardViaLandingPage } from '@e2e/utils/card.js'
+import { getRandomInt } from '@e2e/utils/getRandomInt'
 import hashSha256 from '@frontend/modules/hashSha256'
-import { loginViaUi } from '@e2e-playwright/utils/auth/login'
+import { loginViaUi } from '@e2e/utils/auth/login'
 
 test.describe('Tipcard Set Funding', () => {
   let walletBalanceBefore: number

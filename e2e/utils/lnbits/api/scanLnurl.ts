@@ -1,5 +1,5 @@
 import { APIRequestContext } from '@playwright/test'
-import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix'
+import { removeLightningPrefix } from '@e2e/utils/removeLightningPrefix'
 
 export default async (context: APIRequestContext, lnurl: string) => {
   const response = await context.post('/api/v1/lnurlscan', {

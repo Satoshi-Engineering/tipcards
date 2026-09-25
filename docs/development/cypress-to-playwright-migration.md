@@ -19,7 +19,7 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 9. Add helpers only when a batch needs them. Prefer an explicit local helper over a speculative Cypress compatibility layer.
 10. Run focused verification during a batch and the full CI suites once when the batch is complete. Do not repeatedly run all browser tests between small edits.
 11. Use explicit `page.goto(...)` calls in Playwright tests. Do not introduce a shared page-navigation wrapper such as `gotoPage`; rely on web-first assertions and add only the narrowly scoped request wait a specific test requires.
-12. Do not introduce a temporary runner-neutral E2E module such as `e2e-shared` during the migration. Keep Cypress helpers self-contained until Cypress is removed, and port the smallest required implementation directly into `e2e-playwright`, adapting its public API for Playwright usage. Temporary duplication between Cypress and Playwright is preferred over compatibility wrappers or shared migration infrastructure that would need another cleanup step.
+12. Do not introduce a temporary runner-neutral E2E module such as `e2e-shared` during the migration. Keep Cypress helpers self-contained until Cypress is removed, and port the smallest required implementation directly into `e2e`, adapting its public API for Playwright usage. Temporary duplication between Cypress and Playwright is preferred over compatibility wrappers or shared migration infrastructure that would need another cleanup step.
 
 ## Baseline
 
@@ -51,7 +51,7 @@ Do not mark a case `migrated` based only on typechecking or source review.
 Keep the Cypress body as an executable specification until the entire migration is finished. Mark and skip each migrated test individually:
 
 ```ts
-// MIGRATED TO PLAYWRIGHT: e2e-playwright/features/auth/api.publicKey.test.ts
+// MIGRATED TO PLAYWRIGHT: e2e/features/auth/api.publicKey.test.ts
 it.skip('should return public key', () => {
   // Keep the original Cypress body unchanged.
 })
@@ -68,7 +68,7 @@ For a test that was already skipped before the migration, retain its original sk
 For every batch:
 
 1. Read every selected Cypress test and every helper it calls. Write down the setup, action, assertions, and timing or state constraints before translating it.
-2. Create the Playwright files under the corresponding `e2e-playwright` area. Preserve one test case per Cypress test case.
+2. Create the Playwright files under the corresponding `e2e` area. Preserve one test case per Cypress test case.
 3. Reuse existing Playwright helpers where their behavior matches exactly. Port only the smallest missing helper surface needed by this batch.
 4. Run the original Cypress cases and record the result before skipping them.
 5. Run the Playwright replacements against a fresh equivalent environment. Compare the actual assertions and relevant request/state transitions, not only the final pass result.
@@ -125,7 +125,7 @@ For every migrated test, compare all applicable items:
 
 Cypress plugins currently provide database, JWT, LNURL, and clipboard tasks. Playwright tests run in Node and can call equivalent typed helpers directly.
 
-- Port database operations directly into focused helpers in `e2e-playwright/utils/database` as they are needed. Let Playwright helpers acquire their own dependencies, such as the SQL client, instead of adding thin wrappers around Cypress helpers or temporary shared E2E modules.
+- Port database operations directly into focused helpers in `e2e/utils/database` as they are needed. Let Playwright helpers acquire their own dependencies, such as the SQL client, instead of adding thin wrappers around Cypress helpers or temporary shared E2E modules.
 - Reuse the existing shared JWT and LNURL domain modules rather than copying Cypress task wrappers.
 - Preserve transaction boundaries, inserted values, returned identifiers, and direct database timing.
 - Keep secrets in the current environment contract and never print them.

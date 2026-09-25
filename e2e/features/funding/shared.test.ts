@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
 
-import { getAndCheckWalletBalance } from '@e2e-playwright/utils/lnbits/api/wallet.js'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
-import { generateMultipleRandomCardFundingInfos, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e-playwright/utils/card.js'
-import { payLnurlP } from '@e2e-playwright/utils/lnbits/api/payments'
+import { getAndCheckWalletBalance } from '@e2e/utils/lnbits/api/wallet.js'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
+import { generateMultipleRandomCardFundingInfos, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e/utils/card.js'
+import { payLnurlP } from '@e2e/utils/lnbits/api/payments'
 
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   let walletBalanceBefore: number

@@ -129,7 +129,7 @@ const getJwtIssuer = async () => {
   }
 
   const keyDirectory = getRequiredEnvironmentVariable('JWT_AUTH_KEY_DIRECTORY')
-  const keyPairHandler = new JwtKeyPairHandler(path.resolve('e2e-playwright', keyDirectory))
+  const keyPairHandler = new JwtKeyPairHandler(path.resolve('e2e', keyDirectory))
   const keyPair = await keyPairHandler.loadKeyPairFromDirectory() as KeyPair | null
   if (!keyPair) {
     throw new Error('Could not load the JWT key pair.')

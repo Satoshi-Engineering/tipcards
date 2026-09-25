@@ -3,7 +3,7 @@ import * as z from 'zod'
 
 import LNURL from '@shared/modules/LNURL/LNURL'
 
-import { payInvoice, withdrawLnurlW } from '@e2e-playwright/utils/lnbits/api/payments'
+import { payInvoice, withdrawLnurlW } from '@e2e/utils/lnbits/api/payments'
 import { getRandomInt } from './getRandomInt'
 import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 

@@ -16,7 +16,7 @@
       "@backend/*": ["../backend/src/*"],
       "@frontend/*": ["../frontend/src/*"],
       "@shared/*": ["../shared/src/*"],
-      "@e2e-playwright/*": ["./*"],
+      "@e2e/*": ["./*"],
     }
   },
   "references": [

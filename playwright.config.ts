@@ -2,12 +2,12 @@ import { defineConfig, devices } from '@playwright/test'
 import dotenv from 'dotenv'
 
 dotenv.config({
-  path: new URL('./e2e-playwright/.env', import.meta.url).pathname,
+  path: new URL('./e2e/.env', import.meta.url).pathname,
   quiet: true,
 })
 
 export default defineConfig({
-  testDir: './e2e-playwright',
+  testDir: './e2e',
   testIgnore: 'live-checks/**',
   /* Run tests in files in parallel */
   fullyParallel: false,

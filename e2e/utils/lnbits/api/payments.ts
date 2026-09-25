@@ -1,7 +1,7 @@
 import { expect, type APIRequestContext } from '@playwright/test'
 import * as z from 'zod'
 
-import { removeLightningPrefix } from '@e2e-playwright/utils/removeLightningPrefix'
+import { removeLightningPrefix } from '@e2e/utils/removeLightningPrefix'
 import scanLnurl from './scanLnurl'
 
 export const PaymentDto = z.object({

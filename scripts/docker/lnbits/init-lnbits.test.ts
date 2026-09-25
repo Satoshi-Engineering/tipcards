@@ -11,13 +11,13 @@ const backendEnvironment = {
   LNBITS_INVOICE_READ_KEY: '22222222222222222222222222222222',
   LNBITS_ADMIN_KEY_TEST_USER_WALLET: '44444444444444444444444444444444',
 }
-const playwrightEnvironment = {
+const e2eEnvironment = {
   LNBITS_ADMIN_KEY_TEST_USER_WALLET: '44444444444444444444444444444444',
 }
 
 describe('LNbits bootstrap configuration', () => {
   it('builds the two wallet contracts from their owning environment files', () => {
-    expect(parseWalletContracts(backendEnvironment, playwrightEnvironment)).toEqual([
+    expect(parseWalletContracts(backendEnvironment, e2eEnvironment)).toEqual([
       {
         name: 'Application',
         adminKey: backendEnvironment.LNBITS_ADMIN_KEY,
@@ -36,17 +36,17 @@ describe('LNbits bootstrap configuration', () => {
     expect(() => parseWalletContracts(
       backendEnvironment,
       { LNBITS_ADMIN_KEY_TEST_USER_WALLET: '55555555555555555555555555555555' },
-    )).toThrow('Backend and Playwright must use the same test-user wallet key.')
+    )).toThrow('Backend and E2E must use the same test-user wallet key.')
   })
 
   it('rejects missing and duplicated credential values', () => {
     expect(() => parseWalletContracts(
       { ...backendEnvironment, LNBITS_ADMIN_KEY: '' },
-      playwrightEnvironment,
+      e2eEnvironment,
     )).toThrow('Missing required LNBITS_ADMIN_KEY value.')
     expect(() => parseWalletContracts(
       { ...backendEnvironment, LNBITS_INVOICE_READ_KEY: backendEnvironment.LNBITS_ADMIN_KEY },
-      playwrightEnvironment,
+      e2eEnvironment,
     )).toThrow('Every committed LNbits wallet key must be unique.')
   })
 })

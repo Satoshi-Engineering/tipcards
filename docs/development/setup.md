@@ -140,7 +140,7 @@ You can also log in to your local TipCards instance:
   - Minimum balance: 1,000,000 sats
 
 - **Test User Wallet** (used by backend integration and Playwright)
-  - The admin key is defined in `backend/.env` and `e2e-playwright/.env`.
+  - The admin key is defined in `backend/.env` and `e2e/.env`.
   - Minimum balance: 3,000,000 sats
 
 Wallet IDs and the test-user invoice key are generated during bootstrap and are not application contracts. Both wallets intentionally use sats without a fiat currency.

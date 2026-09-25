@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 import hashSha256 from '@frontend/modules/hashSha256'
-import { fundCard } from '@e2e-playwright/utils/card'
-import { lnbitsTestUserWalletApiContext } from '@e2e-playwright/utils/lnbits/api/apiContext'
+import { fundCard } from '@e2e/utils/card'
+import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
 test('do not allow a bulk withdraw for duplicate hashes', async ({ request }) => {
   const cardHash = await hashSha256(crypto.randomUUID())

@@ -34,7 +34,7 @@ export interface WalletContract {
 
 export function loadBootstrapConfig(environment: Environment, baseUrlArgument?: string): BootstrapConfig {
   const backendEnvironment = loadEnvironmentFile('backend/.env')
-  const playwrightEnvironment = loadEnvironmentFile('e2e-playwright/.env')
+  const e2eEnvironment = loadEnvironmentFile('e2e/.env')
   const lnbitsEnvironment = loadEnvironmentFile('scripts/docker/lnbits/.env')
   const runsInContainer = existsSync('/.dockerenv')
   const defaultBaseUrl = runsInContainer ? DEFAULT_COMPOSE_URL : DEFAULT_HOST_URL
@@ -47,19 +47,19 @@ export function loadBootstrapConfig(environment: Environment, baseUrlArgument?: 
     username: environment.LNBITS_BOOTSTRAP_USERNAME ?? DEFAULT_BOOTSTRAP_USERNAME,
     password: environment.LNBITS_BOOTSTRAP_PASSWORD ?? DEFAULT_BOOTSTRAP_PASSWORD,
     extensions: extensionContracts(),
-    wallets: parseWalletContracts(backendEnvironment, playwrightEnvironment),
+    wallets: parseWalletContracts(backendEnvironment, e2eEnvironment),
   }
 }
 
 export function parseWalletContracts(
   backendEnvironment: EnvironmentFile,
-  playwrightEnvironment: EnvironmentFile,
+  e2eEnvironment: EnvironmentFile,
 ): WalletContract[] {
   const backendTestAdminKey = requireValue(backendEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
-  const playwrightTestAdminKey = requireValue(playwrightEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
+  const e2eTestAdminKey = requireValue(e2eEnvironment, 'LNBITS_ADMIN_KEY_TEST_USER_WALLET')
 
-  if (backendTestAdminKey !== playwrightTestAdminKey) {
-    throw new Error('Backend and Playwright must use the same test-user wallet key.')
+  if (backendTestAdminKey !== e2eTestAdminKey) {
+    throw new Error('Backend and E2E must use the same test-user wallet key.')
   }
 
   const wallets: WalletContract[] = [
