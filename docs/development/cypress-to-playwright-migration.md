@@ -269,6 +269,8 @@ Keep the swipe and loading-indicator cases skipped in Playwright unless they are
 
 Completed on 2026-09-25. The user reported both active Cypress source cases and both active Playwright replacements passing; the pre-existing swipe and history loading-indicator skips remain skipped in both runners. Both fully accounted Cypress source specs now use the `*.test.skip.ts` suffix.
 
+The obsolete local Cypress CI job and `e2e:cypress:tests` script were removed after the empty suite correctly reported that no matching local Cypress specs remained. Cypress tooling remains temporarily for the deployed-environment live checks.
+
 ## Inventory
 
 All entries start as `planned`. Update the status and replacement path as work proceeds.
@@ -341,7 +343,7 @@ Preserve the live-check job's operational contract when moving it to Playwright:
 
 Remove Cypress only after all local and live-check inventory rows are migrated, all pre-existing skips are represented accurately, and several normal pipelines have passed with Playwright as the sole source of active E2E and live-check coverage.
 
-The final cleanup may then remove Cypress CI jobs, the old Cypress live-check implementation, packages, configuration, plugins, helpers, and skipped source files. Perform that cleanup as its own reviewable change; do not mix it with the last behavioral migration batch.
+The final cleanup may then remove the remaining Cypress live-check job, the old Cypress live-check implementation, packages, configuration, plugins, helpers, and skipped source files. Perform that cleanup as its own reviewable change; do not mix it with the last behavioral migration batch.
 
 After Cypress has been removed, remove the Cypress-only card-status subscription marker from `frontend/src/pages/landing/useCardStatus.ts`: both assignments to `document.body.dataset.testCardStatusSubscription` and the corresponding cleanup deletion. Playwright waits for the resulting UI or URL state instead of this implementation-level readiness marker.
 

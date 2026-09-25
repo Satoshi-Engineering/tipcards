@@ -38,56 +38,6 @@ test-backend-integration:
       fi
     - docker compose --profile tools --profile test down
 
-test-e2e-cypress:
-  stage: integration-and-e2e
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1
-  tags:
-    - docker
-  services:
-    - name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1-dind
-      alias: docker
-  rules:
-    - !reference [.shared_config, rules, no_tags]
-    - !reference [.shared_config, rules, web_and_push]
-    - when: on_success
-  needs:
-    - job: check-e2e-image-versions
-      optional: true
-    - job: install
-      optional: true
-  cache:
-    - !reference [.shared_config, cache, node_modules]
-  variables:
-    CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}
-    NODE_ENV: test
-  before_script:
-    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login $CI_DEPENDENCY_PROXY_SERVER -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin
-    - docker compose --profile tools --profile test up -d --wait
-  script:
-    - |
-      docker run --rm \
-        --network=container:tipcards-proxy \
-        -v $(pwd):/app \
-        -w /app \
-        -e NODE_EXTRA_CA_CERTS=/app/scripts/docker/nginx/certs/rootCA.pem \
-        --entrypoint /bin/bash \
-        ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/cypress/included:cypress-16.1.0-node-24.21.0-chrome-153.0.8010.36-1-ff-156.0-edge-153.0.4234.32-1 \
-        -c "npm run e2e:cypress:tests"
-  after_script:
-    - |
-      echo "Job status was: $CI_JOB_STATUS"
-      if [ "${CI_JOB_STATUS:-success}" != "success" ]; then
-        echo "Dumping backend logs:"
-        docker logs tipcards-backend-test || true
-        echo "Dumping frontend logs:"
-        docker logs tipcards-frontend-test || true
-        echo "Dumping lnbits logs:"
-        docker logs tipcards-lnbits || true
-        echo "Dumping lnbits bootstrap logs:"
-        docker logs tipcards-lnbits-bootstrap || true
-      fi
-    - docker compose --profile tools --profile test down
-
 test-e2e-playwright:
   stage: integration-and-e2e
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27.5.1

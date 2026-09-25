@@ -28,7 +28,6 @@
     "backend-test-one-integration-route": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem vitest run --config ./backend/vitest.config.ts",
     "backend-test-integration": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem vitest run --config ./backend/vitest.config.ts ./backend/tests/integration",
     "e2e:cypress:ui": "cypress open -C ./e2e-cypress/cypress.config.ts",
-    "e2e:cypress:tests": "cypress run --e2e -C ./e2e-cypress/cypress.config.ts --spec 'e2e-cypress/tests/**/*.test.ts'",
     "e2e:cypress:live-checks": "cypress run --e2e -C ./e2e-cypress/cypress.config.ts --spec 'e2e-cypress/live-checks/**/*.test.ts'",
     "e2e:cypress:typecheck": "tsc -p ./e2e-cypress/tsconfig.json --noEmit",
     "e2e:playwright:ui": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem playwright test --ui",
