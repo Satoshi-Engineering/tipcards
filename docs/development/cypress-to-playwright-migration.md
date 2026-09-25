@@ -345,6 +345,41 @@ The final cleanup may then remove Cypress CI jobs, the old Cypress live-check im
 
 After Cypress has been removed, remove the Cypress-only card-status subscription marker from `frontend/src/pages/landing/useCardStatus.ts`: both assignments to `document.body.dataset.testCardStatusSubscription` and the corresponding cleanup deletion. Playwright waits for the resulting UI or URL state instead of this implementation-level readiness marker.
 
+## Post-migration micro-project: restore skipped coverage
+
+After the live-check migration, Cypress cleanup, and normal pipeline stabilization are complete, review every skipped Playwright test and try to repair and re-enable it. Keep this as a separate micro-project so test repairs and any product fixes remain reviewable independently from the runner migration.
+
+The initial inventory is three pre-existing skips, but recount `test.skip` usage before starting:
+
+- `components/slider/SliderDefault.test.ts` — swipe to the second slide.
+- `pages/history.cardStatusList.test.ts` — small loading icon after the first load-more action.
+- `pages/history.cardStatusList.test.ts` — small loading icon after the second load-more action.
+
+For each skipped test:
+
+1. Reproduce and diagnose the reason for the skip before changing assertions, timing, test setup, or production behavior.
+2. Preserve the intended behavior and assertion strength. Do not replace the scenario with a weaker check or a broad timeout merely to make it pass.
+3. Fix one coherent cause at a time. Keep product fixes separate from test-only synchronization changes when they represent distinct concerns.
+4. Remove `test.skip`, run the focused test repeatedly where timing or pointer interaction is involved, and then run the complete Playwright suite once after all repaired tests are stable.
+5. Update this document with the result. The target is zero skipped Playwright tests; if a case remains genuinely blocked, document the exact blocker and follow-up instead of silently retaining the skip.
+
+## Post-migration micro-project: audit skipped integration tests
+
+As a separate micro-project, inventory every skipped backend integration test, determine why it is skipped, and either repair and re-enable it or document the concrete reason it must remain skipped. A Playwright replacement does not by itself replace backend integration coverage because the suites exercise different contracts and failure boundaries.
+
+The initial integration inventory is two cases in `backend/tests/integration/trpc/bulkWithdraw.test.ts`, but recount all integration-test skip forms before starting:
+
+- `creates and deletes a bulkWithdraw`
+- `creates and withdraws a bulkWithdraw`
+
+Both currently cite flakiness and the Cypress-to-Playwright migration without identifying the underlying failure. Handle each case as follows:
+
+1. Inspect its history, reproduce it against a clean integration environment, and run it repeatedly to identify the actual race, leaked state, external dependency, or product defect.
+2. If flakiness is the only reason, make the setup and synchronization deterministic. Prefer observable state, bounded polling, isolated fixtures, and explicit webhook or LNbits lifecycle handling over sleeps or broader timeouts.
+3. Remove `it.skip`, verify the repaired case repeatedly, and run the complete backend integration suite once after all integration-test changes are stable.
+4. If there is a valid reason the scenario cannot run reliably or should not run in this suite, leave it skipped and replace the vague comment with the specific reason, dependency or limitation, and the condition under which it can be re-enabled. Link a follow-up issue when appropriate.
+5. Record the final disposition of every skipped integration test in this document. Do not silently retain a skip whose only known reason is flakiness.
+
 ## References
 
 - [Playwright locators](https://playwright.dev/docs/locators)
