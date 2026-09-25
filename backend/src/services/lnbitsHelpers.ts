@@ -10,7 +10,7 @@ import { calculateFeeForGrossAmount } from '@shared/modules/feeCalculation.js'
 import type { Set } from '@backend/database/deprecated/data/Set.js'
 import type { BulkWithdraw as BulkWithdrawRedis } from '@backend/database/deprecated/data/BulkWithdraw.js'
 import { cardRedisFromCardApi } from '@backend/database/deprecated/transforms/cardRedisFromCardApi.js'
-import { getCardByHash, createCard, updateCard, updateSet } from '@backend/database/deprecated/queries.js'
+import { createCard, updateCard } from '@backend/database/deprecated/queries.js'
 import { asTransaction } from '@backend/database/client.js'
 import WithdrawAlreadyUsedError from '@backend/errors/WithdrawAlreadyUsedError.js'
 import { TIPCARDS_API_ORIGIN, LNBITS_INVOICE_READ_KEY, LNBITS_ADMIN_KEY, LNBITS_ORIGIN } from '@backend/constants.js'
@@ -602,57 +602,52 @@ export const getLnurlpForNewCard = async (cardHash: string, shared = false): Pro
  *
  * Side-effects:
  *  - manipulates the given set
- *  - updates the set and cards (specified in set.invoice.fundedCards) in the database
+ *  - updates the invoice in the database
  *
  * @param set Set
  * @throws ErrorWithCode
  */
 export const checkIfSetInvoiceIsPaid = async (set: Set): Promise<Set> => {
+  const setInvoice = set.invoice
   if (
-    set.invoice == null
-    || set.invoice.paid != null
+    setInvoice == null
+    || setInvoice.paid != null
   ) {
     return set
   }
   try {
     const response = await axios.get(
-      `${LNBITS_ORIGIN}/api/v1/payments/${set.invoice.payment_hash}`,
+      `${LNBITS_ORIGIN}/api/v1/payments/${setInvoice.payment_hash}`,
       axiosOptionsWithReadHeaders,
     )
     if (typeof response.data.paid !== 'boolean') {
       throw new ErrorWithCode('Missing paid status when checking invoice status at lnbits.', ErrorCode.UnableToGetLnbitsInvoiceStatus)
     }
     if (response.data.paid === true) {
-      set.invoice.paid = Math.round(+ new Date() / 1000)
+      setInvoice.paid = Math.round(+ new Date() / 1000)
     }
   } catch (error) {
     // if the invoice doesnt exist anymore handle the expired invoice in the frontend
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404) {
-        set.invoice.expired = true
+        setInvoice.expired = true
         return set
       }
     }
     throw new ErrorWithCode(error, ErrorCode.UnableToGetLnbitsInvoiceStatus)
   }
-  if (set.invoice.paid == null) {
+  const paid = setInvoice.paid
+  if (paid == null) {
     return set
   }
 
   try {
-    // update all cards -> paid
-    await Promise.all(set.invoice.fundedCards.map(async (cardIndex) => {
-      const cardHash = hashSha256(`${set.id}/${cardIndex}`)
-      const card = await getCardByHash(cardHash)
-      if (card?.setFunding == null) {
-        return
-      }
-      card.setFunding.paid = Math.round(+ new Date() / 1000)
-      await updateCard(card)
-    }))
-
-    // update set -> paid
-    await updateSet(set)
+    await asTransaction(async (queries) => {
+      const invoice = await queries.getInvoiceByPaymentHash(setInvoice.payment_hash)
+      assert(invoice != null, `No invoice found when marking set ${set.id} as paid.`)
+      invoice.paid = new Date(paid * 1000)
+      await queries.updateInvoice(invoice)
+    })
   } catch (error) {
     throw new ErrorWithCode(error, ErrorCode.UnknownDatabaseError)
   }
