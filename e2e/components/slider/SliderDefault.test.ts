@@ -2,30 +2,6 @@ import { expect, test, type Locator } from '@playwright/test'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-const pointerX = 1000
-
-const pointerDownEvent = {
-  button: 0,
-  buttons: 1,
-  pointerId: 1,
-  clientX: pointerX,
-  clientY: 1000,
-  screenX: pointerX,
-  screenY: 1000,
-  pageX: pointerX,
-  pageY: 1000,
-}
-
-const pointerMoveLeft = (deltaX: number) => ({
-  pointerId: 1,
-  clientX: pointerX - deltaX,
-  clientY: 1000,
-  screenX: pointerX - deltaX,
-  screenY: 1000,
-  pageX: pointerX - deltaX,
-  pageY: 1000,
-})
-
 test.describe('SliderDefault', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/style-guide/components')
@@ -46,7 +22,7 @@ test.describe('SliderDefault', () => {
     await expectSlideNotToBeVisibleInSlider(slide3, slider)
   })
 
-  test.skip('swipes to the second slide', async ({ page }) => {
+  test('swipes to the second slide', async ({ page }) => {
     const slider = page.locator('[data-test="slider-default"]').first()
     const slides = slider.locator('[data-test="slide-default"]')
     await expect(slides).toHaveCount(3)
@@ -55,12 +31,18 @@ test.describe('SliderDefault', () => {
     const slide2 = slides.nth(1)
     const slide3 = slides.nth(2)
 
-    const sliderWidth = await slider.evaluate(element => element.getBoundingClientRect().width)
     const sliderList = slider.locator('ul')
-    await sliderList.dispatchEvent('pointerdown', pointerDownEvent)
-    await sliderList.dispatchEvent('pointermove', pointerMoveLeft(Math.round(sliderWidth * 0.3)))
-    await sliderList.dispatchEvent('pointermove', pointerMoveLeft(Math.round(sliderWidth * 0.6)))
-    await sliderList.dispatchEvent('pointerup', { pointerId: 1 })
+    const sliderListBox = await sliderList.boundingBox()
+    if (sliderListBox == null) {
+      throw new Error('Slider list needs a bounding box.')
+    }
+
+    const pointerStartX = sliderListBox.x + sliderListBox.width * 0.8
+    const pointerY = sliderListBox.y + sliderListBox.height / 2
+    await page.mouse.move(pointerStartX, pointerY)
+    await page.mouse.down()
+    await page.mouse.move(pointerStartX - sliderListBox.width * 0.6, pointerY, { steps: 2 })
+    await page.mouse.up()
 
     await expectSlideToBeVisibleInSlider(slide2, slider)
     await expectSlideNotToBeVisibleInSlider(slide1, slider)

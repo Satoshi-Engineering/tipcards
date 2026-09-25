@@ -29,7 +29,7 @@ Inventory date: 2026-09-25.
 - Cypress live-check inventory: four spec files and five statically declared `it` calls. These are tracked separately because they run against deployed environments rather than the local E2E stack.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
 - After completing Batch 9, all 42 local Cypress specs use the `*.test.skip.ts` suffix. The local Cypress spec glob no longer discovers any test files.
-- Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
+- At migration completion, three browser cases remained skipped: one slider swipe case and two history loading-indicator cases. They were restored in the post-migration micro-project documented below.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress has been removed. Playwright runs Chromium with one worker and `fullyParallel: false`.
 
@@ -265,11 +265,11 @@ The four remaining Batch 8 specs were finalized on 2026-09-24. The user reported
 - `components/slider/SliderDefault.test.skip.ts`
 - The two pre-existing skipped cases in `pages/history.cardStatusList.test.skip.ts`
 
-Keep the swipe and loading-indicator cases skipped in Playwright unless they are independently repaired and re-enabled in a separate change. Preserve the slider geometry assertions and pagination scope.
+At migration completion, the swipe and loading-indicator cases stayed skipped in Playwright pending an independent repair. Preserve the slider geometry assertions and pagination scope.
 
-Completed on 2026-09-25. The user reported both active Cypress source cases and both active Playwright replacements passing; the pre-existing swipe and history loading-indicator skips remain skipped in both runners. Both fully accounted Cypress source specs now use the `*.test.skip.ts` suffix.
+Completed on 2026-09-25. The user reported both active Cypress source cases and both active Playwright replacements passing; the pre-existing swipe and history loading-indicator cases remained skipped at the end of the runner migration. Both fully accounted Cypress source specs then used the `*.test.skip.ts` suffix.
 
-The obsolete local Cypress CI job and `e2e:cypress:tests` script were removed after the empty suite correctly reported that no matching local Cypress specs remained. Cypress tooling and source remain temporarily for typechecking and final cleanup.
+The obsolete local Cypress CI job and `e2e:cypress:tests` script were removed after the empty suite correctly reported that no matching local Cypress specs remained. The remaining Cypress tooling and source were subsequently removed during final cleanup.
 
 ## Inventory
 
@@ -339,7 +339,7 @@ Preserve the live-check job's operational contract when moving it to Playwright:
 - Keep failure-only browser artifacts, adapted to Playwright's artifact paths and report format.
 - Verify the Playwright live check in CI before marking the live-check inventory as migrated.
 
-The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25. The GitLab job itself still needs pipeline verification on `main` and `develop`.
+The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25, and the GitLab job passed in the `develop` pipeline. Pipeline verification on `main` remains outstanding.
 
 ## Final cleanup gate
 
@@ -363,6 +363,8 @@ For each skipped test:
 4. Remove `test.skip`, run the focused test repeatedly where timing or pointer interaction is involved, and then run the complete Playwright suite once after all repaired tests are stable.
 5. Update this document with the result. The target is zero skipped Playwright tests; if a case remains genuinely blocked, document the exact blocker and follow-up instead of silently retaining the skip.
 
+Completed on 2026-09-25. The slider test now performs a real in-bounds pointer drag, and the two history tests hold the next `card.cardHistory` request while asserting the transient small loading icon. All three restored cases passed three consecutive focused runs, and no skipped Playwright tests remain.
+
 ## Post-migration micro-project: audit skipped integration tests
 
 As a separate micro-project, inventory every skipped backend integration test, determine why it is skipped, and either repair and re-enable it or document the concrete reason it must remain skipped. A Playwright replacement does not by itself replace backend integration coverage because the suites exercise different contracts and failure boundaries.
@@ -379,6 +381,8 @@ Both currently cite flakiness and the Cypress-to-Playwright migration without id
 3. Remove `it.skip`, verify the repaired case repeatedly, and run the complete backend integration suite once after all integration-test changes are stable.
 4. If there is a valid reason the scenario cannot run reliably or should not run in this suite, leave it skipped and replace the vague comment with the specific reason, dependency or limitation, and the condition under which it can be re-enabled. Link a follow-up issue when appropriate.
 5. Record the final disposition of every skipped integration test in this document. Do not silently retain a skip whose only known reason is flakiness.
+
+Completed on 2026-09-25. Both bulk-withdraw tests were restored. The audit found that the late set-funding callback regression test leaked a bulk-withdraw lock into the following tests, and that the delete assertion both expected a stale LNbits error message and caught its own assertion failure as though it were an Axios error. The regression test now releases its bulk withdraw in `finally`, the LNbits v1.6 responses are asserted directly, and the obsolete fixed delay was removed because the wallet helper already performs bounded retries. The focused five-test integration file passed twice from fresh processes, and no skipped backend integration tests remain.
 
 ## References
 

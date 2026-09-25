@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import assert from 'node:assert'
 import { randomUUID } from 'crypto'
 
@@ -22,7 +22,6 @@ import Frontend from '../lib/frontend/Frontend.js'
 import LNBitsWallet from '../lib/lightning/LNBitsWallet.js'
 import { API_ORIGIN, LNBITS_ORIGIN_INTEGRATION, LNBITS_ADMIN_KEY_TEST_USER_WALLET } from '../lib/constants.js'
 import '../lib/initAxios.js'
-import wait from '../lib/wait.js'
 
 ApplicationEventEmitter.init()
 CardLockManager.init({ aquireTimeout: 1000 })
@@ -80,16 +79,19 @@ describe('TRpc Router BulkWithdraw', () => {
 
   it('keeps the bulk withdraw links after a late set funding callback', async () => {
     const bulkWithdraw = await createBulkWithdraw()
-    const bulkWithdrawLinks = await loadFundedCardWithdrawLinks(bulkWithdraw.id)
+    try {
+      const bulkWithdrawLinks = await loadFundedCardWithdrawLinks(bulkWithdraw.id)
 
-    const response = await FE.markSetFundingInvoicePaid(SET_ID)
+      const response = await FE.markSetFundingInvoicePaid(SET_ID)
 
-    expect(response.data.status).toBe('success')
-    await expectFundedCardsToKeepBulkWithdrawLinks(bulkWithdrawLinks)
+      expect(response.data.status).toBe('success')
+      await expectFundedCardsToKeepBulkWithdrawLinks(bulkWithdrawLinks)
+    } finally {
+      await deleteBulkWithdraw()
+    }
   })
 
-  // skip these tests as they are flaky, and we want to move to e2e tests w/ playwright anyways
-  it.skip('creates and deletes a bulkWithdraw', async () => {
+  it('creates and deletes a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
 
     await checkIfLnurlwExistsInLnbits(bulkWithdraw)
@@ -101,10 +103,8 @@ describe('TRpc Router BulkWithdraw', () => {
     await checkIfCardsAreReleased()
   })
 
-  // skip these tests as they are flaky, and we want to move to e2e tests w/ playwright anyways
-  it.skip('creates and withdraws a bulkWithdraw', async () => {
+  it('creates and withdraws a bulkWithdraw', async () => {
     const bulkWithdraw = await createBulkWithdraw()
-    await wait(1000) // Wait 1 second waiting time of lnurlw after creation
 
     await checkIfLnurlwExistsInLnbits(bulkWithdraw)
     await checkIfCardsAreLocked()
@@ -194,23 +194,12 @@ const deleteBulkWithdraw = async () => {
 }
 
 const checkIfLnurlwIsRemoved = async (bulkWithdraw: BulkWithdraw) => {
-  // lnbits v1.0.0 changed the status code response to 200
-  try {
-    const lnurlResponse = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
-    expect(lnurlResponse.data).toEqual(expect.objectContaining({
-      status: 'ERROR',
-      reason: 'LNURL-withdraw not found.',
-    }))
-  } catch (error) {
-    expect(axios.isAxiosError(error)).toBe(true)
-    expect((error as AxiosError).response?.status).toBe(404)
-    expect((error as AxiosError).response?.data).toEqual(
-      expect.objectContaining({
-        status: 'ERROR',
-        reason: 'LNURL-withdraw not found.',
-      }),
-    )
-  }
+  const response = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
+  expect(response.status).toBe(200)
+  expect(response.data).toEqual(expect.objectContaining({
+    status: 'ERROR',
+    reason: 'Withdraw link does not exist.',
+  }))
 }
 
 const checkIfCardsAreReleased = async () => {
@@ -244,23 +233,12 @@ const sendWebhook = async (bulkWithdraw: BulkWithdraw) => {
 }
 
 const checkIfLnurlwIsWithdrawn = async (bulkWithdraw: BulkWithdraw) => {
-  // lnbits v1.0.0 changed the status code response to 200
-  try {
-    const lnurlResponse = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
-    expect(lnurlResponse.data).toEqual(expect.objectContaining({
-      status: 'ERROR',
-      reason: 'Withdraw is spent.',
-    }))
-  } catch (error) {
-    expect(axios.isAxiosError(error)).toBe(true)
-    expect((error as AxiosError).response?.status).toBe(404)
-    expect((error as AxiosError).response?.data).toEqual(
-      expect.objectContaining({
-        status: 'ERROR',
-        reason: 'Withdraw is spent.',
-      }),
-    )
-  }
+  const response = await axios.get(LNURL.decode(bulkWithdraw.lnurl))
+  expect(response.status).toBe(200)
+  expect(response.data).toEqual(expect.objectContaining({
+    status: 'ERROR',
+    reason: 'Withdraw is spent.',
+  }))
 }
 
 const checkIfCardsAreWithdrawn = async () => {
