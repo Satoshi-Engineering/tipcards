@@ -49,5 +49,6 @@ lnurl.auth.pem.pub
 # Playwright
 /test-results/
 /playwright-report/
+/playwright-report-live-check/
 /blob-report/
 /playwright/.cache/
