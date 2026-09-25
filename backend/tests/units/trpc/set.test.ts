@@ -16,7 +16,7 @@ import { createCallerFactory } from '@backend/trpc/trpc.js'
 import AccessGuard from '@backend/domain/auth/AccessGuard.js'
 import User from '@backend/domain/User.js'
 
-import { createCardForSet, createCardVersion, createSet, createSetSettings, createUser } from '../../drizzleData.js'
+import { createCardForSet, createCardVersion, createInvoice, createSet, createSetSettings, createUser } from '../../drizzleData.js'
 
 ApplicationEventEmitter.init()
 CardLockManager.init({ aquireTimeout: 1000 })
@@ -38,18 +38,28 @@ const dbUser = createUser()
 const emptySet = createSet()
 const setWithCards = createSet()
 const setWithSetFunding = createSet()
-const setSettings = createSetSettings(setWithCards)
-setSettings.numberOfCards = 2
+const setWithCardsSettings = createSetSettings(setWithCards)
+setWithCardsSettings.numberOfCards = 2
 const card1 = createCardForSet(setWithCards, 0)
 const card2 = createCardForSet(setWithCards, 1)
+const setWithSetFundingSettings = createSetSettings(setWithSetFunding)
+setWithSetFundingSettings.numberOfCards = 4
+const setFundedCards = Array.from(
+  { length: setWithSetFundingSettings.numberOfCards },
+  (_, cardIndex) => createCardForSet(setWithSetFunding, cardIndex),
+)
+const setFundedCardVersions = setFundedCards.map(createCardVersion)
+const setFunding = createInvoice(840, ...setFundedCardVersions)
 let user: User
 
 beforeAll(async () => {
   addData({
     sets: [emptySet, setWithCards, setWithSetFunding],
-    setSettings: [setSettings],
-    cards: [card1, card2],
-    cardVersions: [createCardVersion(card1), createCardVersion(card2)],
+    setSettings: [setWithCardsSettings, setWithSetFundingSettings],
+    cards: [card1, card2, ...setFundedCards],
+    cardVersions: [createCardVersion(card1), createCardVersion(card2), ...setFundedCardVersions],
+    invoices: [setFunding.invoice],
+    cardVersionInvoices: setFunding.cardVersionsHaveInvoice,
     users: [dbUser],
     usersCanUseSets: [
       { user: dbUser.id, set: setWithCards.id, canEdit:true },
@@ -95,9 +105,18 @@ describe('TRpc Router Set', () => {
     ]))
   })
 
-  it.skip('returns all cards for a set funding set', async () => {
+  it('returns all cards for a set funding set', async () => {
+    vi.spyOn(cardLockManager, 'lockCards').mockResolvedValueOnce([])
+
     const cards = await caller.getCardsDeprecated({ id: setWithSetFunding.id })
-    expect(cards.length).toBe(4)
+    expect(cards).toEqual(setFundedCards.map(card => expect.objectContaining({
+      hash: card.hash,
+      invoice: expect.objectContaining({ isSet: true }),
+      amount: {
+        pending: 210,
+        funded: null,
+      },
+    })))
   })
 
   it('returns all sets for a logged in user', async () => {
