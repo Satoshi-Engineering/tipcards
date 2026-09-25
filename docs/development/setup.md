@@ -139,8 +139,8 @@ You can also log in to your local TipCards instance:
   - Admin and invoice keys are defined in `backend/.env`.
   - Minimum balance: 1,000,000 sats
 
-- **Test User Wallet** (used by backend integration, Cypress, and Playwright)
-  - The admin key is defined in `backend/.env`, `e2e-playwright/.env`, and `e2e-cypress/.env`.
+- **Test User Wallet** (used by backend integration and Playwright)
+  - The admin key is defined in `backend/.env` and `e2e-playwright/.env`.
   - Minimum balance: 3,000,000 sats
 
 Wallet IDs and the test-user invoice key are generated during bootstrap and are not application contracts. Both wallets intentionally use sats without a fiat currency.

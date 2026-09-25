@@ -2,7 +2,7 @@
 
 This is a **partial checklist** of manual regression tests. It was originally created to verify the migration from Redis to Postgres.
 
-Today, our primary goal is to cover all cases with Playwright (or Cypress) tests, so this document mainly serves as a fallback reference for manual testing when needed.
+Today, our primary goal is to cover all cases with Playwright tests, so this document mainly serves as a fallback reference for manual testing when needed.
 
 ## general
 

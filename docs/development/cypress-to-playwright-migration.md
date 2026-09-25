@@ -31,7 +31,7 @@ Inventory date: 2026-09-25.
 - After completing Batch 9, all 42 local Cypress specs use the `*.test.skip.ts` suffix. The local Cypress spec glob no longer discovers any test files.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
-- Cypress no longer executes in CI. Playwright runs Chromium with one worker and `fullyParallel: false`.
+- Cypress has been removed. Playwright runs Chromium with one worker and `fullyParallel: false`.
 
 Recount the inventory before each batch. The repository may have gained or removed tests since this snapshot.
 
@@ -339,15 +339,11 @@ Preserve the live-check job's operational contract when moving it to Playwright:
 - Keep failure-only browser artifacts, adapted to Playwright's artifact paths and report format.
 - Verify the Playwright live check in CI before marking the live-check inventory as migrated.
 
-The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover; Cypress source specs remain available until final cleanup. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25. The GitLab job itself still needs pipeline verification on `main` and `develop`.
+The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25. The GitLab job itself still needs pipeline verification on `main` and `develop`.
 
 ## Final cleanup gate
 
-Remove Cypress only after all local and live-check inventory rows are migrated, all pre-existing skips are represented accurately, and several normal pipelines have passed with Playwright as the sole source of active E2E and live-check coverage.
-
-The final cleanup may then remove the old Cypress live-check implementation, packages, configuration, plugins, helpers, and skipped source files. Perform that cleanup as its own reviewable change; do not mix it with the last behavioral migration batch.
-
-After Cypress has been removed, remove the Cypress-only card-status subscription marker from `frontend/src/pages/landing/useCardStatus.ts`: both assignments to `document.body.dataset.testCardStatusSubscription` and the corresponding cleanup deletion. Playwright waits for the resulting UI or URL state instead of this implementation-level readiness marker.
+Cypress packages, configuration, plugins, helpers, source specs, and the Cypress-only card-status subscription marker were removed on 2026-09-25 after all local and live-check inventory rows were migrated. Playwright is now the sole browser-test runner.
 
 ## Post-migration micro-project: restore skipped coverage
 

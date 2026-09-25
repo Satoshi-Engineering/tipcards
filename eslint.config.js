@@ -4,7 +4,6 @@ import js from '@eslint/js'
 import pluginVue from 'eslint-plugin-vue'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVitest from '@vitest/eslint-plugin'
-import pluginCypress from 'eslint-plugin-cypress'
 
 const INLINE_ELEMENTS = createRequire(import.meta.url)('eslint-plugin-vue/dist/utils/inline-non-void-elements.js').default
 
@@ -33,14 +32,6 @@ export default defineConfigWithVueTs(
   {
     ...pluginVitest.configs.recommended,
     files: ['src/**/__tests__/*'],
-  },
-
-  {
-    ...pluginCypress.configs.recommended,
-    files: [
-      'cypress/e2e/**/*.{cy,spec}.{js,ts,jsx,tsx}',
-      'cypress/support/**/*.{js,ts,jsx,tsx}',
-    ],
   },
 
   {

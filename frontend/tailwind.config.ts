@@ -127,9 +127,6 @@ export default {
   },
   plugins: [
     plugin(({ addUtilities }) => {
-      // this currently breaks the electron app from cypress during e2e tests
-      // addVariant('starting', '@starting-style')
-
       addUtilities({
         '.break-anywhere': {
           overflowWrap: 'anywhere',

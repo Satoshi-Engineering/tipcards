@@ -47,9 +47,6 @@ export const useCardStatus = () => {
     subscription = card.statusSubscription.subscribe(
       { hash },
       {
-        onStarted: () => {
-          document.body.dataset.testCardStatusSubscription = 'started'
-        },
         onData: (data) => {
           loadingCardStatus.value = false
           cardStatus.value = data
@@ -66,8 +63,6 @@ export const useCardStatus = () => {
     if (!mounted) {
       return
     }
-    document.body.dataset.testCardStatusSubscription = 'started'
-
     try {
       cardStatus.value = await card.status.query({ hash })
     } catch (error) {
@@ -83,7 +78,6 @@ export const useCardStatus = () => {
   const cleanupSubscription = () => {
     subscription?.unsubscribe()
     clearTimeout(pollingTimeout)
-    delete document.body.dataset.testCardStatusSubscription
   }
 
   onMounted(() => {

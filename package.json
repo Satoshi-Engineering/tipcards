@@ -5,7 +5,7 @@
   "scripts": {
     "audit": "better-npm-audit audit",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck && npm run e2e:cypress:typecheck && npm run e2e:playwright:typecheck",
+    "typecheck": "npm run shared-typecheck && npm run backend-typecheck && npm run frontend-typecheck && npm run e2e:playwright:typecheck",
     "test-units": "npm run shared-test-units && npm run backend-test-units && npm run frontend-tests",
     "shared-build": "rm -rf ./dist/shared && tsc -p ./shared/tsconfig.json && tsc-alias -p ./shared/tsconfig.json",
     "shared-typecheck": "tsc -p ./shared/tsconfig.json --noEmit",
@@ -27,8 +27,6 @@
     "backend-test-units": "vitest run --config ./backend/vitest.config.ts ./backend/tests/units",
     "backend-test-one-integration-route": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem vitest run --config ./backend/vitest.config.ts",
     "backend-test-integration": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem vitest run --config ./backend/vitest.config.ts ./backend/tests/integration",
-    "e2e:cypress:ui": "cypress open -C ./e2e-cypress/cypress.config.ts",
-    "e2e:cypress:typecheck": "tsc -p ./e2e-cypress/tsconfig.json --noEmit",
     "e2e:playwright:ui": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem playwright test --ui",
     "e2e:playwright:tests": "NODE_EXTRA_CA_CERTS=./scripts/docker/nginx/certs/rootCA.pem playwright test",
     "e2e:playwright:live-checks": "playwright test --config=playwright.live-check.config.ts",
@@ -98,7 +96,6 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@cypress/webpack-preprocessor": "^8.0.0",
     "@dbml/core": "^10.2.0",
     "@eslint/js": "^10.0.1",
     "@pinia/testing": "^2.0.1",
@@ -130,11 +127,8 @@
     "bip32": "^5.0.1",
     "bip39": "^3.1.0",
     "changelogen": "^0.6.2",
-    "clipboardy": "^5.3.2",
-    "cypress": "^16.1.0",
     "drizzle-kit": "^0.31.11",
     "eslint": "^10.11.0",
-    "eslint-plugin-cypress": "^7.0.2",
     "eslint-plugin-vue": "^10.11.0",
     "globals": "^17.12.0",
     "jsdom": "^30.1.1",
@@ -143,7 +137,6 @@
     "start-server-and-test": "^3.0.12",
     "tailwindcss": "^4.3.3",
     "tiny-secp256k1": "^2.2.4",
-    "ts-loader": "^9.6.2",
     "tsc-alias": "^1.9.5",
     "typescript": "^6.0.3",
     "vite": "^8.3.0",
@@ -162,7 +155,6 @@
     "esbuild@0.28.2": true,
     "fsevents@2.3.2": true,
     "fsevents@2.3.3": true,
-    "secp256k1@5.0.2": true,
-    "cypress@16.1.0": true
+    "secp256k1@5.0.2": true
   }
 }

@@ -20,10 +20,6 @@ coverage
 *.local
 ngrok.yml
 
-/cypress/downloads/
-/cypress/videos/
-/cypress/screenshots/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
