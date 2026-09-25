@@ -28,7 +28,7 @@ Inventory date: 2026-09-25.
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - Cypress live-check inventory: four spec files and five statically declared `it` calls. These are tracked separately because they run against deployed environments rather than the local E2E stack.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After completing Batch 7, 40 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining two specs with nine declared runtime cases: four migrated history cases, three pre-existing skips, and two active cases.
+- After completing Batch 9, all 42 local Cypress specs use the `*.test.skip.ts` suffix. The local Cypress spec glob no longer discovers any test files.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -258,14 +258,16 @@ The three `features/historyList` specs were finalized on 2026-09-24. The user re
 
 The two `features/setsList` change-detection specs were finalized on 2026-09-24. The user reported all four active Cypress source cases and all four Playwright replacements passing; the post-migration Cypress run confirmed all four source cases are pending before the specs were renamed to `*.test.skip.ts`.
 
-The four remaining Batch 8 specs were finalized on 2026-09-24. The user reported all 28 active Cypress source cases and all 28 Playwright replacements passing. The post-migration Cypress run confirmed 30 pending cases, including the two pre-existing history loading-indicator skips. The three fully migrated specs were renamed to `*.test.skip.ts`; `pages/history.cardStatusList.test.ts` remains discoverable for its two Batch 9 cases.
+The four remaining Batch 8 specs were finalized on 2026-09-24. The user reported all 28 active Cypress source cases and all 28 Playwright replacements passing. The post-migration Cypress run confirmed 30 pending cases, including the two pre-existing history loading-indicator skips. The three fully migrated specs were renamed to `*.test.skip.ts`; `pages/history.cardStatusList.test.ts` remained discoverable for its two Batch 9 cases.
 
 ### Batch 9: slider and pre-existing skipped cases
 
-- `components/slider/SliderDefault.test.ts`
-- The two pre-existing skipped cases in `pages/history.cardStatusList.test.ts`
+- `components/slider/SliderDefault.test.skip.ts`
+- The two pre-existing skipped cases in `pages/history.cardStatusList.test.skip.ts`
 
 Keep the swipe and loading-indicator cases skipped in Playwright unless they are independently repaired and re-enabled in a separate change. Preserve the slider geometry assertions and pagination scope.
+
+Completed on 2026-09-25. The user reported both active Cypress source cases and both active Playwright replacements passing; the pre-existing swipe and history loading-indicator skips remain skipped in both runners. Both fully accounted Cypress source specs now use the `*.test.skip.ts` suffix.
 
 ## Inventory
 
@@ -311,10 +313,10 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 8 | `features/setsList/setsList.changeCardStatus.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeCardStatus.test.ts` |
 | 8 | `features/setsList/setsList.changeSettings.test.skip.ts` | 2 | migrated | `features/setsList/setsList.changeSettings.test.ts` |
 | 8 | `pages/dashboard.openTasks.test.skip.ts` | 10 | migrated | `pages/dashboard.openTasks.test.ts` |
-| 8/9 | `pages/history.cardStatusList.test.ts` | 6, including 2 pre-existing skips | 4 migrated; 2 planned | `pages/history.cardStatusList.test.ts` (4 cases) |
+| 8/9 | `pages/history.cardStatusList.test.skip.ts` | 6, including 2 pre-existing skips | migrated | `pages/history.cardStatusList.test.ts` |
 | 8 | `pages/sets.cardsInfo.test.skip.ts` | 4 | migrated | `pages/sets.cardsInfo.test.ts` |
 | 8 | `pages/sets.search.test.skip.ts` | 10 | migrated | `pages/sets.search.test.ts` |
-| 9 | `components/slider/SliderDefault.test.ts` | 3, including 1 pre-existing skip | planned | — |
+| 9 | `components/slider/SliderDefault.test.skip.ts` | 3, including 1 pre-existing skip | migrated | `components/slider/SliderDefault.test.ts` |
 
 ## Live-check migration
 

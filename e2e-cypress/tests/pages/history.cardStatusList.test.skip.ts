@@ -46,6 +46,7 @@ describe('Card status list loading (sorted) data', () => {
     cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--large]').should('be.visible')
   })
 
+  // PRE-EXISTING SKIP; MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
   it.skip('should display the small loading icon, when the list already has items', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()
@@ -53,6 +54,7 @@ describe('Card status list loading (sorted) data', () => {
     cy.get('[data-test=card-status-list] [data-test=items-list-loading-icon--small]').should('be.visible')
   })
 
+  // PRE-EXISTING SKIP; MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/history.cardStatusList.test.ts
   it.skip('should display the small loading icon, when the list already has items and load more buttons is clicked twice', () => {
     tipCards.history.goto()
     cy.getTestElement('history-load-more-button').click()

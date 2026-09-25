@@ -29,7 +29,8 @@ const pointerMoveLeft = (deltaX: number) => ({
 })
 
 describe('SliderDefault', () => {
-  it('renders the slider', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/slider/SliderDefault.test.ts
+  it.skip('renders the slider', () => {
     tipCards.styleGuide.gotoComponents()
 
     cy.get('[data-test="slider-default"]').first().as('slider')
@@ -43,6 +44,7 @@ describe('SliderDefault', () => {
     shouldNotBeVisibleInSlider('@slide3')
   })
 
+  // PRE-EXISTING SKIP; MIGRATED TO PLAYWRIGHT: e2e-playwright/components/slider/SliderDefault.test.ts
   it.skip('swipes to the second slide', () => {
     tipCards.styleGuide.gotoComponents()
 
@@ -72,7 +74,8 @@ describe('SliderDefault', () => {
     shouldNotBeVisibleInSlider('@slide3')
   })
 
-  it('navigates to third slide using pagination', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/components/slider/SliderDefault.test.ts
+  it.skip('navigates to third slide using pagination', () => {
     tipCards.styleGuide.gotoComponents()
 
     cy.get('[data-test="slider-default"]').first().as('slider')

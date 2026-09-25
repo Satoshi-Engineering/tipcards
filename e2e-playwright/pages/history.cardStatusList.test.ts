@@ -46,6 +46,22 @@ test.describe('Card status list loading (sorted) data', () => {
 
     await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--large"]')).toBeVisible()
   })
+
+  test.skip('should display the small loading icon, when the list already has items', async ({ page }) => {
+    await page.goto('/history')
+    await page.locator('[data-test="history-load-more-button"]').click()
+
+    await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--small"]')).toBeVisible()
+  })
+
+  test.skip('should display the small loading icon, when the list already has items and load more buttons is clicked twice', async ({ page }) => {
+    await page.goto('/history')
+    await page.locator('[data-test="history-load-more-button"]').click()
+    await expect(page.locator(cardStatusItems)).toHaveCount(100, { timeout: dataLoadTimeout })
+    await page.locator('[data-test="history-load-more-button"]').click()
+
+    await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--small"]')).toBeVisible()
+  })
 })
 
 const expectCardStatusListItemsToBeSorted = async (page: Page) => {
