@@ -4,7 +4,8 @@ import tipCards from '@e2e/lib/tipCards'
 import tipCardsApi from '@e2e/lib/tipCardsApi'
 
 describe('Landing Page', () => {
-  it('should show locked by bulkWithdraw', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.bulkWithdraw.test.ts
+  it.skip('should show locked by bulkWithdraw', () => {
     const setId = generateSetId()
     tipCardsApi.set.fundSet(setId)
     generateCardHashForSet(setId).then((cardHash) => {
@@ -17,7 +18,8 @@ describe('Landing Page', () => {
     })
   })
 
-  it('should reset a bulkWithdraw', () => {
+  // MIGRATED TO PLAYWRIGHT: e2e-playwright/pages/landing.bulkWithdraw.test.ts
+  it.skip('should reset a bulkWithdraw', () => {
     const setId = generateSetId()
     tipCardsApi.set.fundSet(setId)
     generateCardHashForSet(setId).then((cardHash) => {

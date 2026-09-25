@@ -23,12 +23,12 @@ The migration changes the test runner, not the tested behavior. Every active Pla
 
 ## Baseline
 
-Inventory date: 2026-09-24.
+Inventory date: 2026-09-25.
 
 - Original Cypress inventory: 42 spec files and 154 statically declared `it` calls.
 - Cypress live-check inventory: four spec files and five statically declared `it` calls. These are tracked separately because they run against deployed environments rather than the local E2E stack.
 - The original `TheLangNav.test.ts` generates eight locale cases from one declared `it`, giving 161 runtime cases with the current locale list.
-- After Batch 8, 39 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining three specs with 11 declared runtime cases: four migrated history cases, three pre-existing skips, and four active cases.
+- After completing Batch 7, 40 fully migrated specs use the `*.test.skip.ts` suffix. Cypress discovers the remaining two specs with nine declared runtime cases: four migrated history cases, three pre-existing skips, and two active cases.
 - Three Cypress cases are already skipped: one slider swipe case and two history loading-indicator cases.
 - Playwright: eight existing feature files. These remain authoritative and must not be rewritten as part of Cypress migration batches.
 - Cypress runs Chrome in CI. Playwright currently runs Chromium with one worker and `fullyParallel: false`.
@@ -222,7 +222,7 @@ Completed on 2026-09-23. All 14 Cypress source cases and all 14 Playwright repla
 - `deprecated/api/multipleInvoices.test.skip.ts`
 - `features/feeCalculation.test.skip.ts`
 - `pages/card.test.skip.ts`
-- `pages/landing.bulkWithdraw.test.ts`
+- `pages/landing.bulkWithdraw.test.skip.ts`
 - `pages/landing.content.test.skip.ts`
 - `pages/landing.funded.test.skip.ts`
 - `pages/landing.unfunded.test.skip.ts`
@@ -230,7 +230,7 @@ Completed on 2026-09-23. All 14 Cypress source cases and all 14 Playwright repla
 
 Reuse the existing Playwright LNbits helpers only where their amounts, wallet roles, polling, and status assertions match the Cypress source exactly.
 
-Finalized on 2026-09-23 with 26 migrated cases across seven fully verified specs and two blocked cases in `pages/landing.bulkWithdraw.test.ts`. All 28 Playwright replacements passed. The seven successful Cypress specs were marked and renamed after their 26 source cases passed; the blocked spec remains active in Cypress.
+Completed on 2026-09-25 with all 28 cases across eight verified specs. The first 26 cases were finalized on 2026-09-23; the two bulk-withdraw cases followed after the backend callback race was fixed and both focused Cypress and Playwright verification passed.
 
 #### Separate backend follow-up: idempotent set-invoice paid callback
 
@@ -238,11 +238,7 @@ Keep this work outside the Cypress-to-Playwright migration. During the focused B
 
 The local proxy log showed that LNbits and Cypress called `/api/set/invoice/paid/:setId` concurrently, with LNbits sometimes retrying the callback. The route returned success for every call but recreated ordinary card withdrawal links each time. A callback that completed after `bulkWithdraw.createForCards` could therefore replace the card's bulk-withdraw link and make the card appear normally funded.
 
-Handle this as a separate backend change:
-
-1. Add a backend integration regression test, preferably as a focused new test beside `backend/tests/integration/api/set.funding.test.ts`. Invoke the paid callback repeatedly and concurrently, then assert that every funded card keeps one stable withdrawal-link association. Include the observed ordering where a late repeated callback follows bulk-withdraw creation and assert that it does not replace the link or clear its `bulkWithdrawId`. This belongs in backend integration rather than browser E2E because the contract is HTTP-handler idempotency plus persisted database state.
-2. Make `/api/set/invoice/paid/:setId` serialized and idempotent. Repeated or concurrent LNbits/manual callbacks must return safely without recreating or relinking withdrawal links that already exist.
-3. Run the focused backend integration regression, the two Cypress bulk-withdraw cases, and their Playwright replacements before changing the migration state from `blocked`.
+Completed on 2026-09-25. The callback now creates ordinary withdrawal links idempotently under a card-version row lock, and marking the shared set invoice paid updates only the invoice instead of rewriting every legacy card record. This prevents a concurrent callback from restoring an ordinary withdrawal link over a newly created bulk-withdraw association. The focused Cypress source cases passed, the user confirmed the Playwright replacements pass, and the source spec was finalized.
 
 ### Batch 8: database-heavy lists, delayed responses, and ordering
 
@@ -304,7 +300,7 @@ All entries start as `planned`. Update the status and replacement path as work p
 | 7 | `deprecated/api/multipleInvoices.test.skip.ts` | 2 | migrated | `deprecated/api/multipleInvoices.test.ts` |
 | 7 | `features/feeCalculation.test.skip.ts` | 1 | migrated | `features/feeCalculation.test.ts` |
 | 7 | `pages/card.test.skip.ts` | 5 | migrated | `pages/card.test.ts` |
-| 7 | `pages/landing.bulkWithdraw.test.ts` | 2 | blocked | `pages/landing.bulkWithdraw.test.ts` |
+| 7 | `pages/landing.bulkWithdraw.test.skip.ts` | 2 | migrated | `pages/landing.bulkWithdraw.test.ts` |
 | 7 | `pages/landing.content.test.skip.ts` | 8 | migrated | `pages/landing.content.test.ts` |
 | 7 | `pages/landing.funded.test.skip.ts` | 2 | migrated | `pages/landing.funded.test.ts` |
 | 7 | `pages/landing.unfunded.test.skip.ts` | 5 | migrated | `pages/landing.unfunded.test.ts` |
