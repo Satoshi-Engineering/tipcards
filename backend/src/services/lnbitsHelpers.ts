@@ -249,7 +249,10 @@ export const checkIfCardLnurlpIsPaid = async (card: CardApi, closeShared = false
  * @throws ErrorWithCode
  */
 export const checkIfCardIsPaidAndCreateWithdrawId = async (card: CardApi, closeShared = false): Promise<CardApi> => {
-  if (card.isLockedByBulkWithdraw) {
+  if (
+    card.isLockedByBulkWithdraw
+    || card.lnbitsWithdrawId != null
+  ) {
     return card
   }
 
