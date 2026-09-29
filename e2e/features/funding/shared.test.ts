@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 
 import { getAndCheckWalletBalance } from '@e2e/utils/lnbits/api/wallet.js'
 import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
-import { generateMultipleRandomCardFundingInfos, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e/utils/card.js'
+import { createCardFundingInfo, generateTestingCardHash, withdrawCardViaLandingPage } from '@e2e/utils/card.js'
 import { payLnurlP } from '@e2e/utils/lnbits/api/payments'
 
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
@@ -11,7 +11,7 @@ test.describe('Tipcard LNURLp Funding and Withdraw', () => {
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
 
-  const cardFundingInfos = generateMultipleRandomCardFundingInfos(2, 27)
+  const cardFundingInfos = [210, 1_000, 2_100, 10_000, 21_000, 53_100].map(createCardFundingInfo)
 
   const netAmountOnCard = cardFundingInfos.reduce((sum, { netAmount }) => sum + netAmount, 0)
   const grossAmountsTotal = cardFundingInfos.reduce((sum, { grossAmount }) => sum + grossAmount, 0)

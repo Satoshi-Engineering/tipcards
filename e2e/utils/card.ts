@@ -91,8 +91,7 @@ export const generateTestingCardHash = () => {
   return `${cardHashPrefix}-${crypto.randomUUID()}`
 }
 
-export const generateRandomCardFundingInfo = (minNetAmount: number, maxNetAmount: number) => {
-  const netAmount = getRandomInt(minNetAmount, maxNetAmount)
+export const createCardFundingInfo = (netAmount: number) => {
   const fee = calculateFeeForNetAmount(netAmount)
   return {
     netAmount,
@@ -101,7 +100,6 @@ export const generateRandomCardFundingInfo = (minNetAmount: number, maxNetAmount
   }
 }
 
-export const generateMultipleRandomCardFundingInfos = (minNumberOfFundings: number, maxNumberOfFundings: number) => {
-  const numberOfFundings = getRandomInt(minNumberOfFundings, maxNumberOfFundings)
-  return Array(numberOfFundings).fill(undefined).map(() => generateRandomCardFundingInfo(210, 53100))
+export const generateRandomCardFundingInfo = (minNetAmount: number, maxNetAmount: number) => {
+  return createCardFundingInfo(getRandomInt(minNetAmount, maxNetAmount))
 }
