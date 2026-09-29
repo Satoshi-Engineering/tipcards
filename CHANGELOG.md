@@ -1,6 +1,87 @@
 # Changelog
 
 
+## v0.4.42
+
+[compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.41...v0.4.42)
+
+### 🚀 Enhancements
+
+- Add deterministic LNbits bootstrap ([8a1501a0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/8a1501a0))
+
+### 🩹 Fixes
+
+- Restore local LNURL authentication with LNbits 1.6 ([dca4c436](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/dca4c436))
+- Migrate list item grid to Tailwind 4 ([6cd94bd0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/6cd94bd0))
+- Restore LNURL withdrawals with LNbits 1.6 ([8b988d3c](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/8b988d3c))
+- Also upgrade version in package-lock.json when bumping version ([2dd2772b](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/2dd2772b))
+- Make Cypress tests strict under TypeScript 6 ([f095b78e](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f095b78e))
+- Use global scope for i18n translation components ([9e1b8734](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/9e1b8734))
+- **backend:** Make set funding callback idempotent ([159cd75f](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/159cd75f))
+- **backend:** CheckIfCardIsPaidAndCreateWithdrawId prevent duplicate lnurlw creation ([e27da725](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e27da725))
+- **backend:** Preserve bulk withdraw links during set funding callbacks ([a8b85062](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/a8b85062))
+- Double underline in LinkDefault ([946042a8](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/946042a8))
+
+### 💅 Refactors
+
+- Clarify LNbits test wallet configuration ([1b8d3620](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/1b8d3620))
+- Share LNbits test user wallet ([487ded01](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/487ded01))
+- **e2e:** Use runner-agnostic naming ([5f163323](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/5f163323))
+
+### 📖 Documentation
+
+- Revise LNbits bootstrap credential strategy ([8e1929a0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/8e1929a0))
+- Prepare LNbits seed removal handoff ([70af5e1b](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/70af5e1b))
+- Clean up completed migration guides ([7bc24ed4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/7bc24ed4))
+- Document LNbits login workaround ([5efd53d2](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/5efd53d2))
+- Add live check cypress migration to migration docs ([84f51cd0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/84f51cd0))
+- **e2e:** Plan post-migration skipped test recovery ([fcdc70f7](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/fcdc70f7))
+
+### 🏡 Chore
+
+- Upgrade Tailwind CSS to v4 ([13c2d00d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/13c2d00d))
+- Remove legacy LNbits database seed ([a2fc2fb1](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/a2fc2fb1))
+- Upgrade LNbits to v1.6.0 ([1ea7eef1](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/1ea7eef1))
+- Patch and minor upgrades ([cad0c035](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/cad0c035))
+- Upgrade vueuse package to latest ([9ee6335c](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/9ee6335c))
+- Upgrade dotenv package to latest ([e39fc022](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e39fc022))
+- Upgrade typescript to v6 ([a87212c2](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/a87212c2))
+- Upgrade minor dependencies ([b172f602](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/b172f602))
+- Minor dependency upgrades ([41f79009](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/41f79009))
+
+### ✅ Tests
+
+- Turn off noise from dotenv loader ([3a2c33d2](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/3a2c33d2))
+- **e2e:** Migrate first Cypress API tests to Playwright ([f0a989a0](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/f0a989a0))
+- **e2e:** Migrate Cypress batches 2 and 3 to Playwright ([1c02ecd3](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/1c02ecd3))
+- **e2e:** Migrate Cypress batch 4 to Playwright ([39ec1bec](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/39ec1bec))
+- **e2e:** Skip fully migrated Cypress specs ([43870e3a](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/43870e3a))
+- **e2e:** Migrate Cypress batch 5 to Playwright ([02b3b826](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/02b3b826))
+- **e2e:** Migrate Cypress batch 6 to Playwright ([5ad9ca75](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/5ad9ca75))
+- **e2e:** Migrate verified Cypress batch 7 tests to Playwright ([e2174e4f](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e2174e4f))
+- **e2e:** Migrate batch 8 (history list tests) to Playwright ([d352e9ba](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/d352e9ba))
+- **e2e:** Migrate batch 8 (sets list tests) to Playwright ([47c442f4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/47c442f4))
+- **e2e:** Migrate dashboard open tasks to Playwright ([be35a7bd](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/be35a7bd))
+- **e2e:** Complete batch 8 Playwright migration ([357ebfce](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/357ebfce))
+- **backend:** Cover late set funding callback ([e8355d3d](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e8355d3d))
+- **e2e:** Complete batch 7 Playwright migration ([2dc28181](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/2dc28181))
+- **e2e:** Complete batch 9 Playwright migration ([913a0bb9](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/913a0bb9))
+- **e2e:** Migrate live checks to Playwright ([474eba8c](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/474eba8c))
+- **e2e:** Complete Cypress to Playwright migration ([8b3390aa](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/8b3390aa))
+- **backend:** Restore set funding unit coverage ([81f3a0d4](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/81f3a0d4))
+- Restore skipped browser and backend coverage ([c84f4ec9](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/c84f4ec9))
+
+### 🤖 CI
+
+- Bootstrap deterministic LNbits test data ([bf2710ab](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/bf2710ab))
+- Upload live-check screenshots only on failure ([333eaf48](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/333eaf48))
+- **e2e:** Remove obsolete Cypress test job ([e80ca1a7](https://gitlab.com/satoshiengineering/lightning-tip-cards/commit/e80ca1a7))
+
+### ❤️ Contributors
+
+- Dr-erych <dave@satoshiengineering.com>
+- Thomas Schagerl <tom@satoshiengineering.com>
+
 ## v0.4.41
 
 [compare changes](https://gitlab.com/satoshiengineering/lightning-tip-cards/compare/v0.4.40...v0.4.41)
