@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-test.describe('TheHeader', () => {
+test.describe('TheHeader', { tag: '@parallel-safe' }, () => {
   test('clicks on the lang icon in the header and the lang nav should appear and disappear', async ({ page }) => {
     await page.goto('/style-guide')
 

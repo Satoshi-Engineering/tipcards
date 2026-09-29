@@ -9,7 +9,7 @@ test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 const cardStatusItems = '[data-test="card-status-list-item"]'
 const landingPageViewedDate = '[data-test="card-status-list-item-date-landingPageViewed"]'
 
-test.describe('History list without data', () => {
+test.describe('History list without data', { tag: '@parallel-safe' }, () => {
   test('should refresh when navigating from dashboard to history page', async ({ context, page }) => {
     const userId = await login(context)
     const testSet = await createHistoryUpdateTestData(userId)

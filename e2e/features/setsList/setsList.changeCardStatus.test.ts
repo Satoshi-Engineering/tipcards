@@ -10,7 +10,7 @@ const fundedCards = '[data-test="sets-list-item-cards-summary-funded"]'
 const withdrawnCards = '[data-test="sets-list-item-cards-summary-withdrawn"]'
 const reloadingIcon = '[data-test="sets-list"] [data-test="items-list-reloading-icon"]'
 
-test.describe('Sets List with sets data', () => {
+test.describe('Sets List with sets data', { tag: '@parallel-safe' }, () => {
   test('should update a cards summary checkbox on the dashboard page', async ({ context, page }) => {
     const userId = await login(context)
     const testSet = await createSetWithFundedCard(userId)

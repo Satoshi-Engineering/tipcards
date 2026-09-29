@@ -9,6 +9,8 @@ import hashSha256 from '@frontend/modules/hashSha256'
 import { loginViaUi } from '@e2e/utils/auth/login'
 
 test.describe('Tipcard Set Funding', () => {
+  test.describe.configure({ mode: 'serial' })
+
   let walletBalanceBefore: number
   const setId = crypto.randomUUID()
   let fullSetUrl = ''
@@ -39,7 +41,9 @@ test.describe('Tipcard Set Funding', () => {
     // Fill in and submit the form
     await page.locator('[data-test="sats-amount-selector"] input').fill(`${netAmount}`)
     await page.locator('[data-test="textmessage-text-field"] input').fill('E2E Test Set Funding Tipcard Message')
+    const invoiceResponse = page.waitForResponse(response => response.url().includes(`/api/set/invoice/${setId}`))
     await page.locator('[data-test="funding-submit-button"]').click()
+    expect((await invoiceResponse).ok()).toBe(true)
 
     // Get the invoice
     await expect(page.locator('[data-test="lightning-qr-code-image"]')).toBeVisible()
@@ -67,7 +71,9 @@ test.describe('Tipcard Set Funding', () => {
     // Bulk withdraw is only possible for logged in users
     await loginViaUi({ page, lnbitsApiContext: lnbitsTestUserWalletApiContext })
 
+    const bulkWithdrawResponse = page.waitForResponse(response => response.url().includes('bulkWithdraw.createForCards'))
     await page.locator('a[data-test="start-bulk-withdraw"]').click({ timeout: 10_000 })
+    expect((await bulkWithdrawResponse).ok()).toBe(true)
 
     // Get the LNURL withdraw link
     await expect(page.locator('[data-test="lightning-qr-code-image"]')).toHaveAttribute('href')

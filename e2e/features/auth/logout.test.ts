@@ -7,7 +7,7 @@ const API_SET = `${process.env.BACKEND_API_ORIGIN}/api/set`
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Feature Logout', () => {
+test.describe('Feature Logout', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context }) => {
     await login(context)
   })

@@ -8,7 +8,7 @@ import { generateAndAddSet } from '../../utils/set'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Sets List with sets data', () => {
+test.describe('Sets List with sets data', { tag: '@parallel-safe' }, () => {
   test('should login and display the user\'s sets aferwards', async ({ page }) => {
     const keyPair = createLnurlAuthKeyPair()
     const userId = (await createUser({ lnurlAuthKey: keyPair.publicKeyAsHex })).userId

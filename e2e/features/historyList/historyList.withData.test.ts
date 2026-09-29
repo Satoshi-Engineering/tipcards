@@ -16,6 +16,7 @@ test.describe('History list loading (sorted) data', () => {
   })
 
   test('should load and display 3 card statuses (sorted) on the dashboard page', async ({ page }) => {
+    await delayNextTrpcResponse(page)
     await page.goto('/dashboard')
 
     await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--large"]')).toBeVisible()
@@ -24,6 +25,7 @@ test.describe('History list loading (sorted) data', () => {
   })
 
   test('should load and display 50 card statuses (sorted) on the history page', async ({ page }) => {
+    await delayNextTrpcResponse(page)
     await page.goto('/history')
 
     await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--large"]')).toBeVisible()

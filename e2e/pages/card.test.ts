@@ -8,7 +8,7 @@ import { createSetWithCardStatusExamples } from '@e2e/utils/database/set'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Card Details Page', () => {
+test.describe('Card Details Page', { tag: '@parallel-safe' }, () => {
   let setId: string
 
   test.beforeAll(async ({ browser }) => {

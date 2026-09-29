@@ -4,7 +4,7 @@ import { login } from '../utils/auth/login'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('profileData', () => {
+test.describe('profileData', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context }) => {
     await login(context)
   })

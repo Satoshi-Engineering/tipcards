@@ -16,7 +16,7 @@ const secondSavedSet = {
   setId: 'bb02fdd5-c556-425e-9464-32d07a8ad327',
 }
 
-test.describe('localStorageSets', () => {
+test.describe('localStorageSets', { tag: '@parallel-safe' }, () => {
   test('should render no warning, if no localStorage sets exist', async ({ page }) => {
     await page.goto('/sets')
 

@@ -8,7 +8,7 @@ test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 const setsListItems = '[data-test="sets-list-item"]'
 const setsCount = '[data-test="sets-list-sets-count"]'
 
-test.describe('Sets Page', () => {
+test.describe('Sets Page', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context }) => {
     await login(context)
   })

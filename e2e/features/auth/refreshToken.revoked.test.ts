@@ -9,7 +9,7 @@ import {
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Revoked/denied refresh token', () => {
+test.describe('Revoked/denied refresh token', { tag: '@parallel-safe' }, () => {
   test('should show modal login with logged out by other device error message', async ({ context, page }) => {
     await login(context)
     await logoutAllDevices(await getRefreshToken(context))

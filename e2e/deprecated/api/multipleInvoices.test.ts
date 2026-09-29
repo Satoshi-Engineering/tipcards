@@ -4,7 +4,7 @@ import hashSha256 from '@frontend/modules/hashSha256'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Card invoices', () => {
+test.describe('Card invoices', { tag: '@parallel-safe' }, () => {
   test('should not be possible to create invoice for card with set-invoice', async ({ page, request }) => {
     const setId = crypto.randomUUID()
     await page.goto(`/set-funding/${setId}`)

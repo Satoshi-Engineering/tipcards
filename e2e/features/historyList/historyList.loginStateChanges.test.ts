@@ -11,7 +11,7 @@ test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 const cardStatusItems = '[data-test="card-status-list"] [data-test="card-status-list-item"]'
 const loggedOutMessage = '[data-test="history-list-message-not-logged-in"]'
 
-test.describe('History list handling login state changes', () => {
+test.describe('History list handling login state changes', { tag: '@parallel-safe' }, () => {
   test('should login and display the user\'s history afterwards, on the dashboard', async ({ page }) => {
     const keyPair = createLnurlAuthKeyPair()
     const userId = await createUserForLogin(keyPair)

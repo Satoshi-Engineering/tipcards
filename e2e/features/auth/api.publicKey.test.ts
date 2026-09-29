@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const API_PUBLIC_KEY = `${process.env.TIPCARDS_AUTH_ORIGIN}/auth/api/publicKey`
 
-test.describe('Auth API - public Key', () => {
+test.describe('Auth API - public Key', { tag: '@parallel-safe' }, () => {
   test('should return public key', async ({ request }) => {
     const response = await request.get(API_PUBLIC_KEY)
 

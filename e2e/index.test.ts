@@ -4,7 +4,7 @@ import { urlWithOptionalTrailingSlash } from './utils/urlHelpers.js'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-test.describe('Web client', () => {
+test.describe('Web client', { tag: '@parallel-safe' }, () => {
   test('visits the app root url and checks the headline', async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, 'language', { value: 'en-US' })

@@ -6,20 +6,20 @@ import { create100TestSets } from '../utils/database/set'
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
 test.describe('Dashboard Cards Summary', () => {
-  test('should show the preview if the user is logged out', async ({ page }) => {
+  test('should show the preview if the user is logged out', { tag: '@parallel-safe' }, async ({ page }) => {
     await page.goto('/dashboard')
 
     await expect(page.locator('[data-test="cards-summary-preview"]')).toBeAttached()
   })
 
-  test('should open the modal login', async ({ page }) => {
+  test('should open the modal login', { tag: '@parallel-safe' }, async ({ page }) => {
     await page.goto('/dashboard')
     await page.locator('[data-test="dashboard-login-link"]').click()
 
     await expect(page.locator('[data-test="modal-login"]')).toBeAttached()
   })
 
-  test('should show zeros if the user has no sets', async ({ context, page }) => {
+  test('should show zeros if the user has no sets', { tag: '@parallel-safe' }, async ({ context, page }) => {
     await login(context)
     await page.goto('/dashboard')
 

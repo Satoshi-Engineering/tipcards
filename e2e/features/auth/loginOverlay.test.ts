@@ -8,7 +8,7 @@ import {
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Login Overlay', () => {
+test.describe('Login Overlay', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context, page }) => {
     await context.clearCookies()
     await page.goto('/')

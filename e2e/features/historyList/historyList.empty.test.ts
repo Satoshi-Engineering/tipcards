@@ -7,7 +7,7 @@ test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
 const loggedOutMessage = '[data-test="history-list-message-not-logged-in"]'
 
-test.describe('History list without data', () => {
+test.describe('History list without data', { tag: '@parallel-safe' }, () => {
   test('should render logged out state if logged out on the dashboard page, if the user is logged out', async ({ page }) => {
     await page.goto('/dashboard')
 

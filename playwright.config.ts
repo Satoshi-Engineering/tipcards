@@ -6,6 +6,8 @@ dotenv.config({
   quiet: true,
 })
 
+const parallelSafeTag = /@parallel-safe/
+
 export default defineConfig({
   testDir: './e2e',
   testIgnore: 'live-checks/**',
@@ -15,8 +17,8 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests */
-  workers: 1,
+  /* Run shared-state tests first, then explicitly tagged tests with two workers. */
+  workers: 2,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -45,7 +47,16 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'non-parallel',
+      grepInvert: parallelSafeTag,
+      workers: 1,
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'parallel-safe',
+      dependencies: ['non-parallel'],
+      grep: parallelSafeTag,
+      workers: 2,
       use: { ...devices['Desktop Chrome'] },
     },
   ],

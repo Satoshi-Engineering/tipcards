@@ -7,7 +7,7 @@ const numberOfRefreshTokens = 4
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Feature logoutAllOtherDevices', () => {
+test.describe('Feature logoutAllOtherDevices', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context }) => {
     await context.clearCookies()
   })

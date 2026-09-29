@@ -6,7 +6,7 @@ import { urlWithOptionalTrailingSlash } from '../../utils/urlHelpers.js'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-test.describe('TheLangNav', () => {
+test.describe('TheLangNav', { tag: '@parallel-safe' }, () => {
   const rootPageButtonText: Record<LocaleCode, string> = {
     en: 'Create your TipCards set',
     de: 'Erstelle dein TipCards-Set',

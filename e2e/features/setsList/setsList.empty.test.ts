@@ -7,7 +7,7 @@ test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
 const loggedOutMessage = '[data-test="sets-list-message-not-logged-in"]'
 
-test.describe('Sets List without sets data', () => {
+test.describe('Sets List without sets data', { tag: '@parallel-safe' }, () => {
   test('shows a message on the dashboard page, when the user is logged out', async ({ page }) => {
     await page.goto('/dashboard')
 

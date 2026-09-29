@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-test.describe('homePageLinks', () => {
+test.describe('homePageLinks', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
   })

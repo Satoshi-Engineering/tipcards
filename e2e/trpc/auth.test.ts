@@ -9,7 +9,7 @@ const API_AUTH_REFRESH = `${process.env.TIPCARDS_AUTH_ORIGIN}/auth/trpc/auth.ref
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Trpc Auth', () => {
+test.describe('Trpc Auth', { tag: '@parallel-safe' }, () => {
   test('should not be able to refresh, if the user is logged out', async ({ request }) => {
     const response = await request.get(API_AUTH_REFRESH)
 

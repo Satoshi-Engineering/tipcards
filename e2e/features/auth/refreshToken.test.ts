@@ -4,7 +4,7 @@ import { login } from '../../utils/auth/login'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Refresh token', () => {
+test.describe('Refresh token', { tag: '@parallel-safe' }, () => {
   test('should do nothing if none exists', async ({ page }) => {
     await page.goto('/sets')
 

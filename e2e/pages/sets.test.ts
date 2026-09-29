@@ -11,7 +11,7 @@ test.describe('Sets Page', () => {
     await login(context)
   })
 
-  test('User should see the empty sets list', async ({ page }) => {
+  test('User should see the empty sets list', { tag: '@parallel-safe' }, async ({ page }) => {
     const setsResponse = page.waitForResponse(response => response.url().includes('/trpc/set.getAll'))
     await page.goto('/sets')
     await setsResponse
@@ -21,7 +21,7 @@ test.describe('Sets Page', () => {
     await expect(page.locator('[data-test="sets-list-message-empty"]')).toBeAttached()
   })
 
-  test('User should access a saved set', async ({ context, page }) => {
+  test('User should access a saved set', { tag: '@parallel-safe' }, async ({ context, page }) => {
     const randomSetName = Math.random().toString(36).substring(7)
     await generateAndAddSet(context)
     await generateAndAddSet(context, randomSetName)
@@ -34,7 +34,7 @@ test.describe('Sets Page', () => {
     await expect(page.locator('[data-test="the-layout"]')).toContainText(randomSetName)
   })
 
-  test('User should see logged out message after logging out', async ({ context, page }) => {
+  test('User should see logged out message after logging out', { tag: '@parallel-safe' }, async ({ context, page }) => {
     await context.clearCookies()
     const refreshResponse = await context.request.get(
       `${process.env.TIPCARDS_AUTH_ORIGIN}/auth/trpc/auth.refreshRefreshToken`,

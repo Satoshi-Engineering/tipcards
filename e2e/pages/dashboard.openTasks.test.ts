@@ -15,7 +15,7 @@ import { generateAndAddSet } from '../utils/set'
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
 test.describe('OpenTasks', () => {
-  test('should not render if logged out', async ({ page }) => {
+  test('should not render if logged out', { tag: '@parallel-safe' }, async ({ page }) => {
     const authResponse = waitForAuthResponse(page)
     await page.goto('/dashboard')
     await authResponse
@@ -23,7 +23,7 @@ test.describe('OpenTasks', () => {
     await expect(page.locator('[data-test="open-tasks"]')).toHaveCount(0)
   })
 
-  test('should not render if the user is logged in and there are no todos', async ({ context, page }) => {
+  test('should not render if the user is logged in and there are no todos', { tag: '@parallel-safe' }, async ({ context, page }) => {
     await login(context)
     const authResponse = waitForAuthResponse(page)
     await page.goto('/dashboard')
@@ -32,7 +32,7 @@ test.describe('OpenTasks', () => {
     await expect(page.locator('[data-test="open-tasks"]')).toHaveCount(0)
   })
 
-  test('should not render, even if a set is created', async ({ context, page }) => {
+  test('should not render, even if a set is created', { tag: '@parallel-safe' }, async ({ context, page }) => {
     await login(context)
     await generateAndAddSet(context)
     const authResponse = waitForAuthResponse(page)
@@ -42,7 +42,7 @@ test.describe('OpenTasks', () => {
     await expect(page.locator('[data-test="open-tasks"]')).toHaveCount(0)
   })
 
-  test('should load the open tasks on login', async ({ page }) => {
+  test('should load the open tasks on login', { tag: '@parallel-safe' }, async ({ page }) => {
     const keyPair = createLnurlAuthKeyPair()
     const userId = await createUserForLogin(keyPair)
     await createSetWithBulkWithdrawTask(userId)
@@ -114,7 +114,7 @@ test.describe('OpenTasks', () => {
     }
   })
 
-  test('it should link to funding page', async ({ context, page }) => {
+  test('it should link to funding page', { tag: '@parallel-safe' }, async ({ context, page }) => {
     const userId = await login(context)
     const set = await createSetWithCardFundingTasks(userId)
     const cardHash = generateCardHashForSet(set.id, 0)
@@ -127,7 +127,7 @@ test.describe('OpenTasks', () => {
     await expect(page).toHaveURL(new RegExp(`/funding/${cardHash}`))
   })
 
-  test('it should link to set funding page', async ({ context, page }) => {
+  test('it should link to set funding page', { tag: '@parallel-safe' }, async ({ context, page }) => {
     const userId = await login(context)
     const [set] = await createSetsWithSetFunding(userId, 1, 8)
     const authResponse = waitForAuthResponse(page)
@@ -139,7 +139,7 @@ test.describe('OpenTasks', () => {
     await expect(page).toHaveURL(new RegExp(`/set-funding/${set.id}`))
   })
 
-  test('it should link to bulk withdraw page', async ({ context, page }) => {
+  test('it should link to bulk withdraw page', { tag: '@parallel-safe' }, async ({ context, page }) => {
     const userId = await login(context)
     const set = await createSetWithBulkWithdrawTask(userId)
     const authResponse = waitForAuthResponse(page)
@@ -151,7 +151,7 @@ test.describe('OpenTasks', () => {
     await expect(page).toHaveURL(new RegExp(`/bulk-withdraw/${set.id}`))
   })
 
-  test('it should remove the remove the task if its resolved', async ({ context, page }) => {
+  test('it should remove the remove the task if its resolved', { tag: '@parallel-safe' }, async ({ context, page }) => {
     const userId = await login(context)
     const [set] = await createSetsWithSetFunding(userId, 1, 8)
     let authResponse = waitForAuthResponse(page)

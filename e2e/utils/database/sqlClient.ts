@@ -10,7 +10,9 @@ let sqlClient: Sql
 
 export default () => {
   if (!sqlClient) {
-    sqlClient = postgres(`postgres://${user}:${password}@${host}:${port}/${database}`)
+    sqlClient = postgres(`postgres://${user}:${password}@${host}:${port}/${database}`, {
+      max: 1,
+    })
   }
   return sqlClient
 }

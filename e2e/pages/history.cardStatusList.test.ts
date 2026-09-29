@@ -2,13 +2,14 @@ import { expect, test, type Page } from '@playwright/test'
 
 import { login } from '../utils/auth/login'
 import { createSetsWithSetFunding } from '../utils/database/set'
+import { delayNextTrpcResponse } from '../utils/trpc'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
 const cardStatusItems = '[data-test="card-status-list"] [data-test="card-status-list-item"]'
 const dataLoadTimeout = 60_000
 
-test.describe('Card status list loading (sorted) data', () => {
+test.describe('Card status list loading (sorted) data', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ context }) => {
     const userId = await login(context)
     await createSetsWithSetFunding(userId, 5, 21)
@@ -42,6 +43,7 @@ test.describe('Card status list loading (sorted) data', () => {
   })
 
   test('should display the large loading icon, when the list has not yet loaded any items', async ({ page }) => {
+    await delayNextTrpcResponse(page)
     await page.goto('/history')
 
     await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--large"]')).toBeVisible()

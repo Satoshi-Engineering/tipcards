@@ -2,7 +2,7 @@ import { expect, test, type Locator } from '@playwright/test'
 
 test.use({ viewport: { width: 1000, height: 660 } })
 
-test.describe('SliderDefault', () => {
+test.describe('SliderDefault', { tag: '@parallel-safe' }, () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/style-guide/components')
   })

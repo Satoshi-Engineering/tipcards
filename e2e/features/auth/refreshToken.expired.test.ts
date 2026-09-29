@@ -5,7 +5,7 @@ import { generateExpiredRefreshToken } from '../../utils/auth/refreshToken'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Expired refresh token', () => {
+test.describe('Expired refresh token', { tag: '@parallel-safe' }, () => {
   test('should show modal login with session expiration message', async ({ context, page }) => {
     await login(context)
     const refreshToken = await getRefreshToken(context)

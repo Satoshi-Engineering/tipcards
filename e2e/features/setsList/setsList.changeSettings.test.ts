@@ -10,7 +10,7 @@ const setItems = '[data-test="sets-list"] [data-test="sets-list-item"]'
 const reloadingIcon = '[data-test="sets-list"] [data-test="items-list-reloading-icon"]'
 const updatedSetName = 'Updated Set Name'
 
-test.describe('Sets List with sets data', () => {
+test.describe('Sets List with sets data', { tag: '@parallel-safe' }, () => {
   test('should update the changed set name on the dashboard page', async ({ context, page }) => {
     const userId = await login(context)
     const testSet = await createOlderTestSet(userId)

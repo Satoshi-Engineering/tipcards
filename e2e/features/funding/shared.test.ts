@@ -6,6 +6,8 @@ import { generateMultipleRandomCardFundingInfos, generateTestingCardHash, withdr
 import { payLnurlP } from '@e2e/utils/lnbits/api/payments'
 
 test.describe('Tipcard LNURLp Funding and Withdraw', () => {
+  test.describe.configure({ mode: 'serial' })
+
   let walletBalanceBefore: number
   const cardHash = generateTestingCardHash()
 

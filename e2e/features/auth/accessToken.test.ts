@@ -5,7 +5,7 @@ import { validateAccessToken } from '../../utils/auth/refreshToken'
 
 const API_AUTH_REFRESH = `${process.env.TIPCARDS_AUTH_ORIGIN}/auth/trpc/auth.refreshRefreshToken`
 
-test.describe('accessToken', () => {
+test.describe('accessToken', { tag: '@parallel-safe' }, () => {
   test('should not be able to get an access token, if the user is logged out', async ({ request }) => {
     const response = await request.get(API_AUTH_REFRESH)
 

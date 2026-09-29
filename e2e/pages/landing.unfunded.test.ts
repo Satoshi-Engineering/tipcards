@@ -5,7 +5,7 @@ import { calculateFeeForNetAmount } from '@shared/modules/feeCalculation'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page', { tag: '@parallel-safe' }, () => {
   test('should redirect to the funding page, if the card does not exist', async ({ page }) => {
     const cardHash = await hashSha256(crypto.randomUUID())
 
