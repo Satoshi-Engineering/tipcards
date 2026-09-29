@@ -9,7 +9,7 @@ import { urlWithOptionalTrailingSlash } from '@e2e/utils/urlHelpers'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page', { tag: '@parallel-safe' }, () => {
   let cardHash: string
 
   test.beforeAll(async () => {

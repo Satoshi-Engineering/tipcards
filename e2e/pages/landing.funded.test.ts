@@ -8,7 +8,7 @@ import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page', { tag: '@parallel-safe' }, () => {
   test('should show the default landing page for a funded card', async ({ page }) => {
     const cardHash = await hashSha256(crypto.randomUUID())
     await fundCard(cardHash, lnbitsTestUserWalletApiContext, 210, 'Have fun with testing!')

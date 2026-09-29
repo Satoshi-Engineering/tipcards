@@ -47,6 +47,8 @@ test.describe('Card status list loading (sorted) data', { tag: '@parallel-safe' 
     await page.goto('/history')
 
     await expect(page.locator('[data-test="card-status-list"] [data-test="items-list-loading-icon--large"]')).toBeVisible()
+    // Let the delayed request finish before Playwright tears down the page.
+    await expect(page.locator(cardStatusItems)).toHaveCount(50, { timeout: dataLoadTimeout })
   })
 
   test('should display the small loading icon, when the list already has items', async ({ page }) => {

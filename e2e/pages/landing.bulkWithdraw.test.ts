@@ -10,7 +10,7 @@ import { payInvoice } from '@e2e/utils/lnbits/api/payments'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page', { tag: '@parallel-safe' }, () => {
   test('should show locked by bulkWithdraw', async ({ page, request }) => {
     const setId = crypto.randomUUID()
     const cardHash = await fundSet(setId, request)

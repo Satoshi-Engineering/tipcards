@@ -6,7 +6,7 @@ import { updateWithdrawLink } from '@e2e/utils/lnbits/api/withdraw'
 import { fundCard, getCardStatus, withdrawCardWithoutWebhookSimulation } from '@e2e/utils/card'
 import { lnbitsApplicationWalletApiContext, lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
-test('check if card has withdrawPending state after withdrawing before the webhook call from lnbits comes in', async () => {
+test('check if card has withdrawPending state after withdrawing before the webhook call from lnbits comes in', { tag: '@parallel-safe' }, async () => {
   const cardHash = await hashSha256(crypto.randomUUID())
   await fundCard(cardHash, lnbitsTestUserWalletApiContext)
   await replaceWebhookUrlWithGibberish(cardHash) // set the webhook url to gibberish in the so that the status of the card never gets set to withdrawn

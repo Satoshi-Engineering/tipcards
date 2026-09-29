@@ -10,7 +10,7 @@ import { withdrawLnurlW } from '@e2e/utils/lnbits/api/payments'
 
 test.use({ locale: 'en-US', viewport: { width: 1000, height: 660 } })
 
-test.describe('Landing Page', () => {
+test.describe('Landing Page', { tag: '@parallel-safe' }, () => {
   test('should load the status of a recently withdrawn card', async ({ page }) => {
     const cardHash = await hashSha256(crypto.randomUUID())
     await fundCard(cardHash, lnbitsTestUserWalletApiContext, 210, 'Have fun with testing!')

@@ -6,7 +6,7 @@ import { fundCard, getCardStatus } from '@e2e/utils/card'
 import { createSavedSet, gotoCardsPage, gotoSetPage } from '@e2e/utils/set'
 import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
-test.describe('Tipcard Set Cloning', () => {
+test.describe('Tipcard Set Cloning', { tag: '@parallel-safe' }, () => {
   const setId = crypto.randomUUID()
   const setName = `E2E Clone Source ${setId}`
   const clonedSetName = `Copy of ${setName}`

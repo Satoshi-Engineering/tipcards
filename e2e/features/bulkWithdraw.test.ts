@@ -4,7 +4,7 @@ import hashSha256 from '@frontend/modules/hashSha256'
 import { fundCard } from '@e2e/utils/card'
 import { lnbitsTestUserWalletApiContext } from '@e2e/utils/lnbits/api/apiContext'
 
-test('do not allow a bulk withdraw for duplicate hashes', async ({ request }) => {
+test('do not allow a bulk withdraw for duplicate hashes', { tag: '@parallel-safe' }, async ({ request }) => {
   const cardHash = await hashSha256(crypto.randomUUID())
   await fundCard(cardHash, lnbitsTestUserWalletApiContext)
 
