@@ -7,8 +7,8 @@
     :active-class="activeClass"
     :class="{
       'font-bold': !noBold,
-      'underline hover:no-underline': !invertUnderline,
-      'no-underline hover:underline': invertUnderline,
+      'underline hover:no-underline': !invertUnderline && !noUnderline,
+      'no-underline hover:underline': invertUnderline && !noUnderline,
       'no-underline': noUnderline,
     }"
     :element="element"

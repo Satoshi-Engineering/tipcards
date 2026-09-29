@@ -48,6 +48,22 @@ describe('LinkDefault', () => {
     expect(button.text()).toBe('Satoshi Engineering')
   })
 
+  it('does not apply underline styles when disabled', () => {
+    const wrapper = mount(LinkDefault, {
+      props: {
+        noUnderline: true,
+      },
+      slots: {
+        default: 'Satoshi Engineering',
+      },
+    })
+
+    expect(wrapper.classes()).toContain('no-underline')
+    expect(wrapper.classes()).not.toContain('underline')
+    expect(wrapper.classes()).not.toContain('hover:no-underline')
+    expect(wrapper.classes()).not.toContain('hover:underline')
+  })
+
   it('sets target to _blank if the href begins with http', async () => {
     const wrapper = mount(LinkDefault, {
       props: {
