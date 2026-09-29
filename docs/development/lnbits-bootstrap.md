@@ -66,9 +66,3 @@ DATA_DIR="$LNBITS_BOOTSTRAP_DATA_DIR" docker compose --profile tools --profile t
 ```
 
 The second start verifies idempotency. After the temporary stack is down, the temporary directory can be deleted. The normal stack continues to use the data directory configured in `.env`.
-
-## External variable cleanup
-
-The deprecated aliases in the external `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab file variables were removed on 2026-09-29 after the renamed-variable release was deployed and verified on both branches.
-
-Do not remove LNbits origins from `E2E_ENV_FILE_LIVE_CHECK_MAIN` or `E2E_ENV_FILE_LIVE_CHECK_DEVELOP`. Live checks require the origins but no wallet credentials.
