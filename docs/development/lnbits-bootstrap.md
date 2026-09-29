@@ -69,6 +69,6 @@ The second start verifies idempotency. After the temporary stack is down, the te
 
 ## External variable cleanup
 
-The deprecated aliases in the external `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab file variables are intentionally outside this repository cleanup. Remove them only after the renamed-variable release is deployed to both branches, the rollback window no longer includes versions that read the old names, and active pipelines no longer reference them.
+The deprecated aliases in the external `BACKEND_ENV_FILE_MAIN` and `BACKEND_ENV_FILE_DEVELOP` GitLab file variables were removed on 2026-09-29 after the renamed-variable release was deployed and verified on both branches.
 
 Do not remove LNbits origins from `E2E_ENV_FILE_LIVE_CHECK_MAIN` or `E2E_ENV_FILE_LIVE_CHECK_DEVELOP`. Live checks require the origins but no wallet credentials.

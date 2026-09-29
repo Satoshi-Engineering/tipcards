@@ -339,7 +339,7 @@ Preserve the live-check job's operational contract when moving it to Playwright:
 - Keep failure-only browser artifacts, adapted to Playwright's artifact paths and report format.
 - Verify the Playwright live check in CI before marking the live-check inventory as migrated.
 
-The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25, and the GitLab job passed in the `develop` pipeline. Pipeline verification on `main` remains outstanding.
+The Playwright job is now the sole live-check execution path. The Cypress live-check script and CI execution were removed at the user's direction, matching the earlier local-E2E cutover. The user reported all five Playwright checks passing against the configured deployed environment on 2026-09-25, and the GitLab job passed in the `develop` pipeline. The complete `main` pipeline, including the live-check job, passed on 2026-09-29 and triggered the production release. Live-check pipeline verification is complete.
 
 ## Final cleanup gate
 
